@@ -8,7 +8,7 @@ class CrochetCell : public Cell
 {
     Q_OBJECT
 public:
-    CrochetCell(QGraphicsItem *parent = 0);
+    CrochetCell(const QString fileName, QGraphicsItem *parent = 0);
     ~CrochetCell();
 
     QRectF boundingRect () const;

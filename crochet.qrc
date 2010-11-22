@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/crochet_icon.png</file>
+        <file>stitches/chain.svg</file>
+        <file>stitches/single_crochet.svg</file>
+    </qresource>
+</RCC>

@@ -11,10 +11,17 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Crochet</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../crochet.qrc">
+    <normaloff>:/images/crochet_icon.png</normaloff>:/images/crochet_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="margin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -69,7 +76,7 @@
      <string>&amp;Document</string>
     </property>
     <addaction name="actionAdd_Chart"/>
-    <addaction name="actionAdd_Notes_2"/>
+    <addaction name="actionAdd_Notes"/>
    </widget>
    <widget class="QMenu" name="menu_Chart">
     <property name="title">
@@ -80,13 +87,15 @@
     <property name="title">
      <string>&amp;Options</string>
     </property>
-    <addaction name="actionPreferences_2"/>
+    <addaction name="actionStitch_Library"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionAbout_2"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
@@ -103,19 +112,28 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionNew"/>
+   <addaction name="actionOpen"/>
+   <addaction name="actionSave"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="stitchPaletteDock">
    <property name="windowTitle">
-    <string>Tools</string>
+    <string>Stitch Palette</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="margin">
+      <number>0</number>
+     </property>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QComboBox" name="categorySelection"/>
+     </item>
+     <item>
+      <widget class="QListView" name="stitchView"/>
      </item>
     </layout>
    </widget>
@@ -157,7 +175,7 @@
     <string>Export...</string>
    </property>
    <property name="shortcut">
-    <string></string>
+    <string/>
    </property>
   </action>
   <action name="actionClose">
@@ -200,12 +218,12 @@
     <string>Ctrl+V</string>
    </property>
   </action>
-  <action name="actionAbout_2">
+  <action name="actionAbout">
    <property name="text">
     <string>&amp;About</string>
    </property>
   </action>
-  <action name="actionPreferences_2">
+  <action name="actionPreferences">
    <property name="text">
     <string>&amp;Preferences</string>
    </property>
@@ -215,7 +233,7 @@
     <string>Add Chart</string>
    </property>
   </action>
-  <action name="actionAdd_Notes_2">
+  <action name="actionAdd_Notes">
    <property name="text">
     <string>Add Notes</string>
    </property>
@@ -236,8 +254,15 @@
     <string>Ctrl+-</string>
    </property>
   </action>
+  <action name="actionStitch_Library">
+   <property name="text">
+    <string>Stitch Library</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../crochet.qrc"/>
+ </resources>
  <connections/>
 </ui>

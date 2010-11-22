@@ -21,6 +21,8 @@ private slots:
 
     void documentNewChart();
 
+    void about();
+
 private:
     Ui::MainWindow *ui;
     Ui::ExportDialog *expDialog;

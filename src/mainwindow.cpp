@@ -2,8 +2,11 @@
 #include "ui_mainwindow.h"
 #include "ui_export.h"
 
+//#include <QApplication>
 #include <QDialog>
+#include <QMessageBox>
 
+#include "appinfo.h"
 #include "charttab.h"
 
 #include <QDebug>
@@ -44,6 +47,7 @@ void MainWindow::setupMenus()
     //Options
 
     //Help
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 
 }
 
@@ -73,4 +77,20 @@ void MainWindow::documentNewChart()
     ChartTab *newTab = new ChartTab(this);
     ui->tabWidget->addTab(newTab, tr("Chart"));
 
+}
+
+void MainWindow::about()
+{
+    QString aboutInfo = QString(tr("<h1>%1</h1>"
+                                   "<p>Version: %2 (built on %3)</p>"
+                                   "<p>By: %4</p>"
+                                   "<p>This software is for creating crochet charts that can"
+                                   "that can be exported in many differnet file types.</p>")
+                                .arg(qApp->applicationName())
+                                .arg(qApp->applicationVersion())
+                                .arg(AppInfo::appBuildInfo)
+                                .arg(qApp->organizationName())
+                                );
+
+    QMessageBox::about(this, tr("About Crochet"), aboutInfo);
 }

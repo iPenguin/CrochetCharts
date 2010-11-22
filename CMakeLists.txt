@@ -29,9 +29,12 @@ set(crochet_srcs
     src/main.cpp
     src/mainwindow.cpp
     src/tabinterface.cpp
+    src/stitch.cpp
+    src/stitchset.cpp
     )
 
-set(crochet_headers 
+set(crochet_headers
+    src/appinfo.h
     src/mainwindow.h
     src/cell.h
     src/charttab.h
@@ -39,22 +42,36 @@ set(crochet_headers
     src/crochetdatamodel.h
     src/mainwindow.h
     src/tabinterface.h
-    src/version.h
+    src/stitch.h
+    src/stitchset.h
     )
  
 set(crochet_uis 
     src/export.ui 
     src/mainwindow.ui
+    src/stitcheditor.ui
+    src/stitchlibrary.ui
     )
 
-#SET(crochet_resources
-#    src/resources.qrc
+set(crochet_resources
+    crochet.qrc
+    )
+
+#set(crochet_test_src
+#    src/tests/testcrochetdatamodel.cpp
+#    src/tests/teststitch.cpp
+#    )
+
+#set(crochet_test_h
+#    src/tests/testcrochetdatamodel.h
+#    src/tests/teststitch.h
 #    )
 
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
-qt4_wrap_cpp(crochet_moc_srcs ${crochet_headers} )
+qt4_wrap_cpp(crochet_moc_srcs ${crochet_headers})
+qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 
-add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs})
+add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs})
 target_link_libraries(crochet ${QT_LIBRARIES})
 
 
