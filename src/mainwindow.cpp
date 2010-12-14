@@ -84,8 +84,8 @@ void MainWindow::about()
     QString aboutInfo = QString(tr("<h1>%1</h1>"
                                    "<p>Version: %2 (built on %3)</p>"
                                    "<p>By: %4</p>"
-                                   "<p>This software is for creating crochet charts that can"
-                                   "that can be exported in many differnet file types.</p>")
+                                   "<p>This software is for creating crochet charts that"
+                                   "can be exported in many differnet file types.</p>")
                                 .arg(qApp->applicationName())
                                 .arg(qApp->applicationVersion())
                                 .arg(AppInfo::appBuildInfo)

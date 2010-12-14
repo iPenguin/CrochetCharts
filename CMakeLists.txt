@@ -31,6 +31,7 @@ set(crochet_srcs
     src/tabinterface.cpp
     src/stitch.cpp
     src/stitchset.cpp
+    src/crochetscene.cpp
     )
 
 set(crochet_headers
@@ -44,13 +45,15 @@ set(crochet_headers
     src/tabinterface.h
     src/stitch.h
     src/stitchset.h
+    src/crochetscene.h
     )
  
-set(crochet_uis 
-    src/export.ui 
+set(crochet_uis
+    src/export.ui
     src/mainwindow.ui
     src/stitcheditor.ui
     src/stitchlibrary.ui
+    src/newdocument.ui
     )
 
 set(crochet_resources

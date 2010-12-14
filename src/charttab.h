@@ -4,7 +4,7 @@
 #include <QWidget>
 
 class QGraphicsView;
-class QGraphicsScene;
+class CrochetScene;
 
 class ChartTab : public QWidget
 {
@@ -19,7 +19,7 @@ public slots:
 
 private:
     QGraphicsView *mView;
-    QGraphicsScene *mScene;
+    CrochetScene *mScene;
 };
 
 #endif // CHARTTAB_H

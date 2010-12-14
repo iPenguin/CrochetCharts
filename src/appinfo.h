@@ -9,9 +9,9 @@
 
 namespace AppInfo {
     const QString appName = "Crochet";
-    const QString appOrg = "Fiber Software";
+    const QString appOrg = "Stitch Works Software";
 
-    const QString appOrgDomain = "fibersoftware.com";
+    const QString appOrgDomain = "stitchworkssoftware.com";
     const QString appVersion = GIT_VERSION; //ie: 0.1.0
 
     const QString appBuildInfo = QString(__DATE__) + " " + QString(__TIME__);
