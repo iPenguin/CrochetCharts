@@ -12,7 +12,7 @@ namespace AppInfo {
     const QString appOrg = "Stitch Works Software";
 
     const QString appOrgDomain = "stitchworkssoftware.com";
-    const QString appVersion = GIT_VERSION; //ie: 0.1.0
+    const QString appVersion = GIT_VERSION; //ie: 0.1.1
 
     const QString appBuildInfo = QString(__DATE__) + " " + QString(__TIME__);
 }
