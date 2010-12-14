@@ -24,6 +24,15 @@
     <value key="CMakeProjectManager.CMakeBuildConfiguration.MsvcVersion" type="QString"></value>
     <valuemap key="ProjectExplorer.BuildConfiguration.BuildStepList.0" type="QVariantMap">
      <valuemap key="ProjectExplorer.BuildStepList.Step.0" type="QVariantMap">
+      <valuelist key="ProjectExplorer.ProcessStep.Arguments" type="QVariantList"/>
+      <value key="ProjectExplorer.ProcessStep.Command" type="QString">/home/brian/crochet/version_number.sh</value>
+      <value key="ProjectExplorer.ProcessStep.Enabled" type="bool">true</value>
+      <value key="ProjectExplorer.ProcessStep.WorkingDirectory" type="QString">$BUILDDIR</value>
+      <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Custom Process Step</value>
+      <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
+      <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">ProjectExplorer.ProcessStep</value>
+     </valuemap>
+     <valuemap key="ProjectExplorer.BuildStepList.Step.1" type="QVariantMap">
       <valuelist key="CMakeProjectManager.MakeStep.AdditionalArguments" type="QVariantList"/>
       <valuelist key="CMakeProjectManager.MakeStep.BuildTargets" type="QVariantList"/>
       <value key="CMakeProjectManager.MakeStep.Clean" type="bool">false</value>
@@ -31,7 +40,7 @@
       <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
       <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">CMakeProjectManager.MakeStep</value>
      </valuemap>
-     <value key="ProjectExplorer.BuildStepList.StepsCount" type="int">1</value>
+     <value key="ProjectExplorer.BuildStepList.StepsCount" type="int">2</value>
      <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">Build</value>
      <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
      <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">ProjectExplorer.BuildSteps.Build</value>
