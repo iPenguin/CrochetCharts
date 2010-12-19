@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 2.8)
+project(CrochetTests)
+
+find_package(Qt4 REQUIRED)
+
+set(CMAKE_CXX_FLAGS "-g -Wall")
+set(CMAKE_C_FLAGS   "-g -Wall")
+
+include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+
+# for more information on the following lines see: http://cmake.org/cmake/help/cmake2.6docs.html#module:FindQt4
+set(QT_USE_QTSVG 1)
+include(${QT_USE_FILE})
+
+add_definitions(${QT_DEFINITIONS})
+
+set(crochet_srcs
+    testlicense.cpp
+    )
+
+set(crochet_headers
+    ../src/license.h
+    testlicense.h
+    )
+ 
+qt4_wrap_cpp(crochet_moc_srcs ${crochet_headers})
+
+add_executable(crochet_test ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs})
+target_link_libraries(crochet_test ${QT_LIBRARIES})
+

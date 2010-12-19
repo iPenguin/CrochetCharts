@@ -117,23 +117,20 @@
    <addaction name="actionSave"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="stitchPaletteDock">
+  <widget class="QDockWidget" name="stitchLibraryDock">
    <property name="windowTitle">
     <string>Stitches</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>2</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
+   <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="margin">
-      <number>0</number>
-     </property>
      <item>
-      <widget class="QComboBox" name="categorySelection"/>
+      <widget class="QComboBox" name="stitchCategory"/>
      </item>
      <item>
-      <widget class="QListView" name="stitchView"/>
+      <widget class="QListWidget" name="stitchList"/>
      </item>
     </layout>
    </widget>

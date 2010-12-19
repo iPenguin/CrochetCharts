@@ -32,6 +32,7 @@ set(crochet_srcs
     src/stitch.cpp
     src/stitchset.cpp
     src/crochetscene.cpp
+    src/licensewizard.cpp
     )
 
 set(crochet_headers
@@ -46,6 +47,8 @@ set(crochet_headers
     src/stitch.h
     src/stitchset.h
     src/crochetscene.h
+    src/licensewizard.h
+    src/license.h
     )
  
 set(crochet_uis

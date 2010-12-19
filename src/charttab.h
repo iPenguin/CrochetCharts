@@ -11,6 +11,7 @@ class ChartTab : public QWidget
     Q_OBJECT
 public:
     explicit ChartTab(QWidget *parent = 0);
+    QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
 signals:
 
