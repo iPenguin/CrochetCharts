@@ -16,18 +16,18 @@ include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
 
-set(crochet_srcs
+set(crochet_test_srcs
     testlicense.cpp
     )
 
-set(crochet_headers
+set(crochet_test_headers
     ../src/license.h
     testlicense.h
     )
 
-qt4_automoc(${crochet_srcs})
-qt4_wrap_cpp(crochet_moc_srcs ${crochet_headers})
+qt4_automoc(${crochet_test_srcs})
+qt4_wrap_cpp(crochet_test_moc_srcs ${crochet_test_headers})
 
-add_executable(crochet_test ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs})
+add_executable(crochet_test ${crochet_test_srcs} ${crochet_test_moc_srcs})
 target_link_libraries(crochet_test ${QT_LIBRARIES})
 

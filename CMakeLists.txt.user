@@ -107,7 +107,7 @@
     <valuelist key="CMakeProjectManager.CMakeRunConfiguration.UserEnvironmentChanges" type="QVariantList"/>
     <value key="CMakeProjectManager.CMakeRunConfiguration.UserWorkingDirectory" type="QString"></value>
     <value key="CMakeProjectManager.CMakeRunConfiguration.WorkingDirectory" type="QString">/home/brian/crochet/build/tests</value>
-    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">crochet_test</value>
+    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">crochet_test (disabled)</value>
     <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
     <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">CMakeProjectManager.CMakeRunConfiguration.</value>
     <value key="RunConfiguration.QmlDebugServerPort" type="uint">3768</value>

@@ -80,5 +80,7 @@ qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs})
 target_link_libraries(crochet ${QT_LIBRARIES})
 
-
-add_subdirectory(tests)
+if(UNIT_TESTS)
+    message("Unit testing on")
+    add_subdirectory(tests)
+endif()
