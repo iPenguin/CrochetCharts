@@ -81,4 +81,4 @@ add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${cro
 target_link_libraries(crochet ${QT_LIBRARIES})
 
 
-#add_subdirectory(tests)
+add_subdirectory(tests)

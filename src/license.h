@@ -13,7 +13,8 @@ namespace License {
     QString serialNumber(long sequenceNumber)
     {
         QByteArray seed = "BCM Software";
-        QByteArray data = seed + sequenceNumber;
+        QString number = QString::number(sequenceNumber);
+        QByteArray data = seed + number.toUtf8();
 
         QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
 
@@ -29,33 +30,32 @@ namespace License {
         int hex4 = str.right(1).toInt(&ok, 16);
 
         int digit1, digit2, digit3, digit4;
-        int temp = hex % 10;
-        if(temp == 0)
-            digit1 = hex - 1;
-        else
-            digit1 = temp;
 
-        temp = hex2 % 10;
-        if(temp == 0)
-            digit2 = hex2 - 1;
-        else
-            digit2 = temp;
+        int temp = hex / 10;
+        if(temp < 1)
+            digit1 = hex;
+        else if (temp >= 1)
+            digit1 = hex - 10;
 
+        temp = hex2 / 10;
+        if(temp < 1)
+            digit2 = hex2;
+        else if (temp >= 1)
+            digit2 = hex2 - 10;
 
-        temp = hex3 % 10;
-        if(temp == 0)
-            digit3 = hex3 - 1;
-        else
-            digit3 = temp;
+        temp = hex3 / 10;
+        if(temp < 1)
+            digit3 = hex3;
+        else if (temp >= 1)
+            digit3 = hex3 - 10;
 
-        temp = hex4 % 10;
-        if(temp == 0)
-            digit4 = hex4 - 1;
-        else
-            digit4 = temp;
+        temp = hex4 / 10;
+        if(temp < 1)
+            digit4 = hex4;
+        else if (temp >= 1)
+            digit4 = hex4 - 10;
 
         QString seqNum = QString("%1").arg(QString::number(sequenceNumber),7, QChar('0'));
-
 
         QString sn;
         sn = seqNum.left(4) + "-" + seqNum.right(3) + "-" + QString::number(digit1)

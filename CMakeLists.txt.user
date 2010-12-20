@@ -98,7 +98,23 @@
     <value key="RunConfiguration.UseCppDebugger" type="bool">true</value>
     <value key="RunConfiguration.UseQmlDebugger" type="bool">false</value>
    </valuemap>
-   <value key="ProjectExplorer.Target.RunConfigurationCount" type="int">1</value>
+   <valuemap key="ProjectExplorer.Target.RunConfiguration.1" type="QVariantMap">
+    <value key="CMakeProjectManager.BaseEnvironmentBase" type="int">2</value>
+    <value key="CMakeProjectManager.CMakeRunConfiguation.Title" type="QString">crochet_test</value>
+    <value key="CMakeProjectManager.CMakeRunConfiguration.Arguments" type="QString"></value>
+    <value key="CMakeProjectManager.CMakeRunConfiguration.Target" type="QString">/home/brian/crochet/build/tests/crochet_test</value>
+    <value key="CMakeProjectManager.CMakeRunConfiguration.UseTerminal" type="bool">false</value>
+    <valuelist key="CMakeProjectManager.CMakeRunConfiguration.UserEnvironmentChanges" type="QVariantList"/>
+    <value key="CMakeProjectManager.CMakeRunConfiguration.UserWorkingDirectory" type="QString"></value>
+    <value key="CMakeProjectManager.CMakeRunConfiguration.WorkingDirectory" type="QString">/home/brian/crochet/build/tests</value>
+    <value key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName" type="QString">crochet_test</value>
+    <value key="ProjectExplorer.ProjectConfiguration.DisplayName" type="QString"></value>
+    <value key="ProjectExplorer.ProjectConfiguration.Id" type="QString">CMakeProjectManager.CMakeRunConfiguration.</value>
+    <value key="RunConfiguration.QmlDebugServerPort" type="uint">3768</value>
+    <value key="RunConfiguration.UseCppDebugger" type="bool">true</value>
+    <value key="RunConfiguration.UseQmlDebugger" type="bool">false</value>
+   </valuemap>
+   <value key="ProjectExplorer.Target.RunConfigurationCount" type="int">2</value>
   </valuemap>
  </data>
  <data>
