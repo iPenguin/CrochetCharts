@@ -15,15 +15,21 @@ add_definitions(${QT_DEFINITIONS})
 
 set(crochet_test_srcs
     ../src/stitch.cpp
+    ../src/stitchset.cpp
+    testcrochetdatamodel.cpp
     testlicense.cpp
     teststitch.cpp
+    teststitchset.cpp
     )
 
 set(crochet_test_headers
     ../src/license.h
     ../src/stitch.h
+    ../src/stitchset.h
+    testcrochetdatamodel.h
     testlicense.h
     teststitch.h
+    teststitchset.h
     )
 
 qt4_automoc(${crochet_test_srcs})

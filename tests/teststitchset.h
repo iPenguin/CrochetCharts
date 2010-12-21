@@ -1,5 +1,5 @@
-#ifndef TESTCROCHETDATAMODEL_H
-#define TESTCROCHETDATAMODEL_H
+#ifndef TESTSTITCHSET_H
+#define TESTSTITCHSET_H
 
 #include <QtTest/QTest>
 #include <QDebug>
@@ -14,11 +14,10 @@ private slots:
      void initTestCase();
      void setupStitchSet();
      void findStitch();
-     void 
      void cleanupTestCase();
 
 private:
-     Stitch *s;
+
 };
 
-#endif // TESTCROCHETDATAMODEL_H
+#endif // TESTSTITCHSET_H

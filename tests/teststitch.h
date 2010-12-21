@@ -1,5 +1,5 @@
-#ifndef TESTCROCHETDATAMODEL_H
-#define TESTCROCHETDATAMODEL_H
+#ifndef TESTSTITCH_H
+#define TESTSTITCH_H
 
 #include <QtTest/QTest>
 #include <QDebug>
@@ -20,4 +20,4 @@ private:
      Stitch *mS;
 };
 
-#endif // TESTCROCHETDATAMODEL_H
+#endif // TESTSTITCH_H

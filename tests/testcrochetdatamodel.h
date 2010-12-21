@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QObject>
 
-#include "../crochetdatamodel.h"
+#include "../src/crochetdatamodel.h"
 
 class TestCrochetDataModel : public QObject
 {

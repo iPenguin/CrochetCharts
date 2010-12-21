@@ -22,7 +22,7 @@ void TestCrochetDataModel::testDataModelSetup()
     model->addColumn(2, 10);
     model->addColumn(2);
 
-    //QVARIFY(model->cell(3, 6) == "1");
+    //QVERIFY(model->cell(3, 6) == "1");
 
 }
 
@@ -30,7 +30,7 @@ void TestCrochetDataModel::testDataModelAdditions()
 {
     //model->setCell(0, 0, );
 
-    //QVARIFY(model->cell(0, 0) == );
+    //QVERIFY(model->cell(0, 0) == );
 
 }
 
@@ -45,9 +45,9 @@ void TestCrochetDataModel::testDataModelRemovals()
 
     model->removeColumn(0, 2);
 /*
-    QVARIFY(model->cell(0, 0) == "a");
-    QVARIFY(model->cell(0, 1) == "x");
-    QVARIFY(model->cell(0, 2) == "z");
+    QVERIFY(model->cell(0, 0) == "a");
+    QVERIFY(model->cell(0, 1) == "x");
+    QVERIFY(model->cell(0, 2) == "z");
 */
 }
 
