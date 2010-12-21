@@ -38,4 +38,4 @@ void TestLicense::cleanupTestCase()
 
 
 //main()
-QTEST_MAIN(TestLicense)
+//QTEST_MAIN(TestLicense)

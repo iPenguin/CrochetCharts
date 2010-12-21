@@ -1,37 +1,37 @@
 #include "teststitch.h"
 
-void Stitch::initTestCase()
+void TestStitch::initTestCase()
 {
     qDebug() << "Begin all tests";
-    s = new Stitch();
+    mS = new Stitch();
 }
 
-void Stitch::stitchSetup()
+void TestStitch::stitchSetup()
 {
-    s->setName("ch");
-    s->setFile(":/stitches/chain.svg");
-    s->setDescription("chain");
-    s->setCategory("Basic");
-    s->setWrongSide("ch");
+    mS->setName("ch");
+    mS->setFile(":/stitches/chain.svg");
+    mS->setDescription("chain");
+    mS->setCategory("Basic");
+    mS->setWrongSide("ch");
 
-    QVARIFY(s->name() == "ch");
-    QVARIFY(s->file() == ":/stitches/chain.svg");
-    QVARIFY(s->description() == "chain");
-    QVARIFY(s->category() == "Basic");
-    QVARIFY(s->wrongSide() == "ch");
+    QVERIFY(mS->name() == "ch");
+    QVERIFY(mS->file() == ":/stitches/chain.svg");
+    QVERIFY(mS->description() == "chain");
+    QVERIFY(mS->category() == "Basic");
+    QVERIFY(mS->wrongSide() == "ch");
 }
 
-void Stitch::stitchRender()
+void TestStitch::stitchRender()
 {
-    s->setRotation(90); //rotation around the center point.
-    s->setAngle(15); //angle from the base of the stitch.
+    mS->setRotation(90); //rotation around the center point.
+    mS->setAngle(15); //angle from the base of the stitch.
 
 
     //FIXME: finish this function
     // sha1 hash of the exported image and svg compaired to the expected output.
 
-    //QPixmap p = s->renderImage();
-    //QSvg svg = s->renderSvg();
+    //QPixmap p = mS->renderImage();
+    //QSvg svg = mS->renderSvg();
 
     //change rotation
     //render image
@@ -42,7 +42,7 @@ void Stitch::stitchRender()
 
 }
 
-void Stitch::cleanupTestCase()
+void TestStitch::cleanupTestCase()
 {
     qDebug() << "End all tests";
 }

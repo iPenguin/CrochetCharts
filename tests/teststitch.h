@@ -17,7 +17,7 @@ private slots:
      void cleanupTestCase();
 
 private:
-     Stitch *s;
+     Stitch *mS;
 };
 
 #endif // TESTCROCHETDATAMODEL_H
