@@ -3,15 +3,20 @@ project(Crochet)
 
 find_package(Qt4 REQUIRED)
 
-# The version number.
-set (Crochet_VERSION_MAJOR 0)
-set (Crochet_VERSION_MINOR 1)
-set (Crochet_VERSION_REVISION 0)
-
 set(CMAKE_CXX_FLAGS "-g -Wall")
 set(CMAKE_C_FLAGS   "-g -Wall")
 
-#add_subdirectory(src)
+option(CODE_PROFILING "Profile the code using gprof" false)
+option(UNIT_TESTING  "Build QTestLib Unit Tests" false)
+
+message("-- Code Profiling - " ${CODE_PROFILING})
+message("-- Unit Testing   - " ${UNIT_TESTING})
+
+if(CODE_PROFILING)
+    set(CMAKE_CXX_FLAGS "-g -pg -Wall")
+    set(CMAKE_C_FLAGS "-g -pg -Wall")
+    set(CMAKE_EXE_LINKER_FLAGS "-pg " ${CMAKE_EXE_LINKER_FLAGS})
+endif()
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -63,24 +68,34 @@ set(crochet_resources
     crochet.qrc
     )
 
-#set(crochet_test_src
-#    src/tests/testcrochetdatamodel.cpp
-#    src/tests/teststitch.cpp
-#    )
+if(WIN32)
+#http://public.kitware.com/Bug/view.php?id=4068
+#if(MINGW)
+#  set(CMAKE_RC_COMPILER_INIT windres)
+#  ENABLE_LANGUAGE(RC)
+#  SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> <DEFINES> -o <OBJECT> <SOURCE>")
+# ALT: set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
+#endif(MINGW)
 
-#set(crochet_test_h
-#    src/tests/testcrochetdatamodel.h
-#    src/tests/teststitch.h
-#    )
+    set(crochet_win crochet.rc
+        )
+elseif(APPLE)
+    set(crochet_mac
+        )
+else(UNIX)
+    set(crochet_nix
+        )
+endif()
 
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
 qt4_wrap_cpp(crochet_moc_srcs ${crochet_headers})
 qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 
-add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs})
+add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+                ${crochet_win} ${crochet_mac} ${crochet_nix}
+                )
 target_link_libraries(crochet ${QT_LIBRARIES})
 
-if(UNIT_TESTS)
-    message("Unit testing on")
+if(UNIT_TESTING)
     add_subdirectory(tests)
 endif()
