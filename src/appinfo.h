@@ -3,9 +3,7 @@
 
 #include "../VERSION"
 #include <QString>
-#include <QList>
 #include <QRegExp>
-#include <QStringList>
 
 namespace AppInfo {
     const QString appName = "Crochet";
@@ -15,6 +13,8 @@ namespace AppInfo {
     const QString appVersion = GIT_VERSION; //ie: 0.1.1
 
     const QString appBuildInfo = QString(__DATE__) + " " + QString(__TIME__);
+
+    const QRegExp emailRegExp = QRegExp("[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,4}");
 }
 
 #endif // APPINFO_H

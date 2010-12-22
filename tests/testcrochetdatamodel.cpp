@@ -2,7 +2,6 @@
 
 void TestCrochetDataModel::initTestCase()
 {
-    qDebug() << "Begin all tests";
     model = new CrochetDataModel(this);
 }
 
@@ -53,5 +52,4 @@ void TestCrochetDataModel::testDataModelRemovals()
 
 void TestCrochetDataModel::cleanupTestCase()
 {
-    qDebug() << "End all tests";
 }

@@ -4,7 +4,6 @@
 
 void TestLicense::initTestCase()
 {
-    qDebug() << "Begin all tests";
 }
 
 void TestLicense::checkLicense()
@@ -33,9 +32,4 @@ void TestLicense::checkLicense_data()
 
 void TestLicense::cleanupTestCase()
 {
-    qDebug() << "End all tests";
 }
-
-
-//main()
-//QTEST_MAIN(TestLicense)

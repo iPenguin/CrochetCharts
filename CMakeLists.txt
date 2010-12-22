@@ -33,26 +33,32 @@ set(crochet_srcs
     src/crochetdatamodel.cpp
     src/main.cpp
     src/mainwindow.cpp
-    src/tabinterface.cpp
     src/stitch.cpp
     src/stitchset.cpp
     src/crochetscene.cpp
     src/licensewizard.cpp
+    src/licensevalidator.cpp
+    src/settings.cpp
+    src/license.cpp
     )
 
-set(crochet_headers
-    src/appinfo.h
+set(crochet_qobject_headers
     src/mainwindow.h
     src/cell.h
     src/charttab.h
     src/crochetcell.h
     src/crochetdatamodel.h
     src/mainwindow.h
-    src/tabinterface.h
     src/stitch.h
     src/stitchset.h
     src/crochetscene.h
     src/licensewizard.h
+    src/licensevalidator.h
+    src/settings.h
+    )
+
+set(crochet_headers
+    src/appinfo.h
     src/license.h
     )
  
@@ -88,7 +94,7 @@ else(UNIX)
 endif()
 
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
-qt4_wrap_cpp(crochet_moc_srcs ${crochet_headers})
+qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers})
 qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 
 add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}

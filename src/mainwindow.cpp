@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setupMenus();
 
+    //FIXME: if !userState then inital setup state...
+    this->setWindowState(Qt::WindowMaximized);
 }
 
 MainWindow::~MainWindow()

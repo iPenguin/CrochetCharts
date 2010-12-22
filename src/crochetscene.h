@@ -5,7 +5,7 @@
 
 class CrochetScene : public QGraphicsScene
 {
-
+    Q_OBJECT
 public:
     CrochetScene(QObject *parent = 0);
 /*

@@ -3,5 +3,7 @@
         <file>images/crochet_icon.png</file>
         <file>stitches/chain.svg</file>
         <file>stitches/single_crochet.svg</file>
+        <file>images/wizard_watermark.png</file>
+        <file>license.txt</file>
     </qresource>
 </RCC>

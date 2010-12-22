@@ -2,7 +2,6 @@
 
 void TestStitch::initTestCase()
 {
-    qDebug() << "Begin all tests";
     mS = new Stitch();
 }
 
@@ -44,6 +43,5 @@ void TestStitch::stitchRender()
 
 void TestStitch::cleanupTestCase()
 {
-    qDebug() << "End all tests";
 }
 
