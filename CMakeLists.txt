@@ -1,22 +1,28 @@
 cmake_minimum_required(VERSION 2.8)
+
+set(CMAKE_BUILD_TYPE DebugProfiling)
+set(CMAKE_CONFIGURATION_TYPES Debug Release DebugProfiling CACHE TYPE INTERNAL FORCE)
+
 project(Crochet)
 
 find_package(Qt4 REQUIRED)
 
-set(CMAKE_CXX_FLAGS "-g -Wall")
-set(CMAKE_C_FLAGS   "-g -Wall")
+set(CMAKE_C_FLAGS "-g -Wall")
+set(CMAKE_C_FLAGS_DEBUG "-g -Wall")
+set(CMAKE_C_FLAGS_RELEASE "-g -Wall -O3")
+set(CMAKE_C_FLAGS_DEBUGPROFILING "-g -pg -Wall")
 
-option(CODE_PROFILING "Profile the code using gprof" false)
+set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
+set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
+set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
+set(CMAKE_CXX_FLAGS_DEBUGPROFILING ${CMAKE_C_FLAGS_DEBUGPROFILING})
+
+set(CMAKE_EXE_LINKER_FLAGS_DEBUGPROFILING "-pg " ${CMAKE_EXE_LINKER_FLAGS})
+
 option(UNIT_TESTING  "Build QTestLib Unit Tests" false)
 
-message("-- Code Profiling - " ${CODE_PROFILING})
+message("-- Build Profile  - " ${CMAKE_BUILD_TYPE})
 message("-- Unit Testing   - " ${UNIT_TESTING})
-
-if(CODE_PROFILING)
-    set(CMAKE_CXX_FLAGS "-g -pg -Wall")
-    set(CMAKE_C_FLAGS "-g -pg -Wall")
-    set(CMAKE_EXE_LINKER_FLAGS "-pg " ${CMAKE_EXE_LINKER_FLAGS})
-endif()
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -85,7 +91,9 @@ if(WIN32)
 
     set(crochet_win crochet.rc
         )
-elseif(APPLE)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") #apple
+    set(CMAKE_OSX_ARCHITECTURES "ppc;i386;ppc64;x86_64")
+
     set(crochet_mac
         )
 else(UNIX)
