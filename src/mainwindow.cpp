@@ -2,9 +2,9 @@
 #include "ui_mainwindow.h"
 #include "ui_export.h"
 
-//#include <QApplication>
 #include <QDialog>
 #include <QMessageBox>
+#include <QFileDialog>
 
 #include "appinfo.h"
 #include "charttab.h"
@@ -33,7 +33,9 @@ MainWindow::~MainWindow()
 void MainWindow::setupMenus()
 {
     //File
-
+    connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
+    connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
+    connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
 
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
@@ -130,4 +132,34 @@ void MainWindow::optionsUi()
     qDebug() << "optionsUi";
     SettingsUi dialog;
     dialog.exec();
+}
+
+void MainWindow::fileOpen()
+{
+    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
+    QString fileName = QFileDialog::getOpenFileName(this,
+         tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.crochet)"));
+
+    if(fileName.isEmpty())
+        return;
+
+    qDebug() << "open the file " << fileName;
+}
+
+void MainWindow::fileSave()
+{
+    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
+    QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Save Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.crochet)"));
+
+    if(fileName.isEmpty())
+        return;
+
+    qDebug() << "save the file" << fileName;
+}
+
+void MainWindow::fileSaveAs()
+{
+
+    qDebug() << "save the file as";
 }

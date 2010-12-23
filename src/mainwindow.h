@@ -20,6 +20,9 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
+    void fileOpen();
+    void fileSave();
+    void fileSaveAs();
     void fileExport();
 
     void documentNewChart();

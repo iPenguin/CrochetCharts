@@ -15,6 +15,8 @@ public:
     ~SettingsUi();
 
     int exec();
+public slots:
+    void selectFolder();
 private:
     Ui::SettingsDialog *ui;
 };
