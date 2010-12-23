@@ -12,6 +12,7 @@ class ChartTab : public QWidget
 public:
     explicit ChartTab(QWidget *parent = 0);
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
+    void createRow(int columns);
 
 signals:
 
