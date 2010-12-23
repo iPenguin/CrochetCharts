@@ -129,7 +129,6 @@ void MainWindow::readSettings()
 
 void MainWindow::optionsUi()
 {
-    qDebug() << "optionsUi";
     SettingsUi dialog;
     dialog.exec();
 }
