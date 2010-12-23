@@ -16,6 +16,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void fileExport();
 
@@ -23,7 +26,11 @@ private slots:
 
     void about();
 
+    void optionsUi();
+
 private:
+    void readSettings();
+
     Ui::MainWindow *ui;
     Ui::ExportDialog *expDialog;
 

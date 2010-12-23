@@ -9,6 +9,9 @@
 #include "appinfo.h"
 #include "charttab.h"
 
+#include "settings.h"
+#include "settingsui.h"
+
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -18,8 +21,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setupMenus();
 
-    //FIXME: if !userState then inital setup state...
-    this->setWindowState(Qt::WindowMaximized);
+    this->readSettings();
+
 }
 
 MainWindow::~MainWindow()
@@ -33,7 +36,7 @@ void MainWindow::setupMenus()
 
 
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
-    connect(ui->actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
     //Edit
 
@@ -45,7 +48,8 @@ void MainWindow::setupMenus()
 
     //Chart
 
-    //Options
+    //Tools
+    connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(optionsUi()));
 
     //Help
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
@@ -92,6 +96,38 @@ void MainWindow::about()
                                 .arg(AppInfo::appBuildInfo)
                                 .arg(qApp->organizationName())
                                 );
+    QString name = Settings::inst()->value("name").toString();
+    QString email = Settings::inst()->value("email").toString();
+    QString sn = Settings::inst()->value("serialNumber").toString();
 
+    QString licenseInfo = QString(tr("<p>This software is licensed to:<br />"
+                                     "Name: %1<br />"
+                                     "Email: %2<br />"
+                                     "Serial #: %3</p>")
+                                  .arg(name).arg(email).arg(sn));
+    aboutInfo.append(licenseInfo);
     QMessageBox::about(this, tr("About Crochet"), aboutInfo);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    Settings::inst()->setValue("geometry", saveGeometry());
+    Settings::inst()->setValue("windowState", saveState());
+    QMainWindow::closeEvent(event);
+}
+
+void MainWindow::readSettings()
+{
+    //TODO: For full session restoration reimplement QApplication::commitData()
+    //See: http://doc.qt.nokia.com/stable/session.html
+    restoreGeometry(Settings::inst()->value("geometry", QVariant()).toByteArray());
+    restoreState(Settings::inst()->value("windowState", QVariant()).toByteArray());
+
+}
+
+void MainWindow::optionsUi()
+{
+    qDebug() << "optionsUi";
+    SettingsUi dialog;
+    dialog.exec();
 }

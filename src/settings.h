@@ -8,7 +8,7 @@ class Settings : public QObject
 {
     Q_OBJECT
 public:
-    static Settings* instance();
+    static Settings* inst();
 
     void setValue(const QString &key, const QVariant &value);
     QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;

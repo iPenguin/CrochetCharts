@@ -7,7 +7,7 @@
 Settings* Settings::mInstance = NULL;
 
 // singleton constructor:
-Settings* Settings::instance()
+Settings* Settings::inst()
 {
    if (!mInstance)   // Only allow one instance of the settings.
       mInstance = new Settings();

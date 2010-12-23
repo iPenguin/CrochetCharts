@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>
+	<key>CFBundleGetInfoString</key>
+	<string>${MACOSX_BUNDLE_INFO_STRING}</string>
+	<key>CFBundleIconFile</key>
+	<string>${MACOSX_BUNDLE_ICON_FILE}</string>
+	<key>CFBundleIdentifier</key>
+	<string>${MACOSX_BUNDLE_GUI_IDENTIFIER}</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleLongVersionString</key>
+	<string>${MACOSX_BUNDLE_LONG_VERSION_STRING}</string>
+	<key>CFBundleName</key>
+	<string>${MACOSX_BUNDLE_BUNDLE_NAME}</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>${MACOSX_BUNDLE_SHORT_VERSION_STRING}</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>${MACOSX_BUNDLE_BUNDLE_VERSION}</string>
+	<key>CSResourcesFileMapped</key>
+	<true/>
+	<key>LSRequiresCarbon</key>
+	<true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>
+
+<!--Register file types: http://stackoverflow.com/questions/1460193/set-default-file-association-mac-os-x-java-package-maker-installer -->
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <!-- Enter as "txt" for example, not ".txt" -->
+                <string>yourExtension1</string>
+                <string>yourExtension2</string>
+            </array>
+            <key>CFBundleTypeName</key>
+            <string>YourType document</string>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            
+            <!-- The LSItemContentTypes key is ignored in Mac OS X v10.4 because itâ€™s introduced in 10.5. -->
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>public.archive</string>
+                <string>public.data</string>
+                <string>public.content</string>
+            </array>
+            
+            <!-- The NSExportableTypes key is ignored in Mac OS X 10.4 -->
+            <key>NSExportableTypes</key>
+            <array>
+                <string>public.archive</string>
+                <string>public.data</string>
+                <string>public.content</string>
+            </array>
+            
+            <!-- The LSHandlerRank key is ignored in Mac OS X 10.4 -->
+            <key>LSHandlerRank</key>
+            <string>Owner</string>
+        </dict>
+    </array>
+    
+    <key>UTExportedTypeDeclarations</key>
+    <array>
+        
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>public.archive</string>
+            <key>UTTypeReferenceURL</key>
+            <string>http://www.yourSite.com</string>
+            <key>UTTypeDescription</key>
+            <string>yourType Document</string>
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.content</string>
+                <string>public.data</string>
+                <string>public.archive</string>
+            </array>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>com.apple.ostype</key>
+                <string>public.archive</string>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>yourExtension1</string>
+                    <string>yourExtension2</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>

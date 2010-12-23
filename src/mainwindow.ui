@@ -83,13 +83,13 @@
      <string>&amp;Chart</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_Options">
+   <widget class="QMenu" name="menu_Tools">
     <property name="title">
-     <string>&amp;Options</string>
+     <string>&amp;Tools</string>
     </property>
     <addaction name="actionStitch_Library"/>
     <addaction name="separator"/>
-    <addaction name="actionPreferences"/>
+    <addaction name="actionOptions"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
@@ -102,7 +102,7 @@
    <addaction name="menuView"/>
    <addaction name="menu_Document"/>
    <addaction name="menu_Chart"/>
-   <addaction name="menu_Options"/>
+   <addaction name="menu_Tools"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -126,6 +126,9 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="margin">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QComboBox" name="stitchCategory"/>
      </item>
@@ -220,9 +223,9 @@
     <string>&amp;About</string>
    </property>
   </action>
-  <action name="actionPreferences">
+  <action name="actionOptions">
    <property name="text">
-    <string>&amp;Preferences</string>
+    <string>&amp;Options...</string>
    </property>
   </action>
   <action name="actionAdd_Chart">

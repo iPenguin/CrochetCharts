@@ -19,9 +19,13 @@ ChartTab::ChartTab(QWidget *parent) :
     mScene = new CrochetScene(this);
     mView->setScene(mScene);
     l->addWidget(mView);
+    l->setMargin(0);
 
     double pi = M_PI;
-    double circumference = 8 * 64;
+    int columns = 8;
+    int stitchWidth = 64;
+    double widthInDegrees = 360 / columns;
+    double circumference = columns * stitchWidth;
     double diameter = circumference / pi;
     double radius = diameter /2;
 
@@ -29,68 +33,28 @@ ChartTab::ChartTab(QWidget *parent) :
     mScene->addEllipse(-4, -4, 8, 8);
 
     CrochetCell *c;
+/*****************************************\
+|row 1:
+\*****************************************/
+    for(int i = 0; i < columns; ++i) {
+        double degrees = (widthInDegrees*i) - (widthInDegrees/2);
+        QPointF finish = this->calcPoint(radius, degrees, QPointF(0,0));
 
-//top right
-    c= new CrochetCell(":/stitches/chain.svg");
-    mScene->addItem(c);
-    c->setX(0);
-    c->setY(-64);
-    c->rotate((45*7) - 22.5);
-
-    c = new CrochetCell(":/stitches/chain.svg");
-    mScene->addItem(c);
-    c->setX(48);
-    c->setY(-48);
-    c->rotate((45*0) - 22.5);
-
-//bottom right
-    c = new CrochetCell(":/stitches/chain.svg");
-    mScene->addItem(c);
-    c->setX(64);
-    c->setY(0);
-    c->rotate((45*1) - 22.5);
-
-    c= new CrochetCell(":/stitches/chain.svg");
-    mScene->addItem(c);
-    c->setX(48);
-    c->setY(48);
-    c->rotate((45*2) - 22.5);
-
-//bottom left
-    c = new CrochetCell(":/stitches/chain.svg");
-    mScene->addItem(c);
-    c->setX(0);
-    c->setY(64);
-    c->rotate((45*3) - 22.5);
-
-    c = new CrochetCell(":/stitches/chain.svg");
-    mScene->addItem(c);
-    c->setX(-48);
-    c->setY(48);
-    c->rotate((45*4) - 22.5);
-
-//top left
-    c = new CrochetCell(":/stitches/chain.svg");
-    mScene->addItem(c);
-    c->setX(-64);
-    c->setY(0);
-    c->rotate((45*5) - 22.5);
-
-    c = new CrochetCell(":/stitches/chain.svg");
-    mScene->addItem(c);
-    c->setX(-48);
-    c->setY(-48);
-    c->rotate((45*6) - 22.5);
+        c = new CrochetCell(":/stitches/chain.svg");
+        mScene->addItem(c);
+        c->setX(finish.x());
+        c->setY(finish.y());
+        c->rotate(degrees + (widthInDegrees/2));
+    }
 
 
 /*****************************************\
 |row 2:
 \*****************************************/
 
-    int columns = 12;
-    int stitchWidth = 64;
+    columns = 12;
     circumference = columns * stitchWidth;
-    double widthInDegrees = 360 / columns;
+    widthInDegrees = 360 / columns;
     diameter = circumference / pi;
     radius = diameter /2;
 
@@ -104,7 +68,7 @@ ChartTab::ChartTab(QWidget *parent) :
         mScene->addItem(c);
         c->setX(finish.x());
         c->setY(finish.y());
-        c->rotate(degrees);
+        c->rotate(degrees + (widthInDegrees/2));
     }
 
 }

@@ -8,6 +8,8 @@
 #include "licensewizard.h"
 #include "settings.h"
 
+#include "splashscreen.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -19,16 +21,26 @@ int main(int argc, char *argv[])
 
     Q_INIT_RESOURCE(crochet);
 
-    QString userSn = Settings::instance()->value("serialNumber", QVariant("0000-000-0000")).toString();
+
+    SplashScreen splash;
+    splash.show();
+    splash.showMessage(QObject::tr("Loading..."));
+    qApp->processEvents();
+
+    QString userSn = Settings::inst()->value("serialNumber", QVariant("0000-000-0000")).toString();
 
     if(!License::isValid(userSn)) {
+        splash.showMessage(QObject::tr("Loading: License Wizard"));
         LicenseWizard wizard;
+        splash.hide();
         if(wizard.exec() != QWizard::Accepted)
                 return -1;
+        splash.show();
     }
 
+    splash.showMessage(QObject::tr("Loading: Main Window"));
     MainWindow w;
     w.show();
-
+    splash.finish(&w);
     return a.exec();
 }

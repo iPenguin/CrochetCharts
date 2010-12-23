@@ -23,6 +23,11 @@
 
 #include "settings.h"
 
+/*FIXME: Add network connection to transfer the data to the website.
+ *The network connection will look up the base url from the config file
+ *the settings class will default to the official website, but if the
+ *user changes the setting in the config file this wizard will use that setting.
+ */
 LicenseWizard::LicenseWizard(QWidget *parent)
     : QWizard(parent)
 {
@@ -226,9 +231,9 @@ void ConclusionPage::initializePage()
     QString email = field("register.email").toString();
     QString sn    = field("register.serialNumber").toString();
 
-    Settings::instance()->setValue("name", QVariant(name));
-    Settings::instance()->setValue("email", QVariant(email));
-    Settings::instance()->setValue("serialNumber", QVariant(sn));
+    Settings::inst()->setValue("name", QVariant(name));
+    Settings::inst()->setValue("email", QVariant(email));
+    Settings::inst()->setValue("serialNumber", QVariant(sn));
 }
 
 void ConclusionPage::setVisible(bool visible)
@@ -258,7 +263,7 @@ void ConclusionPage::printButtonClicked()
 void ConclusionPage::cleanupPage()
 {
     //the back button has been pressed, clear the data entered...
-    Settings::instance()->setValue("name", "");
-    Settings::instance()->setValue("email", "");
-    Settings::instance()->setValue("serialNumber", "");
+    Settings::inst()->setValue("name", "");
+    Settings::inst()->setValue("email", "");
+    Settings::inst()->setValue("serialNumber", "");
 }
