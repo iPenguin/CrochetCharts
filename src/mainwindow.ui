@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>536</width>
-    <height>316</height>
+    <width>620</width>
+    <height>372</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,11 +36,11 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>536</width>
+     <width>620</width>
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu_File">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>&amp;File</string>
     </property>
@@ -56,7 +56,7 @@
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
-   <widget class="QMenu" name="menu_Edit">
+   <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>&amp;Edit</string>
     </property>
@@ -68,42 +68,44 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <addaction name="actionZoom_In"/>
-    <addaction name="actionZoom_Out"/>
+    <addaction name="actionZoomIn"/>
+    <addaction name="actionZoomOut"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowStitches"/>
    </widget>
-   <widget class="QMenu" name="menu_Document">
+   <widget class="QMenu" name="menuDocument">
     <property name="title">
      <string>&amp;Document</string>
     </property>
-    <addaction name="actionAdd_Chart"/>
-    <addaction name="actionAdd_Notes"/>
+    <addaction name="actionAddChart"/>
+    <addaction name="actionAddNotes"/>
    </widget>
-   <widget class="QMenu" name="menu_Chart">
+   <widget class="QMenu" name="menuChart">
     <property name="title">
      <string>&amp;Chart</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_Tools">
+   <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>&amp;Tools</string>
     </property>
-    <addaction name="actionStitch_Library"/>
+    <addaction name="actionStitchLibrary"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
-   <widget class="QMenu" name="menu_Help">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout"/>
    </widget>
-   <addaction name="menu_File"/>
-   <addaction name="menu_Edit"/>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuView"/>
-   <addaction name="menu_Document"/>
-   <addaction name="menu_Chart"/>
-   <addaction name="menu_Tools"/>
-   <addaction name="menu_Help"/>
+   <addaction name="menuDocument"/>
+   <addaction name="menuChart"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="windowTitle">
@@ -231,17 +233,17 @@
     <string>&amp;Options...</string>
    </property>
   </action>
-  <action name="actionAdd_Chart">
+  <action name="actionAddChart">
    <property name="text">
     <string>Add Chart</string>
    </property>
   </action>
-  <action name="actionAdd_Notes">
+  <action name="actionAddNotes">
    <property name="text">
     <string>Add Notes</string>
    </property>
   </action>
-  <action name="actionZoom_In">
+  <action name="actionZoomIn">
    <property name="text">
     <string>Zoom &amp;In</string>
    </property>
@@ -249,7 +251,7 @@
     <string>Ctrl+=</string>
    </property>
   </action>
-  <action name="actionZoom_Out">
+  <action name="actionZoomOut">
    <property name="text">
     <string>Zoom &amp;Out</string>
    </property>
@@ -257,9 +259,17 @@
     <string>Ctrl+-</string>
    </property>
   </action>
-  <action name="actionStitch_Library">
+  <action name="actionStitchLibrary">
    <property name="text">
     <string>Stitch Configuration</string>
+   </property>
+  </action>
+  <action name="actionShowStitches">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Stitches</string>
    </property>
   </action>
  </widget>

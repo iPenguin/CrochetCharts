@@ -25,11 +25,14 @@ private slots:
     void fileSaveAs();
     void fileExport();
 
+    void menuViewAboutToShow();
+    void viewShowStitches();
+
     void documentNewChart();
 
-    void about();
+    void helpAbout();
 
-    void optionsUi();
+    void toolsOptions();
 
 private:
     void readSettings();

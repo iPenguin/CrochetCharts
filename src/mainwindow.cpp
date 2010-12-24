@@ -43,18 +43,19 @@ void MainWindow::setupMenus()
     //Edit
 
     //View
-
+    connect(ui->menuView, SIGNAL(aboutToShow()), this, SLOT(menuViewAboutToShow()));
+    connect(ui->actionShowStitches, SIGNAL(triggered()), this, SLOT(viewShowStitches()));
     //Document
 
-    connect(ui->actionAdd_Chart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
+    connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
 
     //Chart
 
     //Tools
-    connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(optionsUi()));
+    connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
 
     //Help
-    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
 }
 
@@ -86,7 +87,7 @@ void MainWindow::documentNewChart()
 
 }
 
-void MainWindow::about()
+void MainWindow::helpAbout()
 {
     QString aboutInfo = QString(tr("<h1>%1</h1>"
                                    "<p>Version: %2 (built on %3)</p>"
@@ -127,7 +128,7 @@ void MainWindow::readSettings()
 
 }
 
-void MainWindow::optionsUi()
+void MainWindow::toolsOptions()
 {
     SettingsUi dialog;
     dialog.exec();
@@ -161,4 +162,15 @@ void MainWindow::fileSaveAs()
 {
 
     qDebug() << "save the file as";
+}
+
+void MainWindow::menuViewAboutToShow()
+{
+    ui->actionShowStitches->setChecked(ui->stitchLibraryDock->isVisible());
+
+}
+
+void MainWindow::viewShowStitches()
+{
+    ui->stitchLibraryDock->setVisible(ui->actionShowStitches->isChecked());
 }
