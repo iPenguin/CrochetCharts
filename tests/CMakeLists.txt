@@ -42,8 +42,13 @@ set(crochet_test_qobject_headers
     testcell.h
     )
 
+set(crochet_resources
+    ../crochet.qrc
+    )
+
 qt4_automoc(${crochet_test_srcs})
 qt4_wrap_cpp(crochet_test_moc_srcs ${crochet_test_qobject_headers})
+qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 
-add_executable(crochet_tests main.cpp ${crochet_test_srcs} ${crochet_test_moc_srcs})
+add_executable(crochet_tests main.cpp ${crochet_test_srcs} ${crochet_test_moc_srcs} ${crochet_rcc_srcs})
 target_link_libraries(crochet_tests ${QT_LIBRARIES})

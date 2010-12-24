@@ -2,13 +2,16 @@
 #define STITCH_H
 
 #include <QObject>
+class QSvgRenderer;
+class QPixmap;
 
 class Stitch : public QObject
 {
     Q_OBJECT
 public:
     Stitch();
-    
+    ~Stitch();
+
     void setName(QString name) { mName = name; }
     QString name() { return mName; }
 
@@ -24,12 +27,16 @@ public:
     void setWrongSide(QString ws) { mWrongSide = ws; }
     QString wrongSide() { return mWrongSide; }
 
-
     void setRotation(double rotation) { mRotation = rotation; }
     double rotation() { return mRotation; }
 
     void setAngle(double angle) { mAngle = angle; }
     double angle() { return mRotation; }
+
+    bool isSvg();
+
+    QPixmap* renderPixmap();
+    QSvgRenderer* renderSvg();
 
 private:
 
@@ -41,6 +48,9 @@ private:
 
     double mRotation;
     double mAngle;
+
+    QPixmap *mPixmap;
+    QSvgRenderer *mSvgRenderer;
 
 };
 

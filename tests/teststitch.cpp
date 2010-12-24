@@ -1,5 +1,10 @@
 #include "teststitch.h"
 
+#include <QPainter>
+#include <QPixmap>
+#include <QtSvg/QSvgRenderer>
+#include <QtSvg/QSvgGenerator>
+
 void TestStitch::initTestCase()
 {
     mS = new Stitch();
@@ -38,6 +43,23 @@ void TestStitch::stitchRender()
     //render image
 
     //verify all images.
+    QPixmap pix = QPixmap(32, 64);
+    pix.fill(QColor(Qt::white));
+    QPainter pixp;
+    pixp.begin(&pix);
+    pixp.drawPixmap(0,0, *mS->renderPixmap());
+    pixp.end();
+    pix.save("teststitch-render.jpg", "", 100);
+
+    QPainter p;
+    QSvgGenerator gen;
+    gen.setFileName("teststitch-render.svg");
+    gen.setSize(QSize(32, 64));
+    gen.setResolution(100);
+    gen.setViewBox(QRectF(0,0,32,64));
+    p.begin(&gen);
+    mS->renderSvg()->render(&p);
+    p.end();
 
 }
 

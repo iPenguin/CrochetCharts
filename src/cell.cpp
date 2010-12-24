@@ -4,7 +4,6 @@ Cell::Cell(const QString fileName, QGraphicsItem *parent) :
     QGraphicsSvgItem(fileName, parent)
 {
 
-
 }
 
 Cell::Cell(QGraphicsItem *parent) :
