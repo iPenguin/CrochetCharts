@@ -2,7 +2,10 @@
 
 #include <QGraphicsView>
 #include <QVBoxLayout>
-#include <QSvgRenderer>
+
+#include <QtSvg/QSvgGenerator>
+#include <QPrinter>
+
 #include <QDebug>
 
 #include <QThread>
@@ -67,6 +70,7 @@ ChartTab::ChartTab(QWidget *parent) :
     f12.waitForFinished();
 #endif //QT_NO_CONCURRENT
 /*
+//Export as image
     QPainter p;
 
     QPixmap pix = QPixmap(mScene->sceneRect().size().toSize());
@@ -80,6 +84,30 @@ ChartTab::ChartTab(QWidget *parent) :
 
     pix.save("test.png", "", 100);
 */
+/*
+//Export as svg
+    QSvgGenerator gen;
+    gen.setFileName("chart.svg");
+    gen.setSize(mScene->sceneRect().size().toSize());
+    QPainter p;
+
+    p.begin(&gen);
+    mScene->render(&p);
+    p.end();
+*/
+/*
+//Export as pdf
+//Test run was missing a stitch in lower right corner.
+    QPrinter printer;
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName("chart.pdf");
+    printer.setResolution(300);
+    QPainter p;
+    p.begin(&printer);
+    mScene->render(&p);
+    p.end();
+*/
+
 }
 
 void ChartTab::createRow(int columns)
