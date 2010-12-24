@@ -2,8 +2,8 @@
 
 #include <QPainter>
 
-CrochetCell::CrochetCell(const QString fileName, QGraphicsItem *parent) :
-    Cell(fileName, parent)
+CrochetCell::CrochetCell(const QString fileName) :
+    Cell(fileName)
 {
 
 }

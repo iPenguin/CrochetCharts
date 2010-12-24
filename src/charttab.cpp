@@ -24,6 +24,7 @@ ChartTab::ChartTab(QWidget *parent) :
     l->addWidget(mView);
     l->setMargin(0);
 
+#ifdef QT_NO_CONCURRENT
     this->createRow(8);
     this->createRow(14);
     this->createRow(20);
@@ -36,7 +37,7 @@ ChartTab::ChartTab(QWidget *parent) :
     this->createRow(62);
     this->createRow(68);
     this->createRow(74);
-/*
+#else
     //FIXME: less then 8 stitches gives funny rows.
     //TODO: make this work better with threads!
     QFuture<void> f1 = QtConcurrent::run(this, &ChartTab::createRow, 8);
@@ -64,8 +65,21 @@ ChartTab::ChartTab(QWidget *parent) :
     f10.waitForFinished();
     f11.waitForFinished();
     f12.waitForFinished();
-*/
+#endif //QT_NO_CONCURRENT
+/*
+    QPainter p;
 
+    QPixmap pix = QPixmap(mScene->sceneRect().size().toSize());
+//FIXME: needs a background color so it doesn't use white noise.
+// Leave white noise for demo version? can it be reproduced on all OSes?
+
+    p.begin(&pix);
+    p.drawText(QRectF(100, 100, 500, 500), "DEMO VERSION OF STITCH WORKS SOFTWARE CROCHET");
+    mScene->render(&p); //, mScene->sceneRect(), mScene->sceneRect());
+    p.end();
+
+    pix.save("test.png", "", 100);
+*/
 }
 
 void ChartTab::createRow(int columns)
@@ -76,7 +90,7 @@ void ChartTab::createRow(int columns)
     double diameter = circumference / M_PI;
     double radius = diameter /2;
 
-    CrochetCell *c;
+    Cell *c;
 
     for(int i = 0; i < columns; ++i) {
         double degrees = (widthInDegrees*i) - (widthInDegrees/2);

@@ -1,14 +1,13 @@
 #ifndef CROCHETCELL_H
 #define CROCHETCELL_H
 
-
 #include "cell.h"
 
 class CrochetCell : public Cell
 {
     Q_OBJECT
 public:
-    CrochetCell(const QString fileName, QGraphicsItem *parent = 0);
+    CrochetCell(const QString fileName);
     ~CrochetCell();
 
     QRectF boundingRect () const;

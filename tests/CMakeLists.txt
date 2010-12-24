@@ -23,6 +23,7 @@ set(crochet_test_srcs
     testlicense.cpp
     teststitch.cpp
     teststitchset.cpp
+    testcell.cpp
     )
 
 set(crochet_test_headers
@@ -38,6 +39,7 @@ set(crochet_test_qobject_headers
     testlicense.h
     teststitch.h
     teststitchset.h
+    testcell.h
     )
 
 qt4_automoc(${crochet_test_srcs})
