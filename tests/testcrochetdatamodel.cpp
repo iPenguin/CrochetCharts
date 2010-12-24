@@ -7,47 +7,53 @@ void TestCrochetDataModel::initTestCase()
 
 void TestCrochetDataModel::testDataModelSetup()
 {
-
-    model->setRows(10);
-    model->setInitialColumns(10);
+    model->setRowCount(10);
+    model->setColumnCount(0, 10);
 
     QVERIFY(model->rowCount() == 10);
     QVERIFY(model->columnCount(0) == 10);
+}
 
-    model->addColumn(1, 10);
+void TestCrochetDataModel::testDataModelAppendRows()
+{
+    model->appendRow();
 
-    QVERIFY(model->columnCount(1) == 11);
+    QVERIFY(model->rowCount() == 11);
+}
 
-    model->addColumn(2, 10);
-    model->addColumn(2);
-
-    //QVERIFY(model->cell(3, 6) == "1");
+void TestCrochetDataModel::testDataModelInsertRows()
+{
 
 }
 
-void TestCrochetDataModel::testDataModelAdditions()
+void TestCrochetDataModel::testDataModelRemoveRows()
 {
-    //model->setCell(0, 0, );
-
-    //QVERIFY(model->cell(0, 0) == );
 
 }
 
-void TestCrochetDataModel::testDataModelInsertions()
+void TestCrochetDataModel::testDataModelAppendColumns()
 {
-
 
 }
 
-void TestCrochetDataModel::testDataModelRemovals()
+void TestCrochetDataModel::testDataModelInsertColumns()
 {
 
-    model->removeColumn(0, 2);
-/*
-    QVERIFY(model->cell(0, 0) == "a");
-    QVERIFY(model->cell(0, 1) == "x");
-    QVERIFY(model->cell(0, 2) == "z");
-*/
+}
+
+void TestCrochetDataModel::testDataModelRemoveColumns()
+{
+
+}
+
+void TestCrochetDataModel::testDataModelSet()
+{
+
+}
+
+void TestCrochetDataModel::testDataModelAt()
+{
+
 }
 
 void TestCrochetDataModel::cleanupTestCase()

@@ -14,6 +14,7 @@ include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 
 set(crochet_test_srcs
+    ../src/cell.cpp
     ../src/stitch.cpp
     ../src/stitchset.cpp
     ../src/crochetdatamodel.cpp
@@ -29,6 +30,7 @@ set(crochet_test_headers
     )
 
 set(crochet_test_qobject_headers
+    ../src/cell.h
     ../src/stitch.h
     ../src/stitchset.h
     ../src/crochetdatamodel.h

@@ -13,9 +13,14 @@ class TestCrochetDataModel : public QObject
 private slots:
      void initTestCase();
      void testDataModelSetup();
-     void testDataModelAdditions();
-     void testDataModelInsertions();
-     void testDataModelRemovals();
+     void testDataModelAppendRows();
+     void testDataModelInsertRows();
+     void testDataModelRemoveRows();
+     void testDataModelAppendColumns();
+     void testDataModelInsertColumns();
+     void testDataModelRemoveColumns();
+     void testDataModelSet();
+     void testDataModelAt();
      void cleanupTestCase();
 
 private:

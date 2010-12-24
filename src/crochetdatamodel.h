@@ -4,7 +4,6 @@
 #include <QAbstractItemModel>
 
 class Cell;
-class CrochetCell;
 
 class CrochetDataModel : public QAbstractItemModel
 {
@@ -22,11 +21,16 @@ public:
 
     QModelIndex	index ( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
 
-    void setRows(int rows);
-    void setInitialColumns(int columns);
+    void setRowCount(int rows);
+    void setColumnCount(int row, int columns);
+    //void setColumnCountAll(int columns);
 
-    void addColumn(int row, int column = -1);
-    void removeColumn(int row, int columnt = -1);
+    void appendColumn(int row);
+    bool insertColumns(int column, int count, const QModelIndex &parent);
+    void removeColumn(int row, int column = -1);
+
+    void appendRow();
+    bool insertRows(int row, int count, const QModelIndex &parent);
 
     void setCell(int row, int column, Cell *c);
     Cell* cell(int row, int column);

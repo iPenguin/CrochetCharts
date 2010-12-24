@@ -8,6 +8,7 @@ class Cell : public QGraphicsSvgItem
     Q_OBJECT
 public:
     explicit Cell(const QString fileName, QGraphicsItem *parent = 0);
+    Cell(QGraphicsItem *parent = 0);
 
     QRectF boundingRect () const;
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );

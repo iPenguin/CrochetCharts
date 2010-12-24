@@ -1,6 +1,6 @@
 #include "crochetdatamodel.h"
 
-#include "crochetcell.h"
+#include "cell.h"
 
 CrochetDataModel::CrochetDataModel(QObject *parent) :
     QAbstractItemModel(parent)
@@ -32,7 +32,7 @@ Cell* CrochetDataModel::cell(int row, int column)
 
 QModelIndex CrochetDataModel::index(int row, int column, const QModelIndex &/*parent*/) const
 {
-    return this->index(row, column);
+    return this->createIndex(row, column);
 }
 
 QModelIndex CrochetDataModel::parent(const QModelIndex &/*index*/) const
@@ -48,7 +48,15 @@ int CrochetDataModel::rowCount(const QModelIndex &/*parent*/) const
 int CrochetDataModel::columnCount (const QModelIndex &parent) const
 {
     int row = parent.row();
+    if (mRows.count() <= row)
+        return -1;
+
     return mRows[row].count();
+}
+
+int CrochetDataModel::columnCount(int row)
+{
+    return columnCount(this->index(row, 0));
 }
 
 QVariant CrochetDataModel::data(const QModelIndex &/*index*/, int /*role*/) const
@@ -56,34 +64,45 @@ QVariant CrochetDataModel::data(const QModelIndex &/*index*/, int /*role*/) cons
     return QVariant();
 }
 
-int CrochetDataModel::columnCount(int row)
+void CrochetDataModel::setRowCount(int rows)
 {
-    if (mRows.count() <= row)
-        return -1;
+    if(rows <= 0)
+        return;
 
-    return mRows.at(row).count();
+    //TODO: allow code to truncate the row count here? or rename the function?
+    if(rows < mRows.count())
+        return;
+
+    for(int i = 0; i < rows; ++i) {
+        QList<Cell *> row;
+        mRows.append(row);
+    }
 }
 
-void CrochetDataModel::setRows(int /*rows*/)
+//FIXME: pass in the information about what cells to set as defaults.
+void CrochetDataModel::setColumnCount(int row, int columns)
 {
+    if(columns <= 0)
+        return;
+    if(mRows.count() <= row)
+        return;
 
-
+    for(int i = 0; i < columns; ++i) {
+        Cell *c = new Cell(0);
+        mRows[row].append(c);
+    }
 }
 
-void CrochetDataModel::setInitialColumns(int /*columns*/)
+void CrochetDataModel::appendRow()
 {
-
+    QList<Cell *> row;
+    mRows.append(row);
 }
 
-void CrochetDataModel::addColumn(int row, int column)
+void CrochetDataModel::appendColumn(int row)
 {
     if(row >= mRows.count())
         return;
-    if(column >= mRows[row].count())
-        return;
-
-    if(column == -1)
-        column = mRows.count();
 
     //FIXME: finish function...
     //mRows[row].insert(column, new Cell());
@@ -99,4 +118,14 @@ void CrochetDataModel::removeColumn(int row, int column)
         return;
 
 //FIXME: finish function...
+}
+
+bool CrochetDataModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    return true;
+}
+
+bool CrochetDataModel::insertColumns(int column, int count, const QModelIndex &parent)
+{
+    return true;
 }

@@ -7,6 +7,12 @@ Cell::Cell(const QString fileName, QGraphicsItem *parent) :
 
 }
 
+Cell::Cell(QGraphicsItem *parent) :
+    QGraphicsSvgItem(parent)
+{
+
+}
+
 QRectF Cell::boundingRect() const
 {
     return QGraphicsSvgItem::boundingRect();
