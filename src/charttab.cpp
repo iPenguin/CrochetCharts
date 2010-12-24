@@ -24,6 +24,19 @@ ChartTab::ChartTab(QWidget *parent) :
     l->addWidget(mView);
     l->setMargin(0);
 
+    this->createRow(8);
+    this->createRow(14);
+    this->createRow(20);
+    this->createRow(26);
+    this->createRow(32);
+    this->createRow(38);
+    this->createRow(44);
+    this->createRow(50);
+    this->createRow(56);
+    this->createRow(62);
+    this->createRow(68);
+    this->createRow(74);
+/*
     //FIXME: less then 8 stitches gives funny rows.
     //TODO: make this work better with threads!
     QFuture<void> f1 = QtConcurrent::run(this, &ChartTab::createRow, 8);
@@ -51,6 +64,7 @@ ChartTab::ChartTab(QWidget *parent) :
     f10.waitForFinished();
     f11.waitForFinished();
     f12.waitForFinished();
+*/
 
 }
 
