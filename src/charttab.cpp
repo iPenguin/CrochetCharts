@@ -27,7 +27,7 @@ ChartTab::ChartTab(QWidget *parent) :
     l->addWidget(mView);
     l->setMargin(0);
 
-#ifdef QT_NO_CONCURRENT
+//#ifdef QT_NO_CONCURRENT
     this->createRow(8);
     this->createRow(14);
     this->createRow(20);
@@ -40,6 +40,7 @@ ChartTab::ChartTab(QWidget *parent) :
     this->createRow(62);
     this->createRow(68);
     this->createRow(74);
+/*
 #else
     //FIXME: less then 8 stitches gives funny rows.
     //TODO: make this work better with threads!
@@ -69,6 +70,7 @@ ChartTab::ChartTab(QWidget *parent) :
     f11.waitForFinished();
     f12.waitForFinished();
 #endif //QT_NO_CONCURRENT
+*/
 /*
 //Export as image
     QPainter p;
