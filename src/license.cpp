@@ -1,5 +1,7 @@
 #include "license.h"
 
+#include <QDebug>
+
 QRegExp License::licenseRegEx()
 {
     return QRegExp("[0-9]{4}-[0-9]{3}-[0-9]{4}");
@@ -12,11 +14,11 @@ QString License::serialNumber(long sequenceNumber)
     QByteArray seed = "BCM Software";
     QString number = QString::number(sequenceNumber);
     QByteArray data = seed + number.toUtf8();
-    
+
     QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
     
     QString hashString = hash.toHex();
-    
+
     QList<int> hexVals;
     bool ok;
     
@@ -28,7 +30,7 @@ QString License::serialNumber(long sequenceNumber)
     str = hashString.mid(hashString.length() - 2, 2);
     hexVals.append(str.left(1).toInt(&ok, 16));
     hexVals.append(str.right(1).toInt(&ok, 16));
-    
+
     QList<int> digits;
     
     //convert each hex char to a base 10 int.
