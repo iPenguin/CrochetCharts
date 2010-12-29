@@ -1,10 +1,15 @@
 <?php
+/*
+    (c) Stitch Works Software 2010
+    Brian C. Milco <brian@stitchworkssoftware.com>
+
+*/
+
 $server="localhost";
 $database="stitchw1_licenses";
 $username="stitchw1_user";
 $password="swsPasswd+2010";
 $port="3306";
-
 
 /*
     return the last auto increment value for $table using $link.
