@@ -6,25 +6,52 @@
 */
 require_once("license-functions.php");
 
-$sn = $_GET['sws_serial_number'];
-$email = $_GET['sws_email'];
-$fname = $_GET['sws_fname'];
-$lname = $_GET['sws_lname'];
+$sn = mysql_real_escape_string($_GET['sws_sn']);
+$email = mysql_real_escape_string($_GET['sws_email']);
+$fname = mysql_real_escape_string($_GET['sws_fname']);
+$lname = mysql_real_escape_string($_GET['sws_lname']);
+$license_type = mysql_real_escape_string($_GET['sws_license_type']);
 
-if(!isset($sn))
-    return;
-if(!isset($email))
-    return;
-if(!isset($fname))
-    return;
-if(!isset($lname))
-    return;
+$clean = array();
 
-if(is_valid($sn)) {
+if(isset($sn) && is_valid_serial_number($sn))
+    $clean['sn'] = $sn;
+else
+    $clean['sn'] = '';
 
-    $r = mysql_query("INSERT INTO `stitchw1_licenses`.`licenses` (serial_number, email, first_name, last_name) VALUES (".
-    "\"".$sn."\",\"" . $email ."\",\"" . $fname . "\",\"" . $lname . "\");");
+if(isset($email) && is_valid_email($email))
+    $clean['email'] = $email;
+else
+    $clean['email'] = '';
 
+if(isset($license_type) && is_valid_license_type($license_type))
+    $clean['license_type'] = $license_type;
+else
+    $clean['license_type'] = '';
+
+if(isset($fname)) //TODO: check if the variable is a valid string w/o sql injection
+    $clean['fname'] = $fname;
+else
+    $clean['fname'] = '';
+
+if(isset($lname)) //TODO: check if the variable is a valid string w/o sql injection
+    $clean['lname'] = $lname;
+else
+    $clean['lname'] = '';
+
+if(empty($clean['sn']) && empty($clean['email'])) {
+    print "<sws_crochet></sws_crochet>";
+    return;
 }
+
+$ip=mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
+$license = generate_license($clean['sn'], $clean['email']);
+
+$r = mysql_query("INSERT INTO `stitchw1_licenses`.`licenses` " .
+    "(`serial_number`, `email`, `first_name`, `last_name`, `ip_address`, `license`) VALUES (" .
+    "'".$clean['sn']."','" . $clean['email'] ."','" . $clean['fname'] . "','" . $clean['lname'] .
+    "','".$ip."','".$license."');");
+
+    print "<sws_crochet>".$license."</sws_crochet>";
 
 ?>
