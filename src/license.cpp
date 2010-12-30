@@ -70,3 +70,37 @@ bool License::isValid(QString sn)
         return true;
     return false;
 }
+
+QString License::license(QString serialNumber, QString email)
+{
+    if(!isValid(serialNumber))
+        return;
+    if(!isValidEmail(email))
+
+
+/*
+    if(!valid_sn && !valid_email)
+        return '';
+
+    $info = license_gen_values($valid_sn, $valid_email);
+    $license_type = $info['license_type'];
+    $seed = $info['seed'];
+
+    $data = $seed . $serial_number . $license_type;
+    $hash = sha1($data);
+    $beginning = substr($hash, 0, 4);
+    $middle = substr($hash, 18, 4);
+    $end = substr($hash, strlen($hash) - 4, 4);
+
+    $license = $beginning."-".$middle."-".$end."-".$license_type;
+
+    $license = strtoupper($license);
+
+    return $license;
+*/
+}
+
+bool License::isValidLicense(QString license)
+{
+
+}

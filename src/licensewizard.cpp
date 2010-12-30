@@ -118,9 +118,13 @@ EvaluatePage::EvaluatePage(QWidget *parent)
     setSubTitle(tr("Please fill both fields. Make sure to provide a valid "
                    "email address (e.g., john.smith@example.com)."));
 
-    nameLabel = new QLabel(tr("N&ame:"));
-    nameLineEdit = new QLineEdit(this);
-    nameLabel->setBuddy(nameLineEdit);
+    firstNameLabel = new QLabel(tr("&First Name:"));
+    firstNameLineEdit = new QLineEdit(this);
+    firstNameLabel->setBuddy(firstNameLineEdit);
+
+    lastNameLabel = new QLabel(tr("&Last Name:"));
+    lastNameLineEdit = new QLineEdit(this);
+    lastNameLabel->setBuddy(lastNameLineEdit);
 
     emailLabel = new QLabel(tr("&Email address:"));
     emailLineEdit = new QLineEdit(this);
@@ -130,15 +134,18 @@ EvaluatePage::EvaluatePage(QWidget *parent)
     licenseNumberLineEdit = new QLineEdit(this);
     licenseNumberLineEdit->setVisible(false);
 
-    registerField("evaluate.name*", nameLineEdit);
+    registerField("evaluate.first_name*", firstNameLineEdit);
+    registerField("evaluate.last_name*", lastNameLineEdit);
     registerField("evaluate.email*", emailLineEdit);
     registerField("evaluate.license", licenseNumberLineEdit);
 
     QGridLayout *layout = new QGridLayout;
-    layout->addWidget(nameLabel, 0, 0);
-    layout->addWidget(nameLineEdit, 0, 1);
-    layout->addWidget(emailLabel, 1, 0);
-    layout->addWidget(emailLineEdit, 1, 1);
+    layout->addWidget(firstNameLabel, 0, 0);
+    layout->addWidget(firstNameLineEdit, 0, 1);
+    layout->addWidget(lastNameLabel, 1, 0);
+    layout->addWidget(lastNameLineEdit, 1, 1);
+    layout->addWidget(emailLabel, 2, 0);
+    layout->addWidget(emailLineEdit, 2, 1);
     setLayout(layout);
 }
 
@@ -152,7 +159,7 @@ bool EvaluatePage::validatePage()
     //Look up the licensePage value so I can use a testing server if I need to, otherwise it
     //should always default to the live server as specified in AppInfo::licensePage;
     QString path = Settings::inst()->value("licensePage", QVariant(AppInfo::liveLicensePage)).toString();
-    path = QString(path).arg("").arg(emailLineEdit->text()).arg(nameLineEdit->text()).arg(nameLineEdit->text());
+    path = QString(path).arg("").arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);
 
     mLicHttp->downloadFile(url);
@@ -182,9 +189,13 @@ RegisterPage::RegisterPage(QWidget *parent)
     setTitle(tr("Register Your Copy of <i>%1</i>&trade;").arg(qApp->applicationName()));
     setSubTitle(tr("Please fill in all the fields."));
 
-    nameLabel = new QLabel(tr("N&ame:"));
-    nameLineEdit = new QLineEdit(this);
-    nameLabel->setBuddy(nameLineEdit);
+    firstNameLabel = new QLabel(tr("&First Name:"));
+    firstNameLineEdit = new QLineEdit(this);
+    firstNameLabel->setBuddy(firstNameLineEdit);
+
+    lastNameLabel = new QLabel(tr("&Last Name:"));
+    lastNameLineEdit = new QLineEdit(this);
+    lastNameLabel->setBuddy(lastNameLineEdit);
 
     emailLabel = new QLabel(tr("&Email:"));
     emailLineEdit = new QLineEdit(this);
@@ -200,18 +211,21 @@ RegisterPage::RegisterPage(QWidget *parent)
     licenseNumberLineEdit = new QLineEdit(this);
     licenseNumberLineEdit->setVisible(false);
 
-    registerField("register.name*", nameLineEdit);
+    registerField("register.first_name*", firstNameLineEdit);
+    registerField("register.last_name*", lastNameLineEdit);
     registerField("register.email*", emailLineEdit);
     registerField("register.serialNumber*", serialNumberLineEdit);
     registerField("register.license", licenseNumberLineEdit);
 
     QGridLayout *layout = new QGridLayout;
-    layout->addWidget(nameLabel, 0, 0);
-    layout->addWidget(nameLineEdit, 0, 1);
-    layout->addWidget(emailLabel, 1, 0);
-    layout->addWidget(emailLineEdit, 1, 1);
-    layout->addWidget(serialNumberLabel, 2, 0);
-    layout->addWidget(serialNumberLineEdit, 2, 1);
+    layout->addWidget(firstNameLabel, 0, 0);
+    layout->addWidget(firstNameLineEdit, 0, 1);
+    layout->addWidget(lastNameLabel, 1, 0);
+    layout->addWidget(lastNameLineEdit, 1, 1);
+    layout->addWidget(emailLabel, 2, 0);
+    layout->addWidget(emailLineEdit, 2, 1);
+    layout->addWidget(serialNumberLabel, 3, 0);
+    layout->addWidget(serialNumberLineEdit, 3, 1);
     setLayout(layout);
 }
 
@@ -220,7 +234,7 @@ bool RegisterPage::validatePage()
     //Look up the licensePage value so I can use a testing server if I need to, otherwise it
     //should always default to the live server as specified in AppInfo::licensePage;
     QString path = Settings::inst()->value("licensePage", QVariant(AppInfo::liveLicensePage)).toString();
-    path = QString(path).arg(serialNumberLineEdit->text()).arg(emailLineEdit->text()).arg(nameLineEdit->text()).arg(nameLineEdit->text());
+    path = QString(path).arg(serialNumberLineEdit->text()).arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);
 
     mLicHttp->downloadFile(url);
@@ -281,11 +295,13 @@ void ConclusionPage::initializePage()
     if (wizard()->hasVisitedPage(LicenseWizard::Page_Register)) {
         sn      = field("register.serialNumber").toString();
         license = field("register.license").toString();
-        fname    = field("register.name").toString();
+        fname   = field("register.first_name").toString();
+        lname   = field("register.last_name").toString();
         email   = field("register.email").toString();
     } else if (wizard()->hasVisitedPage(LicenseWizard::Page_Evaluate)) {
         license = field("evaluate.license").toString();
-        fname    = field("evaluate.name").toString();
+        fname   = field("evaluate.first_name").toString();
+        lname   = field("evaluate.last_name").toString();
         email   = field("evaluate.email").toString();
     }
     //else do an upgrade.
@@ -293,7 +309,7 @@ void ConclusionPage::initializePage()
     licenseEdit->setHtml(licenseText);
     licenseEdit->setReadOnly(true);
 
-    Settings::inst()->setValue("name", QVariant(name));
+    Settings::inst()->setValue("name", QVariant(fname + " " + lname));
     Settings::inst()->setValue("email", QVariant(email));
     Settings::inst()->setValue("serialNumber", QVariant(sn));
     Settings::inst()->setValue("license", QVariant(license));

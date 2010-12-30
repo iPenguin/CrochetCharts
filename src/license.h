@@ -13,5 +13,7 @@ namespace License {
     QString serialNumber(long sequenceNumber);
     bool isValid(QString sn);
 
+    QString license(QString serialNumber, QString email);
+    bool isValidLicense(QString license);
 }
 #endif // LICENSE_H

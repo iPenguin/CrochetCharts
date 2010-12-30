@@ -53,9 +53,11 @@ public slots:
     void getLicense(QString license, bool errors);
 
 private:
-    QLabel *nameLabel;
+    QLabel *firstNameLabel;
+    QLabel *lastNameLabel;
     QLabel *emailLabel;
-    QLineEdit *nameLineEdit;
+    QLineEdit *firstNameLineEdit;
+    QLineEdit *lastNameLineEdit;
     QLineEdit *emailLineEdit;
     QLineEdit *licenseNumberLineEdit;
 
@@ -76,10 +78,12 @@ public:
 public slots:
     void getLicense(QString license, bool errors);
 private:
-    QLabel *nameLabel;
+    QLabel *firstNameLabel;
+    QLabel *lastNameLabel;
     QLabel *serialNumberLabel;
     QLabel *emailLabel;
-    QLineEdit *nameLineEdit;
+    QLineEdit *firstNameLineEdit;
+    QLineEdit *lastNameLineEdit;
     QLineEdit *serialNumberLineEdit;
     QLineEdit *emailLineEdit;
     QLineEdit *licenseNumberLineEdit;
