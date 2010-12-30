@@ -26,7 +26,9 @@ message("-- Unit Testing   - " ${UNIT_TESTING})
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 #More info see: http://cmake.org/cmake/help/cmake2.6docs.html#module:FindQt4
-set(QT_USE_QTSVG 1)
+set(QT_USE_QTMAIN true)
+set(QT_USE_QTSVG true)
+set(QT_USE_QTNETWORK true)
 include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
@@ -48,6 +50,7 @@ set(crochet_srcs
     src/undocommands.cpp
     src/settingsui.cpp
     src/splashscreen.cpp
+    src/licensehttp.cpp
     )
 
 set(crochet_qobject_headers
@@ -66,6 +69,7 @@ set(crochet_qobject_headers
     src/undocommands.h
     src/settingsui.h
     src/splashscreen.h
+    src/licensehttp.h
     )
 
 set(crochet_headers

@@ -18,10 +18,12 @@
 #include <QPrintDialog>
 #include <QPrinter>
 
-#include "appinfo.h" // email RegEx
+#include "appinfo.h" // email RegEx & licensePage
 #include "licensevalidator.h"
 
 #include "settings.h"
+
+#include <QDebug>
 
 /*FIXME: Add network connection to transfer the data to the website.
  *The network connection will look up the base url from the config file
@@ -141,27 +143,35 @@ int EvaluatePage::nextId() const
 RegisterPage::RegisterPage(QWidget *parent)
     : QWizardPage(parent)
 {
+    mAllowNextPage = false;
+    mLicHttp = new LicenseHttp(this);
+
     setTitle(tr("Register Your Copy of <i>%1</i>&trade;").arg(qApp->applicationName()));
     setSubTitle(tr("Please fill in all the fields."));
 
     nameLabel = new QLabel(tr("N&ame:"));
-    nameLineEdit = new QLineEdit;
+    nameLineEdit = new QLineEdit(this);
     nameLabel->setBuddy(nameLineEdit);
 
     emailLabel = new QLabel(tr("&Email:"));
-    emailLineEdit = new QLineEdit;
+    emailLineEdit = new QLineEdit(this);
     emailLabel->setBuddy(emailLineEdit);
     emailLineEdit->setValidator(new QRegExpValidator(AppInfo::emailRegExp, this));
 
     serialNumberLabel = new QLabel(tr("&Serial Number:"));
-    serialNumberLineEdit = new QLineEdit;
+    serialNumberLineEdit = new QLineEdit(this);
     serialNumberLabel->setBuddy(serialNumberLineEdit);
-    //FIXME: don't pass the RegExp from here move it into the license.h namespace.
+
     serialNumberLineEdit->setValidator(new LicenseValidator(this));
+
+    licenseNumberLineEdit = new QLineEdit(this);
+    licenseNumberLineEdit->setVisible(false);
 
     registerField("register.name*", nameLineEdit);
     registerField("register.email*", emailLineEdit);
     registerField("register.serialNumber*", serialNumberLineEdit);
+
+    registerField("register.license", licenseNumberLineEdit);
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(nameLabel, 0, 0);
@@ -171,6 +181,32 @@ RegisterPage::RegisterPage(QWidget *parent)
     layout->addWidget(serialNumberLabel, 2, 0);
     layout->addWidget(serialNumberLineEdit, 2, 1);
     setLayout(layout);
+}
+
+bool RegisterPage::validatePage()
+{
+    //Look up the licensePage value so I can use a testing server if I need to, otherwise it
+    //should always default to the live server as specified in AppInfo::licensePage;
+    QString path = Settings::inst()->value("licensePage", QVariant(AppInfo::liveLicensePage)).toString();
+    path = QString(path).arg(serialNumberLineEdit->text()).arg(emailLineEdit->text()).arg(nameLineEdit->text()).arg(nameLineEdit->text());
+    QUrl url(path);
+
+    mLicHttp->downloadFile(url);
+    connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), this, SLOT(getLicense(QString,bool)));
+
+    return mAllowNextPage;
+}
+
+void RegisterPage::getLicense(QString license, bool errors)
+{
+    if(errors) {
+        mAllowNextPage = false;
+        QMessageBox::information(this, "Error", "Unable to register with the server.");
+    }
+
+    setField("register.license", QVariant(license));
+    mAllowNextPage = true;
+    this->wizard()->next();
 }
 
 int RegisterPage::nextId() const

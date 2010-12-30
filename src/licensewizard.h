@@ -9,6 +9,8 @@ class QLineEdit;
 class QRadioButton;
 class QTextEdit;
 
+#include "licensehttp.h"
+
 class LicenseWizard : public QWizard
 {
     Q_OBJECT
@@ -60,8 +62,11 @@ class RegisterPage : public QWizardPage
 public:
     RegisterPage(QWidget *parent = 0);
 
+    bool validatePage();
     int nextId() const;
 
+public slots:
+    void getLicense(QString license, bool errors);
 private:
     QLabel *nameLabel;
     QLabel *serialNumberLabel;
@@ -69,6 +74,10 @@ private:
     QLineEdit *nameLineEdit;
     QLineEdit *serialNumberLineEdit;
     QLineEdit *emailLineEdit;
+    QLineEdit *licenseNumberLineEdit;
+
+    LicenseHttp *mLicHttp;
+    bool mAllowNextPage;
 };
 
 class ConclusionPage : public QWizardPage

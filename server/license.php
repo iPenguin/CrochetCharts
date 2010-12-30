@@ -10,7 +10,6 @@ $sn = mysql_real_escape_string($_GET['sws_sn']);
 $email = mysql_real_escape_string($_GET['sws_email']);
 $fname = mysql_real_escape_string($_GET['sws_fname']);
 $lname = mysql_real_escape_string($_GET['sws_lname']);
-$license_type = mysql_real_escape_string($_GET['sws_license_type']);
 
 $clean = array();
 
@@ -24,11 +23,6 @@ if(isset($email) && is_valid_email($email))
 else
     $clean['email'] = '';
 
-if(isset($license_type) && is_valid_license_type($license_type))
-    $clean['license_type'] = $license_type;
-else
-    $clean['license_type'] = '';
-
 if(isset($fname)) //TODO: check if the variable is a valid string w/o sql injection
     $clean['fname'] = $fname;
 else
@@ -40,7 +34,7 @@ else
     $clean['lname'] = '';
 
 if(empty($clean['sn']) && empty($clean['email'])) {
-    print "<sws_crochet></sws_crochet>";
+    print "";
     return;
 }
 
@@ -52,6 +46,6 @@ $r = mysql_query("INSERT INTO `stitchw1_licenses`.`licenses` " .
     "'".$clean['sn']."','" . $clean['email'] ."','" . $clean['fname'] . "','" . $clean['lname'] .
     "','".$ip."','".$license."');");
 
-    print "<sws_crochet>".$license."</sws_crochet>";
+    print $license;
 
 ?>

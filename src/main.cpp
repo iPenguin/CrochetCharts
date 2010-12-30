@@ -21,7 +21,6 @@ int main(int argc, char *argv[])
 
     Q_INIT_RESOURCE(crochet);
 
-
     SplashScreen splash;
     splash.show();
     splash.showMessage(QObject::tr("Loading..."));
