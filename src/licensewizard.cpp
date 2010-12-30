@@ -174,8 +174,8 @@ void EvaluatePage::getLicense(QString license, bool errors)
         mAllowNextPage = false;
         QMessageBox::information(this, "Error", "Unable to register with the server.");
     }
-qDebug() << "eval license:" << license;
-    setField("register.license", QVariant(license));
+
+    setField("evaluate.license", QVariant(license));
     mAllowNextPage = true;
     this->wizard()->next();
 }

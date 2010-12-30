@@ -10,8 +10,13 @@ class TestLicense : public QObject
     Q_OBJECT
 private slots:
      void initTestCase();
-     void checkLicense();
-     void checkLicense_data();
+
+     void checkSerialNumbers();
+     void checkSerialNumbers_data();
+
+     void checkLicenseNumbers();
+     void checkLicenseNumbers_data();
+
      void cleanupTestCase();
 
 private:

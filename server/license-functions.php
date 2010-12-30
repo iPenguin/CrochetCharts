@@ -10,7 +10,7 @@ function license_gen_values($valid_sn = false, $valid_email = false)
 {
     $data = array();
     if(!$valid_sn && !$valid_email) {                //serial number generator values
-        $data['seed'] = "BCM Software"; 
+        $data['seed'] = ";;Stitch Works Software - Serial Number;;";
     } elseif($valid_sn) {                            //full license values
         $data['license_type'] = "L1";
         $data['seed'] = ";;Stitch Works Software - Full License;;";
@@ -106,7 +106,7 @@ function generate_license($serial_number, $email)
     $valid_sn = is_valid_serial_number($serial_number);
     $valid_email = is_valid_email($email);
 
-    if(!valid_sn && !valid_email)
+    if(!$valid_sn && !$valid_email)
         return '';
 
     $info = license_gen_values($valid_sn, $valid_email);
@@ -121,9 +121,7 @@ function generate_license($serial_number, $email)
 
     $license = $beginning."-".$middle."-".$end."-".$license_type;
 
-    $license = strtoupper($license);
-
-    return $license;
+    return strtoupper($license);
 }
 
 function is_valid_email($email)

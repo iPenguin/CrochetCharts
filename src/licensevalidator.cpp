@@ -17,7 +17,7 @@ QValidator::State LicenseValidator::validate(QString &input, int &pos) const
     state = QRegExpValidator::validate(input, pos);
 
     if(state == QValidator::Acceptable) {
-        if(!License::isValid(input)) {
+        if(!License::isValidSerialNumber(input)) {
             //we make the state intermediate because if we made it invalid it wouldn't
             //display the last digit in the line edit.
             state = QValidator::Intermediate;

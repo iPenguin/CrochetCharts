@@ -7,11 +7,27 @@ QRegExp License::licenseRegEx()
     return QRegExp("[0-9]{4}-[0-9]{3}-[0-9]{4}");
 }
 
+QMap<QString, QString> License::licenseGenValues(bool validSn, bool validEmail)
+{
+    QMap<QString, QString> data;
+    if(!validSn && !validEmail) {                  //serial number generator values
+        data["seed"] = ";;Stitch Works Software - Serial Number;;";
+    } else if(validSn) {                           //full license values
+        data["license_type"] = "L1";
+        data["seed"] = ";;Stitch Works Software - Full License;;";
+    } else if(!validSn && validEmail) {            //trial license values
+        data["license_type"] = "T1";
+        data["seed"] = ";;Stitch Works Software - Trial License;;";
+    }
+
+    return data;
+}
+
 //this function takes a long int and returns a QString serial number in the form
 //4444-333-1234
 QString License::serialNumber(long sequenceNumber)
 {
-    QByteArray seed = "BCM Software";
+    QByteArray seed = License::licenseGenValues(false, false)["seed"].toLatin1();
     QString number = QString::number(sequenceNumber);
     QByteArray data = seed + number.toUtf8();
 
@@ -54,7 +70,7 @@ QString License::serialNumber(long sequenceNumber)
     return sn;
 }
 
-bool License::isValid(QString sn)
+bool License::isValidSerialNumber(QString sn)
 {
     
     if(sn.length() > 13)
@@ -71,36 +87,45 @@ bool License::isValid(QString sn)
     return false;
 }
 
-QString License::license(QString serialNumber, QString email)
+QString License::generateLicense(QString serialNumber, QString email)
 {
-    if(!isValid(serialNumber))
-        return;
-    if(!isValidEmail(email))
+    bool validSn = isValidSerialNumber(serialNumber);
+    bool validEmail = isValidEmail(email);
 
+    if(!validSn && !validEmail)
+        return "";
 
-/*
-    if(!valid_sn && !valid_email)
-        return '';
+    QMap<QString, QString> info = License::licenseGenValues(validSn, validEmail);
+    QString seed = info["seed"];
+    QString licenseType = info["license_type"];
 
-    $info = license_gen_values($valid_sn, $valid_email);
-    $license_type = $info['license_type'];
-    $seed = $info['seed'];
+    QByteArray data = seed.toLatin1() + serialNumber.toLatin1() + licenseType.toLatin1();
 
-    $data = $seed . $serial_number . $license_type;
-    $hash = sha1($data);
-    $beginning = substr($hash, 0, 4);
-    $middle = substr($hash, 18, 4);
-    $end = substr($hash, strlen($hash) - 4, 4);
+    QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
+    QString hashHex = hash.toHex();
 
-    $license = $beginning."-".$middle."-".$end."-".$license_type;
+    QString beginning = hashHex.mid(0, 4);
+    QString middle    = hashHex.mid(18, 4);
+    QString end       = hashHex.mid(hashHex.length() - 4, 4);
+    QString license = beginning + "-" + middle + "-" + end + "-" + licenseType;
 
-    $license = strtoupper($license);
-
-    return $license;
-*/
+    return license.toUpper();
 }
 
-bool License::isValidLicense(QString license)
+bool License::isValidLicense(QString license, QString serialNumber, QString email)
 {
+    if(license.isEmpty() || license.isNull())
+        return false;
 
+    QString temp = generateLicense(serialNumber, email);
+
+    if(license == temp)
+        return true;
+    else
+        return false;
+}
+
+bool License::isValidEmail(QString email)
+{
+    return true; //TODO: validate the email address.
 }
