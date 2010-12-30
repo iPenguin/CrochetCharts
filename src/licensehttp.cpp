@@ -9,6 +9,8 @@
 #include <QFileInfo>
 #include <QMessageBox>
 
+#include "appinfo.h"
+
 #include <QDebug>
 
 LicenseHttp::LicenseHttp(QWidget *parent) :
@@ -71,16 +73,20 @@ void LicenseHttp::httpFinished()
 
     if (reply->error()) {
         file->remove();
-        QMessageBox::information(this, tr("HTTP"), tr("Download failed: %1.")
-                                 .arg(reply->errorString()));
+        QMessageBox::information(this, tr("Stitch Works Registration"),
+                                 tr("%1 was unable to connect to the server to register this software. "
+                                    "Please make sure you are connected to the internet. If you have a firewall "
+                                    "running please make sure it allows this software to connect to the internet. "
+                                    "If you are still having problems please contact Stitch Works Software at %2")
+                                 .arg(AppInfo::appName).arg(AppInfo::appOrgContact));
+    } else {
+        emit licenseCompleted(data, false);
     }
 
     reply->deleteLater();
     reply = 0;
     delete file;
     file = 0;
-    emit licenseCompleted(data, false);
-qDebug() << "LicenseHttp::httpFinished() << done";
 }
 
 void LicenseHttp::httpReadyRead()

@@ -11,7 +11,7 @@
 #include <QVBoxLayout>
 
 #include <QMessageBox>
-#include <QRegExpValidator> //email validator
+#include <QRegExpValidator>
 
 #include <QFile>
 
@@ -111,21 +111,28 @@ int IntroPage::nextId() const
 EvaluatePage::EvaluatePage(QWidget *parent)
     : QWizardPage(parent)
 {
+    mAllowNextPage = false;
+    mLicHttp = new LicenseHttp(this);
+
     setTitle(tr("Evaluate <i>%1</i>&trade;").arg(qApp->applicationName()));
     setSubTitle(tr("Please fill both fields. Make sure to provide a valid "
                    "email address (e.g., john.smith@example.com)."));
 
     nameLabel = new QLabel(tr("N&ame:"));
-    nameLineEdit = new QLineEdit;
+    nameLineEdit = new QLineEdit(this);
     nameLabel->setBuddy(nameLineEdit);
 
     emailLabel = new QLabel(tr("&Email address:"));
-    emailLineEdit = new QLineEdit;
+    emailLineEdit = new QLineEdit(this);
     emailLineEdit->setValidator(new QRegExpValidator(AppInfo::emailRegExp, this));
     emailLabel->setBuddy(emailLineEdit);
 
+    licenseNumberLineEdit = new QLineEdit(this);
+    licenseNumberLineEdit->setVisible(false);
+
     registerField("evaluate.name*", nameLineEdit);
     registerField("evaluate.email*", emailLineEdit);
+    registerField("evaluate.license", licenseNumberLineEdit);
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(nameLabel, 0, 0);
@@ -138,6 +145,32 @@ EvaluatePage::EvaluatePage(QWidget *parent)
 int EvaluatePage::nextId() const
 {
     return LicenseWizard::Page_Conclusion;
+}
+
+bool EvaluatePage::validatePage()
+{
+    //Look up the licensePage value so I can use a testing server if I need to, otherwise it
+    //should always default to the live server as specified in AppInfo::licensePage;
+    QString path = Settings::inst()->value("licensePage", QVariant(AppInfo::liveLicensePage)).toString();
+    path = QString(path).arg("").arg(emailLineEdit->text()).arg(nameLineEdit->text()).arg(nameLineEdit->text());
+    QUrl url(path);
+
+    mLicHttp->downloadFile(url);
+    connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), this, SLOT(getLicense(QString,bool)));
+
+    return mAllowNextPage;
+}
+
+void EvaluatePage::getLicense(QString license, bool errors)
+{
+    if(errors) {
+        mAllowNextPage = false;
+        QMessageBox::information(this, "Error", "Unable to register with the server.");
+    }
+qDebug() << "eval license:" << license;
+    setField("register.license", QVariant(license));
+    mAllowNextPage = true;
+    this->wizard()->next();
 }
 
 RegisterPage::RegisterPage(QWidget *parent)
@@ -170,7 +203,6 @@ RegisterPage::RegisterPage(QWidget *parent)
     registerField("register.name*", nameLineEdit);
     registerField("register.email*", emailLineEdit);
     registerField("register.serialNumber*", serialNumberLineEdit);
-
     registerField("register.license", licenseNumberLineEdit);
 
     QGridLayout *layout = new QGridLayout;
@@ -244,32 +276,27 @@ void ConclusionPage::initializePage()
         return;
     QString licenseText = f.readAll();
 
-    if (wizard()->hasVisitedPage(LicenseWizard::Page_Evaluate)) {
-/*        licenseText = tr("<u>Evaluation License Agreement:</u> "
-                         "You can use this software for 30 days and make one "
-                         "backup, but you are not allowed to distribute it.");
-*/
-    } else if (wizard()->hasVisitedPage(LicenseWizard::Page_Register)) {
-/*        licenseText = tr("<u>First-Time License Agreement:</u> "
-                         "You can use this software subject to the license "
-                         "you will receive by email.");
-*/
-    } else {
-/*        licenseText = tr("<u>Upgrade License Agreement:</u> "
-                         "This software is licensed under the terms of your "
-                         "current license.");
-*/
+
+    QString sn, license, email, fname, lname;
+    if (wizard()->hasVisitedPage(LicenseWizard::Page_Register)) {
+        sn      = field("register.serialNumber").toString();
+        license = field("register.license").toString();
+        fname    = field("register.name").toString();
+        email   = field("register.email").toString();
+    } else if (wizard()->hasVisitedPage(LicenseWizard::Page_Evaluate)) {
+        license = field("evaluate.license").toString();
+        fname    = field("evaluate.name").toString();
+        email   = field("evaluate.email").toString();
     }
+    //else do an upgrade.
+
     licenseEdit->setHtml(licenseText);
     licenseEdit->setReadOnly(true);
-
-    QString name  = field("register.name").toString();
-    QString email = field("register.email").toString();
-    QString sn    = field("register.serialNumber").toString();
 
     Settings::inst()->setValue("name", QVariant(name));
     Settings::inst()->setValue("email", QVariant(email));
     Settings::inst()->setValue("serialNumber", QVariant(sn));
+    Settings::inst()->setValue("license", QVariant(license));
 }
 
 void ConclusionPage::setVisible(bool visible)
@@ -302,4 +329,5 @@ void ConclusionPage::cleanupPage()
     Settings::inst()->setValue("name", "");
     Settings::inst()->setValue("email", "");
     Settings::inst()->setValue("serialNumber", "");
+    Settings::inst()->setValue("license", "");
 }

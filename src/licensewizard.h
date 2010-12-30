@@ -46,13 +46,21 @@ class EvaluatePage : public QWizardPage
 public:
     EvaluatePage(QWidget *parent = 0);
 
+    bool validatePage();
     int nextId() const;
+
+public slots:
+    void getLicense(QString license, bool errors);
 
 private:
     QLabel *nameLabel;
     QLabel *emailLabel;
     QLineEdit *nameLineEdit;
     QLineEdit *emailLineEdit;
+    QLineEdit *licenseNumberLineEdit;
+
+    LicenseHttp *mLicHttp;
+    bool mAllowNextPage;
 };
 
 class RegisterPage : public QWizardPage
