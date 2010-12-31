@@ -16,6 +16,8 @@
 #include "crochetscene.h"
 #include "crochetcell.h"
 
+#include "settings.h"
+
 ChartTab::ChartTab(QWidget *parent) :
     QWidget(parent)
 {
@@ -40,6 +42,38 @@ ChartTab::ChartTab(QWidget *parent) :
     this->createRow(62);
     this->createRow(68);
     this->createRow(74);
+
+    if(Settings::inst()->isDemoVersion()) {
+
+        double fontSize = 32.0;
+        QFont demoFont = QFont();
+        demoFont.setPointSize(fontSize);
+        QString demoString = "Stitch Works Software - Demo Version  -  ";
+
+        QFontMetrics fm = QFontMetrics(demoFont);
+        double stringWidth = fm.width(demoString);
+
+        QGraphicsSimpleTextItem *demoText;
+        QRectF rect = mScene->sceneRect();
+        double demoRows = rect.height() / fontSize;
+        demoRows = demoRows /2.0;
+
+        double demoCols = rect.width() / stringWidth;
+
+        for(int c = 0; c < ceil(demoCols); ++c) {
+            for(int i = 0; i < ceil(demoRows); ++i) {
+                demoText = mScene->addSimpleText(demoString, demoFont);
+                demoText->setBrush(QBrush(QColor(Qt::lightGray)));
+                QPointF point = QPointF(rect.left() + c*stringWidth , rect.top() + i*(2*fontSize));
+                demoText->setPos(point);
+                demoText->setZValue(-1);
+            }
+        }
+
+        //restore original rect. letting the demo text overflow off the scene.
+        mScene->setSceneRect(rect);
+    }
+
 /*
 #else
     //FIXME: less then 8 stitches gives funny rows.
