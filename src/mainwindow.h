@@ -6,6 +6,7 @@
 namespace Ui {
     class MainWindow;
     class ExportDialog;
+    class StitchLibraryDialog;
 }
 
 class MainWindow : public QMainWindow
@@ -32,6 +33,7 @@ private slots:
 
     void toolsOptions();
     void toolsRegisterSoftware();
+    void toolsStitchLibrary();
 
     void helpAbout();
 
@@ -40,6 +42,7 @@ private:
 
     Ui::MainWindow *ui;
     Ui::ExportDialog *expDialog;
+    Ui::StitchLibraryDialog *sld;
 
     void setupMenus();
 };

@@ -136,7 +136,13 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QComboBox" name="stitchCategory"/>
+      <widget class="QComboBox" name="stitchCategory">
+       <item>
+        <property name="text">
+         <string>All</string>
+        </property>
+       </item>
+      </widget>
      </item>
      <item>
       <widget class="QListWidget" name="stitchList"/>
@@ -262,7 +268,7 @@
   </action>
   <action name="actionStitchLibrary">
    <property name="text">
-    <string>Stitch Configuration</string>
+    <string>Stitch Library</string>
    </property>
   </action>
   <action name="actionShowStitches">

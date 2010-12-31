@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "ui_export.h"
+#include "ui_stitchlibrary.h"
 
 #include <QDialog>
 #include <QMessageBox>
@@ -60,6 +61,8 @@ void MainWindow::setupMenus()
         ui->actionRegisterSoftware->setVisible(false);
     connect(ui->actionRegisterSoftware, SIGNAL(triggered()), this, SLOT(toolsRegisterSoftware()));
 
+    connect(ui->actionStitchLibrary, SIGNAL(triggered()), this, SLOT(toolsStitchLibrary()));
+
     //Help
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
@@ -87,7 +90,7 @@ void MainWindow::fileExport()
 
 void MainWindow::documentNewChart()
 {
-
+//TODO: include the prompt for document size etc.
     ChartTab *newTab = new ChartTab(this);
     ui->tabWidget->addTab(newTab, tr("Chart"));
 
@@ -201,4 +204,25 @@ void MainWindow::toolsRegisterSoftware()
                 return;
         }
     }
+}
+
+void MainWindow::toolsStitchLibrary()
+{
+    QDialog *d = new QDialog(this);
+    sld = new Ui::StitchLibraryDialog();
+    sld->setupUi(d);
+
+    int value = d->exec();
+
+    if(value != QDialog::Accepted) {
+        delete d;
+        d = 0;
+        return;
+    }
+
+    qWarning() << "Make this dialog do something.";
+
+    delete d;
+    d = 0;
+
 }
