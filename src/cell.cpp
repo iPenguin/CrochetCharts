@@ -3,13 +3,14 @@
 Cell::Cell(const QString fileName, QGraphicsItem *parent) :
     QGraphicsSvgItem(fileName, parent)
 {
+//    this->setCacheMode(QGraphicsItem::ItemCoordinateCache, QSize(32,64));
 
 }
 
 Cell::Cell(QGraphicsItem *parent) :
     QGraphicsSvgItem(parent)
 {
-
+//    this->setCacheMode(QGraphicsItem::ItemCoordinateCache, QSize(32,64));
 }
 
 QRectF Cell::boundingRect() const
