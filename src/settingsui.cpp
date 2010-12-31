@@ -11,6 +11,12 @@ SettingsUi::SettingsUi() :
 {
     ui->setupUi(this);
 
+#ifdef Q_WS_MAC
+    this->setWindowTitle(tr("Preferences"));
+#else
+    this->setWindowTitle(tr("Options"));
+#endif //Q_WS_MAC
+
     connect(ui->folderSelector, SIGNAL(clicked()), this, SLOT(selectFolder()));
 
     //TODO: load settings from disk:
