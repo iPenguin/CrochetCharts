@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QObject>
 
-#include "../src/cell.h"
+#include "../src/crochetcell.h"
 
 class TestCell : public QObject
 {

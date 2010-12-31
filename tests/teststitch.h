@@ -14,6 +14,7 @@ private slots:
      void initTestCase();
      void stitchSetup();
      void stitchRender();
+     void stitchRender_data();
      void cleanupTestCase();
 
 private:

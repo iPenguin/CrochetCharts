@@ -17,6 +17,7 @@ set(crochet_test_srcs
     ../src/cell.cpp
     ../src/stitch.cpp
     ../src/stitchset.cpp
+    ../src/crochetcell.cpp
     ../src/crochetdatamodel.cpp
     ../src/license.cpp
     testcrochetdatamodel.cpp
@@ -34,6 +35,7 @@ set(crochet_test_qobject_headers
     ../src/cell.h
     ../src/stitch.h
     ../src/stitchset.h
+    ../src/crochetcell.h
     ../src/crochetdatamodel.h
     testcrochetdatamodel.h
     testlicense.h
