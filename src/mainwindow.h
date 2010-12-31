@@ -30,9 +30,10 @@ private slots:
 
     void documentNewChart();
 
-    void helpAbout();
-
     void toolsOptions();
+    void toolsRegisterSoftware();
+
+    void helpAbout();
 
 private:
     void readSettings();

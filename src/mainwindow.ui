@@ -90,6 +90,7 @@
      <string>&amp;Tools</string>
     </property>
     <addaction name="actionStitchLibrary"/>
+    <addaction name="actionRegisterSoftware"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -270,6 +271,11 @@
    </property>
    <property name="text">
     <string>Show Stitches</string>
+   </property>
+  </action>
+  <action name="actionRegisterSoftware">
+   <property name="text">
+    <string>Register this Software</string>
    </property>
   </action>
  </widget>

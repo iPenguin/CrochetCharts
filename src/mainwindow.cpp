@@ -12,6 +12,8 @@
 #include "settings.h"
 #include "settingsui.h"
 
+#include "licensewizard.h"
+
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -53,6 +55,10 @@ void MainWindow::setupMenus()
 
     //Tools
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
+
+    if(!Settings::inst()->isDemoVersion())
+        ui->actionRegisterSoftware->setVisible(false);
+    connect(ui->actionRegisterSoftware, SIGNAL(triggered()), this, SLOT(toolsRegisterSoftware()));
 
     //Help
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
@@ -173,4 +179,13 @@ void MainWindow::menuViewAboutToShow()
 void MainWindow::viewShowStitches()
 {
     ui->stitchLibraryDock->setVisible(ui->actionShowStitches->isChecked());
+}
+
+void MainWindow::toolsRegisterSoftware()
+{
+    if(Settings::inst()->isDemoVersion()) {
+        LicenseWizard wizard(true, this);
+        if(wizard.exec() != QWizard::Accepted)
+                return;
+    }
 }
