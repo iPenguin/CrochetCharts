@@ -13,7 +13,13 @@ public:
     void insertCell(int row, int columnBefore, Stitch *s);
 
 */
+    void createRow(int columns);
+private:
+    QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
+    void initDemoBackground();
+
+    int mStitchWidth;
 };
 
 #endif //CROCHETSCENE_H

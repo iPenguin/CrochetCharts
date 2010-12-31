@@ -11,8 +11,10 @@ class ChartTab : public QWidget
     Q_OBJECT
 public:
     explicit ChartTab(QWidget *parent = 0);
-    QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
-    void createRow(int columns);
+
+    void savePdf(QPrinter printer, QString fileName, int resolution = 300);
+    void saveSvg(QString fileName);
+    void saveImage(QString fileName, QSize size, int resolution = 96);
 
 signals:
 

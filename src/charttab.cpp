@@ -8,13 +8,7 @@
 
 #include <QDebug>
 
-#include <QThread>
-#include <QtConcurrentRun>
-
-#include <math.h>
-
 #include "crochetscene.h"
-#include "crochetcell.h"
 
 #include "settings.h"
 
@@ -29,149 +23,62 @@ ChartTab::ChartTab(QWidget *parent) :
     l->addWidget(mView);
     l->setMargin(0);
 
-//#ifdef QT_NO_CONCURRENT
-    this->createRow(8);
-    this->createRow(14);
-    this->createRow(20);
-    this->createRow(26);
-    this->createRow(32);
-    this->createRow(38);
-    this->createRow(44);
-    this->createRow(50);
-    this->createRow(56);
-    this->createRow(62);
-    this->createRow(68);
-    this->createRow(74);
+    mScene->createRow(8);
+    mScene->createRow(14);
+    mScene->createRow(20);
+    mScene->createRow(26);
+    mScene->createRow(32);
+    mScene->createRow(38);
+    mScene->createRow(44);
+    mScene->createRow(50);
+    mScene->createRow(56);
+    mScene->createRow(62);
+    mScene->createRow(68);
+    mScene->createRow(74);
+}
 
-    if(Settings::inst()->isDemoVersion()) {
-
-        double fontSize = 32.0;
-        QFont demoFont = QFont();
-        demoFont.setPointSize(fontSize);
-        QString demoString = "Stitch Works Software - Demo Version  -  ";
-
-        QFontMetrics fm = QFontMetrics(demoFont);
-        double stringWidth = fm.width(demoString);
-
-        QGraphicsSimpleTextItem *demoText;
-        QRectF rect = mScene->sceneRect();
-        double demoRows = rect.height() / fontSize;
-        demoRows = demoRows /2.0;
-
-        double demoCols = rect.width() / stringWidth;
-
-        for(int c = 0; c < ceil(demoCols); ++c) {
-            for(int i = 0; i < ceil(demoRows); ++i) {
-                demoText = mScene->addSimpleText(demoString, demoFont);
-                demoText->setBrush(QBrush(QColor(Qt::lightGray)));
-                QPointF point = QPointF(rect.left() + c*stringWidth , rect.top() + i*(2*fontSize));
-                demoText->setPos(point);
-                demoText->setZValue(-1);
-            }
-        }
-
-        //restore original rect. letting the demo text overflow off the scene.
-        mScene->setSceneRect(rect);
-    }
-
-/*
-#else
-    //FIXME: less then 8 stitches gives funny rows.
-    //TODO: make this work better with threads!
-    QFuture<void> f1 = QtConcurrent::run(this, &ChartTab::createRow, 8);
-    QFuture<void> f2 = QtConcurrent::run(this, &ChartTab::createRow, 14);
-    QFuture<void> f3 = QtConcurrent::run(this, &ChartTab::createRow, 20);
-    QFuture<void> f4 = QtConcurrent::run(this, &ChartTab::createRow, 26);
-    QFuture<void> f5 = QtConcurrent::run(this, &ChartTab::createRow, 32);
-    QFuture<void> f6 = QtConcurrent::run(this, &ChartTab::createRow, 38);
-    QFuture<void> f7 = QtConcurrent::run(this, &ChartTab::createRow, 44);
-    QFuture<void> f8 = QtConcurrent::run(this, &ChartTab::createRow, 50);
-    QFuture<void> f9 = QtConcurrent::run(this, &ChartTab::createRow, 56);
-    QFuture<void> f10 = QtConcurrent::run(this, &ChartTab::createRow, 62);
-    QFuture<void> f11 = QtConcurrent::run(this, &ChartTab::createRow, 68);
-    QFuture<void> f12 = QtConcurrent::run(this, &ChartTab::createRow, 74);
-
-    f1.waitForFinished();
-    f2.waitForFinished();
-    f3.waitForFinished();
-    f4.waitForFinished();
-    f5.waitForFinished();
-    f6.waitForFinished();
-    f7.waitForFinished();
-    f8.waitForFinished();
-    f9.waitForFinished();
-    f10.waitForFinished();
-    f11.waitForFinished();
-    f12.waitForFinished();
-#endif //QT_NO_CONCURRENT
-*/
-/*
-//Export as image
+void ChartTab::savePdf(QPrinter printer, QString fileName, int resolution)
+{
+    //Export as pdf
+    //Test run was missing a stitch in lower right corner.
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    printer.setResolution(resolution);
     QPainter p;
-
-    QPixmap pix = QPixmap(mScene->sceneRect().size().toSize());
-//FIXME: needs a background color so it doesn't use white noise.
-// Leave white noise for demo version? can it be reproduced on all OSes?
-
-    p.begin(&pix);
-    p.drawText(QRectF(100, 100, 500, 500), "DEMO VERSION OF STITCH WORKS SOFTWARE CROCHET");
-    mScene->render(&p); //, mScene->sceneRect(), mScene->sceneRect());
+    p.begin(&printer);
+    mScene->render(&p);
     p.end();
+}
 
-    pix.save("test.png", "", 100);
-*/
-/*
-//Export as svg
+void ChartTab::saveSvg(QString fileName)
+{
+    //Export as svg
     QSvgGenerator gen;
-    gen.setFileName("chart.svg");
+    //TODO: fill in more info about the svg.
+    gen.setFileName(fileName);
     gen.setSize(mScene->sceneRect().size().toSize());
     QPainter p;
 
     p.begin(&gen);
     mScene->render(&p);
     p.end();
-*/
-/*
-//Export as pdf
-//Test run was missing a stitch in lower right corner.
-    QPrinter printer;
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName("chart.pdf");
-    printer.setResolution(300);
+}
+
+void ChartTab::saveImage(QString fileName, QSize size, int resolution)
+{
+    //Export as image
     QPainter p;
-    p.begin(&printer);
-    mScene->render(&p);
+    double dpm = resolution * (39.3700787);
+    QImage img = QImage(mScene->sceneRect().size().toSize(), QImage::Format_ARGB32);
+    img.setDotsPerMeterX(dpm);
+    img.setDotsPerMeterY(dpm);
+//FIXME: needs a background color so it doesn't use white noise.
+// Leave white noise for demo version? can it be reproduced on all OSes?
+
+    p.begin(&img);
+    mScene->render(&p, QRectF(0, 0, size.width(), size.height()), mScene->sceneRect());
     p.end();
-*/
 
-}
+    img.save(fileName, "", -1);
 
-void ChartTab::createRow(int columns)
-{
-    int stitchWidth = 64;
-    double widthInDegrees = 360.0 / columns;
-    double circumference = (columns -2) * stitchWidth;
-    double diameter = circumference / M_PI;
-    double radius = diameter /2;
-
-    Cell *c;
-
-    for(int i = 0; i < columns; ++i) {
-        double degrees = (widthInDegrees*i) - (widthInDegrees/2);
-        QPointF finish = this->calcPoint(radius, degrees, QPointF(0,0));
-
-        c = new CrochetCell(":/stitches/chain.svg");
-        mScene->addItem(c);
-        c->setPos(finish);
-        c->setToolTip(QString::number(i+1));
-        c->rotate(degrees + (widthInDegrees/2));
-    }
-}
-
-QPointF ChartTab::calcPoint(double radius, double angleInDegrees, QPointF origin)
-{
-    // Convert from degrees to radians via multiplication by PI/180
-    double x = (double)(radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
-    double y = (double)(radius * sin(angleInDegrees * M_PI / 180)) + origin.y();
-    return QPointF(x, y);
 }
