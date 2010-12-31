@@ -13,6 +13,7 @@ public:
     void setValue(const QString &key, const QVariant &value);
     QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
 
+    bool isDemoVersion();
 
 private:
     static Settings *mInstance;

@@ -1,5 +1,7 @@
 #include "settings.h"
 
+#include "license.h"
+
 #include <QApplication>
 #include <QDebug>
 
@@ -26,4 +28,18 @@ void Settings::setValue(const QString &key, const QVariant &value)
 QVariant Settings::value(const QString &key, const QVariant &defaultValue) const
 {
     return mSettings.value(key, defaultValue);
+}
+
+bool Settings::isDemoVersion()
+{
+    QString license = mSettings.value("license", QVariant("")).toString();
+    QString sn      = mSettings.value("serialNumber", QVariant("")).toString();
+    QString email   = mSettings.value("email", QVariant("")).toString();
+
+    if(!License::isValidSerialNumber(sn))
+        return true;
+    if(!License::isValidLicense(license, sn, email))
+        return true;
+
+    return false;
 }
