@@ -105,15 +105,16 @@ void MainWindow::helpAbout()
                                 .arg(AppInfo::appBuildInfo)
                                 .arg(qApp->organizationName())
                                 );
-    QString name = Settings::inst()->value("name").toString();
+    QString fName = Settings::inst()->value("firstName").toString();
+    QString lName = Settings::inst()->value("lastName").toString();
     QString email = Settings::inst()->value("email").toString();
     QString sn = Settings::inst()->value("serialNumber").toString();
 
     QString licenseInfo = QString(tr("<p>This software is licensed to:<br />"
-                                     "Name: %1<br />"
-                                     "Email: %2<br />"
-                                     "Serial #: %3</p>")
-                                  .arg(name).arg(email).arg(sn));
+                                     "Name: %1 %2<br />"
+                                     "Email: %3<br />"
+                                     "Serial #: %4</p>")
+                                  .arg(fName).arg(lName).arg(email).arg(sn));
     aboutInfo.append(licenseInfo);
     QMessageBox::about(this, tr("About Crochet"), aboutInfo);
 }
