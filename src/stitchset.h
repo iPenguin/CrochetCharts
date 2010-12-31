@@ -9,6 +9,7 @@ class StitchSet : public QStandardItemModel
 public:
     StitchSet();
 
+    void loadXmlStitches(QString fileName);
 private:
 
 };

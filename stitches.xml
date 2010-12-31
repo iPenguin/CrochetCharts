@@ -1,0 +1,25 @@
+<stitch_set>
+    <name>Default</name>
+    <author>Brian C. Milco</author>
+    <email>brian@stitchworkssoftware.com</email>
+    <org>Stitch Works Software</org>
+    <url>http://www.StitchWorksSoftware.com/</url>
+
+    <stitches>
+        <stitch>
+            <name>ch</name>
+            <icon>stitches/chain.svg</icon>
+            <description>chain</description>
+            <category>Basic</category>
+            <wrong_side>ch</wrong_side>
+        </stitch>
+
+        <stitch>
+            <name>sc</name>
+            <icon>stitches/single_crochet.svg</icon>
+            <description>single crochet</description>
+            <category>Basic</category>
+            <wrong_side>sc</wrong_side>
+        </stitch>
+    </stitches>
+</stitch_set>

@@ -2,3 +2,4 @@ VERSION
 build
 *~
 CMakeLists.txt.user
+*.kdev4
