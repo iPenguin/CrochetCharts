@@ -99,7 +99,7 @@ QString License::generateLicense(QString serialNumber, QString email)
     QString seed = info["seed"];
     QString licenseType = info["license_type"];
 
-    QByteArray data = seed.toLatin1() + serialNumber.toLatin1() + licenseType.toLatin1();
+    QByteArray data = seed.toLatin1() + serialNumber.toLatin1() + email.toLatin1() + licenseType.toLatin1();
 
     QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
     QString hashHex = hash.toHex();

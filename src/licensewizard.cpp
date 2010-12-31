@@ -30,10 +30,11 @@
  *the settings class will default to the official website, but if the
  *user changes the setting in the config file this wizard will use that setting.
  */
-LicenseWizard::LicenseWizard(QWidget *parent)
+LicenseWizard::LicenseWizard(bool regOnly, QWidget *parent)
     : QWizard(parent)
 {
-    setPage(Page_Intro, new IntroPage);
+
+    setPage(Page_Intro, new IntroPage(regOnly));
     setPage(Page_Evaluate, new EvaluatePage);
     setPage(Page_Register, new RegisterPage);
     setPage(Page_Conclusion, new ConclusionPage);
@@ -78,7 +79,7 @@ void LicenseWizard::showHelp()
     lastHelpMessage = message;
 }
 
-IntroPage::IntroPage(QWidget *parent)
+IntroPage::IntroPage(bool regOnly, QWidget *parent)
     : QWizardPage(parent)
 {
     setTitle(tr("Introduction"));
@@ -89,8 +90,11 @@ IntroPage::IntroPage(QWidget *parent)
     topLabel->setWordWrap(true);
 
     registerRadioButton = new QRadioButton(tr("&Register your copy"));
-    evaluateRadioButton = new QRadioButton(tr("&Evaluate for 30 days"));
+    evaluateRadioButton = new QRadioButton(tr("&Evaluate this software"));
     registerRadioButton->setChecked(true);
+
+    evaluateRadioButton->setEnabled(!regOnly);
+    evaluateRadioButton->setVisible(!regOnly);
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(topLabel);
@@ -115,7 +119,7 @@ EvaluatePage::EvaluatePage(QWidget *parent)
     mLicHttp = new LicenseHttp(this);
 
     setTitle(tr("Evaluate <i>%1</i>&trade;").arg(qApp->applicationName()));
-    setSubTitle(tr("Please fill both fields. Make sure to provide a valid "
+    setSubTitle(tr("Please fill all fields. Make sure to provide a valid "
                    "email address (e.g., john.smith@example.com)."));
 
     firstNameLabel = new QLabel(tr("&First Name:"));
@@ -187,7 +191,7 @@ RegisterPage::RegisterPage(QWidget *parent)
     mLicHttp = new LicenseHttp(this);
 
     setTitle(tr("Register Your Copy of <i>%1</i>&trade;").arg(qApp->applicationName()));
-    setSubTitle(tr("Please fill in all the fields."));
+    setSubTitle(tr("Please fill in all fields. The Serial Number should use the form XXXX-XXX-XXXX and it should include the dashes."));
 
     firstNameLabel = new QLabel(tr("&First Name:"));
     firstNameLineEdit = new QLineEdit(this);
@@ -227,6 +231,17 @@ RegisterPage::RegisterPage(QWidget *parent)
     layout->addWidget(serialNumberLabel, 3, 0);
     layout->addWidget(serialNumberLineEdit, 3, 1);
     setLayout(layout);
+}
+
+void RegisterPage::initializePage()
+{
+    QString fName = Settings::inst()->value("firstName", QVariant("")).toString();
+    QString lName = Settings::inst()->value("lastName", QVariant("")).toString();
+    QString email = Settings::inst()->value("email", QVariant("")).toString();
+
+    firstNameLineEdit->setText(fName);
+    lastNameLineEdit->setText(lName);
+    emailLineEdit->setText(email);
 }
 
 bool RegisterPage::validatePage()
@@ -309,7 +324,8 @@ void ConclusionPage::initializePage()
     licenseEdit->setHtml(licenseText);
     licenseEdit->setReadOnly(true);
 
-    Settings::inst()->setValue("name", QVariant(fname + " " + lname));
+    Settings::inst()->setValue("firstName", QVariant(fname));
+    Settings::inst()->setValue("lastName", QVariant(lname));
     Settings::inst()->setValue("email", QVariant(email));
     Settings::inst()->setValue("serialNumber", QVariant(sn));
     Settings::inst()->setValue("license", QVariant(license));
@@ -342,7 +358,8 @@ void ConclusionPage::printButtonClicked()
 void ConclusionPage::cleanupPage()
 {
     //the back button has been pressed, clear the data entered...
-    Settings::inst()->setValue("name", "");
+    Settings::inst()->setValue("firstName", "");
+    Settings::inst()->setValue("lastName", "");
     Settings::inst()->setValue("email", "");
     Settings::inst()->setValue("serialNumber", "");
     Settings::inst()->setValue("license", "");

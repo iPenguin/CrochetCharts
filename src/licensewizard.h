@@ -18,10 +18,11 @@ class LicenseWizard : public QWizard
 public:
     enum { Page_Intro, Page_Evaluate, Page_Register, Page_Conclusion };
 
-    LicenseWizard(QWidget *parent = 0);
+    LicenseWizard(bool regOnly = false, QWidget *parent = 0);
 
 private slots:
     void showHelp();
+
 };
 
 class IntroPage : public QWizardPage
@@ -29,7 +30,7 @@ class IntroPage : public QWizardPage
     Q_OBJECT
 
 public:
-    IntroPage(QWidget *parent = 0);
+    IntroPage(bool regOnly = false, QWidget *parent = 0);
 
     int nextId() const;
 
@@ -74,6 +75,8 @@ public:
 
     bool validatePage();
     int nextId() const;
+
+    void initializePage();
 
 public slots:
     void getLicense(QString license, bool errors);
