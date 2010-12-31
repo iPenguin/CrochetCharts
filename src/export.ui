@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>370</width>
-    <height>158</height>
+    <height>188</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="fileTypeLbl">
        <property name="text">
         <string>File Type:</string>
        </property>
@@ -63,7 +63,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="optionsGroupBox">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -74,7 +74,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QLabel" name="label_3">
+         <widget class="QLabel" name="heightLbl">
           <property name="text">
            <string>Height:</string>
           </property>
@@ -94,7 +94,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_2">
+         <widget class="QLabel" name="widthLbl">
           <property name="text">
            <string>Width:</string>
           </property>
@@ -115,7 +115,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QLabel" name="label_4">
+         <widget class="QLabel" name="resolutionLbl">
           <property name="text">
            <string>Resolution:</string>
           </property>
@@ -132,6 +132,34 @@
           <property name="maximum">
            <number>300</number>
           </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="selectionLbl">
+          <property name="text">
+           <string>Selection:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="chartSelection">
+          <item>
+           <property name="text">
+            <string>Current Chart</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>All Charts</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>

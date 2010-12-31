@@ -5,7 +5,6 @@
 
 namespace Ui {
     class MainWindow;
-    class ExportDialog;
     class StitchLibraryDialog;
 }
 
@@ -42,7 +41,6 @@ private:
     void trialVersionMessage();
 
     Ui::MainWindow *ui;
-    Ui::ExportDialog *expDialog;
     Ui::StitchLibraryDialog *sld;
 
     void setupMenus();

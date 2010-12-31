@@ -184,7 +184,7 @@
   </action>
   <action name="actionExport">
    <property name="text">
-    <string>Export...</string>
+    <string>E&amp;xport...</string>
    </property>
    <property name="shortcut">
     <string/>

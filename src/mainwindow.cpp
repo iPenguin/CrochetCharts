@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "ui_export.h"
 #include "ui_stitchlibrary.h"
 
 #include <QDialog>
@@ -14,6 +13,7 @@
 #include "settingsui.h"
 
 #include "licensewizard.h"
+#include "exportui.h"
 
 #include <QDebug>
 
@@ -70,22 +70,13 @@ void MainWindow::setupMenus()
 
 void MainWindow::fileExport()
 {
-    QDialog *d = new QDialog(this);
-    expDialog = new Ui::ExportDialog();
-    expDialog->setupUi(d);
-
-    int value = d->exec();
-
-    if(value != QDialog::Accepted) {
-        delete d;
-        d = 0;
-        return;
+    //TODO: pass the tab, or tabbar into the dialog so it can work on the data.
+    ExportUi d(this);
+    if(d.exec() == QDialog::Accepted) {
+        QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
+        QString fileName = QFileDialog::getSaveFileName(this,
+             tr("Export Pattern As..."), fileLoc, tr(""));
     }
-
-    qWarning() << "Make this dialog do something.";
-
-    delete d;
-    d = 0;
 }
 
 void MainWindow::documentNewChart()

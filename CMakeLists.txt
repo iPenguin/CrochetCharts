@@ -51,6 +51,7 @@ set(crochet_srcs
     src/settingsui.cpp
     src/splashscreen.cpp
     src/licensehttp.cpp
+    src/exportui.cpp
     )
 
 set(crochet_qobject_headers
@@ -70,6 +71,7 @@ set(crochet_qobject_headers
     src/settingsui.h
     src/splashscreen.h
     src/licensehttp.h
+    src/exportui.h
     )
 
 set(crochet_headers
