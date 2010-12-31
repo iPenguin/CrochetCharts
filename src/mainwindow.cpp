@@ -168,6 +168,11 @@ void MainWindow::fileOpen()
 
 void MainWindow::fileSave()
 {
+    if(Settings::inst()->isDemoVersion()) {
+        this->trialVersionMessage();
+        return;
+    }
+
     QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
     QString fileName = QFileDialog::getSaveFileName(this,
         tr("Save Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.crochet)"));
@@ -180,6 +185,10 @@ void MainWindow::fileSave()
 
 void MainWindow::fileSaveAs()
 {
+    if(Settings::inst()->isDemoVersion()) {
+        this->trialVersionMessage();
+        return;
+    }
 
     qDebug() << "save the file as";
 }
@@ -224,5 +233,18 @@ void MainWindow::toolsStitchLibrary()
 
     delete d;
     d = 0;
+
+}
+
+void MainWindow::trialVersionMessage()
+{
+    QMessageBox msgbox(this);
+    msgbox.setWindowTitle(qApp->applicationName());
+    msgbox.setText(tr("This feature is disabled in the demo version."));
+    msgbox.setInformativeText(tr("There are some examples output files and screen shots on the website."));
+    msgbox.setStandardButtons(QMessageBox::Ok);
+    msgbox.setIcon(QMessageBox::Information);
+
+    msgbox.exec();
 
 }

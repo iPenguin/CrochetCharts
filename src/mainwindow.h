@@ -39,6 +39,7 @@ private slots:
 
 private:
     void readSettings();
+    void trialVersionMessage();
 
     Ui::MainWindow *ui;
     Ui::ExportDialog *expDialog;
