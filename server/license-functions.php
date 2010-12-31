@@ -113,7 +113,7 @@ function generate_license($serial_number, $email)
     $license_type = $info['license_type'];
     $seed = $info['seed'];
        
-    $data = $seed . $serial_number . $license_type;
+    $data = $seed . $serial_number . $email . $license_type;
     $hash = sha1($data);
     $beginning = substr($hash, 0, 4);
     $middle = substr($hash, 18, 4);
