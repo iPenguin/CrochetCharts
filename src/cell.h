@@ -14,6 +14,11 @@ public:
     void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
     int type () const;
 
+    void setRotation(double rotation) { mRotation = rotation; }
+    const double rotation() { return mRotation; }
+
+    void setAngle(double angle) { mAngle = angle; }
+    const double angle() { return mRotation; }
 
 signals:
 
@@ -21,7 +26,8 @@ public slots:
 
 
 private:
-
+    double mRotation;
+    double mAngle;
 };
 
 #endif // CELL_H
