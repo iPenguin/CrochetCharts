@@ -13,14 +13,18 @@ public:
     void setValue(const QString &key, const QVariant &value);
     QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
 
-    bool isDemoVersion();
+    bool isDemoVersion() { return mIsDemoVersion; }
+    void setDemoVersion(bool isDemo) { mIsDemoVersion = isDemo; }
 
 private:
+    void initDemoVersion();
     static Settings *mInstance;
 
     Settings();
 
     QSettings mSettings;
+
+    bool mIsDemoVersion;
 };
 
 #endif //SETTINGS_H

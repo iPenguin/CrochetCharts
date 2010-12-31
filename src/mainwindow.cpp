@@ -110,11 +110,21 @@ void MainWindow::helpAbout()
     QString email = Settings::inst()->value("email").toString();
     QString sn = Settings::inst()->value("serialNumber").toString();
 
-    QString licenseInfo = QString(tr("<p>This software is licensed to:<br />"
-                                     "Name: %1 %2<br />"
-                                     "Email: %3<br />"
-                                     "Serial #: %4</p>")
-                                  .arg(fName).arg(lName).arg(email).arg(sn));
+    QString licenseInfo;
+
+    if(Settings::inst()->isDemoVersion()) {
+        licenseInfo = QString(tr("<p>This is a demo version licensed to:<br />"
+                              "Name: %1 %2<br />"
+                              "Email: %3<br /></p>")
+                              .arg(fName).arg(lName).arg(email));
+    } else {
+        licenseInfo = QString(tr("<p>This software is licensed to:<br />"
+                              "Name: %1 %2<br />"
+                              "Email: %3<br />"
+                              "Serial #: %4</p>")
+                              .arg(fName).arg(lName).arg(email).arg(sn));
+    }
+
     aboutInfo.append(licenseInfo);
     QMessageBox::about(this, tr("About Crochet"), aboutInfo);
 }
@@ -186,7 +196,9 @@ void MainWindow::toolsRegisterSoftware()
 {
     if(Settings::inst()->isDemoVersion()) {
         LicenseWizard wizard(true, this);
-        if(wizard.exec() != QWizard::Accepted)
+        if(wizard.exec() != QWizard::Accepted) {
+                Settings::inst()->setDemoVersion(false);
                 return;
+        }
     }
 }
