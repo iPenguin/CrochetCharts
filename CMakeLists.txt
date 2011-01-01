@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release DebugProfiling CACHE TYPE INTERNAL FORCE)
-
+set(CMAKE_BUILD_TYPE "Debug")
 project(Crochet)
 
 find_package(Qt4 REQUIRED)
