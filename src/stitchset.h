@@ -1,6 +1,7 @@
 #ifndef STITCHSET_H
 #define STITCHSET_H
 
+#include <QList>
 #include <QStandardItemModel>
 
 class StitchSet : public QStandardItemModel
@@ -15,6 +16,8 @@ private:
 
     //TODO: figure out which stitches should be saved to which file...
     void saveXmlStitches(QString fileName);
+
+    QList<Stitch *> mStitches;
 
 };
 
