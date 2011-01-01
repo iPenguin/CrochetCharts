@@ -57,6 +57,7 @@ function(get_git_head_revision _refspecvar _hashvar)
 	configure_file("${_gitdescmoddir}/GetGitRevisionDescription.cmake.in" "${GIT_DATA}/grabRef.cmake" @ONLY)
 	include("${GIT_DATA}/grabRef.cmake")
 
+    message(STATUS "current version" ${DESCRIBE_VER})
 	set(${_refspecvar} "${HEAD_REF}" PARENT_SCOPE)
 	set(${_hashvar} "${HEAD_HASH}" PARENT_SCOPE)
 endfunction()
