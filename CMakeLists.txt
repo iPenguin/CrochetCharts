@@ -20,12 +20,17 @@ set(CMAKE_EXE_LINKER_FLAGS_DEBUGPROFILING "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
 option(UNIT_TESTING  "Build QTestLib Unit Tests" OFF)
 
-add_custom_command(OUTPUT "VERSION" COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/version_number.sh")
-#http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
-#file(READ "VERSION" ${VERSION})
+exec_program("git" ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe" OUTPUT_VARIABLE VERSION)
 
-message("-- Build Profile  - " ${CMAKE_BUILD_TYPE})
-message("-- Unit Testing   - " ${UNIT_TESTING})
+string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
+string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
+string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
+
+configure_file ( "${CMAKE_CURRENT_SOURCE_DIR}/version.h.in" "${CMAKE_CURRENT_BINARY_DIR}/version.h")
+
+message(STATUS "Building Version - " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH})
+message(STATUS "Build Profile - " ${CMAKE_BUILD_TYPE})
+message(STATUS "Unit Testing - " ${UNIT_TESTING})
 
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -152,7 +157,8 @@ include(InstallRequiredSystemLibraries)
 
 set(CPACK_RESOURCE_FILE_LICENSE  "${CMAKE_CURRENT_SOURCE_DIR}/license.txt")
 #TODO: get the version information from git.
-set(CPACK_PACKAGE_VERSION_MAJOR "1")
-set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
 
 include(CPack)

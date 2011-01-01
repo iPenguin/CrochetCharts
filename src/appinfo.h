@@ -1,9 +1,10 @@
 #ifndef APPINFO_H
 #define APPINFO_H
 
-#include "../VERSION"
 #include <QString>
 #include <QRegExp>
+
+#define GIT_SHA1 @GIT_VERSION@
 
 namespace AppInfo {
     const QString appName = "Crochet";
@@ -11,7 +12,7 @@ namespace AppInfo {
 
     const QString appOrgDomain = "StitchWorksSoftware.com";
     const QString appOrgContact = "http://StitchWorksSoftware.com/contact";
-    const QString appVersion = GIT_VERSION; //ie: 0.1.1
+    const QString appVersion = GIT_SHA1; //"@GIT_VERSION@";
 
     const QString appBuildInfo = QString(__DATE__) + " " + QString(__TIME__);
 
