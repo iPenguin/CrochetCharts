@@ -1,24 +1,4 @@
-# - Returns a version string from Git
-#
-# These functions force a re-configure on each git commit so that you can
-# trust the values of the variables in your build system.
-#
-#  get_git_head_revision(<refspecvar> <hashvar> [<additonal arguments to git describe> ...])
-#
-# Returns the refspec and sha hash of the current head revision
-#
-#  git_describe(<var> [<additonal arguments to git describe> ...])
-#
-# Returns the results of git describe on the source tree, and adjusting
-# the output so that it tests false if an error occurs.
-#
-#  git_get_exact_tag(<var> [<additonal arguments to git describe> ...])
-#
-# Returns the results of git describe --exact-match on the source tree,
-# and adjusting the output so that it tests false if there was no exact
-# matching tag.
-#
-# Requires CMake 2.6 or newer (uses the 'function' command)
+#http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
 #
 # Original Author:
 # 2009-2010 Ryan Pavlik <rpavlik@iastate.edu> <abiryan@ryand.net>
@@ -39,7 +19,7 @@ set(__get_git_revision_description YES)
 # to find the path to this module rather than the path to a calling list file
 get_filename_component(_gitdescmoddir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
-function(get_git_head_revision _refspecvar _hashvar)
+function(get_git_head_revision _refspecvar _hashvar _describevar)
 	set(GIT_DIR "${CMAKE_SOURCE_DIR}/.git")
 	if(NOT EXISTS "${GIT_DIR}")
 		# not in git
@@ -58,6 +38,7 @@ function(get_git_head_revision _refspecvar _hashvar)
 	include("${GIT_DATA}/grabRef.cmake")
 
     message(STATUS "current version" ${DESCRIBE_VER})
+    set(${_describevar} "${DESCRIBE_VER}" PARENT_SCOPE)
 	set(${_refspecvar} "${HEAD_REF}" PARENT_SCOPE)
 	set(${_hashvar} "${HEAD_HASH}" PARENT_SCOPE)
 endfunction()
@@ -66,7 +47,7 @@ function(git_describe _var)
 	if(NOT GIT_FOUND)
 		find_package(Git QUIET)
 	endif()
-	get_git_head_revision(refspec hash)
+	get_git_head_revision(refspec hash version)
 	if(NOT GIT_FOUND)
 		set(${_var} "GIT-NOTFOUND"  PARENT_SCOPE)
 		return()
