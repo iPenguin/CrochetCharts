@@ -1,4 +1,24 @@
-#http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
+# - Returns a version string from Git
+#
+# These functions force a re-configure on each git commit so that you can
+# trust the values of the variables in your build system.
+#
+#  get_git_head_revision(<refspecvar> <hashvar> [<additonal arguments to git describe> ...])
+#
+# Returns the refspec and sha hash of the current head revision
+#
+#  git_describe(<var> [<additonal arguments to git describe> ...])
+#
+# Returns the results of git describe on the source tree, and adjusting
+# the output so that it tests false if an error occurs.
+#
+#  git_get_exact_tag(<var> [<additonal arguments to git describe> ...])
+#
+# Returns the results of git describe --exact-match on the source tree,
+# and adjusting the output so that it tests false if there was no exact
+# matching tag.
+#
+# Requires CMake 2.6 or newer (uses the 'function' command)
 #
 # Original Author:
 # 2009-2010 Ryan Pavlik <rpavlik@iastate.edu> <abiryan@ryand.net>
@@ -54,8 +74,10 @@ function(git_describe _var)
 		set(${_var} "HEAD-HASH-NOTFOUND"  PARENT_SCOPE)
 		return()
 	endif()
-	
-    execute_process(COMMAND "${GIT_EXECUTABLE}" describe ${ARGN}
+
+	#message(STATUS "Arguments to execute_process: ${ARGN}")
+
+	execute_process(COMMAND "${GIT_EXECUTABLE}" describe ${ARGN}
 		WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 		RESULT_VARIABLE res
 		OUTPUT_VARIABLE out
@@ -68,3 +90,7 @@ function(git_describe _var)
 	set(${_var} "${out}" PARENT_SCOPE)
 endfunction()
 
+function(git_get_exact_tag _var)
+	git_describe(out --exact-match ${ARGN})
+	set(${_var} "${out}" PARENT_SCOPE)
+endfunction()

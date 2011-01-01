@@ -29,18 +29,5 @@ endif()
 file(READ "@GIT_DATA@/head-ref" HEAD_HASH LIMIT 1024)
 string(STRIP "${HEAD_HASH}" HEAD_HASH)
 
+
 set(HEAD_HASH "${HEAD_CONTENTS}")
-
-if(NOT GIT_FOUND)
-	find_package(Git QUIET)
-endif()
-
-execute_process(COMMAND "${GIT_EXECUTABLE}" describe --tags --dirty 
-	WORKING_DIRECTORY "@CMAKE_SOURCE_DIR@"
-	RESULT_VARIABLE res
-	OUTPUT_VARIABLE _GIT_VERSION
-	ERROR_QUIET
-	OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
-            ${CMAKE_CURRENT_BINARY_DIR}/version.cpp @ONLY)
