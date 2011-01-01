@@ -19,8 +19,6 @@ private:
     void saveXmlStitches(QString fileName);
 
     QList<Stitch *> mStitches;
-
 };
-
 
 #endif //STITCHSET_H
