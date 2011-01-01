@@ -9,8 +9,12 @@ class StitchSet : public QStandardItemModel
 public:
     StitchSet();
 
-    void loadXmlStitches(QString fileName);
+    void loadStitches();
 private:
+    void loadXmlStitches(QString fileName);
+
+    //TODO: figure out which stitches should be saved to which file...
+    void saveXmlStitches(QString fileName);
 
 };
 
