@@ -7,17 +7,34 @@
 
 #include <math.h>
 
+#include <QDebug>
+
 #include "settings.h"
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent)
 {
     mStitchWidth = 64;
+
+    this->createRow(8);
+    this->createRow(14);
+    this->createRow(20);
+    this->createRow(26);
+    this->createRow(32);
+    this->createRow(38);
+    this->createRow(44);
+    this->createRow(50);
+    this->createRow(56);
+    this->createRow(62);
+    this->createRow(68);
+    this->createRow(74);
+
     this->initDemoBackground();
 }
 
 void CrochetScene::initDemoBackground()
 {
+
     if(Settings::inst()->isDemoVersion()) {
 
         double fontSize = 32.0;

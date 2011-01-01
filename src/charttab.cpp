@@ -22,19 +22,6 @@ ChartTab::ChartTab(QWidget *parent) :
     mView->setScene(mScene);
     l->addWidget(mView);
     l->setMargin(0);
-
-    mScene->createRow(8);
-    mScene->createRow(14);
-    mScene->createRow(20);
-    mScene->createRow(26);
-    mScene->createRow(32);
-    mScene->createRow(38);
-    mScene->createRow(44);
-    mScene->createRow(50);
-    mScene->createRow(56);
-    mScene->createRow(62);
-    mScene->createRow(68);
-    mScene->createRow(74);
 }
 
 void ChartTab::savePdf(QPrinter printer, QString fileName, int resolution)
