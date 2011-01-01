@@ -24,6 +24,8 @@ string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSI
 #configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
 #                ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
 
+add_definitions("-DGIT_VERSION=${_GIT_VERSION}")
+
 find_package(Qt4 REQUIRED)
 find_package(Automoc4 REQUIRED)
 
