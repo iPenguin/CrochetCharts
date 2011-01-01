@@ -7,15 +7,16 @@ project(Crochet)
 find_package(Qt4 REQUIRED)
 
 set(CMAKE_C_FLAGS "-g -Wall")
-set(CMAKE_C_FLAGS_DEBUG "-g -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
-set(CMAKE_C_FLAGS_RELEASE "-g -Wall -O2")
-set(CMAKE_C_FLAGS_DEBUGPROFILING "-g -pg -Wall")
-
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
-set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
-set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
-set(CMAKE_CXX_FLAGS_DEBUGPROFILING ${CMAKE_C_FLAGS_DEBUGPROFILING})
 
+set(CMAKE_C_FLAGS_DEBUG "-g -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
+set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
+
+set(CMAKE_C_FLAGS_RELEASE "-g -Wall -O2")
+set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
+
+set(CMAKE_C_FLAGS_DEBUGPROFILING "-g -pg -Wall")
+set(CMAKE_CXX_FLAGS_DEBUGPROFILING ${CMAKE_C_FLAGS_DEBUGPROFILING})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUGPROFILING "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
 option(UNIT_TESTING  "Build QTestLib Unit Tests" OFF)
@@ -127,8 +128,8 @@ elseif(APPLE)
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
 #plutil command line utility to edit plist files.
 #http://rixstep.com/2/20060901,00.shtml
-    set(MACOSX_BUNDLE_INFO_STRING "Crochet - version 0.1.1")
-    set(MACOSX_BUNDLE_BUNDLE_VERSION "0.1.1")
+    set(MACOSX_BUNDLE_INFO_STRING "Crochet - version " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH})
+    set(MACOSX_BUNDLE_BUNDLE_VERSION ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH})
     set(MACOSX_BUNDLE_ICON_FILE "platforms/mac/crochet.icns")
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware")
     set(MACOSX_BUNDLE_BUNDLE_NAME "Crochet")
