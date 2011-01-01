@@ -29,19 +29,19 @@ endif()
 file(READ "@GIT_DATA@/head-ref" HEAD_HASH LIMIT 1024)
 string(STRIP "${HEAD_HASH}" HEAD_HASH)
 
+set(HEAD_HASH "${HEAD_CONTENTS}")
+
 if(NOT GIT_FOUND)
 	find_package(Git QUIET)
 endif()
 
-set(HEAD_HASH "${HEAD_CONTENTS}")
-
 execute_process(COMMAND "${GIT_EXECUTABLE}" describe --tags --dirty 
-	WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+	WORKING_DIRECTORY "@CMAKE_SOURCE_DIR@"
 	RESULT_VARIABLE res
 	OUTPUT_VARIABLE out
 	ERROR_QUIET
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-file(WRITE "@GIT_DIR@/version" ${out})
+file(WRITE "@GIT_DATA@/version" ${out})
 
-set(DESCRIBE_VER "${out}")
+set(_GIT_VERSION "${out}")

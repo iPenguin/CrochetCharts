@@ -14,7 +14,7 @@ set(CMAKE_BUILD_TYPE "Debug")
 project(Crochet)
 
 include(GetGitRevisionDescription)
-git_describe(VERSION " --tags --dirty")
+git_describe(VERSION --tags --dirty)
 
 string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
 string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")

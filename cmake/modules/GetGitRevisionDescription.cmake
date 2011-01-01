@@ -19,7 +19,7 @@ set(__get_git_revision_description YES)
 # to find the path to this module rather than the path to a calling list file
 get_filename_component(_gitdescmoddir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
-function(get_git_head_revision _refspecvar _hashvar _describevar)
+function(get_git_head_revision _refspecvar _hashvar _version)
 	set(GIT_DIR "${CMAKE_SOURCE_DIR}/.git")
 	if(NOT EXISTS "${GIT_DIR}")
 		# not in git
@@ -37,8 +37,7 @@ function(get_git_head_revision _refspecvar _hashvar _describevar)
 	configure_file("${_gitdescmoddir}/GetGitRevisionDescription.cmake.in" "${GIT_DATA}/grabRef.cmake" @ONLY)
 	include("${GIT_DATA}/grabRef.cmake")
 
-    message(STATUS "current version" ${DESCRIBE_VER})
-    set(${_describevar} "${DESCRIBE_VER}" PARENT_SCOPE)
+    set(${_version} "${_GIT_VERSION}" PARENT_SCOPE)
 	set(${_refspecvar} "${HEAD_REF}" PARENT_SCOPE)
 	set(${_hashvar} "${HEAD_HASH}" PARENT_SCOPE)
 endfunction()
@@ -56,18 +55,8 @@ function(git_describe _var)
 		set(${_var} "HEAD-HASH-NOTFOUND"  PARENT_SCOPE)
 		return()
 	endif()
-
-	# TODO sanitize
-	#if((${ARGN}" MATCHES "&&") OR
-	#	(ARGN MATCHES "||") OR
-	#	(ARGN MATCHES "\\;"))
-	#	message("Please report the following error to the project!")
-	#	message(FATAL_ERROR "Looks like someone's doing something nefarious with git_describe! Passed arguments ${ARGN}")
-	#endif()
-
-	#message(STATUS "Arguments to execute_process: ${ARGN}")
-
-	execute_process(COMMAND "${GIT_EXECUTABLE}" describe --tags --dirty 
+    message(${version})
+	execute_process(COMMAND "${GIT_EXECUTABLE}" describe ${ARGN}
 		WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 		RESULT_VARIABLE res
 		OUTPUT_VARIABLE out
@@ -80,7 +69,3 @@ function(git_describe _var)
 	set(${_var} "${out}" PARENT_SCOPE)
 endfunction()
 
-#function(git_get_exact_tag _var)
-#	git_describe(out --exact-match ${ARGN})
-#	set(${_var} "${out}" PARENT_SCOPE)
-#endfunction()
