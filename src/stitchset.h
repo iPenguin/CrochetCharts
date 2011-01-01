@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QStandardItemModel>
+#include "stitch.h"
 
 class StitchSet : public QStandardItemModel
 {
