@@ -21,8 +21,8 @@ string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
 string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
 string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
-                ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
+#configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
+#                ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
 
 find_package(Qt4 REQUIRED)
 find_package(Automoc4 REQUIRED)

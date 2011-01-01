@@ -38,10 +38,9 @@ endif()
 execute_process(COMMAND "${GIT_EXECUTABLE}" describe --tags --dirty 
 	WORKING_DIRECTORY "@CMAKE_SOURCE_DIR@"
 	RESULT_VARIABLE res
-	OUTPUT_VARIABLE out
+	OUTPUT_VARIABLE _GIT_VERSION
 	ERROR_QUIET
 	OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-file(WRITE "@GIT_DATA@/version" ${out})
-
-set(_GIT_VERSION "${out}")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
+            ${CMAKE_CURRENT_BINARY_DIR}/version.cpp @ONLY)

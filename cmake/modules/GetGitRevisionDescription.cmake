@@ -19,7 +19,7 @@ set(__get_git_revision_description YES)
 # to find the path to this module rather than the path to a calling list file
 get_filename_component(_gitdescmoddir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
-function(get_git_head_revision _refspecvar _hashvar _version)
+function(get_git_head_revision _refspecvar _hashvar)
 	set(GIT_DIR "${CMAKE_SOURCE_DIR}/.git")
 	if(NOT EXISTS "${GIT_DIR}")
 		# not in git
@@ -37,7 +37,6 @@ function(get_git_head_revision _refspecvar _hashvar _version)
 	configure_file("${_gitdescmoddir}/GetGitRevisionDescription.cmake.in" "${GIT_DATA}/grabRef.cmake" @ONLY)
 	include("${GIT_DATA}/grabRef.cmake")
 
-    set(${_version} "${_GIT_VERSION}" PARENT_SCOPE)
 	set(${_refspecvar} "${HEAD_REF}" PARENT_SCOPE)
 	set(${_hashvar} "${HEAD_HASH}" PARENT_SCOPE)
 endfunction()
@@ -46,7 +45,7 @@ function(git_describe _var)
 	if(NOT GIT_FOUND)
 		find_package(Git QUIET)
 	endif()
-	get_git_head_revision(refspec hash version)
+	get_git_head_revision(refspec hash)
 	if(NOT GIT_FOUND)
 		set(${_var} "GIT-NOTFOUND"  PARENT_SCOPE)
 		return()
@@ -55,8 +54,8 @@ function(git_describe _var)
 		set(${_var} "HEAD-HASH-NOTFOUND"  PARENT_SCOPE)
 		return()
 	endif()
-    message(${version})
-	execute_process(COMMAND "${GIT_EXECUTABLE}" describe ${ARGN}
+	
+    execute_process(COMMAND "${GIT_EXECUTABLE}" describe ${ARGN}
 		WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
 		RESULT_VARIABLE res
 		OUTPUT_VARIABLE out
