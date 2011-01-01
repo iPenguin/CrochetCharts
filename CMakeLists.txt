@@ -18,7 +18,11 @@ set(CMAKE_CXX_FLAGS_DEBUGPROFILING ${CMAKE_C_FLAGS_DEBUGPROFILING})
 
 set(CMAKE_EXE_LINKER_FLAGS_DEBUGPROFILING "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
-option(UNIT_TESTING  "Build QTestLib Unit Tests" false)
+option(UNIT_TESTING  "Build QTestLib Unit Tests" OFF)
+
+add_custom_command(OUTPUT "VERSION" COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/version_number.sh")
+#http://stackoverflow.com/questions/1435953/how-can-i-pass-git-sha1-to-compiler-as-definition-using-cmake
+#file(READ "VERSION" ${VERSION})
 
 message("-- Build Profile  - " ${CMAKE_BUILD_TYPE})
 message("-- Unit Testing   - " ${UNIT_TESTING})
@@ -147,5 +151,8 @@ target_link_libraries(crochet ${QT_LIBRARIES})
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_RESOURCE_FILE_LICENSE  "${CMAKE_CURRENT_SOURCE_DIR}/license.txt")
+#TODO: get the version information from git.
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
 
 include(CPack)
