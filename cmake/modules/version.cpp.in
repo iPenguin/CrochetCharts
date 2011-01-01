@@ -1,0 +1,4 @@
+#include "../src/version.h"
+
+#define GIT_VERSION "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@@VERSION_SHA1@"
+const QString gGIT_VERSION = GIT_VERSION;

@@ -1,10 +1,31 @@
 cmake_minimum_required(VERSION 2.8)
 
+# Appends the cmake/modules path inside the MAKE_MODULE_PATH variable which stores the
+# directories of additional CMake modules (eg MacroOutOfSourceBuild.cmake):
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
+
+# The macro below forces the build directory to be different from source directory:
+include(MacroOutOfSourceBuild)
+
+macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build.")
+
 set(CMAKE_CONFIGURATION_TYPES Debug Release DebugProfiling CACHE TYPE INTERNAL FORCE)
 set(CMAKE_BUILD_TYPE "Debug")
 project(Crochet)
 
+include(GetGitRevisionDescription)
+git_describe(VERSION " --tags --dirty")
+
+string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
+string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
+string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
+string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
+                ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
+
 find_package(Qt4 REQUIRED)
+find_package(Automoc4 REQUIRED)
 
 set(CMAKE_C_FLAGS "-g -Wall")
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
@@ -20,15 +41,6 @@ set(CMAKE_CXX_FLAGS_DEBUGPROFILING ${CMAKE_C_FLAGS_DEBUGPROFILING})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUGPROFILING "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
 option(UNIT_TESTING  "Build QTestLib Unit Tests" OFF)
-
-exec_program("git" ${CMAKE_CURRENT_SOURCE_DIR} ARGS "describe --tags --dirty" OUTPUT_VARIABLE VERSION)
-
-string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
-string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
-string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
-string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
-
-add_custom_command(OUTPUT version.h COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/version.cmake)
 
 message(STATUS "Building Version - " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH} ${VERSION_SHA1})
 message(STATUS "Build Profile - " ${CMAKE_BUILD_TYPE})
@@ -86,10 +98,15 @@ set(crochet_qobject_headers
     )
 
 set(crochet_headers
+    src/version.h
     src/appinfo.h
     src/license.h
     )
- 
+
+set(crochet_version
+    "${CMAKE_CURRENT_BINARY_DIR}/version.cpp"
+    )
+
 set(crochet_uis
     src/export.ui
     src/mainwindow.ui
@@ -150,8 +167,8 @@ qt4_wrap_ui(crochet_ui_h ${crochet_uis})
 qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers})
 qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 
-add_executable(crochet WIN32 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
-                ${crochet_win} ${crochet_mac} ${crochet_nix}
+add_executable(crochet WIN32 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs} 
+                ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix}
                 )
 target_link_libraries(crochet ${QT_LIBRARIES})
 
