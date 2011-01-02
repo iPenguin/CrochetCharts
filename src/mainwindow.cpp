@@ -12,6 +12,8 @@
 #include "settings.h"
 #include "settingsui.h"
 
+#include "stitchset.h"
+
 #include "licensewizard.h"
 #include "exportui.h"
 
@@ -26,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->readSettings();
 
+    StitchSet::inst()->loadXmlStitchSet("/home/brian/crochet.git/stitches/stitches.xml");
+
 }
 
 MainWindow::~MainWindow()
@@ -37,6 +41,12 @@ void MainWindow::setupMenus()
 {
     //File
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
+    ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
+    ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
+    ui->actionSave->setIcon(QIcon::fromTheme("document-save"));
+    ui->actionSaveAs->setIcon(QIcon::fromTheme("document-save-as"));
+    ui->actionClose->setIcon(QIcon::fromTheme("document-close"));
+
     connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
     connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
 
@@ -44,10 +54,17 @@ void MainWindow::setupMenus()
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
     //Edit
+    ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy" /*, QIcon(":/edit-copy.png")*/));
+    ui->actionCut->setIcon(QIcon::fromTheme("edit-cut" /*, QIcon(":/edit-cut.png")*/));
+    ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste" /*, QIcon(":/edit-paste.png")*/));
 
     //View
     connect(ui->menuView, SIGNAL(aboutToShow()), this, SLOT(menuViewAboutToShow()));
     connect(ui->actionShowStitches, SIGNAL(triggered()), this, SLOT(viewShowStitches()));
+
+    ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in"));
+    ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out"));
+
     //Document
 
     connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
