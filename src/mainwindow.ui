@@ -98,6 +98,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionCrochetHelp"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuFile"/>
@@ -232,7 +234,7 @@
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>&amp;About</string>
+    <string>&amp;About Crochet</string>
    </property>
   </action>
   <action name="actionOptions">
@@ -282,6 +284,11 @@
   <action name="actionRegisterSoftware">
    <property name="text">
     <string>Register this Software</string>
+   </property>
+  </action>
+  <action name="actionCrochetHelp">
+   <property name="text">
+    <string>Crochet Help</string>
    </property>
   </action>
  </widget>
