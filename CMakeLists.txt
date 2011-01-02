@@ -56,26 +56,8 @@ include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
 
-set(crochet_srcs
-    src/cell.cpp
-    src/charttab.cpp
-    src/crochetcell.cpp
-    src/crochetdatamodel.cpp
-    src/main.cpp
-    src/mainwindow.cpp
-    src/stitch.cpp
-    src/stitchset.cpp
-    src/crochetscene.cpp
-    src/licensewizard.cpp
-    src/licensevalidator.cpp
-    src/settings.cpp
-    src/license.cpp
-    src/undocommands.cpp
-    src/settingsui.cpp
-    src/splashscreen.cpp
-    src/licensehttp.cpp
-    src/exportui.cpp
-    )
+
+file(GLOB crochet_srcs "src/*.cpp")
 
 set(crochet_qobject_headers
     src/mainwindow.h
@@ -95,6 +77,7 @@ set(crochet_qobject_headers
     src/splashscreen.h
     src/licensehttp.h
     src/exportui.h
+    src/stitchcollection.h
     )
 
 set(crochet_headers
