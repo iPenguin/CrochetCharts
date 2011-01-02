@@ -1,25 +1,71 @@
-<stitch_set tag="test">
-    <name>Default</name>
+<stitch_set>
+    <name>Default Set</name>
     <author>Brian C. Milco</author>
     <email>brian@stitchworkssoftware.com</email>
     <org>Stitch Works Software</org>
     <url>http://www.StitchWorksSoftware.com/</url>
 
-    <stitches>
-        <stitch>
-            <name>ch</name>
-            <icon>stitches/chain.svg</icon>
-            <description>chain</description>
-            <category>Basic</category>
-            <wrong_side>ch</wrong_side>
-        </stitch>
+    <stitch>
+        <name>ss</name>
+        <icon>stitches/slip.svg</icon>
+        <description>Slip stitch</description>
+        <category>Basic</category>
+        <ws>ss</ws>
+    </stitch>
 
-        <stitch>
-            <name>sc</name>
-            <icon>stitches/single_crochet.svg</icon>
-            <description>single crochet</description>
-            <category>Basic</category>
-            <wrong_side>sc</wrong_side>
-        </stitch>
-    </stitches>
+    <stitch>
+        <name>ch</name>
+        <icon>stitches/chain.svg</icon>
+        <description>chain</description>
+        <category>Basic</category>
+        <ws>ch</ws>
+    </stitch>
+
+    <stitch>
+        <name>sc</name>
+        <icon>stitches/single_crochet.svg</icon>
+        <description>single crochet</description>
+        <category>Basic</category>
+        <ws>sc</ws>
+    </stitch>
+
+    <stitch>
+        <name>hdc</name>
+        <icon>stitches/half_double_crochet.svg</icon>
+        <description>half double crochet</description>
+        <category>Basic</category>
+        <ws>hdc</ws>
+    </stitch>
+
+    <stitch>
+        <name>dc</name>
+        <icon>stitches/double_crochet.svg</icon>
+        <description>double crochet</description>
+        <category>Basic</category>
+        <ws>dc</ws>
+    </stitch>
+
+    <stitch>
+        <name>tc</name>
+        <icon>stitches/treble_crochet.svg</icon>
+        <description>treble crochet</description>
+        <category>Basic</category>
+        <ws>tc</ws>
+    </stitch>
+
+    <stitch>
+        <name>dtc</name>
+        <icon>stitches/double_treble_crochet.svg</icon>
+        <description>double treble crochet</description>
+        <category>Basic</category>
+        <ws>dtc</ws>
+    </stitch>
+
+    <stitch>
+        <name>ttc</name>
+        <icon>stitches/triple_treble_crochet.svg</icon>
+        <description>triple treble crochet</description>
+        <category>Basic</category>
+        <ws>ttc</ws>
+    </stitch>
 </stitch_set>
