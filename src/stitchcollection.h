@@ -22,9 +22,15 @@ class StitchCollection : public QObject
     Q_OBJECT
 
 public:
+    static StitchCollection* inst();
+
     StitchCollection(QObject *parent = 0);
 
 private:
+
+    static StitchCollection *mInstance;
+
+
     QList<StitchSet *> mStitchSets;
     StitchSet *mStitches;
 

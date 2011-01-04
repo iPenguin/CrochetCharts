@@ -28,7 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     this->readSettings();
 
-    StitchSet::inst()->loadXmlStitchSet("/home/brian/crochet.git/stitches/stitches.xml");
+    StitchSet *set = new StitchSet();
+    set->loadXmlStitchSet("/home/brian/crochet.git/stitches/stitches.xml");
+    delete set;
+    set = 0;
 
 }
 

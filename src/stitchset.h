@@ -6,12 +6,14 @@
 #include "stitch.h"
 
 class QDomElement;
+class QXmlStreamWriter;
 
 class StitchSet : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    static StitchSet* inst();
+    StitchSet();
+    ~StitchSet();
 
     void loadXmlStitchSet(QString fileName);
 
@@ -33,13 +35,12 @@ public:
     Stitch* findStitch(QString name);
 
 private:
-    StitchSet();
-    static StitchSet *mInstance;
 
     void loadXmlStitch(QDomElement e);
 
     //TODO: figure out which stitches should be saved to which file...
-    void saveXmlStitches(QString fileName);
+    void saveXmlStitchSet(QString fileName);
+    void saveXmlStitches(QXmlStreamWriter stream);
 
     //TODO: make the set class
     QList<Stitch *> mStitches;
