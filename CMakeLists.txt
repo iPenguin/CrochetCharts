@@ -31,18 +31,22 @@ option(ARCH_32BIT "Force 32-bit Build" OFF)
 message(STATUS "Building Version - " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH} ${VERSION_SHA1})
 message(STATUS "Build Profile - " ${CMAKE_BUILD_TYPE})
 message(STATUS "Unit Testing - " ${UNIT_TESTING})
-message(STATUS "Force 32-bit -" ${ARCH_32BIT})
+message(STATUS "Force 32-bit Builds - " ${ARCH_32BIT})
 
-set(CMAKE_C_FLAGS "-g -Wall")
+if(ARCH_32BIT)
+    set(extra_build_flags "-m32")
+endif()
+
+set(CMAKE_C_FLAGS "${extra_build_flags} -g -Wall")
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 
-set(CMAKE_C_FLAGS_DEBUG "-g -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
+set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 
-set(CMAKE_C_FLAGS_RELEASE "-g -Wall -O2")
+set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -g -Wall -O2")
 set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
 
-set(CMAKE_C_FLAGS_DEBUGPROFILING "-g -pg -Wall")
+set(CMAKE_C_FLAGS_DEBUGPROFILING "${extra_build_flags} -g -pg -Wall")
 set(CMAKE_CXX_FLAGS_DEBUGPROFILING ${CMAKE_C_FLAGS_DEBUGPROFILING})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUGPROFILING "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
