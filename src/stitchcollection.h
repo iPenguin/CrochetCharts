@@ -6,6 +6,7 @@
 class StitchSet;
 class Stitch;
 
+class QXmlStreamWriter;
 /*
     for every set of stitches the user has we'll load a StitchSet (including the user overlay).
     Once all the sets are loaded we want to combine all the stitches into one master list.
@@ -23,16 +24,24 @@ class StitchCollection : public QObject
 
 public:
     static StitchCollection* inst();
+    ~StitchCollection();
 
-    StitchCollection(QObject *parent = 0);
+    StitchSet* stitchSet() { return mMasterSet; }
+    
+    void loadStitchSets();
+    void populateMasterSet();
+
+    void debug();
+protected:
+    //TODO: figure out which stitches should be saved to which file...
+    void saveXmlStitchSet(QString fileName);
 
 private:
-
-    static StitchCollection *mInstance;
-
+    StitchCollection();
+    static StitchCollection *mInstance;   
 
     QList<StitchSet *> mStitchSets;
-    StitchSet *mStitches;
+    StitchSet *mMasterSet; //links to stitches in the other mStitchSets...
 
 };
 

@@ -8,6 +8,8 @@
 #include "licensewizard.h"
 #include "settings.h"
 
+#include "stitchcollection.h"
+
 #include "splashscreen.h"
 
 int main(int argc, char *argv[])
@@ -39,7 +41,13 @@ int main(int argc, char *argv[])
         splash.show();
     }
 
-    splash.showMessage(QObject::tr("Loading: Main Window"));
+    splash.showMessage(QObject::tr("Loading Stitch Sets..."));
+    StitchCollection *collection = StitchCollection::inst();
+    collection->loadStitchSets();
+    splash.showMessage(QObject::tr("Populating Master Stitch Set..."));
+    collection->populateMasterSet();
+
+    splash.showMessage(QObject::tr("Loading Main Window..."));
     MainWindow w;
     w.show();
     splash.finish(&w);

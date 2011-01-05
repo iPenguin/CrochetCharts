@@ -6,29 +6,23 @@
 #include <QDomElement>
 #include <QDomNode>
 
-#include <QXmlStreamWriter>
-
-#include "settings.h"
-
 #include <QDebug>
 
 StitchSet::StitchSet()
 {
-    qDebug() << "create a stitchset";
 }
 
 StitchSet::~StitchSet()
 {
-    qDebug() << "~StitchSet()";
-    //FIXME: dont hard code file name
-    this->saveXmlStitchSet("/home/brian/stitches.xml");
+    foreach(Stitch *s, mStitches)
+        delete s;
 }
 
 void StitchSet::loadXmlStitchSet(QString fileName)
 {    
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "Could not open the file:" << fileName;
+        qWarning() << "Could not open the file for reading" << fileName;
         //TODO: Add a nice error message.
         return;
     }
@@ -63,7 +57,7 @@ void StitchSet::loadXmlStitchSet(QString fileName)
             else if(e.tagName() == "stitch")
                 this->loadXmlStitch(e);
             else
-                qDebug() << "Could not load part of the stitch set:" << e.tagName() << e.text();
+                 qWarning() << "Could not load part of the stitch set:" << e.tagName() << e.text();
         }
         n = n.nextSibling();
     }
@@ -88,7 +82,7 @@ void StitchSet::loadXmlStitch(QDomElement element)
             else if(e.tagName() == "ws")
                 s->setWrongSide(e.text());
             else
-                qDebug() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
+                qWarning() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
         }
         n = n.nextSibling();
     }
@@ -106,59 +100,38 @@ Stitch* StitchSet::findStitch(QString name)
     return 0;
 }
 
-void StitchSet::saveXmlStitchSet(QString fileName)
+bool StitchSet::hasStitch(QString name)
 {
-
-    QString *data = new QString();
-
-    QXmlStreamWriter stream(data);
-    stream.setAutoFormatting(true);
-    stream.writeStartDocument();
-
-    QString fName = Settings::inst()->value("firstName").toString();
-    QString lName = Settings::inst()->value("lastName").toString();
-    QString email = Settings::inst()->value("email").toString();
-
-    //TODO: figure out all the pieces or remove them...
-    stream.writeStartElement("stitch_set");
-    stream.writeTextElement("name", "User Overlay");
-    stream.writeTextElement("author", fName + " " + lName);
-    stream.writeTextElement("email", email);
-    stream.writeTextElement("org", "");
-    stream.writeTextElement("url", "");
-
-    foreach(Stitch *s, mStitches) {
-        stream.writeStartElement("stitch");
-
-        stream.writeTextElement("name", s->name());
-        stream.writeTextElement("icon", s->file());
-        stream.writeTextElement("description", s->description());
-        stream.writeTextElement("category", s->category());
-        stream.writeTextElement("ws", s->wrongSide());
-
-        stream.writeEndElement(); //stitch
-    }
-
-    stream.writeEndElement(); // stitch_set
-
-    stream.writeEndDocument();
-
-    QFile file(fileName);
-
-    if(!file.open(QIODevice::WriteOnly)) {
-    //TODO: some nice dialog to warn the user.
-        qDebug() << "couldn't open file for writing...";
-        return;
-    }
-
-    file.write(data->toLatin1());
-
-    delete data;
-    data = 0;
+    Stitch *s = this->findStitch(name);
+    if(s)
+        return true;
+    else
+        return false;
 }
 
-void StitchSet::saveXmlStitches(QXmlStreamWriter stream)
+void StitchSet::addStitch(Stitch *s)
 {
+    mStitches.append(s);
+}
 
+Stitch* StitchSet::stitch(QModelIndex index) const
+{
+    if(!index.isValid())
+        return 0;
 
+    
+
+    return 0;
+}
+
+QVariant StitchSet::data(const QModelIndex &index, int role) const
+{
+    if(role == Qt::DecorationRole) {
+        return QIcon(QPixmap(stitch(index)->file()));
+    } else if( role == Qt::UserRole) {
+        return "Custom user role";
+    }
+
+    //fall back to the default implementation
+    return QStandardItemModel::data(index, role);
 }

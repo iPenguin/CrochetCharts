@@ -6,11 +6,11 @@
 #include "stitch.h"
 
 class QDomElement;
-class QXmlStreamWriter;
 
 class StitchSet : public QStandardItemModel
 {
     Q_OBJECT
+    friend class StitchCollection;
 public:
     StitchSet();
     ~StitchSet();
@@ -34,13 +34,19 @@ public:
 
     Stitch* findStitch(QString name);
 
+    bool hasStitch(QString name);
+    void addStitch(Stitch *s);
+
+    Stitch* stitch(QModelIndex index) const;
+    
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+protected:
+    QList<Stitch *> stitches() { return mStitches; }
+
 private:
 
     void loadXmlStitch(QDomElement e);
-
-    //TODO: figure out which stitches should be saved to which file...
-    void saveXmlStitchSet(QString fileName);
-    void saveXmlStitches(QXmlStreamWriter stream);
 
     //TODO: make the set class
     QList<Stitch *> mStitches;

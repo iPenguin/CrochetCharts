@@ -63,7 +63,7 @@ void LicenseHttp::httpFinished()
         file->close();
     }
     if(!file->open(QIODevice::ReadOnly)) {
-        qDebug() << "couldn't open the file for reading!";
+        qWarning() << "Couldn't open the file for reading: " << file->fileName();
         return;
     }
     QString data = file->readAll();

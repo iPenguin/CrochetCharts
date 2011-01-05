@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "ui_stitchlibrary.h"
 
 #include <QDialog>
 #include <QMessageBox>
@@ -12,10 +11,12 @@
 #include "settings.h"
 #include "settingsui.h"
 
-#include "stitchset.h"
+#include "stitchcollection.h"
+//#include "stitchset.h"
 
 #include "licensewizard.h"
 #include "exportui.h"
+#include "stitchlibraryui.h"
 
 #include <QDebug>
 
@@ -27,17 +28,12 @@ MainWindow::MainWindow(QWidget *parent) :
     setupMenus();
 
     this->readSettings();
-
-    StitchSet *set = new StitchSet();
-    set->loadXmlStitchSet("/home/brian/crochet.git/stitches/stitches.xml");
-    delete set;
-    set = 0;
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete StitchCollection::inst();
 }
 
 void MainWindow::setupMenus()
@@ -173,8 +169,8 @@ void MainWindow::fileOpen()
 
     if(fileName.isEmpty())
         return;
-
-    qDebug() << "open the file " << fileName;
+    //TODO: open the file
+    qWarning() << "TODO: open the file " << fileName;
 }
 
 void MainWindow::fileSave()
@@ -191,7 +187,8 @@ void MainWindow::fileSave()
     if(fileName.isEmpty())
         return;
 
-    qDebug() << "save the file" << fileName;
+    //TODO: save the file
+    qWarning() << "TODO: save the file" << fileName;
 }
 
 void MainWindow::fileSaveAs()
@@ -201,7 +198,8 @@ void MainWindow::fileSaveAs()
         return;
     }
 
-    qDebug() << "save the file as";
+    //TODO: save the file as
+    qWarning() << "TODO: save the file as";
 }
 
 void MainWindow::menuViewAboutToShow()
@@ -228,12 +226,9 @@ void MainWindow::toolsRegisterSoftware()
 
 void MainWindow::toolsStitchLibrary()
 {
-    QDialog *d = new QDialog(this);
-    sld = new Ui::StitchLibraryDialog();
-    sld->setupUi(d);
-
+    StitchLibraryUi *d = new StitchLibraryUi(this);
     int value = d->exec();
-
+    
     if(value != QDialog::Accepted) {
         delete d;
         d = 0;
@@ -252,7 +247,7 @@ void MainWindow::trialVersionMessage()
     QMessageBox msgbox(this);
     msgbox.setWindowTitle(qApp->applicationName());
     msgbox.setText(tr("This feature is disabled in the demo version."));
-    msgbox.setInformativeText(tr("There are some examples output files and screen shots on the website."));
+    msgbox.setInformativeText(tr("There are some example output files and screen shots on the website."));
     msgbox.setStandardButtons(QMessageBox::Ok);
     msgbox.setIcon(QMessageBox::Information);
 
