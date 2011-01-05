@@ -32,7 +32,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox"/>
+        <widget class="QComboBox" name="stitchSource"/>
        </item>
       </layout>
      </item>

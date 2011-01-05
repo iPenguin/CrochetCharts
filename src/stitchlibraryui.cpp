@@ -8,7 +8,11 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
 {
     ui->setupUi(this);
 
-    ui->listView->setModel(StitchCollection::inst()->stitchSet());
+    foreach(StitchSet *set, StitchCollection::inst()->stitchSets()) {
+        ui->stitchSource->addItem(set->name());
+    }
+    
+    ui->listView->setModel(StitchCollection::inst()->masterStitchSet());
 }
 
 StitchLibraryUi::~StitchLibraryUi()
