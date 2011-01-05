@@ -1,17 +1,15 @@
 cmake_minimum_required(VERSION 2.8)
+project(Crochet)
 
-# Appends the cmake/modules path inside the MAKE_MODULE_PATH variable which stores the
-# directories of additional CMake modules (eg MacroOutOfSourceBuild.cmake):
+# Appends the cmake/modules path to MAKE_MODULE_PATH variable...
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
-# The macro below forces the build directory to be different from source directory:
+#Forces out of source builds just in case.
 include(MacroOutOfSourceBuild)
-
 macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build.")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release DebugProfiling CACHE TYPE INTERNAL FORCE)
 set(CMAKE_BUILD_TYPE "Debug")
-project(Crochet)
 
 include(GetGitRevisionDescription)
 git_describe(VERSION --tags --dirty=-working)
@@ -25,7 +23,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
 
 find_package(Qt4 REQUIRED)
-find_package(Automoc4 REQUIRED)
+#find_package(Automoc4 REQUIRED)
 
 set(CMAKE_C_FLAGS "-g -Wall")
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
@@ -56,56 +54,9 @@ include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
 
-
-file(GLOB crochet_srcs "src/*.cpp")
-
-set(crochet_qobject_headers
-    src/mainwindow.h
-    src/cell.h
-    src/charttab.h
-    src/crochetcell.h
-    src/crochetdatamodel.h
-    src/mainwindow.h
-    src/stitch.h
-    src/stitchset.h
-    src/crochetscene.h
-    src/licensewizard.h
-    src/licensevalidator.h
-    src/settings.h
-    src/undocommands.h
-    src/settingsui.h
-    src/splashscreen.h
-    src/licensehttp.h
-    src/exportui.h
-    src/stitchcollection.h
-    )
-
-set(crochet_headers
-    src/version.h
-    src/appinfo.h
-    src/license.h
-    )
-
 set(crochet_version
     "${CMAKE_CURRENT_BINARY_DIR}/version.cpp"
     )
-
-set(crochet_uis
-    src/export.ui
-    src/mainwindow.ui
-    src/stitcheditor.ui
-    src/stitchlibrary.ui
-    src/newdocument.ui
-    src/settings.ui
-    )
-
-set(crochet_resources
-    crochet.qrc
-    )
-
-if(UNIT_TESTING)
-    add_subdirectory(tests)
-endif()
 
 if(WIN32)
 #http://public.kitware.com/Bug/view.php?id=4068
@@ -146,14 +97,15 @@ else(UNIX)
         )
 endif()
 
-qt4_wrap_ui(crochet_ui_h ${crochet_uis})
-qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers})
-qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
+add_subdirectory(src)
 
-add_executable(crochet WIN32 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs} 
-                ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix}
-                )
-target_link_libraries(crochet ${QT_LIBRARIES})
+if(UNIT_TESTING)
+    add_subdirectory(tests)
+endif()
+
+###################################################################################
+#Package management
+###################################################################################
 
 include(InstallRequiredSystemLibraries)
 
