@@ -51,7 +51,7 @@ void TestStitch::stitchRender()
     QFile f(rasterImage);
 
     if(!f.open(QIODevice::ReadOnly)) {
-        qDebug() << "Could not compare raster file with expected results";
+        qWarning() << "Could not compare raster file with expected results";
         return;
     }
     QByteArray data = f.readAll();
@@ -75,7 +75,7 @@ void TestStitch::stitchRender()
     f.setFileName(svgImage);
 
     if(!f.open(QIODevice::ReadOnly)) {
-        qDebug() << "Could not compare svg file with expected results";
+        qWarning() << "Could not compare svg file with expected results";
         return;
     }
     data = f.readAll();
