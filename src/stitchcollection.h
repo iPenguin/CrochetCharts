@@ -26,7 +26,10 @@ public:
     static StitchCollection* inst();
     ~StitchCollection();
 
-    StitchSet* stitchSet() { return mMasterSet; }
+    //return the list of stitch sets.
+    QList<StitchSet *> stitchSets() { return mStitchSets; }
+    //return the master stitch set.
+    StitchSet* masterStitchSet() { return mMasterSet; }
     
     void loadStitchSets();
     void populateMasterSet();
