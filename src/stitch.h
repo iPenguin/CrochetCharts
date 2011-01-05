@@ -2,6 +2,8 @@
 #define STITCH_H
 
 #include <QObject>
+#include <QStandardItem>
+
 class QSvgRenderer;
 class QPixmap;
 

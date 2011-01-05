@@ -9,13 +9,14 @@
 Stitch::Stitch()
 {
 
-    mSvgRenderer = new QSvgRenderer(this);
+    mSvgRenderer = new QSvgRenderer();
     mPixmap = 0;
 }
 
 Stitch::~Stitch()
 {
-    //the svgRenderer should be deleted automatically...
+    delete mSvgRenderer;
+    mSvgRenderer = 0;
     delete mPixmap;
     mPixmap = 0;
 }
