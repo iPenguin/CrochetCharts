@@ -22,9 +22,10 @@ void StitchPaletteDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
 QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+/*
     if(!index.isValid())
         return QSize(100, 10);
-
+*/
     Stitch *s = static_cast<Stitch*>(index.internalPointer());
     if(!s)
         return QSize(100, 10);

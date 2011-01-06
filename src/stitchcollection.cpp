@@ -13,6 +13,8 @@
 #include <QXmlStreamWriter>
 #include <QComboBox>
 
+#include "../qttests/modeltest.h"
+
 #include <QDebug>
 
 // Global static pointer
@@ -27,8 +29,9 @@ StitchCollection* StitchCollection::inst()
 }
 
 StitchCollection::StitchCollection()
-{
+{ 
     mMasterSet = new StitchSet(this);
+    //new ModelTest(mMasterSet, this);
 }
 
 StitchCollection::~StitchCollection()

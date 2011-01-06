@@ -63,8 +63,6 @@ private:
     Stitch* parentItem;
     QList<Stitch*> childItems;
 /********************************************************************/
-
-
 };
 
 #endif //STITCH_H

@@ -24,6 +24,9 @@ set(crochet_qobject_headers
     stitchlibraryui.h
     stitchlibrarydelegate.h
     stitchpalettedelegate.h
+
+    dynamictreemodel.h
+    modeltest.h
     )
 
 set(crochet_headers
@@ -46,11 +49,10 @@ set(crochet_resources
     )
 
 qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
-
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
-qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers})
+qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers} ${testmodel_headers})
 
 add_executable(crochet WIN32 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
-                ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix}
+                ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix} ${testmodel_srcs}
                 )
 target_link_libraries(crochet ${QT_LIBRARIES})

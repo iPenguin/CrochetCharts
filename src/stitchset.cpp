@@ -91,7 +91,7 @@ void StitchSet::loadXmlStitch(QDomElement element)
         n = n.nextSibling();
     }
 
-    mStitches.append(s);
+    addStitch(s);
 }
 
 Stitch* StitchSet::findStitch(QString name)
@@ -115,7 +115,16 @@ bool StitchSet::hasStitch(QString name)
 
 void StitchSet::addStitch(Stitch *s)
 {
+    int last = mStitches.count();
+    qDebug() << last;
+    foreach(Stitch *s, mStitches)
+        qDebug() << s->name();
+
+    beginInsertRows(QModelIndex(), last, last);
+    qDebug() << "append stitch" << name();
     mStitches.append(s);
+    endInsertRows();
+    qDebug() << "append stitch end";
 }
 
 Stitch* StitchSet::stitch(QModelIndex index) const
@@ -129,7 +138,7 @@ Stitch* StitchSet::stitch(QModelIndex index) const
 QVariant StitchSet::data(const QModelIndex &index, int role) const
 {
     if(!index.isValid()) {
-        qWarning() << "Index is invalid";
+        qWarning() << "StitchSet::data << Index is invalid:" << name();
         return QVariant();
     }
     Stitch *s = stitch(index);

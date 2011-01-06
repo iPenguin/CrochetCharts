@@ -56,6 +56,7 @@ include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_S
 set(QT_USE_QTMAIN true)
 set(QT_USE_QTSVG true)
 set(QT_USE_QTNETWORK true)
+set(QT_USE_QTTEST true)
 include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
@@ -103,6 +104,7 @@ else(UNIX)
         )
 endif()
 
+#add_subdirectory(qttests)
 add_subdirectory(src)
 
 if(UNIT_TESTING)
