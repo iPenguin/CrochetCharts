@@ -37,7 +37,17 @@
       </layout>
      </item>
      <item>
-      <widget class="QListView" name="listView"/>
+      <widget class="QTableView" name="listView">
+       <property name="editTriggers">
+        <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

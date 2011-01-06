@@ -6,7 +6,9 @@
 class StitchSet;
 class Stitch;
 
+class QComboBox;
 class QXmlStreamWriter;
+
 /*
     for every set of stitches the user has we'll load a StitchSet (including the user overlay).
     Once all the sets are loaded we want to combine all the stitches into one master list.
@@ -31,8 +33,15 @@ public:
     //return the master stitch set.
     StitchSet* masterStitchSet() { return mMasterSet; }
     
+    //load all known stitch sets.
     void loadStitchSets();
+    //create links to the stitches being used from each set/overlay
     void populateMasterSet();
+
+    //fill in a dropdown list for selecting a stitch set.
+    void populateComboBox(QComboBox *cb);
+
+    StitchSet* findStitchSet(QString setName);
 
     void debug();
 protected:

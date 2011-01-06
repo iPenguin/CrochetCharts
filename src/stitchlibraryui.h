@@ -15,8 +15,13 @@ public:
     explicit StitchLibraryUi(QWidget* parent = 0);
     ~StitchLibraryUi();
 
+private slots:
+    void changeStitchSet(QString setName);
+
 private:
     Ui::StitchLibraryDialog *ui;
+
+    void setDialogSize();
 
 };
 

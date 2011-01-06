@@ -1,17 +1,17 @@
 #ifndef STITCH_H
 #define STITCH_H
 
-#include <QObject>
-#include <QStandardItem>
+#include <QString>
+#include <QList>
+#include <QVariant>
 
 class QSvgRenderer;
 class QPixmap;
 
-class Stitch : public QObject
+class Stitch
 {
-    Q_OBJECT
 public:
-    Stitch();
+    Stitch(Stitch *parent = 0);
     ~Stitch();
 
     void setName(QString name) { mName = name; }
@@ -44,6 +44,22 @@ private:
 
     QPixmap *mPixmap;
     QSvgRenderer *mSvgRenderer;
+
+/********************************************************************\
+| Functions and properties for working with the                      |
+| QAbstractItemModel parts of the StitchSet and StitchLibrary.       |
+\********************************************************************/
+public:
+    QVariant data(int column) const;
+    Stitch* child(int row);
+    int childCount() const;
+    int row() const;
+    Stitch* parent();
+private:
+    Stitch* parentItem;
+    QList<Stitch*> childItems;
+/********************************************************************/
+
 
 };
 

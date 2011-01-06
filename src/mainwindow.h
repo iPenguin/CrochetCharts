@@ -37,6 +37,7 @@ private slots:
     void helpAbout();
 
 private:
+    void setupStitchPalette();
     void readSettings();
     void trialVersionMessage();
 

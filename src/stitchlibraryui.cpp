@@ -2,20 +2,52 @@
 
 #include "stitchcollection.h"
 #include "stitchset.h"
+#include "stitchlibrarydelegate.h"
+
+#include <QDebug>
 
 StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     : QDialog(parent), ui(new Ui::StitchLibraryDialog)
 {
     ui->setupUi(this);
 
-    foreach(StitchSet *set, StitchCollection::inst()->stitchSets()) {
-        ui->stitchSource->addItem(set->name());
-    }
-    
-    ui->listView->setModel(StitchCollection::inst()->masterStitchSet());
+    StitchCollection::inst()->populateComboBox(ui->stitchSource);
+    StitchSet *master = StitchCollection::inst()->masterStitchSet();
+    ui->listView->setModel(master);
+
+    StitchLibraryDelegate *delegate = new StitchLibraryDelegate(ui->listView);
+    ui->listView->setItemDelegate(delegate);
+
+    setDialogSize();
+
+    connect(ui->stitchSource, SIGNAL(currentIndexChanged(QString)),
+                this, SLOT(changeStitchSet(QString)));
 }
 
 StitchLibraryUi::~StitchLibraryUi()
 {
     delete ui;
+}
+
+void StitchLibraryUi::setDialogSize()
+{
+    ui->listView->resizeColumnsToContents();
+
+    int width = 0;
+    int height = ui->listView->height();
+    for(int i = 0; i < 5; ++i)
+        width += ui->listView->columnWidth(i);
+
+    ui->listView->setMinimumSize(QSize(width+25, height));
+}
+
+void StitchLibraryUi::changeStitchSet(QString setName)
+{
+qDebug() << "set the model";
+    StitchSet *set = StitchCollection::inst()->findStitchSet(setName);
+    if(!set)
+        return;
+    
+    ui->listView->setModel(set);
+    ui->listView->update();
 }

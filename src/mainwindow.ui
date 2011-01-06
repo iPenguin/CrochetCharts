@@ -125,7 +125,7 @@
    <addaction name="actionSave"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="stitchLibraryDock">
+  <widget class="QDockWidget" name="stitchPaletteDock">
    <property name="windowTitle">
     <string>Stitches</string>
    </property>
@@ -138,16 +138,23 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QComboBox" name="stitchCategory">
-       <item>
-        <property name="text">
-         <string>All</string>
-        </property>
-       </item>
+      <widget class="QTreeView" name="stitchPalette">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>false</bool>
+       </property>
+       <property name="rootIsDecorated">
+        <bool>false</bool>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="animated">
+        <bool>true</bool>
+       </property>
       </widget>
-     </item>
-     <item>
-      <widget class="QListWidget" name="stitchList"/>
      </item>
     </layout>
    </widget>

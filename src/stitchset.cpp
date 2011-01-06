@@ -8,14 +8,14 @@
 
 #include <QDebug>
 
-StitchSet::StitchSet()
+StitchSet::StitchSet(QObject *parent)
+    : QAbstractItemModel(parent)
 {
+    rootItem = new Stitch();
 }
 
 StitchSet::~StitchSet()
 {
-    foreach(Stitch *s, mStitches)
-        delete s;
 }
 
 void StitchSet::loadXmlStitchSet(QString fileName)
@@ -119,19 +119,67 @@ Stitch* StitchSet::stitch(QModelIndex index) const
     if(!index.isValid())
         return 0;
 
-    
-
-    return 0;
+    return mStitches[index.row()];
 }
 
 QVariant StitchSet::data(const QModelIndex &index, int role) const
 {
-    if(role == Qt::DecorationRole) {
-        return QIcon(QPixmap(stitch(index)->file()));
-    } else if( role == Qt::UserRole) {
-        return "Custom user role";
+    if(!index.isValid()) {
+        qWarning() << "Index is invalid";
+        return QVariant();
     }
+    Stitch *s = stitch(index);
 
-    //fall back to the default implementation
-    return QStandardItemModel::data(index, role);
+    /*if(role == Qt::DisplayRole) {
+        return QVariant(s->name());
+    } else if(role == Qt::DecorationRole) {
+        return QIcon(QPixmap(stitch(index)->file()));
+    }*/
+
+    return QVariant(s->data(index.column()));
+}
+
+QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) const
+{
+    if(!hasIndex(row, column, parent))
+        return QModelIndex();
+
+    Stitch *parentItem;
+
+    if(!parent.isValid())
+        parentItem = rootItem;
+    else
+        parentItem = static_cast<Stitch*>(parent.internalPointer());
+
+    Stitch *childItem = parentItem->child(row);
+
+    if(childItem)
+        return createIndex(row, column, childItem);
+    else
+        return QModelIndex();
+
+}
+
+QModelIndex StitchSet::parent(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return QModelIndex();
+
+    Stitch *childItem = static_cast<Stitch*>(index.internalPointer());
+    Stitch *parentItem = childItem->parent();
+
+    if (parentItem == rootItem)
+        return QModelIndex();
+
+    return createIndex(parentItem->row(), 0, parentItem);
+}
+
+int StitchSet::rowCount(const QModelIndex &/*parent*/) const
+{
+    return mStitches.count();
+}
+
+int StitchSet::columnCount(const QModelIndex &/*parent*/) const
+{
+    return 5;
 }

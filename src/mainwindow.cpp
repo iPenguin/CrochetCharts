@@ -18,6 +18,9 @@
 #include "exportui.h"
 #include "stitchlibraryui.h"
 
+#include "stitchpalettedelegate.h"
+#include "stitchset.h"
+
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -27,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setupMenus();
 
+    setupStitchPalette();
+
     this->readSettings();
 }
 
@@ -34,6 +39,14 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete StitchCollection::inst();
+}
+
+void MainWindow::setupStitchPalette()
+{
+    StitchSet *master = StitchCollection::inst()->masterStitchSet();
+    ui->stitchPalette->setModel(master);
+    StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->stitchPalette);
+    ui->stitchPalette->setItemDelegate(delegate);
 }
 
 void MainWindow::setupMenus()
@@ -204,13 +217,13 @@ void MainWindow::fileSaveAs()
 
 void MainWindow::menuViewAboutToShow()
 {
-    ui->actionShowStitches->setChecked(ui->stitchLibraryDock->isVisible());
+    ui->actionShowStitches->setChecked(ui->stitchPaletteDock->isVisible());
 
 }
 
 void MainWindow::viewShowStitches()
 {
-    ui->stitchLibraryDock->setVisible(ui->actionShowStitches->isChecked());
+    ui->stitchPaletteDock->setVisible(ui->actionShowStitches->isChecked());
 }
 
 void MainWindow::toolsRegisterSoftware()

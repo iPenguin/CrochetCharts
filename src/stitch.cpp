@@ -6,9 +6,9 @@
 
 #include <QDebug>
 
-Stitch::Stitch()
+Stitch::Stitch(Stitch *parent)
 {
-
+    parentItem = parent;
     mSvgRenderer = new QSvgRenderer();
     mPixmap = 0;
 }
@@ -51,4 +51,45 @@ QSvgRenderer* Stitch::renderSvg()
         mSvgRenderer->load(mFile);
 
     return mSvgRenderer;
+}
+
+QVariant Stitch::data(int column) const
+{
+    switch(column) {
+        case 0:
+            return QVariant(mName);
+        case 1:
+            return QVariant(mFile);
+        case 2:
+            return QVariant(mDescription);
+        case 3:
+            return QVariant(mCategory);
+        case 4:
+            return QVariant(mWrongSide);
+        default:
+            return QVariant();
+    }
+}
+
+Stitch* Stitch::child(int row)
+{
+    return childItems.value(row);
+}
+
+int Stitch::childCount() const
+{
+    return childItems.count();
+}
+
+Stitch* Stitch::parent()
+{
+    return parentItem;
+}
+
+int Stitch::row() const
+{
+    if (parentItem)
+        return parentItem->childItems.indexOf(const_cast<Stitch*>(this));
+
+    return 0;
 }

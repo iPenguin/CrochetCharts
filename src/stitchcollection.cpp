@@ -7,6 +7,7 @@
 
 #include <QFile>
 #include <QXmlStreamWriter>
+#include <QComboBox>
 
 #include <QDebug>
 
@@ -23,20 +24,16 @@ StitchCollection* StitchCollection::inst()
 
 StitchCollection::StitchCollection()
 {
-    mMasterSet = new StitchSet();
+    mMasterSet = new StitchSet(this);
 }
 
 StitchCollection::~StitchCollection()
 {
-
-    foreach(StitchSet *set, mStitchSets)
-        delete set;
-
 }
 
 void StitchCollection::loadStitchSets()
 {
-    StitchSet *set = new StitchSet();
+    StitchSet *set = new StitchSet(this);
     set->loadXmlStitchSet("/home/brian/crochet.git/stitches/stitches.xml");
 
     mStitchSets.append(set);
@@ -44,6 +41,8 @@ void StitchCollection::loadStitchSets()
 
 void StitchCollection::populateMasterSet()
 {
+    mMasterSet->setName(tr("Master Stitch Set"));
+    
     foreach(StitchSet *set, mStitchSets) {
         foreach(Stitch *s, set->stitches()) {
             //FIXME: use a bool to figure out if this is the correct version of this stitch.
@@ -109,4 +108,26 @@ void StitchCollection::debug()
 {
     foreach(Stitch *s, mMasterSet->stitches())
         qDebug() << s->name();
+}
+
+StitchSet* StitchCollection::findStitchSet(QString setName)
+{
+    foreach(StitchSet *set, mStitchSets) {
+        if(set->name() == setName)
+            return set;
+    }
+
+    if(mMasterSet->name() == setName)
+        return mMasterSet;
+
+    return 0;
+}
+
+void StitchCollection::populateComboBox(QComboBox *cb)
+{
+    cb->addItem(mMasterSet->name());
+
+    foreach(StitchSet *set, mStitchSets) {
+        cb->addItem(set->name());
+    }
 }

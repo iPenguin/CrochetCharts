@@ -2,17 +2,18 @@
 #define STITCHSET_H
 
 #include <QList>
-#include <QStandardItemModel>
+#include <QAbstractItemModel>
 #include "stitch.h"
 
 class QDomElement;
 
-class StitchSet : public QStandardItemModel
+class StitchSet : public QAbstractItemModel
 {
     Q_OBJECT
     friend class StitchCollection;
+    friend class StitchLibraryUi;
 public:
-    StitchSet();
+    StitchSet(QObject *parent = 0);
     ~StitchSet();
 
     void loadXmlStitchSet(QString fileName);
@@ -38,6 +39,11 @@ public:
     void addStitch(Stitch *s);
 
     Stitch* stitch(QModelIndex index) const;
+
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &index) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
     
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
@@ -45,10 +51,11 @@ protected:
     QList<Stitch *> stitches() { return mStitches; }
 
 private:
+    Stitch *rootItem;
 
     void loadXmlStitch(QDomElement e);
 
-    //TODO: make the set class
+    //TODO: convert to model functions where possible: this->invisibleRootItem();?
     QList<Stitch *> mStitches;
 
     QString mName,

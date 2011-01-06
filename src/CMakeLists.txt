@@ -22,6 +22,8 @@ set(crochet_qobject_headers
     exportui.h
     stitchcollection.h
     stitchlibraryui.h
+    stitchlibrarydelegate.h
+    stitchpalettedelegate.h
     )
 
 set(crochet_headers
