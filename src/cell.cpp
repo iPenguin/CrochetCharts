@@ -1,3 +1,7 @@
+/*************************************************\
+| (c) 2010-2011 Stitch Works Software             |
+| Brian C. Milco <brian@stitchworkssoftware.com>  |
+\*************************************************/
 #include "cell.h"
 
 Cell::Cell(const QString fileName, QGraphicsItem *parent) :

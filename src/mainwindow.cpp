@@ -1,3 +1,7 @@
+/*************************************************\
+| (c) 2010-2011 Stitch Works Software             |
+| Brian C. Milco <brian@stitchworkssoftware.com>  |
+\*************************************************/
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -12,7 +16,6 @@
 #include "settingsui.h"
 
 #include "stitchcollection.h"
-//#include "stitchset.h"
 
 #include "licensewizard.h"
 #include "exportui.h"
@@ -120,7 +123,7 @@ void MainWindow::helpAbout()
 {
     QString aboutInfo = QString(tr("<h1>%1</h1>"
                                    "<p>Version: %2 (built on %3)</p>"
-                                   "<p>By: %4</p>"
+                                   "<p>(c) 2010-2011 %4</p>"
                                    "<p>This software is for creating crochet charts that"
                                    " can be exported in many differnet file types.</p>")
                                 .arg(qApp->applicationName())

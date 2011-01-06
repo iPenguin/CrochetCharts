@@ -1,3 +1,7 @@
+/*************************************************\
+| (c) 2010-2011 Stitch Works Software             |
+| Brian C. Milco <brian@stitchworkssoftware.com>  |
+\*************************************************/
 #ifndef STITCHPALETTEDELEGATE_H
 #define STITCHPALETTEDELEGATE_H
 
