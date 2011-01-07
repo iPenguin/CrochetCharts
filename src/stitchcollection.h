@@ -47,10 +47,9 @@ public:
 
     StitchSet* findStitchSet(QString setName);
 
-    void debug();
 protected:
     //TODO: figure out which stitches should be saved to which file...
-    void saveXmlStitchSet(QString fileName);
+    void saveMasterStitchSet(QString fileName);
 
 private:
     StitchCollection();

@@ -13,7 +13,7 @@
 #include <QXmlStreamWriter>
 #include <QComboBox>
 
-#include "../qttests/modeltest.h"
+#include <modeltest.h>
 
 #include <QDebug>
 
@@ -30,12 +30,13 @@ StitchCollection* StitchCollection::inst()
 
 StitchCollection::StitchCollection()
 { 
-    mMasterSet = new StitchSet(this);
-    //new ModelTest(mMasterSet, this);
+    mMasterSet = new StitchSet(tr("Master Stitch Set"), this);
+    new ModelTest(mMasterSet, this);
 }
 
 StitchCollection::~StitchCollection()
 {
+    saveMasterStitchSet("/home/brian/stitches.xml");
 }
 
 void StitchCollection::loadStitchSets()
@@ -48,21 +49,15 @@ void StitchCollection::loadStitchSets()
 
 void StitchCollection::populateMasterSet()
 {
-    mMasterSet->setName(tr("Master Stitch Set"));
-    
-    foreach(StitchSet *set, mStitchSets) {
-        foreach(Stitch *s, set->stitches()) {
-            //FIXME: use a bool to figure out if this is the correct version of this stitch.
-            if(!mMasterSet->hasStitch(s->name())) 
-                mMasterSet->addStitch(s);
-        }
-    }
-        
+    //TODO: load from a user config folder. this stitch set should be saved back to disk
+    // anytime the set is edited. This is the only set that can be edited.
+    mMasterSet->loadXmlStitchSet("/home/brian/stitches.xml");
 }
 
-void StitchCollection::saveXmlStitchSet(QString fileName)
+void StitchCollection::saveMasterStitchSet(QString fileName)
 {
-
+//TODO: push this off into the StitchSet.
+// The user can create a "new" set that can then be saved to a user specified file.
     QString *data = new QString();
 
     QXmlStreamWriter stream(data);
@@ -75,7 +70,7 @@ void StitchCollection::saveXmlStitchSet(QString fileName)
 
     //TODO: figure out all the pieces or remove them...
     stream.writeStartElement("stitch_set");
-    stream.writeTextElement("name", "User Overlay");
+    stream.writeTextElement("name", "Master Stitch Set");
     stream.writeTextElement("author", fName + " " + lName);
     stream.writeTextElement("email", email);
     stream.writeTextElement("org", "");
@@ -109,12 +104,6 @@ void StitchCollection::saveXmlStitchSet(QString fileName)
 
     delete data;
     data = 0;
-}
-
-void StitchCollection::debug()
-{
-    foreach(Stitch *s, mMasterSet->stitches())
-        qDebug() << s->name();
 }
 
 StitchSet* StitchCollection::findStitchSet(QString setName)
