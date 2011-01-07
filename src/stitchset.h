@@ -18,6 +18,7 @@ class StitchSet : public QAbstractItemModel
     friend class StitchLibraryUi;
 public:
     StitchSet(QObject *parent = 0);
+    StitchSet(QString name, QObject *parent = 0);
     ~StitchSet();
 
     void loadXmlStitchSet(QString fileName);
@@ -40,26 +41,17 @@ public:
     Stitch* findStitch(QString name);
 
     bool hasStitch(QString name);
-    void addStitch(Stitch *s);
+    void addStitch(Stitch *s, Stitch *parent = 0);
 
-    Stitch* stitch(QModelIndex index) const;
-
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex parent(const QModelIndex &index) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    int stitchCount();
 
 protected:
     QList<Stitch *> stitches() { return mStitches; }
 
 private:
-    Stitch *rootItem;
-
     void loadXmlStitch(QDomElement e);
 
-    //TODO: convert to model functions where possible: this->invisibleRootItem();?
+    //FIXME: convert to model functions where possible: this->invisibleRootItem();?
     QList<Stitch *> mStitches;
 
     QString mName,
@@ -67,6 +59,26 @@ private:
             mEmail,
             mOrg,
             mUrl;
+
+/***************************************************************\
+|QAbstractItemModel
+\***************************************************************/
+public:
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex parent(const QModelIndex &index) const;
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+
+    QModelIndex rootItemIndex() const { return createIndex(0, 0, rootItem); }
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+private:
+    Stitch *rootItem;
+/***************************************************************/
 };
+
+QDataStream& operator<<(QDataStream &out, const StitchSet &set);
+QDataStream& operator>>(QDataStream &in, StitchSet &set);
 
 #endif //STITCHSET_H

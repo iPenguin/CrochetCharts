@@ -18,8 +18,16 @@ StitchSet::StitchSet(QObject *parent)
     rootItem = new Stitch();
 }
 
+StitchSet::StitchSet(QString name, QObject *parent)
+    : QAbstractItemModel(parent)
+{
+    setName(name);
+    rootItem = new Stitch();
+}
+
 StitchSet::~StitchSet()
 {
+//TODO: delete stitches?
 }
 
 void StitchSet::loadXmlStitchSet(QString fileName)
@@ -90,7 +98,6 @@ void StitchSet::loadXmlStitch(QDomElement element)
         }
         n = n.nextSibling();
     }
-
     addStitch(s);
 }
 
@@ -113,43 +120,36 @@ bool StitchSet::hasStitch(QString name)
         return false;
 }
 
-void StitchSet::addStitch(Stitch *s)
+void StitchSet::addStitch(Stitch *s, Stitch *parent)
 {
-    int last = mStitches.count();
-    qDebug() << last;
-    foreach(Stitch *s, mStitches)
-        qDebug() << s->name();
+    if(parent == 0)
+        parent = rootItem;
+    QModelIndex parentIdx = createIndex(parent->row(), 0, parent);
 
-    beginInsertRows(QModelIndex(), last, last);
-    qDebug() << "append stitch" << name();
+    beginInsertRows(parentIdx, parent->childCount(), parent->childCount());
+    parent->appendChild(s);
     mStitches.append(s);
     endInsertRows();
-    qDebug() << "append stitch end";
-}
-
-Stitch* StitchSet::stitch(QModelIndex index) const
-{
-    if(!index.isValid())
-        return 0;
-
-    return mStitches[index.row()];
 }
 
 QVariant StitchSet::data(const QModelIndex &index, int role) const
 {
-    if(!index.isValid()) {
-        qWarning() << "StitchSet::data << Index is invalid:" << name();
+    if(!index.isValid())
+        return QVariant();
+
+    Stitch *s = static_cast<Stitch *>(index.internalPointer());
+
+    if(!s) {
+        qDebug() << "data cannot get valid stitch";
         return QVariant();
     }
-    Stitch *s = stitch(index);
-
     /*if(role == Qt::DisplayRole) {
         return QVariant(s->name());
     } else if(role == Qt::DecorationRole) {
         return QIcon(QPixmap(stitch(index)->file()));
     }*/
 
-    return QVariant(s->data(index.column()));
+    return s->data(index.column());
 }
 
 QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) const
@@ -187,12 +187,33 @@ QModelIndex StitchSet::parent(const QModelIndex &index) const
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
-int StitchSet::rowCount(const QModelIndex &/*parent*/) const
+int StitchSet::stitchCount()
 {
-    return mStitches.count();
+    return rowCount(rootItemIndex());
+}
+
+int StitchSet::rowCount(const QModelIndex &parent) const
+{
+    if(!parent.isValid())
+        return 0;
+
+    Stitch *s = static_cast<Stitch*>(parent.internalPointer());
+    if(s)
+        return s->childCount();
+    return 0;
 }
 
 int StitchSet::columnCount(const QModelIndex &/*parent*/) const
 {
     return 5;
+}
+
+QDataStream& operator<<(QDataStream &out, const StitchSet &set)
+{
+    return out;
+}
+
+QDataStream& operator>>(QDataStream &in, StitchSet &set)
+{
+    return in;
 }
