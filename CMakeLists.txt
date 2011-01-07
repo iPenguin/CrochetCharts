@@ -104,7 +104,6 @@ else(UNIX)
         )
 endif()
 
-#add_subdirectory(qttests)
 add_subdirectory(src)
 
 if(UNIT_TESTING)
