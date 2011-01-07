@@ -1,1 +1,0 @@
-../qttests/dynamictreemodel.h

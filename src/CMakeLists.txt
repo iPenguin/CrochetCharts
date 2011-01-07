@@ -24,9 +24,6 @@ set(crochet_qobject_headers
     stitchlibraryui.h
     stitchlibrarydelegate.h
     stitchpalettedelegate.h
-
-    dynamictreemodel.h
-    modeltest.h
     )
 
 set(crochet_headers

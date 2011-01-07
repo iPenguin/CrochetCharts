@@ -34,20 +34,3 @@ qt4_wrap_cpp(crochet_test_moc_srcs ${crochet_test_qobject_headers} ${crochet_app
 
 add_executable(crochet_tests main.cpp ${crochet_test_srcs} ${crochet_test_moc_srcs} ${crochet_app_cpp} ${crochet_app_rcc_srcs})
 target_link_libraries(crochet_tests ${QT_LIBRARIES})
-
-set(modeltest_h
-    ../src/dynamictreemodel.h
-    ../src/modeltest.h
-    tst_modeltest.h
-    )
-
-set(modeltest_cpp
-    ../src/dynamictreemodel.cpp
-    ../src/modeltest.cpp
-    tst_modeltest.cpp
-    )
-#qt4_automoc(tst_modeltest.cpp)
-qt4_wrap_cpp(modeltest_moc ${modeltest_h})
-
-add_executable(table_test tst_modeltest.cpp ${modeltest_moc} ${modeltest_cpp})
-target_link_libraries(table_test ${QT_LIBRARIES})
