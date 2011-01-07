@@ -6,5 +6,6 @@
         <file>stitches/chain.svg</file>
         <file>stitches/single_crochet.svg</file>
         <file>license.txt</file>
+        <file>stitches/stitches.xml</file>
     </qresource>
 </RCC>
