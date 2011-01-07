@@ -9,7 +9,7 @@
     <stitch>
         <name>ss</name>
         <icon>stitches/slip.svg</icon>
-        <description>Slip stitch</description>
+        <description>slip stitch</description>
         <category>Basic</category>
         <ws>ss</ws>
     </stitch>
