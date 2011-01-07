@@ -24,6 +24,8 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
 
     setDialogSize();
 
+
+
     connect(ui->stitchSource, SIGNAL(currentIndexChanged(QString)),
                 this, SLOT(changeStitchSet(QString)));
 }
@@ -35,6 +37,8 @@ StitchLibraryUi::~StitchLibraryUi()
 
 void StitchLibraryUi::setDialogSize()
 {
+/*
+//for a table widget.
     ui->listView->resizeColumnsToContents();
 
     int width = 0;
@@ -43,11 +47,11 @@ void StitchLibraryUi::setDialogSize()
         width += ui->listView->columnWidth(i);
 
     ui->listView->setMinimumSize(QSize(width+25, height));
+*/
 }
 
 void StitchLibraryUi::changeStitchSet(QString setName)
 {
-qDebug() << "set the model";
     StitchSet *set = StitchCollection::inst()->findStitchSet(setName);
     if(!set)
         return;

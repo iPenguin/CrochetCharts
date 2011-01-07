@@ -17,11 +17,13 @@ StitchLibraryDelegate::StitchLibraryDelegate(QWidget *parent)
 void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     //fall back to the basic painter.
-    QStyledItemDelegate::paint(painter, option, index);
+    //QStyledItemDelegate::paint(painter, option, index);
+    painter->drawText(QRectF(0,0,50,10), "Test");
 }
 
 QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+qDebug() << "hint hint";
     if(!index.isValid())
         return QSize(100, 10);
 

@@ -37,7 +37,7 @@
       </layout>
      </item>
      <item>
-      <widget class="QTableView" name="listView">
+      <widget class="QTreeView" name="listView">
        <property name="editTriggers">
         <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
        </property>
