@@ -61,6 +61,8 @@ public:
     int childCount() const;
     int row() const;
     Stitch* parent();
+    QList<Stitch*> children() { return childItems; }
+
 protected:
     //setParent is called from appendChild() calling both is redundant.
     void setParent(Stitch *parent);

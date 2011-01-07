@@ -103,7 +103,7 @@ void StitchSet::loadXmlStitch(QDomElement element)
 
 Stitch* StitchSet::findStitch(QString name)
 {
-    foreach(Stitch *s, mStitches) {
+    foreach(Stitch *s, rootItem->children()) {
         if(s->name() == name)
             return s;
     }
@@ -120,20 +120,18 @@ bool StitchSet::hasStitch(QString name)
         return false;
 }
 
-void StitchSet::addStitch(Stitch *s, Stitch *parent)
+void StitchSet::addStitch(Stitch *s)
 {
-    if(parent == 0)
-        parent = rootItem;
-    QModelIndex parentIdx = createIndex(parent->row(), 0, parent);
+    QModelIndex parentIdx = createIndex(rootItem->row() , 0, rootItem);
 
-    beginInsertRows(parentIdx, parent->childCount(), parent->childCount());
-    parent->appendChild(s);
-    mStitches.append(s);
+    beginInsertRows(parentIdx, rootItem->childCount(), rootItem->childCount());
+    rootItem->appendChild(s);
     endInsertRows();
 }
 
 QVariant StitchSet::data(const QModelIndex &index, int role) const
 {
+    qDebug() << "StitchSet::data << started";
     if(!index.isValid())
         return QVariant();
 
@@ -182,7 +180,7 @@ QModelIndex StitchSet::parent(const QModelIndex &index) const
     Stitch *parentItem = childItem->parent();
 
     if (parentItem == rootItem)
-        return QModelIndex();
+        return createIndex(0,0,(quint32)95973);
 
     return createIndex(parentItem->row(), 0, parentItem);
 }
@@ -203,8 +201,9 @@ int StitchSet::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-int StitchSet::columnCount(const QModelIndex &/*parent*/) const
+int StitchSet::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return 5;
 }
 

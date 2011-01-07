@@ -41,18 +41,17 @@ public:
     Stitch* findStitch(QString name);
 
     bool hasStitch(QString name);
-    void addStitch(Stitch *s, Stitch *parent = 0);
+    void addStitch(Stitch *s);
 
     int stitchCount();
 
 protected:
-    QList<Stitch *> stitches() { return mStitches; }
+    QList<Stitch *> stitches() { return rootItem->children(); }
 
 private:
     void loadXmlStitch(QDomElement e);
 
     //FIXME: convert to model functions where possible: this->invisibleRootItem();?
-    QList<Stitch *> mStitches;
 
     QString mName,
             mAuthor,
