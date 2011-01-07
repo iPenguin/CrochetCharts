@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <QObject>
 
-#include "../src/stitchset.h"
+#include "stitchset.h"
 
 class TestStitchSet : public QObject
 {
@@ -18,10 +18,11 @@ private slots:
      void initTestCase();
      void setupStitchSet();
      void findStitch();
+     void findStitch_data();
      void cleanupTestCase();
 
 private:
-
+    StitchSet *mSet;
 };
 
 #endif // TESTSTITCHSET_H

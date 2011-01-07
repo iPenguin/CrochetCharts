@@ -20,6 +20,7 @@ void TestStitch::initTestCase()
 
 void TestStitch::stitchSetup()
 {
+    //FIXME: don't hard code the stitches.
     mS->setName("ch");
     mS->setFile(":/stitches/chain.svg");
     mS->setDescription("chain");
@@ -99,8 +100,8 @@ void TestStitch::stitchRender_data()
     QTest::addColumn<QString>("rasterHash");
     QTest::addColumn<QString>("svgHash");
 
-    QTest::newRow("1st")   << (int)32 << (int)64 << "786ff038d0ada0c449a19007892bd1b443a558f3" << "8a64346c61917cc5d40a113710e6f82f75fbff86";
-    QTest::newRow("2nd")   << (int)32 << (int)64 << "786ff038d0ada0c449a19007892bd1b443a558f3" << "8a64346c61917cc5d40a113710e6f82f75fbff86";
+    QTest::newRow("1st")   << (int)32 << (int)64 << "be5e4360b19c6d8ae58c0f07d5a252f18cd50a04" << "e77a026f3f9a5e22ab04b532d93a4315b935c180";
+    QTest::newRow("2nd")   << (int)32 << (int)64 << "be5e4360b19c6d8ae58c0f07d5a252f18cd50a04" << "e77a026f3f9a5e22ab04b532d93a4315b935c180";
 //TODO: render other stitches esp tall and wide stitches.
 }
 
