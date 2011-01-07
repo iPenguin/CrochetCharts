@@ -19,19 +19,19 @@ public:
     ~Stitch();
 
     void setName(QString name) { mName = name; }
-    const QString name() { return mName; }
+    QString name() const { return mName; }
 
     void setFile(QString file) { mFile = file; }
-    const QString file() { return mFile; }
+    QString file() const { return mFile; }
 
     void setDescription(QString desc) { mDescription = desc; }
-    const QString description() { return mDescription; }
+    QString description() const { return mDescription; }
 
     void setCategory(QString cat) { mCategory = cat; }
-    const QString category() { return mCategory; }
+    QString category() const { return mCategory; }
 
     void setWrongSide(QString ws) { mWrongSide = ws; }
-    const QString wrongSide() { return mWrongSide; }
+    QString wrongSide() const { return mWrongSide; }
 
     bool isSvg();
 
@@ -54,15 +54,25 @@ private:
 | QAbstractItemModel parts of the StitchSet and StitchLibrary.       |
 \********************************************************************/
 public:
+    void appendChild(Stitch *child);
+
     QVariant data(int column) const;
     Stitch* child(int row);
     int childCount() const;
     int row() const;
     Stitch* parent();
+protected:
+    //setParent is called from appendChild() calling both is redundant.
+    void setParent(Stitch *parent);
 private:
     Stitch* parentItem;
     QList<Stitch*> childItems;
 /********************************************************************/
 };
+
+QDataStream& operator<<(QDataStream &out, const Stitch &s);
+Stitch& operator<<(Stitch &out, const Stitch &s);
+
+QDataStream& operator>>(QDataStream &in, Stitch &s);
 
 #endif //STITCH_H

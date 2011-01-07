@@ -97,3 +97,43 @@ int Stitch::row() const
 
     return 0;
 }
+
+void Stitch::setParent(Stitch *parent)
+{
+    if(parent)
+        parentItem = parent;
+}
+
+void Stitch::appendChild(Stitch *child)
+{
+    childItems.append(child);
+    child->setParent(this);
+}
+
+QDataStream& operator<<(QDataStream &out, const Stitch &s)
+{
+    out << s.name() << s.file() << s.description() << s.category() << s.wrongSide();
+    return out;
+}
+
+Stitch& operator<<(Stitch &out, const Stitch &s)
+{
+    out.setName(s.name());
+    out.setFile(s.file());
+    out.setDescription(s.description());
+    out.setCategory(s.category());
+    out.setWrongSide(s.wrongSide());
+    return out;
+}
+
+QDataStream& operator>>(QDataStream &in, Stitch &s)
+{
+    QString name, file, desc, cat, ws;
+    in >> name >> file >> desc >> cat >> ws;
+    s.setName(name);
+    s.setFile(file);
+    s.setDescription(desc);
+    s.setCategory(cat);
+    s.setWrongSide(ws);
+    return in;
+}
