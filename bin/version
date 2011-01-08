@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Copyright 2011 Stitch Works Software
+# Brian C. Milco <brian@stitchworkssoftware.com>
+#
+# This script generates a version.cpp file which
+# contains the current git revision based on the tags
+# and if the repo is dirty. It should be run before
+# every build.
+#
+PATH="~/crochet.git/bin:$PATH"
+base_dir="${HOME}/crochet.git"
+
+echo "#include \"../src/version.h\"" > "${base_dir}/build/version.cpp"
+echo "#define GIT_VERSION" \"`git describe --tags --dirty=-working`\" >> "${base_dir}/build/version.cpp"
+echo "const QString gGIT_VERSION = GIT_VERSION;" >> "${base_dir}/build/version.cpp"

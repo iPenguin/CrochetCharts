@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Copyright 2011 Stitch Works Software
+# Brian C. Milco <brian@stitchworkssoftware.com>
+#
+# This script is a wrapper for the awk script.
+# The final output of this script is clean color-ified
+# total lines for all the tests in the test suite.
+#
+PATH="~/crochet.git/bin:$PATH"
+base_dir="${HOME}/crochet.git"
+
+cd ${base_dir}/build
+tests/tests > tests.log
+cat tests.log | grep -e Start -e Totals | awk -f ${base_dir}/bin/tests_parse.awk
+

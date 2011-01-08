@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Copyright 2011 Stitch Works Software
+# Brian C. Milco <brian@stitchworkssoftware.com>
+#
+#This is a quick script that will make sure everything
+#is up to date before running the build process
+#
+PATH="~/crochet.git/bin:$PATH"
+base_dir="${HOME}/crochet.git"
+
+version
+
+cd ${base_dir}/build
+make
+
