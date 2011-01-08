@@ -27,37 +27,37 @@ void TestCrochetDataModel::testDataModelAppendRows()
 
 void TestCrochetDataModel::testDataModelInsertRows()
 {
-
+    QSKIP("Skip this test because it doesn't have anything to do yet.", SkipSingle);
 }
 
 void TestCrochetDataModel::testDataModelRemoveRows()
 {
-
+    QSKIP("No test here.", SkipSingle);
 }
 
 void TestCrochetDataModel::testDataModelAppendColumns()
 {
-
+    QSKIP("No test here.", SkipSingle);
 }
 
 void TestCrochetDataModel::testDataModelInsertColumns()
 {
-
+    QSKIP("No test here.", SkipSingle);
 }
 
 void TestCrochetDataModel::testDataModelRemoveColumns()
 {
-
+    QSKIP("No test here.", SkipSingle);
 }
 
 void TestCrochetDataModel::testDataModelSet()
 {
-
+    QSKIP("No test here.", SkipSingle);
 }
 
 void TestCrochetDataModel::testDataModelAt()
 {
-
+    QSKIP("No test here.", SkipSingle);
 }
 
 void TestCrochetDataModel::cleanupTestCase()
