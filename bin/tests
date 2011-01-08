@@ -12,5 +12,16 @@ base_dir="${HOME}/crochet.git"
 
 cd ${base_dir}/build
 tests/tests > tests.log
-cat tests.log | grep -e Start -e Totals | awk -f ${base_dir}/bin/tests_parse.awk
+cat tests.log | grep -e Start -e Totals | awk -f ${base_dir}/bin/tests_overview.awk
+
+if [[ "$1" != "-d" && "$1" != "--details" ]]; then
+    echo "Do you want to see the details? (y/N)"
+    read answer
+else
+    answer="y"
+fi
+
+if [ "$answer" == "y" ]; then
+    cat ${base_dir}/build/tests.log | awk -f ${base_dir}/bin/tests_output.awk
+fi
 

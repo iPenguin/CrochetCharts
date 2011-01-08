@@ -12,5 +12,5 @@ base_dir="${HOME}/crochet.git"
 version
 
 cd ${base_dir}/build
-make
+/usr/bin/make $1
 

@@ -4,3 +4,4 @@ CMakeLists.txt.user
 *.kdev4
 *.swp
 .swp.*
+*.log

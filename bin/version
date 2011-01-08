@@ -11,6 +11,10 @@
 PATH="~/crochet.git/bin:$PATH"
 base_dir="${HOME}/crochet.git"
 
+git_version=`git describe --tags --dirty=-working`
+
+echo "Git Version:" ${git_version}
+
 echo "#include \"../src/version.h\"" > "${base_dir}/build/version.cpp"
-echo "#define GIT_VERSION" \"`git describe --tags --dirty=-working`\" >> "${base_dir}/build/version.cpp"
+echo "#define GIT_VERSION" \"${git_version}\" >> "${base_dir}/build/version.cpp"
 echo "const QString gGIT_VERSION = GIT_VERSION;" >> "${base_dir}/build/version.cpp"
