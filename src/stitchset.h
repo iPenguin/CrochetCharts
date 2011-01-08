@@ -24,19 +24,19 @@ public:
     void loadXmlStitchSet(QString fileName);
 
     const QString name() const { return mName; }
-    void setName(QString name) { mName = name; }
+    void setName(QString n) { mName = n; }
 
     const QString author() { return mAuthor; }
-    void setAuthor(QString author) { mAuthor = author; }
+    void setAuthor(QString a) { mAuthor = a; }
 
     const QString email() { return mEmail; }
-    void setEmail(QString email) { mEmail = email; }
+    void setEmail(QString e) { mEmail = e; }
 
     const QString org() { return mOrg; }
-    void setOrg(QString org) { mOrg = org; }
+    void setOrg(QString o) { mOrg = o; }
 
     const QString url() { return mUrl; }
-    void setUrl(QString url) { mUrl = url; }
+    void setUrl(QString u) { mUrl = u; }
 
     Stitch* findStitch(QString name);
 

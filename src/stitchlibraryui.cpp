@@ -18,9 +18,8 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     StitchCollection::inst()->populateComboBox(ui->stitchSource);
     StitchSet *master = StitchCollection::inst()->masterStitchSet();
     ui->listView->setModel(master);
-
-    StitchLibraryDelegate *delegate = new StitchLibraryDelegate(ui->listView);
-    ui->listView->setItemDelegate(delegate);
+qDebug() << "create delegate for library";
+    ui->listView->setItemDelegate(new StitchLibraryDelegate(ui->listView));
 
     setDialogSize();
 

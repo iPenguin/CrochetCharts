@@ -64,8 +64,13 @@ QWidget* StitchPaletteDelegate::createEditor(QWidget *parent, const QStyleOption
 
 void StitchPaletteDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
+    Q_UNUSED(editor);
+    Q_UNUSED(index);
 }
 
 void StitchPaletteDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
+    Q_UNUSED(editor);
+    Q_UNUSED(model);
+    Q_UNUSED(index);
 }

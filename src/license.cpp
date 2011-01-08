@@ -131,5 +131,6 @@ bool License::isValidLicense(QString license, QString serialNumber, QString emai
 
 bool License::isValidEmail(QString email)
 {
+     Q_UNUSED(email);
     return true; //TODO: validate the email address.
 }

@@ -32,5 +32,5 @@ set(crochet_app_resources
 qt4_add_resources(crochet_app_rcc_srcs ${crochet_app_resources})
 qt4_wrap_cpp(crochet_test_moc_srcs ${crochet_test_qobject_headers} ${crochet_app_h})
 
-add_executable(crochet_tests main.cpp ${crochet_test_srcs} ${crochet_test_moc_srcs} ${crochet_app_cpp} ${crochet_app_rcc_srcs})
-target_link_libraries(crochet_tests ${QT_LIBRARIES})
+add_executable(tests main.cpp ${crochet_test_srcs} ${crochet_test_moc_srcs} ${crochet_app_cpp} ${crochet_app_rcc_srcs})
+target_link_libraries(tests ${QT_LIBRARIES})

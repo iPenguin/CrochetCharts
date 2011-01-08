@@ -26,26 +26,32 @@ find_package(Qt4 REQUIRED)
 
 option(UNIT_TESTING  "Build QTestLib Unit Tests" OFF)
 option(ARCH_32BIT "Force 32-bit Build" OFF)
+option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
 
-message(STATUS "Building Version - " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH} ${VERSION_SHA1})
+message(STATUS "Building " ${PROJECT_NAME} " version - " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH} ${VERSION_SHA1})
 message(STATUS "Build Profile - " ${CMAKE_BUILD_TYPE})
 message(STATUS "Unit Testing - " ${UNIT_TESTING})
 message(STATUS "Force 32-bit Builds - " ${ARCH_32BIT})
+message(STATUS "Use -Wshadow when compiling - " ${SHADOW_FLAG})
 
 if(ARCH_32BIT)
     set(extra_build_flags "-m32")
 endif()
 
-set(CMAKE_C_FLAGS "${extra_build_flags} -g -Wall")
+if(SHADOW_FLAG)
+    list(APPEND extra_build_flags " -Wshadow")
+endif()
+
+set(CMAKE_C_FLAGS "${extra_build_flags} -g -W -Wall")
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 
-set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
+set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -W -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 
-set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -g -Wall -O2")
+set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -g -W -Wall -O2")
 set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
 
-set(CMAKE_C_FLAGS_DEBUGPROFILING "${extra_build_flags} -g -pg -Wall")
+set(CMAKE_C_FLAGS_DEBUGPROFILING "${extra_build_flags} -g -pg -W -Wall")
 set(CMAKE_CXX_FLAGS_DEBUGPROFILING ${CMAKE_C_FLAGS_DEBUGPROFILING})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUGPROFILING "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 

@@ -34,18 +34,21 @@ Cell* CrochetDataModel::cell(int row, int column)
     return mRows[row].at(column);
 }
 
-QModelIndex CrochetDataModel::index(int row, int column, const QModelIndex &/*parent*/) const
+QModelIndex CrochetDataModel::index(int row, int column, const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return this->createIndex(row, column);
 }
 
-QModelIndex CrochetDataModel::parent(const QModelIndex &/*index*/) const
+QModelIndex CrochetDataModel::parent(const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     return QModelIndex();
 }
 
-int CrochetDataModel::rowCount(const QModelIndex &/*parent*/) const
+int CrochetDataModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     return mRows.count();
 }
 
@@ -63,8 +66,10 @@ int CrochetDataModel::columnCount(int row)
     return columnCount(this->index(row, 0));
 }
 
-QVariant CrochetDataModel::data(const QModelIndex &/*index*/, int /*role*/) const
+QVariant CrochetDataModel::data(const QModelIndex &index, int role) const
 {
+    Q_UNUSED(index);
+    Q_UNUSED(role);
     return QVariant();
 }
 
@@ -126,10 +131,16 @@ void CrochetDataModel::removeColumn(int row, int column)
 
 bool CrochetDataModel::insertRows(int row, int count, const QModelIndex &parent)
 {
+    Q_UNUSED(row);
+    Q_UNUSED(count);
+    Q_UNUSED(parent);
     return true;
 }
 
 bool CrochetDataModel::insertColumns(int column, int count, const QModelIndex &parent)
 {
+    Q_UNUSED(column);
+    Q_UNUSED(count);
+    Q_UNUSED(parent);
     return true;
 }

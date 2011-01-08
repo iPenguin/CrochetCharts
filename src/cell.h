@@ -19,10 +19,10 @@ public:
     int type () const;
 
     void setRotation(double rotation) { mRotation = rotation; }
-    const double rotation() { return mRotation; }
+    double rotation() const { return mRotation; }
 
     void setAngle(double angle) { mAngle = angle; }
-    const double angle() { return mRotation; }
+    double angle() const { return mRotation; }
 
 signals:
 

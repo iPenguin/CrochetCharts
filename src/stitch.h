@@ -18,10 +18,10 @@ public:
     Stitch(Stitch *parent = 0);
     ~Stitch();
 
-    void setName(QString name) { mName = name; }
+    void setName(QString n) { mName = n; }
     QString name() const { return mName; }
 
-    void setFile(QString file) { mFile = file; }
+    void setFile(QString f) { mFile = f; }
     QString file() const { return mFile; }
 
     void setDescription(QString desc) { mDescription = desc; }

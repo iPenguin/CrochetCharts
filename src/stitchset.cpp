@@ -131,6 +131,7 @@ void StitchSet::addStitch(Stitch *s)
 
 QVariant StitchSet::data(const QModelIndex &index, int role) const
 {
+    Q_UNUSED(role)
     qDebug() << "StitchSet::data << started";
     if(!index.isValid())
         return QVariant();
@@ -209,10 +210,12 @@ int StitchSet::columnCount(const QModelIndex &parent) const
 
 QDataStream& operator<<(QDataStream &out, const StitchSet &set)
 {
+    Q_UNUSED(set);
     return out;
 }
 
 QDataStream& operator>>(QDataStream &in, StitchSet &set)
 {
+    Q_UNUSED(set);
     return in;
 }
