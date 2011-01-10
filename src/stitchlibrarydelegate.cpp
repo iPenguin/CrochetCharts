@@ -42,7 +42,7 @@ qDebug() << "size hint";
             text = s->name();
             break;
         case 1:
-            text = s->file(); //TODO: make this the icon. 32x32.
+            text = s->file(); //TODO: make this the icon size.
             break;
         case 2:
             text = s->description();
