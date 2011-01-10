@@ -28,7 +28,7 @@ StitchCollection* StitchCollection::inst()
 
 StitchCollection::StitchCollection()
 { 
-    mMasterSet = new StitchSet(tr("Master Stitch Set"), this);
+    mMasterSet = new StitchSet(this);
 }
 
 StitchCollection::~StitchCollection()

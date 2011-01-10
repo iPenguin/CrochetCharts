@@ -46,10 +46,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupStitchPalette()
 {
-    StitchSet *master = StitchCollection::inst()->masterStitchSet();
-    ui->stitchPalette->setModel(master);
-    StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->stitchPalette);
-    ui->stitchPalette->setItemDelegate(delegate);
+    StitchSet *set = StitchCollection::inst()->masterStitchSet();
+    ui->stitchPalette->setModel(set);
+    
+    //StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->stitchPalette);
+    //ui->stitchPalette->setItemDelegate(delegate);
 }
 
 void MainWindow::setupMenus()

@@ -18,7 +18,6 @@ class StitchSet : public QAbstractItemModel
     friend class StitchLibraryUi;
 public:
     StitchSet(QObject *parent = 0);
-    StitchSet(QString name, QObject *parent = 0);
     ~StitchSet();
 
     void loadXmlStitchSet(QString fileName);
@@ -43,16 +42,15 @@ public:
     bool hasStitch(QString name);
     void addStitch(Stitch *s);
 
-    int stitchCount();
+    int stitchCount() const;
 
 protected:
-    QList<Stitch *> stitches() { return rootItem->children(); }
+    QList<Stitch *> stitches() { return mStitches; }
 
 private:
     void loadXmlStitch(QDomElement e);
 
-    //FIXME: convert to model functions where possible: this->invisibleRootItem();?
-
+    QList<Stitch*> mStitches;
     QString mName,
             mAuthor,
             mEmail,
@@ -66,14 +64,15 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &index) const;
 
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-    QModelIndex rootItemIndex() const { return createIndex(0, 0, rootItem); }
-
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 private:
-    Stitch *rootItem;
+
 /***************************************************************/
 };
 

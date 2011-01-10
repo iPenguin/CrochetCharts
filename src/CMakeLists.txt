@@ -24,6 +24,7 @@ set(crochet_qobject_headers
     stitchlibraryui.h
     stitchlibrarydelegate.h
     stitchpalettedelegate.h
+    stitchmodel.h
     )
 
 set(crochet_headers

@@ -15,14 +15,7 @@
 StitchSet::StitchSet(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    rootItem = new Stitch();
-}
-
-StitchSet::StitchSet(QString name, QObject *parent)
-    : QAbstractItemModel(parent)
-{
-    setName(name);
-    rootItem = new Stitch();
+    
 }
 
 StitchSet::~StitchSet()
@@ -103,7 +96,7 @@ void StitchSet::loadXmlStitch(QDomElement element)
 
 Stitch* StitchSet::findStitch(QString name)
 {
-    foreach(Stitch *s, rootItem->children()) {
+    foreach(Stitch *s, mStitches) {
         if(s->name() == name)
             return s;
     }
@@ -122,11 +115,39 @@ bool StitchSet::hasStitch(QString name)
 
 void StitchSet::addStitch(Stitch *s)
 {
-    QModelIndex parentIdx = createIndex(rootItem->row() , 0, rootItem);
-
-    beginInsertRows(parentIdx, rootItem->childCount(), rootItem->childCount());
-    rootItem->appendChild(s);
+    qDebug() << "addStitch start";
+    beginInsertRows(this->parent(QModelIndex()), stitchCount(), stitchCount());
+    mStitches.append(s);
     endInsertRows();
+    qDebug() << "addStitch done";
+}
+
+Qt::ItemFlags StitchSet::flags(const QModelIndex &index) const
+{
+    qDebug() << "flags";
+    return QAbstractItemModel::flags(index);
+}
+
+QVariant StitchSet::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if(orientation == Qt::Horizontal) {
+        switch(section) {
+            case 0:
+                return QVariant(tr("Name"));
+            case 1:
+                return QVariant(tr("Icon"));
+            case 2:
+                return QVariant(tr("Description"));
+            case 3:
+                return QVariant(tr("Category"));
+            case 4:
+                return QVariant(tr("Wrong Side"));
+            default:
+                return QVariant();
+        }
+
+    }
+    return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 QVariant StitchSet::data(const QModelIndex &index, int role) const
@@ -142,64 +163,40 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
         qDebug() << "data cannot get valid stitch";
         return QVariant();
     }
-    /*if(role == Qt::DisplayRole) {
-        return QVariant(s->name());
-    } else if(role == Qt::DecorationRole) {
-        return QIcon(QPixmap(stitch(index)->file()));
-    }*/
 
-    return s->data(index.column());
+//TODO: add switch(column)    
+    if(role == Qt::DisplayRole)
+        return s->name();
+    else
+        return QVariant();
 }
 
 QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) const
 {
-    if(!hasIndex(row, column, parent))
+    Q_UNUSED(parent);
+    if(row < 0 || column < 0)
         return QModelIndex();
-
-    Stitch *parentItem;
-
-    if(!parent.isValid())
-        parentItem = rootItem;
-    else
-        parentItem = static_cast<Stitch*>(parent.internalPointer());
-
-    Stitch *childItem = parentItem->child(row);
-
-    if(childItem)
-        return createIndex(row, column, childItem);
-    else
-        return QModelIndex();
-
+    
+    return createIndex(row, column, (quint32)95973);
 }
 
 QModelIndex StitchSet::parent(const QModelIndex &index) const
 {
-    if (!index.isValid())
+    if(!index.isValid())
         return QModelIndex();
-
-    Stitch *childItem = static_cast<Stitch*>(index.internalPointer());
-    Stitch *parentItem = childItem->parent();
-
-    if (parentItem == rootItem)
-        return createIndex(0,0,(quint32)95973);
-
-    return createIndex(parentItem->row(), 0, parentItem);
+    
+    return createIndex(0, 0, (quint32)95973);
 }
 
-int StitchSet::stitchCount()
+int StitchSet::stitchCount() const
 {
-    return rowCount(rootItemIndex());
+    return mStitches.count();
 }
 
 int StitchSet::rowCount(const QModelIndex &parent) const
 {
-    if(!parent.isValid())
-        return 0;
-
-    Stitch *s = static_cast<Stitch*>(parent.internalPointer());
-    if(s)
-        return s->childCount();
-    return 0;
+    Q_UNUSED(parent);
+    return stitchCount();
 }
 
 int StitchSet::columnCount(const QModelIndex &parent) const
