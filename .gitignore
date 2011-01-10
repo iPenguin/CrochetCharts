@@ -5,3 +5,4 @@ CMakeLists.txt.user
 *.swp
 .swp.*
 *.log
+core

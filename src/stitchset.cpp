@@ -152,7 +152,6 @@ QVariant StitchSet::headerData(int section, Qt::Orientation orientation, int rol
 
 QVariant StitchSet::data(const QModelIndex &index, int role) const
 {
-    Q_UNUSED(role)
     qDebug() << "StitchSet::data << started";
     if(!index.isValid())
         return QVariant();
@@ -166,7 +165,7 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
 
 //TODO: add switch(column)    
     if(role == Qt::DisplayRole)
-        return s->name();
+        return QVariant("test"); //QVariant(s->name());
     else
         return QVariant();
 }

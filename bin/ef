@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+#
+#
+
+export LD_PRELOAD=libefence.so.0.0
+$1
+

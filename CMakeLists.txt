@@ -42,16 +42,16 @@ if(SHADOW_FLAG)
     list(APPEND extra_build_flags " -Wshadow")
 endif()
 
-set(CMAKE_C_FLAGS "${extra_build_flags} -g -W -Wall")
+set(CMAKE_C_FLAGS "${extra_build_flags} -g -ggdb -W -Wall")
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 
-set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -W -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
+set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -ggdb -W -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 
-set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -g -W -Wall -O2")
+set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -W -Wall -O2")
 set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
 
-set(CMAKE_C_FLAGS_DEBUGPROFILING "${extra_build_flags} -g -pg -W -Wall")
+set(CMAKE_C_FLAGS_DEBUGPROFILING "${extra_build_flags} -g -ggdb -pg -W -Wall")
 set(CMAKE_CXX_FLAGS_DEBUGPROFILING ${CMAKE_C_FLAGS_DEBUGPROFILING})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUGPROFILING "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
