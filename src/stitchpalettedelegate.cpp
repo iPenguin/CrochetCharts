@@ -6,6 +6,7 @@
 
 #include "stitch.h"
 #include <QPainter>
+#include <QPixmap>
 
 #include <QDebug>
 
@@ -17,7 +18,26 @@ StitchPaletteDelegate::StitchPaletteDelegate(QWidget *parent)
 void StitchPaletteDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     //fall back to the basic painter.
-    QStyledItemDelegate::paint(painter, option, index);
+    //QStyledItemDelegate::paint(painter, option, index);
+
+    if(index.column() == 0) {
+        int pad = 5;
+        int iconWidth = 32;
+        int iconHeight = 32;
+
+        Stitch *s = static_cast<Stitch*>(index.internalPointer());
+        QRect rect = option.rect;
+
+        if(option.state == QStyle::State_Selected)
+            painter->fillRect(rect, option.palette.highlight());
+        
+        //TODO: move image loading/caching into the stitch class.
+        QPixmap pix = QPixmap(iconWidth, iconHeight);
+        pix.load(":/stitches/chain.svg");
+        painter->drawPixmap(rect.left() + pad, rect.top() + pad, pix);
+        painter->drawText(rect.left() + iconWidth + (2*pad), rect.top() + pad, s->name());
+       
+    }
 }
 
 QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -28,12 +48,11 @@ QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const 
 */
     Stitch *s = static_cast<Stitch*>(index.internalPointer());
     if(!s)
-        return QSize(100, 10);
+        return QSize(100, 42);
 
-qDebug() << "size hint";
     QString text;
 
-    switch(index.row()) {
+    switch(index.column()) {
         case 0:
             text = s->name();
             break;
@@ -53,8 +72,9 @@ qDebug() << "size hint";
             text = "";
             break;
     }
-
-    return option.fontMetrics.size(Qt::TextWordWrap, text);
+    QSize textSize = option.fontMetrics.size(Qt::TextWordWrap, text);
+    
+    return QSize(textSize.width(), 42);
 }
 
 QWidget* StitchPaletteDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
