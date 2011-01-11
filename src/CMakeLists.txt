@@ -10,7 +10,6 @@ set(crochet_qobject_headers
     crochetcell.h
     crochetdatamodel.h
     mainwindow.h
-    stitch.h
     stitchset.h
     crochetscene.h
     licensewizard.h
@@ -31,6 +30,7 @@ set(crochet_headers
     version.h
     appinfo.h
     license.h
+    stitch.h
     )
 
 set(crochet_uis
