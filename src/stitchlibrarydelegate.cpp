@@ -10,6 +10,7 @@
 #include <QComboBox>
 
 #include <QDebug>
+#include "stitchcollection.h"
 
 StitchLibraryDelegate::StitchLibraryDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
@@ -71,18 +72,26 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
     switch(index.column()) {
         case Stitch::Name:
             return new QWidget(parent); //the name is the unique id and shouldn't be changed.
-        case Stitch::Icon:
+        case Stitch::Icon: {
+            
             return new QWidget(parent); //TODO: create an editor widget for selecting icons.
+        }
         case Stitch::Description: {
-             QLineEdit *editor = new QLineEdit(parent);
+            QLineEdit *editor = new QLineEdit(parent);
 
             editor->setText(s->name());
             return editor;
         }
-        case Stitch::Category:
-            return new QComboBox(parent);
-        case Stitch::WrongSide:
-            return new QComboBox(parent);
+        case Stitch::Category: {
+            QComboBox *cb = new QComboBox(parent);
+            cb->addItems(StitchCollection::inst()->categoryList());
+            return cb;
+        }
+        case Stitch::WrongSide: {
+            QComboBox *cb = new QComboBox(parent);
+            cb->addItems(StitchCollection::inst()->stitchList());
+            return cb;
+        }
         default:
             return new QWidget(parent);
     }
@@ -100,24 +109,18 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
 void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     switch(index.column()) {
-        case Stitch::Name: {
-            QLineEdit *le = static_cast<QLineEdit*>(editor);
-            model->setData(index, le->text(), Qt::EditRole);
-        }
         case Stitch::Icon: {
             //TODO: custom editor widget and data.
         }
+        case Stitch::Name:
         case Stitch::Description: {
             QLineEdit *le = static_cast<QLineEdit*>(editor);
             model->setData(index, le->text(), Qt::EditRole); //TODO: consolidate with Stitch::Name ?
         }
-        case Stitch::Category:{
+        case Stitch::WrongSide:
+        case Stitch::Category: {
             QComboBox *cb = static_cast<QComboBox*>(editor);
             model->setData(index, cb->currentText(), Qt::EditRole);
-        }
-        case Stitch::WrongSide: {
-            QComboBox *cb = static_cast<QComboBox*>(editor);
-            model->setData(index, cb->currentText(), Qt::EditRole); //TODO: consolidate with Stitch::Category ?
         }
         default:
             break;
