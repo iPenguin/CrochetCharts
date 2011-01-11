@@ -124,3 +124,27 @@ void StitchCollection::populateComboBox(QComboBox *cb)
         cb->addItem(set->name());
     }
 }
+
+QStringList StitchCollection::categoryList() const
+{
+    QStringList list;
+
+    foreach(Stitch *s, mMasterSet->stitches()) {
+        if(!list.contains(s->category()))
+            list.append(s->category());
+    }
+    
+    return list;
+}
+
+QStringList StitchCollection::stitchList() const
+{
+    QStringList list;
+
+    foreach(Stitch *s, mMasterSet->stitches()) {
+        if(!list.contains(s->name()))
+            list.append(s->name());
+    }
+
+    return list;
+}

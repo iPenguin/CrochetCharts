@@ -6,6 +6,7 @@
 #define STITCHCOLLECTION_H
 
 #include <QObject>
+#include <QStringList>
 
 class StitchSet;
 class Stitch;
@@ -46,6 +47,8 @@ public:
     void populateComboBox(QComboBox *cb);
 
     StitchSet* findStitchSet(QString setName);
+    QStringList categoryList() const;
+    QStringList stitchList() const;
 
 protected:
     //TODO: figure out which stitches should be saved to which file...
