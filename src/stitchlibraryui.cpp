@@ -18,7 +18,7 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     StitchCollection::inst()->populateComboBox(ui->stitchSource);
     StitchSet *master = StitchCollection::inst()->masterStitchSet();
     ui->listView->setModel(master);
-qDebug() << "create delegate for library";
+
     ui->listView->setItemDelegate(new StitchLibraryDelegate(ui->listView));
 
     setDialogSize();
@@ -36,8 +36,7 @@ StitchLibraryUi::~StitchLibraryUi()
 
 void StitchLibraryUi::setDialogSize()
 {
-/*
-//for a table widget.
+    //for a table widget.
     ui->listView->resizeColumnsToContents();
 
     int width = 0;
@@ -46,7 +45,7 @@ void StitchLibraryUi::setDialogSize()
         width += ui->listView->columnWidth(i);
 
     ui->listView->setMinimumSize(QSize(width+25, height));
-*/
+
 }
 
 void StitchLibraryUi::changeStitchSet(QString setName)

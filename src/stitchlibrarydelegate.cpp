@@ -6,6 +6,8 @@
 
 #include "stitch.h"
 #include <QPainter>
+#include <QLineEdit>
+#include <QComboBox>
 
 #include <QDebug>
 
@@ -26,7 +28,6 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
 QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-qDebug() << "hint hint";
     if(!index.isValid())
         return QSize(100, 10);
 
@@ -34,16 +35,14 @@ qDebug() << "hint hint";
     if(!s)
         return QSize(100, 10);
 
-qDebug() << "size hint";
     QString text;
 
-    switch(index.row()) {
+    switch(index.column()) {
         case 0:
             text = s->name();
             break;
         case 1:
-            text = s->file(); //TODO: make this the icon size.
-            break;
+            return QSize(64, 64); //TODO: get this from the stitch class.
         case 2:
             text = s->description();
             break;
@@ -63,26 +62,71 @@ qDebug() << "size hint";
 
 QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    return QStyledItemDelegate::createEditor(parent, option, index);
+    Q_UNUSED(option);
+    if(!index.isValid())
+        return new QWidget(parent);
+
+    Stitch *s = static_cast<Stitch*>(index.internalPointer());
+    
+    switch(index.column()) {
+        case Stitch::Name:
+            return new QWidget(parent); //the name is the unique id and shouldn't be changed.
+        case Stitch::Icon:
+            return new QWidget(parent); //TODO: create an editor widget for selecting icons.
+        case Stitch::Description: {
+             QLineEdit *editor = new QLineEdit(parent);
+
+            editor->setText(s->name());
+            return editor;
+        }
+        case Stitch::Category:
+            return new QComboBox(parent);
+        case Stitch::WrongSide:
+            return new QComboBox(parent);
+        default:
+            return new QWidget(parent);
+    }
+
+    return new QWidget(parent);
 }
 
 void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
     Q_UNUSED(editor);
     Q_UNUSED(index);
+
 }
 
 void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-    Q_UNUSED(editor);
-    //TODO: set data from the editor.
-    //static_cast editor based on the column get data and set it.
-    model->setData(index, "test");
+    switch(index.column()) {
+        case Stitch::Name: {
+            QLineEdit *le = static_cast<QLineEdit*>(editor);
+            model->setData(index, le->text(), Qt::EditRole);
+        }
+        case Stitch::Icon: {
+            //TODO: custom editor widget and data.
+        }
+        case Stitch::Description: {
+            QLineEdit *le = static_cast<QLineEdit*>(editor);
+            model->setData(index, le->text(), Qt::EditRole); //TODO: consolidate with Stitch::Name ?
+        }
+        case Stitch::Category:{
+            QComboBox *cb = static_cast<QComboBox*>(editor);
+            model->setData(index, cb->currentText(), Qt::EditRole);
+        }
+        case Stitch::WrongSide: {
+            QComboBox *cb = static_cast<QComboBox*>(editor);
+            model->setData(index, cb->currentText(), Qt::EditRole); //TODO: consolidate with Stitch::Category ?
+        }
+        default:
+            break;
+    }
 }
 
 void StitchLibraryDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    Q_UNUSED(editor);
-    Q_UNUSED(option);
     Q_UNUSED(index);
+
+    editor->setGeometry(option.rect);
 }
