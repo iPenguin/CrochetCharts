@@ -49,13 +49,13 @@ void MainWindow::setupStitchPalette()
     StitchSet *set = StitchCollection::inst()->masterStitchSet();
     ui->stitchPalette->setModel(set);
     
-    //StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->stitchPalette);
-    //ui->stitchPalette->setItemDelegate(delegate);
+    StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->stitchPalette);
+    ui->stitchPalette->setItemDelegate(delegate);
 }
 
 void MainWindow::setupMenus()
 {
-    //File
+    //File Menu
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
@@ -69,25 +69,25 @@ void MainWindow::setupMenus()
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
-    //Edit
+    //Edit Menu
     ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy" /*, QIcon(":/edit-copy.png")*/));
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut" /*, QIcon(":/edit-cut.png")*/));
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste" /*, QIcon(":/edit-paste.png")*/));
 
-    //View
+    //View Menu
     connect(ui->menuView, SIGNAL(aboutToShow()), this, SLOT(menuViewAboutToShow()));
     connect(ui->actionShowStitches, SIGNAL(triggered()), this, SLOT(viewShowStitches()));
 
     ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in"));
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out"));
 
-    //Document
+    //Document Menu
 
     connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
 
-    //Chart
+    //Chart Menu
 
-    //Tools
+    //Tools Menu
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
 
     if(!Settings::inst()->isDemoVersion())
@@ -96,7 +96,7 @@ void MainWindow::setupMenus()
 
     connect(ui->actionStitchLibrary, SIGNAL(triggered()), this, SLOT(toolsStitchLibrary()));
 
-    //Help
+    //Help Menu
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
 }
