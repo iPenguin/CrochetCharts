@@ -69,4 +69,28 @@
         <category>Basic</category>
         <ws>ttc</ws>
     </stitch>
+
+   <stitch>
+       <name>lsdc</name>
+       <icon>stitches/left_slant_double_crochet.svg</icon>
+       <description>left slant decrease</description>
+       <category>Basic</category>
+       <ws>lsdc</ws>
+   </stitch>
+
+   <stitch>
+       <name>rsdc</name>
+       <icon>stitches/right_slant_double_crochet.svg</icon>
+       <description>right slant double crochet</description>
+       <category>Basic</category>
+       <ws>rsdc</ws>
+   </stitch>
+
+   <stitch>
+       <name>rsdc</name>
+       <icon>stitches/right_slant_double_crochet.svg</icon>
+       <description>right slant double crochet</description>
+       <category>Basic</category>
+       <ws>rsdc</ws>
+   </stitch>
 </stitch_set>
