@@ -115,59 +115,67 @@ bool StitchSet::hasStitch(QString name)
 
 void StitchSet::addStitch(Stitch *s)
 {
-    qDebug() << "addStitch start";
     beginInsertRows(this->parent(QModelIndex()), stitchCount(), stitchCount());
     mStitches.append(s);
     endInsertRows();
-    qDebug() << "addStitch done";
 }
 
 Qt::ItemFlags StitchSet::flags(const QModelIndex &index) const
 {
-    qDebug() << "flags";
-    return QAbstractItemModel::flags(index);
+    Q_UNUSED(index);
+    //Qt::ItemIsEditable | Qt::ItemIsUserCheckable
+    return (Qt::ItemIsSelectable); // | Qt::ItemIsEnabled);
 }
 
 QVariant StitchSet::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if(orientation == Qt::Horizontal) {
-        switch(section) {
-            case 0:
-                return QVariant(tr("Name"));
-            case 1:
-                return QVariant(tr("Icon"));
-            case 2:
-                return QVariant(tr("Description"));
-            case 3:
-                return QVariant(tr("Category"));
-            case 4:
-                return QVariant(tr("Wrong Side"));
-            default:
-                return QVariant();
-        }
+    if(role == Qt::DisplayRole) {
+        if(orientation == Qt::Horizontal) {
+            switch(section) {
+                case 0:
+                    return QVariant(tr("Name"));
+                case 1:
+                    return QVariant(tr("Icon"));
+                case 2:
+                    return QVariant(tr("Description"));
+                case 3:
+                    return QVariant(tr("Category"));
+                case 4:
+                    return QVariant(tr("Wrong Side"));
+                default:
+                    return QVariant();
+            }
 
+        }
     }
     return QAbstractItemModel::headerData(section, orientation, role);
 }
 
 QVariant StitchSet::data(const QModelIndex &index, int role) const
 {
-    qDebug() << "StitchSet::data << started";
     if(!index.isValid())
         return QVariant();
 
-    Stitch *s = static_cast<Stitch *>(index.internalPointer());
+    Stitch *s = static_cast<Stitch*>(index.internalPointer());
 
-    if(!s) {
-        qDebug() << "data cannot get valid stitch";
-        return QVariant();
+    if(role == Qt::DisplayRole) {
+        switch(index.column()) {
+            case 0:
+                return QVariant(s->name());
+            case 1:
+                return QVariant(s->file()); //TODO: return the QIcon.
+            case 2:
+                return QVariant(s->description());
+            case 3:
+                return QVariant(s->category());
+            case 4:
+                return QVariant(s->wrongSide());
+            default:
+                return QVariant();
+        }
     }
 
-//TODO: add switch(column)    
-    if(role == Qt::DisplayRole)
-        return QVariant("test"); //QVariant(s->name());
-    else
-        return QVariant();
+    return QVariant();
 }
 
 QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) const
@@ -176,7 +184,7 @@ QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) con
     if(row < 0 || column < 0)
         return QModelIndex();
     
-    return createIndex(row, column, (quint32)95973);
+    return createIndex(row, column, mStitches[row]);
 }
 
 QModelIndex StitchSet::parent(const QModelIndex &index) const
