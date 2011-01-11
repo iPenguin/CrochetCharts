@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QPushButton>
 
 #include <QDebug>
 #include "stitchcollection.h"
@@ -39,20 +40,22 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     QString text;
 
     switch(index.column()) {
-        case 0:
+        case Stitch::Name:
             text = s->name();
             break;
-        case 1:
+        case Stitch::Icon:
             return QSize(64, 64); //TODO: get this from the stitch class.
-        case 2:
+        case Stitch::Description:
             text = s->description();
             break;
-        case 3:
+        case Stitch::Category:
             text = s->category();
             break;
-        case 4:
+        case Stitch::WrongSide:
             text = s->wrongSide();
             break;
+        case 5:
+            text = tr("Add Stitch");
         default:
             text = "";
             break;
@@ -91,6 +94,13 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
             QComboBox *cb = new QComboBox(parent);
             cb->addItems(StitchCollection::inst()->stitchList());
             return cb;
+        }
+        case 5: {
+            QPushButton *pb = new QPushButton(parent);
+            pb->setText(tr("Add Stitch"));
+            pb->setObjectName(QString("%1 %2").arg(index.row()).arg(index.column()));
+            connect(pb, SIGNAL(clicked(bool)), this, SLOT(addStitch()));
+            return pb;
         }
         default:
             return new QWidget(parent);
@@ -132,4 +142,14 @@ void StitchLibraryDelegate::updateEditorGeometry(QWidget *editor, const QStyleOp
     Q_UNUSED(index);
 
     editor->setGeometry(option.rect);
+}
+
+void StitchLibraryDelegate::addStitch()
+{
+    QPushButton *pb = qobject_cast<QPushButton*>(sender());
+    int row, column;
+    QStringList numbers = pb->objectName().split(" ");
+    row = numbers.first().toInt();
+    column = numbers.last().toInt();
+
 }
