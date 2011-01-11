@@ -17,9 +17,6 @@ StitchPaletteDelegate::StitchPaletteDelegate(QWidget *parent)
 
 void StitchPaletteDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    //fall back to the basic painter.
-    //QStyledItemDelegate::paint(painter, option, index);
-
     if(index.column() == 0) {
         int pad = 5;
         int iconWidth = 32;
@@ -77,20 +74,3 @@ QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     return QSize(textSize.width(), 42);
 }
 
-QWidget* StitchPaletteDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    return QStyledItemDelegate::createEditor(parent, option, index);
-}
-
-void StitchPaletteDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
-{
-    Q_UNUSED(editor);
-    Q_UNUSED(index);
-}
-
-void StitchPaletteDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
-{
-    Q_UNUSED(editor);
-    Q_UNUSED(model);
-    Q_UNUSED(index);
-}
