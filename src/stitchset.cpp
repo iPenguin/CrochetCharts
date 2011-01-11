@@ -178,6 +178,38 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if(!index.isValid())
+        return false;
+    
+    if(role == Qt::EditRole) {
+        Stitch *s = static_cast<Stitch*>(index.internalPointer());
+        
+        switch(index.column()) {
+            case Stitch::Name:
+                s->setName(value.toString());
+                return true;
+            case Stitch::Icon:
+                s->setFile(value.toString());
+                return true;
+            case Stitch::Description:
+                s->setDescription(value.toString());
+                return true;
+            case Stitch::Category:
+                s->setCategory(value.toString());
+                return true;
+            case Stitch::WrongSide:
+                s->setWrongSide(value.toString());
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    return false;
+}
+
 QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
