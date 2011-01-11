@@ -12,8 +12,8 @@
 
 #include <QDebug>
 
-StitchSet::StitchSet(QObject *parent)
-    : QAbstractItemModel(parent)
+StitchSet::StitchSet(QObject *parent, bool isMasterSet)
+    : QAbstractItemModel(parent), mIsMasterSet(isMasterSet)
 {
     
 }
@@ -124,7 +124,7 @@ Qt::ItemFlags StitchSet::flags(const QModelIndex &index) const
 {
     Q_UNUSED(index);
     //Qt::ItemIsEditable | Qt::ItemIsUserCheckable
-    return (Qt::ItemIsSelectable); // | Qt::ItemIsEnabled);
+    return (Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 QVariant StitchSet::headerData(int section, Qt::Orientation orientation, int role) const
@@ -241,7 +241,10 @@ int StitchSet::rowCount(const QModelIndex &parent) const
 int StitchSet::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 5;
+    if(mIsMasterSet)
+        return 5;
+    else
+        return 6;
 }
 
 QDataStream& operator<<(QDataStream &out, const StitchSet &set)

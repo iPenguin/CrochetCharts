@@ -17,7 +17,7 @@ class StitchSet : public QAbstractItemModel
     friend class StitchCollection;
     friend class StitchLibraryUi;
 public:
-    StitchSet(QObject *parent = 0);
+    StitchSet(QObject *parent = 0, bool isMasterSet = false);
     ~StitchSet();
 
     void loadXmlStitchSet(QString fileName);
@@ -57,6 +57,7 @@ private:
             mOrg,
             mUrl;
 
+    bool mIsMasterSet;
 /***************************************************************\
 |QAbstractItemModel
 \***************************************************************/
