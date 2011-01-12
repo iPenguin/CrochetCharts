@@ -82,7 +82,7 @@
        <name>rsdc</name>
        <icon>stitches/right_slant_double_crochet.svg</icon>
        <description>right slant double crochet</description>
-       <category>Basic</category>
+       <category>Advanced</category>
        <ws>rsdc</ws>
    </stitch>
 
@@ -90,7 +90,7 @@
        <name>rsdc</name>
        <icon>stitches/right_slant_double_crochet.svg</icon>
        <description>right slant double crochet</description>
-       <category>Basic</category>
+       <category>Advanced</category>
        <ws>rsdc</ws>
    </stitch>
 </stitch_set>
