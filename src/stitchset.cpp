@@ -122,9 +122,15 @@ void StitchSet::addStitch(Stitch *s)
 
 Qt::ItemFlags StitchSet::flags(const QModelIndex &index) const
 {
-    Q_UNUSED(index);
-    //Qt::ItemIsEditable | Qt::ItemIsUserCheckable
-    return (Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    if(!index.isValid())
+        return Qt::NoItemFlags;
+
+    Qt::ItemFlags f =  Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
+    
+    if(index.column() == 5)
+        return f | Qt::ItemIsEditable | Qt::ItemIsUserCheckable;
+    else
+        return f;
 }
 
 QVariant StitchSet::headerData(int section, Qt::Orientation orientation, int role) const
@@ -132,15 +138,15 @@ QVariant StitchSet::headerData(int section, Qt::Orientation orientation, int rol
     if(role == Qt::DisplayRole) {
         if(orientation == Qt::Horizontal) {
             switch(section) {
-                case 0:
+                case Stitch::Name:
                     return QVariant(tr("Name"));
-                case 1:
+                case Stitch::Icon:
                     return QVariant(tr("Icon"));
-                case 2:
+                case Stitch::Description:
                     return QVariant(tr("Description"));
-                case 3:
+                case Stitch::Category:
                     return QVariant(tr("Category"));
-                case 4:
+                case Stitch::WrongSide:
                     return QVariant(tr("Wrong Side"));
                 default:
                     return QVariant();
@@ -160,15 +166,15 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
 
     if(role == Qt::DisplayRole) {
         switch(index.column()) {
-            case 0:
+            case Stitch::Name:
                 return QVariant(s->name());
-            case 1:
+            case Stitch::Icon:
                 return QVariant(s->file()); //TODO: return the QIcon.
-            case 2:
+            case Stitch::Description:
                 return QVariant(s->description());
-            case 3:
+            case Stitch::Category:
                 return QVariant(s->category());
-            case 4:
+            case Stitch::WrongSide:
                 return QVariant(s->wrongSide());
             default:
                 return QVariant();
