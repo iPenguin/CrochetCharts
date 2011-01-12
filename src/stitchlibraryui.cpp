@@ -19,11 +19,10 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     StitchSet *master = StitchCollection::inst()->masterStitchSet();
     ui->listView->setModel(master);
 
-    ui->listView->setItemDelegate(new StitchLibraryDelegate(ui->listView));
+    StitchLibraryDelegate *delegate = new StitchLibraryDelegate(ui->listView);
+    ui->listView->setItemDelegate(delegate);
 
     setDialogSize();
-
-
 
     connect(ui->stitchSource, SIGNAL(currentIndexChanged(QString)),
                 this, SLOT(changeStitchSet(QString)));
@@ -44,7 +43,7 @@ void StitchLibraryUi::setDialogSize()
     for(int i = 0; i < 5; ++i)
         width += ui->listView->columnWidth(i);
 
-    ui->listView->setMinimumSize(QSize(width+25, height));
+    ui->listView->setMinimumSize(QSize(width+25 + 125, height));
 
 }
 

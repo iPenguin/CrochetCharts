@@ -6,6 +6,7 @@
 #define STITCHLIBRARYDELEGATE_H
 
 #include <QStyledItemDelegate>
+#include <QSignalMapper>
 
 class StitchLibraryDelegate : public QStyledItemDelegate
 {
@@ -23,9 +24,12 @@ public:
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    
+signals:
+    void addStitchToMasterSet(int row);
 
-public slots:
-    void addStitch();
+private:
+    QSignalMapper *mSignalMapper;
 };
 
 #endif //STITCHLIBRARYDELEGATE_H

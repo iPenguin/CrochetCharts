@@ -10,32 +10,58 @@
 #include <QComboBox>
 #include <QPushButton>
 
+#include <QStyleOption>
+#include <QStyleOptionViewItem>
+
+#include <math.h>
+
+#include <QApplication>
+
 #include <QDebug>
 #include "stitchcollection.h"
 
 StitchLibraryDelegate::StitchLibraryDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
 {
-    qDebug() << "sld ctor";
+    mSignalMapper = new QSignalMapper(this);   
+    connect(mSignalMapper, SIGNAL(mapped(int)), this, SIGNAL(addStitchToMasterSet(int)));
 }
 
 void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    qDebug() << "StitchLibraryDelegate::paint << start";
-    //fall back to the basic painter.
-    QStyledItemDelegate::paint(painter, option, index);
-    //painter->drawText(QRectF(0,0,50,10), "Test");
-    
+    if(!index.isValid())
+        return;
+        
+    if(index.column() == 5) {
+        QStyleOption opt = option;
+
+        qApp->style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, painter);
+        QString buttonText = tr("Add Stitch");
+
+        int width = option.fontMetrics.width(buttonText);
+        int height = option.fontMetrics.height();
+        int borderW = ceil((option.rect.width() - width) / 2.0);
+        int borderH = ceil((option.rect.height() - height) / 4.0);
+        painter->drawText(option.rect.x() + borderW, option.rect.y() + (borderH + height), buttonText);
+
+        qDebug() << option.state;
+        if(option.state == QStyle::State_Selected)
+            painter->fillRect(option.rect, option.palette.highlight());
+        
+    } else {
+        //fall back to the basic painter.
+        QStyledItemDelegate::paint(painter, option, index);
+    }
 }
 
 QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     if(!index.isValid())
-        return QSize(100, 10);
+        return QSize(100, 32);
 
     Stitch *s = static_cast<Stitch*>(index.internalPointer());
     if(!s)
-        return QSize(100, 10);
+        return QSize(100, 32);
 
     QString text;
 
@@ -55,7 +81,7 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
             text = s->wrongSide();
             break;
         case 5:
-            text = tr("Add Stitch");
+            text = tr("Add Stitch"); //TODO: there's a button to estimate too.
         default:
             text = "";
             break;
@@ -73,8 +99,12 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
     Stitch *s = static_cast<Stitch*>(index.internalPointer());
     
     switch(index.column()) {
-        case Stitch::Name:
-            return new QWidget(parent); //the name is the unique id and shouldn't be changed.
+        case Stitch::Name:{ //TODO: add a validator that checks if the name already exists.
+            QLineEdit *editor = new QLineEdit(parent);
+            
+            editor->setText(s->description());
+            return editor;
+        }
         case Stitch::Icon: {
             
             return new QWidget(parent); //TODO: create an editor widget for selecting icons.
@@ -82,7 +112,7 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
         case Stitch::Description: {
             QLineEdit *editor = new QLineEdit(parent);
 
-            editor->setText(s->name());
+            editor->setText(s->description());
             return editor;
         }
         case Stitch::Category: {
@@ -98,8 +128,8 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
         case 5: {
             QPushButton *pb = new QPushButton(parent);
             pb->setText(tr("Add Stitch"));
-            pb->setObjectName(QString("%1 %2").arg(index.row()).arg(index.column()));
-            connect(pb, SIGNAL(clicked(bool)), this, SLOT(addStitch()));
+            mSignalMapper->setMapping(pb, index.row());
+            connect(pb, SIGNAL(clicked(bool)), mSignalMapper, SLOT(map()));
             return pb;
         }
         default:
@@ -111,9 +141,39 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
 
 void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-    Q_UNUSED(editor);
-    Q_UNUSED(index);
+    if(!index.isValid())
+        return;
 
+    Stitch *s = static_cast<Stitch*>(index.internalPointer());
+    
+    switch(index.column()) {
+        case Stitch::Name: {
+            QLineEdit *le = static_cast<QLineEdit*>(editor);
+            le->setText(s->name());
+            break;
+        }
+        case Stitch::Icon: {
+            //TODO: custom widget for icon editing.
+            break;
+        }
+        case Stitch::Description: {
+            QLineEdit *le = static_cast<QLineEdit*>(editor);
+            le->setText(s->description());
+            break;
+        }
+        case Stitch::Category: {
+            QComboBox *cb = static_cast<QComboBox*>(editor);
+            cb->setCurrentIndex(cb->findText(s->category()));
+            break;
+        }
+        case Stitch::WrongSide: {
+            QComboBox *cb = static_cast<QComboBox*>(editor);
+            cb->setCurrentIndex(cb->findText(s->wrongSide()));
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
@@ -122,10 +182,10 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
         case Stitch::Icon: {
             //TODO: custom editor widget and data.
         }
-        case Stitch::Name:
+        case Stitch::Name: //TODO: make the name check if it already exists before accepting any alterations.
         case Stitch::Description: {
             QLineEdit *le = static_cast<QLineEdit*>(editor);
-            model->setData(index, le->text(), Qt::EditRole); //TODO: consolidate with Stitch::Name ?
+            model->setData(index, le->text(), Qt::EditRole);
         }
         case Stitch::WrongSide:
         case Stitch::Category: {
@@ -144,12 +204,3 @@ void StitchLibraryDelegate::updateEditorGeometry(QWidget *editor, const QStyleOp
     editor->setGeometry(option.rect);
 }
 
-void StitchLibraryDelegate::addStitch()
-{
-    QPushButton *pb = qobject_cast<QPushButton*>(sender());
-    int row, column;
-    QStringList numbers = pb->objectName().split(" ");
-    row = numbers.first().toInt();
-    column = numbers.last().toInt();
-
-}
