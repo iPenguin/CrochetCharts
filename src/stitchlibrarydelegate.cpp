@@ -44,7 +44,6 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         int borderH = ceil((option.rect.height() - height) / 4.0);
         painter->drawText(option.rect.x() + borderW, option.rect.y() + (borderH + height), buttonText);
 
-        qDebug() << option.state;
         if(option.state == QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
         
@@ -82,6 +81,7 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
             break;
         case 5:
             text = tr("Add Stitch"); //TODO: there's a button to estimate too.
+            break;
         default:
             text = "";
             break;
@@ -116,6 +116,7 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
             return editor;
         }
         case Stitch::Category: {
+            qDebug() << "combo box";
             QComboBox *cb = new QComboBox(parent);
             cb->addItems(StitchCollection::inst()->categoryList());
             return cb;
@@ -181,16 +182,19 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
     switch(index.column()) {
         case Stitch::Icon: {
             //TODO: custom editor widget and data.
+            break;
         }
         case Stitch::Name: //TODO: make the name check if it already exists before accepting any alterations.
         case Stitch::Description: {
             QLineEdit *le = static_cast<QLineEdit*>(editor);
             model->setData(index, le->text(), Qt::EditRole);
+            break;
         }
         case Stitch::WrongSide:
         case Stitch::Category: {
             QComboBox *cb = static_cast<QComboBox*>(editor);
             model->setData(index, cb->currentText(), Qt::EditRole);
+            break;
         }
         default:
             break;
