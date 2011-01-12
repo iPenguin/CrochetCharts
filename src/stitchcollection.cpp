@@ -133,7 +133,7 @@ QStringList StitchCollection::categoryList() const
         if(!list.contains(s->category()))
             list.append(s->category());
     }
-    
+
     return list;
 }
 
