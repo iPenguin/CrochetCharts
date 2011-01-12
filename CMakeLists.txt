@@ -11,6 +11,8 @@ macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source buil
 set(CMAKE_CONFIGURATION_TYPES Debug Release DebugProfiling CACHE TYPE INTERNAL FORCE)
 set(CMAKE_BUILD_TYPE "Debug")
 
+include(FindHunSpell)
+
 include(GetGitRevisionDescription)
 git_describe(VERSION --tags --dirty=-working)
 
