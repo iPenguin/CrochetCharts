@@ -14,7 +14,7 @@ void TestStitchSet::setupStitchSet()
     //TODO: make a couple of test sets of stitches.
     QVERIFY(mSet->stitchCount() == 0);
     mSet->loadXmlStitchSet(":/stitches/stitches.xml");
-    qDebug() << mSet->rowCount();
+
     QVERIFY(mSet->stitchCount() == 8);
 }
 
