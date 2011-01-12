@@ -125,10 +125,13 @@ Qt::ItemFlags StitchSet::flags(const QModelIndex &index) const
     if(!index.isValid())
         return Qt::NoItemFlags;
 
-    Qt::ItemFlags f =  Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
+    Qt::ItemFlags f =  Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+
+    if(!mIsBuiltInSet)
+        f |= Qt::ItemIsEditable;
     
     if(index.column() == 5)
-        return f | Qt::ItemIsEditable | Qt::ItemIsUserCheckable;
+        return f;// | Qt::ItemIsUserCheckable;
     else
         return f;
 }

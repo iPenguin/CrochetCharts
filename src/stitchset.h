@@ -57,6 +57,9 @@ private:
             mOrg,
             mUrl;
 
+    //The set of stitches that comes with the software.
+    bool mIsBuiltInSet;
+    //The stitch set that the user is works with.
     bool mIsMasterSet;
 /***************************************************************\
 |QAbstractItemModel
