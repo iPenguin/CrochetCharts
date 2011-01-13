@@ -35,6 +35,7 @@ message(STATUS "Build Profile - " ${CMAKE_BUILD_TYPE})
 message(STATUS "Unit Testing - " ${UNIT_TESTING})
 message(STATUS "Force 32-bit Builds - " ${ARCH_32BIT})
 message(STATUS "Use -Wshadow when compiling - " ${SHADOW_FLAG})
+message(STATUS "HunSpell Found: " ${HUNSPELL_FOUND})
 
 if(ARCH_32BIT)
     set(extra_build_flags "-m32")
