@@ -48,9 +48,10 @@ void MainWindow::setupStitchPalette()
 {
     StitchSet *set = StitchCollection::inst()->masterStitchSet();
     ui->stitchPalette->setModel(set);
-    
-    StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->stitchPalette);
-    ui->stitchPalette->setItemDelegate(delegate);
+
+    //TODO: setup a proxywidget that can hold header sections?
+    //StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->stitchPalette);
+    //ui->stitchPalette->setItemDelegate(delegate);
 }
 
 void MainWindow::setupMenus()

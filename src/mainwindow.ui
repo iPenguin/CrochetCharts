@@ -72,6 +72,8 @@
     <addaction name="actionZoomOut"/>
     <addaction name="separator"/>
     <addaction name="actionShowStitches"/>
+    <addaction name="separator"/>
+    <addaction name="actionViewFullScreen"/>
    </widget>
    <widget class="QMenu" name="menuDocument">
     <property name="title">
@@ -299,6 +301,11 @@
   <action name="actionCrochetHelp">
    <property name="text">
     <string>Crochet Help</string>
+   </property>
+  </action>
+  <action name="actionViewFullScreen">
+   <property name="text">
+    <string>Full Screen Mode</string>
    </property>
   </action>
  </widget>
