@@ -167,12 +167,12 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
 
     Stitch *s = static_cast<Stitch*>(index.internalPointer());
 
-    if(role == Qt::DisplayRole) {
+    if(role == Qt::DisplayRole || role == Qt::EditRole) {
         switch(index.column()) {
             case Stitch::Name:
                 return QVariant(s->name());
             case Stitch::Icon:
-                return QVariant(s->file()); //TODO: return the QIcon.
+                return QVariant(s->file()); //TODO: return QIcon for display role and filename for edit role.
             case Stitch::Description:
                 return QVariant(s->description());
             case Stitch::Category:
@@ -191,29 +191,41 @@ bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int rol
 {
     if(!index.isValid())
         return false;
-    
-    if(role == Qt::EditRole) {
+
+    if(role == Qt::EditRole || role == Qt::DisplayRole) {
         Stitch *s = static_cast<Stitch*>(index.internalPointer());
         
+        bool retVal = false;
+
         switch(index.column()) {
             case Stitch::Name:
                 s->setName(value.toString());
-                return true;
+                retVal = true;
+                break;
             case Stitch::Icon:
                 s->setFile(value.toString());
-                return true;
+                retVal = true;
+                break;
             case Stitch::Description:
                 s->setDescription(value.toString());
-                return true;
+                retVal = true;
+                break;
             case Stitch::Category:
                 s->setCategory(value.toString());
-                return true;
+                retVal = true;
+                break;
             case Stitch::WrongSide:
                 s->setWrongSide(value.toString());
-                return true;
+                retVal = true;
+                break;
             default:
-                return false;
+                retVal = false;
         }
+
+        if(retVal)
+            emit dataChanged(index, index);
+        return retVal;
+
     }
 
     return false;
@@ -230,10 +242,7 @@ QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) con
 
 QModelIndex StitchSet::parent(const QModelIndex &index) const
 {
-    if(!index.isValid())
-        return QModelIndex();
-    
-    return createIndex(0, 0, (quint32)95973);
+    return QModelIndex(); //This is not a tree it doesn't have a parent.
 }
 
 int StitchSet::stitchCount() const
