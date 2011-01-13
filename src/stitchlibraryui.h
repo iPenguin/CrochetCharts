@@ -21,7 +21,10 @@ public:
 
 private slots:
     void changeStitchSet(QString setName);
-
+    void addStitchToMasterSet(int row);
+    void addStitchToSet();
+    void resetLibrary();
+    
 private:
     Ui::StitchLibraryDialog *ui;
 

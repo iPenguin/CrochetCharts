@@ -37,6 +37,7 @@ public:
     QList<StitchSet *> stitchSets() { return mStitchSets; }
     //return the master stitch set.
     StitchSet* masterStitchSet() { return mMasterSet; }
+    StitchSet* builtIn() { return mBuiltIn; }
     
     //load all known stitch sets.
     void loadStitchSets();
@@ -56,10 +57,11 @@ protected:
 
 private:
     StitchCollection();
-    static StitchCollection *mInstance;   
+    static StitchCollection* mInstance;
 
-    QList<StitchSet *> mStitchSets;
-    StitchSet *mMasterSet; //links to stitches in the other mStitchSets...
+    QList<StitchSet*> mStitchSets;
+    StitchSet* mMasterSet; //links to stitches in the other mStitchSets...
+    StitchSet* mBuiltIn;
 
 };
 

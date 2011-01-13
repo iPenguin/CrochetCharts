@@ -6,14 +6,18 @@
 
 #include <QFile>
 
-#include <QDomDocument>
+#include <QXmlStreamWriter> //write the file
+
+#include <QDomDocument> //read the file
 #include <QDomElement>
 #include <QDomNode>
 
+#include "settings.h"
+
 #include <QDebug>
 
-StitchSet::StitchSet(QObject *parent, bool isMasterSet)
-    : QAbstractItemModel(parent), mIsMasterSet(isMasterSet)
+StitchSet::StitchSet(QObject *parent, bool isMasterSet, bool isBuiltIn)
+    : QAbstractItemModel(parent), mIsMasterSet(isMasterSet), mIsBuiltInSet(isBuiltIn)
 {
     
 }
@@ -94,6 +98,56 @@ void StitchSet::loadXmlStitch(QDomElement element)
     addStitch(s);
 }
 
+void StitchSet::saveXmlStitchSet(QString fileName)
+{
+    QString *data = new QString();
+    
+    QXmlStreamWriter stream(data);
+    stream.setAutoFormatting(true);
+    stream.writeStartDocument();
+    
+    QString fName = Settings::inst()->value("firstName").toString();
+    QString lName = Settings::inst()->value("lastName").toString();
+    QString email = Settings::inst()->value("email").toString();
+    
+    //TODO: figure out all the pieces or remove them...
+    stream.writeStartElement("stitch_set");
+    stream.writeTextElement("name", "Master Stitch Set");
+    stream.writeTextElement("author", fName + " " + lName);
+    stream.writeTextElement("email", email);
+    stream.writeTextElement("org", "");
+    stream.writeTextElement("url", "");
+    
+    foreach(Stitch *s, mStitches) {
+        stream.writeStartElement("stitch");
+        
+        stream.writeTextElement("name", s->name());
+        stream.writeTextElement("icon", s->file());
+        stream.writeTextElement("description", s->description());
+        stream.writeTextElement("category", s->category());
+        stream.writeTextElement("ws", s->wrongSide());
+        
+        stream.writeEndElement(); //stitch
+    }
+    
+    stream.writeEndElement(); // stitch_set
+    
+    stream.writeEndDocument();
+    
+    QFile file(fileName);
+    
+    if(!file.open(QIODevice::WriteOnly)) {
+        //TODO: some nice dialog to warn the user.
+        qWarning() << "Couldn't open file for writing..." << fileName;
+        return;
+    }
+    
+    file.write(data->toLatin1());
+    
+    delete data;
+    data = 0;
+}
+
 Stitch* StitchSet::findStitch(QString name)
 {
     foreach(Stitch *s, mStitches) {
@@ -127,7 +181,7 @@ Qt::ItemFlags StitchSet::flags(const QModelIndex &index) const
 
     Qt::ItemFlags f =  Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
-    if(!mIsBuiltInSet)
+    if(!mIsBuiltInSet || index.column() == 5)
         f |= Qt::ItemIsEditable;
     
     if(index.column() == 5)
@@ -242,6 +296,7 @@ QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) con
 
 QModelIndex StitchSet::parent(const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     return QModelIndex(); //This is not a tree it doesn't have a parent.
 }
 
@@ -265,14 +320,22 @@ int StitchSet::columnCount(const QModelIndex &parent) const
         return 6;
 }
 
-QDataStream& operator<<(QDataStream &out, const StitchSet &set)
+void StitchSet::clearStitches()
 {
-    Q_UNUSED(set);
-    return out;
+    mStitches.clear();
 }
 
-QDataStream& operator>>(QDataStream &in, StitchSet &set)
+void StitchSet::cloneStitchSet(StitchSet *orig)
 {
-    Q_UNUSED(set);
-    return in;
+    if(this == orig) // cannot clone yourself.
+        return;
+
+    mStitches.clear(); //TODO: make sure these are being deleted too...
+    
+    foreach(Stitch *s, orig->stitches()) {
+        Stitch *newS = new Stitch();
+        *newS << *s;
+        addStitch(newS);
+    }
+    reset();
 }

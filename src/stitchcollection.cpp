@@ -7,10 +7,7 @@
 #include "stitchset.h"
 #include "stitch.h"
 
-#include "settings.h"
-
 #include <QFile>
-#include <QXmlStreamWriter>
 #include <QComboBox>
 
 #include <QDebug>
@@ -21,7 +18,7 @@ StitchCollection* StitchCollection::mInstance = NULL;
 // singleton constructor:
 StitchCollection* StitchCollection::inst()
 {
-   if (!mInstance)   // Only allow one instance of the settings.
+   if (!mInstance)   // Only allow one instance of the StitchCollection.
       mInstance = new StitchCollection();
    return mInstance;
 }
@@ -38,10 +35,11 @@ StitchCollection::~StitchCollection()
 
 void StitchCollection::loadStitchSets()
 {
-    StitchSet *set = new StitchSet(this);
-    set->loadXmlStitchSet("/home/brian/crochet.git/stitches/stitches.xml");
+    mBuiltIn = new StitchSet(this, false, true);
+    mBuiltIn->loadXmlStitchSet("/home/brian/crochet.git/stitches/stitches.xml");
+    mStitchSets.append(mBuiltIn);
 
-    mStitchSets.append(set);
+    //TODO: add the rest of the sets.
 }
 
 void StitchCollection::populateMasterSet()
@@ -53,54 +51,7 @@ void StitchCollection::populateMasterSet()
 
 void StitchCollection::saveMasterStitchSet(QString fileName)
 {
-//TODO: push this off into the StitchSet.
-// The user can create a "new" set that can then be saved to a user specified file.
-    QString *data = new QString();
-
-    QXmlStreamWriter stream(data);
-    stream.setAutoFormatting(true);
-    stream.writeStartDocument();
-
-    QString fName = Settings::inst()->value("firstName").toString();
-    QString lName = Settings::inst()->value("lastName").toString();
-    QString email = Settings::inst()->value("email").toString();
-
-    //TODO: figure out all the pieces or remove them...
-    stream.writeStartElement("stitch_set");
-    stream.writeTextElement("name", "Master Stitch Set");
-    stream.writeTextElement("author", fName + " " + lName);
-    stream.writeTextElement("email", email);
-    stream.writeTextElement("org", "");
-    stream.writeTextElement("url", "");
-
-    foreach(Stitch *s, mMasterSet->stitches()) {
-        stream.writeStartElement("stitch");
-
-        stream.writeTextElement("name", s->name());
-        stream.writeTextElement("icon", s->file());
-        stream.writeTextElement("description", s->description());
-        stream.writeTextElement("category", s->category());
-        stream.writeTextElement("ws", s->wrongSide());
-
-        stream.writeEndElement(); //stitch
-    }
-
-    stream.writeEndElement(); // stitch_set
-
-    stream.writeEndDocument();
-
-    QFile file(fileName);
-
-    if(!file.open(QIODevice::WriteOnly)) {
-    //TODO: some nice dialog to warn the user.
-        qWarning() << "Couldn't open file for writing..." << fileName;
-        return;
-    }
-
-    file.write(data->toLatin1());
-
-    delete data;
-    data = 0;
+    mMasterSet->saveXmlStitchSet(fileName);
 }
 
 StitchSet* StitchCollection::findStitchSet(QString setName)

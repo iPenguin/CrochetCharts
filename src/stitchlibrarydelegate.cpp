@@ -24,29 +24,38 @@ StitchLibraryDelegate::StitchLibraryDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
 {
     mSignalMapper = new QSignalMapper(this);   
-    connect(mSignalMapper, SIGNAL(mapped(int)), this, SLOT(addStitchToMasterSet(int)));
+    connect(mSignalMapper, SIGNAL(mapped(int)), this, SIGNAL(addStitchToMasterSet(int)));
 }
 
 void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     if(!index.isValid())
         return;
-        
-    if(index.column() == 5) {
-        QStyleOption opt = option;
+
+    QStyleOption opt = option;
+    QString buttonText;
+
+    if(index.column() == 5) //FIXME: don't hard code the text here.
+        buttonText = tr("Add Stitch");
+    else
+        buttonText = index.data(Qt::DisplayRole).toString();
+    
+    int width = option.fontMetrics.width(buttonText);
+    int height = option.fontMetrics.height();
+    int borderW = ceil((option.rect.width() - width) / 2.0);
+    int borderH = ceil((option.rect.height() - height) / 4.0);
+
+    if (index.column() == 3 || index.column() == 4) {
+        //FIXME: QStyle::PE_IndicatorButtonDropDown causes a crash.
+        qApp->style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, painter);
+        painter->drawText(option.rect.x() + 6, option.rect.y() + (borderH + height), buttonText);
+    } else if(index.column() == 5) {
 
         qApp->style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, painter);
-        QString buttonText = tr("Add Stitch");
-
-        int width = option.fontMetrics.width(buttonText);
-        int height = option.fontMetrics.height();
-        int borderW = ceil((option.rect.width() - width) / 2.0);
-        int borderH = ceil((option.rect.height() - height) / 4.0);
-        painter->drawText(option.rect.x() + borderW, option.rect.y() + (borderH + height), buttonText);
 
         if(option.state == QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
-        
+        painter->drawText(option.rect.x() + borderW, option.rect.y() + (borderH + height), buttonText);
     } else {
         //fall back to the basic painter.
         QStyledItemDelegate::paint(painter, option, index);
@@ -215,9 +224,10 @@ void StitchLibraryDelegate::updateEditorGeometry(QWidget *editor, const QStyleOp
 
     editor->setGeometry(option.rect);
 }
-
+/*
 void StitchLibraryDelegate::addStitchToMasterSet(int row)
 {
     qDebug() << "row: " << row;
     
 }
+*/

@@ -25,7 +25,8 @@ public:
 
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     
-public slots:
+//public slots:
+signals:
     void addStitchToMasterSet(int row);
 
 private:

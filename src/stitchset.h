@@ -17,10 +17,11 @@ class StitchSet : public QAbstractItemModel
     friend class StitchCollection;
     friend class StitchLibraryUi;
 public:
-    StitchSet(QObject *parent = 0, bool isMasterSet = false);
+    StitchSet(QObject *parent = 0, bool isMasterSet = false, bool isBuiltIn = false);
     ~StitchSet();
 
     void loadXmlStitchSet(QString fileName);
+    void saveXmlStitchSet(QString fileName);
 
     const QString name() const { return mName; }
     void setName(QString n) { mName = n; }
@@ -44,9 +45,11 @@ public:
 
     int stitchCount() const;
 
-protected:
-    QList<Stitch *> stitches() { return mStitches; }
+    QList<Stitch *> stitches() const { return mStitches; }
+    void clearStitches();
 
+    void cloneStitchSet(StitchSet *orig);
+    
 private:
     void loadXmlStitch(QDomElement e);
 
@@ -57,10 +60,10 @@ private:
             mOrg,
             mUrl;
 
-    //The set of stitches that comes with the software.
-    bool mIsBuiltInSet;
     //The stitch set that the user is works with.
     bool mIsMasterSet;
+    //The set of stitches that comes with the software.
+    bool mIsBuiltInSet;
 /***************************************************************\
 |QAbstractItemModel
 \***************************************************************/
@@ -81,8 +84,5 @@ private:
 
 /***************************************************************/
 };
-
-QDataStream& operator<<(QDataStream &out, const StitchSet &set);
-QDataStream& operator>>(QDataStream &in, StitchSet &set);
 
 #endif //STITCHSET_H
