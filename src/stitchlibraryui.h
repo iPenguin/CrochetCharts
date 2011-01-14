@@ -26,6 +26,8 @@ private slots:
     void resetLibrary();
 
     void hideProperties();
+    void updateStitchSetProperties();
+    void printStitchSet();
     
 private:
     Ui::StitchLibraryDialog *ui;

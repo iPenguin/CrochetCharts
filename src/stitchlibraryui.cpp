@@ -12,6 +12,10 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QPainter>
+
 StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     : QDialog(parent), ui(new Ui::StitchLibraryDialog)
 {
@@ -28,6 +32,14 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
 
     ui->propertiesBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked(bool)), this, SLOT(hideProperties()));
+    connect(ui->printSet, SIGNAL(clicked()), this, SLOT(printStitchSet()));
+
+    connect(ui->setName, SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
+    connect(ui->author,  SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
+    connect(ui->email,   SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
+    connect(ui->org,     SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
+    connect(ui->url,     SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
+    
     setupPropertiesBox();
     
     connect(delegate, SIGNAL(addStitchToMasterSet(int)), this, SLOT(addStitchToMasterSet(int)));
@@ -129,6 +141,16 @@ void StitchLibraryUi::addStitchToSet()
     }
 }
 
+void StitchLibraryUi::updateStitchSetProperties()
+{
+    StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
+    set->setName(ui->setName->text());
+    set->setAuthor(ui->author->text());
+    set->setEmail(ui->email->text());
+    set->setOrg(ui->org->text());
+    set->setUrl(ui->url->text());
+}
+
 void StitchLibraryUi::setupPropertiesBox()
 {
     StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
@@ -138,6 +160,7 @@ void StitchLibraryUi::setupPropertiesBox()
     ui->org->setText(set->org());
     ui->url->setText(set->url());
 }
+
 void StitchLibraryUi::hideProperties()
 {
     if(ui->moreBttn->text() == tr("More >>")) {
@@ -147,4 +170,18 @@ void StitchLibraryUi::hideProperties()
         ui->moreBttn->setText(tr("More >>"));
         ui->propertiesBox->setVisible(false);
     }
+}
+
+void StitchLibraryUi::printStitchSet()
+{
+    //TODO: make the rect fit the page better. Also see if the page breaks work ok.
+    QPrinter printer;
+    QPrintDialog dialog(&printer, this);
+    if(dialog.exec() != QDialog::Accepted)
+        return;
+    
+    QPainter p;
+    p.begin(&printer);
+    ui->listView->render(&p);
+    p.end();
 }
