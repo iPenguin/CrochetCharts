@@ -235,7 +235,7 @@ void MainWindow::toolsRegisterSoftware()
 {
     if(Settings::inst()->isDemoVersion()) {
         LicenseWizard wizard(true, this);
-        if(wizard.exec() != QWizard::Accepted) {
+        if(wizard.exec() == QWizard::Accepted) {
                 Settings::inst()->setDemoVersion(false);
                 return;
         }
