@@ -26,6 +26,10 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
 
     setDialogSize();
 
+    ui->propertiesBox->setVisible(false);
+    connect(ui->moreBttn, SIGNAL(clicked(bool)), this, SLOT(hideProperties()));
+    setupPropertiesBox();
+    
     connect(delegate, SIGNAL(addStitchToMasterSet(int)), this, SLOT(addStitchToMasterSet(int)));
     connect(ui->stitchSource, SIGNAL(currentIndexChanged(QString)),
                 this, SLOT(changeStitchSet(QString)));
@@ -60,6 +64,7 @@ void StitchLibraryUi::changeStitchSet(QString setName)
     
     ui->listView->setModel(set);
     ui->listView->update();
+    setupPropertiesBox();
 }
 
 void StitchLibraryUi::addStitchToMasterSet(int row)
@@ -116,10 +121,30 @@ void StitchLibraryUi::resetLibrary()
 void StitchLibraryUi::addStitchToSet()
 {
     bool ok;
-    QString text = QInputDialog::getText(this, tr("New Stitch"), tr("Stitch name:"), QLineEdit::Normal,
-                                         "", &ok);
+    QString text = QInputDialog::getText(this, tr("New Stitch"), tr("Stitch name:"),
+                                         QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty()) {
         //TODO: check if the stitch already exists. if not add it.
 
+    }
+}
+
+void StitchLibraryUi::setupPropertiesBox()
+{
+    StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
+    ui->setName->setText(set->name());
+    ui->author->setText(set->author());
+    ui->email->setText(set->email());
+    ui->org->setText(set->org());
+    ui->url->setText(set->url());
+}
+void StitchLibraryUi::hideProperties()
+{
+    if(ui->moreBttn->text() == tr("More >>")) {
+        ui->moreBttn->setText(tr("Less <<"));
+        ui->propertiesBox->setVisible(true);
+    } else {
+        ui->moreBttn->setText(tr("More >>"));
+        ui->propertiesBox->setVisible(false);
     }
 }

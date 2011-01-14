@@ -24,11 +24,14 @@ private slots:
     void addStitchToMasterSet(int row);
     void addStitchToSet();
     void resetLibrary();
+
+    void hideProperties();
     
 private:
     Ui::StitchLibraryDialog *ui;
 
     void setDialogSize();
+    void setupPropertiesBox();
 
 };
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>525</width>
-    <height>471</height>
+    <width>548</width>
+    <height>490</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,12 +29,143 @@
          <property name="text">
           <string>Stitch Source:</string>
          </property>
+         <property name="buddy">
+          <cstring>stitchSource</cstring>
+         </property>
         </widget>
        </item>
        <item>
         <widget class="QComboBox" name="stitchSource"/>
        </item>
+       <item>
+        <widget class="QPushButton" name="moreBttn">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>More &gt;&gt;</string>
+         </property>
+        </widget>
+       </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="propertiesBox">
+       <property name="sizeIncrement">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>Stitch Set Properties</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Set Name:</string>
+            </property>
+            <property name="buddy">
+             <cstring>setName</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="setName"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Author:</string>
+            </property>
+            <property name="buddy">
+             <cstring>author</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="author"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Email:</string>
+            </property>
+            <property name="buddy">
+             <cstring>email</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="email"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Organization:</string>
+            </property>
+            <property name="buddy">
+             <cstring>org</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="org"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Url:</string>
+            </property>
+            <property name="buddy">
+             <cstring>url</cstring>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="url"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
      </item>
      <item>
       <widget class="QTableView" name="listView">
@@ -140,6 +271,21 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>stitchSource</tabstop>
+  <tabstop>moreBttn</tabstop>
+  <tabstop>setName</tabstop>
+  <tabstop>author</tabstop>
+  <tabstop>email</tabstop>
+  <tabstop>org</tabstop>
+  <tabstop>url</tabstop>
+  <tabstop>listView</tabstop>
+  <tabstop>addStitch</tabstop>
+  <tabstop>importStitches</tabstop>
+  <tabstop>exportStitches</tabstop>
+  <tabstop>resetLibrary</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -149,12 +295,12 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>542</x>
+     <y>58</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
+     <x>489</x>
+     <y>184</y>
     </hint>
    </hints>
   </connection>
@@ -165,12 +311,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>542</x>
+     <y>58</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>487</x>
+     <y>125</y>
     </hint>
    </hints>
   </connection>
