@@ -33,6 +33,7 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     ui->propertiesBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked(bool)), this, SLOT(hideProperties()));
     connect(ui->printSet, SIGNAL(clicked()), this, SLOT(printStitchSet()));
+    connect(ui->addStitch, SIGNAL(clicked()), this, SLOT(addStitchToSet()));
 
     connect(ui->setName, SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
     connect(ui->author,  SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
@@ -136,8 +137,18 @@ void StitchLibraryUi::addStitchToSet()
     QString text = QInputDialog::getText(this, tr("New Stitch"), tr("Stitch name:"),
                                          QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty()) {
-        //TODO: check if the stitch already exists. if not add it.
+        StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
 
+        Stitch *s = set->findStitch(text.toLower());
+        if(s) {
+            QMessageBox::warning(this, tr("Stitch Exists"),
+                tr("The stitch %1 is already in this stitch set").arg(text), QMessageBox::Ok);
+            //TODO: find a way to take the user to the current cell.
+        } else {
+            Stitch *newS = new Stitch();
+            newS->setName(text.toLower());
+            set->addStitch(newS);
+        }
     }
 }
 
