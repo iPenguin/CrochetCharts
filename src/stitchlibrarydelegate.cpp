@@ -46,15 +46,20 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     int borderH = ceil((option.rect.height() - height) / 4.0);
 
     if (index.column() == 3 || index.column() == 4) {
+
+        if(option.state & QStyle::State_Selected)
+            painter->fillRect(option.rect, option.palette.highlight());
+        
         //FIXME: QStyle::PE_IndicatorButtonDropDown causes a crash.
         qApp->style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, painter);
         painter->drawText(option.rect.x() + 6, option.rect.y() + (borderH + height), buttonText);
+        
     } else if(index.column() == 5) {
-
+        if(option.state & QStyle::State_Selected)
+            painter->fillRect(option.rect, option.palette.highlight());
+        
         qApp->style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, painter);
 
-        if(option.state == QStyle::State_Selected)
-            painter->fillRect(option.rect, option.palette.highlight());
         painter->drawText(option.rect.x() + borderW, option.rect.y() + (borderH + height), buttonText);
     } else {
         //fall back to the basic painter.
