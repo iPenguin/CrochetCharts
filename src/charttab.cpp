@@ -26,6 +26,11 @@ ChartTab::ChartTab(QWidget *parent) :
     mView->setScene(mScene);
     l->addWidget(mView);
     l->setMargin(0);
+
+    mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+
+    //click and drag mode.
+    //mView->setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
 void ChartTab::savePdf(QPrinter printer, QString fileName, int resolution)

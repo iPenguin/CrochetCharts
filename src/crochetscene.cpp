@@ -26,7 +26,8 @@ CrochetScene::CrochetScene(QObject *parent)
     this->createRow(0, 8);
     this->createRow(1, 14);
     this->createRow(2, 20);
-/*    this->createRow(3, 26);
+/*
+    this->createRow(3, 26);
     this->createRow(4, 32);
     this->createRow(5, 38);
     this->createRow(6, 44);
@@ -76,6 +77,19 @@ void CrochetScene::initDemoBackground()
 
 void CrochetScene::createRow(int row, int columns)
 {
+    Cell *c;
+
+    for(int i = 0; i < columns; ++i) {
+        c = new CrochetCell(":/stitches/chain.svg");
+        addItem(c);
+        mModel->setCell(row, i, c);
+        c->setPos(i*64, row*64);
+        c->setToolTip(QString::number(i+1));
+        c->rotate(90);
+        c->setFlag(QGraphicsItem::ItemIsMovable, true);
+    }
+    
+/*
     int rowC = 8;
     //FIXME: less then 8 stitches gives funny rows.
     double widthInDegrees = 360.0 / columns;
@@ -96,6 +110,7 @@ qDebug() << degrees << finish;
         c->setToolTip(QString::number(i+1));
         c->rotate(degrees + (widthInDegrees/2));
     }
+*/
 }
 
 QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF origin)
@@ -104,4 +119,48 @@ QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF or
     double x = (double)(radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
     double y = (double)(radius * sin(angleInDegrees * M_PI / 180)) + origin.y();
     return QPointF(x, y);
+}
+
+void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+
+    
+    
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
+}
+
+void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
+}
+
+void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
+}
+
+void CrochetScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
+{
+
+    QGraphicsScene::dragEnterEvent(event);
+}
+
+void CrochetScene::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
+{
+
+    QGraphicsScene::dragLeaveEvent(event);
+}
+
+void CrochetScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
+{
+
+    QGraphicsScene::dragMoveEvent(event);
+}
+
+void CrochetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
+{
+
+    QGraphicsScene::dropEvent(event);
 }

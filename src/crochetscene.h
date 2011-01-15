@@ -20,6 +20,30 @@ public:
 
 */
     void createRow(int row, int columns);
+
+protected:
+/*
+    virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
+    virtual void    drawBackground ( QPainter * painter, const QRectF & rect )
+    virtual void    drawForeground ( QPainter * painter, const QRectF & rect )
+    virtual void    focusInEvent ( QFocusEvent * focusEvent )
+    virtual void    focusOutEvent ( QFocusEvent * focusEvent )
+    virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
+    virtual void    inputMethodEvent ( QInputMethodEvent * event )
+    virtual void    keyPressEvent ( QKeyEvent * keyEvent )
+    virtual void    keyReleaseEvent ( QKeyEvent * keyEvent )
+    virtual void    mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * mouseEvent )
+    virtual void    wheelEvent ( QGraphicsSceneWheelEvent * wheelEvent )
+*/
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
+
+    void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+    void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
+    void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
+    void dropEvent(QGraphicsSceneDragDropEvent *event);
+    
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
