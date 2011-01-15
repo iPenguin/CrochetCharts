@@ -10,7 +10,11 @@
 class Cell : public QGraphicsSvgItem
 {
     Q_OBJECT
+
 public:
+
+    enum {Type = UserType + 1 };
+    
     explicit Cell(const QString fileName, QGraphicsItem *parent = 0);
     Cell(QGraphicsItem *parent = 0);
 

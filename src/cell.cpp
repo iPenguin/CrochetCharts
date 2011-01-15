@@ -27,7 +27,7 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     QGraphicsSvgItem::paint(painter, option, widget);
 }
 
-int Cell::type () const
+int Cell::type() const
 {
-    return 0;
+    return Cell::Type;
 }
