@@ -7,6 +7,8 @@
 
 #include <QGraphicsScene>
 
+#include "crochetdatamodel.h"
+
 class CrochetScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -17,13 +19,15 @@ public:
     void insertCell(int row, int columnBefore, Stitch *s);
 
 */
-    void createRow(int columns);
+    void createRow(int row, int columns);
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
     void initDemoBackground();
 
     int mStitchWidth;
+
+    CrochetDataModel *mModel;
 };
 
 #endif //CROCHETSCENE_H

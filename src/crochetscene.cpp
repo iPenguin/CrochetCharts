@@ -14,25 +14,28 @@
 #include <QDebug>
 
 #include "settings.h"
+#include "crochetdatamodel.h"
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent)
 {
+    mModel = new CrochetDataModel(this);
+
     mStitchWidth = 64;
 
-    this->createRow(8);
-    this->createRow(14);
-    this->createRow(20);
-    this->createRow(26);
-    this->createRow(32);
-    this->createRow(38);
-    this->createRow(44);
-    this->createRow(50);
-    this->createRow(56);
-    this->createRow(62);
-    this->createRow(68);
-    this->createRow(74);
-
+    this->createRow(0, 8);
+    this->createRow(1, 14);
+    this->createRow(2, 20);
+/*    this->createRow(3, 26);
+    this->createRow(4, 32);
+    this->createRow(5, 38);
+    this->createRow(6, 44);
+    this->createRow(7, 50);
+    this->createRow(8, 56);
+    this->createRow(9, 62);
+    this->createRow(10, 68);
+    this->createRow(11, 74);
+*/
     this->initDemoBackground();
 }
 
@@ -71,22 +74,24 @@ void CrochetScene::initDemoBackground()
     }
 }
 
-void CrochetScene::createRow(int columns)
+void CrochetScene::createRow(int row, int columns)
 {
+    int rowC = 8;
     //FIXME: less then 8 stitches gives funny rows.
     double widthInDegrees = 360.0 / columns;
-    double circumference = (columns -2) * mStitchWidth;
+    double circumference = ((rowC + (row*6)) - (rowC * 1/3)) * mStitchWidth;  //(columns - (rowC * 1/3)) * mStitchWidth;
     double diameter = circumference / M_PI;
-    double radius = diameter /2;
-
+    double radius = diameter / 2;
+qDebug() << widthInDegrees << circumference << diameter << radius;
+    
     Cell *c;
 
     for(int i = 0; i < columns; ++i) {
         double degrees = (widthInDegrees*i) - (widthInDegrees/2);
-        QPointF finish = this->calcPoint(radius, degrees, QPointF(0,0));
-
+        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+qDebug() << degrees << finish;
         c = new CrochetCell(":/stitches/chain.svg");
-        this->addItem(c);
+        addItem(c);
         c->setPos(finish);
         c->setToolTip(QString::number(i+1));
         c->rotate(degrees + (widthInDegrees/2));
