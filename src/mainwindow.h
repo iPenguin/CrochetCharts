@@ -20,17 +20,23 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    bool hasDocument();
+
 protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
+    void menuFileAboutToShow();
     void fileOpen();
     void fileSave();
     void fileSaveAs();
     void fileExport();
 
+    void menuEditAboutToShow();
+    
     void menuViewAboutToShow();
     void viewShowStitches();
+    void viewFullScreen(bool state);
 
     void documentNewChart();
 
@@ -39,7 +45,7 @@ private slots:
     void toolsStitchLibrary();
 
     void helpAbout();
-
+    
 private:
     void setupStitchPalette();
     void readSettings();

@@ -57,6 +57,7 @@ void MainWindow::setupStitchPalette()
 void MainWindow::setupMenus()
 {
     //File Menu
+    connect(ui->menuFile, SIGNAL(aboutToShow()), this, SLOT(menuFileAboutToShow()));
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
@@ -71,6 +72,7 @@ void MainWindow::setupMenus()
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 
     //Edit Menu
+    connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
     ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy" /*, QIcon(":/edit-copy.png")*/));
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut" /*, QIcon(":/edit-cut.png")*/));
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste" /*, QIcon(":/edit-paste.png")*/));
@@ -78,6 +80,8 @@ void MainWindow::setupMenus()
     //View Menu
     connect(ui->menuView, SIGNAL(aboutToShow()), this, SLOT(menuViewAboutToShow()));
     connect(ui->actionShowStitches, SIGNAL(triggered()), this, SLOT(viewShowStitches()));
+    connect(ui->actionViewFullScreen, SIGNAL(triggered(bool)), this, SLOT(viewFullScreen(bool)));
+            
 
     ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in"));
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out"));
@@ -104,6 +108,11 @@ void MainWindow::setupMenus()
 
 void MainWindow::fileExport()
 {
+    //TODO: in the future check for all tab types or a base Tab type.
+    ChartTab *cTab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
+    if(!cTab)
+        return;
+    
     //TODO: pass the tab, or tabbar into the dialog so it can work on the data.
     ExportUi d(this);
     if(d.exec() == QDialog::Accepted) {
@@ -220,10 +229,38 @@ void MainWindow::fileSaveAs()
     qWarning() << "TODO: save the file as";
 }
 
+void MainWindow::viewFullScreen(bool state)
+{
+    if(state)
+        showFullScreen();
+    else
+        showNormal();
+}
+
+void MainWindow::menuFileAboutToShow()
+{
+    bool state = hasDocument();
+
+    ui->actionClose->setEnabled(state);
+    ui->actionSave->setEnabled(state);
+    ui->actionSaveAs->setEnabled(state);
+    ui->actionExport->setEnabled(state);
+}
+
+void MainWindow::menuEditAboutToShow()
+{
+    bool state = hasDocument();
+
+    ui->actionCopy->setEnabled(state);
+    ui->actionCut->setEnabled(state);
+    ui->actionPaste->setEnabled(state);
+    
+}
+
 void MainWindow::menuViewAboutToShow()
 {
     ui->actionShowStitches->setChecked(ui->stitchPaletteDock->isVisible());
-
+    ui->actionViewFullScreen->setChecked(isFullScreen());
 }
 
 void MainWindow::viewShowStitches()
@@ -271,4 +308,13 @@ void MainWindow::trialVersionMessage()
 
     msgbox.exec();
 
+}
+
+bool MainWindow::hasDocument()
+{
+    ChartTab *cTab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
+    if(!cTab)
+        return false;
+
+    return true;
 }
