@@ -89,8 +89,6 @@ void CrochetScene::createRow(int row, int columns)
         c->setToolTip(QString::number(i+1));
         c->rotate(90);
         c->setObjectName("Cell Object: " + QString::number(i + 1));
-        c->setFlag(QGraphicsItem::ItemIsSelectable, true);
-        //c->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemClipsToShape | QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable);
     }
     
 /*
@@ -151,8 +149,6 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-qDebug() << "mousePressEvent";
-
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
