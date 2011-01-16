@@ -32,7 +32,6 @@ signals:
 
 public slots:
 
-
 private:
     double mRotation;
     double mAngle;

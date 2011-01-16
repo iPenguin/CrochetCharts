@@ -4,6 +4,8 @@
 \*************************************************/
 #include "cell.h"
 
+#include <QDebug>
+
 Cell::Cell(const QString fileName, QGraphicsItem *parent) :
     QGraphicsSvgItem(fileName, parent)
 {
