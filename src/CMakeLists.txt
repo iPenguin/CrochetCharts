@@ -23,6 +23,7 @@ set(crochet_qobject_headers
     stitchlibraryui.h
     stitchlibrarydelegate.h
     stitchpalettedelegate.h
+    chartview.h
     )
 
 set(crochet_headers
