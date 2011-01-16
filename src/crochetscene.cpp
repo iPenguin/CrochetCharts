@@ -15,12 +15,13 @@
 
 #include "settings.h"
 #include "crochetdatamodel.h"
+#include <qgraphicssceneevent.h>
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent)
 {
     mModel = new CrochetDataModel(this);
-
+    
     mStitchWidth = 64;
 
     this->createRow(0, 8);
@@ -77,6 +78,7 @@ void CrochetScene::initDemoBackground()
 
 void CrochetScene::createRow(int row, int columns)
 {
+    //TODO: use c->setSharedRenderer(QSvgRenderer *renderer); and the Stitch *s->svgRenderer(); to draw the stitches?
     Cell *c;
 
     for(int i = 0; i < columns; ++i) {
@@ -86,7 +88,9 @@ void CrochetScene::createRow(int row, int columns)
         c->setPos(i*64, row*64);
         c->setToolTip(QString::number(i+1));
         c->rotate(90);
-        c->setFlag(QGraphicsItem::ItemIsMovable, true);
+        c->setObjectName("Cell Object: " + QString::number(i + 1));
+        c->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        //c->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemClipsToShape | QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsFocusable);
     }
     
 /*
@@ -123,14 +127,31 @@ QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF or
 
 void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-
+    //FIXME: only send the event to the currently moving item.
+    if(mouseEvent->buttons() != Qt::LeftButton)
+        return;
     
+    selectedItems().clear();
+    QGraphicsItem *gi = itemAt(mouseEvent->scenePos());
+    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+    if(!c)
+        return;
+    
+    selectedItems().append(gi);
+    
+    QPointF origPos = mouseEvent->buttonDownScenePos(Qt::LeftButton);
+    QPointF curPos = mouseEvent->scenePos();
+    
+    qreal diff = origPos.manhattanLength() - curPos.manhattanLength();
+    c->rotate(diff);
+    c->update();
     
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
+qDebug() << "mousePressEvent";
 
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
