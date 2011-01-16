@@ -11,6 +11,8 @@ class CrochetCell : public Cell
 {
     Q_OBJECT
 public:
+    enum {Type = UserType + 10 };
+    
     CrochetCell(const QString fileName);
     ~CrochetCell();
 
@@ -21,7 +23,6 @@ public:
 signals:
 
 public slots:
-
 
 private:
 

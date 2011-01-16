@@ -5,6 +5,9 @@
 #include "crochetcell.h"
 
 #include <QPainter>
+#include <QDebug>
+
+#include <QApplication>
 
 CrochetCell::CrochetCell(const QString fileName) :
     Cell(fileName)
@@ -19,7 +22,6 @@ CrochetCell::~CrochetCell()
 
 QRectF CrochetCell::boundingRect () const
 {
-
     return Cell::boundingRect();
 }
 
@@ -30,5 +32,5 @@ void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
 int CrochetCell::type () const
 {
-    return 0;
+    return CrochetCell::Type;
 }
