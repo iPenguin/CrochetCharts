@@ -4,7 +4,11 @@
 \*************************************************/
 #include "chartview.h"
 
-ChartView::ChartView()
+#include <QWheelEvent>
+#include <QDebug>
+
+ChartView::ChartView(QWidget *parent)
+    : QGraphicsView(parent)
 {
 }
 
@@ -34,5 +38,14 @@ void ChartView::scrollContentsBy(int dx, int dy)
 
 void ChartView::wheelEvent(QWheelEvent *event)
 {
+    zoom(event->delta());
     QGraphicsView::wheelEvent(event);
+}
+
+void ChartView::zoom(int mouseDelta)
+{
+    double scroll = mouseDelta / 120;
+    scroll /= 10;
+    scroll += 1;
+    scale(scroll, scroll);
 }

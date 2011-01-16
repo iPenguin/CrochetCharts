@@ -11,8 +11,13 @@ class ChartView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    ChartView();
+    ChartView(QWidget *parent = 0);
     ~ChartView();
+
+    void zoomIn() { zoom(120); }
+    void zoomOut() { zoom(-120); }
+    //zoom takes the mouseDelta which is usually +/- 120;
+    void zoom(int mouseDelta);
 
 protected:
     void mouseMoveEvent(QMouseEvent *event);

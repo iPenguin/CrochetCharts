@@ -7,6 +7,8 @@
 
 #include <QWidget>
 
+#include "chartview.h"
+
 class QGraphicsView;
 class CrochetScene;
 
@@ -23,10 +25,11 @@ public:
 signals:
 
 public slots:
-
+    void zoomIn();
+    void zoomOut();
 
 private:
-    QGraphicsView *mView;
+    ChartView *mView;
     CrochetScene *mScene;
 };
 

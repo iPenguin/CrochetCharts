@@ -4,7 +4,6 @@
 \*************************************************/
 #include "charttab.h"
 
-#include <QGraphicsView>
 #include <QVBoxLayout>
 
 #include <QtSvg/QSvgGenerator>
@@ -21,7 +20,7 @@ ChartTab::ChartTab(QWidget *parent) :
 {
 
     QVBoxLayout *l = new QVBoxLayout(this);
-    mView = new QGraphicsView(this);
+    mView = new ChartView(this);
     mScene = new CrochetScene(this);
     mView->setScene(mScene);
     l->addWidget(mView);
@@ -77,4 +76,14 @@ void ChartTab::saveImage(QString fileName, QSize size, int resolution)
 
     img.save(fileName, "", -1);
 
+}
+
+void ChartTab::zoomIn()
+{
+    mView->zoomIn();
+}
+
+void ChartTab::zoomOut()
+{
+    mView->zoomOut();
 }
