@@ -27,17 +27,7 @@ CrochetScene::CrochetScene(QObject *parent)
     this->createRow(0, 8);
     this->createRow(1, 14);
     this->createRow(2, 20);
-/*
-    this->createRow(3, 26);
-    this->createRow(4, 32);
-    this->createRow(5, 38);
-    this->createRow(6, 44);
-    this->createRow(7, 50);
-    this->createRow(8, 56);
-    this->createRow(9, 62);
-    this->createRow(10, 68);
-    this->createRow(11, 74);
-*/
+
     this->initDemoBackground();
 }
 
@@ -123,38 +113,42 @@ QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF or
     return QPointF(x, y);
 }
 
+void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+{
+    if(mouseEvent->buttons() != Qt::LeftButton)
+        return;
+    
+    QGraphicsItem *gi = itemAt(mouseEvent->scenePos());
+    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+    if(!c)
+        return;
+
+    mCurCell = c;
+    
+    QGraphicsScene::mouseMoveEvent(mouseEvent);
+}
+
 void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     //FIXME: only send the event to the currently moving item.
     if(mouseEvent->buttons() != Qt::LeftButton)
         return;
     
-    selectedItems().clear();
-    QGraphicsItem *gi = itemAt(mouseEvent->scenePos());
-    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(!c)
+    if(!mCurCell)
         return;
-    
-    selectedItems().append(gi);
     
     QPointF origPos = mouseEvent->buttonDownScenePos(Qt::LeftButton);
     QPointF curPos = mouseEvent->scenePos();
     
     qreal diff = origPos.manhattanLength() - curPos.manhattanLength();
-    c->rotate(diff);
-    c->update();
+    mCurCell->rotate(diff);
     
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
-}
-
-void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
 void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-
+    mCurCell = 0;
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 

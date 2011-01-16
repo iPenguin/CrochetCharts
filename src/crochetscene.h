@@ -8,6 +8,7 @@
 #include <QGraphicsScene>
 
 #include "crochetdatamodel.h"
+#include "crochetcell.h"
 
 class CrochetScene : public QGraphicsScene
 {
@@ -24,12 +25,7 @@ public:
 protected:
 /*
     virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
-    virtual void    drawBackground ( QPainter * painter, const QRectF & rect )
-    virtual void    drawForeground ( QPainter * painter, const QRectF & rect )
-    virtual void    focusInEvent ( QFocusEvent * focusEvent )
-    virtual void    focusOutEvent ( QFocusEvent * focusEvent )
     virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
-    virtual void    inputMethodEvent ( QInputMethodEvent * event )
     virtual void    keyPressEvent ( QKeyEvent * keyEvent )
     virtual void    keyReleaseEvent ( QKeyEvent * keyEvent )
     virtual void    mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * mouseEvent )
@@ -51,6 +47,9 @@ private:
 
     int mStitchWidth;
 
+    //Used in the mouse*Event()s to keep the mouse movements on the same cell.
+    CrochetCell *mCurCell;
+    
     CrochetDataModel *mModel;
 };
 
