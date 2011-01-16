@@ -7,6 +7,8 @@
 
 #include <QMainWindow>
 
+class ChartTab;
+
 namespace Ui {
     class MainWindow;
     class StitchLibraryDialog;
@@ -20,13 +22,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    bool hasDocument();
+    bool hasTab();
 
 protected:
     void closeEvent(QCloseEvent *event);
 
 private slots:
     void menuFileAboutToShow();
+    void fileNew();
     void fileOpen();
     void fileSave();
     void fileSaveAs();
@@ -37,6 +40,8 @@ private slots:
     void menuViewAboutToShow();
     void viewShowStitches();
     void viewFullScreen(bool state);
+    void viewZoomIn();
+    void viewZoomOut();
 
     void documentNewChart();
 
@@ -47,14 +52,16 @@ private slots:
     void helpAbout();
     
 private:
+    void setupMenus();
     void setupStitchPalette();
     void readSettings();
     void trialVersionMessage();
 
+    ChartTab* curChartTab();
+    
     Ui::MainWindow *ui;
     Ui::StitchLibraryDialog *sld;
 
-    void setupMenus();
 };
 
 #endif // MAINWINDOW_H

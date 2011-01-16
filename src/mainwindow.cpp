@@ -46,8 +46,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupStitchPalette()
 {
-    //StitchSet *set = StitchCollection::inst()->masterStitchSet();
-    //ui->stitchPalette->setModel(set);
+    StitchSet *set = StitchCollection::inst()->masterStitchSet();
+    ui->stitchPalette->setModel(set);
 
     //TODO: setup a proxywidget that can hold header sections?
     //StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->stitchPalette);
@@ -58,21 +58,22 @@ void MainWindow::setupMenus()
 {
     //File Menu
     connect(ui->menuFile, SIGNAL(aboutToShow()), this, SLOT(menuFileAboutToShow()));
+    connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(fileNew()));
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
+    connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
+    connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+    connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
+    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+    
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
     ui->actionSave->setIcon(QIcon::fromTheme("document-save"));
     ui->actionSaveAs->setIcon(QIcon::fromTheme("document-save-as"));
     ui->actionClose->setIcon(QIcon::fromTheme("document-close"));
 
-    connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
-    connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
-
-    connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
-    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-
     //Edit Menu
     connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
+    
     ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy" /*, QIcon(":/edit-copy.png")*/));
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut" /*, QIcon(":/edit-cut.png")*/));
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste" /*, QIcon(":/edit-paste.png")*/));
@@ -81,25 +82,25 @@ void MainWindow::setupMenus()
     connect(ui->menuView, SIGNAL(aboutToShow()), this, SLOT(menuViewAboutToShow()));
     connect(ui->actionShowStitches, SIGNAL(triggered()), this, SLOT(viewShowStitches()));
     connect(ui->actionViewFullScreen, SIGNAL(triggered(bool)), this, SLOT(viewFullScreen(bool)));
-            
 
+    connect(ui->actionZoomIn, SIGNAL(triggered(bool)), this, SLOT(viewZoomIn()));
+    connect(ui->actionZoomOut, SIGNAL(triggered(bool)), this, SLOT(viewZoomOut()));
+    
     ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in"));
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out"));
 
     //Document Menu
-
     connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
 
     //Chart Menu
 
     //Tools Menu
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
-
+    connect(ui->actionRegisterSoftware, SIGNAL(triggered()), this, SLOT(toolsRegisterSoftware()));
+    connect(ui->actionStitchLibrary, SIGNAL(triggered()), this, SLOT(toolsStitchLibrary()));
+    
     if(!Settings::inst()->isDemoVersion())
         ui->actionRegisterSoftware->setVisible(false);
-    connect(ui->actionRegisterSoftware, SIGNAL(triggered()), this, SLOT(toolsRegisterSoftware()));
-
-    connect(ui->actionStitchLibrary, SIGNAL(triggered()), this, SLOT(toolsStitchLibrary()));
 
     //Help Menu
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
@@ -109,8 +110,7 @@ void MainWindow::setupMenus()
 void MainWindow::fileExport()
 {
     //TODO: in the future check for all tab types or a base Tab type.
-    ChartTab *cTab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
-    if(!cTab)
+    if(!hasTab())
         return;
     
     //TODO: pass the tab, or tabbar into the dialog so it can work on the data.
@@ -239,7 +239,7 @@ void MainWindow::viewFullScreen(bool state)
 
 void MainWindow::menuFileAboutToShow()
 {
-    bool state = hasDocument();
+    bool state = hasTab();
 
     ui->actionClose->setEnabled(state);
     ui->actionSave->setEnabled(state);
@@ -249,7 +249,7 @@ void MainWindow::menuFileAboutToShow()
 
 void MainWindow::menuEditAboutToShow()
 {
-    bool state = hasDocument();
+    bool state = hasTab();
 
     ui->actionCopy->setEnabled(state);
     ui->actionCut->setEnabled(state);
@@ -261,6 +261,13 @@ void MainWindow::menuViewAboutToShow()
 {
     ui->actionShowStitches->setChecked(ui->stitchPaletteDock->isVisible());
     ui->actionViewFullScreen->setChecked(isFullScreen());
+}
+
+void MainWindow::fileNew()
+{
+    MainWindow *newWin = new MainWindow;
+    newWin->move(x() + 40, y() + 40);
+    newWin->show();
 }
 
 void MainWindow::viewShowStitches()
@@ -310,7 +317,29 @@ void MainWindow::trialVersionMessage()
 
 }
 
-bool MainWindow::hasDocument()
+void MainWindow::viewZoomIn()
+{
+    ChartTab* tab = curChartTab();
+    if(!tab)
+        return;
+    tab->zoomIn();
+}
+
+void MainWindow::viewZoomOut()
+{
+    ChartTab* tab = curChartTab();
+    if(!tab)
+        return;
+    tab->zoomOut();
+}
+
+ChartTab* MainWindow::curChartTab()
+{
+    ChartTab* tab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
+    return tab;
+}
+
+bool MainWindow::hasTab()
 {
     ChartTab *cTab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
     if(!cTab)
