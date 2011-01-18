@@ -26,6 +26,8 @@ namespace AppInfo {
     //a testing server for the license set the licensePage variable in the default config file!
     const QString liveLicensePage = "http://stitchworkssoftware.com/license/license.php"
                                 "?sws_sn=%1&sws_email=%2&sws_fname=%3&sws_lname=%4";
+
+    const quint32 magicNumber = 0x95973530;
 }
 
 #endif // APPINFO_H
