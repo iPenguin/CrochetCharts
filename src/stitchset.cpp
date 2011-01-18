@@ -110,7 +110,7 @@ void StitchSet::saveXmlStitchSet(QString fileName)
     QString lName = Settings::inst()->value("lastName").toString();
     QString email = Settings::inst()->value("email").toString();
     
-    //TODO: figure out all the pieces or remove them...
+    //TODO: use the settings as the default values, but allow the user to override those settings.
     stream.writeStartElement("stitch_set");
     stream.writeTextElement("name", "Master Stitch Set");
     stream.writeTextElement("author", fName + " " + lName);
