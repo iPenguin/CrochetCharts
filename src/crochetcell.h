@@ -20,6 +20,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     int type() const;
 
+    void save(QXmlStreamWriter *stream);
 signals:
 
 public slots:

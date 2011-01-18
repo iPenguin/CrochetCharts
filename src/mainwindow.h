@@ -57,10 +57,16 @@ private:
     void readSettings();
     void trialVersionMessage();
 
+    bool save(QString fileName);
+    bool load(QString fileName);
+    void loadXmlChart(QDomElement element);
+    
     ChartTab* curChartTab();
     
     Ui::MainWindow *ui;
     Ui::StitchLibraryDialog *sld;
+
+    QString mFileName;
 
 };
 

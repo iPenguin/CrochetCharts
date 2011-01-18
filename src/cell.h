@@ -7,6 +7,21 @@
 
 #include <QtSvg/QGraphicsSvgItem>
 
+class QXmlStreamWriter;
+
+/**
+ * Cell is a base class it should NOT be used directly.
+ * Some of the functions are incomplete without being subclassed.
+ * save() should be called like this:
+ *
+ * SubCell::save(stream) {
+ *  stream->writeStartElement("cell");
+ *  ...
+ *  Cell::save(stream);
+ *  ...
+ *  stream->writeEndElement();
+ * }
+ */
 class Cell : public QGraphicsSvgItem
 {
     Q_OBJECT
@@ -28,6 +43,7 @@ public:
     void setAngle(double angle) { mAngle = angle; }
     double angle() const { return mRotation; }
 
+    void save(QXmlStreamWriter *stream);
 signals:
 
 public slots:

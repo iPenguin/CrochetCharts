@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>798</width>
+    <width>802</width>
     <height>492</height>
    </rect>
   </property>
@@ -27,7 +27,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Stitch Source:</string>
+          <string>Stitch &amp;Source:</string>
          </property>
          <property name="buddy">
           <cstring>stitchSource</cstring>
@@ -46,7 +46,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>More &gt;&gt;</string>
+          <string>&amp;More &gt;&gt;</string>
          </property>
         </widget>
        </item>
@@ -72,7 +72,7 @@
           <item>
            <widget class="QLabel" name="label_5">
             <property name="text">
-             <string>Set Name:</string>
+             <string>Set &amp;Name:</string>
             </property>
             <property name="buddy">
              <cstring>setName</cstring>
@@ -92,7 +92,7 @@
           <item>
            <widget class="QLabel" name="label_4">
             <property name="text">
-             <string>Author:</string>
+             <string>A&amp;uthor:</string>
             </property>
             <property name="buddy">
              <cstring>author</cstring>
@@ -112,7 +112,7 @@
           <item>
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Email:</string>
+             <string>&amp;Email:</string>
             </property>
             <property name="buddy">
              <cstring>email</cstring>
@@ -132,7 +132,7 @@
           <item>
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Organization:</string>
+             <string>&amp;Organization:</string>
             </property>
             <property name="buddy">
              <cstring>org</cstring>
@@ -152,7 +152,7 @@
           <item>
            <widget class="QLabel" name="label_6">
             <property name="text">
-             <string>Url:</string>
+             <string>&amp;Url:</string>
             </property>
             <property name="buddy">
              <cstring>url</cstring>
@@ -188,7 +188,14 @@
        <item>
         <widget class="QPushButton" name="addStitch">
          <property name="text">
-          <string>Add Stitch</string>
+          <string>&amp;Add Stitch</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="createSet">
+         <property name="text">
+          <string>&amp;Create Set</string>
          </property>
         </widget>
        </item>
@@ -211,14 +218,14 @@
        <item>
         <widget class="QPushButton" name="importStitches">
          <property name="text">
-          <string>Import Stitches</string>
+          <string>&amp;Import Stitches</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="exportStitches">
          <property name="text">
-          <string>Export Stitches</string>
+          <string>E&amp;xport Stitches</string>
          </property>
         </widget>
        </item>
@@ -241,7 +248,7 @@
        <item>
         <widget class="QPushButton" name="printSet">
          <property name="text">
-          <string>Print Set</string>
+          <string>&amp;Print Set</string>
          </property>
         </widget>
        </item>
@@ -264,7 +271,7 @@
        <item>
         <widget class="QPushButton" name="resetLibrary">
          <property name="text">
-          <string>Reset Library</string>
+          <string>&amp;Reset Library</string>
          </property>
         </widget>
        </item>

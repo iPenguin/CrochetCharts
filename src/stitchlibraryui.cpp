@@ -178,11 +178,11 @@ void StitchLibraryUi::setupPropertiesBox()
 
 void StitchLibraryUi::hideProperties()
 {
-    if(ui->moreBttn->text() == tr("More >>")) {
-        ui->moreBttn->setText(tr("Less <<"));
+    if(ui->moreBttn->text() == tr("&More >>")) {
+        ui->moreBttn->setText(tr("&Less <<"));
         ui->propertiesBox->setVisible(true);
     } else {
-        ui->moreBttn->setText(tr("More >>"));
+        ui->moreBttn->setText(tr("&More >>"));
         ui->propertiesBox->setVisible(false);
     }
 }

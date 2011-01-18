@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+#include <QXmlStreamWriter>
+
 #include "appinfo.h"
 #include "charttab.h"
 
@@ -23,6 +25,10 @@
 
 #include "stitchpalettedelegate.h"
 #include "stitchset.h"
+
+#include <QDomDocument>
+#include <QDomNode>
+#include <QDomElement>
 
 #include <QDebug>
 
@@ -207,15 +213,10 @@ void MainWindow::fileSave()
         return;
     }
 
-    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
-    QString fileName = QFileDialog::getSaveFileName(this,
-        tr("Save Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.crochet)"));
-
-    if(fileName.isEmpty())
-        return;
-
-    //TODO: save the file
-    qWarning() << "TODO: save the file" << fileName;
+    if(mFileName.isEmpty() || mFileName.isNull())
+        fileSaveAs();
+    else
+        save(mFileName);
 }
 
 void MainWindow::fileSaveAs()
@@ -225,8 +226,115 @@ void MainWindow::fileSaveAs()
         return;
     }
 
-    //TODO: save the file as
-    qWarning() << "TODO: save the file as";
+    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
+    QString fileName = QFileDialog::getSaveFileName(this,
+            tr("Save Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern)"));
+
+    if(fileName.isEmpty())
+        return;
+
+    save(fileName);
+}
+
+bool MainWindow::save(QString fileName)
+{
+    int tabCount = ui->tabWidget->count();
+
+    QString *data = new QString();
+    
+    QXmlStreamWriter stream(data);
+    stream.setAutoFormatting(true);
+    stream.writeStartDocument();
+
+    stream.writeStartElement("pattern"); //start pattern
+
+    //TODO: Write the data to a QDataStream that is versioned and that also
+    //contains the custom stitches.
+    //foreach(Stitch *s, mUsedCustomStitches)
+    //      s->save(stream);
+    //      saveIcon(dataStream, s->file()); //copy the icon files into the data stream
+    //dataStream << stream(customIcons);
+    
+    for(int i = 0; i < tabCount; ++i) {
+        ChartTab* tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        if(!tab)
+            continue;
+        tab->save(&stream);
+    }
+
+    stream.writeEndElement(); // end pattern
+    stream.writeEndDocument();
+
+    QFile file(fileName);
+
+    if(!file.open(QIODevice::WriteOnly)) {
+        //TODO: some nice dialog to warn the user.
+        qWarning() << "Couldn't open file for writing..." << fileName;
+        return false;
+    }
+
+    file.write(data->toLatin1());
+
+    delete data;
+    data = 0;
+    return true;
+}
+
+bool MainWindow::load(QString fileName)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "Could not open the file for reading" << fileName;
+        //TODO: Add a nice error message.
+        return;
+    }
+    
+    QDomDocument doc("pattern");
+    
+    if (!doc.setContent(&file)) {
+        file.close();
+        return;
+    }
+    file.close();
+    
+    QDomElement docElem = doc.documentElement();
+    
+    QDomNode n = docElem.firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement(); // try to convert the node to an element.
+        if(!e.isNull()) {
+            
+            if(e.tagName() == "name")
+                this->setName(e.text());
+            else if(e.tagName() == "chart")
+                loadXmlChart(e);
+            else
+                qWarning() << "Could not load part of the stitch set:" << e.tagName() << e.text();
+        }
+        n = n.nextSibling();
+    }
+}
+
+void MainWindow::loadXmlChart(QDomElement element)
+{
+    ChartTab* tab = new ChartTab(ui->tabWidget);
+    
+    QDomNode n = element.firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement();
+        if(!e.isNull()) {
+            if(e.tagName() == "name") {
+                tab->setName(e.text());
+            } else if(e.tagName() == "cell") {
+                continue;
+            } else {
+                qWarning() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
+            }
+        }
+        n = n.nextSibling();
+    }
+
+    ui->tabWidget->addTab(tab, tab->name());
 }
 
 void MainWindow::viewFullScreen(bool state)
@@ -261,6 +369,10 @@ void MainWindow::menuViewAboutToShow()
 {
     ui->actionShowStitches->setChecked(ui->stitchPaletteDock->isVisible());
     ui->actionViewFullScreen->setChecked(isFullScreen());
+
+    bool state = hasTab();
+    ui->actionZoomIn->setEnabled(state);
+    ui->actionZoomOut->setEnabled(state);
 }
 
 void MainWindow::fileNew()

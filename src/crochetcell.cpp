@@ -8,6 +8,7 @@
 #include <QDebug>
 
 #include <QApplication>
+#include <QXmlStreamWriter>
 
 CrochetCell::CrochetCell(const QString fileName) :
     Cell(fileName)
@@ -33,4 +34,13 @@ void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 int CrochetCell::type () const
 {
     return CrochetCell::Type;
+}
+
+void CrochetCell::save(QXmlStreamWriter *stream)
+{
+    
+    stream->writeStartElement("cell"); //start cell
+    Cell::save(stream);
+    stream->writeEndElement(); //end cell
+    
 }

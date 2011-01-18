@@ -10,6 +10,9 @@
 #include "crochetdatamodel.h"
 #include "crochetcell.h"
 
+class QXmlStreamReader;
+class QXmlStreamWriter;
+
 class CrochetScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -21,6 +24,9 @@ public:
 
 */
     void createRow(int row, int columns);
+
+    void load(QXmlStreamReader* stream);
+    void save(QXmlStreamWriter* stream);
 
 protected:
 /*

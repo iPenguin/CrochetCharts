@@ -9,10 +9,11 @@
 #include <QtSvg/QSvgGenerator>
 #include <QPrinter>
 
+#include <QXmlStreamWriter>
+
 #include <QDebug>
 
 #include "crochetscene.h"
-
 #include "settings.h"
 
 ChartTab::ChartTab(QWidget *parent) :
@@ -86,4 +87,20 @@ void ChartTab::zoomIn()
 void ChartTab::zoomOut()
 {
     mView->zoomOut();
+}
+
+bool ChartTab::save(QXmlStreamWriter *stream)
+{
+    stream->writeStartElement("chart");
+    stream->writeTextElement("name", name());
+    //TODO: fills in missing items.
+    mScene->save(stream);
+    stream->writeEndElement(); // chart
+
+    return true;
+}
+
+bool ChartTab::load(QXmlStreamReader *stream)
+{
+    
 }

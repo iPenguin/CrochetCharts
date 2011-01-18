@@ -4,6 +4,8 @@
 \*************************************************/
 #include "cell.h"
 
+#include <QXmlStreamWriter>
+
 #include <QDebug>
 
 Cell::Cell(const QString fileName, QGraphicsItem *parent) :
@@ -32,4 +34,12 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 int Cell::type() const
 {
     return Cell::Type;
+}
+
+void Cell::save(QXmlStreamWriter *stream)
+{
+    stream->writeTextElement("x", QString::number(pos().x()));
+    stream->writeTextElement("y", QString::number(pos().y()));
+    stream->writeTextElement("rotation", QString::number(mRotation));
+    stream->writeTextElement("angle", QString::number(mAngle));
 }

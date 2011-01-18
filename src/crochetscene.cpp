@@ -8,6 +8,10 @@
 
 #include <QFontMetrics>
 #include <QGraphicsSimpleTextItem>
+#include <QGraphicsSceneEvent>
+
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 #include <math.h>
 
@@ -15,7 +19,6 @@
 
 #include "settings.h"
 #include "crochetdatamodel.h"
-#include <qgraphicssceneevent.h>
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -174,4 +177,41 @@ void CrochetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
 
     QGraphicsScene::dropEvent(event);
+}
+
+void CrochetScene::save(QXmlStreamWriter *stream)
+{
+    qDebug() << "CrochetScene::save()";
+
+    QList<QGraphicsItem*> items = this->items();
+    foreach(QGraphicsItem* itm, items) {
+        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(itm);
+        if(!c)
+            return;
+        c->save(stream);
+    }
+/*
+    int rows = mModel->rowCount();
+
+    for(int row = 0; row < rows; ++row) {
+        int cols = mModel->columnCount(row);
+        for(int col = 0; col < cols; ++col) {
+            CrochetCell *c = qobject_cast<CrochetCell*>(mModel->cell(row, col));
+            c->save(stream);
+        }
+    }
+*/
+}
+
+void CrochetScene::load(QXmlStreamReader* stream)
+{
+    if(stream->isStartElement())
+    {
+        QString tag = stream->name().toString();
+
+        if(tag == "stitch")
+
+    }
+    stream->readNext();
+
 }
