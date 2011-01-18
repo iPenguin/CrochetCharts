@@ -203,15 +203,25 @@ void CrochetScene::save(QXmlStreamWriter *stream)
 */
 }
 
-void CrochetScene::load(QXmlStreamReader* stream)
+void CrochetScene::load(QDomElement* element)
 {
-    if(stream->isStartElement())
-    {
-        QString tag = stream->name().toString();
 
-        if(tag == "stitch")
-
+    QDomNode n = element.firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement();
+        if(!e.isNull()) {
+            if(e.tagName() == "cell") {
+                createCell(e);
+            } else {
+                qWarning() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
+            }
+        }
+        n = n.nextSibling();
     }
-    stream->readNext();
+}
 
+void CrochetScene::createCell(QDomElement* element)
+{
+
+    
 }

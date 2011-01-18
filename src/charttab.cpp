@@ -15,6 +15,7 @@
 
 #include "crochetscene.h"
 #include "settings.h"
+#include <qdom.h>
 
 ChartTab::ChartTab(QWidget *parent) :
     QWidget(parent)
@@ -100,7 +101,7 @@ bool ChartTab::save(QXmlStreamWriter *stream)
     return true;
 }
 
-bool ChartTab::load(QXmlStreamReader *stream)
+bool ChartTab::load(QDomElement* element)
 {
-    
+    element->
 }

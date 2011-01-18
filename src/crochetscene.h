@@ -49,13 +49,14 @@ protected:
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
+    void createCell(QDomElement* element);
+    
     void initDemoBackground();
 
     int mStitchWidth;
 
     //Used in the mouse*Event()s to keep the mouse movements on the same cell.
     CrochetCell *mCurCell;
-    
     CrochetDataModel *mModel;
 };
 
