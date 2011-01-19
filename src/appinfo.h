@@ -15,8 +15,8 @@ namespace AppInfo {
 
     const QString appOrgDomain = "StitchWorksSoftware.com";
     const QString appOrgContact = "http://StitchWorksSoftware.com/contact";
-    const QString appVersion = gGIT_VERSION;
 
+    const QString appVersion = gGIT_VERSION;
     const QString appBuildInfo = QString(__DATE__) + " " + QString(__TIME__);
 
     const QRegExp emailRegExp = QRegExp("[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,4}");
