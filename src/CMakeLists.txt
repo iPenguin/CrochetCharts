@@ -31,6 +31,7 @@ set(crochet_headers
     appinfo.h
     license.h
     stitch.h
+    savefile.h
     )
 
 set(crochet_uis
