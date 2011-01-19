@@ -52,8 +52,12 @@ SaveFile::FileError SaveFile::save()
     stream.setAutoFormatting(true);
     stream.writeStartDocument();
 
+    stream.writeStartElement("pattern"); //start pattern
+    //TODO: dont need to set the version when saving into a binary file.
+    stream.writeAttribute("version", QString::number(SaveFile::Version_1_0));
     saveChart(&stream);
-
+    stream.writeEndElement();
+    
     stream.writeEndDocument();
 
     QFile file(fileName);
@@ -99,8 +103,38 @@ SaveFile::FileError SaveFile::load()
     //    in >> data_new_in_XXX_version_1_2;
     //in >> other_interesting_data;
 */
+    QFile file(fileName);
 
+    if(!file.open(QIODevice::ReadOnly)) {
+        //TODO: some nice dialog to warn the user.
+        qWarning() << "Couldn't open file for reading..." << fileName;
+        return SaveFile::Err_OpeningFile;
+    }
+    
+    QXmlStreamReader stream;
+    stream.setDevice(&file);
 
+    stream.readNextStartElement();
+
+    QString version = stream.attributes().value("version").toString();
+    if (stream.name() == "pattern" && version.toInt() == SaveFile::Version_1_0) {
+
+        while(stream.readNextStartElement()) {
+            qDebug() << stream.name();
+            if(stream.name() == "chart")
+                loadChart(&stream);
+            else if(stream.name() == "stitch") {//custom stitch
+                continue;
+            } else {
+                qWarning() << "Could not parse the file:" << stream.name() << stream.text();
+                
+            }
+        }
+    } else {
+        stream.raiseError(QObject::tr("The file is not an XBEL version 1.0 file."));
+    }
+    
+    file.close();
 
     return SaveFile::No_Error;
 }
@@ -121,9 +155,8 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
 {
     int tabCount = mTabWidget->count();
         
-    stream->writeStartElement("chart"); //start chart
-        
     for(int i = 0; i < tabCount; ++i) {
+        stream->writeStartElement("chart"); //start chart
         ChartTab* tab = qobject_cast<ChartTab*>(mTabWidget->widget(i));
         if(!tab)
             continue;
@@ -147,9 +180,9 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
                 stream->writeEndElement(); //end cell
             }
         }
+
+        stream->writeEndElement(); // end chart
     }
-    
-    stream->writeEndElement(); // end chart
 
     return true;
 }
@@ -157,57 +190,62 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
 bool SaveFile::loadChart(QXmlStreamReader* stream)
 {
     ChartTab* tab = new ChartTab(mTabWidget);
-    stream->readNextStartElement();
-    if(stream->name() == "name") {
-        tab->setName(stream->text().toString());
-    } else if (stream->name() == "cell") {
-        CrochetCell* c = new CrochetCell();
-        
-        stream->readNext();
+    while(stream->readNextStartElement()) {
 
-        while(stream->readNextStartElement()) {
-            if(stream->name() == "stitch") {
-                StitchSet* set = StitchCollection::inst()->masterStitchSet();
-                //TODO: what to do if I cannot find the stitch?
-                c->setStitch(set->findStitch(stream->text().toString()));
-            } else if(stream->name() == "x") {
-                bool ok = false;
-                qreal temp = stream->text().toString().toDouble(&ok);
-                if(ok)
-                    c->pos().setX(temp);
-                else
-                    qWarning() << "Couldn't read stitch's x position";
-            } else if(stream->name() == "y") {
-                bool ok = false;
-                qreal temp = stream->text().toString().toDouble(&ok);
-                if(ok)
-                    c->pos().setY(temp);
-                else
-                    qWarning() << "Couldn't read stitch's y position";
-            } else if(stream->name() == "rotation")  {
-                bool ok = false;
-                double temp = stream->text().toString().toDouble(&ok);
-                if(ok)
-                    c->setRotation(temp);
-                else
-                    qWarning() << "Couldn't read stitch's rotation";
-            } else if(stream->name() == "angle")  {
-                bool ok = false;
-                double temp = stream->text().toString().toDouble(&ok);
-                if(ok)
-                    c->setAngle(temp);
-                else
-                    qWarning() << "Couldn't read stitch's angle";
-            } else {
-                qWarning() << "Skipped cell element in the chart file:" << stream->name() << stream->text();
+        if(stream->name() == "name") {
+            tab->setName(stream->text().toString());
+        } else if (stream->name() == "cell") {
+            CrochetCell* c = new CrochetCell();
+
+            while(stream->readNextStartElement()) {
+                if(stream->name() == "stitch") {
+                    StitchSet* set = StitchCollection::inst()->masterStitchSet();
+                    //TODO: what to do if I cannot find the stitch?
+                    c->setStitch(set->findStitch(stream->text().toString()));
+                } else if(stream->name() == "x") {
+                    bool ok = false;
+                    qreal temp = stream->text().toString().toDouble(&ok);
+                    if(ok)
+                        c->pos().setX(temp);
+                    else
+                        qWarning() << "Couldn't read stitch's x position";
+                } else if(stream->name() == "y") {
+                    bool ok = false;
+                    qreal temp = stream->text().toString().toDouble(&ok);
+                    if(ok)
+                        c->pos().setY(temp);
+                    else
+                        qWarning() << "Couldn't read stitch's y position";
+                } else if(stream->name() == "rotation")  {
+                    bool ok = false;
+                    double temp = stream->text().toString().toDouble(&ok);
+                    if(ok)
+                        c->setRotation(temp);
+                    else
+                        qWarning() << "Couldn't read stitch's rotation";
+                } else if(stream->name() == "angle")  {
+                    bool ok = false;
+                    double temp = stream->text().toString().toDouble(&ok);
+                    if(ok)
+                        c->setAngle(temp);
+                    else
+                        qWarning() << "Couldn't read stitch's angle";
+                } else {
+                    qWarning() << "Skipped cell element in the chart file:" << stream->name() << stream->text();
+                    stream->skipCurrentElement();
+                }
+                qDebug() << "inner loop" << stream->readElementText();
                 stream->skipCurrentElement();
             }
+        } else {
+            qWarning() << "Skipped element in the chart file:" << stream->name() << stream->text();
+            stream->skipCurrentElement();
         }
-        
-    } else {
-        qWarning() << "Skipped element in the chart file:" << stream->name() << stream->text();
+        qDebug() << "outer loop" << stream->readElementText();
         stream->skipCurrentElement();
     }
-        
+    
+    //FIXME: load the tab name in the place of the "Chart".
+    mTabWidget->addTab(tab, "Chart");
     return true;
 }
