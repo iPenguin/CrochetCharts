@@ -9,7 +9,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include <QXmlStreamWriter>
+#include "savefile.h"
 
 #include "appinfo.h"
 #include "charttab.h"
@@ -26,22 +26,22 @@
 #include "stitchpalettedelegate.h"
 #include "stitchset.h"
 
-#include <QDomDocument>
-#include <QDomNode>
-#include <QDomElement>
-
 #include <QDebug>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent, QString fileName)
+    : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setupMenus();
 
     setupStitchPalette();
+    readSettings();
 
-    this->readSettings();
+    mFile = new SaveFile(ui->tabWidget);
+    if(!fileName.isEmpty()) {
+        mFile->fileName = fileName;
+        mFile->load();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -200,10 +200,12 @@ void MainWindow::fileOpen()
     QString fileName = QFileDialog::getOpenFileName(this,
          tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.crochet)"));
 
-    if(fileName.isEmpty())
+    if(fileName.isEmpty() || fileName.isNull())
         return;
-    //TODO: open the file
-    qWarning() << "TODO: open the file " << fileName;
+
+    MainWindow *newWin = new MainWindow(0, fileName);
+    newWin->move(x() + 40, y() + 40);
+    newWin->show();    
 }
 
 void MainWindow::fileSave()
@@ -213,10 +215,14 @@ void MainWindow::fileSave()
         return;
     }
 
-    if(mFileName.isEmpty() || mFileName.isNull())
+    if(mFile->fileName.isEmpty())
         fileSaveAs();
-    else
-        save(mFileName);
+    else {
+        SaveFile::FileError err = mFile->save();
+        if(err != SaveFile::No_Error)
+            qWarning() << "There was an error saving the file: " << err;
+    }
+    
 }
 
 void MainWindow::fileSaveAs()
@@ -233,108 +239,8 @@ void MainWindow::fileSaveAs()
     if(fileName.isEmpty())
         return;
 
-    save(fileName);
-}
-
-bool MainWindow::save(QString fileName)
-{
-    int tabCount = ui->tabWidget->count();
-
-    QString *data = new QString();
-    
-    QXmlStreamWriter stream(data);
-    stream.setAutoFormatting(true);
-    stream.writeStartDocument();
-
-    stream.writeStartElement("pattern"); //start pattern
-
-    //TODO: Write the data to a QDataStream that is versioned and that also
-    //contains the custom stitches.
-    //foreach(Stitch *s, mUsedCustomStitches)
-    //      s->save(stream);
-    //      saveIcon(dataStream, s->file()); //copy the icon files into the data stream
-    //dataStream << stream(customIcons);
-    
-    for(int i = 0; i < tabCount; ++i) {
-        ChartTab* tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
-        if(!tab)
-            continue;
-        tab->save(&stream);
-    }
-
-    stream.writeEndElement(); // end pattern
-    stream.writeEndDocument();
-
-    QFile file(fileName);
-
-    if(!file.open(QIODevice::WriteOnly)) {
-        //TODO: some nice dialog to warn the user.
-        qWarning() << "Couldn't open file for writing..." << fileName;
-        return false;
-    }
-
-    file.write(data->toLatin1());
-
-    delete data;
-    data = 0;
-    return true;
-}
-
-bool MainWindow::load(QString fileName)
-{
-    QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly)) {
-        qWarning() << "Could not open the file for reading" << fileName;
-        //TODO: Add a nice error message.
-        return;
-    }
-    
-    QDomDocument doc("pattern");
-    
-    if (!doc.setContent(&file)) {
-        file.close();
-        return;
-    }
-    file.close();
-    
-    QDomElement docElem = doc.documentElement();
-    
-    QDomNode n = docElem.firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement(); // try to convert the node to an element.
-        if(!e.isNull()) {
-            
-            if(e.tagName() == "name")
-                this->setName(e.text());
-            else if(e.tagName() == "chart")
-                loadXmlChart(e);
-            else
-                qWarning() << "Could not load part of the stitch set:" << e.tagName() << e.text();
-        }
-        n = n.nextSibling();
-    }
-}
-
-void MainWindow::loadXmlChart(QDomElement element)
-{
-    ChartTab* tab = new ChartTab(ui->tabWidget);
-    
-    QDomNode n = element.firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement();
-        if(!e.isNull()) {
-            if(e.tagName() == "name") {
-                tab->setName(e.text());
-            } else if(e.tagName() == "cell") {
-                continue;
-            } else {
-                qWarning() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
-            }
-        }
-        n = n.nextSibling();
-    }
-
-    ui->tabWidget->addTab(tab, tab->name());
+    mFile->fileName = fileName;
+    mFile->save();
 }
 
 void MainWindow::viewFullScreen(bool state)

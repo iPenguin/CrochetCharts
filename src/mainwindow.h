@@ -7,6 +7,8 @@
 
 #include <QMainWindow>
 
+#include "savefile.h"
+
 class ChartTab;
 
 namespace Ui {
@@ -17,9 +19,8 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0, QString fileName = "");
     ~MainWindow();
 
     bool hasTab();
@@ -56,17 +57,13 @@ private:
     void setupStitchPalette();
     void readSettings();
     void trialVersionMessage();
-
-    bool save(QString fileName);
-    bool load(QString fileName);
-    void loadXmlChart(QDomElement element);
     
     ChartTab* curChartTab();
     
     Ui::MainWindow *ui;
     Ui::StitchLibraryDialog *sld;
 
-    QString mFileName;
+    SaveFile *mFile;
 
 };
 

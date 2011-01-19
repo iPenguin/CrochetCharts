@@ -6,35 +6,21 @@
 #define CELL_H
 
 #include <QtSvg/QGraphicsSvgItem>
+#include "stitch.h"
 
-class QXmlStreamWriter;
-
-/**
- * Cell is a base class it should NOT be used directly.
- * Some of the functions are incomplete without being subclassed.
- * save() should be called like this:
- *
- * SubCell::save(stream) {
- *  stream->writeStartElement("cell");
- *  ...
- *  Cell::save(stream);
- *  ...
- *  stream->writeEndElement();
- * }
- */
 class Cell : public QGraphicsSvgItem
 {
     Q_OBJECT
-
+    friend class SaveFile;
 public:
 
     enum {Type = UserType + 1 };
     
-    explicit Cell(const QString fileName, QGraphicsItem *parent = 0);
-    Cell(QGraphicsItem *parent = 0);
+    explicit Cell(QGraphicsItem* parent = 0);
+    ~Cell();
 
-    QRectF boundingRect () const;
-    void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+    QRectF boundingRect() const;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     int type () const;
 
     void setRotation(double rotation) { mRotation = rotation; }
@@ -43,7 +29,9 @@ public:
     void setAngle(double angle) { mAngle = angle; }
     double angle() const { return mRotation; }
 
-    void save(QXmlStreamWriter *stream);
+    void setStitch(Stitch* s);
+    Stitch* stitch() const { return mStitch; }
+    
 signals:
 
 public slots:
@@ -51,6 +39,8 @@ public slots:
 private:
     double mRotation;
     double mAngle;
+
+    Stitch* mStitch;
 };
 
 #endif // CELL_H

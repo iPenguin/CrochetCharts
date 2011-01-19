@@ -10,17 +10,17 @@
 class CrochetCell : public Cell
 {
     Q_OBJECT
+    friend class SaveFile;
 public:
     enum {Type = UserType + 10 };
     
-    CrochetCell(const QString fileName);
+    CrochetCell();
     ~CrochetCell();
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     int type() const;
 
-    void save(QXmlStreamWriter *stream);
 signals:
 
 public slots:

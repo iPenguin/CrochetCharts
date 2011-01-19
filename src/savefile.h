@@ -8,33 +8,48 @@
 #include <qglobal.h>
 #include <qmap.h>
 
+#include <QString>
+#include <QTabWidget>
+
+class QDomDocument;
+class QDomElement;
+class QDomNode;
+
+class QXmlStreamWriter;
+class QXmlStreamReader;
+
+class QDataStream;
+
 class SaveFile
 {
 
 public:
-    SaveFile();
+    SaveFile(QTabWidget* tabWidget);
     ~SaveFile();
 
     enum FileVersion { Version_1_0 = 100 };
+    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile };
     
-    bool save(QString fileName);
-    bool load(QString fileName);
-
-    bool isSaved();
+    SaveFile::FileError save();
+    SaveFile::FileError load();
 
     bool isOldFileVersion();
 
+    bool isSaved;
+    QString fileName;
+    
 private:
-    bool saveCustomStitches();
-    bool saveChart();
-    bool saveCell();
-    bool saveStitch();
+    bool saveCustomStitches(QDataStream* stream);
+    bool loadCustomStitches(QDataStream* stream);
+    
+    bool saveChart(QXmlStreamWriter* stream);
+    bool loadChart(QXmlStreamReader* stream);
 
-    bool loadCustomStitches();
-    bool loadChart();
-    bool loadCell();
-    bool loadStitch();
+    //fileVersion of the file we're working with.
+    qint32 mCurrentFileVersion;
+    //fileVersion of the current version of the software.
+    qint32 mFileVersion;
 
-    quint32 mFileVersion;
+    QTabWidget* mTabWidget;
 };
 #endif //SAVEFILE_H

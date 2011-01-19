@@ -15,23 +15,23 @@ CrochetDataModel::CrochetDataModel(QObject *parent) :
 void CrochetDataModel::setCell(int row, int column, Cell *c)
 {
 
-    if(row >= mRows.count())
+    if(row >= mGrid.count())
         return;
-    if(column >= mRows[row].count())
+    if(column >= mGrid[row].count())
         return;
 
-    mRows[row][column] = c;
+    mGrid[row][column] = c;
 }
 
 Cell* CrochetDataModel::cell(int row, int column)
 {
 
-    if(row >= mRows.count())
+    if(row >= mGrid.count())
         return 0;
-    if(column >= mRows[row].count())
+    if(column >= mGrid[row].count())
         return 0;
 
-    return mRows[row].at(column);
+    return mGrid[row].at(column);
 }
 
 QModelIndex CrochetDataModel::index(int row, int column, const QModelIndex &parent) const
@@ -49,16 +49,16 @@ QModelIndex CrochetDataModel::parent(const QModelIndex &index) const
 int CrochetDataModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return mRows.count();
+    return mGrid.count();
 }
 
 int CrochetDataModel::columnCount (const QModelIndex &parent) const
 {
     int row = parent.row();
-    if (mRows.count() <= row)
+    if (mGrid.count() <= row)
         return -1;
 
-    return mRows[row].count();
+    return mGrid[row].count();
 }
 
 int CrochetDataModel::columnCount(int row)
@@ -79,12 +79,12 @@ void CrochetDataModel::setRowCount(int rows)
         return;
 
     //TODO: allow code to truncate the row count here? or rename the function?
-    if(rows < mRows.count())
+    if(rows < mGrid.count())
         return;
 
     for(int i = 0; i < rows; ++i) {
         QList<Cell *> row;
-        mRows.append(row);
+        mGrid.append(row);
     }
 }
 
@@ -93,37 +93,36 @@ void CrochetDataModel::setColumnCount(int row, int columns)
 {
     if(columns <= 0)
         return;
-    if(mRows.count() <= row)
+    if(mGrid.count() <= row)
         return;
 
     for(int i = 0; i < columns; ++i) {
         Cell *c = new Cell(0);
-        mRows[row].append(c);
+        mGrid[row].append(c);
     }
 }
 
-void CrochetDataModel::appendRow()
+void CrochetDataModel::appendRow(QList<Cell *> row)
 {
-    QList<Cell *> row;
-    mRows.append(row);
+    mGrid.append(row);
 }
 
 void CrochetDataModel::appendColumn(int row)
 {
-    if(row >= mRows.count())
+    if(row >= mGrid.count())
         return;
 
     //FIXME: finish function...
-    //mRows[row].insert(column, new Cell());
+    //mGrid[row].insert(column, new Cell());
 
 }
 
 void CrochetDataModel::removeColumn(int row, int column)
 {
 
-    if(row >= mRows.count())
+    if(row >= mGrid.count())
         return;
-    if(column >= mRows[row].count())
+    if(column >= mGrid[row].count())
         return;
 
 //FIXME: finish function...

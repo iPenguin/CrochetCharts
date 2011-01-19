@@ -9,14 +9,13 @@
 
 #include "chartview.h"
 
-class QXmlStreamWriter;
-class QXmlStreamReader;
 class QGraphicsView;
 class CrochetScene;
 
 class ChartTab : public QWidget
 {
     Q_OBJECT
+    friend class SaveFile;
 public:
     explicit ChartTab(QWidget *parent = 0);
 
@@ -27,14 +26,14 @@ public:
     void saveSvg(QString fileName);
     void saveImage(QString fileName, QSize size, int resolution = 96);
 
-    bool save(QXmlStreamWriter *stream);
-    bool load(QXmlStreamReader *stream);
-    
 signals:
 
 public slots:
     void zoomIn();
     void zoomOut();
+
+protected:
+    CrochetScene* scene() { return mScene; }
 
 private:
     ChartView *mView;

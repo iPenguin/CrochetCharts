@@ -33,7 +33,7 @@ public:
     bool insertColumns(int column, int count, const QModelIndex &parent);
     void removeColumn(int row, int column = -1);
 
-    void appendRow();
+    void appendRow(QList<Cell*> row);
     bool insertRows(int row, int count, const QModelIndex &parent);
 
     void setCell(int row, int column, Cell *c);
@@ -46,7 +46,7 @@ public slots:
 
 private:
 
-    QList<QList<Cell *> > mRows;
+    QList<QList<Cell *> > mGrid;
 };
 
 #endif // CROCHETDATAMODEL_H

@@ -10,15 +10,14 @@
 #include <QGraphicsSimpleTextItem>
 #include <QGraphicsSceneEvent>
 
-#include <QXmlStreamReader>
-#include <QXmlStreamWriter>
-
 #include <math.h>
 
 #include <QDebug>
 
 #include "settings.h"
 #include "crochetdatamodel.h"
+#include "stitchcollection.h"
+#include "stitchset.h"
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -71,18 +70,23 @@ void CrochetScene::initDemoBackground()
 
 void CrochetScene::createRow(int row, int columns)
 {
-    //TODO: use c->setSharedRenderer(QSvgRenderer *renderer); and the Stitch *s->svgRenderer(); to draw the stitches?
     Cell *c;
 
+    //TODO: find the default stitch.
+    Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch("ch");
+    QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
-        c = new CrochetCell(":/stitches/chain.svg");
+        c = new CrochetCell();
+        c->setStitch(s);
         addItem(c);
-        mModel->setCell(row, i, c);
+        modelRow.append(c);
         c->setPos(i*64, row*64);
         c->setToolTip(QString::number(i+1));
         c->rotate(90);
         c->setObjectName("Cell Object: " + QString::number(i + 1));
     }
+
+    mModel->appendRow(modelRow);
     
 /*
     int rowC = 8;
@@ -177,51 +181,4 @@ void CrochetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
 
     QGraphicsScene::dropEvent(event);
-}
-
-void CrochetScene::save(QXmlStreamWriter *stream)
-{
-    qDebug() << "CrochetScene::save()";
-
-    QList<QGraphicsItem*> items = this->items();
-    foreach(QGraphicsItem* itm, items) {
-        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(itm);
-        if(!c)
-            return;
-        c->save(stream);
-    }
-/*
-    int rows = mModel->rowCount();
-
-    for(int row = 0; row < rows; ++row) {
-        int cols = mModel->columnCount(row);
-        for(int col = 0; col < cols; ++col) {
-            CrochetCell *c = qobject_cast<CrochetCell*>(mModel->cell(row, col));
-            c->save(stream);
-        }
-    }
-*/
-}
-
-void CrochetScene::load(QDomElement* element)
-{
-
-    QDomNode n = element.firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement();
-        if(!e.isNull()) {
-            if(e.tagName() == "cell") {
-                createCell(e);
-            } else {
-                qWarning() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
-            }
-        }
-        n = n.nextSibling();
-    }
-}
-
-void CrochetScene::createCell(QDomElement* element)
-{
-
-    
 }

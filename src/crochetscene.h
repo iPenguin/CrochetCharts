@@ -10,12 +10,10 @@
 #include "crochetdatamodel.h"
 #include "crochetcell.h"
 
-class QXmlStreamReader;
-class QXmlStreamWriter;
-
 class CrochetScene : public QGraphicsScene
 {
     Q_OBJECT
+    friend class SaveFile;
 public:
     CrochetScene(QObject *parent = 0);
 /*
@@ -24,9 +22,6 @@ public:
 
 */
     void createRow(int row, int columns);
-
-    void load(QXmlStreamReader* stream);
-    void save(QXmlStreamWriter* stream);
 
 protected:
 /*
@@ -45,11 +40,11 @@ protected:
     void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
     void dropEvent(QGraphicsSceneDragDropEvent *event);
+
+    CrochetDataModel* model() { return mModel; }
     
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
-
-    void createCell(QDomElement* element);
     
     void initDemoBackground();
 
