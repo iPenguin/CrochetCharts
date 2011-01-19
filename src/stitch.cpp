@@ -49,9 +49,9 @@ QSvgRenderer* Stitch::renderSvg()
 {
     if(!this->isSvg())
         return new QSvgRenderer();
-
+//FIXME: don't hard code the path to the files!
     if(!mSvgRenderer->isValid())
-        mSvgRenderer->load(mFile);
+        mSvgRenderer->load("/home/brian/crochet.git/" + mFile);
 
     return mSvgRenderer;
 }
