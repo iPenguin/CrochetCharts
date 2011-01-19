@@ -19,7 +19,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
+    
     qApp->setApplicationName(AppInfo::appName);
     qApp->setApplicationVersion(AppInfo::appVersion);
     qApp->setOrganizationName(AppInfo::appOrg);
@@ -52,6 +52,9 @@ int main(int argc, char *argv[])
     collection->populateMasterSet();
 
     splash.showMessage(QObject::tr("Loading Main Window..."));
+
+    //TODO: pass the filename in from the command line to the loading application.
+    //foreach file name create a new MainWindow. Make sure it works on the Mac!!
     MainWindow w;
     w.show();
     splash.finish(&w);
