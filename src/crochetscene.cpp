@@ -25,11 +25,11 @@ CrochetScene::CrochetScene(QObject *parent)
     mModel = new CrochetDataModel(this);
     
     mStitchWidth = 64;
-
+/*
     this->createRow(0, 8);
     this->createRow(1, 14);
     this->createRow(2, 20);
-
+*/
     this->initDemoBackground();
 }
 
