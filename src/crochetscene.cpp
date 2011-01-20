@@ -68,6 +68,12 @@ void CrochetScene::initDemoBackground()
     }
 }
 
+void CrochetScene::addCell(int row, int col, Cell* c)
+{
+    addItem(c);
+    //TODO: Add items to the model, or remove the model...
+}
+
 void CrochetScene::createRow(int row, int columns)
 {
     Cell *c;

@@ -23,6 +23,8 @@ public:
 */
     void createRow(int row, int columns);
 
+    void addCell(int row, int col, Cell* c);
+
 protected:
 /*
     virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
