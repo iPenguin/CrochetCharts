@@ -140,12 +140,13 @@ SaveFile::FileError SaveFile::load()
 
 void SaveFile::loadChart(QDomElement *element)
 {
+    ChartTab* tab = new ChartTab();
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
         if(!e.isNull()) {
             if(e.tagName() == "name") {
-                qDebug() << "name:" << e.tagName();
+                tab->setName(e.text());
             } else if(e.tagName() == "cell") {
                 QDomNode nProp = e.firstChild();
                 while(!nProp.isNull()) {
@@ -167,8 +168,9 @@ void SaveFile::loadChart(QDomElement *element)
                             qWarning() << "Cannot load stitch" << eProp.tagName() << eProp.text();
                         }
                     }
-
-                    CrochetDataModel *model = tab->scene()->model();
+                    qDebug() << "cell" << c->stitch()->name();
+                     tab->scene()->addCell(c->pos().x(), c->pos().y(), c);
+                    
                     nProp = nProp.nextSibling();
                 }
             } else {
