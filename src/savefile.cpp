@@ -16,6 +16,7 @@
 #include <QDomNode>
 
 #include <QXmlStreamWriter>
+#include <QXmlStreamReader>
 
 #include <QDataStream>
 #include "crochetscene.h"
@@ -111,32 +112,71 @@ SaveFile::FileError SaveFile::load()
         return SaveFile::Err_OpeningFile;
     }
     
-    QXmlStreamReader stream;
-    stream.setDevice(&file);
-
-    stream.readNextStartElement();
-
-    QString version = stream.attributes().value("version").toString();
-    if (stream.name() == "pattern" && version.toInt() == SaveFile::Version_1_0) {
-
-        while(stream.readNextStartElement()) {
-            qDebug() << stream.name();
-            if(stream.name() == "chart")
-                loadChart(&stream);
-            else if(stream.name() == "stitch") {//custom stitch
+    QDomDocument doc("pattern");
+    
+    if (!doc.setContent(&file)) {
+        file.close();
+        return SaveFile::Err_GettingFileContents;
+    }
+    file.close();
+    
+    QDomElement docElem = doc.documentElement();
+    
+    QDomNode n = docElem.firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement(); // try to convert the node to an element.
+        if(!e.isNull()) {
+            if(e.tagName() == "chart") {
+                loadChart(&e);
+            } else if (e.tagName() == "stitch") { // custom stitches.
                 continue;
-            } else {
-                qWarning() << "Could not parse the file:" << stream.name() << stream.text();
-                
             }
         }
-    } else {
-        stream.raiseError(QObject::tr("The file is not an XBEL version 1.0 file."));
+        n = n.nextSibling();
     }
     
-    file.close();
-
     return SaveFile::No_Error;
+}
+
+void SaveFile::loadChart(QDomElement *element)
+{
+    QDomNode n = element->firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement();
+        if(!e.isNull()) {
+            if(e.tagName() == "name") {
+                qDebug() << "name:" << e.tagName();
+            } else if(e.tagName() == "cell") {
+                QDomNode nProp = e.firstChild();
+                while(!nProp.isNull()) {
+                    QDomElement eProp = nProp.toElement();
+                    CrochetCell* c = new CrochetCell();
+                    if(!eProp.isNull()) {
+                        if(eProp.tagName() == "stitch") {
+                            Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(eProp.text());
+                            c->setStitch(s);
+                        } else if(eProp.tagName() == "x") {
+                            c->pos().setX((qreal) eProp.text().toDouble());
+                        } else if(eProp.tagName() == "y") {
+                            c->pos().setY((qreal) eProp.text().toDouble());
+                        } else if(eProp.tagName() == "rotation") {
+                            c->setRotation(eProp.text().toDouble());
+                        } else if(eProp.tagName() == "angle") {
+                            c->setAngle(eProp.text().toDouble());
+                        } else {
+                            qWarning() << "Cannot load stitch" << eProp.tagName() << eProp.text();
+                        }
+                    }
+
+                    CrochetDataModel *model = tab->scene()->model();
+                    nProp = nProp.nextSibling();
+                }
+            } else {
+                qWarning() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
+            }
+        }
+        n = n.nextSibling();
+    }
 }
 
 bool SaveFile::saveCustomStitches(QDataStream* stream)
@@ -197,51 +237,12 @@ bool SaveFile::loadChart(QXmlStreamReader* stream)
         } else if (stream->name() == "cell") {
             CrochetCell* c = new CrochetCell();
 
-            while(stream->readNextStartElement()) {
-                if(stream->name() == "stitch") {
-                    StitchSet* set = StitchCollection::inst()->masterStitchSet();
-                    //TODO: what to do if I cannot find the stitch?
-                    c->setStitch(set->findStitch(stream->text().toString()));
-                } else if(stream->name() == "x") {
-                    bool ok = false;
-                    qreal temp = stream->text().toString().toDouble(&ok);
-                    if(ok)
-                        c->pos().setX(temp);
-                    else
-                        qWarning() << "Couldn't read stitch's x position";
-                } else if(stream->name() == "y") {
-                    bool ok = false;
-                    qreal temp = stream->text().toString().toDouble(&ok);
-                    if(ok)
-                        c->pos().setY(temp);
-                    else
-                        qWarning() << "Couldn't read stitch's y position";
-                } else if(stream->name() == "rotation")  {
-                    bool ok = false;
-                    double temp = stream->text().toString().toDouble(&ok);
-                    if(ok)
-                        c->setRotation(temp);
-                    else
-                        qWarning() << "Couldn't read stitch's rotation";
-                } else if(stream->name() == "angle")  {
-                    bool ok = false;
-                    double temp = stream->text().toString().toDouble(&ok);
-                    if(ok)
-                        c->setAngle(temp);
-                    else
-                        qWarning() << "Couldn't read stitch's angle";
-                } else {
-                    qWarning() << "Skipped cell element in the chart file:" << stream->name() << stream->text();
-                    stream->skipCurrentElement();
-                }
-                qDebug() << "inner loop" << stream->readElementText();
-                stream->skipCurrentElement();
-            }
+            qDebug() << "cell" << c->stitch()->name();
         } else {
             qWarning() << "Skipped element in the chart file:" << stream->name() << stream->text();
             stream->skipCurrentElement();
         }
-        qDebug() << "outer loop" << stream->readElementText();
+        qDebug() << "outer loop" << stream->name() << stream->text();
         stream->skipCurrentElement();
     }
     

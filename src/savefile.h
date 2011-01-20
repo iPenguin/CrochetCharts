@@ -28,7 +28,7 @@ public:
     ~SaveFile();
 
     enum FileVersion { Version_1_0 = 100 };
-    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile };
+    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, Err_GettingFileContents };
     
     SaveFile::FileError save();
     SaveFile::FileError load();
@@ -44,6 +44,7 @@ private:
     
     bool saveChart(QXmlStreamWriter* stream);
     bool loadChart(QXmlStreamReader* stream);
+    void loadChart(QDomElement *element);
 
     //fileVersion of the file we're working with.
     qint32 mCurrentFileVersion;
