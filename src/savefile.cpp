@@ -141,44 +141,59 @@ SaveFile::FileError SaveFile::load()
 void SaveFile::loadChart(QDomElement *element)
 {
     ChartTab* tab = new ChartTab();
+    QString tabName;
+    
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
         if(!e.isNull()) {
             if(e.tagName() == "name") {
-                tab->setName(e.text());
+                tabName = e.text();
+                tab->setName(tabName);
             } else if(e.tagName() == "cell") {
-                QDomNode nProp = e.firstChild();
-                while(!nProp.isNull()) {
-                    QDomElement eProp = nProp.toElement();
-                    CrochetCell* c = new CrochetCell();
-                    if(!eProp.isNull()) {
-                        if(eProp.tagName() == "stitch") {
-                            Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(eProp.text());
-                            c->setStitch(s);
-                        } else if(eProp.tagName() == "x") {
-                            c->pos().setX((qreal) eProp.text().toDouble());
-                        } else if(eProp.tagName() == "y") {
-                            c->pos().setY((qreal) eProp.text().toDouble());
-                        } else if(eProp.tagName() == "rotation") {
-                            c->setRotation(eProp.text().toDouble());
-                        } else if(eProp.tagName() == "angle") {
-                            c->setAngle(eProp.text().toDouble());
-                        } else {
-                            qWarning() << "Cannot load stitch" << eProp.tagName() << eProp.text();
-                        }
-                    }
-                    qDebug() << "cell" << c->stitch()->name();
-                     tab->scene()->addCell(c->pos().x(), c->pos().y(), c);
-                    
-                    nProp = nProp.nextSibling();
-                }
+                loadCell(tab, &e);
             } else {
                 qWarning() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
             }
         }
         n = n.nextSibling();
     }
+    //FIXME: don't hard code the chart name
+    mTabWidget->addTab(tab, tabName);
+}
+
+void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
+{
+    CrochetCell* c = new CrochetCell();
+    qreal x, y, rotation;
+    double angle;
+    
+    QDomNode n = element->firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement();
+        if(!e.isNull()) {
+            if(e.tagName() == "stitch") {
+                Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(e.text());
+                c->setStitch(s);
+            } else if(e.tagName() == "x") {
+                x = e.text().toInt();
+            } else if(e.tagName() == "y") {
+                y = e.text().toInt();
+            } else if(e.tagName() == "rotation") {
+                rotation = e.text().toDouble();
+                e.text().toFloat();
+            } else if(e.tagName() == "angle") {
+                angle = e.text().toDouble();
+            } else {
+                qWarning() << "Cannot load stitch" << e.tagName() << e.text();
+            }
+        }
+        n = n.nextSibling();
+    }
+    tab->scene()->addCell(c->pos().x(), c->pos().y(), c);
+    c->setPos(x, y);
+    c->setRotation(rotation);
+    c->setAngle(angle);
 }
 
 bool SaveFile::saveCustomStitches(QDataStream* stream)
@@ -203,7 +218,6 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
         if(!tab)
             continue;
         stream->writeTextElement("name", tab->name());
-        CrochetDataModel *model = tab->scene()->model();
 
         int rows = model->rowCount();
         for(int row = 0; row < rows; ++row) {

@@ -20,6 +20,8 @@ class QXmlStreamReader;
 
 class QDataStream;
 
+class ChartTab;
+
 class SaveFile
 {
 
@@ -45,6 +47,7 @@ private:
     bool saveChart(QXmlStreamWriter* stream);
     bool loadChart(QXmlStreamReader* stream);
     void loadChart(QDomElement *element);
+    void loadCell(ChartTab* tab, QDomElement *element);
 
     //fileVersion of the file we're working with.
     qint32 mCurrentFileVersion;
