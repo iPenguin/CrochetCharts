@@ -16,7 +16,6 @@ class QDomElement;
 class QDomNode;
 
 class QXmlStreamWriter;
-class QXmlStreamReader;
 
 class QDataStream;
 
@@ -45,7 +44,6 @@ private:
     bool loadCustomStitches(QDataStream* stream);
     
     bool saveChart(QXmlStreamWriter* stream);
-    bool loadChart(QXmlStreamReader* stream);
     void loadChart(QDomElement *element);
     void loadCell(ChartTab* tab, QDomElement *element);
 

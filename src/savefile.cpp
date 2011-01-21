@@ -16,7 +16,6 @@
 #include <QDomNode>
 
 #include <QXmlStreamWriter>
-#include <QXmlStreamReader>
 
 #include <QDataStream>
 #include "crochetscene.h"
@@ -142,7 +141,7 @@ void SaveFile::loadChart(QDomElement *element)
 {
     ChartTab* tab = new ChartTab();
     QString tabName;
-    
+    qDebug() << "loadChart";
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
@@ -165,16 +164,22 @@ void SaveFile::loadChart(QDomElement *element)
 void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
 {
     CrochetCell* c = new CrochetCell();
+    int row, column;
     qreal x, y, rotation;
     double angle;
-    
+    qDebug() << "loadCell";
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
         if(!e.isNull()) {
+            qDebug() << e.tagName();
             if(e.tagName() == "stitch") {
                 Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(e.text());
                 c->setStitch(s);
+            } else if(e.tagName() == "row") {
+                row = e.text().toInt();
+            } else if(e.tagName() == "column") {
+                column = e.text().toInt();
             } else if(e.tagName() == "x") {
                 x = e.text().toInt();
             } else if(e.tagName() == "y") {
@@ -190,7 +195,8 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
         }
         n = n.nextSibling();
     }
-    tab->scene()->addCell(c->pos().x(), c->pos().y(), c);
+    
+    tab->scene()->appendCell(row, c);
     c->setPos(x, y);
     c->setRotation(rotation);
     c->setAngle(angle);
@@ -219,11 +225,11 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
             continue;
         stream->writeTextElement("name", tab->name());
 
-        int rows = model->rowCount();
+        int rows = tab->scene()->rowCount();
         for(int row = 0; row < rows; ++row) {
-            int cols = model->columnCount(row);
+            int cols = tab->scene()->columnCount(row);
             for(int col = 0; col < cols; ++col) {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(model->cell(row, col));
+                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(tab->scene()->cell(row, col));
                 if(!c)
                     continue;
                 stream->writeStartElement("cell"); //start cell
@@ -240,29 +246,5 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
         stream->writeEndElement(); // end chart
     }
 
-    return true;
-}
-
-bool SaveFile::loadChart(QXmlStreamReader* stream)
-{
-    ChartTab* tab = new ChartTab(mTabWidget);
-    while(stream->readNextStartElement()) {
-
-        if(stream->name() == "name") {
-            tab->setName(stream->text().toString());
-        } else if (stream->name() == "cell") {
-            CrochetCell* c = new CrochetCell();
-
-            qDebug() << "cell" << c->stitch()->name();
-        } else {
-            qWarning() << "Skipped element in the chart file:" << stream->name() << stream->text();
-            stream->skipCurrentElement();
-        }
-        qDebug() << "outer loop" << stream->name() << stream->text();
-        stream->skipCurrentElement();
-    }
-    
-    //FIXME: load the tab name in the place of the "Chart".
-    mTabWidget->addTab(tab, "Chart");
     return true;
 }
