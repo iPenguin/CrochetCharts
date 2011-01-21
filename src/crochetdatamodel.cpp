@@ -5,6 +5,8 @@
 #include "crochetdatamodel.h"
 
 #include "cell.h"
+#include "stitchcollection.h"
+#include "stitchset.h"
 
 CrochetDataModel::CrochetDataModel(QObject *parent) :
     QAbstractItemModel(parent)
@@ -119,7 +121,16 @@ void CrochetDataModel::appendColumn(int row)
 
 void CrochetDataModel::addRow(int columns)
 {
+    //FIXME: don't hard code the stitch, use the default stitch.
+    QList<Cell*> row;
+    Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch("ch");
+    for(int i = 0; i < columns; ++i) {
+        Cell* c = new Cell();
+        c->setStitch(s);
+        row.append(c);
+    }
 
+    mGrid.append(row);
 }
 
 void CrochetDataModel::removeColumn(int row, int column)
