@@ -15,7 +15,6 @@
 #include <QDebug>
 
 #include "settings.h"
-#include "crochetdatamodel.h"
 #include "stitchcollection.h"
 #include "stitchset.h"
 
@@ -58,8 +57,49 @@ void CrochetScene::initDemoBackground()
         }
 
         //restore original rect. letting the demo text overflow off the scene.
-        this->setSceneRect(rect);
+        setSceneRect(rect);
     }
+}
+
+Cell* CrochetScene::cell(int row, int column)
+{
+    Q_ASSERT(mGrid.count() > row);
+    Q_ASSERT(mGrid[row].count() > column);
+    
+    return mGrid[row][column];
+}
+
+int CrochetScene::rowCount()
+{
+    return mGrid.count();
+}
+
+int CrochetScene::columnCount(int row)
+{
+    
+    Q_ASSERT(mGrid.count() > row);
+    return mGrid[row].count();
+}
+
+void CrochetScene::appendCell(int row, Cell* c)
+{
+    if(mGrid.count() <= row) {
+        for(int i = mGrid.count(); i < row; ++i) {
+            QList<Cell*> row;
+            mGrid.append(row);
+        }
+    }
+
+    addItem(c);
+    mGrid[row].append(c);
+}
+
+void CrochetScene::insertCell(int row, int colBefore, Cell *c)
+{
+    Q_ASSERT(mGrid.count() > row);
+    
+    addItem(c);
+    mGrid[row].insert(colBefore, c);
 }
 
 void CrochetScene::createRow(int row, int columns)
@@ -79,29 +119,6 @@ void CrochetScene::createRow(int row, int columns)
         c->rotate(90);
         c->setObjectName("Cell Object: " + QString::number(i + 1));
     }
-    
-/*
-    int rowC = 8;
-    //FIXME: less then 8 stitches gives funny rows.
-    double widthInDegrees = 360.0 / columns;
-    double circumference = ((rowC + (row*6)) - (rowC * 1/3)) * mStitchWidth;  //(columns - (rowC * 1/3)) * mStitchWidth;
-    double diameter = circumference / M_PI;
-    double radius = diameter / 2;
-qDebug() << widthInDegrees << circumference << diameter << radius;
-    
-    Cell *c;
-
-    for(int i = 0; i < columns; ++i) {
-        double degrees = (widthInDegrees*i) - (widthInDegrees/2);
-        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
-qDebug() << degrees << finish;
-        c = new CrochetCell(":/stitches/chain.svg");
-        addItem(c);
-        c->setPos(finish);
-        c->setToolTip(QString::number(i+1));
-        c->rotate(degrees + (widthInDegrees/2));
-    }
-*/
 }
 
 QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF origin)
@@ -150,3 +167,26 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     mCurCell = 0;
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
+
+/*
+ *  int rowC = 8;
+ *  //FIXME: less then 8 stitches gives funny rows.
+ *  double widthInDegrees = 360.0 / columns;
+ *  double circumference = ((rowC + (row*6)) - (rowC * 1/3)) * mStitchWidth;  //(columns - (rowC * 1/3)) * mStitchWidth;
+ *  double diameter = circumference / M_PI;
+ *  double radius = diameter / 2;
+ q D*ebug() << widthInDegrees << circumference << diameter << radius;
+ 
+ Cell *c;
+ 
+ for(int i = 0; i < columns; ++i) {
+     double degrees = (widthInDegrees*i) - (widthInDegrees/2);
+     QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+     qDebug() << degrees << finish;
+     c = new CrochetCell(":/stitches/chain.svg");
+     addItem(c);
+     c->setPos(finish);
+     c->setToolTip(QString::number(i+1));
+     c->rotate(degrees + (widthInDegrees/2));
+     }
+*/

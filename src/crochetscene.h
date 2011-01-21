@@ -7,7 +7,6 @@
 
 #include <QGraphicsScene>
 
-#include "crochetdatamodel.h"
 #include "crochetcell.h"
 
 class CrochetScene : public QGraphicsScene
@@ -23,7 +22,13 @@ public:
 */
     void createRow(int row, int columns);
 
-    void addCell(int row, int col, Cell* c);
+    void appendCell(int row, Cell* c);
+    void insertCell(int row, int colBefore, Cell *c);
+
+    int rowCount();
+    int columnCount(int row);
+
+    Cell* cell(int row, int column);
 
 protected:
 /*
@@ -43,7 +48,6 @@ protected:
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
     void dropEvent(QGraphicsSceneDragDropEvent *event);
 */
-    CrochetDataModel* model() { return mModel; }
     
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
@@ -54,7 +58,8 @@ private:
 
     //Used in the mouse*Event()s to keep the mouse movements on the same cell.
     CrochetCell *mCurCell;
-    CrochetDataModel *mModel;
+
+    QList<QList<Cell *> > mGrid;
 };
 
 #endif //CROCHETSCENE_H
