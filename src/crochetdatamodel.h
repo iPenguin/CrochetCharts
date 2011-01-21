@@ -33,6 +33,7 @@ public:
     bool insertColumns(int column, int count, const QModelIndex &parent);
     void removeColumn(int row, int column = -1);
 
+    void addRow(int columns);
     void appendRow(QList<Cell*> row);
     bool insertRows(int row, int count, const QModelIndex &parent);
 

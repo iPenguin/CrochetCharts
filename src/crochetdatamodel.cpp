@@ -117,6 +117,11 @@ void CrochetDataModel::appendColumn(int row)
 
 }
 
+void CrochetDataModel::addRow(int columns)
+{
+
+}
+
 void CrochetDataModel::removeColumn(int row, int column)
 {
 
