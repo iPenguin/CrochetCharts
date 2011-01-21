@@ -22,15 +22,9 @@
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent)
 {
-    mModel = new CrochetDataModel(this);
-    
     mStitchWidth = 64;
-/*
-    this->createRow(0, 8);
-    this->createRow(1, 14);
-    this->createRow(2, 20);
-*/
-    this->initDemoBackground();
+
+    initDemoBackground();
 }
 
 void CrochetScene::initDemoBackground()
@@ -47,7 +41,7 @@ void CrochetScene::initDemoBackground()
         double stringWidth = fm.width(demoString);
 
         QGraphicsSimpleTextItem *demoText;
-        QRectF rect = this->sceneRect();
+        QRectF rect = sceneRect();
         double demoRows = rect.height() / fontSize;
         demoRows = demoRows /2.0;
 
@@ -55,7 +49,7 @@ void CrochetScene::initDemoBackground()
 
         for(int c = 0; c < ceil(demoCols); ++c) {
             for(int i = 0; i < ceil(demoRows); ++i) {
-                demoText = this->addSimpleText(demoString, demoFont);
+                demoText = addSimpleText(demoString, demoFont);
                 demoText->setBrush(QBrush(QColor(Qt::lightGray)));
                 QPointF point = QPointF(rect.left() + c*stringWidth , rect.top() + i*(2*fontSize));
                 demoText->setPos(point);
@@ -66,12 +60,6 @@ void CrochetScene::initDemoBackground()
         //restore original rect. letting the demo text overflow off the scene.
         this->setSceneRect(rect);
     }
-}
-
-void CrochetScene::addCell(int row, int col, Cell* c)
-{
-    addItem(c);
-    //TODO: Add items to the model, or remove the model...
 }
 
 void CrochetScene::createRow(int row, int columns)
@@ -91,8 +79,6 @@ void CrochetScene::createRow(int row, int columns)
         c->rotate(90);
         c->setObjectName("Cell Object: " + QString::number(i + 1));
     }
-
-    mModel->appendRow(modelRow);
     
 /*
     int rowC = 8;
@@ -163,28 +149,4 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     mCurCell = 0;
     QGraphicsScene::mouseMoveEvent(mouseEvent);
-}
-
-void CrochetScene::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
-{
-
-    QGraphicsScene::dragEnterEvent(event);
-}
-
-void CrochetScene::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
-{
-
-    QGraphicsScene::dragLeaveEvent(event);
-}
-
-void CrochetScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
-{
-
-    QGraphicsScene::dragMoveEvent(event);
-}
-
-void CrochetScene::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-
-    QGraphicsScene::dropEvent(event);
 }
