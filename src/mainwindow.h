@@ -14,6 +14,7 @@ class ChartTab;
 namespace Ui {
     class MainWindow;
     class StitchLibraryDialog;
+    class NewDocument;
 }
 
 class MainWindow : public QMainWindow
@@ -24,6 +25,7 @@ public:
     ~MainWindow();
 
     bool hasTab();
+    void createChart();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -62,6 +64,7 @@ private:
     
     Ui::MainWindow *ui;
     Ui::StitchLibraryDialog *sld;
+    Ui::NewDocument *newDoc;
 
     SaveFile *mFile;
 

@@ -4,6 +4,7 @@
 \*************************************************/
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ui_newdocument.h"
 
 #include <QDialog>
 #include <QMessageBox>
@@ -27,6 +28,7 @@
 #include "stitchset.h"
 
 #include <QDebug>
+#include "crochetscene.h"
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -34,6 +36,11 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     ui->setupUi(this);
     setupMenus();
 
+    setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
+    setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
+    setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+    
     setupStitchPalette();
     readSettings();
 
@@ -69,7 +76,8 @@ void MainWindow::setupMenus()
     connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
     connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
-    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+    connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(close()));
+    connect(ui->actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
     
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
@@ -130,10 +138,7 @@ void MainWindow::fileExport()
 
 void MainWindow::documentNewChart()
 {
-//TODO: include the prompt for document size etc.
-    ChartTab *newTab = new ChartTab(this);
-    ui->tabWidget->addTab(newTab, tr("Chart"));
-
+    createChart();
 }
 
 void MainWindow::helpAbout()
@@ -286,6 +291,35 @@ void MainWindow::fileNew()
     MainWindow *newWin = new MainWindow;
     newWin->move(x() + 40, y() + 40);
     newWin->show();
+    newWin->createChart();
+}
+
+void MainWindow::createChart()
+{
+    QDialog *d = new QDialog(this);
+    newDoc = new Ui::NewDocument;
+    newDoc->setupUi(d);
+    connect(newDoc->buttonBox, SIGNAL(accepted()), d, SLOT(accept()));
+    connect(newDoc->buttonBox, SIGNAL(rejected()), d, SLOT(reject()));
+    
+    if(d->exec() != QDialog::Accepted)
+        return;
+
+    int rows = newDoc->rows->text().toInt();
+    int cols = newDoc->stitches->text().toInt();
+    QString defStitch = newDoc->defaultStitch->currentText();
+    QString name = newDoc->chartTitle->text();
+    
+    ChartTab* tab = new ChartTab(ui->tabWidget);
+
+    for(int i = 0; i < rows; ++i) {
+        tab->scene()->createRow(i, cols);
+    }
+
+    if(name.isEmpty())
+        name = tr("Chart");
+    
+    ui->tabWidget->addTab(tab, name);
 }
 
 void MainWindow::viewShowStitches()
