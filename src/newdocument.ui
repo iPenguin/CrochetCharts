@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>NewDocument</class>
+ <widget class="QDialog" name="NewDocument">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>237</width>
-    <height>136</height>
+    <height>150</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>New Document</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -24,7 +24,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="rows"/>
+      <widget class="QSpinBox" name="rows">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -38,7 +42,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="stitches"/>
+      <widget class="QSpinBox" name="stitches">
+       <property name="minimum">
+        <number>3</number>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -53,6 +61,24 @@
      </item>
      <item>
       <widget class="QComboBox" name="defaultStitch"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Chart Title:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="chartTitle">
+       <property name="text">
+        <string>Chart</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -73,7 +99,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>NewDocument</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -89,7 +115,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Dialog</receiver>
+   <receiver>NewDocument</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
