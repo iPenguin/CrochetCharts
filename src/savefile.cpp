@@ -74,35 +74,35 @@ SaveFile::FileError SaveFile::save()
     return SaveFile::No_Error;
 }
 
-SaveFile::FileError SaveFile::load()
-{
 /*
-//TODO: add stitches and make this a QDataStream.*
-    QFile file(fileName);
-    file.open(QIODevice::ReadOnly);
-    QDataStream in(&file);
-    
-    // Read and check the header
-    quint32 magic;
-    in >> magic;
-    if (magic != AppInfo::magicNumber)
-        return SaveFile::Err_WrongFileType;
-
-    qint32 version;
-    in >> version;
-    
-    if (version <= SaveFile::Version_1_0)
-        in.setVersion(QDataStream::Qt_4_7);
-
-    if (version > mFileVersion)
-        return SaveFile::Err_UnknownFileVersion;
-    
-    // Read the data
-    //in >> lots_of_interesting_data;
-    //if (version >= 120)
-    //    in >> data_new_in_XXX_version_1_2;
-    //in >> other_interesting_data;
+ //TODO: add stitches and make this a QDataStream.*
+ QFile file(fileName);
+ file.open(QIODevice::ReadOnly);
+ QDataStream in(&file);
+ 
+ // Read and check the header
+ quint32 magic;
+ in >> magic;
+ if (magic != AppInfo::magicNumber)
+     return SaveFile::Err_WrongFileType;
+ 
+ qint32 version;
+ in >> version;
+ 
+ if (version <= SaveFile::Version_1_0)
+     in.setVersion(QDataStream::Qt_4_7);
+ 
+ if (version > mFileVersion)
+     return SaveFile::Err_UnknownFileVersion;
+ 
+ // Read the data
+     //in >> lots_of_interesting_data;
+     //if (version >= 120)
+     //    in >> data_new_in_XXX_version_1_2;
+     //in >> other_interesting_data;
 */
+SaveFile::FileError SaveFile::load()
+{   
     QFile file(fileName);
 
     if(!file.open(QIODevice::ReadOnly)) {
@@ -115,6 +115,7 @@ SaveFile::FileError SaveFile::load()
     
     if (!doc.setContent(&file)) {
         file.close();
+        qWarning() << "Couldn't set the contents of the xml file";
         return SaveFile::Err_GettingFileContents;
     }
     file.close();
@@ -141,7 +142,7 @@ void SaveFile::loadChart(QDomElement *element)
 {
     ChartTab* tab = new ChartTab();
     QString tabName;
-    qDebug() << "loadChart";
+
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
@@ -167,12 +168,11 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
     int row, column;
     qreal x, y, rotation;
     double angle;
-    qDebug() << "loadCell";
+    
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
         if(!e.isNull()) {
-            qDebug() << e.tagName();
             if(e.tagName() == "stitch") {
                 Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(e.text());
                 c->setStitch(s);
@@ -186,7 +186,6 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
                 y = e.text().toInt();
             } else if(e.tagName() == "rotation") {
                 rotation = e.text().toDouble();
-                e.text().toFloat();
             } else if(e.tagName() == "angle") {
                 angle = e.text().toDouble();
             } else {
@@ -217,23 +216,27 @@ bool SaveFile::loadCustomStitches(QDataStream* stream)
 bool SaveFile::saveChart(QXmlStreamWriter* stream)
 {
     int tabCount = mTabWidget->count();
-        
+
     for(int i = 0; i < tabCount; ++i) {
         stream->writeStartElement("chart"); //start chart
         ChartTab* tab = qobject_cast<ChartTab*>(mTabWidget->widget(i));
         if(!tab)
             continue;
         stream->writeTextElement("name", tab->name());
-
+ 
         int rows = tab->scene()->rowCount();
+        qDebug() << "rows" << rows;
         for(int row = 0; row < rows; ++row) {
             int cols = tab->scene()->columnCount(row);
+            qDebug() << "cols" << cols;
             for(int col = 0; col < cols; ++col) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(tab->scene()->cell(row, col));
                 if(!c)
                     continue;
                 stream->writeStartElement("cell"); //start cell
                     stream->writeTextElement("stitch", c->stitch()->name());
+                    stream->writeTextElement("row", QString::number(row));
+                    stream->writeTextElement("column", QString::number(col));
                     //TODO: make sure the numbers are translating correctly to xml and back.
                     stream->writeTextElement("x", QString::number(c->pos().x()));
                     stream->writeTextElement("y", QString::number(c->pos().y()));
