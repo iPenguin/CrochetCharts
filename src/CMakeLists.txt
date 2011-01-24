@@ -24,6 +24,7 @@ set(crochet_qobject_headers
     stitchlibrarydelegate.h
     stitchpalettedelegate.h
     chartview.h
+    crochettextview.h
     )
 
 set(crochet_headers

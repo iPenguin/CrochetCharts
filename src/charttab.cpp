@@ -5,6 +5,7 @@
 #include "charttab.h"
 
 #include <QVBoxLayout>
+#include <QSplitter>
 
 #include <QtSvg/QSvgGenerator>
 #include <QPrinter>
@@ -14,20 +15,30 @@
 #include <QDebug>
 
 #include "crochetscene.h"
+#include "crochettextview.h"
 #include "settings.h"
 #include <qdom.h>
 
 ChartTab::ChartTab(QWidget *parent) :
     QWidget(parent)
 {
-
     QVBoxLayout *l = new QVBoxLayout(this);
+    QSplitter *splitter = new QSplitter(Qt::Vertical, this);
+    splitter->setObjectName("chartSplitter");
+    l->addWidget(splitter);
+    
     mView = new ChartView(this);
     mScene = new CrochetScene(this);
     mView->setScene(mScene);
-    l->addWidget(mView);
+    mTextView = new CrochetTextView(this, mScene);
+    
+    splitter->addWidget(mView);
+    splitter->addWidget(mTextView);
     l->setMargin(0);
-
+    
+    mView->setMinimumSize(width(), height()*2/3);
+    splitter->setStretchFactor(0, 8);
+    
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
     //click and drag mode.

@@ -11,6 +11,7 @@
 
 class QGraphicsView;
 class CrochetScene;
+class CrochetTextView;
 
 class ChartTab : public QWidget
 {
@@ -32,12 +33,12 @@ public slots:
     void zoomIn();
     void zoomOut();
 
-protected:
     CrochetScene* scene() { return mScene; }
 
 private:
     ChartView *mView;
     CrochetScene *mScene;
+    CrochetTextView *mTextView;
 
     QString mName;
 };
