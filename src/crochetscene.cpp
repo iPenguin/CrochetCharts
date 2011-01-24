@@ -84,14 +84,14 @@ int CrochetScene::columnCount(int row)
 void CrochetScene::appendCell(int row, Cell* c)
 {
     if(mGrid.count() <= row) {
-        for(int i = mGrid.count(); i < row; ++i) {
+        for(int i = mGrid.count(); i < row + 1; ++i) {
             QList<Cell*> row;
             mGrid.append(row);
         }
     }
-
     addItem(c);
     mGrid[row].append(c);
+    emit rowChanged(row);
 }
 
 void CrochetScene::insertCell(int row, int colBefore, Cell *c)
@@ -100,6 +100,7 @@ void CrochetScene::insertCell(int row, int colBefore, Cell *c)
     
     addItem(c);
     mGrid[row].insert(colBefore, c);
+    emit rowsChanged(row);
 }
 
 void CrochetScene::createRow(int row, int columns)
@@ -119,6 +120,8 @@ void CrochetScene::createRow(int row, int columns)
         c->rotate(90);
         c->setObjectName("Cell Object: " + QString::number(i + 1));
     }
+    mGrid.append(modelRow);
+    emit rowsChanged(row);
 }
 
 QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF origin)

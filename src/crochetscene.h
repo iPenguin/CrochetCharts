@@ -30,6 +30,10 @@ public:
 
     Cell* cell(int row, int column);
 
+signals:
+    void rowChanged(int row);
+    void rowsChanged(int startRow);
+    
 protected:
 /*
     virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
