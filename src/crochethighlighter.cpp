@@ -16,15 +16,14 @@ CrochetHighlighter::CrochetHighlighter(QTextDocument *parent)
     
     keywordFormat.setForeground(Qt::darkBlue);
     keywordFormat.setFontWeight(QFont::Bold);
-    QStringList keywordPatterns;
 
     StitchSet* set = StitchCollection::inst()->masterStitchSet();
     foreach(Stitch* s, set->stitches()) {
-        keywordPatterns << "\\b" + s->name() + "(?=[0-9]+|\\b)";
+        keywordPatterns << s->name();
     }
     
-    foreach (const QString &pattern, keywordPatterns) {
-        rule.pattern = QRegExp(pattern);
+    foreach (const QString &keyword, keywordPatterns) {
+        rule.pattern = QRegExp(keyword + "\\b?(?=[0-9]*|,)");
         rule.pattern.setMinimal(true);
         rule.pattern.setCaseSensitivity(Qt::CaseInsensitive);
         rule.format = keywordFormat;

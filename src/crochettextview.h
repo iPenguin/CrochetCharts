@@ -9,6 +9,7 @@
 #include "crochethighlighter.h"
 
 #include <QPlainTextEdit>
+#include <QCompleter>
 
 class CrochetTextView : public QPlainTextEdit
 {
@@ -20,16 +21,26 @@ public:
 
     void setScene(CrochetScene* scene) { mScene = scene; }
 
-    void generateRows();
-    QString generateRow(int i);
+    void displayRows();
+    QString displayRow(int row);
+
+    void setCompleter(QCompleter *c);
     
 protected:
+    void keyPressEvent(QKeyEvent *e);
+    void focusInEvent(QFocusEvent *e);
 
 private slots:
+    void insertCompletion(const QString &completion);
+
+    void updateRow(int row);
     void updateScene();
+private:
+    QString textUnderCursor() const;
     
 private:
     CrochetHighlighter *mHighlighter;
     CrochetScene* mScene;
+    QCompleter* mCompleter;
 };
 #endif //CROCHETTEXTVIEW_H

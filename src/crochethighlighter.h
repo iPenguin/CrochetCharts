@@ -15,6 +15,8 @@ public:
     ~CrochetHighlighter();
 
     void resetRules();
+
+    QStringList keywords() { return keywordPatterns; }
     
 protected:
     void highlightBlock(const QString &text);
@@ -27,6 +29,8 @@ private:
     };
     QVector<HighlightingRule> highlightingRules;
 
+    QStringList keywordPatterns;
+    
     QRegExp repeatStartExp;
     QRegExp repeatEndExp;
 

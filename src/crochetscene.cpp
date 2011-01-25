@@ -65,7 +65,7 @@ Cell* CrochetScene::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
     Q_ASSERT(mGrid[row].count() > column);
-    
+
     return mGrid[row][column];
 }
 
@@ -100,7 +100,7 @@ void CrochetScene::insertCell(int row, int colBefore, Cell *c)
     
     addItem(c);
     mGrid[row].insert(colBefore, c);
-    emit rowsChanged(row);
+    emit rowChanged(row);
 }
 
 void CrochetScene::createRow(int row, int columns)
@@ -121,7 +121,7 @@ void CrochetScene::createRow(int row, int columns)
         c->setObjectName("Cell Object: " + QString::number(i + 1));
     }
     mGrid.append(modelRow);
-    emit rowsChanged(row);
+    emit rowChanged(row);
 }
 
 QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF origin)
