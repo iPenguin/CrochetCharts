@@ -14,14 +14,6 @@ CrochetTextView::CrochetTextView(QWidget *parent, CrochetScene* scene)
 
     mHighlighter = new CrochetHighlighter(document());
     mCompleter = new QCompleter(this);
-
-    QStringList words = mHighlighter->keywords();
-    words.sort();
-    
-    mCompleter->setModel(new QStringListModel(words, mCompleter));
-    mCompleter->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
-    mCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-
     setCompleter(mCompleter);
     
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(updateScene()));
@@ -107,17 +99,23 @@ QString CrochetTextView::textUnderCursor() const
     return tc.selectedText();
 }
 
-void CrochetTextView::setCompleter(QCompleter *comp)
+void CrochetTextView::setCompleter(QCompleter *c)
 {
     if (mCompleter)
         QObject::disconnect(mCompleter, 0, this, 0);
     
-    mCompleter = comp;
+    mCompleter = c;
     
     if (!mCompleter)
         return;
     
     mCompleter->setWidget(this);
+
+    QStringList words = mHighlighter->keywords();
+    words.sort();
+    mCompleter->setModel(new QStringListModel(words, mCompleter));
+    
+    mCompleter->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
     mCompleter->setCompletionMode(QCompleter::PopupCompletion);
     mCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     QObject::connect(mCompleter, SIGNAL(activated(QString)),
