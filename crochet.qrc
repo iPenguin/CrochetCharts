@@ -7,5 +7,7 @@
         <file>stitches/stitches.xml</file>
         <file>stitches/chain.svg</file>
         <file>stitches/single_crochet.svg</file>
+        <file>stitches/double_crochet.svg</file>
+        <file>stitches/treble_crochet.svg</file>
     </qresource>
 </RCC>
