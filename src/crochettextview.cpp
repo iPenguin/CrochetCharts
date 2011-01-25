@@ -7,55 +7,33 @@
 #include <QDebug>
 #include <qstringlistmodel.h>
 #include <QScrollBar>
+#include <qtextdocumentfragment.h>
 
 CrochetTextView::CrochetTextView(QWidget *parent, CrochetScene* scene)
     : QPlainTextEdit(parent), mScene(scene), mCompleter(0)
 {
-
     mHighlighter = new CrochetHighlighter(document());
     mCompleter = new QCompleter(this);
     setCompleter(mCompleter);
     
-    connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(updateScene()));
+    document()->setMaximumBlockCount(mScene->rowCount());
+    
+    //update this text view
     connect(mScene, SIGNAL(rowChanged(int)), this, SLOT(updateRow(int)));
-    //connect(this, SIGNAL(selectionChanged()), this, SLOT(updateScene()));
-   //Update on every key stroke:
-   //connect(this, SIGNAL(textChanged()), this, SLOT(updateScene()));
+    connect(mScene, SIGNAL(rowAdded(int)), this, SLOT(addRow(int)));
+    //update the data model.
+    connect(document(), SIGNAL(contentsChange(int,int,int)), this, SLOT(updateScene(int,int,int)));
+
 }
 
 CrochetTextView::~CrochetTextView()
 {
-    
-}
-
-void CrochetTextView::displayRows()
-{
-    QString chart;
-    int rows = mScene->rowCount();
-   
-    for(int r = 0; r < rows; ++r) {
-        chart += displayRow(r) + "\n";
-    }
-
-    setPlainText(chart);
-}
-
-QString CrochetTextView::displayRow(int row)
-{
-    QString rowText;
-
-    int cols = mScene->columnCount(row);
-
-    for(int c = 0; c < cols; ++c) {
-        rowText += mScene->cell(row, c)->name();
-    }
-    
-    return rowText;
 }
 
 void CrochetTextView::updateRow(int row)
 {
     QString rowText;
+    QTextCursor curs = cursorAtBlockStart(row);
     
     int cols = mScene->columnCount(row);
     
@@ -63,16 +41,75 @@ void CrochetTextView::updateRow(int row)
         rowText += mScene->cell(row, c)->name() + ", ";
     }
 
-    appendPlainText(rowText);
 }
 
-void CrochetTextView::updateScene()
+void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
 {
+    QTextCursor curs = cursorAtBlockStart(pos);
+
+    int row = curs.blockNumber();
+    //TODO: add complicated [] 3 times and * ; repeat from * parsing...
+    // and make sure the parse puts each stitch in the stitches var seperately.
+    QStringList stitches;
+    stitches = curs.block().text().split(",");
+    int cols = mScene->columnCount(row);
+
+    int stitchCount = stitches.count();
     
-    qDebug() << "update Scene";
-        
+    if(stitchCount < cols) {
+        for(int i = stitchCount; i < cols; ++i)
+            mScene->removeCell(row, i);
+    }
+
+    for(int c = 0; c < stitchCount; ++c) {
+        QString s = stitches.at(c);
+        s = s.simplified().toLower();
+        Cell* cell = mScene->cell(row, c);
+        if(!cell) {
+            cell = new CrochetCell();
+            mScene->appendCell(row, cell);
+        }
+        mScene->cell(row, c)->setStitch(s);
+    }
+
+    
 }
 
+void CrochetTextView::addRow(int newRow)
+{
+    QTextCursor curs = QTextCursor(textCursor());
+    curs.movePosition(QTextCursor::Start);
+    for(int i = 0; i < newRow; ++i) {
+        curs.movePosition(QTextCursor::NextBlock);
+    }
+    
+    QString rowText;
+    
+    int cols = mScene->columnCount(newRow);
+
+    bool firstPass = true;
+    
+    for(int c = 0; c < cols; ++c) {
+        if(!firstPass) rowText += ", ";
+        rowText += mScene->cell(newRow, c)->name();
+        firstPass = false;
+    }
+    rowText.append('\n');
+    curs.insertText(rowText);
+}
+
+QTextCursor CrochetTextView::cursorAtBlockStart(int pos)
+{
+    QTextCursor curs = QTextCursor(textCursor());
+    curs.setPosition(pos);
+    curs.movePosition(QTextCursor::StartOfBlock);
+    
+    return curs;
+}
+
+/************************************************************************
+ * Text Completer functions
+ ************************************************************************/
 void CrochetTextView::insertCompletion(const QString& completion)
 {
     if (mCompleter->widget() != this)
@@ -137,6 +174,21 @@ void CrochetTextView::keyPressEvent(QKeyEvent *e)
             default:
                 break;
         }
+    }
+
+    switch(e->key()) {
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+            e->ignore(); //eat enter/return.
+            return;
+        case Qt::Key_Up:
+        case Qt::Key_Down:
+        case Qt::Key_Left:
+        case Qt::Key_Right:
+            QPlainTextEdit::keyPressEvent(e); //accept default behavior for arrows.
+            return;
+        default:
+            break;
     }
     
     bool isShortcut = ((e->modifiers() & Qt::ControlModifier) && e->key() == Qt::Key_E); // CTRL+E

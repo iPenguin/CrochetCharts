@@ -21,10 +21,9 @@ public:
 
     void setScene(CrochetScene* scene) { mScene = scene; }
 
-    void displayRows();
-    QString displayRow(int row);
-
     void setCompleter(QCompleter *c);
+
+    QTextCursor cursorAtBlockStart(int pos);
     
 protected:
     void keyPressEvent(QKeyEvent *e);
@@ -34,7 +33,9 @@ private slots:
     void insertCompletion(const QString &completion);
 
     void updateRow(int row);
-    void updateScene();
+    void updateScene(int pos, int charsRemoved, int charsAdded);
+    void addRow(int newRow);
+    
 private:
     QString textUnderCursor() const;
     
