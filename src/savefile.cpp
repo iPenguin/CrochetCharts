@@ -225,10 +225,10 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
         stream->writeTextElement("name", tab->name());
  
         int rows = tab->scene()->rowCount();
-        qDebug() << "rows" << rows;
+
         for(int row = 0; row < rows; ++row) {
             int cols = tab->scene()->columnCount(row);
-            qDebug() << "cols" << cols;
+
             for(int col = 0; col < cols; ++col) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(tab->scene()->cell(row, col));
                 if(!c)
