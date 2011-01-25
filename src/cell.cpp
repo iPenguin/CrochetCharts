@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <qpainter.h>
 #include <qsvgrenderer.h>
+#include "stitchcollection.h"
+#include "stitchset.h"
 
 Cell::Cell(QGraphicsItem *parent) :
     QGraphicsSvgItem(parent)
@@ -37,6 +39,19 @@ void Cell::setStitch(Stitch* s)
         mStitch = s;
         setSharedRenderer(s->renderSvg());
     }
+}
+
+void Cell::setStitch(QString s)
+{
+    Stitch* stitch = 0;
+
+    stitch = StitchCollection::inst()->masterStitchSet()->findStitch(s);
+
+    //FIXME: do a look up for the default stitch.
+    if(!stitch)
+        stitch = StitchCollection::inst()->masterStitchSet()->findStitch("ch");
+
+    setStitch(stitch);
 }
 
 int Cell::type() const

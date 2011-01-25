@@ -30,6 +30,7 @@ public:
     double angle() const { return mAngle; }
 
     void setStitch(Stitch* s);
+    void setStitch(QString s);
     Stitch* stitch() const { return mStitch; }
 
     QString name();
