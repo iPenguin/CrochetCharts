@@ -20,11 +20,13 @@ CrochetHighlighter::CrochetHighlighter(QTextDocument *parent)
 
     StitchSet* set = StitchCollection::inst()->masterStitchSet();
     foreach(Stitch* s, set->stitches()) {
-        keywordPatterns << "\\b" + s->name() + "\\b";
+        keywordPatterns << "\\b" + s->name() + "(?=[0-9]+|\\b)";
     }
     
     foreach (const QString &pattern, keywordPatterns) {
         rule.pattern = QRegExp(pattern);
+        rule.pattern.setMinimal(true);
+        rule.pattern.setCaseSensitivity(Qt::CaseInsensitive);
         rule.format = keywordFormat;
         highlightingRules.append(rule);
     }
@@ -32,15 +34,24 @@ CrochetHighlighter::CrochetHighlighter(QTextDocument *parent)
     repeatFormat.setForeground(Qt::darkBlue);
     repeatFormat.setFontWeight(QFont::Bold);
     repeatStartExp = QRegExp("\\*");
+    repeatStartExp.setCaseSensitivity(Qt::CaseInsensitive);
     repeatEndExp = QRegExp("; repeat from \\*");
+    repeatEndExp.setCaseSensitivity(Qt::CaseInsensitive);
 
     repeat2Start = QRegExp("\\[");
+    repeat2Start.setCaseSensitivity(Qt::CaseInsensitive);
     repeat2End = QRegExp("\\] [0-9]+ times");
+    repeat2End.setCaseSensitivity(Qt::CaseInsensitive);
     
 }
 
 CrochetHighlighter::~CrochetHighlighter()
 {
+}
+
+void CrochetHighlighter::resetRules()
+{
+
 }
 
 void CrochetHighlighter::highlightBlock(const QString &text)
@@ -57,6 +68,7 @@ void CrochetHighlighter::highlightBlock(const QString &text)
 
     setCurrentBlockState(0);
 
+    //find \* .*; repeat from \*
     int startIndex = 0;
     if (previousBlockState() != 1)
         startIndex = repeatStartExp.indexIn(text);
@@ -76,6 +88,7 @@ void CrochetHighlighter::highlightBlock(const QString &text)
         startIndex = repeatStartExp.indexIn(text, startIndex + commentLength);
     }
 
+    //find [.*] X times
     if (previousBlockState() != 2)
         startIndex = repeat2Start.indexIn(text);
 

@@ -14,6 +14,8 @@ public:
     CrochetHighlighter(QTextDocument *parent = 0);
     ~CrochetHighlighter();
 
+    void resetRules();
+    
 protected:
     void highlightBlock(const QString &text);
     
