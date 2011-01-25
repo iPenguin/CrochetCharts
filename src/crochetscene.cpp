@@ -64,9 +64,19 @@ void CrochetScene::initDemoBackground()
 Cell* CrochetScene::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
-    Q_ASSERT(mGrid[row].count() > column);
+    if(mGrid[row].count() <= column)
+        return 0;
 
     return mGrid[row][column];
+}
+
+void CrochetScene::removeCell(int row, int column)
+{
+    Q_ASSERT(mGrid.count() > row);
+    Q_ASSERT(mGrid[row].count() > column);
+
+    delete mGrid[row][column];
+    mGrid[row].removeAt(column);
 }
 
 int CrochetScene::rowCount()
@@ -91,7 +101,14 @@ void CrochetScene::appendCell(int row, Cell* c)
     }
     addItem(c);
     mGrid[row].append(c);
-    emit rowChanged(row);
+    //TODO: abstract out the position setting to a seperate function: void setPos(Cell *c);
+    int i = mGrid[row].count();
+    c->setPos(i*64, row*64);
+    c->setToolTip(QString::number(i+1));
+    c->rotate(90);
+    c->setObjectName("Cell Object: " + QString::number(i + 1));
+    
+    //emit rowChanged(row);
 }
 
 void CrochetScene::insertCell(int row, int colBefore, Cell *c)
@@ -107,7 +124,7 @@ void CrochetScene::createRow(int row, int columns)
 {
     Cell *c;
 
-    //TODO: find the default stitch.
+    //FIXME: find the default stitch.
     Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch("ch");
     QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
@@ -121,7 +138,8 @@ void CrochetScene::createRow(int row, int columns)
         c->setObjectName("Cell Object: " + QString::number(i + 1));
     }
     mGrid.append(modelRow);
-    emit rowChanged(row);
+    //emit rowChanged(row);
+    emit rowAdded(row);
 }
 
 QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF origin)
@@ -167,7 +185,8 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
-    mCurCell = 0;
+    if(mCurCell)
+        mCurCell = 0;
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 

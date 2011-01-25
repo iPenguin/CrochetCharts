@@ -30,9 +30,12 @@ public:
 
     Cell* cell(int row, int column);
 
+    void removeCell(int row, int column);
+    
 signals:
     void rowChanged(int row);
     void rowsChanged(int startRow);
+    void rowAdded(int newRow);
     
 protected:
 /*
