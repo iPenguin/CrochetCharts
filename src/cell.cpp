@@ -5,6 +5,8 @@
 #include "cell.h"
 
 #include <QDebug>
+#include <qpainter.h>
+#include <qsvgrenderer.h>
 
 Cell::Cell(QGraphicsItem *parent) :
     QGraphicsSvgItem(parent)
@@ -24,6 +26,8 @@ QRectF Cell::boundingRect() const
 
 void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    //painter->setPen(Qt::red);
+    //renderer()->render(painter, boundingRect());  
     QGraphicsSvgItem::paint(painter, option, widget);
 }
 
