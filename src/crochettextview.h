@@ -6,6 +6,7 @@
 #define CROCHETTEXTVIEW_H
 
 #include "crochetscene.h"
+#include "crochethighlighter.h"
 
 #include <QPlainTextEdit>
 
@@ -28,7 +29,7 @@ private slots:
     void updateScene();
     
 private:
-        
+    CrochetHighlighter *mHighlighter;
     CrochetScene* mScene;
 };
 #endif //CROCHETTEXTVIEW_H

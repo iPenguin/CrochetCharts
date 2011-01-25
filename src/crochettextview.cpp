@@ -10,6 +10,8 @@ CrochetTextView::CrochetTextView(QWidget *parent, CrochetScene* scene)
     : QPlainTextEdit(parent), mScene(scene)
 {
 
+    mHighlighter = new CrochetHighlighter(document());
+    
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(updateScene()));
     //connect(this, SIGNAL(selectionChanged()), this, SLOT(updateScene()));
    //Update on every key stroke:
