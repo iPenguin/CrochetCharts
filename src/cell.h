@@ -31,6 +31,8 @@ public:
 
     void setStitch(Stitch* s);
     Stitch* stitch() const { return mStitch; }
+
+    QString name();
     
 signals:
 

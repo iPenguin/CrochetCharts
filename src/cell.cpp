@@ -51,3 +51,13 @@ void Cell::setRotation(qreal rotation)
         rotate(rotation);
     }
 }
+
+QString Cell::name()
+{
+    if(!mStitch)
+        return QString();
+    else
+        return mStitch->name();
+}
+
+
