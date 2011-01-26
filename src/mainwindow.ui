@@ -173,6 +173,8 @@
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
     <addaction name="separator"/>
+    <addaction name="actionPrint"/>
+    <addaction name="actionPrintPreview"/>
     <addaction name="actionExport"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
@@ -211,6 +213,7 @@
     <property name="title">
      <string>&amp;Chart</string>
     </property>
+    <addaction name="actionEditName"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -602,6 +605,24 @@
    </property>
    <property name="toolTip">
     <string>Show the colors used in this pattern</string>
+   </property>
+  </action>
+  <action name="actionEditName">
+   <property name="text">
+    <string>Edit Name...</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit the name of the current chart</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="text">
+    <string>&amp;Print...</string>
+   </property>
+  </action>
+  <action name="actionPrintPreview">
+   <property name="text">
+    <string>Print Preview...</string>
    </property>
   </action>
  </widget>

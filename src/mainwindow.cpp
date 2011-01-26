@@ -28,6 +28,7 @@
 
 #include <QDebug>
 #include "crochetscene.h"
+#include <qinputdialog.h>
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -83,9 +84,14 @@ void MainWindow::setupMenus()
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
     connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
     connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+
+    connect(ui->actionPrint, SIGNAL(triggered()), this, SLOT(filePrint()));
+    connect(ui->actionPrintPreview, SIGNAL(triggered()), this, SLOT(filePrintPreivew()));
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
+
     connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(close()));
     connect(ui->actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    
     
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
@@ -118,7 +124,9 @@ void MainWindow::setupMenus()
     connect(ui->actionAddChart, SIGNAL(triggered()), ui->newDocument, SLOT(show()));
 
     //Chart Menu
-
+    connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
+    connect(ui->actionEditName, SIGNAL(triggered()), this, SLOT(chartEditName()));
+    
     //Tools Menu
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
     connect(ui->actionRegisterSoftware, SIGNAL(triggered()), this, SLOT(toolsRegisterSoftware()));
@@ -130,6 +138,16 @@ void MainWindow::setupMenus()
     //Help Menu
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
+}
+
+void MainWindow::filePrint()
+{
+    qDebug() << "filePrint()";
+}
+
+void MainWindow::filePrintPreview()
+{
+    qDebug() << "filePrintPreview()";
 }
 
 void MainWindow::fileExport()
@@ -156,7 +174,7 @@ void MainWindow::helpAbout()
 {
     QString aboutInfo = QString(tr("<h1>%1</h1>"
                                    "<p>Version: %2 (built on %3)</p>"
-                                   "<p>(c) 2010-2011 %4</p>"
+                                   "<p>Copyright (c) 2010-2011 %4</p>"
                                    "<p>This software is for creating crochet charts that"
                                    " can be exported in many differnet file types.</p>")
                                 .arg(qApp->applicationName())
@@ -354,6 +372,26 @@ void MainWindow::viewShowPatternColors()
 void MainWindow::viewShowPatternStitches()
 {
     ui->patternStitchesDock->setVisible(ui->actionShowPatternStitches->isChecked());
+}
+
+void MainWindow::menuChartAboutToShow()
+{
+    bool state = hasTab();
+    ui->actionEditName->setEnabled(state);       
+}
+
+void MainWindow::chartEditName()
+{
+    if(!ui->tabWidget->currentWidget())
+        return;
+    
+    int curTab = ui->tabWidget->currentIndex();
+    QString currentName  = ui->tabWidget->tabText(curTab);
+    bool ok;
+    QString newName = QInputDialog::getText(this, tr("Set Chart Name"), tr("Chart name:"),
+                                            QLineEdit::Normal, currentName, &ok);
+    if(ok && !newName.isEmpty())
+        ui->tabWidget->setTabText(curTab, newName);
 }
 
 void MainWindow::toolsRegisterSoftware()

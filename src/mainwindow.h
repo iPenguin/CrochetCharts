@@ -36,6 +36,8 @@ private slots:
     void fileSave();
     void fileSaveAs();
     void fileExport();
+    void filePrint();
+    void filePrintPreview();
 
     void menuEditAboutToShow();
     
@@ -49,6 +51,9 @@ private slots:
 
     void documentNewChart();
     void createChart();
+
+    void menuChartAboutToShow();
+    void chartEditName();
 
     void toolsOptions();
     void toolsRegisterSoftware();
