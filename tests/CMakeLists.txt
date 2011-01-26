@@ -13,7 +13,6 @@ set(crochet_app_h
     ../src/license.h
     ../src/cell.h
     ../src/stitch.h
-    ../src/crochetdatamodel.h
     ../src/stitchset.h
     ../src/settings.h
     )

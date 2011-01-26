@@ -8,7 +8,6 @@ set(crochet_qobject_headers
     cell.h
     charttab.h
     crochetcell.h
-    crochetdatamodel.h
     mainwindow.h
     stitchset.h
     crochetscene.h
