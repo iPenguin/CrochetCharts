@@ -312,9 +312,7 @@ void MainWindow::createChart()
     
     ChartTab* tab = new ChartTab(ui->tabWidget);
 
-    for(int i = 0; i < rows; ++i) {
-        tab->scene()->createRow(i, cols);
-    }
+    tab->scene()->createChart(rows, cols);
 
     if(name.isEmpty())
         name = tr("Chart");
