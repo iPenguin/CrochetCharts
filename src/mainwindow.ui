@@ -436,6 +436,15 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>rows</tabstop>
+  <tabstop>stitches</tabstop>
+  <tabstop>defaultStitch</tabstop>
+  <tabstop>chartTitle</tabstop>
+  <tabstop>newDocBttnBox</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>stitchPalette</tabstop>
+ </tabstops>
  <resources>
   <include location="../crochet.qrc"/>
  </resources>
