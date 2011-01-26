@@ -4,7 +4,6 @@
 \*************************************************/
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "ui_newdocument.h"
 
 #include <QDialog>
 #include <QMessageBox>
@@ -34,7 +33,6 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setupMenus();
 
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
@@ -49,12 +47,22 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
         mFile->fileName = fileName;
         mFile->load();
     }
+
+    setupNewTabDialog();
+
+    setupMenus();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete StitchCollection::inst();
+}
+
+void MainWindow::setupNewTabDialog()
+{
+    connect(ui->newDocBttnBox, SIGNAL(accepted()), this, SLOT(createChart()));
+    connect(ui->newDocBttnBox, SIGNAL(rejected()), ui->newDocument, SLOT(hide()));   
 }
 
 void MainWindow::setupStitchPalette()
@@ -104,7 +112,7 @@ void MainWindow::setupMenus()
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out"));
 
     //Document Menu
-    connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
+    connect(ui->actionAddChart, SIGNAL(triggered()), ui->newDocument, SLOT(show()));
 
     //Chart Menu
 
@@ -208,9 +216,16 @@ void MainWindow::fileOpen()
     if(fileName.isEmpty() || fileName.isNull())
         return;
 
-    MainWindow *newWin = new MainWindow(0, fileName);
-    newWin->move(x() + 40, y() + 40);
-    newWin->show();    
+    if(ui->tabWidget->count() > 0) {
+        MainWindow *newWin = new MainWindow(0, fileName);
+        newWin->move(x() + 40, y() + 40);
+        newWin->ui->newDocument->hide();
+        newWin->show();
+    } else {
+        ui->newDocument->hide();
+        mFile->fileName = fileName;
+        mFile->load();
+    }
 }
 
 void MainWindow::fileSave()
@@ -288,27 +303,26 @@ void MainWindow::menuViewAboutToShow()
 
 void MainWindow::fileNew()
 {
-    MainWindow *newWin = new MainWindow;
-    newWin->move(x() + 40, y() + 40);
-    newWin->show();
-    newWin->createChart();
+
+    if(ui->tabWidget->count() > 0) {
+        MainWindow *newWin = new MainWindow;
+        newWin->move(x() + 40, y() + 40);
+        newWin->show();
+        newWin->ui->newDocument->show();
+    } else {
+        ui->newDocument->show();
+    }
+    
 }
 
 void MainWindow::createChart()
 {
-    QDialog *d = new QDialog(this);
-    newDoc = new Ui::NewDocument;
-    newDoc->setupUi(d);
-    connect(newDoc->buttonBox, SIGNAL(accepted()), d, SLOT(accept()));
-    connect(newDoc->buttonBox, SIGNAL(rejected()), d, SLOT(reject()));
+    ui->newDocument->hide();
     
-    if(d->exec() != QDialog::Accepted)
-        return;
-
-    int rows = newDoc->rows->text().toInt();
-    int cols = newDoc->stitches->text().toInt();
-    QString defStitch = newDoc->defaultStitch->currentText();
-    QString name = newDoc->chartTitle->text();
+    int rows = ui->rows->text().toInt();
+    int cols = ui->stitches->text().toInt();
+    QString defStitch = ui->defaultStitch->currentText();
+    QString name = ui->chartTitle->text();
     
     ChartTab* tab = new ChartTab(ui->tabWidget);
 
@@ -318,6 +332,7 @@ void MainWindow::createChart()
         name = tr("Chart");
     
     ui->tabWidget->addTab(tab, name);
+    ui->tabWidget->setCurrentWidget(tab);
 }
 
 void MainWindow::viewShowStitches()

@@ -14,7 +14,6 @@ class ChartTab;
 namespace Ui {
     class MainWindow;
     class StitchLibraryDialog;
-    class NewDocument;
 }
 
 class MainWindow : public QMainWindow
@@ -25,7 +24,7 @@ public:
     ~MainWindow();
 
     bool hasTab();
-    void createChart();
+    void setupNewTabDialog();
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -47,6 +46,7 @@ private slots:
     void viewZoomOut();
 
     void documentNewChart();
+    void createChart();
 
     void toolsOptions();
     void toolsRegisterSoftware();
@@ -61,10 +61,9 @@ private:
     void trialVersionMessage();
     
     ChartTab* curChartTab();
-    
+   
     Ui::MainWindow *ui;
     Ui::StitchLibraryDialog *sld;
-    Ui::NewDocument *newDoc;
 
     SaveFile *mFile;
 

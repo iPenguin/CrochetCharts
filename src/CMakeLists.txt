@@ -41,7 +41,6 @@ set(crochet_uis
     mainwindow.ui
     stitcheditor.ui
     stitchlibrary.ui
-    newdocument.ui
     settings.ui
     )
 
