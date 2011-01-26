@@ -6,7 +6,6 @@
 #include "teststitch.h"
 #include "teststitchset.h"
 #include "testcell.h"
-#include "testcrochetdatamodel.h"
 
 int main(int argc, char** argv) 
 {
@@ -35,12 +34,6 @@ int main(int argc, char** argv)
     retval +=QTest::qExec(test, argc, argv);
     delete test;
     test = 0;
-
-    test = new TestCrochetDataModel();
-    retval +=QTest::qExec(test, argc, argv);
-    delete test;
-    test = 0;
-
 
     return (retval ? 1 : 0);
 }

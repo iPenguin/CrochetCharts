@@ -19,7 +19,6 @@
 
 #include <QDataStream>
 #include "crochetscene.h"
-#include "crochetdatamodel.h"
 #include "stitchcollection.h"
 #include "stitchset.h"
 

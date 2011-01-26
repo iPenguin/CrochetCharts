@@ -15,15 +15,16 @@ set(crochet_app_h
     ../src/stitch.h
     ../src/stitchset.h
     ../src/settings.h
+    ../src/stitchcollection.h
     )
 
 set(crochet_app_cpp
     ../src/license.cpp
     ../src/cell.cpp
     ../src/stitch.cpp
-    ../src/crochetdatamodel.cpp
     ../src/stitchset.cpp
     ../src/settings.cpp
+    ../src/stitchcollection.cpp
     )
 
 set(crochet_app_resources
