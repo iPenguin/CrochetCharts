@@ -195,6 +195,8 @@
     <addaction name="actionZoomOut"/>
     <addaction name="separator"/>
     <addaction name="actionShowStitches"/>
+    <addaction name="actionShowPatternStitches"/>
+    <addaction name="actionShowPatternColors"/>
     <addaction name="separator"/>
     <addaction name="actionViewFullScreen"/>
    </widget>
@@ -250,20 +252,20 @@
    <addaction name="actionSave"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="stitchesUsedDock">
+  <widget class="QDockWidget" name="patternStitchesDock">
    <property name="windowTitle">
-    <string>Stitches Used</string>
+    <string>Pattern Stitches</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="stitchesUsedDockWidget">
+   <widget class="QWidget" name="patternStitchesDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <property name="margin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QListWidget" name="stitchesUsed">
+      <widget class="QListWidget" name="patternStitches">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -305,20 +307,20 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="colorsUsedDock">
+  <widget class="QDockWidget" name="patternColorsDock">
    <property name="windowTitle">
-    <string>Colors Used</string>
+    <string>Pattern Colors</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="colorUsedDockWidget">
+   <widget class="QWidget" name="patternColorsDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <property name="margin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QListWidget" name="colorsUsed">
+      <widget class="QListWidget" name="patternColors">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -348,7 +350,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="stitchPaletteDock">
+  <widget class="QDockWidget" name="allStitchesDock">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
      <horstretch>0</horstretch>
@@ -356,18 +358,18 @@
     </sizepolicy>
    </property>
    <property name="windowTitle">
-    <string>Stitches</string>
+    <string>All Stitches</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="stitchPaletteDockWidget">
+   <widget class="QWidget" name="allStitchesDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
      <property name="margin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QTreeView" name="stitchPalette">
+      <widget class="QTreeView" name="allStitches">
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -407,6 +409,9 @@
    <property name="text">
     <string>&amp;New</string>
    </property>
+   <property name="toolTip">
+    <string>Create a new pattern</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
    </property>
@@ -414,6 +419,9 @@
   <action name="actionOpen">
    <property name="text">
     <string>&amp;Open...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open an existing pattern</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -423,6 +431,9 @@
    <property name="text">
     <string>Save</string>
    </property>
+   <property name="toolTip">
+    <string>Save the current pattern</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
    </property>
@@ -430,6 +441,9 @@
   <action name="actionSaveAs">
    <property name="text">
     <string>Save &amp;As</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the current pattern under another name</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
@@ -439,6 +453,9 @@
    <property name="text">
     <string>E&amp;xport...</string>
    </property>
+   <property name="toolTip">
+    <string>Export parts of the pattern to other file types</string>
+   </property>
    <property name="shortcut">
     <string/>
    </property>
@@ -447,6 +464,9 @@
    <property name="text">
     <string>&amp;Close</string>
    </property>
+   <property name="toolTip">
+    <string>Close the current pattern</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
    </property>
@@ -454,6 +474,9 @@
   <action name="actionQuit">
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+   <property name="toolTip">
+    <string>Quit and close all open patterns</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -497,6 +520,9 @@
    <property name="text">
     <string>Add Chart</string>
    </property>
+   <property name="toolTip">
+    <string>Add a chart to the current pattern</string>
+   </property>
   </action>
   <action name="actionAddNotes">
    <property name="text">
@@ -529,7 +555,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Stitches</string>
+    <string>Show All Stitches</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the complete list of stitches</string>
    </property>
   </action>
   <action name="actionRegisterSoftware">
@@ -549,6 +578,31 @@
    <property name="text">
     <string>Full Screen Mode</string>
    </property>
+   <property name="toolTip">
+    <string>Make the application use the entire screen</string>
+   </property>
+  </action>
+  <action name="actionShowPatternStitches">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Pattern Stitches</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the stitches used in this pattern</string>
+   </property>
+  </action>
+  <action name="actionShowPatternColors">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Pattern Colors</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the colors used in this pattern</string>
+   </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
@@ -559,7 +613,7 @@
   <tabstop>chartTitle</tabstop>
   <tabstop>newDocBttnBox</tabstop>
   <tabstop>tabWidget</tabstop>
-  <tabstop>stitchPalette</tabstop>
+  <tabstop>allStitches</tabstop>
  </tabstops>
  <resources>
   <include location="../crochet.qrc"/>

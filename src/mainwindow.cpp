@@ -68,11 +68,11 @@ void MainWindow::setupNewTabDialog()
 void MainWindow::setupStitchPalette()
 {
     StitchSet *set = StitchCollection::inst()->masterStitchSet();
-    ui->stitchPalette->setModel(set);
+    ui->allStitches->setModel(set);
 
     //TODO: setup a proxywidget that can hold header sections?
-    //StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->stitchPalette);
-    //ui->stitchPalette->setItemDelegate(delegate);
+    //StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->allStitches);
+    //ui->allStitches->setItemDelegate(delegate);
 }
 
 void MainWindow::setupMenus()
@@ -103,6 +103,9 @@ void MainWindow::setupMenus()
     //View Menu
     connect(ui->menuView, SIGNAL(aboutToShow()), this, SLOT(menuViewAboutToShow()));
     connect(ui->actionShowStitches, SIGNAL(triggered()), this, SLOT(viewShowStitches()));
+    connect(ui->actionShowPatternColors, SIGNAL(triggered()), this, SLOT(viewShowPatternColors()));
+    connect(ui->actionShowPatternStitches, SIGNAL(triggered()), this, SLOT(viewShowPatternStitches()));
+    
     connect(ui->actionViewFullScreen, SIGNAL(triggered(bool)), this, SLOT(viewFullScreen(bool)));
 
     connect(ui->actionZoomIn, SIGNAL(triggered(bool)), this, SLOT(viewZoomIn()));
@@ -293,7 +296,10 @@ void MainWindow::menuEditAboutToShow()
 
 void MainWindow::menuViewAboutToShow()
 {
-    ui->actionShowStitches->setChecked(ui->stitchPaletteDock->isVisible());
+    ui->actionShowStitches->setChecked(ui->allStitchesDock->isVisible());
+    ui->actionShowPatternColors->setChecked(ui->patternColorsDock->isVisible());
+    ui->actionShowPatternStitches->setChecked(ui->patternStitchesDock->isVisible());
+    
     ui->actionViewFullScreen->setChecked(isFullScreen());
 
     bool state = hasTab();
@@ -337,7 +343,17 @@ void MainWindow::createChart()
 
 void MainWindow::viewShowStitches()
 {
-    ui->stitchPaletteDock->setVisible(ui->actionShowStitches->isChecked());
+    ui->allStitchesDock->setVisible(ui->actionShowStitches->isChecked());
+}
+
+void MainWindow::viewShowPatternColors()
+{
+    ui->patternColorsDock->setVisible(ui->actionShowPatternColors->isChecked());
+}
+
+void MainWindow::viewShowPatternStitches()
+{
+    ui->patternStitchesDock->setVisible(ui->actionShowPatternStitches->isChecked());
 }
 
 void MainWindow::toolsRegisterSoftware()

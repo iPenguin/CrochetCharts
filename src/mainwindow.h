@@ -41,6 +41,8 @@ private slots:
     
     void menuViewAboutToShow();
     void viewShowStitches();
+    void viewShowPatternColors();
+    void viewShowPatternStitches();
     void viewFullScreen(bool state);
     void viewZoomIn();
     void viewZoomOut();
