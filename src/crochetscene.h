@@ -38,6 +38,7 @@ signals:
     void rowsChanged(int startRow);
     void rowAdded(int newRow);
     void chartCreated(int rows, int cols);
+    void stitchChanged(Stitch* oldSt, Stitch* newSt);
     
 protected:
 /*

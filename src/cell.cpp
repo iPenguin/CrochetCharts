@@ -11,7 +11,7 @@
 #include "stitchset.h"
 
 Cell::Cell(QGraphicsItem *parent) :
-    QGraphicsSvgItem(parent)
+    QGraphicsSvgItem(parent), mStitch(0)
 {
 //    this->setCacheMode(QGraphicsItem::ItemCoordinateCache, QSize(32,64));
 
@@ -36,8 +36,10 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 void Cell::setStitch(Stitch* s)
 {
     if(mStitch != s) {
+        Stitch* old = mStitch;
         mStitch = s;
         setSharedRenderer(s->renderSvg());
+        emit stitchChanged(old, s);
     }
 }
 

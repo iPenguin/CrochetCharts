@@ -8,6 +8,7 @@
 #include <QString>
 #include <QRegExp>
 #include "version.h"
+#include <qobject.h>
 
 namespace AppInfo {
     const QString appName = "Crochet";
@@ -27,6 +28,8 @@ namespace AppInfo {
     const QString liveLicensePage = "http://stitchworkssoftware.com/license/license.php"
                                 "?sws_sn=%1&sws_email=%2&sws_fname=%3&sws_lname=%4";
 
+    const QString demoString = QObject::tr("Stitch Works Software - Demo Version  -  ");
+    
     const quint32 magicNumber = 0x95973530;
 }
 

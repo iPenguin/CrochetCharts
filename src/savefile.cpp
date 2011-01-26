@@ -168,6 +168,8 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
     int row, column;
     qreal x, y, rotation;
     double angle;
+
+    QObject::connect(c, SIGNAL(stitchChanged(Stitch*,Stitch*)), tab->scene(), SIGNAL(stitchChanged(Stitch*,Stitch*)));
     
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
@@ -251,3 +253,4 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
 
     return true;
 }
+

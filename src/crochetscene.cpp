@@ -17,6 +17,7 @@
 #include "settings.h"
 #include "stitchcollection.h"
 #include "stitchset.h"
+#include "appinfo.h"
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent)
@@ -34,7 +35,7 @@ void CrochetScene::initDemoBackground()
         double fontSize = 32.0;
         QFont demoFont = QFont();
         demoFont.setPointSize(fontSize);
-        QString demoString = "Stitch Works Software - Demo Version  -  ";
+        QString demoString = AppInfo::demoString;
 
         QFontMetrics fm = QFontMetrics(demoFont);
         double stringWidth = fm.width(demoString);
@@ -102,7 +103,8 @@ void CrochetScene::appendCell(int row, Cell* c)
     }
     addItem(c);
     mGrid[row].append(c);
-    //TODO: abstract out the position setting to a seperate function: void setPos(Cell *c);
+    connect(c, SIGNAL(stitchChanged(Stitch*,Stitch*)), this, SIGNAL(stitchChanged(Stitch*,Stitch*)));
+    //TODO: abstract out setting the position to a seperate function: void setCellPos(Cell *c);
     int i = mGrid[row].count() -1;
     c->setPos(i*64, row*64);
     c->setToolTip(QString::number(i+1));
@@ -139,6 +141,7 @@ void CrochetScene::createRow(int row, int columns)
     QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
         c = new CrochetCell();
+        connect(c, SIGNAL(stitchChanged(Stitch*,Stitch*)), this, SIGNAL(stitchChanged(Stitch*,Stitch*)));
         c->setStitch(s);
         addItem(c);
         modelRow.append(c);

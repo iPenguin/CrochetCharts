@@ -36,7 +36,8 @@ public:
     QString name();
     
 signals:
-
+    void stitchChanged(Stitch* oldSt, Stitch* newSt);
+    
 public slots:
 
 private:
