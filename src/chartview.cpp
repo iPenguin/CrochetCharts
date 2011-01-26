@@ -38,8 +38,10 @@ void ChartView::scrollContentsBy(int dx, int dy)
 
 void ChartView::wheelEvent(QWheelEvent *event)
 {
-    zoom(event->delta());
-    QGraphicsView::wheelEvent(event);
+    if(event->modifiers() && Qt::CTRL)
+        zoom(event->delta());
+    else
+        QGraphicsView::wheelEvent(event);
 }
 
 void ChartView::zoom(int mouseDelta)
