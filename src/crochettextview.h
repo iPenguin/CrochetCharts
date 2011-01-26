@@ -10,6 +10,7 @@
 
 #include <QPlainTextEdit>
 #include <QCompleter>
+#include <QWidget>
 
 class CrochetTextView : public QPlainTextEdit
 {
@@ -35,6 +36,7 @@ private slots:
     void updateRow(int row);
     void updateScene(int pos, int charsRemoved, int charsAdded);
     void addRow(int newRow);
+    void createChart(int rows, int cols);
     
 private:
     QString textUnderCursor() const;
@@ -43,5 +45,46 @@ private:
     CrochetHighlighter *mHighlighter;
     CrochetScene* mScene;
     QCompleter* mCompleter;
+
+/**
+ * Line number area.
+ */
+public:
+   
+    void lineNumberAreaPaintEvent(QPaintEvent *event);
+    int lineNumberAreaWidth();
+    
+protected:
+    void resizeEvent(QResizeEvent *event);
+    
+private slots:
+    void updateLineNumberAreaWidth(int newBlockCount);
+    void highlightCurrentLine();
+    void updateLineNumberArea(const QRect &, int);
+    void setupLineNumberArea();
+private:
+    QWidget *lineNumberArea;
+    QString lineNumberText;
 };
+
+class LineNumberArea : public QWidget
+{
+public:
+    LineNumberArea(CrochetTextView *view) : QWidget(view) {
+        textView = view;
+    }
+    
+    QSize sizeHint() const {
+        return QSize(textView->lineNumberAreaWidth(), 0);
+    }
+    
+protected:
+    void paintEvent(QPaintEvent *event) {
+        textView->lineNumberAreaPaintEvent(event);
+    }
+    
+private:
+    CrochetTextView *textView;
+};
+
 #endif //CROCHETTEXTVIEW_H
