@@ -73,7 +73,8 @@ Cell* CrochetScene::cell(int row, int column)
 void CrochetScene::removeCell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
-    Q_ASSERT(mGrid[row].count() > column);
+    if(mGrid[row].count() <= column)
+        return;
 
     delete mGrid[row][column];
     mGrid[row].removeAt(column);
@@ -102,12 +103,11 @@ void CrochetScene::appendCell(int row, Cell* c)
     addItem(c);
     mGrid[row].append(c);
     //TODO: abstract out the position setting to a seperate function: void setPos(Cell *c);
-    int i = mGrid[row].count();
+    int i = mGrid[row].count() -1;
     c->setPos(i*64, row*64);
     c->setToolTip(QString::number(i+1));
     c->rotate(90);
     c->setObjectName("Cell Object: " + QString::number(i + 1));
-    
     //emit rowChanged(row);
 }
 
@@ -118,6 +118,16 @@ void CrochetScene::insertCell(int row, int colBefore, Cell *c)
     addItem(c);
     mGrid[row].insert(colBefore, c);
     emit rowChanged(row);
+}
+
+void CrochetScene::createChart(int rows, int cols)
+{
+    for(int i = 0; i < rows; ++i) {
+        blockSignals(true);
+        createRow(i, cols);
+        blockSignals(false);
+    }
+    emit chartCreated(rows, cols);
 }
 
 void CrochetScene::createRow(int row, int columns)

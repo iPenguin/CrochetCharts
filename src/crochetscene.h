@@ -31,11 +31,13 @@ public:
     Cell* cell(int row, int column);
 
     void removeCell(int row, int column);
+    void createChart(int rows, int cols);
     
 signals:
     void rowChanged(int row);
     void rowsChanged(int startRow);
     void rowAdded(int newRow);
+    void chartCreated(int rows, int cols);
     
 protected:
 /*
