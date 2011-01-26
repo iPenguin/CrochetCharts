@@ -50,6 +50,9 @@ void CrochetTextView::updateRow(int row)
 
 void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
 {
+    Q_UNUSED(charsRemoved);
+    Q_UNUSED(charsAdded);
+    
     QTextCursor curs = cursorAtBlockStart(pos);
 
     int row = curs.blockNumber();
@@ -104,11 +107,8 @@ void CrochetTextView::createChart(int rows, int cols)
     curs.movePosition(QTextCursor::Start);
     for(int i = 0; i < rows; ++i) {
         curs.movePosition(QTextCursor::NextBlock);
-
-    
+   
         QString rowText;
-
-        int cols = mScene->columnCount(i);
 
         QString curStitch, previousStitch, nextStitch;
         int count = 1;
