@@ -57,6 +57,7 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
 
     int row = curs.blockNumber();
     //TODO: add repeat parsing (ie "\[.*\] 3 times" and "\*.*; repeat from \*" )
+    //TODO: add color parsing (ie ch3 in C1) save for version 1.x...
     QStringList stitches, tokens, stitchList;
     stitchList = StitchCollection::inst()->stitchList();
     tokens = curs.block().text().split(",");
@@ -329,14 +330,10 @@ int CrochetTextView::lineNumberAreaWidth()
     return space;
 }
 
-
-
 void CrochetTextView::updateLineNumberAreaWidth(int /* newBlockCount */)
 {
     setViewportMargins(lineNumberAreaWidth(), 0, 0, 0);
 }
-
-
 
 void CrochetTextView::updateLineNumberArea(const QRect &rect, int dy)
 {
@@ -349,8 +346,6 @@ void CrochetTextView::updateLineNumberArea(const QRect &rect, int dy)
         updateLineNumberAreaWidth(0);
 }
 
-
-
 void CrochetTextView::resizeEvent(QResizeEvent *e)
 {
     QPlainTextEdit::resizeEvent(e);
@@ -358,8 +353,6 @@ void CrochetTextView::resizeEvent(QResizeEvent *e)
     QRect cr = contentsRect();
     lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
-
-
 
 void CrochetTextView::highlightCurrentLine()
 {
@@ -379,8 +372,6 @@ void CrochetTextView::highlightCurrentLine()
     
     setExtraSelections(extraSelections);
 }
-
-
 
 void CrochetTextView::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
@@ -407,4 +398,3 @@ void CrochetTextView::lineNumberAreaPaintEvent(QPaintEvent *event)
         ++blockNumber;
     }
 }
-
