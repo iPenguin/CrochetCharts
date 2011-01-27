@@ -64,7 +64,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::checkUpdates()
 {
+    //TODO: check for updates in a seperate thread.
     mUpdater = new Updater(this);
+    // append the updater to the centralWidget to keep it out of the way of the menus.
+    ui->centralWidget->layout()->addWidget(mUpdater); 
         
     bool checkForUpdates = Settings::inst()->value("checkForUpdates", QVariant(true)).toBool();
     if(checkForUpdates)
