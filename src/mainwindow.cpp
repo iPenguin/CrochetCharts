@@ -39,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
+    checkUpdates();
     
     setupStitchPalette();
     readSettings();
@@ -58,6 +60,15 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete StitchCollection::inst();
+}
+
+void MainWindow::checkUpdates()
+{
+    mUpdater = new Updater(this);
+        
+    bool checkForUpdates = Settings::inst()->value("checkForUpdates", QVariant(true)).toBool();
+    if(checkForUpdates)
+        mUpdater->checkForUpdates(true); //check at startup is always silent.
 }
 
 void MainWindow::setupNewTabDialog()
@@ -136,6 +147,7 @@ void MainWindow::setupMenus()
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
     connect(ui->actionRegisterSoftware, SIGNAL(triggered()), this, SLOT(toolsRegisterSoftware()));
     connect(ui->actionStitchLibrary, SIGNAL(triggered()), this, SLOT(toolsStitchLibrary()));
+    connect(ui->actionCheckForUpdates, SIGNAL(triggered()), this, SLOT(toolsCheckForUpdates()));
     
     if(!Settings::inst()->isDemoVersion())
         ui->actionRegisterSoftware->setVisible(false);
@@ -409,6 +421,12 @@ void MainWindow::toolsRegisterSoftware()
                 return;
         }
     }
+}
+
+void MainWindow::toolsCheckForUpdates()
+{
+    bool silent = false;
+    mUpdater->checkForUpdates(silent);
 }
 
 void MainWindow::toolsStitchLibrary()

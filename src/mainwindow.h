@@ -8,6 +8,7 @@
 #include <QMainWindow>
 
 #include "savefile.h"
+#include "updater.h"
 
 class ChartTab;
 
@@ -62,6 +63,7 @@ private slots:
     void toolsOptions();
     void toolsRegisterSoftware();
     void toolsStitchLibrary();
+    void toolsCheckForUpdates();
 
     void helpAbout();
     
@@ -70,6 +72,8 @@ private:
     void setupStitchPalette();
     void readSettings();
     void trialVersionMessage();
+
+    void checkUpdates();
     
     ChartTab* curChartTab();
    
@@ -77,6 +81,7 @@ private:
     Ui::StitchLibraryDialog *sld;
 
     SaveFile *mFile;
+    Updater *mUpdater;
 
 };
 

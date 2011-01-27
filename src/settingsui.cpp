@@ -24,11 +24,15 @@ SettingsUi::SettingsUi() :
     connect(ui->folderSelector, SIGNAL(clicked()), this, SLOT(selectFolder()));
 
     //TODO: load settings from disk:
+    //TODO: use auto completer to help fill in this field.
 
     QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
 
     ui->defaultFileLocation->setText(
                 Settings::inst()->value("fileLocation", QVariant(userDocs)).toString());
+
+    ui->checkForUpdates->setChecked(
+                Settings::inst()->value("checkForUpdates", QVariant(true)).toBool());
 
 }
 
@@ -48,6 +52,8 @@ int SettingsUi::exec()
         return retValue;
 
     Settings::inst()->setValue("fileLocation", QVariant(ui->defaultFileLocation->text()));
+
+    Settings::inst()->setValue("checkForUpdates", QVariant(ui->checkForUpdates->isChecked()));
 
     return retValue;
 }

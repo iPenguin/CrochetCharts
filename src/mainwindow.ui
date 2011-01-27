@@ -221,6 +221,7 @@
     </property>
     <addaction name="actionStitchLibrary"/>
     <addaction name="actionRegisterSoftware"/>
+    <addaction name="actionCheckForUpdates"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -623,6 +624,11 @@
   <action name="actionPrintPreview">
    <property name="text">
     <string>Print Preview...</string>
+   </property>
+  </action>
+  <action name="actionCheckForUpdates">
+   <property name="text">
+    <string>Check for Updates</string>
    </property>
   </action>
  </widget>
