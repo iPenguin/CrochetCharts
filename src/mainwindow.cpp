@@ -86,7 +86,7 @@ void MainWindow::setupMenus()
     connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
 
     connect(ui->actionPrint, SIGNAL(triggered()), this, SLOT(filePrint()));
-    connect(ui->actionPrintPreview, SIGNAL(triggered()), this, SLOT(filePrintPreivew()));
+    connect(ui->actionPrintPreview, SIGNAL(triggered()), this, SLOT(filePrintPreview()));
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
 
     connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(close()));
@@ -97,6 +97,11 @@ void MainWindow::setupMenus()
     ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
     ui->actionSave->setIcon(QIcon::fromTheme("document-save"));
     ui->actionSaveAs->setIcon(QIcon::fromTheme("document-save-as"));
+
+    ui->actionPrint->setIcon(QIcon::fromTheme("document-print"));
+    ui->actionPrintPreview->setIcon(QIcon::fromTheme("file-print"));
+    ui->actionExport->setIcon(QIcon::fromTheme("export-pdf"));
+    
     ui->actionClose->setIcon(QIcon::fromTheme("document-close"));
 
     //Edit Menu
@@ -349,14 +354,15 @@ void MainWindow::createChart()
     QString name = ui->chartTitle->text();
     
     ChartTab* tab = new ChartTab(ui->tabWidget);
-
-    tab->scene()->createChart(rows, cols);
+    connect(tab, SIGNAL(chartStitchesChanged()), this, SLOT(updatePatternStitches()));
 
     if(name.isEmpty())
         name = tr("Chart");
     
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
+
+    tab->scene()->createChart(rows, cols);
 }
 
 void MainWindow::viewShowStitches()
@@ -465,4 +471,28 @@ bool MainWindow::hasTab()
         return false;
 
     return true;
+}
+
+void MainWindow::updatePatternStitches()
+{
+    //TODO: foreach tab merge the maps and the totals...
+    ChartTab* tab = curChartTab();
+    
+    if(ui->tabWidget->count() <= 0)
+        return;
+
+    //FIXME: this whole thing needs to be worked out, but the very least is make this use a shared icon.
+    ui->patternStitches->clear();
+    QMapIterator<QString, int> i(tab->chartStitches());
+    while (i.hasNext()) {
+        i.next();
+        QList<QListWidgetItem*> items = ui->patternStitches->findItems(i.key(), Qt::MatchExactly);
+        if(items.count() == 0) {
+            Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(i.key());
+            //FIXME: don't hard code the files!!
+            QIcon icon = QIcon("/home/brian/crochet.git/" + s->file());
+            QListWidgetItem *item = new QListWidgetItem(icon, i.key(), ui->patternStitches);
+            ui->patternStitches->addItem(item);
+        }
+    }
 }

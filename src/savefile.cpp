@@ -168,7 +168,7 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
     qreal x, y, rotation;
     double angle;
 
-    QObject::connect(c, SIGNAL(stitchChanged(Stitch*,Stitch*)), tab->scene(), SIGNAL(stitchChanged(Stitch*,Stitch*)));
+    QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     
     QDomNode n = element->firstChild();
     while(!n.isNull()) {

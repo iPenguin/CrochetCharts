@@ -35,11 +35,13 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Cell::setStitch(Stitch* s)
 {
+    QString old;
     if(mStitch != s) {
-        Stitch* old = mStitch;
+        if(mStitch)
+            old = mStitch->name();
         mStitch = s;
         setSharedRenderer(s->renderSvg());
-        emit stitchChanged(old, s);
+        emit stitchChanged(old, s->name());
     }
 }
 

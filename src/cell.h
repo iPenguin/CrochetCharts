@@ -36,7 +36,7 @@ public:
     QString name();
     
 signals:
-    void stitchChanged(Stitch* oldSt, Stitch* newSt);
+    void stitchChanged(QString oldSt, QString newSt);
     
 public slots:
 

@@ -296,7 +296,7 @@
        <property name="gridSize">
         <size>
          <width>32</width>
-         <height>0</height>
+         <height>32</height>
         </size>
        </property>
        <property name="viewMode">
@@ -342,7 +342,7 @@
        <property name="gridSize">
         <size>
          <width>32</width>
-         <height>0</height>
+         <height>32</height>
         </size>
        </property>
        <property name="viewMode">

@@ -29,6 +29,8 @@ ChartTab::ChartTab(QWidget *parent) :
     
     mView = new ChartView(this);
     mScene = new CrochetScene(this);
+    connect(mScene, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchChanged(QString,QString)));
+    
     mView->setScene(mScene);
     mTextView = new CrochetTextView(this, mScene);
     
@@ -89,6 +91,21 @@ void ChartTab::saveImage(QString fileName, QSize size, int resolution)
 
     img.save(fileName, "", -1);
 
+}
+
+void ChartTab::stitchChanged(QString oldSt, QString newSt)
+{
+    if(!oldSt.isEmpty()) {
+        mStitchCount[oldSt]--;
+        if(mStitchCount[oldSt] == 0)
+            mStitchCount.remove(oldSt);
+    }
+    
+    if(!mStitchCount.contains(newSt))
+        mStitchCount.insert(newSt, 0);
+    mStitchCount[newSt]++;
+
+    emit chartStitchesChanged();
 }
 
 void ChartTab::zoomIn()

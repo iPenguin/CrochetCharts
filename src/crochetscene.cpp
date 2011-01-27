@@ -103,7 +103,7 @@ void CrochetScene::appendCell(int row, Cell* c)
     }
     addItem(c);
     mGrid[row].append(c);
-    connect(c, SIGNAL(stitchChanged(Stitch*,Stitch*)), this, SIGNAL(stitchChanged(Stitch*,Stitch*)));
+    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     //TODO: abstract out setting the position to a seperate function: void setCellPos(Cell *c);
     int i = mGrid[row].count() -1;
     c->setPos(i*64, row*64);
@@ -124,11 +124,9 @@ void CrochetScene::insertCell(int row, int colBefore, Cell *c)
 
 void CrochetScene::createChart(int rows, int cols)
 {
-    for(int i = 0; i < rows; ++i) {
-        blockSignals(true);
+    for(int i = 0; i < rows; ++i)
         createRow(i, cols);
-        blockSignals(false);
-    }
+    
     emit chartCreated(rows, cols);
 }
 
@@ -141,7 +139,7 @@ void CrochetScene::createRow(int row, int columns)
     QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
         c = new CrochetCell();
-        connect(c, SIGNAL(stitchChanged(Stitch*,Stitch*)), this, SIGNAL(stitchChanged(Stitch*,Stitch*)));
+        connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
         c->setStitch(s);
         addItem(c);
         modelRow.append(c);

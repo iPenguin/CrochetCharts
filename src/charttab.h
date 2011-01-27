@@ -6,6 +6,7 @@
 #define CHARTTAB_H
 
 #include <QWidget>
+#include <QMap>
 
 #include "chartview.h"
 
@@ -27,11 +28,16 @@ public:
     void saveSvg(QString fileName);
     void saveImage(QString fileName, QSize size, int resolution = 96);
 
+    QMap<QString, int> chartStitches() const { return mStitchCount; }
+    
 signals:
-
+    void chartStitchesChanged();
+    
 public slots:
     void zoomIn();
     void zoomOut();
+
+    void stitchChanged(QString oldSt, QString newSt);
 
     CrochetScene* scene() { return mScene; }
 
@@ -40,6 +46,8 @@ private:
     CrochetScene *mScene;
     CrochetTextView *mTextView;
 
+    QMap<QString, int> mStitchCount;
+    
     QString mName;
 };
 

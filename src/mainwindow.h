@@ -29,6 +29,10 @@ public:
 protected:
     void closeEvent(QCloseEvent *event);
 
+protected slots:
+    void updatePatternStitches();
+    
+//menu functions/slots:
 private slots:
     void menuFileAboutToShow();
     void fileNew();
