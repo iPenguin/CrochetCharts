@@ -21,3 +21,16 @@ CREATE TABLE `stitchw1_licenses`.`licenses` (
 
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM;
+
+
+CREATE TABLE `stitchw1_licenses`.`versions` (
+  `id` BIGINT(20)  NOT NULL AUTO_INCREMENT,
+  `timestamp` TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `software` VARCHAR(50)  NOT NULL,
+  `major` VARCHAR(2)  NOT NULL,
+  `minor` VARCHAR(2)  NOT NULL,
+  `patch` VARCHAR(4)  NOT NULL,
+  `release_url` TEXT  NOT NULL,
+  PRIMARY KEY (`id`)
+)
+ENGINE = MyISAM;

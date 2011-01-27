@@ -1,6 +1,6 @@
 <?php
 /*
-    (c) Stitch Works Software 2010
+    Copyright (c) 2010 Stitch Works Software
     Brian C. Milco <brian@stitchworkssoftware.com>
 
 */
