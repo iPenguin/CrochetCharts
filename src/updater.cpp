@@ -144,7 +144,8 @@ void Updater::cancelDownload()
 {
     httpRequestAborted = true;
     //FIXME:crash on cancel.
-    //instReply->abort();
+    //TODO: add some error handeling so it doesn't just sit there when it's not working.
+    instReply->abort();
 }
 
 void Updater::updateDataTransferProgress(qint64 readBytes, qint64 totalBytes)
@@ -207,6 +208,6 @@ void Updater::launchInstaller()
 #elif defined(Q_OS_DARWIN)
     program = installer->fileName(); //TODO: make sure this launches the dmg file correctly.
 #endif
-    
+    //TODO: startDetached?
     installProc->start(program);
 }
