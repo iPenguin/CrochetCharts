@@ -29,9 +29,6 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event);
-
-protected slots:
-    void updatePatternStitches();
     
 //menu functions/slots:
 private slots:
@@ -82,6 +79,9 @@ private:
 
     SaveFile *mFile;
     Updater *mUpdater;
+
+    QMap<QString, int> mPatternStitches;
+    QMap<QString, int> mPatternColors;
 
 };
 

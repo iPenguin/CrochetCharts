@@ -369,8 +369,9 @@ void MainWindow::createChart()
     QString name = ui->chartTitle->text();
     
     ChartTab* tab = new ChartTab(ui->tabWidget);
-    connect(tab, SIGNAL(chartStitchesChanged()), this, SLOT(updatePatternStitches()));
-
+    tab->setPatternStitches(&mPatternStitches);
+    tab->setPatternColors(&mPatternColors);
+    
     if(name.isEmpty())
         name = tr("Chart");
     
@@ -460,7 +461,6 @@ void MainWindow::trialVersionMessage()
     msgbox.setIcon(QMessageBox::Information);
 
     msgbox.exec();
-
 }
 
 void MainWindow::viewZoomIn()
@@ -493,7 +493,7 @@ bool MainWindow::hasTab()
 
     return true;
 }
-
+/*
 void MainWindow::updatePatternStitches()
 {
     //TODO: foreach tab merge the maps and the totals...
@@ -517,3 +517,4 @@ void MainWindow::updatePatternStitches()
         }
     }
 }
+*/

@@ -28,7 +28,8 @@ public:
     void saveSvg(QString fileName);
     void saveImage(QString fileName, QSize size, int resolution = 96);
 
-    QMap<QString, int> chartStitches() const { return mStitchCount; }
+    void setPatternStitches(QMap<QString, int> *stitches) { mPatternStitches = stitches; }
+    void setPatternColors(QMap<QString, int> *colors) { mPatternColors = colors; }
     
 signals:
     void chartStitchesChanged();
@@ -46,7 +47,8 @@ private:
     CrochetScene *mScene;
     CrochetTextView *mTextView;
 
-    QMap<QString, int> mStitchCount;
+    QMap<QString, int> *mPatternStitches;
+    QMap<QString, int> *mPatternColors;
     
     QString mName;
 };
