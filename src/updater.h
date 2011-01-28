@@ -19,12 +19,12 @@ public:
     Updater(QWidget* parent = 0);
     ~Updater();
 
-    void checkForUpdates(bool silent);
+    void checkForUpdates(bool silent = false);
 private:
-
+    bool mSilent;
 
 public:
-    void downloadFile(QUrl url);
+    void downloadInstaller(QUrl url);
     
 private slots:
     void startRequest();
@@ -35,7 +35,9 @@ private:
     QUrl mUrl;
     QNetworkAccessManager qnam;
     QNetworkReply *reply;
-    QFile *file;
+
+    QByteArray mData;
+    
     int httpGetId;
     bool httpRequestAborted;
 

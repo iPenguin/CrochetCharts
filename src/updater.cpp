@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QPushButton>
 
 #include "appinfo.h"
 
@@ -19,10 +20,23 @@
 #include "settings.h"
 
 Updater::Updater(QWidget* parent)
-    : QWidget(parent)
+    : QWidget(parent), mSilent(false)
 {
     QString url = Settings::inst()->value("updatePage", QVariant(AppInfo::liveUpdatePage)).toString();
-    mUrl = QUrl(url);
+
+    QString os;
+#if defined(Q_OS_WIN32)
+    os = "windows";
+#elif defined(Q_OS_LINUX)
+    os = "linux";
+#elif defined(Q_OS_DARWIN)
+    os = "osx";
+#endif
+
+    QString sn = Settings::inst()->value("serialNumber", QVariant("")).toString();
+    //software, version, os, serial number
+    mUrl = QUrl(QString(url).arg(AppInfo::appName.toLower()).arg(AppInfo::appVersion).arg(os).arg(sn));
+
 }
 
 Updater::~Updater()
@@ -31,15 +45,13 @@ Updater::~Updater()
 
 void Updater::checkForUpdates(bool silent)
 {
-qDebug() << "checkforupdates start";
-    
-    if(!silent)
-        QMessageBox::information(this, tr("Check for Updates"),
-                                 tr("You are currently using the most recent version of this software."),
-                                QMessageBox::Ok);
+    mSilent = silent;
+       
+    // schedule the request
+    httpRequestAborted = false;
+    startRequest();
     
 }
-
 
 void Updater::startRequest()
 {
@@ -48,63 +60,51 @@ void Updater::startRequest()
     connect(reply, SIGNAL(readyRead()), this, SLOT(httpReadyRead()));
 }
 
-void Updater::downloadFile(QUrl url)
-{
-    mUrl = url;
-    
-    QString fName = "swsc_temp.txt";
-    QString path = QDesktopServices::storageLocation(QDesktopServices::TempLocation);
-    file = new QFile(path + "/" + fName);
-    
-    if (!file->open(QIODevice::WriteOnly)){
-        QMessageBox::information(this, tr("HTTP"), tr("Unable to save the file %1: %2.")
-        .arg(file->fileName()).arg(file->errorString()));
-        delete file;
-        file = 0;
-        return;
-    }
-    
-    // schedule the request
-    httpRequestAborted = false;
-    startRequest();
-}
-
 void Updater::httpFinished()
 {
     if (httpRequestAborted) {
-        if (file) {
-            file->close();
-            file->remove();
-            delete file;
-            file = 0;
-        }
         reply->deleteLater();
         return;
     }
-    if(file->isOpen()) {
-        file->flush();
-        file->close();
-    }
-    if(!file->open(QIODevice::ReadOnly)) {
-        qWarning() << "Couldn't open the file for reading: " << file->fileName();
-        return;
-    }
-    QString data = file->readAll();
-    
-    file->flush();
-    file->close();
-  //TODO: deal with the data.  
+
+    QString data =QString(mData);
+        
     if (reply->error()) {
-        file->remove();
+        
         qWarning() << "add a nice dialog box here to explain what happened.";
     } else {
-//        emit licenseCompleted(data, false);
+
+        QStringList urls = data.split("::", QString::SkipEmptyParts);
+        if(urls.count() == 2) {
+            QMessageBox msgbox(this);
+            msgbox.setIcon(QMessageBox::Information);
+            msgbox.setText(tr("There is a new version of %1.").arg(AppInfo::appName));
+            msgbox.setInformativeText(tr("Would you like to download the new version?"));
+            /*QPushButton *downloadNow =*/ msgbox.addButton(tr("Download the new version"), QMessageBox::ActionRole);
+            QPushButton *seeNotes    = msgbox.addButton(tr("See what's changed"), QMessageBox::HelpRole);
+            QPushButton *remindLater = msgbox.addButton(tr("Remind me later"), QMessageBox::RejectRole);
+
+            msgbox.exec();
+
+            if(msgbox.clickedButton() == remindLater)
+                return;
+            if(msgbox.clickedButton() == seeNotes) {
+                QDesktopServices::openUrl(QUrl(urls.last()));
+                return;
+            }
+                
+
+            qDebug() << "start the download";
+            
+            
+        } else if(!mSilent) {
+            QMessageBox::information(this, tr("Check for Updates"),
+                            tr("You are using the current version of %1.").arg(AppInfo::appName), QMessageBox::Ok);
+        }
     }
     
     reply->deleteLater();
     reply = 0;
-    delete file;
-    file = 0;
 }
 
 void Updater::httpReadyRead()
@@ -113,6 +113,10 @@ void Updater::httpReadyRead()
     // We read all of its new data and write it into the file.
     // That way we use less RAM than when reading it at the finished()
     // signal of the QNetworkReply
-    if (file)
-        file->write(reply->readAll());
+    mData.append(reply->readAll());
+}
+
+void Updater::downloadInstaller(QUrl url)
+{
+
 }
