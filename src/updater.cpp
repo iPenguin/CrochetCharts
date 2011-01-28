@@ -198,7 +198,6 @@ void Updater::launchInstaller()
 {
 
     QProcess *installProc = new QProcess(this);
-    connect(installProc, SIGNAL(started()), qApp, SLOT(quit()));
 
     QString program;
 #if defined(Q_OS_WIN32)
@@ -208,6 +207,8 @@ void Updater::launchInstaller()
 #elif defined(Q_OS_DARWIN)
     program = installer->fileName(); //TODO: make sure this launches the dmg file correctly.
 #endif
-    //TODO: startDetached?
-    installProc->start(program);
+
+    installProc->startDetached(program);
+    installProc->waitForStarted();
+    qApp->quit();
 }
