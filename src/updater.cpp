@@ -101,7 +101,7 @@ void Updater::httpFinished()
             
         } else if(!mSilent) {
             QMessageBox::information(this, tr("Check for Updates"),
-                            tr("You are using the current version of %1.").arg(AppInfo::appName), QMessageBox::Ok);
+                            tr("There are no updates at this time.").arg(AppInfo::appName), QMessageBox::Ok);
         }
     }
     
