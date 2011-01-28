@@ -33,6 +33,7 @@
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     ui->setupUi(this);
 
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
@@ -54,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     setupNewTabDialog();
 
     setupMenus();
+    QApplication::restoreOverrideCursor();
 }
 
 MainWindow::~MainWindow()
@@ -257,6 +259,7 @@ void MainWindow::fileOpen()
     if(fileName.isEmpty() || fileName.isNull())
         return;
 
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     if(ui->tabWidget->count() > 0) {
         MainWindow *newWin = new MainWindow(0, fileName);
         newWin->move(x() + 40, y() + 40);
@@ -267,6 +270,7 @@ void MainWindow::fileOpen()
         mFile->fileName = fileName;
         mFile->load();
     }
+    QApplication::restoreOverrideCursor();
 }
 
 void MainWindow::fileSave()
@@ -279,9 +283,11 @@ void MainWindow::fileSave()
     if(mFile->fileName.isEmpty())
         fileSaveAs();
     else {
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         SaveFile::FileError err = mFile->save();
         if(err != SaveFile::No_Error)
             qWarning() << "There was an error saving the file: " << err;
+        QApplication::restoreOverrideCursor();
     }
     
 }
@@ -300,8 +306,10 @@ void MainWindow::fileSaveAs()
     if(fileName.isEmpty())
         return;
 
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     mFile->fileName = fileName;
     mFile->save();
+    QApplication::restoreOverrideCursor();
 }
 
 void MainWindow::viewFullScreen(bool state)

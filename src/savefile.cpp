@@ -33,6 +33,7 @@ SaveFile::~SaveFile()
 
 SaveFile::FileError SaveFile::save()
 {
+
 /*
 //TODO: add stitches and make this a QDataStream.
     QFile file(fileName);
@@ -69,7 +70,7 @@ SaveFile::FileError SaveFile::save()
 
     file.write(data->toLatin1());
     file.close();
-    
+
     return SaveFile::No_Error;
 }
 
