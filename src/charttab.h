@@ -33,12 +33,14 @@ public:
     
 signals:
     void chartStitchesChanged();
+    void chartColorChanged();
     
 public slots:
     void zoomIn();
     void zoomOut();
 
     void stitchChanged(QString oldSt, QString newSt);
+    void colorChanged(QString oldColor, QString newColor);
 
     CrochetScene* scene() { return mScene; }
 

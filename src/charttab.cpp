@@ -109,6 +109,22 @@ void ChartTab::stitchChanged(QString oldSt, QString newSt)
     emit chartStitchesChanged();
 }
 
+void ChartTab::colorChanged(QString oldColor, QString newColor)
+{
+    if(!oldColor.isEmpty()) {
+        mPatternColors->operator[](oldColor)--;
+        if(mPatternColors->operator[](oldColor) == 0)
+            mPatternColors->remove(oldColor);
+    }
+    
+    if(!mPatternColors->contains(newColor))
+        mPatternColors->insert(newColor, 1);
+    else
+        mPatternColors->operator[](newColor)++;
+    
+    emit chartColorChanged();
+}
+
 void ChartTab::zoomIn()
 {
     mView->zoomIn();
