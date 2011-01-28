@@ -10,6 +10,8 @@
 #include <QNetworkAccessManager>
 #include <QUrl>
 
+#include <QProgressDialog>
+
 class QFile;
 
 class Updater : public QWidget
@@ -30,16 +32,26 @@ private slots:
     void startRequest();
     void httpFinished();
     void httpReadyRead();
+
+    void httpFinishedInstaller();
+    void httpReadyReadInstaller();
+    void launchInstaller();
+
+    void cancelDownload();
+    void updateDataTransferProgress(qint64 readBytes, qint64 totalBytes);
     
 private:
     QUrl mUrl;
     QNetworkAccessManager qnam;
-    QNetworkReply *reply;
+    QNetworkReply *reply,
+                  *instReply;
 
+    QProgressDialog *mProgDialog;
+    
     QByteArray mData;
+    QFile *installer;
     
     int httpGetId;
     bool httpRequestAborted;
-
 };
 #endif //UPDATER_H
