@@ -18,26 +18,28 @@ function generate_download_url($software, $version, $os)
     if(empty($software) || (empty($version) || empty($os)))
         return '';
 
-    $url  = 'http://stitchworkssoftware.com/downloads/';
+    if($_SERVER['SERVER_ADDR'] == "192.168.0.125")
+        $url = 'http://192.168.0.125/~brian/downloads/';
+    else
+        $url  = 'http://stitchworkssoftware.com/downloads/';
+    
     $url .= strtolower($software).'/'.strtolower($software).'-installer';
     $url .= '-'.$version;
 
-    $ext = '';
     switch ($os) {
         case 'windows':
-            $ext = '.exe';
+            $url .= '.exe';
             break;
         case 'osx':
-            $ext = '.dmg';
+            $url .= '.dmg';
             break;
         case 'linux':
-            $ext = '.bin';
+            $url .= '.bin';
             break;
         default:
-            $ext = '.exe';
+            $url .= '.exe';
             break;
     }
-    $url .= $ext;
 
     return $url;
 }
