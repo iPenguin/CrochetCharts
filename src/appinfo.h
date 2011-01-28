@@ -29,7 +29,7 @@ namespace AppInfo {
                                 "?sws_sn=%1&sws_email=%2&sws_fname=%3&sws_lname=%4";
     
     const QString liveUpdatePage = "http://stitchworkssoftware.com/updates/update.php"
-                                "?sws_version=%1&sws_os=%2&sws_sn=%3";
+                                "?sws_software=%1&sws_version=%2&sws_os=%3&sws_sn=%4";
     
     const QString demoString = QObject::tr("Stitch Works Software - Demo Version  -  ");
     
