@@ -22,7 +22,7 @@ public:
 */
     void createRow(int row, int columns);
 
-    void appendCell(int row, Cell* c);
+    void appendCell(int row, Cell *c);
     void insertCell(int row, int colBefore, Cell *c);
 
     int rowCount();
@@ -39,6 +39,7 @@ signals:
     void rowAdded(int newRow);
     void chartCreated(int rows, int cols);
     void stitchChanged(QString oldSt, QString newSt);
+    void colorChanged(QString oldColor, QString newColor);
     
 protected:
 /*

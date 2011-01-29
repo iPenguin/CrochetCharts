@@ -379,6 +379,8 @@ void MainWindow::createChart()
     ChartTab* tab = new ChartTab(ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
     tab->setPatternColors(&mPatternColors);
+    connect(tab, SIGNAL(chartStitchChanged()), this, SLOT(updatePatternStitches()));
+    connect(tab, SIGNAL(chartColorsChanged()), this, SLOT(updatePatternColors()));
     
     if(name.isEmpty())
         name = tr("Chart");
@@ -501,18 +503,15 @@ bool MainWindow::hasTab()
 
     return true;
 }
-/*
+
 void MainWindow::updatePatternStitches()
-{
-    //TODO: foreach tab merge the maps and the totals...
-    ChartTab* tab = curChartTab();
-    
+{   
     if(ui->tabWidget->count() <= 0)
         return;
 
     //FIXME: this whole thing needs to be worked out, but the very least is make this use a shared icon.
     ui->patternStitches->clear();
-    QMapIterator<QString, int> i(tab->chartStitches());
+    QMapIterator<QString, int> i(mPatternStitches);
     while (i.hasNext()) {
         i.next();
         QList<QListWidgetItem*> items = ui->patternStitches->findItems(i.key(), Qt::MatchExactly);
@@ -525,4 +524,28 @@ void MainWindow::updatePatternStitches()
         }
     }
 }
-*/
+
+void MainWindow::updatePatternColors()
+{
+    if(ui->tabWidget->count() <= 0)
+        return;
+    
+    //FIXME: this whole thing needs to be worked out, but the very least is make this use a shared icon.
+        ui->patternColors->clear();
+        QMapIterator<QString, int> i(mPatternColors);
+        while (i.hasNext()) {
+            i.next();
+            QList<QListWidgetItem*> items = ui->patternColors->findItems(i.key(), Qt::MatchExactly);
+            if(items.count() == 0) {
+                QPixmap pix = QPixmap(QSize(16,16)); //FIXME: dont hardcode the icon size or the fill or rect sizes.
+                QPainter p;
+                p.begin(&pix);
+                p.fillRect(0, 0, 16, 16, QColor(i.key()));
+                p.drawRect(1, 1, 14, 14);
+                p.end();
+                QIcon icon = QIcon(pix);
+                QListWidgetItem *item = new QListWidgetItem(icon, i.key(), ui->patternStitches);
+                ui->patternStitches->addItem(item);
+            }
+        }
+}

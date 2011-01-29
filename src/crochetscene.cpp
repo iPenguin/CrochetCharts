@@ -93,7 +93,7 @@ int CrochetScene::columnCount(int row)
     return mGrid[row].count();
 }
 
-void CrochetScene::appendCell(int row, Cell* c)
+void CrochetScene::appendCell(int row, Cell *c)
 {
     if(mGrid.count() <= row) {
         for(int i = mGrid.count(); i < row + 1; ++i) {
@@ -104,6 +104,8 @@ void CrochetScene::appendCell(int row, Cell* c)
     addItem(c);
     mGrid[row].append(c);
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
+    connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
+    
     //TODO: abstract out setting the position to a seperate function: void setCellPos(Cell *c);
     int i = mGrid[row].count() -1;
     c->setPos(i*64, row*64);
@@ -140,6 +142,7 @@ void CrochetScene::createRow(int row, int columns)
     for(int i = 0; i < columns; ++i) {
         c = new CrochetCell();
         connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
+        connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
         c->setStitch(s);
         addItem(c);
         modelRow.append(c);

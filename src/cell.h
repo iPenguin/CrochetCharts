@@ -29,6 +29,12 @@ public:
     void setAngle(double angle) { mAngle = angle; }
     double angle() const { return mAngle; }
 
+    void setBgColor(QColor c);
+    QColor bgColor() const { return mBgColor; }
+
+    void setFgColor(QColor c) { mFgColor = c; }
+    QColor fgColor() const { return mFgColor; }
+    
     void setStitch(Stitch* s);
     void setStitch(QString s);
     Stitch* stitch() const { return mStitch; }
@@ -37,6 +43,7 @@ public:
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);
+    void colorChanged(QString oldColor, QString newColor);
     
 public slots:
 
@@ -44,6 +51,8 @@ private:
     qreal mRotation;
     double mAngle;
 
+    QColor mBgColor;
+    QColor mFgColor;
     Stitch* mStitch;
 };
 

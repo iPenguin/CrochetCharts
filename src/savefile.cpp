@@ -170,6 +170,7 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
     double angle;
 
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
+    QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
     
     QDomNode n = element->firstChild();
     while(!n.isNull()) {

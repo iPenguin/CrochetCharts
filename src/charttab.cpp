@@ -106,7 +106,7 @@ void ChartTab::stitchChanged(QString oldSt, QString newSt)
     else
         mPatternStitches->operator[](newSt)++;
 
-    emit chartStitchesChanged();
+    emit chartStitchChanged();
 }
 
 void ChartTab::colorChanged(QString oldColor, QString newColor)

@@ -32,7 +32,7 @@ public:
     void setPatternColors(QMap<QString, int> *colors) { mPatternColors = colors; }
     
 signals:
-    void chartStitchesChanged();
+    void chartStitchChanged();
     void chartColorChanged();
     
 public slots:
