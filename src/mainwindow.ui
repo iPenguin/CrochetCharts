@@ -290,14 +290,14 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>16</width>
-         <height>16</height>
+         <width>32</width>
+         <height>32</height>
         </size>
        </property>
        <property name="gridSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>56</width>
+         <height>56</height>
         </size>
        </property>
        <property name="viewMode">
@@ -340,10 +340,19 @@
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
-       <property name="gridSize">
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="iconSize">
         <size>
          <width>32</width>
          <height>32</height>
+        </size>
+       </property>
+       <property name="gridSize">
+        <size>
+         <width>56</width>
+         <height>56</height>
         </size>
        </property>
        <property name="viewMode">

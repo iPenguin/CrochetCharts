@@ -29,10 +29,10 @@ public:
     void setAngle(double angle) { mAngle = angle; }
     double angle() const { return mAngle; }
 
-    void setBgColor(QColor c);
+    void setBgColor(QColor c = QColor(Qt::white));
     QColor bgColor() const { return mBgColor; }
 
-    void setFgColor(QColor c) { mFgColor = c; }
+    void setFgColor(QColor c = QColor(Qt::black)) { mFgColor = c; }
     QColor fgColor() const { return mFgColor; }
     
     void setStitch(Stitch* s);

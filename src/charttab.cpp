@@ -30,7 +30,7 @@ ChartTab::ChartTab(QWidget *parent) :
     mView = new ChartView(this);
     mScene = new CrochetScene(this);
     connect(mScene, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchChanged(QString,QString)));
-    
+    connect(mScene, SIGNAL(colorChanged(QString,QString)), this, SLOT(colorChanged(QString,QString)));
     mView->setScene(mScene);
     mTextView = new CrochetTextView(this, mScene);
     

@@ -380,7 +380,7 @@ void MainWindow::createChart()
     tab->setPatternStitches(&mPatternStitches);
     tab->setPatternColors(&mPatternColors);
     connect(tab, SIGNAL(chartStitchChanged()), this, SLOT(updatePatternStitches()));
-    connect(tab, SIGNAL(chartColorsChanged()), this, SLOT(updatePatternColors()));
+    connect(tab, SIGNAL(chartColorChanged()), this, SLOT(updatePatternColors()));
     
     if(name.isEmpty())
         name = tr("Chart");
@@ -518,7 +518,9 @@ void MainWindow::updatePatternStitches()
         if(items.count() == 0) {
             Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(i.key());
             //FIXME: don't hard code the files!!
-            QIcon icon = QIcon("/home/brian/crochet.git/" + s->file());
+            QPixmap pix = QPixmap(QSize(32, 32));
+            pix.load("/home/brian/crochet.git/" + s->file());
+            QIcon icon = QIcon(pix);
             QListWidgetItem *item = new QListWidgetItem(icon, i.key(), ui->patternStitches);
             ui->patternStitches->addItem(item);
         }
@@ -537,15 +539,15 @@ void MainWindow::updatePatternColors()
             i.next();
             QList<QListWidgetItem*> items = ui->patternColors->findItems(i.key(), Qt::MatchExactly);
             if(items.count() == 0) {
-                QPixmap pix = QPixmap(QSize(16,16)); //FIXME: dont hardcode the icon size or the fill or rect sizes.
+                QPixmap pix = QPixmap(QSize(32,32)); //FIXME: dont hardcode the icon size or the fill or rect sizes.
                 QPainter p;
                 p.begin(&pix);
-                p.fillRect(0, 0, 16, 16, QColor(i.key()));
-                p.drawRect(1, 1, 14, 14);
+                p.fillRect(0, 0, 32, 32, QColor(i.key()));
+                p.drawRect(1, 1, 30, 30);
                 p.end();
                 QIcon icon = QIcon(pix);
-                QListWidgetItem *item = new QListWidgetItem(icon, i.key(), ui->patternStitches);
-                ui->patternStitches->addItem(item);
+                QListWidgetItem *item = new QListWidgetItem(icon, i.key(), ui->patternColors);
+                ui->patternColors->addItem(item);
             }
         }
 }
