@@ -112,15 +112,18 @@ void ChartTab::stitchChanged(QString oldSt, QString newSt)
 void ChartTab::colorChanged(QString oldColor, QString newColor)
 {
     if(!oldColor.isEmpty()) {
-        mPatternColors->operator[](oldColor)--;
-        if(mPatternColors->operator[](oldColor) == 0)
+        mPatternColors->operator[](oldColor)["count"]--;
+        if(mPatternColors->operator[](oldColor)["count"] == 0)
             mPatternColors->remove(oldColor);
     }
     
-    if(!mPatternColors->contains(newColor))
-        mPatternColors->insert(newColor, 1);
-    else
-        mPatternColors->operator[](newColor)++;
+    if(!mPatternColors->contains(newColor)) {
+        QMap<QString, int> properties;
+        properties["color number"] = mPatternColors->count() + 1;
+        properties["count"] = 1;
+        mPatternColors->insert(newColor, properties);
+    } else
+        mPatternColors->operator[](newColor)["count"]++;
     
     emit chartColorChanged();
 }

@@ -533,21 +533,22 @@ void MainWindow::updatePatternColors()
         return;
     
     //FIXME: this whole thing needs to be worked out, but the very least is make this use a shared icon.
-        ui->patternColors->clear();
-        QMapIterator<QString, int> i(mPatternColors);
-        while (i.hasNext()) {
-            i.next();
-            QList<QListWidgetItem*> items = ui->patternColors->findItems(i.key(), Qt::MatchExactly);
-            if(items.count() == 0) {
-                QPixmap pix = QPixmap(QSize(32,32)); //FIXME: dont hardcode the icon size or the fill or rect sizes.
-                QPainter p;
-                p.begin(&pix);
-                p.fillRect(0, 0, 32, 32, QColor(i.key()));
-                p.drawRect(1, 1, 30, 30);
-                p.end();
-                QIcon icon = QIcon(pix);
-                QListWidgetItem *item = new QListWidgetItem(icon, i.key(), ui->patternColors);
-                ui->patternColors->addItem(item);
-            }
+    ui->patternColors->clear();
+    QMapIterator<QString, QMap<QString, int> > i(mPatternColors);
+    while (i.hasNext()) {
+        i.next();
+        QList<QListWidgetItem*> items = ui->patternColors->findItems(i.key(), Qt::MatchExactly);
+        if(items.count() == 0) {
+            QPixmap pix = QPixmap(QSize(32,32)); //FIXME: dont hardcode the icon size or the fill or rect sizes.
+            QPainter p;
+            p.begin(&pix);
+            p.fillRect(0, 0, 32, 32, QColor(i.key()));
+            p.drawRect(1, 1, 30, 30);
+            p.end();
+            QIcon icon = QIcon(pix);
+            //FIXME: make the color prefix user configurable. and make it more flexable.
+            QListWidgetItem *item = new QListWidgetItem(icon, "C" + QString::number(i.value()["color number"]), ui->patternColors);
+            ui->patternColors->addItem(item);
         }
+    }
 }

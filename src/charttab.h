@@ -29,7 +29,7 @@ public:
     void saveImage(QString fileName, QSize size, int resolution = 96);
 
     void setPatternStitches(QMap<QString, int> *stitches) { mPatternStitches = stitches; }
-    void setPatternColors(QMap<QString, int> *colors) { mPatternColors = colors; }
+    void setPatternColors(QMap<QString, QMap<QString, int> > *colors) { mPatternColors = colors; }
     
 signals:
     void chartStitchChanged();
@@ -50,7 +50,7 @@ private:
     CrochetTextView *mTextView;
 
     QMap<QString, int> *mPatternStitches;
-    QMap<QString, int> *mPatternColors;
+    QMap<QString, QMap<QString, int> > *mPatternColors;
     
     QString mName;
 };

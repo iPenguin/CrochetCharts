@@ -85,7 +85,7 @@ private:
     Updater *mUpdater;
 
     QMap<QString, int> mPatternStitches;
-    QMap<QString, int> mPatternColors;
+    QMap<QString, QMap<QString, int> > mPatternColors;
 
 };
 
