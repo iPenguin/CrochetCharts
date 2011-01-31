@@ -539,6 +539,7 @@ void MainWindow::updatePatternColors()
         i.next();
         QList<QListWidgetItem*> items = ui->patternColors->findItems(i.key(), Qt::MatchExactly);
         if(items.count() == 0) {
+            //TODO: factor our a function for creating a color box.
             QPixmap pix = QPixmap(QSize(32,32)); //FIXME: dont hardcode the icon size or the fill or rect sizes.
             QPainter p;
             p.begin(&pix);
@@ -548,6 +549,8 @@ void MainWindow::updatePatternColors()
             QIcon icon = QIcon(pix);
             //FIXME: make the color prefix user configurable. and make it more flexable.
             QListWidgetItem *item = new QListWidgetItem(icon, "C" + QString::number(i.value()["color number"]), ui->patternColors);
+            item->setToolTip(i.key());
+            //item->setData(Qt::EditRole, QVariant(i.key()));
             ui->patternColors->addItem(item);
         }
     }
