@@ -25,11 +25,11 @@ class SaveFile
 {
 
 public:
-    SaveFile(QTabWidget* tabWidget);
+    SaveFile(QWidget* parent);
     ~SaveFile();
 
     enum FileVersion { Version_1_0 = 100 };
-    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, sErr_GettingFileContents };
+    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, Err_GettingFileContents };
     
     SaveFile::FileError save();
     SaveFile::FileError load();
@@ -56,5 +56,7 @@ private:
     qint32 mFileVersion;
 
     QTabWidget* mTabWidget;
+
+    QWidget* mParent;
 };
 #endif //SAVEFILE_H

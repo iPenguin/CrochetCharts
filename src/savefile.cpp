@@ -22,9 +22,13 @@
 #include "stitchcollection.h"
 #include "stitchset.h"
 
-SaveFile::SaveFile(QTabWidget* tabWidget)
-    : isSaved(false), fileName(""), mFileVersion(SaveFile::Version_1_0), mTabWidget(tabWidget)
+#include "mainwindow.h"
+
+SaveFile::SaveFile(QWidget* parent)
+    : isSaved(false), fileName(""), mFileVersion(SaveFile::Version_1_0), mParent(parent)
 {
+    mTabWidget = static_cast<MainWindow*>(mParent)->tabWidget();
+    
 }
 
 SaveFile::~SaveFile()
@@ -127,7 +131,9 @@ SaveFile::FileError SaveFile::load()
     while(!n.isNull()) {
         QDomElement e = n.toElement(); // try to convert the node to an element.
         if(!e.isNull()) {
-            if(e.tagName() == "chart") {
+            if(e.tagName() == "colors") {
+                loadColors(&e);
+            } else if(e.tagName() == "chart") {
                 loadChart(&e);
             } else if (e.tagName() == "stitch") { // custom stitches.
                 continue;
@@ -137,6 +143,27 @@ SaveFile::FileError SaveFile::load()
     }
     
     return SaveFile::No_Error;
+}
+
+void SaveFile::loadColors(QDomElement* element)
+{
+    MainWindow *mw = qobject_cast<MainWindow*>(mParent);
+    
+    QDomNode n = element->firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement();
+        if(!e.isNull()) {
+            if(e.tagName() == "color") {
+                QMap<QString, int> properties;
+                properties.insert("color number", mw->patternColors().count() + 1);
+                properties.insert("count", 0); //count = 0 because we haven't added any cells yet.
+                mw->patternColors().insert(e.text(),properties);
+            } else {
+                qWarning() << "Cannot load unknown color property:" << e.tagName() << e.text();
+            }
+        }
+        n = n.nextSibling();
+    }
 }
 
 void SaveFile::loadChart(QDomElement *element)
@@ -270,13 +297,12 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
 void SaveFile::saveColors(QXmlStreamWriter* stream)
 {
     stream->writeStartElement("colors"); //start colors
-
-    
+    MainWindow *mw = static_cast<MainWindow*>(mParent);
+    QMapIterator<QString, QMap<QString, int> > i(mw->patternColors());
+    while (i.hasNext()) {
+        i.next();
+        stream->writeTextElement("color", i.key());
+    }
     
     stream->writeEndElement(); // end colors
-}
-
-void SaveFile::loadColors(QDomElement* element)
-{
-
 }
