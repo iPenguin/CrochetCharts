@@ -36,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     ui->setupUi(this);
 
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
+    
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
@@ -46,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     setupStitchPalette();
     readSettings();
 
-    mFile = new SaveFile(ui->tabWidget);
+    mFile = new SaveFile(this);
     if(!fileName.isEmpty()) {
         mFile->fileName = fileName;
         mFile->load();
@@ -121,7 +123,21 @@ void MainWindow::setupMenus()
     ui->actionClose->setIcon(QIcon::fromTheme("document-close"));
 
     //Edit Menu
+
+
     connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
+
+    mActionUndo = mUndoGroup.createUndoAction(this, tr("Undo"));
+    mActionRedo = mUndoGroup.createRedoAction(this, tr("Redo"));
+    
+    ui->menuEdit->insertAction(ui->actionCopy, mActionUndo);
+    ui->menuEdit->insertAction(ui->actionCopy, mActionRedo);
+    ui->menuEdit->insertSeparator(ui->actionCopy);
+    
+    mActionUndo->setIcon(QIcon::fromTheme("edit-undo"));
+    mActionRedo->setIcon(QIcon::fromTheme("edit-redo"));
+    mActionUndo->setShortcut(QKeySequence::Undo);
+    mActionRedo->setShortcut(QKeySequence::Redo);
     
     ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy" /*, QIcon(":/edit-copy.png")*/));
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut" /*, QIcon(":/edit-cut.png")*/));
@@ -140,6 +156,8 @@ void MainWindow::setupMenus()
     
     ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in"));
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out"));
+    ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
+    ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
 
     //Document Menu
     connect(ui->actionAddChart, SIGNAL(triggered()), ui->newDocument, SLOT(show()));
@@ -333,7 +351,7 @@ void MainWindow::menuFileAboutToShow()
 void MainWindow::menuEditAboutToShow()
 {
     bool state = hasTab();
-
+    
     ui->actionCopy->setEnabled(state);
     ui->actionCut->setEnabled(state);
     ui->actionPaste->setEnabled(state);
@@ -381,6 +399,8 @@ void MainWindow::createChart()
     tab->setPatternColors(&mPatternColors);
     connect(tab, SIGNAL(chartStitchChanged()), this, SLOT(updatePatternStitches()));
     connect(tab, SIGNAL(chartColorChanged()), this, SLOT(updatePatternColors()));
+
+    mUndoGroup.addStack(tab->undoStack());
     
     if(name.isEmpty())
         name = tr("Chart");
@@ -502,6 +522,23 @@ bool MainWindow::hasTab()
         return false;
 
     return true;
+}
+
+QTabWidget* MainWindow::tabWidget()
+{
+    return ui->tabWidget;
+}
+
+void MainWindow::tabChanged(int newTab)
+{
+    if(newTab == -1)
+        return;
+
+    ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(newTab));
+    if(!tab)
+        return;
+    
+    mUndoGroup.setActiveStack(tab->undoStack());
 }
 
 void MainWindow::updatePatternStitches()

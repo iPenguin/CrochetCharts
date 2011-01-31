@@ -9,6 +9,7 @@
 
 #include "savefile.h"
 #include "updater.h"
+#include <qundogroup.h>
 
 class ChartTab;
 
@@ -20,6 +21,7 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    friend class SaveFile;
 public:
     explicit MainWindow(QWidget *parent = 0, QString fileName = "");
     ~MainWindow();
@@ -33,6 +35,8 @@ protected:
 protected slots:
     void updatePatternStitches();
     void updatePatternColors();
+
+    void tabChanged(int newTab);
     
 //menu functions/slots:
 private slots:
@@ -84,8 +88,19 @@ private:
     SaveFile *mFile;
     Updater *mUpdater;
 
+//for the savefile class:
+protected:
+    QMap<QString, QMap<QString, int> > patternColors() { return mPatternColors; }
+    QTabWidget* tabWidget();
+    
+private:
     QMap<QString, int> mPatternStitches;
     QMap<QString, QMap<QString, int> > mPatternColors;
+
+
+    QAction *mActionUndo,
+            *mActionRedo;
+    QUndoGroup mUndoGroup;
 
 };
 

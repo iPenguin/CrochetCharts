@@ -9,6 +9,7 @@
 #include <QMap>
 
 #include "chartview.h"
+#include <qundostack.h>
 
 class QGraphicsView;
 class CrochetScene;
@@ -44,6 +45,8 @@ public slots:
 
     CrochetScene* scene() { return mScene; }
 
+    QUndoStack* undoStack() { return &mUndoStack; }
+
 private:
     ChartView *mView;
     CrochetScene *mScene;
@@ -51,6 +54,8 @@ private:
 
     QMap<QString, int> *mPatternStitches;
     QMap<QString, QMap<QString, int> > *mPatternColors;
+
+    QUndoStack mUndoStack;
     
     QString mName;
 };
