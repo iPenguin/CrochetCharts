@@ -40,15 +40,14 @@ public:
     QString fileName;
     
 private:
-    bool saveCustomStitches(QDataStream *stream);
-    bool loadCustomStitches(QDataStream *stream);
-    
-    bool saveCharts(QXmlStreamWriter *stream);
+    bool saveCustomStitches(QDataStream *stream);   
     void saveColors(QXmlStreamWriter *stream);
-    
+    bool saveCharts(QXmlStreamWriter *stream);
+
+    bool loadCustomStitches(QDataStream *stream);
+    void loadColors(QDomElement *element);
     void loadChart(QDomElement *element);
     void loadCell(ChartTab *tab, QDomElement *element);
-    void loadColors(QDomElement *element);
 
     //fileVersion of the file we're working with.
     qint32 mCurrentFileVersion;

@@ -28,29 +28,26 @@ SaveFile::SaveFile(QWidget* parent)
     : isSaved(false), fileName(""), mFileVersion(SaveFile::Version_1_0), mParent(parent)
 {
     mTabWidget = static_cast<MainWindow*>(mParent)->tabWidget();
-    
 }
 
 SaveFile::~SaveFile()
 {
 }
 
+/*File Save:
+ //TODO: add stitches and make this a QDataStream.
+ QFile file(fileName);
+ file.open(QIODevice::WriteOnly);
+ QDataStream out(&file);
+ 
+ // Write a header with a "magic number" and a version
+ out << AppInfo::magicNumber;
+ out << (qint32)mFileVersion;
+ 
+ out.setVersion(QDataStream::Qt_4_7);
+ */
 SaveFile::FileError SaveFile::save()
 {
-
-/*
-//TODO: add stitches and make this a QDataStream.
-    QFile file(fileName);
-    file.open(QIODevice::WriteOnly);
-    QDataStream out(&file);
-    
-    // Write a header with a "magic number" and a version
-    out << AppInfo::magicNumber;
-    out << (qint32)mFileVersion;
-    
-    out.setVersion(QDataStream::Qt_4_7);
-*/
-
     QString *data = new QString();
     QXmlStreamWriter stream(data);
     stream.setAutoFormatting(true);
@@ -79,7 +76,68 @@ SaveFile::FileError SaveFile::save()
     return SaveFile::No_Error;
 }
 
-/*
+bool SaveFile::saveCustomStitches(QDataStream* stream)
+{
+    Q_UNUSED(stream);
+    //TODO: save everything into a DataStream
+    return true;
+}
+
+bool SaveFile::saveCharts(QXmlStreamWriter *stream)
+{
+    int tabCount = mTabWidget->count();
+    
+    for(int i = 0; i < tabCount; ++i) {
+        stream->writeStartElement("chart"); //start chart
+        ChartTab* tab = qobject_cast<ChartTab*>(mTabWidget->widget(i));
+        if(!tab)
+            continue;
+        stream->writeTextElement("name", tab->name());
+        
+        int rows = tab->scene()->rowCount();
+        
+        for(int row = 0; row < rows; ++row) {
+            int cols = tab->scene()->columnCount(row);
+            
+            for(int col = 0; col < cols; ++col) {
+                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(tab->scene()->cell(row, col));
+                if(!c)
+                    continue;
+                stream->writeStartElement("cell"); //start cell
+                stream->writeTextElement("stitch", c->stitch()->name());
+                stream->writeTextElement("row", QString::number(row));
+                stream->writeTextElement("column", QString::number(col));
+                stream->writeTextElement("bgColor", c->bgColor().name());
+                stream->writeTextElement("fgColor", c->fgColor().name());
+                //TODO: make sure the numbers are translating correctly to xml and back.
+                stream->writeTextElement("x", QString::number(c->pos().x()));
+                stream->writeTextElement("y", QString::number(c->pos().y()));
+                stream->writeTextElement("rotation", QString::number(c->rotation()));
+                stream->writeTextElement("angle", QString::number(c->angle()));
+                stream->writeEndElement(); //end cell
+            }
+        }
+        
+        stream->writeEndElement(); // end chart
+    }
+    
+    return true;
+}
+
+void SaveFile::saveColors(QXmlStreamWriter* stream)
+{
+    stream->writeStartElement("colors"); //start colors
+    MainWindow *mw = static_cast<MainWindow*>(mParent);
+    QMapIterator<QString, QMap<QString, int> > i(mw->patternColors());
+    while (i.hasNext()) {
+        i.next();
+        stream->writeTextElement("color", i.key());
+    }
+    
+    stream->writeEndElement(); // end colors
+}
+
+/*File Load:
  //TODO: add stitches and make this a QDataStream.*
  QFile file(fileName);
  file.open(QIODevice::ReadOnly);
@@ -143,6 +201,13 @@ SaveFile::FileError SaveFile::load()
     }
     
     return SaveFile::No_Error;
+}
+
+bool SaveFile::loadCustomStitches(QDataStream* stream)
+{
+    Q_UNUSED(stream);
+    //TODO: load everything from a DataStream
+    return true;
 }
 
 void SaveFile::loadColors(QDomElement* element)
@@ -237,72 +302,4 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
     c->setPos(x, y);
     c->setRotation(rotation);
     c->setAngle(angle);
-}
-
-bool SaveFile::saveCustomStitches(QDataStream* stream)
-{
-    Q_UNUSED(stream);
-    //TODO: save everything into a DataStream
-    return true;
-}
-
-bool SaveFile::loadCustomStitches(QDataStream* stream)
-{
-    Q_UNUSED(stream);
-    //TODO: load everything from a DataStream
-    return true;
-}
-
-bool SaveFile::saveCharts(QXmlStreamWriter *stream)
-{
-    int tabCount = mTabWidget->count();
-
-    for(int i = 0; i < tabCount; ++i) {
-        stream->writeStartElement("chart"); //start chart
-        ChartTab* tab = qobject_cast<ChartTab*>(mTabWidget->widget(i));
-        if(!tab)
-            continue;
-        stream->writeTextElement("name", tab->name());
-        
-        int rows = tab->scene()->rowCount();
-
-        for(int row = 0; row < rows; ++row) {
-            int cols = tab->scene()->columnCount(row);
-
-            for(int col = 0; col < cols; ++col) {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(tab->scene()->cell(row, col));
-                if(!c)
-                    continue;
-                stream->writeStartElement("cell"); //start cell
-                    stream->writeTextElement("stitch", c->stitch()->name());
-                    stream->writeTextElement("row", QString::number(row));
-                    stream->writeTextElement("column", QString::number(col));
-                    stream->writeTextElement("bgColor", c->bgColor().name());
-                    stream->writeTextElement("fgColor", c->fgColor().name());
-                    //TODO: make sure the numbers are translating correctly to xml and back.
-                    stream->writeTextElement("x", QString::number(c->pos().x()));
-                    stream->writeTextElement("y", QString::number(c->pos().y()));
-                    stream->writeTextElement("rotation", QString::number(c->rotation()));
-                    stream->writeTextElement("angle", QString::number(c->angle()));
-                stream->writeEndElement(); //end cell
-            }
-        }
-
-        stream->writeEndElement(); // end chart
-    }
-
-    return true;
-}
-
-void SaveFile::saveColors(QXmlStreamWriter* stream)
-{
-    stream->writeStartElement("colors"); //start colors
-    MainWindow *mw = static_cast<MainWindow*>(mParent);
-    QMapIterator<QString, QMap<QString, int> > i(mw->patternColors());
-    while (i.hasNext()) {
-        i.next();
-        stream->writeTextElement("color", i.key());
-    }
-    
-    stream->writeEndElement(); // end colors
 }
