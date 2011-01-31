@@ -55,7 +55,8 @@ SaveFile::FileError SaveFile::save()
     stream.writeStartElement("pattern"); //start pattern
     //TODO: dont need to set the version when saving into a binary file.
     stream.writeAttribute("version", QString::number(SaveFile::Version_1_0));
-    saveChart(&stream);
+    saveColors(&stream);
+    saveCharts(&stream);
     stream.writeEndElement();
     
     stream.writeEndDocument();
@@ -214,16 +215,18 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
 bool SaveFile::saveCustomStitches(QDataStream* stream)
 {
     Q_UNUSED(stream);
+    //TODO: save everything into a DataStream
     return true;
 }
 
 bool SaveFile::loadCustomStitches(QDataStream* stream)
 {
     Q_UNUSED(stream);
+    //TODO: load everything from a DataStream
     return true;
 }
 
-bool SaveFile::saveChart(QXmlStreamWriter* stream)
+bool SaveFile::saveCharts(QXmlStreamWriter *stream)
 {
     int tabCount = mTabWidget->count();
 
@@ -233,7 +236,7 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
         if(!tab)
             continue;
         stream->writeTextElement("name", tab->name());
- 
+        
         int rows = tab->scene()->rowCount();
 
         for(int row = 0; row < rows; ++row) {
@@ -264,3 +267,16 @@ bool SaveFile::saveChart(QXmlStreamWriter* stream)
     return true;
 }
 
+void SaveFile::saveColors(QXmlStreamWriter* stream)
+{
+    stream->writeStartElement("colors"); //start colors
+
+    
+    
+    stream->writeEndElement(); // end colors
+}
+
+void SaveFile::loadColors(QDomElement* element)
+{
+
+}

@@ -29,7 +29,7 @@ public:
     ~SaveFile();
 
     enum FileVersion { Version_1_0 = 100 };
-    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, Err_GettingFileContents };
+    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, sErr_GettingFileContents };
     
     SaveFile::FileError save();
     SaveFile::FileError load();
@@ -40,12 +40,15 @@ public:
     QString fileName;
     
 private:
-    bool saveCustomStitches(QDataStream* stream);
-    bool loadCustomStitches(QDataStream* stream);
+    bool saveCustomStitches(QDataStream *stream);
+    bool loadCustomStitches(QDataStream *stream);
     
-    bool saveChart(QXmlStreamWriter* stream);
+    bool saveCharts(QXmlStreamWriter *stream);
+    void saveColors(QXmlStreamWriter *stream);
+    
     void loadChart(QDomElement *element);
-    void loadCell(ChartTab* tab, QDomElement *element);
+    void loadCell(ChartTab *tab, QDomElement *element);
+    void loadColors(QDomElement *element);
 
     //fileVersion of the file we're working with.
     qint32 mCurrentFileVersion;
