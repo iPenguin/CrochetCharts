@@ -86,4 +86,20 @@
        <ws>rsdc</ws>
    </stitch>
 
+   <stitch>
+       <name>fpdc</name>
+       <icon>stitches/front_post_dc.svg</icon>
+       <description>front post decrease</description>
+       <category>Advanced</category>
+       <ws>fpdc</ws>
+   </stitch>
+
+   <stitch>
+       <name>bpdc</name>
+       <icon>stitches/back_post_dc.svg</icon>
+       <description>back post decrease</description>
+       <category>Advanced</category>
+       <ws>bpdc</ws>
+   </stitch>
+
 </stitch_set>

@@ -9,5 +9,9 @@
         <file>stitches/single_crochet.svg</file>
         <file>stitches/double_crochet.svg</file>
         <file>stitches/treble_crochet.svg</file>
+        <file>stitches/back_post_dc.svg</file>
+        <file>stitches/front_post_dc.svg</file>
+        <file>stitches/single_crochet2.svg</file>
+        <file>stitches/slip.svg</file>
     </qresource>
 </RCC>
