@@ -115,6 +115,7 @@ else(UNIX)
 endif()
 
 add_subdirectory(src)
+add_subdirectory(docs)
 
 if(UNIT_TESTING)
     add_subdirectory(tests)
@@ -133,3 +134,4 @@ set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
 
 include(CPack)
+

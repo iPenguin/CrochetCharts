@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <QtHelpProject version="1.0">
+        <namespace>stitchworkssoftware.com.crochet.1.0</namespace>
+        <virtualFolder>doc</virtualFolder>
+        <customFilter name="Crochet 1.0">
+            <filterAttribute>crochet</filterAttribute>
+            <filterAttribute>1.0</filterAttribute>
+        </customFilter>
+        <filterSection>
+            <filterAttribute>crochet</filterAttribute>
+            <filterAttribute>1.0</filterAttribute>
+            <toc>
+                <section title="Crochet Manual" ref="index.html">
+                    <section title="Chapter 1" ref="doc.html#chapter1"/>
+                    <section title="Chapter 2" ref="doc.html#chapter2"/>
+                    <section title="Chapter 3" ref="doc.html#chapter3"/>
+                </section>
+            </toc>
+            <keywords>
+                <keyword name="foo" id="MyApplication::foo" ref="doc.html#foo"/>
+                <keyword name="bar" ref="doc.html#bar"/>
+                <keyword id="MyApplication::foobar" ref="doc.html#foobar"/>
+            </keywords>
+            <files>
+                <file>classic.css</file>
+                <file>*.html</file>
+            </files>
+        </filterSection>
+    </QtHelpProject>
