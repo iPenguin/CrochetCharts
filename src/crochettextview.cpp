@@ -65,9 +65,11 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
     //TODO: break out the parser into a seperate function.
     //TODO: Be more careful about parsing out the stitch count...
     foreach(QString token, tokens) {
+        token = token.simplified().toLower();
+        
         QString st;
         foreach(QString temp, stitchList) {
-            if(token.contains(temp, Qt::CaseInsensitive)) {
+            if(token.contains(QRegExp("^" + temp))) {
                 st = temp;
                 break;
             }
