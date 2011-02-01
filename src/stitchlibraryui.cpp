@@ -1,5 +1,5 @@
 /*************************************************\
-| (c) 2010-2011 Stitch Works Software             |
+| (c) 2010 Stitch Works Software                  |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "stitchlibraryui.h"
@@ -63,7 +63,8 @@ void StitchLibraryUi::setDialogSize()
 {
     //for a table widget.
     ui->listView->resizeColumnsToContents();
-
+    ui->listView->resizeRowsToContents();
+    
     int width = 0;
     int height = ui->listView->height();
     for(int i = 0; i < 5; ++i)

@@ -19,6 +19,8 @@
 
 #include <QDebug>
 #include "stitchcollection.h"
+#include "stitchset.h"
+#include <qsvgrenderer.h>
 
 StitchLibraryDelegate::StitchLibraryDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
@@ -45,7 +47,18 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     int borderW = ceil((option.rect.width() - width) / 2.0);
     int borderH = ceil((option.rect.height() - height) / 4.0);
 
-    if (index.column() == 3 || index.column() == 4) {
+    if (index.column() == 1) {
+        if(option.state & QStyle::State_Selected)
+            painter->fillRect(option.rect, option.palette.highlight());
+        
+        StitchSet *set = static_cast<StitchSet*>((QAbstractItemModel*)index.model());
+        QString st = set->index(index.row(), Stitch::Name).data(Qt::DisplayRole).toString();
+        
+        Stitch *s = set->findStitch(st);
+        QRectF rect = QRectF((qreal)option.rect.x(), (qreal)option.rect.y(), (qreal)option.rect.width(), (qreal)option.rect.height());
+        s->renderSvg()->render(painter, option.rect);
+        
+    } else if (index.column() == 3 || index.column() == 4) {
 
         if(option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
@@ -85,9 +98,13 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
             text = s->name();
             padding += 50;
             break;
-        case Stitch::Icon:
-            padding += 5;
-            return QSize(64, 64); //TODO: get this from the stitch class.
+        case Stitch::Icon: {
+            StitchSet *set = static_cast<StitchSet*>((QAbstractItemModel*)index.model());
+            QString st = set->index(index.row(), Stitch::Name).data(Qt::DisplayRole).toString();
+            
+            Stitch *s = set->findStitch(st);
+            return s->renderPixmap()->size();
+        }
         case Stitch::Description:
             padding +=150;
             text = s->description();
