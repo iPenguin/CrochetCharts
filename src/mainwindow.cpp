@@ -31,6 +31,7 @@
 #include <qinputdialog.h>
 
 #include <QPrinter>
+#include <QtSvg/QSvgGenerator>
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -125,8 +126,6 @@ void MainWindow::setupMenus()
     ui->actionClose->setIcon(QIcon::fromTheme("document-close"));
 
     //Edit Menu
-
-
     connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
 
     mActionUndo = mUndoGroup.createUndoAction(this, tr("Undo"));
@@ -162,7 +161,7 @@ void MainWindow::setupMenus()
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
 
     //Document Menu
-    connect(ui->actionAddChart, SIGNAL(triggered()), ui->newDocument, SLOT(show()));
+    connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
 
     //Chart Menu
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
@@ -201,11 +200,27 @@ void MainWindow::fileExport()
     ExportUi d(ui->tabWidget, this);
     if(d.exec() != QDialog::Accepted)
         return;
-    
-    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
-    QString fileName = QFileDialog::getSaveFileName(this,
-            tr("Export Pattern As..."), fileLoc, tr(""));
 
+    QString filter;
+    if(d.exportType == "pdf")
+        filter = tr("Portable Document Format (pdf)(*.pdf)");
+    else if(d.exportType == "svg")
+        filter = tr("Scaled Vector Graphics (svg)(*.svg *.svgz)");
+    else if(d.exportType == "jpeg")
+        filter = tr("Joint Photographic Experts Group (jpeg)(*.jpeg *.jpg)");
+    else if(d.exportType == "png")
+        filter = tr("Portable Network Graphics (png)(*.png)");
+    else if(d.exportType == "gif")
+        filter = tr("Graphics Interchange Format (gif)(*.gif)");
+    else if(d.exportType == "tiff")
+        filter = tr("Tagged Image File Format (tiff)(*.tiff *.tif)");
+    else if(d.exportType == "bmp")
+        filter = tr("Bitmap (bmp)(*.bmp)");
+    else
+        filter = tr("");
+
+    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Export Pattern As..."), fileLoc, filter);
 
     if(fileName.isEmpty())
         return;
@@ -213,22 +228,89 @@ void MainWindow::fileExport()
     if(d.exportType.isEmpty())
         return;
 
-    ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(1));
+    if(d.exportType == "pdf")
+        exportPdf(d.selection, fileName, QSize(d.width, d.height), d.resolution);
+    else if(d.exportType == "svg")
+        exportSvg(d.selection, fileName, QSize(d.width, d.height));
+    else
+        exportImg(d.selection, fileName, QSize(d.width, d.height), d.resolution);
+}
+
+void MainWindow::exportPdf(QString selection, QString fileName, QSize size, int resolution)
+{
+    int tabCount = ui->tabWidget->count();
+    QPainter *p = new QPainter();
     
-    if(d.exportType == "pdf") {
-        QPrinter *printer = new QPrinter(QPrinter::HighResolution);
-        
-        tab->savePdf(printer, fileName, d.resolution);
-    } else if(d.exportType == "svg") {
-        tab->saveSvg(fileName);
-    } else {
-        tab->saveImage(fileName, QSize(d.width, d.height), d.resolution);
+    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
+    printer->setOutputFormat(QPrinter::PdfFormat);
+    printer->setOutputFileName(fileName);
+    printer->setResolution(resolution);
+    
+    p->begin(printer);
+    
+    bool firstPass = true;
+    for(int i = 0; i < tabCount; ++i) {
+        if(!firstPass)
+            printer->newPage();
+
+        if(selection == tr("All Charts") || selection == ui->tabWidget->tabText(i)) {
+            ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+            tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
+            firstPass = false;
+        }
     }
+    p->end();
+}
+
+void MainWindow::exportSvg(QString selection, QString fileName, QSize size)
+{
+    int tabCount = ui->tabWidget->count();
+    QPainter *p = new QPainter();
+    
+    QSvgGenerator gen;
+    //TODO: fill in more info about the svg.
+    gen.setFileName(fileName);
+    //FIXME: gen.setSize(mScene->sceneRect().size().toSize());
+    
+    p->begin(&gen);
+
+    for(int i = 0; i < tabCount; ++i) {
+        if(selection == ui->tabWidget->tabText(i)) {
+            ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+            tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
+        }
+    }
+    p->end();
+    
+}
+
+void MainWindow::exportImg(QString selection, QString fileName, QSize size, int resolution)
+{
+    int tabCount = ui->tabWidget->count();
+    QPainter *p = new QPainter();
+    
+    double dpm = resolution * (39.3700787);
+    QImage img = QImage(size, QImage::Format_ARGB32); /*mScene->sceneRect().size().toSize()*/
+    img.setDotsPerMeterX(dpm);
+    img.setDotsPerMeterY(dpm);
+    //FIXME: needs a background color so it doesn't use white noise.
+    // Leave white noise for demo version? can it be reproduced on all OSes?
+    for(int i = 0; i < tabCount; ++i) {
+        if(selection == ui->tabWidget->tabText(i)) {
+            ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+            tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
+        }
+    }
+    p->begin(&img);
+
+    img.save(fileName /*, file type, img quality.*/); 
+    
 }
 
 void MainWindow::documentNewChart()
 {
-    createChart();
+    ui->chartTitle->setText(nextChartName());
+    ui->newDocument->show();
 }
 
 void MainWindow::helpAbout()
@@ -414,6 +496,9 @@ void MainWindow::createChart()
     int cols = ui->stitches->text().toInt();
     QString defStitch = ui->defaultStitch->currentText();
     QString name = ui->chartTitle->text();
+
+    if(docHasChartName(name))
+        name = nextChartName(name);
     
     ChartTab* tab = new ChartTab(ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
@@ -424,12 +509,37 @@ void MainWindow::createChart()
     mUndoGroup.addStack(tab->undoStack());
     
     if(name.isEmpty())
-        name = tr("Chart");
+        name = nextChartName();
     
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
 
     tab->scene()->createChart(rows, cols);
+}
+
+QString MainWindow::nextChartName(QString baseName)
+{
+    QString nextName = baseName;
+
+    int i = 1;
+    
+    while(docHasChartName(nextName)) {
+        nextName = baseName + QString::number(i);
+        i++;
+    }
+    
+    return nextName;
+}
+
+bool MainWindow::docHasChartName(QString name)
+{
+    int tabCount = ui->tabWidget->count();
+    for(int i = 0; i < tabCount; ++i) {
+        if (ui->tabWidget->tabText(i) == name)
+            return true;
+    }
+
+    return false;
 }
 
 void MainWindow::viewShowStitches()

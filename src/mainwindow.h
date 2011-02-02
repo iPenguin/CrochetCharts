@@ -32,6 +32,10 @@ public:
 protected:
     void closeEvent(QCloseEvent *event);
 
+    //generate the next "new chart" name ie: chart, chart1, chart2...
+    QString nextChartName(QString baseName = tr("Chart"));
+    bool docHasChartName(QString name);
+    
 protected slots:
     void updatePatternStitches();
     void updatePatternColors();
@@ -79,6 +83,10 @@ private:
     void trialVersionMessage();
 
     void checkUpdates();
+
+    void exportPdf(QString selection, QString fileName, QSize size, int resolution);
+    void exportSvg(QString selection, QString fileName, QSize size);
+    void exportImg(QString selection, QString fileName, QSize size, int resolution);
     
     ChartTab* curChartTab();
    
