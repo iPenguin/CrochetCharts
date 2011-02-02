@@ -22,12 +22,7 @@ class ChartTab : public QWidget
 public:
     explicit ChartTab(QWidget *parent = 0);
 
-    QString name() { return mName; }
-    void setName(QString n) { mName = n; }
-
-    void savePdf(QPrinter *printer, QString fileName, int resolution = 300);
-    void saveSvg(QString fileName);
-    void saveImage(QString fileName, QSize size, int resolution = 96);
+    void renderChart(QPainter *painter, QRectF rect = QRectF());
 
     void setPatternStitches(QMap<QString, int> *stitches) { mPatternStitches = stitches; }
     void setPatternColors(QMap<QString, QMap<QString, int> > *colors) { mPatternColors = colors; }
