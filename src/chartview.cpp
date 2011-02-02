@@ -8,7 +8,7 @@
 #include <QDebug>
 
 ChartView::ChartView(QWidget *parent)
-    : QGraphicsView(parent)
+        : QGraphicsView(parent)
 {
 }
 
@@ -38,7 +38,7 @@ void ChartView::scrollContentsBy(int dx, int dy)
 
 void ChartView::wheelEvent(QWheelEvent *event)
 {
-    if(event->modifiers() && Qt::CTRL)
+    if (event->modifiers() && Qt::CTRL)
         zoom(event->delta());
     else
         QGraphicsView::wheelEvent(event);

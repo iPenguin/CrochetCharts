@@ -1,5 +1,5 @@
 /*************************************************\
-| (c) 2010-2011 Stitch Works Software             |
+| (c) 2010 Stitch Works Software                  |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "cell.h"
@@ -11,7 +11,7 @@
 #include "stitchset.h"
 
 Cell::Cell(QGraphicsItem *parent) :
-    QGraphicsSvgItem(parent), mStitch(0)
+        QGraphicsSvgItem(parent), mStitch(0)
 {
 //    this->setCacheMode(QGraphicsItem::ItemCoordinateCache, QSize(32,64));
 
@@ -29,15 +29,15 @@ QRectF Cell::boundingRect() const
 void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     //painter->setPen(Qt::red);
-    //renderer()->render(painter, boundingRect());  
+    //renderer()->render(painter, boundingRect());
     QGraphicsSvgItem::paint(painter, option, widget);
 }
 
 void Cell::setStitch(Stitch* s)
 {
-    if(mStitch != s) {
+    if (mStitch != s) {
         QString old;
-        if(mStitch)
+        if (mStitch)
             old = mStitch->name();
         mStitch = s;
         setSharedRenderer(s->renderSvg());
@@ -47,9 +47,9 @@ void Cell::setStitch(Stitch* s)
 
 void Cell::setBgColor(QColor c)
 {
-    if(mBgColor != c) {
+    if (mBgColor != c) {
         QString old = "";
-        if(mBgColor.isValid())
+        if (mBgColor.isValid())
             old = mBgColor.name();
         mBgColor = c;
         emit colorChanged(old, c.name());
@@ -63,7 +63,7 @@ void Cell::setStitch(QString s)
     stitch = StitchCollection::inst()->masterStitchSet()->findStitch(s);
 
     //FIXME: do a look up for the default stitch.
-    if(!stitch)
+    if (!stitch)
         stitch = StitchCollection::inst()->masterStitchSet()->findStitch("ch");
 
     setStitch(stitch);
@@ -76,7 +76,7 @@ int Cell::type() const
 
 void Cell::setRotation(qreal rotation)
 {
-    if(mRotation != rotation) {
+    if (mRotation != rotation) {
         mRotation = rotation;
         rotate(rotation);
     }
@@ -84,7 +84,7 @@ void Cell::setRotation(qreal rotation)
 
 QString Cell::name()
 {
-    if(!mStitch)
+    if (!mStitch)
         return QString();
     else
         return mStitch->name();

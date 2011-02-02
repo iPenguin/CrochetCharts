@@ -1,5 +1,5 @@
 /*************************************************\
-| (c) 2010-2011 Stitch Works Software             |
+| (c) 2010 Stitch Works Software                  |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "crochetscene.h"
@@ -207,13 +207,13 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 }
 
 /*
- *  int rowC = 8;
- *  //FIXME: less then 8 stitches gives funny rows.
- *  double widthInDegrees = 360.0 / columns;
- *  double circumference = ((rowC + (row*6)) - (rowC * 1/3)) * mStitchWidth;  //(columns - (rowC * 1/3)) * mStitchWidth;
- *  double diameter = circumference / M_PI;
- *  double radius = diameter / 2;
- q D*ebug() << widthInDegrees << circumference << diameter << radius;
+   int rowC = 8;
+   //FIXME: less then 8 stitches gives funny rows.
+   double widthInDegrees = 360.0 / columns;
+   double circumference = ((rowC + (row*6)) - (rowC * 1/3)) * mStitchWidth;  //(columns - (rowC * 1/3)) * mStitchWidth;
+   double diameter = circumference / M_PI;
+   double radius = diameter / 2;
+ qDebug() << widthInDegrees << circumference << diameter << radius;
  
  Cell *c;
  

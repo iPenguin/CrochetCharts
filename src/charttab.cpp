@@ -20,27 +20,27 @@
 #include <qdom.h>
 
 ChartTab::ChartTab(QWidget *parent) :
-    QWidget(parent)
+        QWidget(parent)
 {
     QVBoxLayout *l = new QVBoxLayout(this);
     QSplitter *splitter = new QSplitter(Qt::Vertical, this);
     splitter->setObjectName("chartSplitter");
     l->addWidget(splitter);
-    
+
     mView = new ChartView(this);
     mScene = new CrochetScene(this);
     connect(mScene, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchChanged(QString,QString)));
     connect(mScene, SIGNAL(colorChanged(QString,QString)), this, SLOT(colorChanged(QString,QString)));
     mView->setScene(mScene);
     mTextView = new CrochetTextView(this, mScene);
-    
+
     splitter->addWidget(mView);
     splitter->addWidget(mTextView);
     l->setMargin(0);
-    
+
     mView->setMinimumSize(width(), height()*2/3);
     splitter->setStretchFactor(0, 8);
-    
+
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
     //click and drag mode.
@@ -95,13 +95,13 @@ void ChartTab::saveImage(QString fileName, QSize size, int resolution)
 
 void ChartTab::stitchChanged(QString oldSt, QString newSt)
 {
-    if(!oldSt.isEmpty()) {
+    if (!oldSt.isEmpty()) {
         mPatternStitches->operator[](oldSt)--;
-        if(mPatternStitches->operator[](oldSt) == 0)
+        if (mPatternStitches->operator[](oldSt) == 0)
             mPatternStitches->remove(oldSt);
     }
-    
-    if(!mPatternStitches->contains(newSt))
+
+    if (!mPatternStitches->contains(newSt))
         mPatternStitches->insert(newSt, 1);
     else
         mPatternStitches->operator[](newSt)++;
@@ -111,20 +111,20 @@ void ChartTab::stitchChanged(QString oldSt, QString newSt)
 
 void ChartTab::colorChanged(QString oldColor, QString newColor)
 {
-    if(!oldColor.isEmpty()) {
+    if (!oldColor.isEmpty()) {
         mPatternColors->operator[](oldColor)["count"]--;
-        if(mPatternColors->operator[](oldColor)["count"] == 0)
+        if (mPatternColors->operator[](oldColor)["count"] == 0)
             mPatternColors->remove(oldColor);
     }
-    
-    if(!mPatternColors->contains(newColor)) {
+
+    if (!mPatternColors->contains(newColor)) {
         QMap<QString, int> properties;
         properties["color number"] = mPatternColors->count() + 1;
         properties["count"] = 1;
         mPatternColors->insert(newColor, properties);
     } else
         mPatternColors->operator[](newColor)["count"]++;
-    
+
     emit chartColorChanged();
 }
 

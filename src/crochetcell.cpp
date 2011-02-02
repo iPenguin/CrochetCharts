@@ -1,5 +1,5 @@
 /*************************************************\
-| (c) 2010-2011 Stitch Works Software             |
+| (c) 2010 Stitch Works Software                  |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "crochetcell.h"
@@ -8,6 +8,8 @@
 #include <QDebug>
 
 #include <QApplication>
+#include <qpainter.h>
+#include <qstyleoption.h>
 
 CrochetCell::CrochetCell()
 {
@@ -25,6 +27,7 @@ QRectF CrochetCell::boundingRect () const
 void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Cell::paint(painter, option, widget);
+    painter->drawText(option->rect.x(), option->rect.y(), toolTip());
 }
 
 int CrochetCell::type () const
