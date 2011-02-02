@@ -47,15 +47,15 @@ ChartTab::ChartTab(QWidget *parent) :
     //mView->setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
-void ChartTab::savePdf(QPrinter printer, QString fileName, int resolution)
+void ChartTab::savePdf(QPrinter *printer, QString fileName, int resolution)
 {
     //Export as pdf
     //Test run was missing a stitch in lower right corner.
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName(fileName);
-    printer.setResolution(resolution);
+    printer->setOutputFormat(QPrinter::PdfFormat);
+    printer->setOutputFileName(fileName);
+    printer->setResolution(resolution);
     QPainter p;
-    p.begin(&printer);
+    p.begin(printer);
     mScene->render(&p);
     p.end();
 }

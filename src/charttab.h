@@ -25,7 +25,7 @@ public:
     QString name() { return mName; }
     void setName(QString n) { mName = n; }
 
-    void savePdf(QPrinter printer, QString fileName, int resolution = 300);
+    void savePdf(QPrinter *printer, QString fileName, int resolution = 300);
     void saveSvg(QString fileName);
     void saveImage(QString fileName, QSize size, int resolution = 96);
 
