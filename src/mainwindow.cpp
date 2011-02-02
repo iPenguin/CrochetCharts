@@ -293,15 +293,17 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
     QImage img = QImage(size, QImage::Format_ARGB32); /*mScene->sceneRect().size().toSize()*/
     img.setDotsPerMeterX(dpm);
     img.setDotsPerMeterY(dpm);
-    //FIXME: needs a background color so it doesn't use white noise.
-    // Leave white noise for demo version? can it be reproduced on all OSes?
+
+    p->begin(&img);
+    p->fillRect(0, 0, size.width(), size.height(), QColor(Qt::white));
+    
     for(int i = 0; i < tabCount; ++i) {
         if(selection == ui->tabWidget->tabText(i)) {
             ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
             tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
         }
     }
-    p->begin(&img);
+    p->end();
 
     img.save(fileName /*, file type, img quality.*/); 
     
