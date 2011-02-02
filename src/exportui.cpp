@@ -13,7 +13,7 @@ ExportUi::ExportUi(QTabWidget *tab, QWidget *parent)
     this->updateExportOptions(eui->fileType->currentText());
     connect(eui->fileType, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(updateExportOptions(QString)));
-    generateSelectionList();
+    generateSelectionList(true);
 
     connect(eui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     connect(eui->buttonBox, SIGNAL(accepted()), this, SLOT(setValues()));
@@ -27,6 +27,8 @@ void ExportUi::updateExportOptions(QString expType)
 
         eui->selectionLbl->setVisible(true);
         eui->chartSelection->setVisible(true);
+        generateSelectionList(true);
+        
         eui->resolution->setVisible(true);
         eui->resolutionLbl->setVisible(true);
 
@@ -37,8 +39,10 @@ void ExportUi::updateExportOptions(QString expType)
 
     } else if(exportType == "svg") {
         //eui->optionsGroupBox->setVisible(false);
-        eui->selectionLbl->setVisible(false);
-        eui->chartSelection->setVisible(false);
+        eui->selectionLbl->setVisible(true);
+        eui->chartSelection->setVisible(true);
+        generateSelectionList(false);
+        
         eui->resolution->setVisible(false);
         eui->resolutionLbl->setVisible(false);
 
@@ -50,8 +54,10 @@ void ExportUi::updateExportOptions(QString expType)
     } else { // jpg, jpeg, png, gif, tiff, bmp, etc.
         eui->optionsGroupBox->setVisible(true);
 
-        eui->selectionLbl->setVisible(false);
-        eui->chartSelection->setVisible(false);
+        eui->selectionLbl->setVisible(true);
+        eui->chartSelection->setVisible(true);
+        generateSelectionList(false);
+        
         eui->resolution->setVisible(true);
         eui->resolutionLbl->setVisible(true);
 
@@ -62,17 +68,24 @@ void ExportUi::updateExportOptions(QString expType)
     }
 }
 
-void ExportUi::generateSelectionList()
+void ExportUi::generateSelectionList(bool showAll)
 {
-    QStringList options;
-    options << tr("Current Chart") << tr("All Charts");
+    eui->chartSelection->clear();
     
+    QStringList options;
+    if(showAll)
+        options << tr("All Charts");
+    
+    QString curChart;
     int count = mTabWidget->count();
     for(int i = 0; i < count; ++i) {
         options << mTabWidget->tabText(i);
+        if(i == mTabWidget->currentIndex())
+            curChart = mTabWidget->tabText(i);
     }
 
     eui->chartSelection->addItems(options);
+    eui->chartSelection->setCurrentIndex(eui->chartSelection->findText(curChart));
 }
 
 void ExportUi::setValues()

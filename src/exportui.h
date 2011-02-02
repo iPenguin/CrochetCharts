@@ -29,7 +29,7 @@ private slots:
     void setValues();
 
 private:
-    void generateSelectionList();
+    void generateSelectionList(bool showAll);
     
     Ui::ExportDialog *eui;
     QTabWidget *mTabWidget;
