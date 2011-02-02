@@ -20,7 +20,7 @@
 #include "appinfo.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent)
+    : QGraphicsScene(parent), mCurCell(0)
 {
     mStitchWidth = 64;
 
