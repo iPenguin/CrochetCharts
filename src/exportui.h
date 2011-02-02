@@ -6,6 +6,7 @@
 #define EXPORTUI_H
 
 #include <QDialog>
+#include <QTabWidget>
 
 namespace Ui {
     class ExportDialog;
@@ -15,13 +16,23 @@ class ExportUi : public QDialog
 {
     Q_OBJECT
 public:
-    ExportUi(QWidget *parent = 0);
+    ExportUi(QTabWidget *tabWidget, QWidget *parent = 0);
 
+    QString exportType,
+            selection;
+    int resolution,
+        width,
+        height;
+    
 private slots:
-    void updateExportOptions(QString exportType);
+    void updateExportOptions(QString expType);
+    void setValues();
 
 private:
+    void generateSelectionList();
+    
     Ui::ExportDialog *eui;
+    QTabWidget *mTabWidget;
 };
 
 #endif //EXPORTUI_H

@@ -5,19 +5,23 @@
 #include "exportui.h"
 #include "ui_export.h"
 
-ExportUi::ExportUi(QWidget *parent) :
-    QDialog(parent), eui(new Ui::ExportDialog)
+ExportUi::ExportUi(QTabWidget *tab, QWidget *parent)
+    : QDialog(parent), exportType(""), eui(new Ui::ExportDialog), mTabWidget(tab)
 {
     eui->setupUi(this);
 
     this->updateExportOptions(eui->fileType->currentText());
     connect(eui->fileType, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(updateExportOptions(QString)));
+    generateSelectionList();
+
+    connect(eui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(eui->buttonBox, SIGNAL(accepted()), this, SLOT(setValues()));
 }
 
-void ExportUi::updateExportOptions(QString exportType)
+void ExportUi::updateExportOptions(QString expType)
 {
-
+    exportType = expType;
     if(exportType == "pdf") {
         eui->optionsGroupBox->setVisible(true);
 
@@ -56,5 +60,28 @@ void ExportUi::updateExportOptions(QString exportType)
         eui->width->setVisible(true);
         eui->widthLbl->setVisible(true);
     }
+}
 
+void ExportUi::generateSelectionList()
+{
+    QStringList options;
+    options << tr("Current Chart") << tr("All Charts");
+    
+    int count = mTabWidget->count();
+    for(int i = 0; i < count; ++i) {
+        options << mTabWidget->tabText(i);
+    }
+
+    eui->chartSelection->addItems(options);
+}
+
+void ExportUi::setValues()
+{
+    exportType = eui->fileType->currentText();
+    selection = eui->chartSelection->currentText();
+    resolution = eui->resolution->text().toInt();
+    width = eui->width->text().toInt();
+    height = eui->height->text().toInt();
+
+    accept();
 }
