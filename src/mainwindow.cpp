@@ -1,5 +1,5 @@
 /*************************************************\
-| (c) 2010 Stitch Works Software                  |
+| Copyright (c) 2010 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "mainwindow.h"
