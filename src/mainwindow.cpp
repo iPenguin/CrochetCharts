@@ -30,6 +30,8 @@
 #include "crochetscene.h"
 #include <qinputdialog.h>
 
+#include <QPrinter>
+
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -196,12 +198,31 @@ void MainWindow::fileExport()
     if(!hasTab())
         return;
     
-    //TODO: pass the tab, or tabbar into the dialog so it can work on the data.
-    ExportUi d(this);
-    if(d.exec() == QDialog::Accepted) {
-        QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
-        QString fileName = QFileDialog::getSaveFileName(this,
-             tr("Export Pattern As..."), fileLoc, tr(""));
+    ExportUi d(ui->tabWidget, this);
+    if(d.exec() != QDialog::Accepted)
+        return;
+    
+    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
+    QString fileName = QFileDialog::getSaveFileName(this,
+            tr("Export Pattern As..."), fileLoc, tr(""));
+
+
+    if(fileName.isEmpty())
+        return;
+
+    if(d.exportType.isEmpty())
+        return;
+
+    ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(1));
+    
+    if(d.exportType == "pdf") {
+        QPrinter *printer = new QPrinter(QPrinter::HighResolution);
+        
+        tab->savePdf(printer, fileName, d.resolution);
+    } else if(d.exportType == "svg") {
+        tab->saveSvg(fileName);
+    } else {
+        tab->saveImage(fileName, QSize(d.width, d.height), d.resolution);
     }
 }
 
