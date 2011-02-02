@@ -92,7 +92,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
         ChartTab* tab = qobject_cast<ChartTab*>(mTabWidget->widget(i));
         if(!tab)
             continue;
-        stream->writeTextElement("name", tab->name());
+        stream->writeTextElement("name", mTabWidget->tabText(i));
         
         int rows = tab->scene()->rowCount();
         
@@ -242,7 +242,6 @@ void SaveFile::loadChart(QDomElement *element)
         if(!e.isNull()) {
             if(e.tagName() == "name") {
                 tabName = e.text();
-                tab->setName(tabName);
             } else if(e.tagName() == "cell") {
                 loadCell(tab, &e);
             } else {
@@ -251,7 +250,7 @@ void SaveFile::loadChart(QDomElement *element)
         }
         n = n.nextSibling();
     }
-    //FIXME: don't hard code the chart name
+    
     mTabWidget->addTab(tab, tabName);
 }
 
