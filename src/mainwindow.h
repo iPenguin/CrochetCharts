@@ -12,6 +12,7 @@
 #include <qundogroup.h>
 
 class ChartTab;
+class QPrinter;
 
 namespace Ui {
     class MainWindow;
@@ -75,6 +76,9 @@ private slots:
     void toolsCheckForUpdates();
 
     void helpAbout();
+
+private slots:
+    void print(QPrinter *printer);
     
 private:
     void setupMenus();
@@ -83,7 +87,7 @@ private:
     void trialVersionMessage();
 
     void checkUpdates();
-
+    
     void exportPdf(QString selection, QString fileName, QSize size, int resolution);
     void exportSvg(QString selection, QString fileName, QSize size);
     void exportImg(QString selection, QString fileName, QSize size, int resolution);
@@ -109,7 +113,6 @@ private:
     QAction *mActionUndo,
             *mActionRedo;
     QUndoGroup mUndoGroup;
-
 };
 
 #endif // MAINWINDOW_H

@@ -188,13 +188,18 @@ void MainWindow::setupMenus()
 
 void MainWindow::filePrint()
 {
-
+    //TODO: page count isn't working...
     QPrinter *printer = new QPrinter();
     QPrintDialog *dialog = new QPrintDialog(printer, this);
 
     if(dialog->exec() != QDialog::Accepted)
         return;
 
+    print(printer);
+}
+
+void MainWindow::print(QPrinter *printer)
+{
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     
     int tabCount = ui->tabWidget->count();
@@ -212,40 +217,18 @@ void MainWindow::filePrint()
         firstPass = false;
     }
     p->end();
-
+    
     QApplication::restoreOverrideCursor();
 }
 
 void MainWindow::filePrintPreview()
 {
     //FIXME: this isn't working
-    QPrinter *printer = new QPrinter();
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    
-    int tabCount = ui->tabWidget->count();
-    QPainter *p = new QPainter();
-    
-    p->begin(printer);
-    
-    bool firstPass = true;
-    for(int i = 0; i < tabCount; ++i) {
-        if(!firstPass)
-            printer->newPage();
-        
-        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
-        tab->renderChart(p);
-        firstPass = false;
-    }
-    p->end();
-        
+    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
     QPrintPreviewDialog *dialog = new QPrintPreviewDialog(printer, this);
-
-    QApplication::restoreOverrideCursor();
+    connect(dialog, SIGNAL(paintRequested(QPrinter *)), this, SLOT(print(QPrinter*)));
     
-    if(dialog->exec() != QDialog::Accepted)
-        return;
-
-    qDebug() << "print preview dialog... now what?";
+    dialog->exec();
     
 }
 
