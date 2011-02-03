@@ -10,6 +10,7 @@
 
 #include "chartview.h"
 #include <qundostack.h>
+#include <QPointer>
 
 class QGraphicsView;
 class CrochetScene;
@@ -21,6 +22,7 @@ class ChartTab : public QWidget
     friend class SaveFile;
 public:
     explicit ChartTab(QWidget *parent = 0);
+    ~ChartTab();
 
     void renderChart(QPainter *painter, QRectF rect = QRectF());
 
@@ -43,9 +45,9 @@ public slots:
     QUndoStack* undoStack() { return &mUndoStack; }
 
 private:
-    ChartView *mView;
+    QPointer<ChartView> mView;
     CrochetScene *mScene;
-    CrochetTextView *mTextView;
+    QPointer<CrochetTextView> mTextView;
 
     QMap<QString, int> *mPatternStitches;
     QMap<QString, QMap<QString, int> > *mPatternColors;

@@ -27,6 +27,16 @@ CrochetScene::CrochetScene(QObject *parent)
     initDemoBackground();
 }
 
+CrochetScene::~CrochetScene()
+{
+qDebug() << "Scene ~tor";
+    foreach(QGraphicsItem *i, items()) {
+        delete i;
+    }
+    items().clear();
+    mGrid.clear();
+}
+
 void CrochetScene::initDemoBackground()
 {
 
@@ -135,7 +145,7 @@ void CrochetScene::createChart(int rows, int cols)
 
 void CrochetScene::createRow(int row, int columns)
 {
-    Cell *c;
+    Cell *c = 0;
 
     //FIXME: find the default stitch.
     Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch("ch");

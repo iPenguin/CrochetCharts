@@ -31,6 +31,10 @@ StitchCollection::StitchCollection()
 StitchCollection::~StitchCollection()
 {
     saveMasterStitchSet("/home/brian/stitches.xml");
+    foreach(StitchSet *set, mStitchSets) {
+        delete set;
+    }
+    mStitchSets.clear();
 }
 
 void StitchCollection::loadStitchSets()

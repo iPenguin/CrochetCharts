@@ -15,6 +15,7 @@ class CrochetScene : public QGraphicsScene
     friend class SaveFile;
 public:
     CrochetScene(QObject *parent = 0);
+    ~CrochetScene();
 /*
     void setCell(int row, int column, Stitch *s);
     void insertCell(int row, int columnBefore, Stitch *s);

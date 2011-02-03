@@ -46,6 +46,18 @@ ChartTab::ChartTab(QWidget *parent) :
     //mView->setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
+ChartTab::~ChartTab()
+{
+/*
+    delete mView;
+    delete mScene;
+    delete mTextView;
+    mView = 0;
+    mScene = 0;
+    mTextView = 0;
+*/
+}
+
 void ChartTab::renderChart(QPainter *painter, QRectF rect)
 {
     if(!rect.isValid())

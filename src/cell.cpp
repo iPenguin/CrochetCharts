@@ -33,7 +33,7 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     QGraphicsSvgItem::paint(painter, option, widget);
 }
 
-void Cell::setStitch(Stitch* s)
+void Cell::setStitch(Stitch *s)
 {
     if (mStitch != s) {
         QString old;
