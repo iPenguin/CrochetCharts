@@ -83,6 +83,9 @@ void MainWindow::checkUpdates()
 
 void MainWindow::setupNewTabDialog()
 {
+    //TODO: see if you can make "returnPressed" work for the spinboxes.
+    connect(ui->chartTitle, SIGNAL(returnPressed()), this, SLOT(createChart()));
+    
     connect(ui->newDocBttnBox, SIGNAL(accepted()), this, SLOT(createChart()));
     connect(ui->newDocBttnBox, SIGNAL(rejected()), ui->newDocument, SLOT(hide()));   
 }
@@ -450,7 +453,12 @@ void MainWindow::menuFileAboutToShow()
     ui->actionClose->setEnabled(state);
     ui->actionSave->setEnabled(state);
     ui->actionSaveAs->setEnabled(state);
+
+    ui->actionPrint->setEnabled(state);
+    ui->actionPrintPreview->setEnabled(state);
+    
     ui->actionExport->setEnabled(state);
+    
 }
 
 void MainWindow::menuEditAboutToShow()
