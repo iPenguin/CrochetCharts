@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -85,6 +85,9 @@
            <property name="text">
             <string>Default Handedness:</string>
            </property>
+           <property name="buddy">
+            <cstring>handedness</cstring>
+           </property>
           </widget>
          </item>
          <item>
@@ -113,6 +116,9 @@
            <property name="text">
             <string>Rows:</string>
            </property>
+           <property name="buddy">
+            <cstring>defaultRows</cstring>
+           </property>
           </widget>
          </item>
          <item>
@@ -139,6 +145,9 @@
           <widget class="QLabel" name="label_4">
            <property name="text">
             <string>Stitches:</string>
+           </property>
+           <property name="buddy">
+            <cstring>defaultStitches</cstring>
            </property>
           </widget>
          </item>
@@ -371,6 +380,26 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>checkForUpdates</tabstop>
+  <tabstop>defaultFileLocation</tabstop>
+  <tabstop>folderSelector</tabstop>
+  <tabstop>handedness</tabstop>
+  <tabstop>defaultRows</tabstop>
+  <tabstop>defaultStitches</tabstop>
+  <tabstop>alternateColors</tabstop>
+  <tabstop>oddRow</tabstop>
+  <tabstop>oddRowButton</tabstop>
+  <tabstop>evenRow</tabstop>
+  <tabstop>evenRowButton</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>showWrongSideInstructions</tabstop>
+  <tabstop>showColors</tabstop>
+  <tabstop>showHexValues</tabstop>
+  <tabstop>checkBox_4</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -380,8 +409,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>252</x>
+     <y>338</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -396,8 +425,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>320</x>
+     <y>338</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
