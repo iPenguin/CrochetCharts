@@ -32,6 +32,8 @@
 
 #include <QPrinter>
 #include <QtSvg/QSvgGenerator>
+#include <QPrintDialog>
+#include <qprintpreviewdialog.h>
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -186,12 +188,65 @@ void MainWindow::setupMenus()
 
 void MainWindow::filePrint()
 {
-    qDebug() << "filePrint()";
+
+    QPrinter *printer = new QPrinter();
+    QPrintDialog *dialog = new QPrintDialog(printer, this);
+
+    if(dialog->exec() != QDialog::Accepted)
+        return;
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    
+    int tabCount = ui->tabWidget->count();
+    QPainter *p = new QPainter();
+    
+    p->begin(printer);
+    
+    bool firstPass = true;
+    for(int i = 0; i < tabCount; ++i) {
+        if(!firstPass)
+            printer->newPage();
+        
+        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        tab->renderChart(p);
+        firstPass = false;
+    }
+    p->end();
+
+    QApplication::restoreOverrideCursor();
 }
 
 void MainWindow::filePrintPreview()
 {
-    qDebug() << "filePrintPreview()";
+    //FIXME: this isn't working
+    QPrinter *printer = new QPrinter();
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    
+    int tabCount = ui->tabWidget->count();
+    QPainter *p = new QPainter();
+    
+    p->begin(printer);
+    
+    bool firstPass = true;
+    for(int i = 0; i < tabCount; ++i) {
+        if(!firstPass)
+            printer->newPage();
+        
+        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        tab->renderChart(p);
+        firstPass = false;
+    }
+    p->end();
+        
+    QPrintPreviewDialog *dialog = new QPrintPreviewDialog(printer, this);
+
+    QApplication::restoreOverrideCursor();
+    
+    if(dialog->exec() != QDialog::Accepted)
+        return;
+
+    qDebug() << "print preview dialog... now what?";
+    
 }
 
 void MainWindow::fileExport()
