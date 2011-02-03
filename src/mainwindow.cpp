@@ -229,7 +229,6 @@ void MainWindow::filePrintPreview()
     connect(dialog, SIGNAL(paintRequested(QPrinter *)), this, SLOT(print(QPrinter*)));
     
     dialog->exec();
-    
 }
 
 void MainWindow::fileExport()
