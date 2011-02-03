@@ -7,6 +7,7 @@
 
 #include <QString>
 #include <QList>
+#include <QPointer>
 
 class QSvgRenderer;
 class QPixmap;
@@ -23,7 +24,7 @@ public:
     void setName(QString n) { mName = n; }
     QString name() const { return mName; }
 
-    void setFile(QString f) { mFile = f; }
+    void setFile(QString f);
     QString file() const { return mFile; }
 
     void setDescription(QString desc) { mDescription = desc; }
@@ -49,7 +50,7 @@ private:
     QString mWrongSide;
 
     QPixmap *mPixmap;
-    QSvgRenderer *mSvgRenderer;
+    QPointer<QSvgRenderer> mSvgRenderer;
 };
 
 QDataStream& operator<<(QDataStream &out, const Stitch &s);

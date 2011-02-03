@@ -24,6 +24,18 @@ Stitch::~Stitch()
     mPixmap = 0;
 }
 
+void Stitch::setFile ( QString f )
+{
+    if(mFile != f) {
+        mFile = f;
+        //FIXME: don't hard code the path to the files!
+        if(!mSvgRenderer->isValid())
+            mSvgRenderer->load("/home/brian/crochet.git/" + mFile);
+    }
+    
+}
+
+
 bool Stitch::isSvg()
 {
     QString fileName = mFile.toLower();
