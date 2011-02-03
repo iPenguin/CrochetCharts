@@ -29,7 +29,6 @@ CrochetScene::CrochetScene(QObject *parent)
 
 CrochetScene::~CrochetScene()
 {
-qDebug() << "Scene ~tor";
     foreach(QGraphicsItem *i, items()) {
         delete i;
     }
