@@ -220,6 +220,8 @@
     </property>
     <addaction name="actionAddChart"/>
     <addaction name="actionAddNotes"/>
+    <addaction name="separator"/>
+    <addaction name="actionRemove_Tab"/>
    </widget>
    <widget class="QMenu" name="menuChart">
     <property name="title">
@@ -650,6 +652,11 @@
   <action name="actionCheckForUpdates">
    <property name="text">
     <string>Check for Updates</string>
+   </property>
+  </action>
+  <action name="actionRemove_Tab">
+   <property name="text">
+    <string>Remove Tab</string>
    </property>
   </action>
  </widget>
