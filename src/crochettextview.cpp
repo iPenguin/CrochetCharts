@@ -305,7 +305,7 @@ void CrochetTextView::keyPressEvent(QKeyEvent *e)
  ************************************************************************/
 void CrochetTextView::setupLineNumberArea()
 {
-    lineNumberText = tr("Row %1");
+    lineNumberText = tr(" Row ");
     lineNumberArea = new LineNumberArea(this);
     
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
@@ -325,9 +325,9 @@ int CrochetTextView::lineNumberAreaWidth()
         ++digits;
     }
 
-    int lineTextWidth = fontMetrics().width(lineNumberText);
+    int lineTextWidth = fontMetrics().width(lineNumberText + " ");
     
-    int space = fontMetrics().width(QLatin1Char('9')) * digits + lineTextWidth;
+    int space = (fontMetrics().width(QLatin1Char('9')) * digits) + lineTextWidth;
     
     return space;
 }
@@ -388,7 +388,7 @@ void CrochetTextView::lineNumberAreaPaintEvent(QPaintEvent *event)
     
     while (block.isValid() && top <= event->rect().bottom()) {
         if (block.isVisible() && bottom >= event->rect().top()) {
-            QString number = QString(lineNumberText.arg(QString::number(blockNumber + 1)));
+            QString number = QString(lineNumberText + QString::number(blockNumber + 1) + " ");
             painter.setPen(Qt::black);
             painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
                              Qt::AlignRight, number);
