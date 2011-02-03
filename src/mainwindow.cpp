@@ -85,6 +85,12 @@ void MainWindow::checkUpdates()
 
 void MainWindow::setupNewTabDialog()
 {
+    int rows = Settings::inst()->value("defaultRows", QVariant(15)).toInt();
+    int stitches = Settings::inst()->value("defaultStitches", QVariant(15)).toInt();
+    
+    ui->rows->setValue(rows);
+    ui->stitches->setValue(stitches);
+    
     //TODO: see if you can make "returnPressed" work for the spinboxes.
     connect(ui->chartTitle, SIGNAL(returnPressed()), this, SLOT(createChart()));
     
@@ -351,6 +357,12 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
 
 void MainWindow::documentNewChart()
 {
+    int rows = Settings::inst()->value("defaultRows", QVariant(15)).toInt();
+    int stitches = Settings::inst()->value("defaultStitches", QVariant(15)).toInt();
+    
+    ui->rows->setValue(rows);
+    ui->stitches->setValue(stitches);
+    
     ui->chartTitle->setText(nextChartName());
     ui->newDocument->show();
 }

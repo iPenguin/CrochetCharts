@@ -22,6 +22,17 @@ public:
 public slots:
     void selectFolder();
 private:
+
+    void loadApplicationSettings();
+    void loadRoundChartSettings();
+    void loadInstructionSettings();
+    void loadLegendSettings();
+
+    void saveApplicationSettings();
+    void saveRoundChartSettings();
+    void saveInstructionSettings();
+    void saveLegendSettings();
+    
     Ui::SettingsDialog *ui;
 };
 

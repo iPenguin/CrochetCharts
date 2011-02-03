@@ -23,16 +23,10 @@ SettingsUi::SettingsUi() :
 
     connect(ui->folderSelector, SIGNAL(clicked()), this, SLOT(selectFolder()));
 
-    //TODO: load settings from disk:
-    //TODO: use auto completer to help fill in this field.
-
-    QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
-
-    ui->defaultFileLocation->setText(
-                Settings::inst()->value("fileLocation", QVariant(userDocs)).toString());
-
-    ui->checkForUpdates->setChecked(
-                Settings::inst()->value("checkForUpdates", QVariant(true)).toBool());
+    loadApplicationSettings();
+    loadRoundChartSettings();
+    loadInstructionSettings();
+    loadLegendSettings();
 
 }
 
@@ -40,6 +34,38 @@ SettingsUi::~SettingsUi()
 {
     delete ui;
     ui = 0;
+}
+
+void SettingsUi::loadApplicationSettings()
+{
+    //TODO: use auto completer to help fill in this field.
+    QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+    
+    ui->defaultFileLocation->setText(
+        Settings::inst()->value("fileLocation", QVariant(userDocs)).toString());
+    
+    ui->checkForUpdates->setChecked(
+        Settings::inst()->value("checkForUpdates", QVariant(true)).toBool());
+}
+
+void SettingsUi::loadRoundChartSettings()
+{
+
+    ui->defaultRows->setValue(
+        Settings::inst()->value("defaultsRows", QVariant(15)).toInt());
+    ui->defaultStitches->setValue(
+        Settings::inst()->value("defaultsStitches", QVariant(15)).toInt());
+
+}
+
+void SettingsUi::loadInstructionSettings()
+{
+
+}
+
+void SettingsUi::loadLegendSettings()
+{
+
 }
 
 int SettingsUi::exec()
@@ -51,11 +77,36 @@ int SettingsUi::exec()
     if(retValue != QDialog::Accepted)
         return retValue;
 
-    Settings::inst()->setValue("fileLocation", QVariant(ui->defaultFileLocation->text()));
-
-    Settings::inst()->setValue("checkForUpdates", QVariant(ui->checkForUpdates->isChecked()));
+    saveApplicationSettings();
+    saveRoundChartSettings();
+    saveInstructionSettings();
+    saveLegendSettings();
 
     return retValue;
+}
+
+void SettingsUi::saveApplicationSettings()
+{
+    Settings::inst()->setValue("fileLocation", QVariant(ui->defaultFileLocation->text()));
+    Settings::inst()->setValue("checkForUpdates", QVariant(ui->checkForUpdates->isChecked()));
+    
+}
+
+void SettingsUi::saveRoundChartSettings()
+{
+    Settings::inst()->setValue("defaultRows", QVariant(ui->defaultRows->value()));
+    Settings::inst()->setValue("defaultStitches", QVariant(ui->defaultStitches->value()));
+    
+}
+
+void SettingsUi::saveInstructionSettings()
+{
+
+}
+
+void SettingsUi::saveLegendSettings()
+{
+
 }
 
 void SettingsUi::selectFolder()
