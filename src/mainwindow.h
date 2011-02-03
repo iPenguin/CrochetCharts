@@ -64,8 +64,11 @@ private slots:
     void viewZoomIn();
     void viewZoomOut();
 
+    void menuDocumentAboutToShow();
     void documentNewChart();
     void createChart();
+    void removeCurrentTab();
+    void removeTab(int tabIndex);
 
     void menuChartAboutToShow();
     void chartEditName();

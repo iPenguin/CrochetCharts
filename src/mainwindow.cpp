@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     ui->setupUi(this);
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabChanged(int)));
+    connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(removeTab(int)));
     
     setCorner(Qt::TopLeftCorner, Qt::LeftDockWidgetArea);
     setCorner(Qt::BottomLeftCorner, Qt::LeftDockWidgetArea);
@@ -172,7 +173,10 @@ void MainWindow::setupMenus()
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
 
     //Document Menu
+    connect(ui->menuDocument, SIGNAL(aboutToShow()), this, SLOT(menuDocumentAboutToShow()));
     connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
+
+    connect(ui->actionRemoveTab, SIGNAL(triggered()), this, SLOT(removeCurrentTab()));
 
     //Chart Menu
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
@@ -550,7 +554,9 @@ void MainWindow::fileNew()
 void MainWindow::createChart()
 {
     ui->newDocument->hide();
-    
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
     int rows = ui->rows->text().toInt();
     int cols = ui->stitches->text().toInt();
     QString defStitch = ui->defaultStitch->currentText();
@@ -574,6 +580,8 @@ void MainWindow::createChart()
     ui->tabWidget->setCurrentWidget(tab);
 
     tab->scene()->createChart(rows, cols);
+
+    QApplication::restoreOverrideCursor();
 }
 
 QString MainWindow::nextChartName(QString baseName)
@@ -614,6 +622,13 @@ void MainWindow::viewShowPatternColors()
 void MainWindow::viewShowPatternStitches()
 {
     ui->patternStitchesDock->setVisible(ui->actionShowPatternStitches->isChecked());
+}
+
+void MainWindow::menuDocumentAboutToShow()
+{
+    bool state = hasTab();
+
+    ui->actionRemoveTab->setEnabled(state);
 }
 
 void MainWindow::menuChartAboutToShow()
@@ -729,6 +744,23 @@ void MainWindow::tabChanged(int newTab)
         return;
     
     mUndoGroup.setActiveStack(tab->undoStack());
+}
+
+void MainWindow::removeCurrentTab()
+{
+    removeTab(ui->tabWidget->currentIndex());
+}
+
+void MainWindow::removeTab(int tabIndex)
+{
+    if(tabIndex < 0)
+        return;
+    
+    qDebug() << "remove tab" << tabIndex;
+
+    //FIXME: either include a warning that this is NOT undo-able or make it undo-able.
+    delete ui->tabWidget->widget(tabIndex);
+    ui->tabWidget->removeTab(tabIndex);
 }
 
 void MainWindow::updatePatternStitches()
