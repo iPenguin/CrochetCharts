@@ -14,7 +14,7 @@
    id="svg2985"
    version="1.1"
    inkscape:version="0.48.0 r9654"
-   sodipodi:docname="New document 2">
+   sodipodi:docname="slip.svg">
   <defs
      id="defs2987" />
   <sodipodi:namedview
@@ -25,15 +25,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="5.5"
-     inkscape:cx="-0.090909091"
+     inkscape:cx="20"
      inkscape:cy="32"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:document-units="px"
      inkscape:grid-bbox="true"
-     inkscape:window-width="1280"
-     inkscape:window-height="929"
-     inkscape:window-x="-4"
+     inkscape:window-width="1212"
+     inkscape:window-height="1004"
+     inkscape:window-x="1276"
      inkscape:window-y="-3"
      inkscape:window-maximized="1" />
   <metadata
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,6 +61,6 @@
        sodipodi:rx="13.454545"
        sodipodi:ry="13.454545"
        d="m 39.636363,25.636364 a 13.454545,13.454545 0 1 1 -26.90909,0 13.454545,13.454545 0 1 1 26.90909,0 z"
-       transform="matrix(0.88285743,0,0,0.87610068,8.5215508,7.9945099)" />
+       transform="matrix(1.1465798,0,0,1.1465798,1.9804558,2.6058635)" />
   </g>
 </svg>
