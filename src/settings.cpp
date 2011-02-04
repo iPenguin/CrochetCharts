@@ -57,42 +57,46 @@ QVariant Settings::value(const QString &key) const
 
 QVariant Settings::defaultValue ( const QString& key ) const
 {
-    
-    if(key == "defaultStitch") //default stitch to use when filling a new document
-        return QVariant("ch");
-    
-    else if(key == "licensePage") //which server & webpage to look at when getting license information.
+    //look up values for setting server/webpage for license and update testing.
+    if(key == "licensePage") 
         return QVariant(AppInfo::liveLicensePage);
-    else if(key == "updatePage") //which server & webpage to look at when checking for updates.
+    else if(key == "updatePage")
         return QVariant(AppInfo::liveUpdatePage);
-    
-    else if(key == "firstName") //license info
+
+    //license information
+    else if(key == "firstName")
         return QVariant("");
-    else if(key == "lastName") //license info
+    else if(key == "lastName")
         return QVariant("");
-    else if(key == "email") //license info
+    else if(key == "email")
         return QVariant("");
-    else if(key == "serialNumber") //license info
+    else if(key == "serialNumber")
         return QVariant("");
-    else if(key == "license") //license info
+    else if(key == "license")
         return QVariant("");
-    
-    else if(key == "checkForUpdates") //check for updates at startup
+
+    //check for updates at startup
+    else if(key == "checkForUpdates")
         return QVariant(true);
-    
-    else if(key == "defaultRows") //default row count for new docs
+
+    //default options for round charts
+    else if(key == "defaultStitch")
+        return QVariant("ch");
+    else if(key == "defaultRows")
         return QVariant(15);
-    else if(key == "defaultStitches") //default stitch count for new docs
+    else if(key == "defaultStitches")
         return QVariant(15);
-    
-    else if(key == "fileLocation") { //default location to look for files.
+
+    //default location to look for files.
+    else if(key == "fileLocation") {
         QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
         return QVariant(userDocs);
     }
-    
-    else if (key == "geometry") //positioning of window when application was last quit.
+
+    //window state and positioning info.
+    else if (key == "geometry")
         return QVariant();
-    else if (key == "windowState") //internal wiget state when application was last quit.
+    else if (key == "windowState")
         return QVariant();
     else 
         return QVariant();
