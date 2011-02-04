@@ -76,14 +76,6 @@ int Cell::type() const
     return Cell::Type;
 }
 
-void Cell::setRotation(qreal rotation)
-{
-    if (mRotation != rotation) {
-        mRotation = rotation;
-        rotate(rotation);
-    }
-}
-
 QString Cell::name()
 {
     if (!mStitch)

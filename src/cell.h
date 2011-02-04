@@ -23,9 +23,6 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     int type () const;
 
-    void setRotation(qreal rotation);
-    qreal rotation() const { return mRotation; }
-
     void setAngle(double angle) { mAngle = angle; }
     double angle() const { return mAngle; }
 
@@ -48,7 +45,6 @@ signals:
 public slots:
 
 private:
-    qreal mRotation;
     double mAngle;
 
     QColor mBgColor;
