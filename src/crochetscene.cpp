@@ -20,7 +20,7 @@
 #include "appinfo.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent), mCurCell(0)
+    : QGraphicsScene(parent), mCurCell(0), mDiff(0.0)
 {
     mStitchWidth = 64;
 
@@ -187,7 +187,8 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
         return;
 
     mCurCell = c;
-    
+    mDiff = 0;
+        
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
@@ -199,12 +200,21 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     
     if(!mCurCell)
         return;
+
+    if(mDiff == 0) {
+        QPointF origPos = mouseEvent->buttonDownScenePos(Qt::LeftButton);
+        QPointF curPos = mouseEvent->scenePos();
     
-    QPointF origPos = mouseEvent->buttonDownScenePos(Qt::LeftButton);
-    QPointF curPos = mouseEvent->scenePos();
-    
-    qreal diff = origPos.manhattanLength() - curPos.manhattanLength();
-    mCurCell->rotate(diff);
+        mDiff = origPos.manhattanLength() - curPos.manhattanLength();
+    } else {
+        //increase speed slowly...
+        if(mDiff < 0)
+            mDiff -= .5;
+        else
+            mDiff += .5;
+    }
+    mCurCell->setTransform(QTransform().translate(32,32).rotate(mDiff).translate(-32, -32), true);
+    //mCurCell->rotate(diff);
     
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
@@ -213,6 +223,8 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {
     if(mCurCell)
         mCurCell = 0;
+    mDiff = 0;
+    
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 
