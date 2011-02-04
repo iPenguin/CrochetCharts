@@ -6,6 +6,14 @@
     <org>Stitch Works Software</org>
     <url>http://www.StitchWorksSoftware.com/</url>
 
+   <stitch>
+       <name>x</name>
+       <icon>stitches/no_stitch.svg</icon>
+       <description>this is a place holder stitch</description>
+       <category>Basic</category>
+       <ws>x</ws>
+   </stitch>
+
     <stitch>
         <name>ss</name>
         <icon>stitches/slip.svg</icon>

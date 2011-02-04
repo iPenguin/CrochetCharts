@@ -13,5 +13,8 @@
         <file>stitches/front_post_dc.svg</file>
         <file>stitches/single_crochet2.svg</file>
         <file>stitches/slip.svg</file>
+        <file>stitches/triple_treble_crochet.svg</file>
+        <file>stitches/double_treble_crochet.svg</file>
+        <file>stitches/half_double_crochet.svg</file>
     </qresource>
 </RCC>
