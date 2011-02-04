@@ -32,9 +32,9 @@ int main(int argc, char *argv[])
     splash.showMessage(QObject::tr("Loading..."));
     qApp->processEvents();
 
-    QString userSn = Settings::inst()->value("serialNumber", QVariant("")).toString();
-    QString userLicense = Settings::inst()->value("license", QVariant("")).toString();
-    QString userEmail = Settings::inst()->value("email", QVariant("")).toString();
+    QString userSn = Settings::inst()->value("serialNumber").toString();
+    QString userLicense = Settings::inst()->value("license").toString();
+    QString userEmail = Settings::inst()->value("email").toString();
 
     if(!License::isValidLicense(userLicense, userSn, userEmail)) {
         splash.showMessage(QObject::tr("Loading: License Wizard"));

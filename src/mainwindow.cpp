@@ -79,15 +79,15 @@ void MainWindow::checkUpdates()
     // append the updater to the centralWidget to keep it out of the way of the menus.
     ui->centralWidget->layout()->addWidget(mUpdater); 
         
-    bool checkForUpdates = Settings::inst()->value("checkForUpdates", QVariant(true)).toBool();
+    bool checkForUpdates = Settings::inst()->value("checkForUpdates").toBool();
     if(checkForUpdates)
         mUpdater->checkForUpdates(true); //check at startup is always silent.
 }
 
 void MainWindow::setupNewTabDialog()
 {
-    int rows = Settings::inst()->value("defaultRows", QVariant(15)).toInt();
-    int stitches = Settings::inst()->value("defaultStitches", QVariant(15)).toInt();
+    int rows = Settings::inst()->value("defaultRows").toInt();
+    int stitches = Settings::inst()->value("defaultStitches").toInt();
     
     ui->rows->setValue(rows);
     ui->stitches->setValue(stitches);
@@ -269,7 +269,7 @@ void MainWindow::fileExport()
     else
         filter = tr("");
 
-    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
+    QString fileLoc = Settings::inst()->value("fileLocation").toString();
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export Pattern As..."), fileLoc, filter);
 
     if(fileName.isEmpty())
@@ -361,8 +361,8 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
 
 void MainWindow::documentNewChart()
 {
-    int rows = Settings::inst()->value("defaultRows", QVariant(15)).toInt();
-    int stitches = Settings::inst()->value("defaultStitches", QVariant(15)).toInt();
+    int rows = Settings::inst()->value("defaultRows").toInt();
+    int stitches = Settings::inst()->value("defaultStitches").toInt();
     
     ui->rows->setValue(rows);
     ui->stitches->setValue(stitches);
@@ -418,8 +418,8 @@ void MainWindow::readSettings()
 {
     //TODO: For full session restoration reimplement QApplication::commitData()
     //See: http://doc.qt.nokia.com/stable/session.html
-    restoreGeometry(Settings::inst()->value("geometry", QVariant()).toByteArray());
-    restoreState(Settings::inst()->value("windowState", QVariant()).toByteArray());
+    restoreGeometry(Settings::inst()->value("geometry").toByteArray());
+    restoreState(Settings::inst()->value("windowState").toByteArray());
 
 }
 
@@ -431,7 +431,7 @@ void MainWindow::toolsOptions()
 
 void MainWindow::fileOpen()
 {
-    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
+    QString fileLoc = Settings::inst()->value("fileLocation").toString();
     QString fileName = QFileDialog::getOpenFileName(this,
          tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern)"));
 
@@ -478,7 +478,7 @@ void MainWindow::fileSaveAs()
         return;
     }
 
-    QString fileLoc = Settings::inst()->value("fileLocation", QVariant("")).toString();
+    QString fileLoc = Settings::inst()->value("fileLocation").toString();
     QString fileName = QFileDialog::getSaveFileName(this,
             tr("Save Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern)"));
 

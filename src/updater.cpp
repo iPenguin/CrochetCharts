@@ -25,7 +25,7 @@
 Updater::Updater(QWidget* parent)
     : QWidget(parent), mSilent(false)
 {
-    QString url = Settings::inst()->value("updatePage", QVariant(AppInfo::liveUpdatePage)).toString();
+    QString url = Settings::inst()->value("updatePage").toString();
 
     QString os;
 #if defined(Q_OS_WIN32)
@@ -36,7 +36,7 @@ Updater::Updater(QWidget* parent)
     os = "osx";
 #endif
 
-    QString sn = Settings::inst()->value("serialNumber", QVariant("")).toString();
+    QString sn = Settings::inst()->value("serialNumber").toString();
     //software, version, os, serial number
     mUrl = QUrl(QString(url).arg(AppInfo::appName.toLower()).arg(AppInfo::appVersion).arg(os).arg(sn));
 

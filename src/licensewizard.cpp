@@ -166,7 +166,7 @@ bool EvaluatePage::validatePage()
 {
     //Look up the licensePage value so I can use a testing server if I need to, otherwise it
     //should always default to the live server as specified in AppInfo::licensePage;
-    QString path = Settings::inst()->value("licensePage", QVariant(AppInfo::liveLicensePage)).toString();
+    QString path = Settings::inst()->value("licensePage").toString();
     path = QString(path).arg("").arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);
 
@@ -239,9 +239,9 @@ RegisterPage::RegisterPage(QWidget *parent)
 
 void RegisterPage::initializePage()
 {
-    QString fName = Settings::inst()->value("firstName", QVariant("")).toString();
-    QString lName = Settings::inst()->value("lastName", QVariant("")).toString();
-    QString email = Settings::inst()->value("email", QVariant("")).toString();
+    QString fName = Settings::inst()->value("firstName").toString();
+    QString lName = Settings::inst()->value("lastName").toString();
+    QString email = Settings::inst()->value("email").toString();
 
     firstNameLineEdit->setText(fName);
     lastNameLineEdit->setText(lName);
@@ -252,7 +252,7 @@ bool RegisterPage::validatePage()
 {
     //Look up the licensePage value so I can use a testing server if I need to, otherwise it
     //should always default to the live server as specified in AppInfo::licensePage;
-    QString path = Settings::inst()->value("licensePage", QVariant(AppInfo::liveLicensePage)).toString();
+    QString path = Settings::inst()->value("licensePage").toString();
     path = QString(path).arg(serialNumberLineEdit->text()).arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);
 

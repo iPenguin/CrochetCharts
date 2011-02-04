@@ -9,6 +9,7 @@
 #include <qsvgrenderer.h>
 #include "stitchcollection.h"
 #include "stitchset.h"
+#include "settings.h"
 
 Cell::Cell(QGraphicsItem *parent) :
         QGraphicsSvgItem(parent), mStitch(0)
@@ -62,9 +63,10 @@ void Cell::setStitch(QString s)
 
     stitch = StitchCollection::inst()->masterStitchSet()->findStitch(s);
 
-    //FIXME: do a look up for the default stitch.
-    if (!stitch)
-        stitch = StitchCollection::inst()->masterStitchSet()->findStitch("ch");
+    if (!stitch) {
+        QString st = Settings::inst()->value("defaultStitch").toString();
+        stitch = StitchCollection::inst()->masterStitchSet()->findStitch(st);
+    }
 
     setStitch(stitch);
 }

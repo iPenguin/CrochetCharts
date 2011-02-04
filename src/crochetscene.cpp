@@ -146,8 +146,9 @@ void CrochetScene::createRow(int row, int columns)
 {
     Cell *c = 0;
 
-    //FIXME: find the default stitch.
-    Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch("ch");
+    QString st = Settings::inst()->value("defaultStitch").toString();
+    Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(st);
+    
     QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
         c = new CrochetCell();

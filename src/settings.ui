@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -103,6 +103,26 @@
             </property>
            </item>
           </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <property name="topMargin">
+          <number>8</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Default Stitch:</string>
+           </property>
+           <property name="buddy">
+            <cstring>defaultStitch</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="defaultStitch"/>
          </item>
         </layout>
        </item>
@@ -386,6 +406,7 @@
   <tabstop>defaultFileLocation</tabstop>
   <tabstop>folderSelector</tabstop>
   <tabstop>handedness</tabstop>
+  <tabstop>defaultStitch</tabstop>
   <tabstop>defaultRows</tabstop>
   <tabstop>defaultStitches</tabstop>
   <tabstop>alternateColors</tabstop>

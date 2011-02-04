@@ -1,5 +1,5 @@
 /*************************************************\
-| Copyright (c) 2010-2011 Stitch Works Software   |
+| Copyright (c) 2010 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #ifndef SETTINGS_H
@@ -15,7 +15,7 @@ public:
     static Settings* inst();
 
     void setValue(const QString &key, const QVariant &value);
-    QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
+    QVariant value(const QString &key) const;
 
     bool isDemoVersion() { return mIsDemoVersion; }
     void setDemoVersion(bool isDemo) { mIsDemoVersion = isDemo; }
@@ -24,6 +24,9 @@ private:
     void initDemoVersion();
     static Settings *mInstance;
 
+    //return the default value of a given key.
+    QVariant defaultValue ( const QString& key ) const;
+    
     Settings();
 
     QSettings mSettings;
