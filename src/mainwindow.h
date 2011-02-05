@@ -36,6 +36,8 @@ protected:
     //generate the next "new chart" name ie: chart, chart1, chart2...
     QString nextChartName(QString baseName = tr("Chart"));
     bool docHasChartName(QString name);
+
+    ChartTab* createTab();
     
 protected slots:
     void updatePatternStitches();
@@ -66,7 +68,7 @@ private slots:
 
     void menuDocumentAboutToShow();
     void documentNewChart();
-    void createChart();
+    void newChart();
     void removeCurrentTab();
     void removeTab(int tabIndex);
 

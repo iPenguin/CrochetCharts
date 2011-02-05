@@ -233,14 +233,10 @@ void SaveFile::loadColors(QDomElement* element)
 
 void SaveFile::loadChart(QDomElement *element)
 {
-    ChartTab* tab = new ChartTab();
+    MainWindow *mw = qobject_cast<MainWindow*>(mParent);
+    ChartTab* tab = mw->createTab();
     QString tabName;
 
-    //TODO: put this in the ChartTab ctor?
-    MainWindow *mw = qobject_cast<MainWindow*>(mParent);
-    tab->setPatternStitches(&mw->patternStitches());
-    tab->setPatternColors(&mw->patternColors());
-    
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
@@ -255,7 +251,7 @@ void SaveFile::loadChart(QDomElement *element)
         }
         n = n.nextSibling();
     }
-    
+
     mTabWidget->addTab(tab, tabName);
 }
 

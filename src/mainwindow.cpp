@@ -93,9 +93,9 @@ void MainWindow::setupNewTabDialog()
     ui->stitches->setValue(stitches);
     
     //TODO: see if you can make "returnPressed" work for the spinboxes.
-    connect(ui->chartTitle, SIGNAL(returnPressed()), this, SLOT(createChart()));
+    connect(ui->chartTitle, SIGNAL(returnPressed()), this, SLOT(newChart()));
     
-    connect(ui->newDocBttnBox, SIGNAL(accepted()), this, SLOT(createChart()));
+    connect(ui->newDocBttnBox, SIGNAL(accepted()), this, SLOT(newChart()));
     connect(ui->newDocBttnBox, SIGNAL(rejected()), ui->newDocument, SLOT(hide()));   
 }
 
@@ -551,19 +551,33 @@ void MainWindow::fileNew()
     
 }
 
-void MainWindow::createChart()
+void MainWindow::newChart()
 {
     ui->newDocument->hide();
-
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     int rows = ui->rows->text().toInt();
     int cols = ui->stitches->text().toInt();
     QString defStitch = ui->defaultStitch->currentText();
     QString name = ui->chartTitle->text();
-
+    
     if(docHasChartName(name))
         name = nextChartName(name);
+
+    ChartTab *tab = createTab();
+    
+    if(name.isEmpty())
+        name = nextChartName();
+    
+    ui->tabWidget->addTab(tab, name);
+    ui->tabWidget->setCurrentWidget(tab);
+    
+    tab->scene()->createChart(rows, cols);
+}
+
+ChartTab* MainWindow::createTab()
+{
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     
     ChartTab* tab = new ChartTab(ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
@@ -572,16 +586,10 @@ void MainWindow::createChart()
     connect(tab, SIGNAL(chartColorChanged()), this, SLOT(updatePatternColors()));
 
     mUndoGroup.addStack(tab->undoStack());
-    
-    if(name.isEmpty())
-        name = nextChartName();
-    
-    ui->tabWidget->addTab(tab, name);
-    ui->tabWidget->setCurrentWidget(tab);
-
-    tab->scene()->createChart(rows, cols);
 
     QApplication::restoreOverrideCursor();
+
+    return tab;
 }
 
 QString MainWindow::nextChartName(QString baseName)
