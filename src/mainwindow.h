@@ -105,6 +105,7 @@ private:
 
 //for the savefile class:
 protected:
+    QMap<QString, int> patternStitches() { return mPatternStitches; }
     QMap<QString, QMap<QString, int> > patternColors() { return mPatternColors; }
     QTabWidget* tabWidget();
     

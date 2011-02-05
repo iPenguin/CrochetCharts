@@ -61,11 +61,11 @@ void Cell::setStitch(QString s)
 {
     Stitch* stitch = 0;
 
-    stitch = StitchCollection::inst()->masterStitchSet()->findStitch(s);
+    stitch = StitchCollection::inst()->findStitch(s);
 
     if (!stitch) {
         QString st = Settings::inst()->value("defaultStitch").toString();
-        stitch = StitchCollection::inst()->masterStitchSet()->findStitch(st);
+        stitch = StitchCollection::inst()->findStitch(st);
     }
 
     setStitch(stitch);

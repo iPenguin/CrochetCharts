@@ -58,6 +58,13 @@ void StitchCollection::saveMasterStitchSet(QString fileName)
     mMasterSet->saveXmlStitchSet(fileName);
 }
 
+Stitch* StitchCollection::findStitch(QString name)
+{
+    //FIXME: add alternative sets for example add a per document stitch set that can be searched.
+    return mMasterSet->findStitch(name);
+
+}
+
 StitchSet* StitchCollection::findStitchSet(QString setName)
 {
     foreach(StitchSet *set, mStitchSets) {

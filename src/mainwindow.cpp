@@ -755,8 +755,9 @@ void MainWindow::removeTab(int tabIndex)
 {
     if(tabIndex < 0)
         return;
-    
-    qDebug() << "remove tab" << tabIndex;
+
+    if(ui->tabWidget->count() == 1)
+        return;
 
     //FIXME: either include a warning that this is NOT undo-able or make it undo-able.
     delete ui->tabWidget->widget(tabIndex);
@@ -764,7 +765,7 @@ void MainWindow::removeTab(int tabIndex)
 }
 
 void MainWindow::updatePatternStitches()
-{   
+{
     if(ui->tabWidget->count() <= 0)
         return;
 
@@ -775,7 +776,7 @@ void MainWindow::updatePatternStitches()
         i.next();
         QList<QListWidgetItem*> items = ui->patternStitches->findItems(i.key(), Qt::MatchExactly);
         if(items.count() == 0) {
-            Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(i.key());
+            Stitch* s = StitchCollection::inst()->findStitch(i.key());
             //FIXME: don't hard code the files!!
             QPixmap pix = QPixmap(QSize(32, 32));
             pix.load("/home/brian/crochet.git/" + s->file());

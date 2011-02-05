@@ -47,6 +47,9 @@ public:
     //fill in a dropdown list for selecting a stitch set.
     void populateComboBox(QComboBox *cb);
 
+    //this function finds the named stitch it can search the master set and any alternative sets.
+    Stitch* findStitch(QString name);
+    
     StitchSet* findStitchSet(QString setName);
     QStringList categoryList() const;
     QStringList stitchList() const;
