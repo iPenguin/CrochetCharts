@@ -165,7 +165,7 @@ void SaveFile::saveColors(QXmlStreamWriter* stream)
      //in >> other_interesting_data;
 */
 SaveFile::FileError SaveFile::load()
-{   
+{
     QFile file(fileName);
 
     if(!file.open(QIODevice::ReadOnly)) {
@@ -199,7 +199,7 @@ SaveFile::FileError SaveFile::load()
         }
         n = n.nextSibling();
     }
-    
+
     return SaveFile::No_Error;
 }
 
@@ -236,6 +236,11 @@ void SaveFile::loadChart(QDomElement *element)
     ChartTab* tab = new ChartTab();
     QString tabName;
 
+    //TODO: put this in the ChartTab ctor?
+    MainWindow *mw = qobject_cast<MainWindow*>(mParent);
+    tab->setPatternStitches(&mw->patternStitches());
+    tab->setPatternColors(&mw->patternColors());
+    
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
@@ -261,7 +266,7 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
     QString fgColor, bgColor;
     qreal x, y, rotation;
     double angle;
-
+    
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
     
@@ -270,8 +275,9 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
         QDomElement e = n.toElement();
         if(!e.isNull()) {
             if(e.tagName() == "stitch") {
-                Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(e.text());
-                c->setStitch(s);
+                Stitch *s = StitchCollection::inst()->findStitch(e.text());
+                if(s)
+                    c->setStitch(s);
             } else if(e.tagName() == "row") {
                 row = e.text().toInt();
             } else if(e.tagName() == "column") {
@@ -294,7 +300,8 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
         }
         n = n.nextSibling();
     }
-    
+
+    //TODO: fix crash on appendCell...
     tab->scene()->appendCell(row, c);
     c->setBgColor(QColor(bgColor));
     c->setFgColor(QColor(fgColor));
