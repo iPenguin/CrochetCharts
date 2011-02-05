@@ -119,7 +119,7 @@ void CrochetScene::appendCell(int row, Cell *c)
     int i = mGrid[row].count() -1;
     c->setPos(i*64, row*64);
     c->setToolTip(QString::number(i+1));
-    c->rotate(90);
+    //c->rotate(90);
     c->setBgColor(QColor(Qt::white));
     c->setObjectName("Cell Object: " + QString::number(i + 1));
     //emit rowChanged(row);
@@ -147,7 +147,7 @@ void CrochetScene::createRow(int row, int columns)
     Cell *c = 0;
 
     QString st = Settings::inst()->value("defaultStitch").toString();
-    Stitch* s = StitchCollection::inst()->masterStitchSet()->findStitch(st);
+    Stitch* s = StitchCollection::inst()->findStitch(st);
     
     QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
@@ -160,7 +160,7 @@ void CrochetScene::createRow(int row, int columns)
         c->setPos(i*64, row*64);
         c->setToolTip(QString::number(i+1));
         c->setBgColor(QColor(Qt::white));
-        c->rotate(90);
+        //c->rotate(90);
         c->setObjectName("Cell Object: " + QString::number(i + 1));
     }
     mGrid.append(modelRow);
@@ -200,21 +200,21 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
     
     if(!mCurCell)
         return;
-
+    
     if(mDiff == 0) {
         QPointF origPos = mouseEvent->buttonDownScenePos(Qt::LeftButton);
         QPointF curPos = mouseEvent->scenePos();
     
         mDiff = origPos.manhattanLength() - curPos.manhattanLength();
     } else {
-        //increase speed slowly...
+        //increase rotation speed over time...
         if(mDiff < 0)
             mDiff -= .5;
         else
             mDiff += .5;
     }
-    mCurCell->setTransform(QTransform().translate(32,32).rotate(mDiff).translate(-32, -32), true);
-    //mCurCell->rotate(diff);
+
+    mCurCell->setTransform(QTransform().translate(32, 0).rotate(mDiff).translate(-32, 0), true);
     
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
@@ -224,7 +224,7 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     if(mCurCell)
         mCurCell = 0;
     mDiff = 0;
-    
+
     QGraphicsScene::mouseMoveEvent(mouseEvent);
 }
 

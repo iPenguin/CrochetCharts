@@ -72,6 +72,7 @@ private:
     CrochetCell *mCurCell;
     qreal mDiff;
 
+    //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<Cell *> > mGrid;
 };
 
