@@ -425,7 +425,7 @@ void MainWindow::readSettings()
 
 void MainWindow::toolsOptions()
 {
-    SettingsUi dialog;
+    SettingsUi dialog(this);
     dialog.exec();
 }
 

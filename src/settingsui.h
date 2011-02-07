@@ -15,7 +15,7 @@ class SettingsUi : public QDialog
 {
     Q_OBJECT
 public:
-    SettingsUi();
+    SettingsUi(QWidget *parent);
     ~SettingsUi();
 
     int exec();

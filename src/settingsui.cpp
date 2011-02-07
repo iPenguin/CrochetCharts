@@ -9,8 +9,8 @@
 
 #include "settings.h"
 
-SettingsUi::SettingsUi() :
-    ui(new Ui::SettingsDialog)
+SettingsUi::SettingsUi(QWidget *parent)
+    : QDialog(parent), ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
     ui->tabWidget->setCurrentIndex(0); //in case the form gets saved on the wrong tab.
