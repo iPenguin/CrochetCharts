@@ -27,44 +27,52 @@ StitchSet::~StitchSet()
 //TODO: delete stitches?
 }
 
-void StitchSet::loadXmlStitchSet(QString fileName)
-{    
+void StitchSet::loadXmlFile(QString fileName)
+{
+    setFileName = fileName;
+    
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Could not open the file for reading" << fileName;
         //TODO: Add a nice error message.
         return;
     }
-
+    
     QDomDocument doc("stitchset");
-
+    
     if (!doc.setContent(&file)) {
+        qWarning() << "could not get contents of file";
         file.close();
         return;
     }
     file.close();
-
+    
     // print out the element names of all elements that are direct children
     // of the outermost element.
     QDomElement docElem = doc.documentElement();
 
-    QDomNode n = docElem.firstChild();
+    loadXmlStitchSet(&docElem);
+}
+
+void StitchSet::loadXmlStitchSet(QDomElement *element)
+{    
+    QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement(); // try to convert the node to an element.
         if(!e.isNull()) {
 
             if(e.tagName() == "name")
-                this->setName(e.text());
+                setName(e.text());
             else if(e.tagName() == "author")
-                this->setAuthor(e.text());
+                setAuthor(e.text());
             else if(e.tagName() == "email")
-                this->setEmail(e.text());
+                setEmail(e.text());
             else if(e.tagName() == "org")
-                this->setOrg(e.text());
+                setOrg(e.text());
             else if(e.tagName() == "url")
-                this->setUrl(e.text());
+                setUrl(e.text());
             else if(e.tagName() == "stitch")
-                this->loadXmlStitch(e);
+                loadXmlStitch(e);
             else
                  qWarning() << "Could not load part of the stitch set:" << e.tagName() << e.text();
         }
@@ -98,40 +106,19 @@ void StitchSet::loadXmlStitch(QDomElement element)
     addStitch(s);
 }
 
-void StitchSet::saveXmlStitchSet(QString fileName)
+void StitchSet::saveXmlFile(QString fileName)
 {
+    if(fileName.isEmpty())
+        fileName = setFileName;
+    
     QString *data = new QString();
     
     QXmlStreamWriter stream(data);
     stream.setAutoFormatting(true);
     stream.writeStartDocument();
-    
-    QString fName = Settings::inst()->value("firstName").toString();
-    QString lName = Settings::inst()->value("lastName").toString();
-    QString email = Settings::inst()->value("email").toString();
-    
-    //TODO: use the settings as the default values, but allow the user to override those settings.
-    stream.writeStartElement("stitch_set");
-    stream.writeTextElement("name", "Master Stitch Set");
-    stream.writeTextElement("author", fName + " " + lName);
-    stream.writeTextElement("email", email);
-    stream.writeTextElement("org", "");
-    stream.writeTextElement("url", "");
-    
-    foreach(Stitch *s, mStitches) {
-        stream.writeStartElement("stitch");
-        
-        stream.writeTextElement("name", s->name());
-        stream.writeTextElement("icon", s->file());
-        stream.writeTextElement("description", s->description());
-        stream.writeTextElement("category", s->category());
-        stream.writeTextElement("ws", s->wrongSide());
-        
-        stream.writeEndElement(); //stitch
-    }
-    
-    stream.writeEndElement(); // stitch_set
-    
+
+    saveXmlStitchSet(&stream);
+
     stream.writeEndDocument();
     
     QFile file(fileName);
@@ -146,6 +133,36 @@ void StitchSet::saveXmlStitchSet(QString fileName)
     
     delete data;
     data = 0;
+}
+
+void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream)
+{
+    QString fName = Settings::inst()->value("firstName").toString();
+    QString lName = Settings::inst()->value("lastName").toString();
+    QString email = Settings::inst()->value("email").toString();
+    
+    //TODO: use the settings as the default values, but allow the user to override those settings.
+    stream->writeStartElement("stitch_set");
+    stream->writeTextElement("name", "Master Stitch Set");
+    stream->writeTextElement("author", fName + " " + lName);
+    stream->writeTextElement("email", email);
+    stream->writeTextElement("org", "");
+    stream->writeTextElement("url", "");
+    
+    foreach(Stitch *s, mStitches) {
+        stream->writeStartElement("stitch");
+        
+        stream->writeTextElement("name", s->name());
+        stream->writeTextElement("icon", s->file());
+        stream->writeTextElement("description", s->description());
+        stream->writeTextElement("category", s->category());
+        stream->writeTextElement("ws", s->wrongSide());
+        
+        stream->writeEndElement(); //stitch
+    }
+    
+    stream->writeEndElement(); // stitch_set
+    
 }
 
 Stitch* StitchSet::findStitch(QString name)

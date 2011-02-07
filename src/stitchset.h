@@ -10,6 +10,7 @@
 #include "stitch.h"
 
 class QDomElement;
+class QXmlStreamWriter;
 
 class StitchSet : public QAbstractItemModel
 {
@@ -20,8 +21,9 @@ public:
     StitchSet(QObject *parent = 0, bool isMasterSet = false, bool isBuiltIn = false);
     ~StitchSet();
 
-    void loadXmlStitchSet(QString fileName);
-    void saveXmlStitchSet(QString fileName);
+    void loadXmlFile(QString fileName);
+    //if you don't pass in a fileName the default setFileName will be used.
+    void saveXmlFile(QString fileName = "");
 
     const QString name() const { return mName; }
     void setName(QString n) { mName = n; }
@@ -56,6 +58,12 @@ public:
     bool isBuiltInSet;
     //The set is temporary and wont be saved.
     bool isTemporary;
+
+    QString setFileName;
+    
+protected:
+    void loadXmlStitchSet(QDomElement *element);
+    void saveXmlStitchSet(QXmlStreamWriter *stream);
     
 private:
     void loadXmlStitch(QDomElement e);
