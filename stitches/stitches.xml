@@ -80,7 +80,7 @@
 
    <stitch>
        <name>lsdc</name>
-       <icon>stitches/left_slant_double_crochet.svg</icon>
+       <icon>stitches/double_crochet.svg</icon> <!--left_slant_-->
        <description>left slant decrease</description>
        <category>Advanced</category>
        <ws>lsdc</ws>
@@ -88,7 +88,7 @@
 
    <stitch>
        <name>rsdc</name>
-       <icon>stitches/right_slant_double_crochet.svg</icon>
+       <icon>stitches/double_crochet.svg</icon> <!--right_slant_-->
        <description>right slant double crochet</description>
        <category>Advanced</category>
        <ws>rsdc</ws>
@@ -110,4 +110,12 @@
        <ws>bpdc</ws>
    </stitch>
 
+   <stitch>
+       <name>ch3picot</name>
+       <icon>stitches/ch3_picot.svg</icon>
+       <description>chain 3 picot</description>
+       <category>Advanced</category>
+       <ws>ch3picot</ws>
+   </stitch>
+   
 </stitch_set>
