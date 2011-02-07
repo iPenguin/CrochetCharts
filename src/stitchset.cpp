@@ -17,9 +17,9 @@
 #include <QDebug>
 
 StitchSet::StitchSet(QObject *parent, bool isMasterSet, bool isBuiltIn)
-    : QAbstractItemModel(parent), mIsMasterSet(isMasterSet), mIsBuiltInSet(isBuiltIn)
+    : QAbstractItemModel(parent), isMasterSet(isMasterSet),
+    isBuiltInSet(isBuiltIn), isTemporary(false)
 {
-    
 }
 
 StitchSet::~StitchSet()
@@ -181,7 +181,7 @@ Qt::ItemFlags StitchSet::flags(const QModelIndex &index) const
 
     Qt::ItemFlags f =  Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
-    if(!mIsBuiltInSet || index.column() == 5)
+    if(!isBuiltInSet || index.column() == 5)
         f |= Qt::ItemIsEditable;
     
     if(index.column() == 5)
@@ -314,7 +314,7 @@ int StitchSet::rowCount(const QModelIndex &parent) const
 int StitchSet::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    if(mIsMasterSet)
+    if(isMasterSet)
         return 5;
     else
         return 6;

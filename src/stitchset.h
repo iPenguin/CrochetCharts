@@ -49,6 +49,13 @@ public:
     void clearStitches();
 
     void cloneStitchSet(StitchSet *orig);
+
+    //The stitch set that the user is works with.
+    bool isMasterSet;
+    //The set of stitches that comes with the software.
+    bool isBuiltInSet;
+    //The set is temporary and wont be saved.
+    bool isTemporary;
     
 private:
     void loadXmlStitch(QDomElement e);
@@ -59,11 +66,7 @@ private:
             mEmail,
             mOrg,
             mUrl;
-
-    //The stitch set that the user is works with.
-    bool mIsMasterSet;
-    //The set of stitches that comes with the software.
-    bool mIsBuiltInSet;
+    
 /***************************************************************\
 |QAbstractItemModel
 \***************************************************************/
