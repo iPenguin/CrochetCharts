@@ -55,15 +55,19 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if(option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
         
-        StitchSet *set = static_cast<StitchSet*>((QAbstractItemModel*)index.model());
-        QString st = set->index(index.row(), Stitch::Name).data(Qt::DisplayRole).toString();
-        
-        Stitch *s = set->findStitch(st);
-        QRectF rect = QRectF((qreal)option.rect.x(), (qreal)option.rect.y(), (qreal)option.rect.width(), (qreal)option.rect.height());
-        if(s->isSvg()) {
-            s->renderSvg()->render(painter, rect);
-        } else
-            painter->drawPixmap(option.rect, *(s->renderPixmap()));
+        QRectF rect = QRectF((qreal)option.rect.x(), (qreal)option.rect.y(),
+                             (qreal)option.rect.width(), (qreal)option.rect.height());
+
+        QString fileName = index.data(Qt::EditRole).toString();
+        QString sufix = QFileInfo(fileName).completeSuffix();
+        if(sufix == "svg" || sufix == "svgz") {
+            QSvgRenderer renderer;
+            renderer.load(fileName);
+            renderer.render(painter, rect);
+        } else {
+            QPixmap pix = QPixmap(fileName);
+            painter->drawPixmap(option.rect, pix);
+        }
         
     } else if (index.column() == 3 || index.column() == 4) {
 
@@ -106,12 +110,8 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
             padding += 50;
             break;
         case Stitch::Icon: {
-            StitchSet *set = static_cast<StitchSet*>((QAbstractItemModel*)index.model());
-            QString st = set->index(index.row(), Stitch::Name).data(Qt::DisplayRole).toString();
-            
-            Stitch *s = set->findStitch(st);
             QSize retSize;
-            
+            //TODO: should this be getting info form the *s?
             if(s->isSvg())
                 retSize = s->renderSvg()->defaultSize();
             else
