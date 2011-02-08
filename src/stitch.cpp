@@ -28,9 +28,9 @@ void Stitch::setFile ( QString f )
 {
     if(mFile != f) {
         mFile = f;
-        if(!mSvgRenderer->isValid())
+        if(!mSvgRenderer->isValid() && isSvg())
             mSvgRenderer->load(mFile);
-        if(!mSvgRenderer->isValid()) {
+        if(!mSvgRenderer->isValid() && !isSvg()) {
             mPixmap = new QPixmap(mFile);
         }
         
