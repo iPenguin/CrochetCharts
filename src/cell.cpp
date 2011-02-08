@@ -10,6 +10,7 @@
 #include "stitchcollection.h"
 #include "stitchset.h"
 #include "settings.h"
+#include <QStyleOption>
 
 Cell::Cell(QGraphicsItem *parent) :
         QGraphicsSvgItem(parent), mStitch(0)
@@ -24,13 +25,14 @@ Cell::~Cell()
 
 QRectF Cell::boundingRect() const
 {
-    return QGraphicsSvgItem::boundingRect();
+    if(stitch()->isSvg())
+        return QGraphicsSvgItem::boundingRect();
+    else
+        return stitch()->renderPixmap()->rect();
 }
 
 void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    //painter->setPen(Qt::red);
-    //renderer()->render(painter, boundingRect());
     QGraphicsSvgItem::paint(painter, option, widget);
 }
 
@@ -38,10 +40,19 @@ void Cell::setStitch(Stitch *s)
 {
     if (mStitch != s) {
         QString old;
-        if (mStitch)
+        bool doUpdate = false;
+        
+        if (mStitch) {
             old = mStitch->name();
+            doUpdate = (mStitch->isSvg() != s->isSvg());
+        }
         mStitch = s;
-        setSharedRenderer(s->renderSvg());
+        if(s->isSvg() && s->renderSvg()->isValid())
+            setSharedRenderer(s->renderSvg());
+
+        if(doUpdate)
+            update();
+            
         emit stitchChanged(old, s->name());
     }
 }

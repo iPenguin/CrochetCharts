@@ -25,7 +25,8 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
 {
     ui->setupUi(this);
 
-    StitchCollection::inst()->populateComboBox(ui->stitchSource);
+    ui->stitchSource->addItems(StitchCollection::inst()->stitchSetList());
+    
     StitchSet *master = StitchCollection::inst()->masterStitchSet();
     ui->listView->setModel(master);
 

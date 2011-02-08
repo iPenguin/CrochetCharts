@@ -28,9 +28,12 @@ void Stitch::setFile ( QString f )
 {
     if(mFile != f) {
         mFile = f;
-        //FIXME: don't hard code the path to the files!
         if(!mSvgRenderer->isValid())
-            mSvgRenderer->load("/home/brian/crochet.git/" + mFile);
+            mSvgRenderer->load(mFile);
+        if(!mSvgRenderer->isValid()) {
+            mPixmap = new QPixmap(mFile);
+        }
+        
     }
     
 }
@@ -61,9 +64,9 @@ QSvgRenderer* Stitch::renderSvg()
 {
     if(!this->isSvg())
         return new QSvgRenderer();
-//FIXME: don't hard code the path to the files!
+
     if(!mSvgRenderer->isValid())
-        mSvgRenderer->load("/home/brian/crochet.git/" + mFile);
+        mSvgRenderer->load(mFile);
 
     return mSvgRenderer;
 }

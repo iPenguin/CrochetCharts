@@ -56,7 +56,10 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         
         Stitch *s = set->findStitch(st);
         QRectF rect = QRectF((qreal)option.rect.x(), (qreal)option.rect.y(), (qreal)option.rect.width(), (qreal)option.rect.height());
-        s->renderSvg()->render(painter, option.rect);
+        if(s->isSvg())
+            s->renderSvg()->render(painter, option.rect);
+        else
+            painter->drawPixmap(option.rect, *(s->renderPixmap()));
         
     } else if (index.column() == 3 || index.column() == 4) {
 
