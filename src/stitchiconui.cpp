@@ -19,6 +19,8 @@ StitchIconUi::StitchIconUi(QWidget *parent)
     connect(ui->saveIcon, SIGNAL(clicked()), this, SLOT(saveIcon()));
 
     connect(this, SIGNAL(newIconAdded(QString)), this, SLOT(updateIconList(QString)));
+
+    connect(ui->iconList, SIGNAL(itemSelectionChanged()), this, SLOT(updateIconSelection()));
     loadIcons();
 }
 
@@ -50,6 +52,7 @@ void StitchIconUi::loadIcons()
             QIcon icon = QIcon(folder + "/" + file);
             QString name = QFileInfo(file).baseName();
             QListWidgetItem *item = new QListWidgetItem(icon, name, ui->iconList);
+            item->setData(Qt::UserRole, QVariant(folder + "/" + file));
             item->setToolTip(folder + "/" + file);
             ui->iconList->addItem(item);
         }
@@ -75,8 +78,10 @@ void StitchIconUi::addIcon()
     if(destInfo.exists()) {
         QMessageBox msgbox(this);
         msgbox.setText(tr("A file with the name '%1' already exists.").arg(srcInfo.fileName()));
+        msgbox.setInformativeText(tr("Would you like to overwrite the existing file?"));
+        msgbox.setIcon(QMessageBox::Question);
         QPushButton *overwrite = msgbox.addButton(tr("Overwrite the file"), QMessageBox::AcceptRole);
-        QPushButton *cancel = msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
+        /*QPushButton *cancel =*/ msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
         
         msgbox.exec();
 
@@ -92,13 +97,49 @@ void StitchIconUi::addIcon()
 
 void StitchIconUi::removeIcon()
 {
-    qDebug() << "removeIcon";
-    
+    QList<QListWidgetItem*> items = ui->iconList->selectedItems();
+
+    if(items.count() <= 0)
+        return;
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    //TODO: do we want to allow the user to remove set icons?
+    //TODO: indicate that you cannot remove built in stitches.
+    foreach(QListWidgetItem *item, items) {
+        QString fileName = item->data(Qt::UserRole).toString();
+        if(fileName.startsWith(":/"))
+            continue;
+        QFile::remove(fileName);
+        ui->iconList->takeItem(ui->iconList->row(item));
+        ui->iconList->removeItemWidget(item);
+
+        ui->iconList->clearSelection();
+    }
+    ui->iconList->update();
+
+    QApplication::restoreOverrideCursor();
 }
 
 void StitchIconUi::saveIcon()
 {
-    qDebug() << "saveIcon";
+    QList<QListWidgetItem*> items = ui->iconList->selectedItems();
+    
+    if(items.count() <= 0)
+        return;
+
+    foreach(QListWidgetItem *item, items) {
+        QString dir = Settings::inst()->value("fileLocation").toString();
+        dir += "/" + QFileInfo(item->data(Qt::UserRole).toString()).fileName();
+        QString dest = QFileDialog::getSaveFileName(this, tr("Save Icon"), dir, "");
+
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+        if(dest.isEmpty())
+            return;
+
+        QFile::copy(item->data(Qt::UserRole).toString(), dest);
+        QApplication::restoreOverrideCursor();
+    }
     
 }
 
@@ -114,7 +155,7 @@ void StitchIconUi::updateIconList(QString fileName)
     QList<QListWidgetItem*> foundItems = ui->iconList->findItems(fileInfo.baseName(), Qt::MatchExactly);
     if(foundItems.count() > 0) {
         foreach(QListWidgetItem *i, foundItems) {
-            QString itemPath =  i->data(Qt::ToolTipRole).toString();
+            QString itemPath =  i->data(Qt::UserRole).toString();
             if(itemPath == fileName)
                 item = i;
         }
@@ -124,12 +165,22 @@ void StitchIconUi::updateIconList(QString fileName)
     
     if(!item) {
         QListWidgetItem *item = new QListWidgetItem(icon,fileInfo.baseName(),ui->iconList);
+        item->setData(Qt::UserRole, QVariant(fileName));
         item->setToolTip(fileName);
         ui->iconList->addItem(item);    
     } else {
         item->setIcon(icon);
         ui->iconList->update();
     }
-    
-    
 }
+
+void StitchIconUi::updateIconSelection()
+{
+    QList<QListWidgetItem*> items = ui->iconList->selectedItems();
+
+    bool state = (items.count() > 0);
+
+    ui->removeIcon->setEnabled(state);
+    ui->saveIcon->setEnabled(state);
+}
+

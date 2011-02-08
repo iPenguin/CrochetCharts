@@ -112,7 +112,6 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
                 retSize = s->renderSvg()->defaultSize();
             else
                 retSize = s->renderPixmap()->size();
-            qDebug() << "icon" << retSize;
             return retSize;
         }
         case Stitch::Description:

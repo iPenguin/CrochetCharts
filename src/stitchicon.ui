@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Stitch Icon List</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -21,8 +21,8 @@
      </property>
      <property name="iconSize">
       <size>
-       <width>32</width>
-       <height>32</height>
+       <width>64</width>
+       <height>64</height>
       </size>
      </property>
      <property name="resizeMode">
@@ -44,6 +44,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="removeIcon">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Remove Icon</string>
        </property>
@@ -51,6 +54,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="saveIcon">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Save Icon</string>
        </property>
@@ -62,7 +68,7 @@
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="standardButtons">
-        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+        <set>QDialogButtonBox::Close</set>
        </property>
       </widget>
      </item>

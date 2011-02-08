@@ -26,6 +26,8 @@ private slots:
     void removeIcon();
     void saveIcon();
     void updateIconList(QString fileName);
+
+    void updateIconSelection();
     
 signals:
     void newIconAdded(QString fileName);
