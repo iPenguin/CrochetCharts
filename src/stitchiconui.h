@@ -21,9 +21,18 @@ public:
     StitchIconUi(QWidget *parent = 0);
     ~StitchIconUi();
 
-    void loadIcons();
+private slots:
+    void addIcon();
+    void removeIcon();
+    void saveIcon();
+    void updateIconList(QString fileName);
+    
+signals:
+    void newIconAdded(QString fileName);
 
 private:
+    void loadIcons();
+    
     Ui::StitchIconDialog *ui;
     
 };
