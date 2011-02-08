@@ -8,7 +8,7 @@
 
    <stitch>
        <name>x</name>
-       <icon>stitches/no_stitch.svg</icon>
+       <icon>:/stitches/no_stitch.svg</icon>
        <description>this is a place holder stitch</description>
        <category>Basic</category>
        <ws>x</ws>
@@ -16,7 +16,7 @@
 
     <stitch>
         <name>ss</name>
-        <icon>stitches/slip.svg</icon>
+        <icon>:/stitches/slip.svg</icon>
         <description>slip stitch</description>
         <category>Basic</category>
         <ws>ss</ws>
@@ -24,7 +24,7 @@
 
     <stitch>
         <name>ch</name>
-        <icon>stitches/chain.svg</icon>
+        <icon>:/stitches/chain.svg</icon>
         <description>chain</description>
         <category>Basic</category>
         <ws>ch</ws>
@@ -32,7 +32,7 @@
 
     <stitch>
         <name>sc</name>
-        <icon>stitches/single_crochet.svg</icon>
+        <icon>:/stitches/single_crochet.svg</icon>
         <description>single crochet</description>
         <category>Basic</category>
         <ws>sc</ws>
@@ -40,7 +40,7 @@
 
     <stitch>
         <name>hdc</name>
-        <icon>stitches/half_double_crochet.svg</icon>
+        <icon>:/stitches/half_double_crochet.svg</icon>
         <description>half double crochet</description>
         <category>Basic</category>
         <ws>hdc</ws>
@@ -48,7 +48,7 @@
 
     <stitch>
         <name>dc</name>
-        <icon>stitches/double_crochet.svg</icon>
+        <icon>:/stitches/double_crochet.svg</icon>
         <description>double crochet</description>
         <category>Basic</category>
         <ws>dc</ws>
@@ -56,7 +56,7 @@
 
     <stitch>
         <name>tc</name>
-        <icon>stitches/treble_crochet.svg</icon>
+        <icon>:/stitches/treble_crochet.svg</icon>
         <description>treble crochet</description>
         <category>Basic</category>
         <ws>tc</ws>
@@ -64,7 +64,7 @@
 
     <stitch>
         <name>dtc</name>
-        <icon>stitches/double_treble_crochet.svg</icon>
+        <icon>:/stitches/double_treble_crochet.svg</icon>
         <description>double treble crochet</description>
         <category>Basic</category>
         <ws>dtc</ws>
@@ -72,7 +72,7 @@
 
     <stitch>
         <name>ttc</name>
-        <icon>stitches/triple_treble_crochet.svg</icon>
+        <icon>:/stitches/triple_treble_crochet.svg</icon>
         <description>triple treble crochet</description>
         <category>Basic</category>
         <ws>ttc</ws>
@@ -80,7 +80,7 @@
 
    <stitch>
        <name>lsdc</name>
-       <icon>stitches/double_crochet.svg</icon> <!--left_slant_-->
+       <icon>:/stitches/double_crochet.svg</icon> <!--left_slant_-->
        <description>left slant decrease</description>
        <category>Advanced</category>
        <ws>lsdc</ws>
@@ -88,7 +88,7 @@
 
    <stitch>
        <name>rsdc</name>
-       <icon>stitches/double_crochet.svg</icon> <!--right_slant_-->
+       <icon>:/stitches/double_crochet.svg</icon> <!--right_slant_-->
        <description>right slant double crochet</description>
        <category>Advanced</category>
        <ws>rsdc</ws>
@@ -96,7 +96,7 @@
 
    <stitch>
        <name>fpdc</name>
-       <icon>stitches/front_post_dc.svg</icon>
+       <icon>:/stitches/front_post_dc.svg</icon>
        <description>front post decrease</description>
        <category>Advanced</category>
        <ws>fpdc</ws>
@@ -104,7 +104,7 @@
 
    <stitch>
        <name>bpdc</name>
-       <icon>stitches/back_post_dc.svg</icon>
+       <icon>:/stitches/back_post_dc.svg</icon>
        <description>back post decrease</description>
        <category>Advanced</category>
        <ws>bpdc</ws>
@@ -112,7 +112,7 @@
 
    <stitch>
        <name>ch3picot</name>
-       <icon>stitches/ch3_picot.svg</icon>
+       <icon>:/stitches/ch3_picot.svg</icon>
        <description>chain 3 picot</description>
        <category>Advanced</category>
        <ws>ch3picot</ws>
