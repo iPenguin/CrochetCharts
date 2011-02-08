@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>823</width>
-    <height>554</height>
+    <width>927</width>
+    <height>669</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -186,13 +186,6 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QPushButton" name="addStitch">
-         <property name="text">
-          <string>&amp;Add Stitch</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QPushButton" name="createSet">
          <property name="text">
           <string>&amp;Create Set</string>
@@ -200,9 +193,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="addStitch">
+         <property name="text">
+          <string>&amp;Add Stitch</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="icons">
          <property name="text">
-          <string>Icons</string>
+          <string>Manage Icons</string>
          </property>
         </widget>
        </item>

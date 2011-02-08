@@ -33,7 +33,7 @@ void StitchIconUi::loadIcons()
     QStringList dirs, setDir;
     QString userFolder = Settings::inst()->userSettingsFolder();
 
-    dirs << ":/stitches/";   
+    dirs << ":/stitches";
     dirs << userFolder + "icons";
 
     QDir dir;

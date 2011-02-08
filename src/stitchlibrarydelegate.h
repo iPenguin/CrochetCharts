@@ -8,6 +8,8 @@
 #include <QStyledItemDelegate>
 #include <QSignalMapper>
 
+class QComboBox;
+
 class StitchLibraryDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -30,6 +32,8 @@ signals:
     void addStitchToMasterSet(int row);
 
 private:
+    void loadIcons(QComboBox *cb) const;
+    
     QSignalMapper *mSignalMapper;
 };
 

@@ -17,10 +17,14 @@
 
 #include <QApplication>
 
+#include "settings.h"
+#include <QFileInfo>
+#include <QDir>
+
 #include <QDebug>
 #include "stitchcollection.h"
 #include "stitchset.h"
-#include <qsvgrenderer.h>
+#include <QSvgRenderer>
 
 StitchLibraryDelegate::StitchLibraryDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
@@ -155,30 +159,29 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
     switch(index.column()) {
         case Stitch::Name:{ //TODO: add a validator that checks if the name already exists.
             QLineEdit *editor = new QLineEdit(parent);
-            
-            editor->setText(index.data(Qt::EditRole).toString());
             return editor;
         }
         case Stitch::Icon: {
-            
-            return new QWidget(parent); //TODO: create an editor widget for selecting icons.
+            QComboBox *cb = new QComboBox(parent);
+            loadIcons(cb);
+            cb->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+            cb->setIconSize(QSize(32,32));
+            cb->model()->sort(0); //TODO: check case sensitivity to the sorting.
+            cb->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+            return cb;
         }
         case Stitch::Description: {
             QLineEdit *editor = new QLineEdit(parent);
-
-            editor->setText(index.data(Qt::EditRole).toString());
             return editor;
         }
         case Stitch::Category: {
             QComboBox *cb = new QComboBox(parent);
             cb->addItems(StitchCollection::inst()->categoryList());
-            cb->setCurrentIndex(cb->findText(index.data(Qt::EditRole).toString()));
             return cb;
         }
         case Stitch::WrongSide: {
             QComboBox *cb = new QComboBox(parent);
             cb->addItems(StitchCollection::inst()->stitchList());
-            cb->setCurrentIndex(cb->findText(index.data(Qt::EditRole).toString()));
             return cb;
         }
         case 5: {
@@ -207,7 +210,8 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
             break;
         }
         case Stitch::Icon: {
-            //TODO: custom widget for icon editing.
+            QComboBox *cb = static_cast<QComboBox*>(editor);
+            cb->setCurrentIndex(cb->findData(index.data(Qt::EditRole), Qt::UserRole));
             break;
         }
         case Stitch::Description: {
@@ -234,7 +238,8 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
 {
     switch(index.column()) {
         case Stitch::Icon: {
-            //TODO: custom editor widget and data.
+            QComboBox *cb = static_cast<QComboBox*>(editor);
+            model->setData(index, cb->itemData(cb->currentIndex(), Qt::UserRole), Qt::EditRole);
             break;
         }
         case Stitch::Name: //TODO: make the name check if it already exists before accepting any alterations.
@@ -260,6 +265,35 @@ void StitchLibraryDelegate::updateEditorGeometry(QWidget *editor, const QStyleOp
 
     editor->setGeometry(option.rect);
 }
+
+void StitchLibraryDelegate::loadIcons(QComboBox *cb) const
+{
+    QStringList dirs, setDir;
+    QString userFolder = Settings::inst()->userSettingsFolder();
+    
+    dirs << ":/stitches";
+    dirs << userFolder + "icons";
+    
+    QDir dir;
+    dir.setPath(userFolder + "sets/");
+    
+    //get all set folders.
+    foreach(QString folder, dir.entryList(QDir::Dirs)) {
+        if(folder != "." && folder != "..")
+            dirs << userFolder + "sets/" + folder;
+    }
+    
+    //get all files from all set folders.
+    foreach(QString folder, dirs) {
+        dir.setPath(folder);
+        foreach(QString file, dir.entryList(QDir::Files)) {
+            QIcon icon = QIcon(folder + "/" + file);
+            QString name = QFileInfo(file).baseName();
+            cb->addItem(icon, name, QVariant(folder + "/" + file));
+        }
+    }
+}
+
 /*
 void StitchLibraryDelegate::addStitchToMasterSet(int row)
 {
