@@ -12,19 +12,18 @@ class StitchSet;
 class Stitch;
 
 class QComboBox;
-class QXmlStreamWriter;
 
-/*
-    for every set of stitches the user has we'll load a StitchSet (including the user overlay).
-    Once all the sets are loaded we want to combine all the stitches into one master list.
-
-    This master list of stitches is what gets searched, and used. The collection acts as the
-    gatekeeper and if the user 'imports' a stitch from one set that is already in use it turns
-    the other stitch 'off'.
-
-    Ideally the collection is just a collection of pointers to the real stitches in the other
-    sets.
-*/
+/**
+ * The StitchCollection is a set of StitchSet*s
+ *
+ * The Collection keeps track of all sets. Specifically the Collection
+ * keeps track of the builtIn Set, and the masterSet. And knows about
+ * temporary sets that are loaded when a file with custom stitches is
+ * opened.
+ *
+ * The StitchCollection acts as the point of reference for StitchSet
+ * based operations such as findStitch();
+ */
 class StitchCollection : public QObject
 {
     Q_OBJECT
@@ -45,7 +44,7 @@ public:
     void populateMasterSet();
 
     //fill in a dropdown list for selecting a stitch set.
-    void populateComboBox(QComboBox *cb);
+    QStringList stitchSetList();
 
     //this function finds the named stitch it can search the master set and any alternative sets.
     Stitch* findStitch(QString name);
@@ -53,10 +52,6 @@ public:
     StitchSet* findStitchSet(QString setName);
     QStringList categoryList() const;
     QStringList stitchList() const;
-
-protected:
-    //TODO: figure out which stitches should be saved to which file...
-    void saveMasterStitchSet(QString fileName);
 
 private:
     StitchCollection();

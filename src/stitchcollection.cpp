@@ -11,6 +11,9 @@
 #include <QComboBox>
 
 #include <QDebug>
+#include <QDir>
+#include <QFileInfo>
+#include "settings.h"
 
 // Global static pointer
 StitchCollection* StitchCollection::mInstance = NULL;
@@ -30,7 +33,7 @@ StitchCollection::StitchCollection()
 
 StitchCollection::~StitchCollection()
 {
-    saveMasterStitchSet("/home/brian/stitches.xml");
+    mMasterSet->saveXmlFile();
     foreach(StitchSet *set, mStitchSets) {
         delete set;
     }
@@ -40,28 +43,55 @@ StitchCollection::~StitchCollection()
 void StitchCollection::loadStitchSets()
 {
     mBuiltIn = new StitchSet(this, false, true);
-    mBuiltIn->loadXmlStitchSet("/home/brian/crochet.git/stitches/stitches.xml");
+    mBuiltIn->loadXmlFile(":/stitches/stitches.xml");
     mStitchSets.append(mBuiltIn);
 
-    //TODO: add the rest of the sets.
+    //Load additional stitch sets:
+    //TODO: store all custom icons in [confFolder]/sets/setName/
+    
+    QString confFolder = Settings::inst()->userSettingsFolder();
+
+    QDir dir = QDir(confFolder + "sets/");
+    QStringList fileTypes;
+    fileTypes << "*.xml";
+  
+    QFileInfoList list = dir.entryInfoList(fileTypes, QDir::Files | QDir::NoSymLinks);
+    foreach(QFileInfo file, list) {
+        StitchSet *set = new StitchSet(this, false, false);
+        set->loadXmlFile(file.absoluteFilePath());
+        mStitchSets.append(set);
+    }
 }
 
 void StitchCollection::populateMasterSet()
 {
-    //TODO: load from a user config folder. this stitch set should be saved back to disk
-    // anytime the set is edited. This is the only set that can be edited.
-    mMasterSet->loadXmlStitchSet("/home/brian/stitches.xml");
-}
+    QString confFolder = Settings::inst()->userSettingsFolder();
+    bool loaded = mMasterSet->loadXmlFile(confFolder + "stitches.xml");
 
-void StitchCollection::saveMasterStitchSet(QString fileName)
-{
-    mMasterSet->saveXmlStitchSet(fileName);
+    //if there isn't a master stitchset create it from the built in stitches.
+    if(!loaded) {
+        mMasterSet->clearStitches();
+        foreach(Stitch *s, mBuiltIn->stitches()) {
+            Stitch *newS = new Stitch();
+            mMasterSet->addStitch(newS);
+            *newS << *s;
+        }
+    }
 }
 
 Stitch* StitchCollection::findStitch(QString name)
 {
-    //FIXME: add alternative sets for example add a per document stitch set that can be searched.
-    return mMasterSet->findStitch(name);
+    //FIXME: This needs some serious logic work.
+
+    Stitch *found = 0;
+    found = mMasterSet->findStitch(name);
+
+    foreach(StitchSet *set, mStitchSets) {
+        if(set->isTemporary)
+            found = mMasterSet->findStitch(name);
+    }
+    
+    return found;
 
 }
 
@@ -78,13 +108,16 @@ StitchSet* StitchCollection::findStitchSet(QString setName)
     return 0;
 }
 
-void StitchCollection::populateComboBox(QComboBox *cb)
+QStringList StitchCollection::stitchSetList()
 {
-    cb->addItem(mMasterSet->name());
+    QStringList list;
 
-    foreach(StitchSet *set, mStitchSets) {
-        cb->addItem(set->name());
-    }
+    list << mMasterSet->name();
+
+    foreach(StitchSet *set, mStitchSets)
+        list << set->name();
+
+    return list;
 }
 
 QStringList StitchCollection::categoryList() const
