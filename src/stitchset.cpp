@@ -15,6 +15,7 @@
 #include "settings.h"
 
 #include <QDebug>
+#include <QFileInfo>
 
 StitchSet::StitchSet(QObject *parent, bool isMasterSet, bool isBuiltIn)
     : QAbstractItemModel(parent), isMasterSet(isMasterSet),
@@ -27,15 +28,21 @@ StitchSet::~StitchSet()
 //TODO: delete stitches?
 }
 
-void StitchSet::loadXmlFile(QString fileName)
+QString StitchSet::stitchSetFolder()
 {
-    setFileName = fileName;
+    QFileInfo file(stitchSetFileName);
+    return file.baseName();
+}
+
+bool StitchSet::loadXmlFile(QString fileName)
+{
+    stitchSetFileName = fileName;
     
     QFile file(fileName);
     if(!file.open(QIODevice::ReadOnly)) {
         qWarning() << "Could not open the file for reading" << fileName;
         //TODO: Add a nice error message.
-        return;
+        return false;
     }
     
     QDomDocument doc("stitchset");
@@ -43,7 +50,7 @@ void StitchSet::loadXmlFile(QString fileName)
     if (!doc.setContent(&file)) {
         qWarning() << "could not get contents of file";
         file.close();
-        return;
+        return false;
     }
     file.close();
     
@@ -52,6 +59,7 @@ void StitchSet::loadXmlFile(QString fileName)
     QDomElement docElem = doc.documentElement();
 
     loadXmlStitchSet(&docElem);
+    return true;
 }
 
 void StitchSet::loadXmlStitchSet(QDomElement *element)
@@ -109,7 +117,9 @@ void StitchSet::loadXmlStitch(QDomElement element)
 void StitchSet::saveXmlFile(QString fileName)
 {
     if(fileName.isEmpty())
-        fileName = setFileName;
+        fileName = stitchSetFileName;
+    if(fileName.isEmpty())
+       return;
     
     QString *data = new QString();
     

@@ -21,7 +21,7 @@ public:
     StitchSet(QObject *parent = 0, bool isMasterSet = false, bool isBuiltIn = false);
     ~StitchSet();
 
-    void loadXmlFile(QString fileName);
+    bool loadXmlFile(QString fileName);
     //if you don't pass in a fileName the default setFileName will be used.
     void saveXmlFile(QString fileName = "");
 
@@ -59,7 +59,8 @@ public:
     //The set is temporary and wont be saved.
     bool isTemporary;
 
-    QString setFileName;
+    QString stitchSetFileName;
+    QString stitchSetFolder();
     
 protected:
     void loadXmlStitchSet(QDomElement *element);
