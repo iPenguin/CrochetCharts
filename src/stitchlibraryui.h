@@ -29,6 +29,9 @@ private slots:
     void updateStitchSetProperties();
     void printStitchSet();
     
+private slots:
+    void iconDialog();
+    
 private:
     Ui::StitchLibraryDialog *ui;
 

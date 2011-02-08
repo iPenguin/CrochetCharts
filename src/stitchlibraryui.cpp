@@ -16,6 +16,8 @@
 #include <QPrintDialog>
 #include <QPainter>
 
+#include "stitchiconui.h"
+
 //TODO: add a hash based on the sn to the stitch set to grant write access to a stitch set.
 //TODO: convert the pushbutton to checkbox for add stitch and add a button at the bottom.
 //TODO: add a checkbox in the 'add stitch' header that allows to select all stitches.
@@ -53,6 +55,8 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
                 this, SLOT(changeStitchSet(QString)));
 
     connect(ui->resetLibrary, SIGNAL(clicked()), this, SLOT(resetLibrary()));
+
+    connect(ui->icons, SIGNAL(clicked()), this, SLOT(iconDialog()));
 }
 
 StitchLibraryUi::~StitchLibraryUi()
@@ -201,4 +205,12 @@ void StitchLibraryUi::printStitchSet()
     p.begin(&printer);
     ui->listView->render(&p);
     p.end();
+}
+
+void StitchLibraryUi::iconDialog()
+{
+    StitchIconUi d(this);
+
+    d.exec();
+    
 }
