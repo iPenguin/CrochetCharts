@@ -129,6 +129,13 @@ QStringList StitchCollection::categoryList() const
             list.append(s->category());
     }
 
+    foreach(StitchSet *set, mStitchSets) {
+        foreach(Stitch *s, set->stitches()) {
+            if(!list.contains(s->category()))
+                list.append(s->category());
+        }
+    }
+    
     return list;
 }
 
