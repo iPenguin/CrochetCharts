@@ -66,7 +66,6 @@ StitchLibraryUi::~StitchLibraryUi()
 
 void StitchLibraryUi::setDialogSize()
 {
-    //for a table widget.
     ui->listView->resizeColumnsToContents();
     ui->listView->resizeRowsToContents();
     
@@ -87,6 +86,9 @@ void StitchLibraryUi::changeStitchSet(QString setName)
     
     ui->listView->setModel(set);
     ui->listView->update();
+
+    ui->listView->resizeColumnsToContents();
+    ui->listView->resizeRowsToContents();
     setupPropertiesBox();
 }
 

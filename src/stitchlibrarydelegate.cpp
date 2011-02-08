@@ -56,9 +56,9 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         
         Stitch *s = set->findStitch(st);
         QRectF rect = QRectF((qreal)option.rect.x(), (qreal)option.rect.y(), (qreal)option.rect.width(), (qreal)option.rect.height());
-        if(s->isSvg())
-            s->renderSvg()->render(painter, option.rect);
-        else
+        if(s->isSvg()) {
+            s->renderSvg()->render(painter, rect);
+        } else
             painter->drawPixmap(option.rect, *(s->renderPixmap()));
         
     } else if (index.column() == 3 || index.column() == 4) {
@@ -106,7 +106,14 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
             QString st = set->index(index.row(), Stitch::Name).data(Qt::DisplayRole).toString();
             
             Stitch *s = set->findStitch(st);
-            return s->renderPixmap()->size();
+            QSize retSize;
+            
+            if(s->isSvg())
+                retSize = s->renderSvg()->defaultSize();
+            else
+                retSize = s->renderPixmap()->size();
+            qDebug() << "icon" << retSize;
+            return retSize;
         }
         case Stitch::Description:
             padding +=150;
@@ -121,7 +128,7 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
             text = s->wrongSide();
             break;
         case 5:
-            padding += 0;
+            padding += 50;
             text = tr("Add Stitch"); //TODO: there's a button to estimate too.
             break;
         default:
@@ -131,7 +138,12 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     
     QSize hint = option.fontMetrics.size(Qt::TextWordWrap, text);
     hint.setWidth(hint.width() + padding);
-    
+
+    //HACK: make the height of the icon the height of the whole row.
+    StitchSet *set = static_cast<StitchSet*>((QAbstractItemModel*)index.model());
+    QSize sizeH = sizeHint(option, set->index(index.row(), Stitch::Icon));
+    hint.setHeight(sizeH.height());
+
     return hint;
 }
 
