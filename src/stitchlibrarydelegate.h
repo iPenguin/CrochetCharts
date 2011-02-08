@@ -8,7 +8,24 @@
 #include <QStyledItemDelegate>
 #include <QSignalMapper>
 
-class QComboBox;
+#include <QComboBox>
+#include <QAbstractItemView>
+
+class IconComboBox : public QComboBox
+{
+    Q_OBJECT
+public:
+    IconComboBox(QWidget *parent = 0)
+        : QComboBox(parent)
+    {
+    }
+
+    void showPopup()
+    {
+        view()->setFixedWidth(200);
+        QComboBox::showPopup();
+    }
+};
 
 class StitchLibraryDelegate : public QStyledItemDelegate
 {

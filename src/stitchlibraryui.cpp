@@ -140,7 +140,9 @@ void StitchLibraryUi::resetLibrary()
     
     master->clearStitches();
     master->cloneStitchSet(builtIn);
-    
+
+    ui->listView->resizeColumnsToContents();
+    ui->listView->resizeRowsToContents();
 }
 
 void StitchLibraryUi::addStitchToSet()

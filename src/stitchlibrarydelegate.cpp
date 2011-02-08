@@ -162,12 +162,11 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
             return editor;
         }
         case Stitch::Icon: {
-            QComboBox *cb = new QComboBox(parent);
+            IconComboBox *cb = new IconComboBox(parent);
             loadIcons(cb);
             cb->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
             cb->setIconSize(QSize(32,32));
             cb->model()->sort(0); //TODO: check case sensitivity to the sorting.
-            cb->setSizeAdjustPolicy(QComboBox::AdjustToContents);
             return cb;
         }
         case Stitch::Description: {
@@ -210,7 +209,7 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
             break;
         }
         case Stitch::Icon: {
-            QComboBox *cb = static_cast<QComboBox*>(editor);
+            IconComboBox *cb = static_cast<IconComboBox*>(editor);
             cb->setCurrentIndex(cb->findData(index.data(Qt::EditRole), Qt::UserRole));
             break;
         }
@@ -238,7 +237,7 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
 {
     switch(index.column()) {
         case Stitch::Icon: {
-            QComboBox *cb = static_cast<QComboBox*>(editor);
+            IconComboBox *cb = static_cast<IconComboBox*>(editor);
             model->setData(index, cb->itemData(cb->currentIndex(), Qt::UserRole), Qt::EditRole);
             break;
         }
