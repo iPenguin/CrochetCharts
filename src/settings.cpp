@@ -10,6 +10,7 @@
 #include <QDebug>
 #include "appinfo.h"
 #include <QDesktopServices>
+#include <QFileInfo>
 
 // Global static pointer
 Settings* Settings::mInstance = NULL;
@@ -101,3 +102,11 @@ QVariant Settings::defaultValue ( const QString& key ) const
     else 
         return QVariant();
 }
+
+QString Settings::userSettingsFolder()
+{
+    //FIXME: will this work on windows w/ the registry?
+    QFileInfo file(mSettings.fileName());
+    return file.absolutePath() + "/";
+}
+

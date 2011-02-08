@@ -20,6 +20,8 @@ public:
     bool isDemoVersion() { return mIsDemoVersion; }
     void setDemoVersion(bool isDemo) { mIsDemoVersion = isDemo; }
 
+    QString userSettingsFolder();
+    
 private:
     void initDemoVersion();
     static Settings *mInstance;

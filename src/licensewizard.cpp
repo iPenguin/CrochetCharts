@@ -29,11 +29,6 @@
 
 #include <QDebug>
 
-/*FIXME: Add network connection to transfer the data to the website.
- *The network connection will look up the base url from the config file
- *the settings class will default to the official website, but if the
- *user changes the setting in the config file this wizard will use that setting.
- */
 LicenseWizard::LicenseWizard(bool regOnly, QWidget *parent)
     : QWizard(parent)
 {

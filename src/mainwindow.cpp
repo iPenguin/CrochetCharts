@@ -785,9 +785,8 @@ void MainWindow::updatePatternStitches()
         QList<QListWidgetItem*> items = ui->patternStitches->findItems(i.key(), Qt::MatchExactly);
         if(items.count() == 0) {
             Stitch* s = StitchCollection::inst()->findStitch(i.key());
-            //FIXME: don't hard code the files!!
             QPixmap pix = QPixmap(QSize(32, 32));
-            pix.load("/home/brian/crochet.git/" + s->file());
+            pix.load(s->file());
             QIcon icon = QIcon(pix);
             QListWidgetItem *item = new QListWidgetItem(icon, i.key(), ui->patternStitches);
             ui->patternStitches->addItem(item);
@@ -800,7 +799,6 @@ void MainWindow::updatePatternColors()
     if(ui->tabWidget->count() <= 0)
         return;
     
-    //FIXME: this whole thing needs to be worked out, but the very least is make this use a shared icon.
     ui->patternColors->clear();
     QMapIterator<QString, QMap<QString, int> > i(mPatternColors);
     while (i.hasNext()) {
