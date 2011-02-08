@@ -17,5 +17,6 @@
         <file>stitches/double_treble_crochet.svg</file>
         <file>stitches/half_double_crochet.svg</file>
         <file>stitches/ch3_picot.svg</file>
+        <file>stitches/no_stitch.svg</file>
     </qresource>
 </RCC>
