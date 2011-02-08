@@ -26,6 +26,7 @@ set(crochet_qobject_headers
     crochettextview.h
     crochethighlighter.h
     updater.h
+    stitchiconui.h
     )
 
 set(crochet_headers
@@ -42,6 +43,7 @@ set(crochet_uis
     stitcheditor.ui
     stitchlibrary.ui
     settings.ui
+    stitchicon.ui
     )
 
 set(crochet_resources
