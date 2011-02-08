@@ -43,7 +43,7 @@ StitchCollection::~StitchCollection()
 void StitchCollection::loadStitchSets()
 {
     mBuiltIn = new StitchSet(this, false, true);
-    mBuiltIn->loadXmlFile(":/stitches/stitches.xml");
+    mBuiltIn->loadXmlFile(":/stitches.xml");
     mStitchSets.append(mBuiltIn);
 
     //Load additional stitch sets:

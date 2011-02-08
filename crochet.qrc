@@ -1,10 +1,10 @@
 <RCC>
     <qresource prefix="/">
         <file>license.txt</file>
+        <file>stitches.xml</file>
         <file>images/crochet_icon.png</file>
         <file>images/wizard_watermark.png</file>
         <file>images/splashscreen.png</file>
-        <file>stitches/stitches.xml</file>
         <file>stitches/chain.svg</file>
         <file>stitches/single_crochet.svg</file>
         <file>stitches/double_crochet.svg</file>
