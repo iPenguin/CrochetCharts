@@ -21,9 +21,11 @@ public:
     StitchSet(QObject *parent = 0, bool isMasterSet = false, bool isBuiltIn = false);
     ~StitchSet();
 
-    bool loadXmlFile(QString fileName);
+    //load icons tells the function to test/replace the icon file names.
+    bool loadXmlFile(QString fileName, bool loadIcons = false);
     //if you don't pass in a fileName the default setFileName will be used.
-    void saveXmlFile(QString fileName = "");
+    //saveIcons is for exporting stitchSets.
+    void saveXmlFile(QString fileName = "", bool saveIcons = false);
 
     const QString name() const { return mName; }
     void setName(QString n) { mName = n; }
@@ -60,14 +62,19 @@ public:
     bool isTemporary;
 
     QString stitchSetFileName;
+
+    //returns the abs path to the stitch set. w/trailing slash.
     QString stitchSetFolder();
     
 protected:
-    void loadXmlStitchSet(QDomElement *element);
-    void saveXmlStitchSet(QXmlStreamWriter *stream);
+    void loadXmlStitchSet(QDomElement *element, bool loadIcons = false);
+    void loadXmlIcon(QDomElement *element);
+    
+    void saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons = false);
+    void saveXmlIcon(QXmlStreamWriter *stream);
     
 private:
-    void loadXmlStitch(QDomElement e);
+    void loadXmlStitch(QDomElement *element, bool loadIcon = false);
 
     QList<Stitch*> mStitches;
     QString mName,
