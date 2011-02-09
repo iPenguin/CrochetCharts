@@ -38,9 +38,15 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     setDialogSize();
 
     ui->propertiesBox->setVisible(false);
-    connect(ui->moreBttn, SIGNAL(clicked(bool)), this, SLOT(hideProperties()));
+    connect(ui->moreBttn, SIGNAL(clicked()), this, SLOT(hideProperties()));
     connect(ui->printSet, SIGNAL(clicked()), this, SLOT(printStitchSet()));
     connect(ui->addStitch, SIGNAL(clicked()), this, SLOT(addStitchToSet()));
+
+    connect(ui->createSet, SIGNAL(clicked()), this, SLOT(createSet()));
+    connect(ui->removeSet, SIGNAL(clicked()), this, SLOT(removeSet()));
+    
+    connect(ui->importSet, SIGNAL(clicked()), this, SLOT(importSet()));
+    connect(ui->exportSet, SIGNAL(clicked()), this, SLOT(exportSet()));
 
     connect(ui->setName, SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
     connect(ui->author,  SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
@@ -90,6 +96,10 @@ void StitchLibraryUi::changeStitchSet(QString setName)
     ui->listView->resizeColumnsToContents();
     ui->listView->resizeRowsToContents();
     setupPropertiesBox();
+
+    bool state = (set != StitchCollection::inst()->masterStitchSet() && set != StitchCollection::inst()->builtIn());
+    
+    ui->removeSet->setEnabled(state);
 }
 
 void StitchLibraryUi::addStitchToMasterSet(int row)
@@ -199,7 +209,7 @@ void StitchLibraryUi::hideProperties()
 
 void StitchLibraryUi::printStitchSet()
 {
-    //TODO: make the rect fit the page better. Also see if the page breaks work ok.
+    //FIXME: this only prints the visible part of the widget.
     QPrinter printer;
     QPrintDialog dialog(&printer, this);
     if(dialog.exec() != QDialog::Accepted)
@@ -217,4 +227,53 @@ void StitchLibraryUi::iconDialog()
 
     d.exec();
     
+}
+
+void StitchLibraryUi::createSet()
+{
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("New Stitch Set"), tr("Stitch set name:"),
+                                         QLineEdit::Normal, "", &ok);
+    if (ok && !text.isEmpty()) {
+        StitchCollection::inst()->addStitchSet(text);
+
+        //switch to the new set.
+        ui->stitchSource->clear();
+        ui->stitchSource->addItems(StitchCollection::inst()->stitchSetList());
+        int index = ui->stitchSource->findText(text, Qt::MatchExactly);
+        ui->stitchSource->setCurrentIndex(index);
+    }
+}
+
+void StitchLibraryUi::removeSet()
+{
+    QMessageBox msgbox(this);
+    msgbox.setText(tr("This will remove the set and it's associated files."));
+    msgbox.setInformativeText(tr("Are you sure you want to remove the set?"));
+    QPushButton *remove = msgbox.addButton(tr("Yes, remove the set and it's files"),QMessageBox::AcceptRole);
+    /*QPushButton *keep =*/ msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
+
+    msgbox.exec();
+    if(msgbox.clickedButton() != remove)
+        return;
+    
+    QString setName = ui->stitchSource->currentText();
+    
+    StitchCollection::inst()->removeSet(setName);
+
+    //switch to the master set.
+    ui->stitchSource->clear();
+    ui->stitchSource->addItems(StitchCollection::inst()->stitchSetList());
+    int index = ui->stitchSource->findText(StitchCollection::inst()->masterStitchSet()->name(), Qt::MatchExactly);
+    ui->stitchSource->setCurrentIndex(index);
+}
+
+void StitchLibraryUi::exportSet()
+{
+    qDebug() << "exportSet";
+}
+
+void StitchLibraryUi::importSet()
+{
+    qDebug() << "importSet";
 }

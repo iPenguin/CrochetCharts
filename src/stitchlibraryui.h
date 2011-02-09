@@ -28,7 +28,13 @@ private slots:
     void hideProperties();
     void updateStitchSetProperties();
     void printStitchSet();
+
+    void createSet();
+    void removeSet();
     
+    void importSet();
+    void exportSet();
+   
 private slots:
     void iconDialog();
     
