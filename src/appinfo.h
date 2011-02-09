@@ -34,6 +34,7 @@ namespace AppInfo {
     const QString demoString = QObject::tr("Stitch Works Software - Demo Version  -  ");
     
     const quint32 magicNumber = 0x95973530;
+    const quint32 magicNumberSet = 0x53095973;
 }
 
 #endif // APPINFO_H

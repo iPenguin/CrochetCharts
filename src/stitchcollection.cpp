@@ -204,9 +204,6 @@ void StitchCollection::addStitchSet(QString fileName)
     
     QString dest = nextSetSaveFile();
 
-    if(!QFile::copy(fileName, dest))
-        return;
-
     //make a set folder
     QFileInfo info(dest);
 
@@ -214,7 +211,7 @@ void StitchCollection::addStitchSet(QString fileName)
     
     StitchSet *set = new StitchSet();
 
-    set->loadXmlFile(dest, true);
+    set->loadDataFile(fileName, dest);
 
     StitchSet *test = 0;
     test = findStitchSet(set->name());

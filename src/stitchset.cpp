@@ -6,20 +6,25 @@
 
 #include <QFile>
 
-#include <QXmlStreamWriter> //write the file
+#include <QXmlStreamWriter> //write the xml file
 
-#include <QDomDocument> //read the file
+#include <QDomDocument> //read the xml file
 #include <QDomElement>
 #include <QDomNode>
+
+#include <QDataStream> //read/write the set file w/icon data.
 
 #include "settings.h"
 
 #include <QDebug>
 #include <QFileInfo>
 
+#include <QMap>
+#include "appinfo.h"
+
 StitchSet::StitchSet(QObject *parent, bool isMasterSet, bool isBuiltIn)
     : QAbstractItemModel(parent), isMasterSet(isMasterSet),
-    isBuiltInSet(isBuiltIn), isTemporary(false)
+    isBuiltInSet(isBuiltIn), isTemporary(false), mSaveFileVersion(StitchSet::Version_1_0_0)
 {
 }
 
@@ -34,7 +39,7 @@ QString StitchSet::stitchSetFolder()
     return file.path() + "/" + file.baseName() + "/";
 }
 
-bool StitchSet::loadXmlFile(QString fileName, bool loadIcons)
+bool StitchSet::loadXmlFile(QString fileName)
 {
     stitchSetFileName = fileName;
     
@@ -56,8 +61,74 @@ bool StitchSet::loadXmlFile(QString fileName, bool loadIcons)
     
     QDomElement docElem = doc.documentElement();
     
-    loadXmlStitchSet(&docElem, loadIcons);
+    loadXmlStitchSet(&docElem);
     return true;
+}
+
+void StitchSet::loadDataFile(QString fileName, QString dest)
+{
+
+    if(fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+    file.open(QIODevice::ReadOnly);
+    QDataStream in(&file);
+
+    quint32 magicNumber;
+    qint32 version;
+    in >> magicNumber;
+
+    if(magicNumber != AppInfo::magicNumberSet)
+        return; //TODO: nice error message. not a set file.
+
+    in >> version;
+    
+    if(version < StitchSet::Version_1_0_0)
+        return; //TODO: unknown version.
+
+    if(version > mSaveFileVersion)
+        return; //TODO: unknown file version
+
+
+    if(version == StitchSet::Version_1_0_0)
+        in.setVersion(QDataStream::Qt_4_7);
+    
+    QMap<QString, QByteArray> icons;
+    in >> icons;
+
+    stitchSetFileName = dest;
+    
+    foreach(QString key, icons.keys()) {
+        qDebug() << "out file " << stitchSetFolder() + key;
+        QFile f(stitchSetFolder() + key);
+        f.open(QIODevice::WriteOnly);
+        f.write(icons[key]);
+        f.close();
+    }
+
+    QDomDocument doc("stitchset");
+
+    QByteArray docData;
+    
+    in >> docData;
+
+    if (!doc.setContent(QString(docData))) {
+        qWarning() << "could not get contents of file";
+        file.close();
+        return;
+    }
+    file.close();
+    
+    QDomElement docElem = doc.documentElement();
+    
+    loadXmlStitchSet(&docElem, true);
+
+}
+
+void StitchSet::loadIcons(QDataStream in)
+{
+
 }
 
 void StitchSet::loadXmlStitchSet(QDomElement *element, bool loadIcons)
@@ -77,36 +148,10 @@ void StitchSet::loadXmlStitchSet(QDomElement *element, bool loadIcons)
                 setOrg(e.text());
             else if(e.tagName() == "url")
                 setUrl(e.text());
-            else if(e.tagName() == "icon")
-                loadXmlIcon(&e);
             else if(e.tagName() == "stitch")
                 loadXmlStitch(&e, loadIcons);
             else
                  qWarning() << "Could not load part of the stitch set:" << e.tagName() << e.text();
-        }
-        n = n.nextSibling();
-    }
-}
-
-void StitchSet::loadXmlIcon(QDomElement *element)
-{
-    QString iconName;
-    QDomNode n = element->firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement();
-        if(!e.isNull()) {
-            
-            if(e.tagName() == "name") {
-                iconName = stitchSetFolder() + e.text();
-            } else if(e.tagName() == "data") {
-                QFile f(iconName);
-                if(!f.open(QIODevice::WriteOnly))
-                    return; //TODO: error message.
-                    QByteArray data(e.text().toLatin1());
-                f.write(data);
-                f.close();
-            } else
-                qWarning() << "Could not load part of the stitch set icon:" << e.tagName() << e.text();
         }
         n = n.nextSibling();
     }
@@ -141,7 +186,7 @@ void StitchSet::loadXmlStitch(QDomElement *element, bool loadIcon)
     addStitch(s);
 }
 
-void StitchSet::saveXmlFile(QString fileName, bool saveIcons)
+void StitchSet::saveXmlFile(QString fileName)
 {
     if(fileName.isEmpty())
         fileName = stitchSetFileName;
@@ -154,7 +199,7 @@ void StitchSet::saveXmlFile(QString fileName, bool saveIcons)
     stream.setAutoFormatting(true);
     stream.writeStartDocument();
     
-    saveXmlStitchSet(&stream, saveIcons);
+    saveXmlStitchSet(&stream);
 
     stream.writeEndDocument();
     
@@ -172,6 +217,53 @@ void StitchSet::saveXmlFile(QString fileName, bool saveIcons)
     data = 0;
 }
 
+void StitchSet::saveDataFile(QString fileName)
+{
+    if(fileName.isEmpty())
+        return;
+    
+    QFile file(fileName);
+    file.open(QIODevice::WriteOnly);
+
+    QDataStream out(&file);
+
+    out << AppInfo::magicNumberSet;
+    out << (qint32)StitchSet::Version_1_0_0;
+    out.setVersion(QDataStream::Qt_4_7);
+    
+    QMap<QString, QByteArray> icons;
+    foreach(Stitch *s, mStitches) {
+        QFile f(s->file());
+        f.open(QIODevice::ReadOnly);
+        qDebug() << "file name" << QFileInfo(s->file()).fileName();
+        icons.insert(QFileInfo(s->file()).fileName(), f.readAll());
+        f.close();
+    }
+    out << icons;
+
+    QString *data = new QString();
+    
+    QXmlStreamWriter stream(data);
+    stream.setAutoFormatting(true);
+    stream.writeStartDocument();
+    
+    saveXmlStitchSet(&stream, true);
+    
+    stream.writeEndDocument();
+
+    out << data->toLatin1();
+    
+    file.close();
+    delete data;
+    data = 0;
+    
+}
+
+void StitchSet::saveIcons(QDataStream *out)
+{
+
+}
+
 void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons)
 {
     stream->writeStartElement("stitch_set");
@@ -180,9 +272,6 @@ void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons)
     stream->writeTextElement("email", email());
     stream->writeTextElement("org", org());
     stream->writeTextElement("url", url());
-
-    if(saveIcons)
-        saveXmlIcon(stream);
         
     foreach(Stitch *s, mStitches) {
         QString file;
@@ -204,24 +293,6 @@ void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons)
     
     stream->writeEndElement(); // stitch_set
     
-}
-
-void StitchSet::saveXmlIcon(QXmlStreamWriter* stream)
-{
-    foreach(Stitch *s, mStitches) {
-        if(s->file().startsWith(":/") || s->file() == "")
-            continue;
-        QFile f(s->file());
-        
-        if(!f.open(QIODevice::ReadOnly))
-            return; //TODO: add nice message about failed read.
-            
-            stream->writeStartElement("icon");
-        stream->writeTextElement("name", QFileInfo(s->file()).fileName());
-        stream->writeTextElement("data", QString(f.readAll()));
-        stream->writeEndElement(); //icon
-        
-    }
 }
 
 Stitch* StitchSet::findStitch(QString name)

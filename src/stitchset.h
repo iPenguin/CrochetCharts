@@ -17,15 +17,23 @@ class StitchSet : public QAbstractItemModel
     Q_OBJECT
     friend class StitchCollection;
     friend class StitchLibraryUi;
+    friend class SaveFile;
 public:
+
+    enum SaveVersion { Version_1_0_0 = 100 };
+    
     StitchSet(QObject *parent = 0, bool isMasterSet = false, bool isBuiltIn = false);
     ~StitchSet();
 
     //load icons tells the function to test/replace the icon file names.
-    bool loadXmlFile(QString fileName, bool loadIcons = false);
+    bool loadXmlFile(QString fileName);
     //if you don't pass in a fileName the default setFileName will be used.
-    //saveIcons is for exporting stitchSets.
-    void saveXmlFile(QString fileName = "", bool saveIcons = false);
+    void saveXmlFile(QString fileName = "");
+
+    //load stitchset with icon data.
+    void loadDataFile(QString fileName, QString dest);
+    //save stitchset with icon data.
+    void saveDataFile(QString fileName);
 
     const QString name() const { return mName; }
     void setName(QString n) { mName = n; }
@@ -68,10 +76,10 @@ public:
     
 protected:
     void loadXmlStitchSet(QDomElement *element, bool loadIcons = false);
-    void loadXmlIcon(QDomElement *element);
-    
     void saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons = false);
-    void saveXmlIcon(QXmlStreamWriter *stream);
+
+    void saveIcons(QDataStream *out);
+    void loadIcons(QDataStream in);
     
 private:
     void loadXmlStitch(QDomElement *element, bool loadIcon = false);
@@ -102,6 +110,8 @@ public:
 private:
 
 /***************************************************************/
+
+    qint32 mSaveFileVersion;
 };
 
 #endif //STITCHSET_H

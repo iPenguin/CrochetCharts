@@ -269,7 +269,7 @@ void StitchLibraryUi::exportSet()
 
     //TODO: prompt user for file name. *.set
 
-    set->saveXmlFile("/home/brian/test.set", true);
+    set->saveDataFile("/home/brian/test.set");
 }
 
 void StitchLibraryUi::importSet()
