@@ -44,6 +44,9 @@ private:
     void setDialogSize();
     void setupPropertiesBox();
 
+    //update the source dropdown list and switch to setName
+    void updateSourceDropDown(QString setName = "");
+
 };
 
 #endif //STITCHLIBRARYUI_H

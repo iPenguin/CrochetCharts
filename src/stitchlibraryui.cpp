@@ -235,13 +235,10 @@ void StitchLibraryUi::createSet()
     QString text = QInputDialog::getText(this, tr("New Stitch Set"), tr("Stitch set name:"),
                                          QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty()) {
-        StitchCollection::inst()->addStitchSet(text);
+        StitchCollection::inst()->createStitchSet(text);
 
         //switch to the new set.
-        ui->stitchSource->clear();
-        ui->stitchSource->addItems(StitchCollection::inst()->stitchSetList());
-        int index = ui->stitchSource->findText(text, Qt::MatchExactly);
-        ui->stitchSource->setCurrentIndex(index);
+        updateSourceDropDown(text);
     }
 }
 
@@ -250,6 +247,7 @@ void StitchLibraryUi::removeSet()
     QMessageBox msgbox(this);
     msgbox.setText(tr("This will remove the set and it's associated files."));
     msgbox.setInformativeText(tr("Are you sure you want to remove the set?"));
+    msgbox.setIcon(QMessageBox::Question);
     QPushButton *remove = msgbox.addButton(tr("Yes, remove the set and it's files"),QMessageBox::AcceptRole);
     /*QPushButton *keep =*/ msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
 
@@ -262,18 +260,33 @@ void StitchLibraryUi::removeSet()
     StitchCollection::inst()->removeSet(setName);
 
     //switch to the master set.
-    ui->stitchSource->clear();
-    ui->stitchSource->addItems(StitchCollection::inst()->stitchSetList());
-    int index = ui->stitchSource->findText(StitchCollection::inst()->masterStitchSet()->name(), Qt::MatchExactly);
-    ui->stitchSource->setCurrentIndex(index);
+    updateSourceDropDown(StitchCollection::inst()->masterStitchSet()->name());
 }
 
 void StitchLibraryUi::exportSet()
 {
-    qDebug() << "exportSet";
+    StitchSet *set = StitchCollection::inst()->findStitchSet(ui->stitchSource->currentText());
+
+    //TODO: prompt user for file name. *.set
+
+    set->saveXmlFile("/home/brian/test.set", true);
 }
 
 void StitchLibraryUi::importSet()
 {
-    qDebug() << "importSet";
+    //TODO: prompt for the set to import.
+    StitchCollection::inst()->addStitchSet("/home/brian/test.set");
+
+    updateSourceDropDown();
+}
+
+void StitchLibraryUi::updateSourceDropDown(QString setName)
+{
+    if(setName.isEmpty())
+        setName = ui->stitchSource->currentText();
+    
+    ui->stitchSource->clear();
+    ui->stitchSource->addItems(StitchCollection::inst()->stitchSetList());
+    int index = ui->stitchSource->findText(setName, Qt::MatchExactly);
+    ui->stitchSource->setCurrentIndex(index);
 }
