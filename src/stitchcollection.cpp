@@ -34,7 +34,10 @@ StitchCollection::StitchCollection()
 StitchCollection::~StitchCollection()
 {
     mMasterSet->saveXmlFile();
+    //FIXME: only save the files if they've changed
     foreach(StitchSet *set, mStitchSets) {
+        if(!set->isTemporary && !set->isBuiltInSet)
+            set->saveXmlFile();
         delete set;
     }
     mStitchSets.clear();
@@ -149,4 +152,44 @@ QStringList StitchCollection::stitchList() const
     }
 
     return list;
+}
+
+QString StitchCollection::nextSetSaveFile()
+{
+    QString baseName, fileName;
+    QString ext = ".xml";
+
+    baseName = Settings::inst()->userSettingsFolder();
+
+    baseName += "sets/set";
+
+    fileName = baseName + ext;
+    int i = 1;
+
+    while(QFileInfo(fileName).exists()) {
+        fileName = baseName + QString::number(i) + ext;
+        i++;
+    }
+    return fileName;
+}
+
+StitchSet* StitchCollection::addStitchSet(QString setName)
+{
+    if(setName.isEmpty())
+        return 0;
+
+    StitchSet *set = new StitchSet(this, false, false);
+    set->setName(setName);
+    mStitchSets.append(set);
+
+    set->stitchSetFileName = nextSetSaveFile();
+    return set;
+}
+
+void StitchCollection::removeSet(QString setName)
+{
+   StitchSet *set = findStitchSet(setName);
+   mStitchSets.removeOne(set);
+
+   //TODO: delete all files and folders
 }

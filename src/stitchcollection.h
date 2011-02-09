@@ -53,12 +53,20 @@ public:
     QStringList categoryList() const;
     QStringList stitchList() const;
 
+    //adds a new set to the collection, and returns a pointer to it.
+    StitchSet* addStitchSet(QString setName);
+    void removeSet(QString setName);
+
 private:
     StitchCollection();
+
+    //generates the next file name that can be used for a stitch set.
+    QString nextSetSaveFile();
+    
     static StitchCollection* mInstance;
 
     QList<StitchSet*> mStitchSets;
-    StitchSet* mMasterSet; //links to stitches in the other mStitchSets...
+    StitchSet* mMasterSet;
     StitchSet* mBuiltIn;
 
 };
