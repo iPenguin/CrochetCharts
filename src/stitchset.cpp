@@ -147,17 +147,12 @@ void StitchSet::saveXmlFile(QString fileName)
 
 void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream)
 {
-    QString fName = Settings::inst()->value("firstName").toString();
-    QString lName = Settings::inst()->value("lastName").toString();
-    QString email = Settings::inst()->value("email").toString();
-    
-    //TODO: use the settings as the default values, but allow the user to override those settings.
     stream->writeStartElement("stitch_set");
-    stream->writeTextElement("name", "Master Stitch Set");
-    stream->writeTextElement("author", fName + " " + lName);
-    stream->writeTextElement("email", email);
-    stream->writeTextElement("org", "");
-    stream->writeTextElement("url", "");
+    stream->writeTextElement("name", name());
+    stream->writeTextElement("author", author());
+    stream->writeTextElement("email", email());
+    stream->writeTextElement("org", org());
+    stream->writeTextElement("url", url());
     
     foreach(Stitch *s, mStitches) {
         stream->writeStartElement("stitch");
