@@ -173,7 +173,7 @@ QString StitchCollection::nextSetSaveFile()
     return fileName;
 }
 
-StitchSet* StitchCollection::addStitchSet(QString setName)
+StitchSet* StitchCollection::createStitchSet(QString setName)
 {
     if(setName.isEmpty())
         return 0;
@@ -192,4 +192,38 @@ void StitchCollection::removeSet(QString setName)
    mStitchSets.removeOne(set);
 
    //TODO: delete all files and folders
+}
+
+void StitchCollection::addStitchSet(QString fileName)
+{
+    if(fileName.isEmpty())
+        return;
+
+    if(!QFileInfo(fileName).exists())
+        return;
+    
+    QString dest = nextSetSaveFile();
+
+    if(!QFile::copy(fileName, dest))
+        return;
+
+    //make a set folder
+    QFileInfo info(dest);
+
+    QDir(info.path()).mkpath(info.path() + "/" + info.baseName());
+    
+    StitchSet *set = new StitchSet();
+
+    set->loadXmlFile(dest, true);
+
+    StitchSet *test = 0;
+    test = findStitchSet(set->name());
+    if(test) {
+        //TODO: warn that a set with this name already exists.
+        //Offer to overwrite (delete old and add new)
+        //Offer to rename new set.
+        //Offer to cancel (delete new)
+    }
+
+    mStitchSets.append(set);
 }
