@@ -18,5 +18,6 @@
         <file>stitches/half_double_crochet.svg</file>
         <file>stitches/ch3_picot.svg</file>
         <file>stitches/no_stitch.svg</file>
+        <file>stitches/unknown.svg</file>
     </qresource>
 </RCC>
