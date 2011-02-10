@@ -285,7 +285,6 @@ void StitchCollection::changeStitchName(QString setName, QString oldName, QStrin
 {
     //update the stitchList with the new stitch name.
     if (mStitchList.value(oldName) == setName) {
-        qDebug() << "in if";
         mStitchList.remove(oldName);
         mStitchList[newName] = setName;
     }

@@ -252,15 +252,35 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
             Stitch *s = static_cast<Stitch*>(index.internalPointer());
             StitchSet *set = static_cast<StitchSet*>(model);
             Stitch *found = set->findStitch(le->text());
-            
+
+            //is there a stitch with the new name in this set already?
             if(found && found != s) {
                 QMessageBox msgbox;
                 //TODO: return to the editor with the bad data.
                 msgbox.setText(tr("A stitch with this name already exists in the set."));
                 msgbox.exec();
-            } else {
-                model->setData(index, le->text(), Qt::EditRole);
+
+                break;
             }
+            
+            //is this stitch in the master list? if so is there a stitch with the new name already?
+            found = 0;
+            found = StitchCollection::inst()->masterStitchSet()->findStitch(s->name());
+            if(found && found == s) {
+                Stitch *m = 0;
+                m = StitchCollection::inst()->masterStitchSet()->findStitch(le->text());
+                if(m && m != s) {
+                    QMessageBox msgbox;
+                    msgbox.setText("There is already a stitch with this name in the master list");
+                    msgbox.exec();
+                    //TODO: offer to remove the stitch already there with this name.
+
+                    break;
+                }
+            }
+                
+            model->setData(index, le->text(), Qt::EditRole);
+            
             break;
         }
         case Stitch::Description: {
