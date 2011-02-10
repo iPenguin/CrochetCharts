@@ -61,8 +61,9 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
                 this, SLOT(changeStitchSet(QString)));
 
     connect(ui->resetLibrary, SIGNAL(clicked()), this, SLOT(resetLibrary()));
-
     connect(ui->icons, SIGNAL(clicked()), this, SLOT(iconDialog()));
+
+    setButtonStates(master);
 }
 
 StitchLibraryUi::~StitchLibraryUi()
@@ -97,9 +98,17 @@ void StitchLibraryUi::changeStitchSet(QString setName)
     ui->listView->resizeRowsToContents();
     setupPropertiesBox();
 
-    bool state = (set != StitchCollection::inst()->masterStitchSet() && set != StitchCollection::inst()->builtIn());
+    setButtonStates(set);
+}
+
+void StitchLibraryUi::setButtonStates(StitchSet *set)
+{    
+    bool state = (set != StitchCollection::inst()->masterStitchSet());
     
     ui->removeSet->setEnabled(state);
+    ui->addStitch->setEnabled(state);
+    ui->moreBttn->setEnabled(state);
+    ui->propertiesBox->setEnabled(state);    
 }
 
 void StitchLibraryUi::addStitchToMasterSet(int row)
