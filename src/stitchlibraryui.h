@@ -8,6 +8,8 @@
 #include <QDialog>
 #include "ui_stitchlibrary.h"
 
+class StitchSet;
+
 namespace Ui {
     class StitchLibraryDialog;
 }
@@ -43,6 +45,7 @@ private:
 
     void setDialogSize();
     void setupPropertiesBox();
+    void setButtonStates(StitchSet *set);
 
     //update the source dropdown list and switch to setName
     void updateSourceDropDown(QString setName = "");
