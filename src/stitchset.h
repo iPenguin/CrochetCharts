@@ -54,7 +54,8 @@ public:
 
     bool hasStitch(QString name);
     void addStitch(Stitch *s);
-
+    void createStitch(QString name);
+    
     void removeStitch(QString name);
     
     int stitchCount() const;
@@ -76,7 +77,10 @@ public:
 
     //reset the model in all views.
     void refreshSet() { reset(); }
-     
+    
+signals:
+    void stitchNameChanged(QString setName, QString oldName, QString newName);
+    
 protected:
     void loadXmlStitchSet(QDomElement *element, bool loadIcons = false);
     void saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons = false);

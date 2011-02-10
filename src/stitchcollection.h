@@ -65,6 +65,9 @@ public:
     void addStitchToMasterSet(StitchSet *set, Stitch *s);
 
     void resetMasterStitchSet();
+
+private slots:
+    void changeStitchName(QString setName, QString oldName, QString newName);
     
 private:
     StitchCollection();

@@ -321,6 +321,14 @@ void StitchSet::addStitch(Stitch *s)
     endInsertRows();
 }
 
+void StitchSet::createStitch(QString name)
+{
+    Stitch *newS = new Stitch();
+    newS->setName(name);
+    newS->setFile(":/stitches/unknown.svg");
+    addStitch(newS);
+}
+
 void StitchSet::removeStitch(QString name)
 {
     Stitch *s = findStitch(name);
@@ -410,10 +418,14 @@ bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int rol
         bool retVal = false;
 
         switch(index.column()) {
-            case Stitch::Name:
+            case Stitch::Name: {
+                Stitch *s = static_cast<Stitch*>(index.internalPointer());
+                QString oldName = s->name();
                 s->setName(value.toString());
+                emit stitchNameChanged(name(), oldName, value.toString());
                 retVal = true;
                 break;
+            }
             case Stitch::Icon:
                 s->setFile(value.toString());
                 retVal = true;

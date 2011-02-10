@@ -62,6 +62,7 @@ void StitchCollection::loadStitchSets()
         StitchSet *set = new StitchSet(this, false, false);
         set->loadXmlFile(file.absoluteFilePath());
         mStitchSets.append(set);
+        connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)), this, SLOT(changeStitchName(QString,QString,QString)));
     }
 }
 
@@ -276,6 +277,16 @@ void StitchCollection::addStitchSet(QString fileName)
         //Offer to rename new set.
         //Offer to cancel (delete new)
     }
-
+    connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)), this, SLOT(changeStitchName(QString,QString,QString)));
     mStitchSets.append(set);
+}
+
+void StitchCollection::changeStitchName(QString setName, QString oldName, QString newName)
+{
+    //update the stitchList with the new stitch name.
+    if (mStitchList.value(oldName) == setName) {
+        qDebug() << "in if";
+        mStitchList.remove(oldName);
+        mStitchList[newName] = setName;
+    }
 }
