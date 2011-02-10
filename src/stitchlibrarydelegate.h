@@ -47,6 +47,7 @@ public:
 //public slots:
 signals:
     void addStitchToMasterSet(int row);
+    void stitchNameChanged(QString oldName, QString newName);
 
 private:
     void loadIcons(QComboBox *cb) const;

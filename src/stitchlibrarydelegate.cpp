@@ -25,6 +25,7 @@
 #include "stitchcollection.h"
 #include "stitchset.h"
 #include <QSvgRenderer>
+#include <QMessageBox>
 
 StitchLibraryDelegate::StitchLibraryDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
@@ -161,6 +162,8 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
     switch(index.column()) {
         case Stitch::Name:{ //TODO: add a validator that checks if the name already exists.
             QLineEdit *editor = new QLineEdit(parent);
+            QRegExpValidator *validator = new QRegExpValidator(QRegExp("[a-zA-Z][a-zA-Z0-9]+"), editor);
+            editor->setValidator(validator);
             return editor;
         }
         case Stitch::Icon: {
@@ -243,7 +246,23 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
             model->setData(index, cb->itemData(cb->currentIndex(), Qt::UserRole), Qt::EditRole);
             break;
         }
-        case Stitch::Name: //TODO: make the name check if it already exists before accepting any alterations.
+        case Stitch::Name: {
+            QLineEdit *le = static_cast<QLineEdit*>(editor);
+
+            Stitch *s = static_cast<Stitch*>(index.internalPointer());
+            StitchSet *set = static_cast<StitchSet*>(model);
+            Stitch *found = set->findStitch(le->text());
+            
+            if(found && found != s) {
+                QMessageBox msgbox;
+                //TODO: return to the editor with the bad data.
+                msgbox.setText(tr("A stitch with this name already exists in the set."));
+                msgbox.exec();
+            } else {
+                model->setData(index, le->text(), Qt::EditRole);
+            }
+            break;
+        }
         case Stitch::Description: {
             QLineEdit *le = static_cast<QLineEdit*>(editor);
             model->setData(index, le->text(), Qt::EditRole);

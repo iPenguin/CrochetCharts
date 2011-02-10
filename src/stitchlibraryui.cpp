@@ -171,9 +171,8 @@ void StitchLibraryUi::addStitchToSet()
                 tr("The stitch %1 is already in this stitch set").arg(text), QMessageBox::Ok);
             //TODO: find a way to take the user to the current cell.
         } else {
-            Stitch *newS = new Stitch();
-            newS->setName(text.toLower());
-            set->addStitch(newS);
+            set->createStitch(text.toLower());
+            ui->listView->resizeRowsToContents();
         }
     }
 }
