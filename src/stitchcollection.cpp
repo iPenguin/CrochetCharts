@@ -29,6 +29,7 @@ StitchCollection* StitchCollection::inst()
 StitchCollection::StitchCollection()
 { 
     mMasterSet = new StitchSet(this, true);
+    mMasterSet->setName(tr("All Stitches"));
 }
 
 StitchCollection::~StitchCollection()
@@ -69,14 +70,8 @@ void StitchCollection::populateMasterSet()
     bool loaded = loadMasterList();
 
     //if there isn't a master stitchset create it from the built in stitches.
-    if(!loaded) {
-        mMasterSet->clearStitches();
-        mMasterSet->setName(tr("All Stitches"));
-        foreach(Stitch *s, mBuiltIn->stitches()) {
-            mMasterSet->addStitch(s);
-            mStitchList.insert(s->name(), mBuiltIn->name());
-        }
-    }
+    if(!loaded)
+        resetMasterStitchSet();
 }
 
 bool StitchCollection::loadMasterList()
@@ -117,6 +112,18 @@ void StitchCollection::saveMasterList()
     out << mStitchList;
     
     file.close();
+}
+
+void StitchCollection::resetMasterStitchSet()
+{
+    mMasterSet->clearStitches();
+    mStitchList.clear();
+
+    foreach(Stitch *s, mBuiltIn->stitches()) {
+        mMasterSet->addStitch(s);
+        mStitchList.insert(s->name(), mBuiltIn->name());
+    }
+    mMasterSet->refreshSet();
 }
 
 void StitchCollection::addStitchToMasterSet(StitchSet *set, Stitch *s)

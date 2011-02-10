@@ -63,6 +63,8 @@ public:
     void addStitchSet(QString fileName);
 
     void addStitchToMasterSet(StitchSet *set, Stitch *s);
+
+    void resetMasterStitchSet();
     
 private:
     StitchCollection();
