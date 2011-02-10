@@ -62,8 +62,6 @@ public:
     QList<Stitch *> stitches() const { return mStitches; }
     void clearStitches();
 
-    void cloneStitchSet(StitchSet *orig);
-
     //The stitch set that the user is works with.
     bool isMasterSet;
     //The set of stitches that comes with the software.
@@ -75,7 +73,10 @@ public:
 
     //returns the abs path to the stitch set. w/trailing slash.
     QString stitchSetFolder();
-    
+
+    //reset the model in all views.
+    void refreshSet() { reset(); }
+     
 protected:
     void loadXmlStitchSet(QDomElement *element, bool loadIcons = false);
     void saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons = false);

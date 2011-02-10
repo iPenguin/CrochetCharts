@@ -482,18 +482,3 @@ void StitchSet::clearStitches()
 {
     mStitches.clear();
 }
-
-void StitchSet::cloneStitchSet(StitchSet *orig)
-{
-    if(this == orig) // cannot clone yourself.
-        return;
-
-    mStitches.clear(); //TODO: make sure these are being deleted too...
-    
-    foreach(Stitch *s, orig->stitches()) {
-        Stitch *newS = new Stitch();
-        *newS << *s;
-        addStitch(newS);
-    }
-    reset();
-}
