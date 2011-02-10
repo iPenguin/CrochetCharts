@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
         splash.show();
     }
 
-    splash.showMessage(QObject::tr("Loading Stitch Sets..."));
+    splash.showMessage(QObject::tr("Loading All Stitch Sets..."));
     StitchCollection *collection = StitchCollection::inst();
     collection->loadStitchSets();
     splash.showMessage(QObject::tr("Populating Master Stitch Set..."));

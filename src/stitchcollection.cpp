@@ -33,7 +33,8 @@ StitchCollection::StitchCollection()
 
 StitchCollection::~StitchCollection()
 {
-    mMasterSet->saveXmlFile();
+    saveMasterList();
+    //mMasterSet->saveXmlFile();
     //FIXME: only save the files if they've changed
     foreach(StitchSet *set, mStitchSets) {
         if(!set->isTemporary && !set->isBuiltInSet)
@@ -47,11 +48,8 @@ void StitchCollection::loadStitchSets()
 {
     mBuiltIn = new StitchSet(this, false, true);
     mBuiltIn->loadXmlFile(":/stitches.xml");
-    mStitchSets.append(mBuiltIn);
 
     //Load additional stitch sets:
-    //TODO: store all custom icons in [confFolder]/sets/setName/
-    
     QString confFolder = Settings::inst()->userSettingsFolder();
 
     QDir dir = QDir(confFolder + "sets/");
@@ -68,31 +66,72 @@ void StitchCollection::loadStitchSets()
 
 void StitchCollection::populateMasterSet()
 {
-    QString confFolder = Settings::inst()->userSettingsFolder();
-    bool loaded = mMasterSet->loadXmlFile(confFolder + "stitches.xml");
+    bool loaded = loadMasterList();
 
     //if there isn't a master stitchset create it from the built in stitches.
     if(!loaded) {
         mMasterSet->clearStitches();
+        mMasterSet->setName(tr("All Stitches"));
         foreach(Stitch *s, mBuiltIn->stitches()) {
-            Stitch *newS = new Stitch();
-            mMasterSet->addStitch(newS);
-            *newS << *s;
+            mMasterSet->addStitch(s);
+            mStitchList.insert(s->name(), mBuiltIn->name());
         }
     }
 }
 
+bool StitchCollection::loadMasterList()
+{
+    QString confFolder = Settings::inst()->userSettingsFolder();
+    QString fileName = confFolder + "stitches.list";
+
+    if(!QFileInfo(fileName).exists())
+        return false;
+    
+    QFile file(fileName);
+    file.open(QIODevice::ReadOnly);
+
+    QDataStream in(&file);
+
+    in >> mStitchList;
+    
+    file.close();
+
+    foreach(QString key, mStitchList.keys()) {
+        Stitch *s = findStitchSet(mStitchList.value(key))->findStitch(key);
+        mMasterSet->addStitch(s);
+    }
+
+    return true;
+}
+
+void StitchCollection::saveMasterList()
+{
+    QString confFolder = Settings::inst()->userSettingsFolder();
+    QString fileName = confFolder + "stitches.list";
+    
+    QFile file(fileName);
+    file.open(QIODevice::WriteOnly);
+
+    QDataStream out(&file);
+
+    out << mStitchList;
+    
+    file.close();
+}
+
+void StitchCollection::addStitchToMasterSet(StitchSet *set, Stitch *s)
+{
+    if(mMasterSet->hasStitch(s->name())) {
+        mMasterSet->removeStitch(s->name());
+    }
+    mMasterSet->addStitch(s);
+    mStitchList[s->name()] = set->name();
+}
+
 Stitch* StitchCollection::findStitch(QString name)
 {
-    //FIXME: This needs some serious logic work.
-
     Stitch *found = 0;
     found = mMasterSet->findStitch(name);
-
-    foreach(StitchSet *set, mStitchSets) {
-        if(set->isTemporary)
-            found = mMasterSet->findStitch(name);
-    }
     
     return found;
 
@@ -107,7 +146,9 @@ StitchSet* StitchCollection::findStitchSet(QString setName)
 
     if(mMasterSet->name() == setName)
         return mMasterSet;
-
+    if(mBuiltIn->name() == setName)
+        return mBuiltIn;
+    
     return 0;
 }
 
@@ -149,6 +190,13 @@ QStringList StitchCollection::stitchList() const
     foreach(Stitch *s, mMasterSet->stitches()) {
         if(!list.contains(s->name()))
             list.append(s->name());
+    }
+
+    foreach(StitchSet *set, mStitchSets) {
+        foreach(Stitch *s, set->stitches()) {
+            if(!list.contains(s->name()))
+                list.append(s->name());
+        }
     }
 
     return list;

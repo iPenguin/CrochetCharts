@@ -111,25 +111,20 @@ void StitchLibraryUi::addStitchToMasterSet(int row)
 
     Stitch *masterStitch;
     
-    if(master->hasStitch(s->name())) {
+    if(master->hasStitch(s->name()) && s != master->findStitch(s->name())) {
         QMessageBox msgbox;
         msgbox.setText(tr("A stitch with this name already exists in your set."));
         msgbox.setInformativeText(tr("Would you like to replace it with this one?"));
         msgbox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-        
+        //TODO: clean up dialog box.
         if(msgbox.exec() != QMessageBox::Yes)
             return;
-        
-        masterStitch = master->findStitch(s->name());
-    } else {
-        masterStitch = new Stitch();
-        master->addStitch(masterStitch);
     }
 
-    *masterStitch << *s;
+    StitchCollection::inst()->addStitchToMasterSet(set, s);
 
-    //TODO: make some other indication that the stitch has 'transfered' as switching
-    //sets is annoying and burdensome.
+    //TODO: make some other indication that the stitch has 'transfered' as switching 
+    //between active sets is annoying and burdensome.
     ui->stitchSource->setCurrentIndex(ui->stitchSource->findText(master->name()));
 }
 
@@ -138,9 +133,13 @@ void StitchLibraryUi::resetLibrary()
     QMessageBox msgbox;
     msgbox.setText(tr("If you reset the stitch set you will loose any customizations you have made to the Master Stitch Set."));
     msgbox.setInformativeText(tr("Are you sure you want to continue?"));
-    msgbox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+    msgbox.setIcon(QMessageBox::Question);
+    QPushButton *reset = msgbox.addButton(tr("Yes, reset the library"), QMessageBox::AcceptRole);
+    /*QPushButton *cancel =*/ msgbox.addButton(tr("No, keep the library as it is"), QMessageBox::RejectRole);
 
-    if(msgbox.exec() != QMessageBox::Yes)
+    msgbox.exec();
+    
+    if(msgbox.clickedButton() != reset)
         return;
     
     StitchSet *master = StitchCollection::inst()->masterStitchSet();

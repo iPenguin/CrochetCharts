@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QMap>
 
 class StitchSet;
 class Stitch;
@@ -46,11 +47,12 @@ public:
     //fill in a dropdown list for selecting a stitch set.
     QStringList stitchSetList();
 
-    //this function finds the named stitch it can search the master set and any alternative sets.
     Stitch* findStitch(QString name);
     
     StitchSet* findStitchSet(QString setName);
+    //list all categories in all sets
     QStringList categoryList() const;
+    //list all stitches in all sets
     QStringList stitchList() const;
 
     //creates a new set to the collection, and returns a pointer to it.
@@ -59,12 +61,18 @@ public:
 
     //add a stitch set from a file.
     void addStitchSet(QString fileName);
+
+    void addStitchToMasterSet(StitchSet *set, Stitch *s);
     
 private:
     StitchCollection();
 
     //generates the next file name that can be used for a stitch set.
     QString nextSetSaveFile();
+
+    //loads the list of stitches and where the stitches are being pulled from.
+    bool loadMasterList();
+    void saveMasterList();
     
     static StitchCollection* mInstance;
 
@@ -72,6 +80,7 @@ private:
     StitchSet* mMasterSet;
     StitchSet* mBuiltIn;
 
+    QMap<QString, QString> mStitchList;
 };
 
 #endif //STITCHCOLLECTION_H

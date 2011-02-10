@@ -316,9 +316,20 @@ bool StitchSet::hasStitch(QString name)
 
 void StitchSet::addStitch(Stitch *s)
 {
-    beginInsertRows(this->parent(QModelIndex()), stitchCount(), stitchCount());
+    beginInsertRows(parent(QModelIndex()), stitchCount(), stitchCount());
     mStitches.append(s);
     endInsertRows();
+}
+
+void StitchSet::removeStitch(QString name)
+{
+    Stitch *s = findStitch(name);
+    int index = mStitches.indexOf(s);
+    if(s) {
+        beginRemoveRows(parent(QModelIndex()), index, index);
+        mStitches.removeOne(s);
+        endRemoveRows();
+    }
 }
 
 Qt::ItemFlags StitchSet::flags(const QModelIndex &index) const

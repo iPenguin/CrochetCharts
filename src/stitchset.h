@@ -55,6 +55,8 @@ public:
     bool hasStitch(QString name);
     void addStitch(Stitch *s);
 
+    void removeStitch(QString name);
+    
     int stitchCount() const;
 
     QList<Stitch *> stitches() const { return mStitches; }
@@ -90,7 +92,7 @@ private:
             mEmail,
             mOrg,
             mUrl;
-    
+
 /***************************************************************\
 |QAbstractItemModel
 \***************************************************************/
@@ -107,10 +109,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     
-private:
-
 /***************************************************************/
-
+private:
     qint32 mSaveFileVersion;
 };
 
