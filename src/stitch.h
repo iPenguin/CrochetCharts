@@ -14,6 +14,7 @@ class QPixmap;
 
 class Stitch
 {
+    friend class StitchSet;
 public:
 
     enum StitchParts { Name = 0, Icon, Description, Category, WrongSide };
@@ -21,19 +22,10 @@ public:
     Stitch();
     ~Stitch();
 
-    void setName(QString n) { mName = n; }
     QString name() const { return mName; }
-
-    void setFile(QString f);
     QString file() const { return mFile; }
-
-    void setDescription(QString desc) { mDescription = desc; }
     QString description() const { return mDescription; }
-
-    void setCategory(QString cat) { mCategory = cat; }
     QString category() const { return mCategory; }
-
-    void setWrongSide(QString ws) { mWrongSide = ws; }
     QString wrongSide() const { return mWrongSide; }
 
     bool isSvg();
@@ -41,6 +33,13 @@ public:
     QPixmap* renderPixmap();
     QSvgRenderer* renderSvg();
 
+protected:
+    void setName(QString n) { mName = n; }
+    void setFile(QString f);
+    void setDescription(QString desc) { mDescription = desc; }
+    void setCategory(QString cat) { mCategory = cat; }
+    void setWrongSide(QString ws) { mWrongSide = ws; }
+    
 private:
 
     QString mName;
@@ -52,10 +51,5 @@ private:
     QPixmap *mPixmap;
     QPointer<QSvgRenderer> mSvgRenderer;
 };
-
-QDataStream& operator<<(QDataStream &out, const Stitch &s);
-Stitch& operator<<(Stitch &out, const Stitch &s);
-
-QDataStream& operator>>(QDataStream &in, Stitch &s);
 
 #endif //STITCH_H

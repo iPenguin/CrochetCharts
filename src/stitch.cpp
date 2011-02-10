@@ -33,11 +33,8 @@ void Stitch::setFile ( QString f )
         if(!mSvgRenderer->isValid() && !isSvg()) {
             mPixmap = new QPixmap(mFile);
         }
-        
     }
-    
 }
-
 
 bool Stitch::isSvg()
 {
@@ -69,32 +66,4 @@ QSvgRenderer* Stitch::renderSvg()
         mSvgRenderer->load(mFile);
 
     return mSvgRenderer;
-}
-
-QDataStream& operator<<(QDataStream &out, const Stitch &s)
-{
-    out << s.name() << s.file() << s.description() << s.category() << s.wrongSide();
-    return out;
-}
-
-Stitch& operator<<(Stitch &out, const Stitch &s)
-{
-    out.setName(s.name());
-    out.setFile(s.file());
-    out.setDescription(s.description());
-    out.setCategory(s.category());
-    out.setWrongSide(s.wrongSide());
-    return out;
-}
-
-QDataStream& operator>>(QDataStream &in, Stitch &s)
-{
-    QString name, file, desc, cat, ws;
-    in >> name >> file >> desc >> cat >> ws;
-    s.setName(name);
-    s.setFile(file);
-    s.setDescription(desc);
-    s.setCategory(cat);
-    s.setWrongSide(ws);
-    return in;
 }
