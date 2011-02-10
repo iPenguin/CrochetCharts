@@ -70,6 +70,9 @@ void StitchIconUi::addIcon()
     
     QString dest = Settings::inst()->userSettingsFolder() + "icons/";
     
+    if(!QFileInfo(dest).exists())
+        QDir(Settings::inst()->userSettingsFolder()).mkpath(dest);
+    
     QFileInfo srcInfo(source);
 
     dest += srcInfo.fileName();
