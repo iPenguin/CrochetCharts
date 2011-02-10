@@ -108,8 +108,6 @@ void StitchLibraryUi::addStitchToMasterSet(int row)
     Stitch *s = static_cast<Stitch*>(set->index(row, 0).internalPointer());
 
     StitchSet *master = StitchCollection::inst()->masterStitchSet();
-
-    Stitch *masterStitch;
     
     if(master->hasStitch(s->name()) && s != master->findStitch(s->name())) {
         QMessageBox msgbox;
@@ -141,14 +139,10 @@ void StitchLibraryUi::resetLibrary()
     
     if(msgbox.clickedButton() != reset)
         return;
-    
-    StitchSet *master = StitchCollection::inst()->masterStitchSet();
-    StitchSet *builtIn = StitchCollection::inst()->builtIn();
 
     ui->listView->clearSelection();
-    
-    master->clearStitches();
-    master->cloneStitchSet(builtIn);
+
+    StitchCollection::inst()->resetMasterStitchSet();
 
     ui->listView->resizeColumnsToContents();
     ui->listView->resizeRowsToContents();
