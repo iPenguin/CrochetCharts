@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>750</width>
-    <height>567</height>
+    <height>616</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -36,6 +36,19 @@
        </item>
        <item>
         <widget class="QComboBox" name="stitchSource"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="moreBttn">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>&amp;More &gt;&gt;</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -175,16 +188,16 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QPushButton" name="createSet">
+      <widget class="QPushButton" name="addStitch">
        <property name="text">
-        <string>&amp;Create Set</string>
+        <string>Create Stitch</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="addStitch">
+      <widget class="QPushButton" name="removeStitch">
        <property name="text">
-        <string>&amp;Add Stitch</string>
+        <string>Delete Stitch</string>
        </property>
       </widget>
      </item>
@@ -199,7 +212,7 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>40</height>
         </size>
        </property>
       </spacer>
@@ -222,7 +235,37 @@
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="createSet">
+       <property name="text">
+        <string>&amp;Create Set</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="removeSet">
+       <property name="text">
+        <string>Delete Set</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
         </size>
        </property>
       </spacer>
@@ -242,60 +285,7 @@
       </widget>
      </item>
      <item>
-      <spacer name="verticalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Maximum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="printSet">
-       <property name="text">
-        <string>&amp;Print Set</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <spacer name="verticalSpacer_5">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Maximum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="removeSet">
-       <property name="text">
-        <string>Remove Set</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="resetLibrary">
-       <property name="text">
-        <string>&amp;Reset Master</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer_6">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
@@ -311,15 +301,16 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="moreBttn">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="QPushButton" name="printSet">
        <property name="text">
-        <string>&amp;More &gt;&gt;</string>
+        <string>&amp;Print Set</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="resetLibrary">
+       <property name="text">
+        <string>&amp;Reset Master</string>
        </property>
       </widget>
      </item>
