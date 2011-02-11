@@ -311,9 +311,11 @@ void StitchLibraryUi::importSet()
         return;
     
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    StitchCollection::inst()->addStitchSet(fileName);
+    StitchSet *set = 0;
+    set = StitchCollection::inst()->addStitchSet(fileName);
 
-    updateSourceDropDown();
+    if(set)
+        updateSourceDropDown(set->name());
 
     QApplication::restoreOverrideCursor();
 }

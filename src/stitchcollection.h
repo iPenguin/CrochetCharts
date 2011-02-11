@@ -59,8 +59,8 @@ public:
     StitchSet* createStitchSet(QString setName);
     void removeSet(QString setName);
 
-    //add a stitch set from a file.
-    void addStitchSet(QString fileName);
+    //add a stitch set from a file, and return a pointer to it.
+    StitchSet* addStitchSet(QString fileName);
 
     void addStitchToMasterSet(StitchSet *set, Stitch *s);
 

@@ -9,11 +9,14 @@
 
 #include <QFile>
 #include <QComboBox>
+#include <QPushButton>
 
 #include <QDebug>
 #include <QDir>
 #include <QFileInfo>
 #include "settings.h"
+#include <QMessageBox>
+#include <QInputDialog>
 
 // Global static pointer
 StitchCollection* StitchCollection::mInstance = NULL;
@@ -250,13 +253,14 @@ void StitchCollection::removeSet(QString setName)
    //TODO: delete all files and folders
 }
 
-void StitchCollection::addStitchSet(QString fileName)
+//FIXME: return a value that can be checked and move the gui dialogs into the libraryui.
+StitchSet* StitchCollection::addStitchSet(QString fileName)
 {
     if(fileName.isEmpty())
-        return;
+        return 0;
 
     if(!QFileInfo(fileName).exists())
-        return;
+        return 0;
     
     QString dest = nextSetSaveFile();
 
@@ -272,13 +276,41 @@ void StitchCollection::addStitchSet(QString fileName)
     StitchSet *test = 0;
     test = findStitchSet(set->name());
     if(test) {
-        //TODO: warn that a set with this name already exists.
-        //Offer to overwrite (delete old and add new)
-        //Offer to rename new set.
-        //Offer to cancel (delete new)
+        QMessageBox msgbox;
+        msgbox.setText(tr("A Set with this name already exists in your collection."));
+        msgbox.setInformativeText(tr("What would you like to do with this set?"));
+        msgbox.setIcon(QMessageBox::Question);
+        QPushButton *overwrite = msgbox.addButton(tr("Overwrite the existing set"), QMessageBox::AcceptRole);
+        QPushButton *rename = msgbox.addButton(tr("Rename the new stitch set"), QMessageBox::ApplyRole);
+        QPushButton *cancel = msgbox.addButton(tr("Cancel adding the new set"), QMessageBox::RejectRole);
+
+        msgbox.exec();
+        
+        if(msgbox.clickedButton() == overwrite) {
+            delete test;
+            test = 0;
+            mStitchSets.removeOne(test);
+            //FIXME: this is going to cause crashes when removing sets with sts in the master list!
+        } else if(msgbox.clickedButton() == rename) {
+            bool ok;
+            QString text;
+            
+            while(!ok || text.isEmpty() || text == set->name() ){
+                text = QInputDialog::getText(0, tr("New Set Name"), tr("Stitch set name:"),
+                                            QLineEdit::Normal, set->name(), &ok);
+            }
+            //TODO: allow the user to 'cancel out' of this loop.
+            set->setName(text);
+            
+        } else {
+            delete set;
+            set = 0;
+            return 0;
+        }
     }
     connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)), this, SLOT(changeStitchName(QString,QString,QString)));
     mStitchSets.append(set);
+    return set;
 }
 
 void StitchCollection::changeStitchName(QString setName, QString oldName, QString newName)
