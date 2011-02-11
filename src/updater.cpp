@@ -74,7 +74,7 @@ void Updater::httpFinished()
     QString data =QString(mData);
         
     if (reply->error()) {
-        
+        //TODO: add a warning.
         qWarning() << "add a nice dialog box here to explain what happened.";
     } else {
 
