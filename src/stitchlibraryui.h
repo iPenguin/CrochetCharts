@@ -24,7 +24,9 @@ public:
 private slots:
     void changeStitchSet(QString setName);
     void addStitchToMasterSet(int row);
-    void addStitchToSet();
+    void addStitch();
+    void removeStitch();
+    
     void resetLibrary();
 
     void hideProperties();

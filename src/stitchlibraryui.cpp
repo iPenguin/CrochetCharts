@@ -40,7 +40,9 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     ui->propertiesBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked()), this, SLOT(hideProperties()));
     connect(ui->printSet, SIGNAL(clicked()), this, SLOT(printStitchSet()));
-    connect(ui->addStitch, SIGNAL(clicked()), this, SLOT(addStitchToSet()));
+    
+    connect(ui->addStitch, SIGNAL(clicked()), this, SLOT(addStitch()));
+    connect(ui->removeSet, SIGNAL(clicked()), this, SLOT(removeStitch()));
 
     connect(ui->createSet, SIGNAL(clicked()), this, SLOT(createSet()));
     connect(ui->removeSet, SIGNAL(clicked()), this, SLOT(removeSet()));
@@ -102,13 +104,14 @@ void StitchLibraryUi::changeStitchSet(QString setName)
 }
 
 void StitchLibraryUi::setButtonStates(StitchSet *set)
-{    
+{
     bool state = (set != StitchCollection::inst()->masterStitchSet());
     
     ui->removeSet->setEnabled(state);
     ui->addStitch->setEnabled(state);
+    ui->removeStitch->setEnabled(state);
     ui->moreBttn->setEnabled(state);
-    ui->propertiesBox->setEnabled(state);    
+    ui->propertiesBox->setEnabled(state);
 }
 
 void StitchLibraryUi::addStitchToMasterSet(int row)
@@ -157,7 +160,7 @@ void StitchLibraryUi::resetLibrary()
     ui->listView->resizeRowsToContents();
 }
 
-void StitchLibraryUi::addStitchToSet()
+void StitchLibraryUi::addStitch()
 {
     bool ok;
     QString text = QInputDialog::getText(this, tr("New Stitch"), tr("Stitch name:"),
@@ -175,6 +178,13 @@ void StitchLibraryUi::addStitchToSet()
             ui->listView->resizeRowsToContents();
         }
     }
+}
+
+void StitchLibraryUi::removeStitch()
+{
+    qDebug() << "remove Stitch";
+    //sort through the checkboxes and remove
+    //any stitches that are checked.
 }
 
 void StitchLibraryUi::updateStitchSetProperties()
