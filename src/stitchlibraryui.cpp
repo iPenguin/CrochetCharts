@@ -314,8 +314,10 @@ void StitchLibraryUi::importSet()
     StitchSet *set = 0;
     set = StitchCollection::inst()->addStitchSet(fileName);
 
-    if(set)
+    if(set) {
+        set->saveXmlFile();
         updateSourceDropDown(set->name());
+    }
 
     QApplication::restoreOverrideCursor();
 }
