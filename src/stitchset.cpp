@@ -346,14 +346,11 @@ Qt::ItemFlags StitchSet::flags(const QModelIndex &index) const
         return Qt::NoItemFlags;
 
     Qt::ItemFlags f =  Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-
-    if(!isBuiltInSet || index.column() == 5)
-        f |= Qt::ItemIsEditable;
     
-    if(index.column() == 5)
-        return f;// | Qt::ItemIsUserCheckable;
-    else
-        return f;
+    if(index.column() != 5)
+        f |= Qt::ItemIsEditable;
+
+    return f;
 }
 
 QVariant StitchSet::headerData(int section, Qt::Orientation orientation, int role) const
@@ -371,6 +368,8 @@ QVariant StitchSet::headerData(int section, Qt::Orientation orientation, int rol
                     return QVariant(tr("Category"));
                 case Stitch::WrongSide:
                     return QVariant(tr("Wrong Side"));
+                case 5:
+                    return QVariant(tr("Selected"));
                 default:
                     return QVariant();
             }
@@ -392,13 +391,15 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
             case Stitch::Name:
                 return QVariant(s->name());
             case Stitch::Icon:
-                return QVariant(s->file()); //TODO: return QIcon for display role and filename for edit role.
+                return QVariant(s->file());
             case Stitch::Description:
                 return QVariant(s->description());
             case Stitch::Category:
                 return QVariant(s->category());
             case Stitch::WrongSide:
                 return QVariant(s->wrongSide());
+            case 5:
+                return QVariant(mSelected.contains(s));
             default:
                 return QVariant();
         }
@@ -419,7 +420,6 @@ bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int rol
 
         switch(index.column()) {
             case Stitch::Name: {
-                Stitch *s = static_cast<Stitch*>(index.internalPointer());
                 QString oldName = s->name();
                 s->setName(value.toString());
                 emit stitchNameChanged(name(), oldName, value.toString());
@@ -442,6 +442,17 @@ bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int rol
                 s->setWrongSide(value.toString());
                 retVal = true;
                 break;
+            case 5: {
+                if(value.toBool()) {
+                    if(!mSelected.contains(s))
+                        mSelected.append(s);
+                } else {
+                    if(mSelected.contains(s))
+                        mSelected.removeOne(s);
+                }
+                retVal = false;
+                break;
+            }   
             default:
                 retVal = false;
         }

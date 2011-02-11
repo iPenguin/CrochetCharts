@@ -26,6 +26,19 @@
 #include "stitchset.h"
 #include <QSvgRenderer>
 #include <QMessageBox>
+#include <QCheckBox>
+
+#include <QMouseEvent>
+
+/***************************************************************************************************************/
+static QRect CheckBoxRect(const QStyleOptionViewItem &itemStyleOptions) {
+    QStyleOptionButton styleOptions;
+    QRect rect = QApplication::style()->subElementRect(QStyle::SE_CheckBoxIndicator, &styleOptions);
+    QPoint check_box_point(itemStyleOptions.rect.x() + itemStyleOptions.rect.width() / 2 - rect.width() / 2,
+                           itemStyleOptions.rect.y() + itemStyleOptions.rect.height() / 2 - rect.height() / 2);
+    return QRect(check_box_point, rect.size());
+}
+/***************************************************************************************************************/
 
 StitchLibraryDelegate::StitchLibraryDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
@@ -46,11 +59,6 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         buttonText = tr("Add Stitch");
     else
         buttonText = index.data(Qt::DisplayRole).toString();
-    
-    int width = option.fontMetrics.width(buttonText);
-    int height = option.fontMetrics.height();
-    int borderW = ceil((option.rect.width() - width) / 2.0);
-    int borderH = ceil((option.rect.height() - height) / 4.0);
 
     if (index.column() == 1) {
         if(option.state & QStyle::State_Selected)
@@ -72,22 +80,24 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
             painter->drawPixmap(option.rect, pix);
         }
         
-    } else if (index.column() == 3 || index.column() == 4) {
 
-        if(option.state & QStyle::State_Selected)
-            painter->fillRect(option.rect, option.palette.highlight());
-        
-        //FIXME: QStyle::PE_IndicatorButtonDropDown causes a crash.
-        qApp->style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, painter);
-        painter->drawText(option.rect.x() + 6, option.rect.y() + (borderH + height), buttonText);
-        
     } else if(index.column() == 5) {
-        if(option.state & QStyle::State_Selected)
-            painter->fillRect(option.rect, option.palette.highlight());
-        
-        qApp->style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, painter);
+        if(option.state & QStyle::State_MouseOver)
+            painter->fillRect(option.rect, option.palette.highlight().color().light(190));
 
-        painter->drawText(option.rect.x() + borderW, option.rect.y() + (borderH + height), buttonText);
+        bool checked = index.model()->data(index, Qt::DisplayRole).toBool();
+        
+        QStyleOptionButton styleOptions;
+        styleOptions.state |= QStyle::State_Enabled;
+        if(checked)
+            styleOptions.state |= QStyle::State_On;
+        else
+            styleOptions.state |= QStyle::State_Off;
+        
+        styleOptions.rect = CheckBoxRect(option);
+        
+        qApp->style()->drawControl(QStyle::CE_CheckBox, &styleOptions, painter);
+        
     } else {
         //fall back to the basic painter.
         QStyledItemDelegate::paint(painter, option, index);
@@ -135,7 +145,7 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
             break;
         case 5:
             padding += 50;
-            text = tr("Add Stitch"); //TODO: there's a button to estimate too.
+            text = ""; //TODO: estimate the size of a checkbox.
             break;
         default:
             text = "";
@@ -160,7 +170,7 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
         return new QWidget(parent);
     
     switch(index.column()) {
-        case Stitch::Name:{ //TODO: add a validator that checks if the name already exists.
+        case Stitch::Name:{
             QLineEdit *editor = new QLineEdit(parent);
             QRegExpValidator *validator = new QRegExpValidator(QRegExp("[a-zA-Z][a-zA-Z0-9]+"), editor);
             editor->setValidator(validator);
@@ -189,11 +199,15 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
             return cb;
         }
         case 5: {
+            QCheckBox *cb = new QCheckBox(parent);
+            return cb;
+            /*
             QPushButton *pb = new QPushButton(parent);
             pb->setText(tr("Add Stitch"));
             mSignalMapper->setMapping(pb, index.row());
             connect(pb, SIGNAL(clicked(bool)), mSignalMapper, SLOT(map()));
             return pb;
+            */
         }
         default:
             return new QWidget(parent);
@@ -231,6 +245,11 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
         case Stitch::WrongSide: {
             QComboBox *cb = static_cast<QComboBox*>(editor);
             cb->setCurrentIndex(cb->findText(index.data(Qt::EditRole).toString()));
+            break;
+        }
+        case 5: {
+            QCheckBox *cb = static_cast<QCheckBox*>(editor);
+            cb->setChecked(index.data(Qt::EditRole).toBool());
             break;
         }
         default:
@@ -299,6 +318,11 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
             model->setData(index, cb->currentText(), Qt::EditRole);
             break;
         }
+        case 5: {
+            QCheckBox *cb = static_cast<QCheckBox*>(editor);
+            model->setData(index, cb->isChecked(), Qt::EditRole);
+            break;
+        }
         default:
             break;
     }
@@ -310,6 +334,35 @@ void StitchLibraryDelegate::updateEditorGeometry(QWidget *editor, const QStyleOp
 
     editor->setGeometry(option.rect);
 }
+
+bool StitchLibraryDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    if(index.column() == 5) {
+        if ((event->type() == QEvent::MouseButtonRelease) || (event->type() == QEvent::MouseButtonDblClick)) {
+            QMouseEvent *mouse_event = static_cast<QMouseEvent*>(event);
+
+            if (mouse_event->button() != Qt::LeftButton || !CheckBoxRect(option).contains(mouse_event->pos())) {
+                return false;
+            }
+            if (event->type() == QEvent::MouseButtonDblClick) {
+                return true;
+            }
+        } else if (event->type() == QEvent::KeyPress) {
+            if (static_cast<QKeyEvent*>(event)->key() != Qt::Key_Space &&
+                    static_cast<QKeyEvent*>(event)->key() != Qt::Key_Select) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+            
+        bool checked = index.model()->data(index, Qt::DisplayRole).toBool();
+        return model->setData(index, !checked, Qt::EditRole);
+
+    } else 
+        return QStyledItemDelegate::editorEvent(event, model, option, index);
+}
+
 
 void StitchLibraryDelegate::loadIcons(QComboBox *cb) const
 {
@@ -338,11 +391,3 @@ void StitchLibraryDelegate::loadIcons(QComboBox *cb) const
         }
     }
 }
-
-/*
-void StitchLibraryDelegate::addStitchToMasterSet(int row)
-{
-    qDebug() << "row: " << row;
-    
-}
-*/

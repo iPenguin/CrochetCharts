@@ -49,6 +49,9 @@ signals:
     void addStitchToMasterSet(int row);
     void stitchNameChanged(QString oldName, QString newName);
 
+protected:
+    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
+    
 private:
     void loadIcons(QComboBox *cb) const;
     

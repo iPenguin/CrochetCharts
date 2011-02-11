@@ -77,6 +77,7 @@ public:
 
     //reset the model in all views.
     void refreshSet() { reset(); }
+    void clearSelection() { mSelected.clear(); }
     
 signals:
     void stitchNameChanged(QString setName, QString oldName, QString newName);
@@ -92,6 +93,9 @@ private:
     void loadXmlStitch(QDomElement *element, bool loadIcon = false);
 
     QList<Stitch*> mStitches;
+    //list of checked items
+    QList<Stitch*> mSelected;
+    
     QString mName,
             mAuthor,
             mEmail,

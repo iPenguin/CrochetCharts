@@ -92,6 +92,9 @@ void StitchLibraryUi::changeStitchSet(QString setName)
     StitchSet *set = StitchCollection::inst()->findStitchSet(setName);
     if(!set)
         return;
+
+    StitchSet *curSet = static_cast<StitchSet*>(ui->listView->model());
+    curSet->clearSelection();
     
     ui->listView->setModel(set);
     ui->listView->update();
