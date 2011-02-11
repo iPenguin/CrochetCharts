@@ -12,6 +12,8 @@
 #include <QDesktopServices>
 #include <QFileInfo>
 
+#include <QMessageBox>
+
 // Global static pointer
 Settings* Settings::mInstance = NULL;
 
@@ -44,6 +46,18 @@ void Settings::initDemoVersion()
     }
 
     mIsDemoVersion = false;
+}
+
+void Settings::trialVersionMessage(QWidget *parent)
+{
+    QMessageBox msgbox(parent);
+    msgbox.setWindowTitle(qApp->applicationName());
+    msgbox.setText(tr("This feature is disabled in the demo version."));
+    msgbox.setInformativeText(tr("There are some example output files and screen shots on the website."));
+    msgbox.setStandardButtons(QMessageBox::Ok);
+    msgbox.setIcon(QMessageBox::Information);
+    
+    msgbox.exec();
 }
 
 void Settings::setValue(const QString &key, const QVariant &value)

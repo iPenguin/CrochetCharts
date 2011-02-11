@@ -89,7 +89,6 @@ private:
     void setupMenus();
     void setupStitchPalette();
     void readSettings();
-    void trialVersionMessage();
 
     void checkUpdates();
     

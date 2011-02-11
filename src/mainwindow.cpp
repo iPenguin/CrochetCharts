@@ -251,6 +251,11 @@ void MainWindow::fileExport()
     if(d.exec() != QDialog::Accepted)
         return;
 
+    if(Settings::inst()->isDemoVersion()) {
+        Settings::inst()->trialVersionMessage(this);
+        return;
+    }
+    
     QString filter;
     if(d.exportType == "pdf")
         filter = tr("Portable Document Format (pdf)(*.pdf)");
@@ -277,7 +282,7 @@ void MainWindow::fileExport()
 
     if(d.exportType.isEmpty())
         return;
-
+    
     if(d.exportType == "pdf")
         exportPdf(d.selection, fileName, QSize(d.width, d.height), d.resolution);
     else if(d.exportType == "svg")
@@ -455,7 +460,7 @@ void MainWindow::fileOpen()
 void MainWindow::fileSave()
 {
     if(Settings::inst()->isDemoVersion()) {
-        this->trialVersionMessage();
+        Settings::inst()->trialVersionMessage(this);
         return;
     }
 
@@ -474,7 +479,7 @@ void MainWindow::fileSave()
 void MainWindow::fileSaveAs()
 {
     if(Settings::inst()->isDemoVersion()) {
-        this->trialVersionMessage();
+        Settings::inst()->trialVersionMessage(this);
         return;
     }
 
@@ -692,18 +697,6 @@ void MainWindow::toolsStitchLibrary()
     delete d;
     d = 0;
 
-}
-
-void MainWindow::trialVersionMessage()
-{
-    QMessageBox msgbox(this);
-    msgbox.setWindowTitle(qApp->applicationName());
-    msgbox.setText(tr("This feature is disabled in the demo version."));
-    msgbox.setInformativeText(tr("There are some example output files and screen shots on the website."));
-    msgbox.setStandardButtons(QMessageBox::Ok);
-    msgbox.setIcon(QMessageBox::Information);
-
-    msgbox.exec();
 }
 
 void MainWindow::viewZoomIn()
