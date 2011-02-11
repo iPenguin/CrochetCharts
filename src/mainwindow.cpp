@@ -28,12 +28,13 @@
 
 #include <QDebug>
 #include "crochetscene.h"
-#include <qinputdialog.h>
+#include <QInputDialog>
 
 #include <QPrinter>
 #include <QtSvg/QSvgGenerator>
 #include <QPrintDialog>
-#include <qprintpreviewdialog.h>
+#include <QPrintPreviewDialog>
+#include <QSvgRenderer>
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -364,6 +365,75 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
     
 }
 
+//TODO: find out if there is a better place for the legend/rendering fucntions.
+void MainWindow::generateStitchLegend(QPainter* painter)
+{
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    QStringList keys = mPatternStitches.keys();
+
+    bool drawDescription = Settings::inst()->value("showStitchDescription").toBool();
+    bool drawWrongSide = Settings::inst()->value("showWrongSideDescription").toBool();
+    int columnCount = Settings::inst()->value("stitchColumnCount").toInt();
+    
+    foreach(QString key, keys) {
+        Stitch *s = StitchCollection::inst()->findStitch(key);
+        if(!s) {
+            qWarning() << "Couldn't find stitch while generating legend: " << key;
+            continue;
+        }
+
+        if(s->isSvg())
+            s->renderSvg()->render(painter);
+        else
+            painter->drawPixmap(0,0, *(s->renderPixmap()));
+
+        painter->drawText(0,0, s->name());
+
+        if(drawDescription)
+            painter->drawText(0,0, s->description());
+        if(drawWrongSide)
+            painter->drawText(0,0, s->wrongSide());
+        
+    }
+
+    QApplication::restoreOverrideCursor();
+}
+
+void MainWindow::generateColorLegend(QPainter* painter)
+{
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    QStringList keys = mPatternColors.keys();
+
+    bool showHexValues = Settings::inst()->value("showHexValues").toBool();
+    int columnCount = Settings::inst()->value("colorColumnCount").toInt();
+    QString colorNumber = Settings::inst()->value("colorPrefix").toString();
+    
+    foreach(QString key, keys) {
+        qDebug() << key << mPatternColors.value(key);
+
+        painter->drawPixmap(0,0, drawColorBox(QColor(key), QSize(32, 32)));
+
+        colorNumber += QString::number(mPatternColors.value(key).value("color number"));
+        painter->drawText(0,0, colorNumber);
+    }
+    
+    QApplication::restoreOverrideCursor();
+    
+}
+
+QPixmap MainWindow::drawColorBox(QColor color, QSize size)
+{
+    QPixmap pix = QPixmap(size);
+    QPainter p;
+    p.begin(&pix);
+    p.fillRect(QRect(QPoint(0, 0), size), QColor(color));
+    p.drawRect(1, 1, size.width() -2, size.height() -2);
+    p.end();
+
+    return pix;
+}
+
+
 void MainWindow::documentNewChart()
 {
     int rows = Settings::inst()->value("defaultRows").toInt();
@@ -575,8 +645,8 @@ void MainWindow::newChart()
     
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
-    
-    tab->scene()->createChart(rows, cols);
+    //FIXME: pass data to tab to pass into scene -- remove the scene header file from this file.
+    tab->scene()->createChart(rows, cols); 
 }
 
 ChartTab* MainWindow::createTab()
@@ -798,18 +868,11 @@ void MainWindow::updatePatternColors()
         i.next();
         QList<QListWidgetItem*> items = ui->patternColors->findItems(i.key(), Qt::MatchExactly);
         if(items.count() == 0) {
-            //TODO: factor our a function for creating a color box.
-            QPixmap pix = QPixmap(QSize(32,32)); //FIXME: dont hardcode the icon size or the fill or rect sizes.
-            QPainter p;
-            p.begin(&pix);
-            p.fillRect(0, 0, 32, 32, QColor(i.key()));
-            p.drawRect(1, 1, 30, 30);
-            p.end();
-            QIcon icon = QIcon(pix);
-            //FIXME: make the color prefix user configurable. and make it more flexable.
-            QListWidgetItem *item = new QListWidgetItem(icon, "C" + QString::number(i.value()["color number"]), ui->patternColors);
+            QPixmap pix = drawColorBox(i.key(), QSize(32, 32));
+            QIcon icon = QIcon(pix);           
+            QString prefix = Settings::inst()->value("colorPrefix").toString();
+            QListWidgetItem *item = new QListWidgetItem(icon, prefix + QString::number(i.value()["color number"]), ui->patternColors);
             item->setToolTip(i.key());
-            //item->setData(Qt::EditRole, QVariant(i.key()));
             ui->patternColors->addItem(item);
         }
     }

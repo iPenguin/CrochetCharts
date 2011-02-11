@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -317,58 +317,120 @@
      </widget>
      <widget class="QWidget" name="tab_4">
       <attribute name="title">
-       <string>Legend</string>
+       <string>Legends</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QCheckBox" name="showWrongSideInstructions">
-         <property name="text">
-          <string>Show Wrong Side Instructions</string>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Stitch Legend</string>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>Column Count:</string>
+              </property>
+              <property name="buddy">
+               <cstring>stitchColumnCount</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="stitchColumnCount">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>2</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="showStitchDescription">
+            <property name="text">
+             <string>Show Stitch Descriptions</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="showWrongSideDescription">
+            <property name="text">
+             <string>Show Wrong Side Descriptions</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="showColors">
-         <property name="text">
-          <string>Show Colors</string>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Color Legend</string>
          </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>25</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="showHexValues">
-           <property name="text">
-            <string>Show Hex Values</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkBox_4">
-         <property name="text">
-          <string>CheckBox</string>
-         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Color Prefix:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="colorPrefix">
+              <property name="text">
+               <string>C</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Column Count:</string>
+              </property>
+              <property name="buddy">
+               <cstring>colorColumnCount</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="colorColumnCount">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>2</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="showHexValues">
+            <property name="text">
+             <string>Show Color Hex Values</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -415,10 +477,10 @@
   <tabstop>evenRow</tabstop>
   <tabstop>evenRowButton</tabstop>
   <tabstop>pushButton</tabstop>
-  <tabstop>showWrongSideInstructions</tabstop>
-  <tabstop>showColors</tabstop>
+  <tabstop>stitchColumnCount</tabstop>
+  <tabstop>showStitchDescription</tabstop>
+  <tabstop>showWrongSideDescription</tabstop>
   <tabstop>showHexValues</tabstop>
-  <tabstop>checkBox_4</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>

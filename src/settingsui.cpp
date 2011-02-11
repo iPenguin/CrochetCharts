@@ -73,7 +73,13 @@ void SettingsUi::loadInstructionSettings()
 
 void SettingsUi::loadLegendSettings()
 {
-
+    ui->stitchColumnCount->setValue(Settings::inst()->value("stitchColumnCount").toInt());
+    ui->showStitchDescription->setChecked(Settings::inst()->value("showStitchDescription").toBool());
+    ui->showWrongSideDescription->setChecked(Settings::inst()->value("showWrongSideDescription").toBool());
+    
+    ui->colorPrefix->setText(Settings::inst()->value("colorPrefix").toString());
+    ui->colorColumnCount->setValue(Settings::inst()->value("colorColumnCount").toInt());
+    ui->showHexValues->setChecked(Settings::inst()->value("showHexValues").toBool());
 }
 
 int SettingsUi::exec()
@@ -115,7 +121,13 @@ void SettingsUi::saveInstructionSettings()
 
 void SettingsUi::saveLegendSettings()
 {
-
+    Settings::inst()->setValue("stitchColumnCount", QVariant(ui->stitchColumnCount->value()));
+    Settings::inst()->setValue("showStitchDescription", QVariant(ui->showStitchDescription->isChecked()));
+    Settings::inst()->setValue("showWrongSideDescription", QVariant(ui->showWrongSideDescription->isChecked()));
+    
+    Settings::inst()->setValue("colorPrefix", QVariant(ui->colorPrefix->text()));
+    Settings::inst()->setValue("colorColumnCount", QVariant(ui->colorColumnCount->value()));
+    Settings::inst()->setValue("showHexValues", QVariant(ui->showHexValues->isChecked()));
 }
 
 void SettingsUi::selectFolder()

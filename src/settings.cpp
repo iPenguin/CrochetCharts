@@ -90,11 +90,19 @@ QVariant Settings::defaultValue ( const QString& key ) const
     else if(key == "license")
         return QVariant("");
 
-    //check for updates at startup
+    //general application options
     else if(key == "checkForUpdates")
         return QVariant(true);
+    else if(key == "fileLocation") {
+        QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+        return QVariant(userDocs);
+    }
+    else if (key == "geometry")
+        return QVariant();
+    else if (key == "windowState")
+        return QVariant();
 
-    //default options for round charts
+    //round charts options
     else if(key == "defaultStitch")
         return QVariant("ch");
     else if(key == "defaultRows")
@@ -102,17 +110,22 @@ QVariant Settings::defaultValue ( const QString& key ) const
     else if(key == "defaultStitches")
         return QVariant(15);
 
-    //default location to look for files.
-    else if(key == "fileLocation") {
-        QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
-        return QVariant(userDocs);
-    }
+    //stitch legend options
+    else if(key == "stitchColumnCount")
+        return QVariant(2);
+    else if(key == "showStitchDescription")
+        return QVariant(true);
+    else if(key == "showWrongSideDescription")
+        return QVariant(false);
 
-    //window state and positioning info.
-    else if (key == "geometry")
-        return QVariant();
-    else if (key == "windowState")
-        return QVariant();
+    //color legend options
+    else if(key == "colorPrefix")
+        return QVariant("C");
+    else if(key == "colorColumnCount")
+        return QVariant(2);
+    else if(key == "showHexValues")
+        return QVariant(false);
+    
     else 
         return QVariant();
 }

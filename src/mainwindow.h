@@ -13,6 +13,7 @@
 
 class ChartTab;
 class QPrinter;
+class QPainter;
 
 namespace Ui {
     class MainWindow;
@@ -95,6 +96,11 @@ private:
     void exportPdf(QString selection, QString fileName, QSize size, int resolution);
     void exportSvg(QString selection, QString fileName, QSize size);
     void exportImg(QString selection, QString fileName, QSize size, int resolution);
+
+    void generateStitchLegend(QPainter *painter);
+    void generateColorLegend(QPainter *painter);
+
+    QPixmap drawColorBox(QColor color, QSize size);
     
     ChartTab* curChartTab();
    
