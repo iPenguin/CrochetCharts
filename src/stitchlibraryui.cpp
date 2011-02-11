@@ -16,7 +16,10 @@
 #include <QPrintDialog>
 #include <QPainter>
 
+#include "settings.h"
+
 #include "stitchiconui.h"
+#include <QFileDialog>
 
 //TODO: add a hash based on the sn to the stitch set to grant write access to a stitch set.
 //TODO: convert the pushbutton to checkbox for add stitch and add a button at the bottom.
@@ -278,20 +281,41 @@ void StitchLibraryUi::removeSet()
 }
 
 void StitchLibraryUi::exportSet()
-{
+{   
     StitchSet *set = StitchCollection::inst()->findStitchSet(ui->stitchSource->currentText());
 
-    //TODO: prompt user for file name. *.set
-
-    set->saveDataFile("/home/brian/test.set");
+    if(Settings::inst()->isDemoVersion()) {
+        Settings::inst()->trialVersionMessage(this);
+        return;
+    }
+    
+    QString fileLoc = Settings::inst()->value("fileLocation").toString();
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Save Stitch Set"), fileLoc, tr("Stitch Set (*.set)"));
+    
+    if(fileName.isEmpty())
+        return;
+    
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    set->saveDataFile(fileName);
+    QApplication::restoreOverrideCursor();
 }
 
 void StitchLibraryUi::importSet()
 {
-    //TODO: prompt for the set to import.
-    StitchCollection::inst()->addStitchSet("/home/brian/test.set");
+    QString fileLoc = Settings::inst()->value("fileLocation").toString();
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Open Stitch Set"), fileLoc, tr("Stitch Set (*.set)"));
+    
+    if(fileName.isEmpty() || fileName.isNull())
+        return;
+    
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    StitchCollection::inst()->addStitchSet(fileName);
 
     updateSourceDropDown();
+
+    QApplication::restoreOverrideCursor();
 }
 
 void StitchLibraryUi::updateSourceDropDown(QString setName)
