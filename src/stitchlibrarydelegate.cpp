@@ -240,6 +240,12 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
 
 void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
+    StitchSet *set = static_cast<StitchSet*>(model);
+    if(set == StitchCollection::inst()->masterStitchSet()) {
+        //TODO:use an overlay or proxy set for changes to the master set...
+        qDebug() << "TODO: use an overlay or proxy set for changes to the master set...";
+    }
+    
     switch(index.column()) {
         case Stitch::Icon: {
             IconComboBox *cb = static_cast<IconComboBox*>(editor);
@@ -250,7 +256,6 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
             QLineEdit *le = static_cast<QLineEdit*>(editor);
 
             Stitch *s = static_cast<Stitch*>(index.internalPointer());
-            StitchSet *set = static_cast<StitchSet*>(model);
             Stitch *found = set->findStitch(le->text());
 
             //is there a stitch with the new name in this set already?
