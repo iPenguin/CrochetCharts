@@ -93,19 +93,10 @@ void StitchSet::loadDataFile(QString fileName, QString dest)
 
     if(version == StitchSet::Version_1_0_0)
         in.setVersion(QDataStream::Qt_4_7);
-    
-    QMap<QString, QByteArray> icons;
-    in >> icons;
 
     stitchSetFileName = dest;
     
-    foreach(QString key, icons.keys()) {
-        qDebug() << "out file " << stitchSetFolder() + key;
-        QFile f(stitchSetFolder() + key);
-        f.open(QIODevice::WriteOnly);
-        f.write(icons[key]);
-        f.close();
-    }
+    loadIcons(&in);
 
     QDomDocument doc("stitchset");
 
@@ -126,9 +117,18 @@ void StitchSet::loadDataFile(QString fileName, QString dest)
 
 }
 
-void StitchSet::loadIcons(QDataStream in)
+void StitchSet::loadIcons(QDataStream *in)
 {
-
+    QMap<QString, QByteArray> icons;
+    *in >> icons;
+        
+    foreach(QString key, icons.keys()) {
+        qDebug() << "out file " << stitchSetFolder() + key;
+        QFile f(stitchSetFolder() + key);
+        f.open(QIODevice::WriteOnly);
+        f.write(icons[key]);
+        f.close();
+    }
 }
 
 void StitchSet::loadXmlStitchSet(QDomElement *element, bool loadIcons)
@@ -230,16 +230,8 @@ void StitchSet::saveDataFile(QString fileName)
     out << AppInfo::magicNumberSet;
     out << (qint32)StitchSet::Version_1_0_0;
     out.setVersion(QDataStream::Qt_4_7);
-    
-    QMap<QString, QByteArray> icons;
-    foreach(Stitch *s, mStitches) {
-        QFile f(s->file());
-        f.open(QIODevice::ReadOnly);
-        qDebug() << "file name" << QFileInfo(s->file()).fileName();
-        icons.insert(QFileInfo(s->file()).fileName(), f.readAll());
-        f.close();
-    }
-    out << icons;
+
+    saveIcons(&out);
 
     QString *data = new QString();
     
@@ -261,7 +253,15 @@ void StitchSet::saveDataFile(QString fileName)
 
 void StitchSet::saveIcons(QDataStream *out)
 {
-
+    QMap<QString, QByteArray> icons;
+    foreach(Stitch *s, mStitches) {
+        QFile f(s->file());
+        f.open(QIODevice::ReadOnly);
+        qDebug() << "file name" << QFileInfo(s->file()).fileName();
+        icons.insert(QFileInfo(s->file()).fileName(), f.readAll());
+        f.close();
+    }
+    *out << icons;
 }
 
 void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons)

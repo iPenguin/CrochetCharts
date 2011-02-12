@@ -87,7 +87,7 @@ protected:
     void saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons = false);
 
     void saveIcons(QDataStream *out);
-    void loadIcons(QDataStream in);
+    void loadIcons(QDataStream *in);
     
 private:
     void loadXmlStitch(QDomElement *element, bool loadIcon = false);
