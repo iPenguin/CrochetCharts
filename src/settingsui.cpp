@@ -94,11 +94,14 @@ void SettingsUi::loadRoundChartSettings()
     int index = ui->defaultStitch->findText(Settings::inst()->value("defaultStitch").toString());
     ui->defaultStitch->setCurrentIndex(index);
 
+    ui->alternateRowColors->setChecked(Settings::inst()->value("alternateRowColors").toBool());
+    
     QString priColor = Settings::inst()->value("stitchPrimaryColor").toString();
     QString altColor = Settings::inst()->value("stitchAlternateColor").toString();
-    
-    ui->primaryColorLbl->setPixmap(drawColorBox(QColor(priColor), QSize(32, 32)));
-    ui->alternateColorLbl->setPixmap(drawColorBox(QColor(altColor), QSize(32, 32)));
+
+    ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(priColor), QSize(32, 32))));
+    ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(altColor), QSize(32, 32))));
+
     mPrimaryColor = priColor;
     mAlternateColor = altColor;
     
@@ -110,6 +113,7 @@ void SettingsUi::saveRoundChartSettings()
     Settings::inst()->setValue("defaultStitches", QVariant(ui->defaultStitches->value()));
     Settings::inst()->setValue("defaultStitch", QVariant(ui->defaultStitch->currentText()));
 
+    Settings::inst()->setValue("alternateRowColors", QVariant(ui->alternateRowColors->isChecked()));
     Settings::inst()->setValue("stitchPrimaryColor", QVariant(mPrimaryColor.name()));
     Settings::inst()->setValue("stitchAlternateColor", QVariant(mAlternateColor.name()));
     
@@ -182,17 +186,18 @@ void SettingsUi::updatePrimaryColor()
     QColor color = QColorDialog::getColor(mPrimaryColor, this, tr("Primary Row Color"));
 
     if (color.isValid()) {
-        ui->primaryColorLbl->setPixmap(drawColorBox(color, QSize(32,32)));
+        ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
         mPrimaryColor = color;
     }
 }
+
 
 void SettingsUi::updateAlternateColor()
 {
     QColor color = QColorDialog::getColor(mAlternateColor, this, tr("Alternate Row Color"));
     
     if (color.isValid()) {
-        ui->alternateColorLbl->setPixmap(drawColorBox(color, QSize(32,32)));
+        ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
         mAlternateColor = color;
     }
 }

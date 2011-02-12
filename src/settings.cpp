@@ -109,6 +109,8 @@ QVariant Settings::defaultValue ( const QString& key ) const
         return QVariant(15);
     else if(key == "defaultStitches")
         return QVariant(15);
+    else if(key == "alternateRowColors")
+        return QVariant(true);
     else if(key == "stitchPrimaryColor")
         return QVariant("#000000");
     else if(key == "stitchAlternateColor")
@@ -131,8 +133,10 @@ QVariant Settings::defaultValue ( const QString& key ) const
     else if(key == "showHexValues")
         return QVariant(false);
     
-    else 
+    else {
+        qWarning() << "Unknown setting requested: " << key;
         return QVariant();
+    }
 }
 
 QString Settings::userSettingsFolder()

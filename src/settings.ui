@@ -192,16 +192,16 @@
           <number>0</number>
          </property>
          <item row="0" column="0">
-          <widget class="QCheckBox" name="alternateColors">
+          <widget class="QCheckBox" name="alternateRowColors">
            <property name="text">
-            <string>Alternate Stitch Colors</string>
+            <string>Alternate Row Colors</string>
            </property>
            <property name="checked">
             <bool>true</bool>
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
+         <item row="1" column="1">
           <widget class="QPushButton" name="alternateColorBttn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -214,7 +214,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
+         <item row="0" column="1">
           <widget class="QPushButton" name="primaryColorBttn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -239,20 +239,6 @@
             </size>
            </property>
           </spacer>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="primaryColorLbl">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLabel" name="alternateColorLbl">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
          </item>
         </layout>
        </item>
@@ -465,7 +451,7 @@
   <tabstop>defaultStitch</tabstop>
   <tabstop>defaultRows</tabstop>
   <tabstop>defaultStitches</tabstop>
-  <tabstop>alternateColors</tabstop>
+  <tabstop>alternateRowColors</tabstop>
   <tabstop>primaryColorBttn</tabstop>
   <tabstop>alternateColorBttn</tabstop>
   <tabstop>pushButton</tabstop>
@@ -510,7 +496,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>alternateColors</sender>
+   <sender>alternateRowColors</sender>
    <signal>toggled(bool)</signal>
    <receiver>primaryColorBttn</receiver>
    <slot>setEnabled(bool)</slot>
@@ -526,7 +512,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>alternateColors</sender>
+   <sender>alternateRowColors</sender>
    <signal>toggled(bool)</signal>
    <receiver>alternateColorBttn</receiver>
    <slot>setEnabled(bool)</slot>
