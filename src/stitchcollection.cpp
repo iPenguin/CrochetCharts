@@ -203,13 +203,6 @@ QStringList StitchCollection::stitchList() const
             list.append(s->name());
     }
 
-    foreach(StitchSet *set, mStitchSets) {
-        foreach(Stitch *s, set->stitches()) {
-            if(!list.contains(s->name()))
-                list.append(s->name());
-        }
-    }
-
     return list;
 }
 
@@ -282,7 +275,7 @@ StitchSet* StitchCollection::addStitchSet(QString fileName)
         msgbox.setIcon(QMessageBox::Question);
         QPushButton *overwrite = msgbox.addButton(tr("Overwrite the existing set"), QMessageBox::AcceptRole);
         QPushButton *rename = msgbox.addButton(tr("Rename the new stitch set"), QMessageBox::ApplyRole);
-        QPushButton *cancel = msgbox.addButton(tr("Cancel adding the new set"), QMessageBox::RejectRole);
+        /*QPushButton *cancel =*/ msgbox.addButton(tr("Cancel adding the new set"), QMessageBox::RejectRole);
 
         msgbox.exec();
         

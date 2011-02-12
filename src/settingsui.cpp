@@ -10,6 +10,7 @@
 #include "settings.h"
 #include <QPainter>
 #include <QColorDialog>
+#include "stitchcollection.h"
 
 SettingsUi::SettingsUi(QWidget *parent)
     : QDialog(parent), ui(new Ui::SettingsDialog)
@@ -88,9 +89,7 @@ void SettingsUi::loadRoundChartSettings()
     ui->defaultStitches->setValue(
         Settings::inst()->value("defaultStitches").toInt());
 
-    QStringList stitches;
-    stitches << "ch"; //FIXME: don't hard code the choice of default stitches.
-    ui->defaultStitch->addItems(stitches);
+    ui->defaultStitch->addItems(StitchCollection::inst()->stitchList());
     int index = ui->defaultStitch->findText(Settings::inst()->value("defaultStitch").toString());
     ui->defaultStitch->setCurrentIndex(index);
 
