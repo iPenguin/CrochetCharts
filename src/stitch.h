@@ -31,7 +31,7 @@ public:
     bool isSvg();
 
     QPixmap* renderPixmap();
-    QSvgRenderer* renderSvg();
+    QSvgRenderer* renderSvg(bool altativeRenderer = false);
 
 protected:
     void setName(QString n) { mName = n; }
@@ -41,7 +41,8 @@ protected:
     void setWrongSide(QString ws) { mWrongSide = ws; }
     
 private:
-
+    void setupSvgFiles();
+    
     QString mName;
     QString mFile;
     QString mDescription;
@@ -50,6 +51,7 @@ private:
 
     QPixmap *mPixmap;
     QPointer<QSvgRenderer> mSvgRenderer;
+    QPointer<QSvgRenderer> mSvgRendererAlt;
 };
 
 #endif //STITCH_H

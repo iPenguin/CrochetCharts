@@ -7,6 +7,8 @@
 
 #include <QDialog>
 
+class QPixmap;
+
 namespace Ui {
     class SettingsDialog;
 }
@@ -21,8 +23,16 @@ public:
     int exec();
 public slots:
     void selectFolder();
+
+private slots:
+    void updatePrimaryColor();
+    void updateAlternateColor();
+    
 private:
 
+    //TODO: Using the same code in MainWindow
+    QPixmap drawColorBox(QColor color, QSize size);
+    
     void loadApplicationSettings();
     void loadRoundChartSettings();
     void loadInstructionSettings();
@@ -34,6 +44,10 @@ private:
     void saveLegendSettings();
     
     Ui::SettingsDialog *ui;
+
+    QColor mPrimaryColor;
+    QColor mAlternateColor;
+    
 };
 
 #endif //SETTINGSUI_H

@@ -109,7 +109,12 @@ QVariant Settings::defaultValue ( const QString& key ) const
         return QVariant(15);
     else if(key == "defaultStitches")
         return QVariant(15);
-
+    else if(key == "stitchPrimaryColor")
+        return QVariant("#000000");
+    else if(key == "stitchAlternateColor")
+        return QVariant("#D4E6FC");
+        
+    
     //stitch legend options
     else if(key == "stitchColumnCount")
         return QVariant(2);

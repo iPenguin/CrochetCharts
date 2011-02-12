@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -202,7 +202,7 @@
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QPushButton" name="evenRowButton">
+          <widget class="QPushButton" name="alternateColorBttn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -210,32 +210,12 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Even Row Color</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="evenRow">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="oddRow">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
+            <string>Alternate</string>
            </property>
           </widget>
          </item>
          <item row="0" column="2">
-          <widget class="QPushButton" name="oddRowButton">
+          <widget class="QPushButton" name="primaryColorBttn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -243,7 +223,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Odd Row Color</string>
+            <string>Primary</string>
            </property>
           </widget>
          </item>
@@ -259,6 +239,20 @@
             </size>
            </property>
           </spacer>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="primaryColorLbl">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="alternateColorLbl">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -472,10 +466,8 @@
   <tabstop>defaultRows</tabstop>
   <tabstop>defaultStitches</tabstop>
   <tabstop>alternateColors</tabstop>
-  <tabstop>oddRow</tabstop>
-  <tabstop>oddRowButton</tabstop>
-  <tabstop>evenRow</tabstop>
-  <tabstop>evenRowButton</tabstop>
+  <tabstop>primaryColorBttn</tabstop>
+  <tabstop>alternateColorBttn</tabstop>
   <tabstop>pushButton</tabstop>
   <tabstop>stitchColumnCount</tabstop>
   <tabstop>showStitchDescription</tabstop>
@@ -514,6 +506,38 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>alternateColors</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>primaryColorBttn</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>68</x>
+     <y>170</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>477</x>
+     <y>171</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>alternateColors</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>alternateColorBttn</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>174</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>459</x>
+     <y>203</y>
     </hint>
    </hints>
   </connection>

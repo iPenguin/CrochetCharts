@@ -9,10 +9,14 @@
 #include <QtSvg/QSvgRenderer>
 
 #include <QDebug>
+#include <QFile>
+
+#include "settings.h"
 
 Stitch::Stitch()
 {
     mSvgRenderer = new QSvgRenderer();
+    mSvgRendererAlt = new QSvgRenderer();
     mPixmap = 0;
 }
 
@@ -28,12 +32,39 @@ void Stitch::setFile ( QString f )
 {
     if(mFile != f) {
         mFile = f;
+        
         if(!mSvgRenderer->isValid() && isSvg())
-            mSvgRenderer->load(mFile);
+            setupSvgFiles();
+        
         if(!mSvgRenderer->isValid() && !isSvg()) {
             mPixmap = new QPixmap(mFile);
         }
     }
+}
+
+void Stitch::setupSvgFiles()
+{
+    QFile file(mFile);
+    file.open(QIODevice::ReadOnly);
+
+    QByteArray data = file.readAll();
+    QByteArray priData, secData;
+    
+    QString black = "#000000";
+    
+    QString pri = Settings::inst()->value("stitchPrimaryColor").toString();
+    QString sec = Settings::inst()->value("stitchAlternateColor").toString();
+
+    priData = data;
+    secData = data;
+
+    if(pri != black)
+        priData = priData.replace(QByteArray(black.toLatin1()), QByteArray(pri.toLatin1()));
+    mSvgRenderer->load(priData);
+
+    if(sec != black)
+        secData = data.replace(QByteArray(black.toLatin1()), QByteArray(sec.toLatin1()));
+    mSvgRendererAlt->load(secData);
 }
 
 bool Stitch::isSvg()
@@ -57,13 +88,16 @@ QPixmap* Stitch::renderPixmap()
     return mPixmap;
 }
 
-QSvgRenderer* Stitch::renderSvg()
+QSvgRenderer* Stitch::renderSvg(bool alternativeRenderer)
 {
-    if(!this->isSvg())
-        return new QSvgRenderer();
+    if(!isSvg())
+        return 0;
 
     if(!mSvgRenderer->isValid())
-        mSvgRenderer->load(mFile);
+        return 0;
 
-    return mSvgRenderer;
+    if(!alternativeRenderer)
+        return mSvgRenderer;
+    else
+        return mSvgRendererAlt;
 }
