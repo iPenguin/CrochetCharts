@@ -427,7 +427,7 @@ QPixmap MainWindow::drawColorBox(QColor color, QSize size)
     QPainter p;
     p.begin(&pix);
     p.fillRect(QRect(QPoint(0, 0), size), QColor(color));
-    p.drawRect(1, 1, size.width() -2, size.height() -2);
+    p.drawRect(0, 0, size.width() - 1, size.height() - 1);
     p.end();
 
     return pix;
