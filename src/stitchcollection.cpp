@@ -194,7 +194,7 @@ QStringList StitchCollection::categoryList() const
     return list;
 }
 
-QStringList StitchCollection::stitchList() const
+QStringList StitchCollection::stitchList(bool showAllSets) const
 {
     QStringList list;
 
@@ -202,6 +202,16 @@ QStringList StitchCollection::stitchList() const
         if(!list.contains(s->name()))
             list.append(s->name());
     }
+
+    if(showAllSets) {
+        foreach(StitchSet *set, mStitchSets) {
+            foreach(Stitch *s, set->stitches()) {
+                if(!list.contains(s->name()))
+                    list.append(s->name());
+            }
+        }
+    }
+    list.sort();
 
     return list;
 }

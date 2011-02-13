@@ -195,7 +195,7 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
         }
         case Stitch::WrongSide: {
             QComboBox *cb = new QComboBox(parent);
-            cb->addItems(StitchCollection::inst()->stitchList());
+            cb->addItems(StitchCollection::inst()->stitchList(true));
             return cb;
         }
         case 5: {

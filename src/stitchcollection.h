@@ -52,8 +52,8 @@ public:
     StitchSet* findStitchSet(QString setName);
     //list all categories in all sets
     QStringList categoryList() const;
-    //list all stitches in all sets
-    QStringList stitchList() const;
+    //list all stitches in the master set by default, optionally show all stitches in all sets.
+    QStringList stitchList(bool showAllSets = false) const;
 
     //creates a new set to the collection, and returns a pointer to it.
     StitchSet* createStitchSet(QString setName);
