@@ -63,7 +63,6 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
     tokens = curs.block().text().split(",");
 
     //TODO: break out the parser into a seperate function.
-    //TODO: Be more careful about parsing out the stitch count...
     foreach(QString token, tokens) {
         token = token.simplified().toLower();
         
@@ -72,13 +71,12 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
             QRegExp re = QRegExp("^" + temp + "[0-9]{,}$");
             re.setMinimal(true);
             if(token.contains(re)) {
-                qDebug() << token << temp << st;
                 st = temp;
                 break;
             }
         }
         
-        token = token.simplified().remove(0, st.length()); //FIXME:? I'm assuming the stitch is the first thing in the string.
+        token = token.simplified().remove(0, st.length());
         int count = token.toInt();
         if(count <= 0) count = 1;
         for(int i = 0; i < count; ++i) {
