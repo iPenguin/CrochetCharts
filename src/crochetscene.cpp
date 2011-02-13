@@ -20,7 +20,7 @@
 #include "appinfo.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent), mCurCell(0), mDiff(0.0)
+    : QGraphicsScene(parent), mCurCell(0), mDiff(0.0), mMode(CrochetScene::EditMode)
 {
     mStitchWidth = 64;
 
@@ -176,34 +176,40 @@ QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF or
     return QPointF(x, y);
 }
 
-void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
-    if(mouseEvent->buttons() != Qt::LeftButton)
-        return;
-    
-    QGraphicsItem *gi = itemAt(mouseEvent->scenePos());
-    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(!c)
-        return;
 
-    mCurCell = c;
-    mDiff = 0;
-        
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
+    switch(mMode) {
+        case CrochetScene::StitchMode:
+            break;
+        case CrochetScene::ColorMode:
+            break;
+        case CrochetScene::GridMode:
+            break;
+        case CrochetScene::PositionMode:
+            positionModeMousePress(e);
+            break;
+        case CrochetScene::RepeatMode:
+            break;
+        default:
+            break;
+    }
+            
+    QGraphicsScene::mouseMoveEvent(e);
 }
 
-void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
     //FIXME: only send the event to the currently moving item.
-    if(mouseEvent->buttons() != Qt::LeftButton)
+    if(e->buttons() != Qt::LeftButton)
         return;
     
     if(!mCurCell)
         return;
     
     if(mDiff == 0) {
-        QPointF origPos = mouseEvent->buttonDownScenePos(Qt::LeftButton);
-        QPointF curPos = mouseEvent->scenePos();
+        QPointF origPos = e->buttonDownScenePos(Qt::LeftButton);
+        QPointF curPos = e->scenePos();
     
         mDiff = origPos.manhattanLength() - curPos.manhattanLength();
     } else {
@@ -216,16 +222,16 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
     mCurCell->setTransform(QTransform().translate(32, 0).rotate(mDiff).translate(-32, 0), true);
     
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
+    QGraphicsScene::mouseMoveEvent(e);
 }
 
-void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
+void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
     if(mCurCell)
         mCurCell = 0;
     mDiff = 0;
 
-    QGraphicsScene::mouseMoveEvent(mouseEvent);
+    QGraphicsScene::mouseMoveEvent(e);
 }
 
 /*
@@ -250,3 +256,87 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
      c->rotate(degrees + (widthInDegrees/2));
      }
 */
+
+void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::gridModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
+{
+    if(e->buttons() != Qt::LeftButton)
+        return;
+    
+    QGraphicsItem *gi = itemAt(e->scenePos());
+    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+    if(!c)
+        return;
+    
+    mCurCell = c;
+    mDiff = 0;
+}
+
+void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::repeatModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::repeatModeMousePress(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::repeatModeMouseRelease(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
+void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
+{
+    
+}
