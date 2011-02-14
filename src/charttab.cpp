@@ -16,7 +16,6 @@
 #include "crochetscene.h"
 #include "crochettextview.h"
 #include "settings.h"
-#include <qdom.h>
 
 ChartTab::ChartTab(QWidget *parent) :
         QWidget(parent)
@@ -42,6 +41,7 @@ ChartTab::ChartTab(QWidget *parent) :
 
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
+    setupMenuItems();
     //click and drag mode.
     //mView->setDragMode(QGraphicsView::ScrollHandDrag);
 }
@@ -54,6 +54,38 @@ ChartTab::~ChartTab()
     mView = 0;
     mScene = 0;
     mTextView = 0;
+}
+
+void ChartTab::setupMenuItems()
+{
+    QActionGroup group;
+    QAction *a;
+
+    a = new QAction(this);
+    a->setText(tr("Stitch Mode"));
+    group.addAction(a);
+    mModeActions.append(a);
+
+    a = new QAction(this);
+    a->setText(tr("Code Mode"));
+    group.addAction(a);
+    mModeActions.append(a);
+
+    a = new QAction(this);
+    a->setText(tr("Grid Mode"));
+    group.addAction(a);
+    mModeActions.append(a);
+
+    a = new QAction(this);
+    a->setText(tr("Position Mode"));
+    group.addAction(a);
+    mModeActions.append(a);
+
+    a = new QAction(this);
+    a->setText(tr("Repeat Mode"));
+    group.addAction(a);
+    mModeActions.append(a);
+    
 }
 
 void ChartTab::renderChart(QPainter *painter, QRectF rect)
