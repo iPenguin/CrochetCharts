@@ -931,7 +931,6 @@ void MainWindow::removeTab(int tabIndex)
         return;
 
     //FIXME: either include a warning that this is NOT undo-able or make it undo-able.
-    delete ui->tabWidget->widget(tabIndex);
     ui->tabWidget->removeTab(tabIndex);
 }
 
