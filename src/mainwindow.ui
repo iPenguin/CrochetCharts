@@ -262,9 +262,19 @@
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuModes">
+    <property name="title">
+     <string>&amp;Modes</string>
+    </property>
+    <addaction name="actionStitchMode"/>
+    <addaction name="actionColorMode"/>
+    <addaction name="actionGridMode"/>
+    <addaction name="actionPositionMode"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
+   <addaction name="menuModes"/>
    <addaction name="menuDocument"/>
    <addaction name="menuChart"/>
    <addaction name="menuTools"/>
@@ -446,6 +456,21 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QToolBar" name="modeToolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionStitchMode"/>
+   <addaction name="actionColorMode"/>
+   <addaction name="actionGridMode"/>
+   <addaction name="actionPositionMode"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -672,6 +697,50 @@
   <action name="actionRemoveTab">
    <property name="text">
     <string>Remove Tab</string>
+   </property>
+  </action>
+  <action name="actionStitchMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Stitch Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit the stitches used on the chart</string>
+   </property>
+  </action>
+  <action name="actionColorMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Color Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit the colors used on the chart</string>
+   </property>
+  </action>
+  <action name="actionGridMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Grid Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit lines and points used on the chart</string>
+   </property>
+  </action>
+  <action name="actionPositionMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Position Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit the positioning of the stitches on the chart</string>
    </property>
   </action>
  </widget>

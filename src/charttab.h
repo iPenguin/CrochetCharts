@@ -12,8 +12,6 @@
 #include <qundostack.h>
 #include <QPointer>
 
-#include <QAction>
-
 class QGraphicsView;
 class CrochetScene;
 class CrochetTextView;
@@ -31,8 +29,11 @@ public:
     void setPatternStitches(QMap<QString, int> *stitches) { mPatternStitches = stitches; }
     void setPatternColors(QMap<QString, QMap<QString, int> > *colors) { mPatternColors = colors; }
 
+    //list of modes available from this tab.
+    QStringList editModes();
 
-    QList<QAction*> editModeActions() { return mModeActions; }
+    void setEditMode(int mode);
+    int editMode() const;
     
 signals:
     void chartStitchChanged();
@@ -49,18 +50,13 @@ public slots:
 
     QUndoStack* undoStack() { return &mUndoStack; }
 
-private:
-    void setupMenuItems();
-    
+private:   
     QPointer<ChartView> mView;
     CrochetScene *mScene;
     QPointer<CrochetTextView> mTextView;
 
     QMap<QString, int> *mPatternStitches;
     QMap<QString, QMap<QString, int> > *mPatternColors;
-
-    QList<QAction*> mChartActions;
-    QList<QAction*> mModeActions;
     
     QUndoStack mUndoStack;
     

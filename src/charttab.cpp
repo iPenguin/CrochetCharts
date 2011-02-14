@@ -41,7 +41,6 @@ ChartTab::ChartTab(QWidget *parent) :
 
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
-    setupMenuItems();
     //click and drag mode.
     //mView->setDragMode(QGraphicsView::ScrollHandDrag);
 }
@@ -56,36 +55,21 @@ ChartTab::~ChartTab()
     mTextView = 0;
 }
 
-void ChartTab::setupMenuItems()
+QStringList ChartTab::editModes()
 {
-    QActionGroup group;
-    QAction *a;
+    QStringList modes;
+    modes << tr("Stitch Mode") << tr("Color Mode") << tr("Grid Mode") << tr("Position Mode");
+    return modes;
+}
 
-    a = new QAction(this);
-    a->setText(tr("Stitch Mode"));
-    group.addAction(a);
-    mModeActions.append(a);
+int ChartTab::editMode() const
+{
+    return (int) mScene->editMode();
+}
 
-    a = new QAction(this);
-    a->setText(tr("Code Mode"));
-    group.addAction(a);
-    mModeActions.append(a);
-
-    a = new QAction(this);
-    a->setText(tr("Grid Mode"));
-    group.addAction(a);
-    mModeActions.append(a);
-
-    a = new QAction(this);
-    a->setText(tr("Position Mode"));
-    group.addAction(a);
-    mModeActions.append(a);
-
-    a = new QAction(this);
-    a->setText(tr("Repeat Mode"));
-    group.addAction(a);
-    mModeActions.append(a);
-    
+void ChartTab::setEditMode(int mode)
+{
+    mScene->setEditMode((CrochetScene::EditMode)mode);
 }
 
 void ChartTab::renderChart(QPainter *painter, QRectF rect)

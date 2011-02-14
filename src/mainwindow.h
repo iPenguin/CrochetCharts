@@ -14,6 +14,7 @@
 class ChartTab;
 class QPrinter;
 class QPainter;
+class QActionGroup;
 
 namespace Ui {
     class MainWindow;
@@ -67,6 +68,8 @@ private slots:
     void viewZoomIn();
     void viewZoomOut();
 
+    void menuModesAboutToShow();
+    
     void menuDocumentAboutToShow();
     void documentNewChart();
     void newChart();
@@ -85,9 +88,13 @@ private slots:
 
 private slots:
     void print(QPrinter *printer);
+
+    void changeTabMode(QAction *a);
     
 private:
     void setupMenus();
+    void updateMenuItems();
+    
     void setupStitchPalette();
     void readSettings();
 
@@ -120,10 +127,12 @@ private:
     QMap<QString, int> mPatternStitches;
     QMap<QString, QMap<QString, int> > mPatternColors;
 
-
+    QActionGroup *mModeGroup;
+    
     QAction *mActionUndo,
             *mActionRedo;
     QUndoGroup mUndoGroup;
+
 };
 
 #endif // MAINWINDOW_H

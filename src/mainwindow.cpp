@@ -36,6 +36,8 @@
 #include <QPrintPreviewDialog>
 #include <QSvgRenderer>
 
+#include <QActionGroup>
+
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -173,6 +175,17 @@ void MainWindow::setupMenus()
     ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
 
+    //Modes menu
+    connect(ui->menuModes, SIGNAL(aboutToShow()), this, SLOT(menuModesAboutToShow()));
+
+    mModeGroup = new QActionGroup(this);
+    mModeGroup->addAction(ui->actionStitchMode);
+    mModeGroup->addAction(ui->actionColorMode);
+    mModeGroup->addAction(ui->actionGridMode);
+    mModeGroup->addAction(ui->actionPositionMode);
+
+    connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
+    
     //Document Menu
     connect(ui->menuDocument, SIGNAL(aboutToShow()), this, SLOT(menuDocumentAboutToShow()));
     connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
@@ -195,6 +208,18 @@ void MainWindow::setupMenus()
     //Help Menu
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
+
+    updateMenuItems();
+}
+
+void MainWindow::updateMenuItems()
+{
+    menuFileAboutToShow();
+    menuEditAboutToShow();
+    menuViewAboutToShow();
+    menuModesAboutToShow();
+    menuDocumentAboutToShow();
+    menuChartAboutToShow();
 }
 
 void MainWindow::filePrint()
@@ -646,7 +671,9 @@ void MainWindow::newChart()
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
     //FIXME: pass data to tab to pass into scene -- remove the scene header file from this file.
-    tab->scene()->createChart(rows, cols); 
+    tab->scene()->createChart(rows, cols);
+
+    updateMenuItems();
 }
 
 ChartTab* MainWindow::createTab()
@@ -661,7 +688,7 @@ ChartTab* MainWindow::createTab()
     connect(tab, SIGNAL(chartColorChanged()), this, SLOT(updatePatternColors()));
 
     mUndoGroup.addStack(tab->undoStack());
-
+    
     QApplication::restoreOverrideCursor();
 
     return tab;
@@ -705,6 +732,58 @@ void MainWindow::viewShowPatternColors()
 void MainWindow::viewShowPatternStitches()
 {
     ui->patternStitchesDock->setVisible(ui->actionShowPatternStitches->isChecked());
+}
+
+void MainWindow::menuModesAboutToShow()
+{
+    bool enabled = false;
+    bool selected = false;
+    bool checkedItem = false;
+    bool used = false;
+    
+    QStringList modes;
+    if(hasTab()) {
+        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
+        modes = tab->editModes();
+    }
+
+    foreach(QAction *a, mModeGroup->actions()) {
+        if(modes.contains(a->text()))
+            enabled = true;
+        else
+            enabled = false;
+
+        if(mModeGroup->checkedAction() && mModeGroup->checkedAction() == a)
+            checkedItem = true;
+        
+        if(enabled && !used && (!mModeGroup->checkedAction() || checkedItem)) {
+            selected = true;
+            used = true;
+        }
+        
+        a->setEnabled(enabled);
+        a->setChecked(selected);
+        selected = false;
+    }   
+}
+
+//TODO: on tab change update the tab's edit mode to the current edit mode?
+void MainWindow::changeTabMode(QAction* a)
+{
+    int mode = -1;
+    
+    if(a == ui->actionStitchMode)
+        mode = 10;
+    else if(a == ui->actionColorMode)
+        mode = 11;
+    else if(a == ui->actionGridMode)
+        mode = 12;
+    else if(a == ui->actionPositionMode)
+        mode = 13;
+
+    ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
+    if(tab && mode >= 0)
+        tab->setEditMode(mode);
 }
 
 void MainWindow::menuDocumentAboutToShow()
