@@ -19,5 +19,9 @@
         <file>stitches/ch3_picot.svg</file>
         <file>stitches/no_stitch.svg</file>
         <file>stitches/unknown.svg</file>
+        <file>images/color_mode.png</file>
+        <file>images/grid_mode.png</file>
+        <file>images/position_mode.png</file>
+        <file>images/stitch_mode.png</file>
     </qresource>
 </RCC>
