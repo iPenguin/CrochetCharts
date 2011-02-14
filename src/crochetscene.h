@@ -19,7 +19,6 @@ public:
                 ColorMode,       //place colors behind stitches.
                 GridMode,        //draw lines on the grid.
                 PositionMode,    //move the stitches around on the chart.
-                RepeatMode       //Draw repeat section on the chart.
     };
     
     CrochetScene(QObject *parent = 0);
@@ -41,6 +40,9 @@ public:
 
     void removeCell(int row, int column);
     void createChart(int rows, int cols);
+
+    void setEditMode(EditMode mode) { mMode = mode; }
+    EditMode editMode() { return mMode; }
     
 signals:
     void rowChanged(int row);
@@ -73,19 +75,16 @@ private:
     void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
     void gridModeMouseMove(QGraphicsSceneMouseEvent *e);
     void positionModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void repeatModeMouseMove(QGraphicsSceneMouseEvent *e);
 
     void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
     void colorModeMousePress(QGraphicsSceneMouseEvent *e);
     void gridModeMousePress(QGraphicsSceneMouseEvent *e);
     void positionModeMousePress(QGraphicsSceneMouseEvent *e);
-    void repeatModeMousePress(QGraphicsSceneMouseEvent *e);
 
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
     void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
     void gridModeMouseRelease(QGraphicsSceneMouseEvent *e);
     void positionModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    void repeatModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);

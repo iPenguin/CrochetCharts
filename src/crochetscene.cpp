@@ -191,9 +191,6 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::PositionMode:
             positionModeMousePress(e);
             break;
-        case CrochetScene::RepeatMode:
-            repeatModeMousePress(e);
-            break;
         default:
             break;
     }
@@ -216,9 +213,6 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::PositionMode:
             positionModeMouseMove(e);
             break;
-        case CrochetScene::RepeatMode:
-            repeatModeMouseMove(e);
-            break;
         default:
             break;
     }
@@ -240,9 +234,6 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
         case CrochetScene::PositionMode:
             positionModeMouseRelease(e);
-            break;
-        case CrochetScene::RepeatMode:
-            repeatModeMouseRelease(e);
             break;
         default:
             break;
@@ -347,21 +338,6 @@ void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
     if(mCurCell)
         mCurCell = 0;
     mDiff = 0;
-}
-
-void CrochetScene::repeatModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    
-}
-
-void CrochetScene::repeatModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    
-}
-
-void CrochetScene::repeatModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    
 }
 
 void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
