@@ -68,7 +68,7 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
         
         QString st;
         foreach(QString temp, stitchList) {
-            QRegExp re = QRegExp("^" + temp + "[0-9]{,}$");
+            QRegExp re = QRegExp("^" + temp + "\\s{,}[0-9]{,}$");
             re.setMinimal(true);
             if(token.contains(re)) {
                 st = temp;
