@@ -91,9 +91,13 @@ void MainWindow::setupNewTabDialog()
 {
     int rows = Settings::inst()->value("defaultRows").toInt();
     int stitches = Settings::inst()->value("defaultStitches").toInt();
+    QString defSt = Settings::inst()->value("defaultStitch").toString();
     
     ui->rows->setValue(rows);
     ui->stitches->setValue(stitches);
+
+    ui->defaultStitch->addItems(StitchCollection::inst()->stitchList());
+    ui->defaultStitch->setCurrentIndex(ui->defaultStitch->findText(defSt));
     
     //TODO: see if you can make "returnPressed" work for the spinboxes.
     connect(ui->chartTitle, SIGNAL(returnPressed()), this, SLOT(newChart()));
@@ -164,6 +168,9 @@ void MainWindow::setupMenus()
     connect(ui->actionShowStitches, SIGNAL(triggered()), this, SLOT(viewShowStitches()));
     connect(ui->actionShowPatternColors, SIGNAL(triggered()), this, SLOT(viewShowPatternColors()));
     connect(ui->actionShowPatternStitches, SIGNAL(triggered()), this, SLOT(viewShowPatternStitches()));
+
+    connect(ui->actionShowMainToolbar, SIGNAL(triggered()), this, SLOT(viewShowMainToolbar()));
+    connect(ui->actionShowEditModeToolbar, SIGNAL(triggered()), this, SLOT(viewShowEditModeToolbar()));
     
     connect(ui->actionViewFullScreen, SIGNAL(triggered(bool)), this, SLOT(viewFullScreen(bool)));
 
@@ -629,6 +636,9 @@ void MainWindow::menuViewAboutToShow()
     ui->actionShowStitches->setChecked(ui->allStitchesDock->isVisible());
     ui->actionShowPatternColors->setChecked(ui->patternColorsDock->isVisible());
     ui->actionShowPatternStitches->setChecked(ui->patternStitchesDock->isVisible());
+
+    ui->actionShowEditModeToolbar->setChecked(ui->editModeToolBar->isVisible());
+    ui->actionShowMainToolbar->setChecked(ui->mainToolBar->isVisible());
     
     ui->actionViewFullScreen->setChecked(isFullScreen());
 
@@ -670,8 +680,9 @@ void MainWindow::newChart()
     
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
-    //FIXME: pass data to tab to pass into scene -- remove the scene header file from this file.
-    tab->scene()->createChart(rows, cols);
+
+    //FIXME: this breaks the ability to create a plugin interface for the tabs
+    tab->scene()->createChart(rows, cols, defStitch);
 
     updateMenuItems();
 }
@@ -732,6 +743,16 @@ void MainWindow::viewShowPatternColors()
 void MainWindow::viewShowPatternStitches()
 {
     ui->patternStitchesDock->setVisible(ui->actionShowPatternStitches->isChecked());
+}
+
+void MainWindow::viewShowEditModeToolbar()
+{
+    ui->editModeToolBar->setVisible(ui->actionShowEditModeToolbar->isChecked());
+}
+
+void MainWindow::viewShowMainToolbar()
+{
+    ui->mainToolBar->setVisible(ui->actionShowMainToolbar->isChecked());
 }
 
 void MainWindow::menuModesAboutToShow()

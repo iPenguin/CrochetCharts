@@ -28,7 +28,7 @@ public:
     void insertCell(int row, int columnBefore, Stitch *s);
 
 */
-    void createRow(int row, int columns);
+    void createRow(int row, int columns, QString stitch);
 
     void appendCell(int row, Cell *c);
     void insertCell(int row, int colBefore, Cell *c);
@@ -39,7 +39,7 @@ public:
     Cell* cell(int row, int column);
 
     void removeCell(int row, int column);
-    void createChart(int rows, int cols);
+    void createChart(int rows, int cols, QString stitch);
 
     void setEditMode(EditMode mode) { mMode = mode; }
     EditMode editMode() { return mMode; }

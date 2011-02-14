@@ -134,19 +134,19 @@ void CrochetScene::insertCell(int row, int colBefore, Cell *c)
     emit rowChanged(row);
 }
 
-void CrochetScene::createChart(int rows, int cols)
+void CrochetScene::createChart(int rows, int cols, QString stitch)
 {
     for(int i = 0; i < rows; ++i)
-        createRow(i, cols);
+        createRow(i, cols, stitch);
     
     emit chartCreated(rows, cols);
 }
 
-void CrochetScene::createRow(int row, int columns)
+void CrochetScene::createRow(int row, int columns, QString stitch)
 {
     Cell *c = 0;
 
-    QString st = Settings::inst()->value("defaultStitch").toString();
+    QString st = stitch;
     Stitch* s = StitchCollection::inst()->findStitch(st);
     
     QList<Cell*> modelRow;

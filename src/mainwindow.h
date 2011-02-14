@@ -64,6 +64,8 @@ private slots:
     void viewShowStitches();
     void viewShowPatternColors();
     void viewShowPatternStitches();
+    void viewShowMainToolbar();
+    void viewShowEditModeToolbar();
     void viewFullScreen(bool state);
     void viewZoomIn();
     void viewZoomOut();
