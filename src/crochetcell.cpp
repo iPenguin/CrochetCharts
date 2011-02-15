@@ -26,6 +26,9 @@ QRectF CrochetCell::boundingRect () const
 
 void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    if(color() != Qt::white)
+        painter->fillRect(option->rect, color());
+    
     if(stitch()->isSvg())
         Cell::paint(painter, option, widget);
     else
