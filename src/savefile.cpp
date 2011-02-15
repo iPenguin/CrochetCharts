@@ -249,6 +249,10 @@ void SaveFile::loadChart(QDomElement *element)
     ChartTab* tab = mw->createTab();
     QString tabName;
 
+    mTabWidget->addTab(tab, "");
+
+    //TODO: hide tab while it loads?
+    
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
@@ -264,7 +268,8 @@ void SaveFile::loadChart(QDomElement *element)
         n = n.nextSibling();
     }
 
-    mTabWidget->addTab(tab, tabName);
+    int index = mTabWidget->indexOf(tab);
+    mTabWidget->setTabText(index, tabName);
 }
 
 void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
