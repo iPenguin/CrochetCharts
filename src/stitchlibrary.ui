@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
+    <width>749</width>
     <height>616</height>
    </rect>
   </property>
@@ -78,101 +78,100 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <layout class="QGridLayout" name="gridLayout">
           <property name="topMargin">
            <number>0</number>
           </property>
-          <item>
+          <item row="0" column="0">
            <widget class="QLabel" name="label_5">
             <property name="text">
              <string>Set &amp;Name:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
             <property name="buddy">
              <cstring>setName</cstring>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="1">
            <widget class="QLineEdit" name="setName"/>
           </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <item>
+          <item row="1" column="0">
            <widget class="QLabel" name="label_4">
             <property name="text">
              <string>A&amp;uthor:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
             <property name="buddy">
              <cstring>author</cstring>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="1" column="1">
            <widget class="QLineEdit" name="author"/>
           </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <item>
+          <item row="2" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
              <string>&amp;Email:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
             <property name="buddy">
              <cstring>email</cstring>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="2" column="1">
            <widget class="QLineEdit" name="email"/>
           </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <item>
+          <item row="3" column="0">
            <widget class="QLabel" name="label_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
             <property name="text">
              <string>&amp;Organization:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
             <property name="buddy">
              <cstring>org</cstring>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="3" column="1">
            <widget class="QLineEdit" name="org"/>
           </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <item>
+          <item row="4" column="0">
            <widget class="QLabel" name="label_6">
             <property name="text">
              <string>&amp;Url:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
             </property>
             <property name="buddy">
              <cstring>url</cstring>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="4" column="1">
            <widget class="QLineEdit" name="url"/>
           </item>
          </layout>
@@ -198,6 +197,13 @@
       <widget class="QPushButton" name="removeStitch">
        <property name="text">
         <string>Delete Stitch</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="addSelected">
+       <property name="text">
+        <string>Add Selected</string>
        </property>
       </widget>
      </item>
@@ -349,11 +355,6 @@
  </widget>
  <tabstops>
   <tabstop>stitchSource</tabstop>
-  <tabstop>setName</tabstop>
-  <tabstop>author</tabstop>
-  <tabstop>email</tabstop>
-  <tabstop>org</tabstop>
-  <tabstop>url</tabstop>
   <tabstop>listView</tabstop>
  </tabstops>
  <resources/>
