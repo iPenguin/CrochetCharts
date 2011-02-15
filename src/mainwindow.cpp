@@ -556,6 +556,8 @@ void MainWindow::fileOpen()
         mFile->fileName = fileName;
         mFile->load();
     }
+
+    updateMenuItems();
     QApplication::restoreOverrideCursor();
 }
 
