@@ -33,7 +33,6 @@ void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     
     QRect rect =QRect(option->rect.x() + (option->rect.width()/2), option->rect.y() + (option->rect.height()/2),
                       (option->rect.width()/2), (option->rect.height()/2));
-    painter->drawText(rect.x(), rect.y(), toolTip());
 }
 
 int CrochetCell::type () const
