@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>730</width>
+    <width>894</width>
     <height>511</height>
    </rect>
   </property>
@@ -129,7 +129,7 @@
          </item>
         </layout>
        </item>
-       <item row="3" column="0" colspan="2">
+       <item row="3" column="0" colspan="3">
         <widget class="QDialogButtonBox" name="newDocBttnBox">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -160,6 +160,46 @@
          </item>
         </layout>
        </item>
+       <item row="0" column="2">
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QComboBox" name="handedness">
+           <item>
+            <property name="text">
+             <string>Right Handed</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Left Handed</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Preferred</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>120</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
     </item>
@@ -186,7 +226,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>730</width>
+     <width>894</width>
      <height>21</height>
     </rect>
    </property>
@@ -706,6 +746,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/stitch_mode.png</normaloff>:/images/stitch_mode.png</iconset>
+   </property>
    <property name="text">
     <string>Stitch Mode</string>
    </property>
@@ -716,6 +760,10 @@
   <action name="actionColorMode">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/color_mode.png</normaloff>:/images/color_mode.png</iconset>
    </property>
    <property name="text">
     <string>Color Mode</string>
@@ -728,6 +776,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/grid_mode.png</normaloff>:/images/grid_mode.png</iconset>
+   </property>
    <property name="text">
     <string>Grid Mode</string>
    </property>
@@ -738,6 +790,10 @@
   <action name="actionPositionMode">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/position_mode.png</normaloff>:/images/position_mode.png</iconset>
    </property>
    <property name="text">
     <string>Position Mode</string>
