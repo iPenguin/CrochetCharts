@@ -111,7 +111,20 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
                 //TODO: make sure the numbers are translating correctly to xml and back.
                 stream->writeTextElement("x", QString::number(c->pos().x()));
                 stream->writeTextElement("y", QString::number(c->pos().y()));
-                stream->writeTextElement("rotation", QString::number(c->rotation()));
+
+                stream->writeStartElement("transformation");
+                    QTransform trans = c->transform();
+                    stream->writeTextElement("m11", QString::number(trans.m11()));
+                    stream->writeTextElement("m12", QString::number(trans.m12()));
+                    stream->writeTextElement("m13", QString::number(trans.m13()));
+                    stream->writeTextElement("m21", QString::number(trans.m21()));
+                    stream->writeTextElement("m22", QString::number(trans.m22()));
+                    stream->writeTextElement("m23", QString::number(trans.m23()));
+                    stream->writeTextElement("m31", QString::number(trans.m31()));
+                    stream->writeTextElement("m32", QString::number(trans.m32()));
+                    stream->writeTextElement("m33", QString::number(trans.m33()));
+                stream->writeEndElement(); //transformation
+                
                 stream->writeTextElement("angle", QString::number(c->angle()));
                 stream->writeEndElement(); //end cell
             }
@@ -259,7 +272,8 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
     CrochetCell* c = new CrochetCell();
     int row, column;
     QString color;
-    qreal x, y, rotation;
+    qreal x, y;
+    QTransform transform;
     double angle;
     
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
@@ -283,8 +297,8 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
                 x = e.text().toInt();
             } else if(e.tagName() == "y") {
                 y = e.text().toInt();
-            } else if(e.tagName() == "rotation") {
-                rotation = e.text().toDouble();
+            } else if(e.tagName() == "transformation") {
+                transform = loadTransform(&e);
             } else if(e.tagName() == "angle") {
                 angle = e.text().toDouble();
             } else {
@@ -293,11 +307,51 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
         }
         n = n.nextSibling();
     }
-
-    //TODO: fix crash on appendCell...
+    
     tab->scene()->appendCell(row, c);
     c->setColor(QColor(color));
     c->setPos(x, y);
-    c->setRotation(rotation);
+    c->setTransform(transform);
     c->setAngle(angle);
+}
+
+QTransform SaveFile::loadTransform(QDomElement *element)
+{
+    QTransform transform;
+
+    qreal m11, m12, m13,
+          m21, m22, m23,
+          m31, m32, m33;
+    
+    QDomNode n = element->firstChild();
+    while(!n.isNull()) {
+        QDomElement e = n.toElement();
+        if(!e.isNull()) {
+            if(e.tagName() == "m11") {
+                m11 = (qreal)e.text().toDouble();
+            } else if(e.tagName() == "m12") {
+                m12 = (qreal)e.text().toDouble();
+            } else if(e.tagName() == "m13") {
+                m13 = (qreal)e.text().toDouble();
+            } else if(e.tagName() == "m21") {
+                m21 = (qreal)e.text().toDouble();
+            } else if(e.tagName() == "m22") {
+                m22 = (qreal)e.text().toDouble();
+            } else if(e.tagName() == "m23") {
+                m23 = (qreal)e.text().toDouble();
+            } else if(e.tagName() == "m31") {
+                m31 = (qreal)e.text().toDouble();
+            } else if(e.tagName() == "m32") {
+                m32 = (qreal)e.text().toDouble();
+            } else if(e.tagName() == "m33") {
+                m33 = (qreal)e.text().toDouble();
+            } else {
+                qWarning() << "Cannot load unknown transform property:" << e.tagName() << e.text();
+            }
+        }
+        n = n.nextSibling();
+    }
+
+    transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+    return transform;
 }

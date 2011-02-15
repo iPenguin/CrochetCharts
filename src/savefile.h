@@ -48,6 +48,7 @@ private:
     void loadColors(QDomElement *element);
     void loadChart(QDomElement *element);
     void loadCell(ChartTab *tab, QDomElement *element);
+    QTransform loadTransform(QDomElement *element);
 
     //fileVersion of the file we're working with.
     qint32 mCurrentFileVersion;
