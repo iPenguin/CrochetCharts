@@ -272,6 +272,18 @@ void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
 {
+
+    if(e->buttons() != Qt::LeftButton)
+        return;
+    
+    QGraphicsItem *gi = itemAt(e->scenePos());
+    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+    if(!c)
+        return;
+    
+    //mCurCell = c;
+
+    c->setColor(Qt::green);
     
 }
 
