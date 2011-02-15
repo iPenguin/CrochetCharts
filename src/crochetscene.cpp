@@ -359,7 +359,17 @@ void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
 {
+    if(e->buttons() != Qt::LeftButton)
+        return;
     
+    QGraphicsItem *gi = itemAt(e->scenePos());
+    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+    if(!c)
+        return;
+    
+    //mCurCell = c;
+    c->setStitch("cb");
+
 }
 
 void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
