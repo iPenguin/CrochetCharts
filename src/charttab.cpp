@@ -16,6 +16,7 @@
 #include "crochetscene.h"
 #include "crochettextview.h"
 #include "settings.h"
+#include <QDate>
 
 ChartTab::ChartTab(QWidget *parent) :
         QWidget(parent)
@@ -105,8 +106,8 @@ void ChartTab::colorChanged(QString oldColor, QString newColor)
     }
 
     if (!mPatternColors->contains(newColor)) {
-        QMap<QString, int> properties;
-        properties["color number"] = mPatternColors->count() + 1;
+        QMap<QString, qint64> properties;
+        properties["added"] = QDateTime::currentDateTime().toMSecsSinceEpoch();
         properties["count"] = 1;
         mPatternColors->insert(newColor, properties);
     } else

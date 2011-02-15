@@ -962,19 +962,32 @@ void MainWindow::updatePatternColors()
 {
     if(ui->tabWidget->count() <= 0)
         return;
-    
+
     ui->patternColors->clear();
-    QMapIterator<QString, QMap<QString, int> > i(mPatternColors);
-    while (i.hasNext()) {
-        i.next();
-        QList<QListWidgetItem*> items = ui->patternColors->findItems(i.key(), Qt::MatchExactly);
+
+    QString prefix = Settings::inst()->value("colorPrefix").toString();
+
+    QStringList keys = mPatternColors.keys();
+    QMap<qint64, QString> sortedColors;
+    
+    foreach(QString key, keys) {
+        qint64 added = mPatternColors.value(key).value("added");
+        sortedColors.insert(added, key);
+    }
+
+    int i = 1;
+    QList<qint64> sortedKeys = sortedColors.keys();
+    foreach(qint64 sortedKey, sortedKeys) {
+        QString color = sortedColors.value(sortedKey);
+        QList<QListWidgetItem*> items = ui->patternColors->findItems(color, Qt::MatchExactly);
         if(items.count() == 0) {
-            QPixmap pix = drawColorBox(i.key(), QSize(32, 32));
-            QIcon icon = QIcon(pix);           
-            QString prefix = Settings::inst()->value("colorPrefix").toString();
-            QListWidgetItem *item = new QListWidgetItem(icon, prefix + QString::number(i.value()["color number"]), ui->patternColors);
-            item->setToolTip(i.key());
+            QPixmap pix = drawColorBox(color, QSize(32, 32));
+            QIcon icon = QIcon(pix);
+            
+            QListWidgetItem *item = new QListWidgetItem(icon, prefix + QString::number(i), ui->patternColors);
+            item->setToolTip(color);
             ui->patternColors->addItem(item);
+            ++i;
         }
     }
 }

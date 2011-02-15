@@ -140,10 +140,14 @@ void SaveFile::saveColors(QXmlStreamWriter* stream)
 {
     stream->writeStartElement("colors"); //start colors
     MainWindow *mw = static_cast<MainWindow*>(mParent);
-    QMapIterator<QString, QMap<QString, int> > i(mw->patternColors());
-    while (i.hasNext()) {
-        i.next();
-        stream->writeTextElement("color", i.key());
+
+    QStringList keys = mw->patternColors().keys();
+    
+    foreach(QString key, keys) {
+        stream->writeStartElement("color");
+        stream->writeAttribute("added", QString::number(mw->patternColors().value(key).value("added")));
+        stream->writeCharacters(key);
+        stream->writeEndElement(); //end color
     }
     
     stream->writeEndElement(); // end colors
@@ -225,15 +229,17 @@ bool SaveFile::loadCustomStitches(QDataStream* stream)
 void SaveFile::loadColors(QDomElement* element)
 {
     MainWindow *mw = qobject_cast<MainWindow*>(mParent);
+
+    mw->patternColors().clear();
     
     QDomNode n = element->firstChild();
     while(!n.isNull()) {
         QDomElement e = n.toElement();
         if(!e.isNull()) {
             if(e.tagName() == "color") {
-                QMap<QString, int> properties;
-                properties.insert("color number", mw->patternColors().count() + 1);
+                QMap<QString, qint64> properties;
                 properties.insert("count", 0); //count = 0 because we haven't added any cells yet.
+                properties.insert("added", (qint64)e.attribute("added").toLongLong());
                 mw->patternColors().insert(e.text(),properties);
             } else {
                 qWarning() << "Cannot load unknown color property:" << e.tagName() << e.text();

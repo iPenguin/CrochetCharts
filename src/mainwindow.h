@@ -122,12 +122,12 @@ private:
 //for the savefile class:
 protected:
     QMap<QString, int> patternStitches() { return mPatternStitches; }
-    QMap<QString, QMap<QString, int> > patternColors() { return mPatternColors; }
+    QMap<QString, QMap<QString, qint64> > patternColors() { return mPatternColors; }
     QTabWidget* tabWidget();
     
 private:
     QMap<QString, int> mPatternStitches;
-    QMap<QString, QMap<QString, int> > mPatternColors;
+    QMap<QString, QMap<QString, qint64> > mPatternColors;
 
     QActionGroup *mModeGroup;
     

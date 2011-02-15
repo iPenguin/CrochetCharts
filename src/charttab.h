@@ -27,7 +27,7 @@ public:
     void renderChart(QPainter *painter, QRectF rect = QRectF());
 
     void setPatternStitches(QMap<QString, int> *stitches) { mPatternStitches = stitches; }
-    void setPatternColors(QMap<QString, QMap<QString, int> > *colors) { mPatternColors = colors; }
+    void setPatternColors(QMap<QString, QMap<QString, qint64> > *colors) { mPatternColors = colors; }
 
     //list of modes available from this tab.
     QStringList editModes();
@@ -56,7 +56,7 @@ private:
     QPointer<CrochetTextView> mTextView;
 
     QMap<QString, int> *mPatternStitches;
-    QMap<QString, QMap<QString, int> > *mPatternColors;
+    QMap<QString, QMap<QString, qint64> > *mPatternColors;
     
     QUndoStack mUndoStack;
     
