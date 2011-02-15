@@ -120,7 +120,7 @@ void CrochetScene::appendCell(int row, Cell *c)
     c->setPos(i*64, row*64);
     c->setToolTip(QString::number(i+1));
     //c->rotate(90);
-    c->setBgColor(QColor(Qt::white));
+    c->setColor(QColor(Qt::white));
     c->setObjectName("Cell Object: " + QString::number(i + 1));
     //emit rowChanged(row);
 }
@@ -159,7 +159,7 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
         modelRow.append(c);
         c->setPos(i*64, row*64);
         c->setToolTip(QString::number(i+1));
-        c->setBgColor(QColor(Qt::white));
+        c->setColor(QColor(Qt::white));
         //c->rotate(90);
         c->setObjectName("Cell Object: " + QString::number(i + 1));
     }

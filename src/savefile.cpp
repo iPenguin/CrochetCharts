@@ -107,8 +107,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
                 stream->writeTextElement("stitch", c->stitch()->name());
                 stream->writeTextElement("row", QString::number(row));
                 stream->writeTextElement("column", QString::number(col));
-                stream->writeTextElement("bgColor", c->bgColor().name());
-                stream->writeTextElement("fgColor", c->fgColor().name());
+                stream->writeTextElement("color", c->color().name());
                 //TODO: make sure the numbers are translating correctly to xml and back.
                 stream->writeTextElement("x", QString::number(c->pos().x()));
                 stream->writeTextElement("y", QString::number(c->pos().y()));
@@ -259,7 +258,7 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
 {
     CrochetCell* c = new CrochetCell();
     int row, column;
-    QString fgColor, bgColor;
+    QString color;
     qreal x, y, rotation;
     double angle;
     
@@ -278,10 +277,8 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
                 row = e.text().toInt();
             } else if(e.tagName() == "column") {
                 column = e.text().toInt();
-            } else if(e.tagName() == "bgColor") {
-                fgColor = e.text();
-            } else if(e.tagName() == "fgColor") {
-                bgColor = e.text();
+            } else if(e.tagName() == "color") {
+                color = e.text();
             } else if(e.tagName() == "x") {
                 x = e.text().toInt();
             } else if(e.tagName() == "y") {
@@ -299,8 +296,7 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
 
     //TODO: fix crash on appendCell...
     tab->scene()->appendCell(row, c);
-    c->setBgColor(QColor(bgColor));
-    c->setFgColor(QColor(fgColor));
+    c->setColor(QColor(color));
     c->setPos(x, y);
     c->setRotation(rotation);
     c->setAngle(angle);

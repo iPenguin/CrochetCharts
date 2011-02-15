@@ -26,11 +26,8 @@ public:
     void setAngle(double angle) { mAngle = angle; }
     double angle() const { return mAngle; }
 
-    void setBgColor(QColor c = QColor(Qt::white));
-    QColor bgColor() const { return mBgColor; }
-
-    void setFgColor(QColor c = QColor(Qt::black)) { mFgColor = c; }
-    QColor fgColor() const { return mFgColor; }
+    void setColor(QColor c = QColor(Qt::white));
+    QColor color() const { return mColor; }
     
     void setStitch(Stitch* s);
     void setStitch(QString s);
@@ -47,8 +44,7 @@ public slots:
 private:
     double mAngle;
 
-    QColor mBgColor;
-    QColor mFgColor;
+    QColor mColor;
     Stitch* mStitch;
 };
 

@@ -57,13 +57,13 @@ void Cell::setStitch(Stitch *s)
     }
 }
 
-void Cell::setBgColor(QColor c)
+void Cell::setColor(QColor c)
 {
-    if (mBgColor != c) {
+    if (mColor != c) {
         QString old = "";
-        if (mBgColor.isValid())
-            old = mBgColor.name();
-        mBgColor = c;
+        if (mColor.isValid())
+            old = mColor.name();
+        mColor = c;
         emit colorChanged(old, c.name());
     }
 }
