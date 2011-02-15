@@ -26,6 +26,7 @@ private slots:
     void addStitchToMasterSet(int row);
     void addStitch();
     void removeStitch();
+    void addSelected();
     
     void resetLibrary();
 

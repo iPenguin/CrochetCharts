@@ -46,6 +46,7 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     
     connect(ui->addStitch, SIGNAL(clicked()), this, SLOT(addStitch()));
     connect(ui->removeStitch, SIGNAL(clicked()), this, SLOT(removeStitch()));
+    connect(ui->addSelected, SIGNAL(clicked()), this, SLOT(addSelected()));
 
     connect(ui->createSet, SIGNAL(clicked()), this, SLOT(createSet()));
     connect(ui->removeSet, SIGNAL(clicked()), this, SLOT(removeSet()));
@@ -118,6 +119,7 @@ void StitchLibraryUi::setButtonStates(StitchSet *set)
     ui->removeStitch->setEnabled(state);
     ui->moreBttn->setEnabled(state);
     ui->propertiesBox->setEnabled(state);
+    ui->addSelected->setEnabled(state);
 }
 
 void StitchLibraryUi::addStitchToMasterSet(int row)
@@ -199,6 +201,23 @@ void StitchLibraryUi::removeStitch()
             set->removeStitch(set->data(set->index(i, 0), Qt::EditRole).toString());
         }
     }
+}
+
+void StitchLibraryUi::addSelected()
+{
+    StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
+    for(int i = 0; i < set->stitchCount(); ++i) {
+        bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
+        if(selected) {
+            Stitch *s = 0;
+            s = static_cast<Stitch*>(set->index(i, 0).internalPointer());
+            if(s)
+                StitchCollection::inst()->addStitchToMasterSet(set, s);
+            else
+                qWarning() << "Error: Couldn't get stitch from the original set.";
+        }
+    }
+    
 }
 
 void StitchLibraryUi::updateStitchSetProperties()
