@@ -440,6 +440,9 @@
        <property name="viewMode">
         <enum>QListView::IconMode</enum>
        </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
     </layout>
