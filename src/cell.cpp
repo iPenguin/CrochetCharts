@@ -65,6 +65,7 @@ void Cell::setColor(QColor c)
             old = mColor.name();
         mColor = c;
         emit colorChanged(old, c.name());
+        update();
     }
 }
 
