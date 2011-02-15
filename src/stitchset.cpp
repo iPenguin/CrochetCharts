@@ -168,7 +168,7 @@ void StitchSet::loadXmlStitch(QDomElement *element, bool loadIcon)
             if(e.tagName() == "name")
                 s->setName(e.text());
             else if(e.tagName() == "icon") {
-                if(loadIcon)
+                if(loadIcon && !e.text().startsWith(":/"))
                     s->setFile(stitchSetFolder() + e.text());
                 else
                     s->setFile(e.text());
@@ -255,11 +255,13 @@ void StitchSet::saveIcons(QDataStream *out)
 {
     QMap<QString, QByteArray> icons;
     foreach(Stitch *s, mStitches) {
-        QFile f(s->file());
-        f.open(QIODevice::ReadOnly);
-        qDebug() << "file name" << QFileInfo(s->file()).fileName();
-        icons.insert(QFileInfo(s->file()).fileName(), f.readAll());
-        f.close();
+        if(!s->file().startsWith(":/")) {
+            QFile f(s->file());
+            f.open(QIODevice::ReadOnly);
+            qDebug() << "file name" << QFileInfo(s->file()).fileName();
+            icons.insert(QFileInfo(s->file()).fileName(), f.readAll());
+            f.close();
+        }
     }
     *out << icons;
 }
@@ -275,7 +277,7 @@ void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons)
         
     foreach(Stitch *s, mStitches) {
         QString file;
-        if(saveIcons)
+        if(saveIcons && !s->file().startsWith(":/"))
             file = QFileInfo(s->file()).fileName();
         else
             file = s->file();
