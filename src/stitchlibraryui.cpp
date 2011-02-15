@@ -45,7 +45,7 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     connect(ui->printSet, SIGNAL(clicked()), this, SLOT(printStitchSet()));
     
     connect(ui->addStitch, SIGNAL(clicked()), this, SLOT(addStitch()));
-    connect(ui->removeSet, SIGNAL(clicked()), this, SLOT(removeStitch()));
+    connect(ui->removeStitch, SIGNAL(clicked()), this, SLOT(removeStitch()));
 
     connect(ui->createSet, SIGNAL(clicked()), this, SLOT(createSet()));
     connect(ui->removeSet, SIGNAL(clicked()), this, SLOT(removeSet()));
@@ -188,9 +188,17 @@ void StitchLibraryUi::addStitch()
 
 void StitchLibraryUi::removeStitch()
 {
-    qDebug() << "remove Stitch";
-    //sort through the checkboxes and remove
-    //any stitches that are checked.
+    //FIXME: check if the stitch is in the master set, if so remove it or we'll crash!
+    //TODO: warn that we'll also be removing this stitch from the master set.
+    StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
+
+    for(int i = 0; i < set->stitchCount(); ++i) {
+        bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
+        if(selected) {
+            qDebug() << set->data(set->index(i, 0), Qt::EditRole).toString();
+            set->removeStitch(set->data(set->index(i, 0), Qt::EditRole).toString());
+        }
+    }
 }
 
 void StitchLibraryUi::updateStitchSetProperties()
