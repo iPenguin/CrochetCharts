@@ -23,5 +23,6 @@
         <file>images/grid_mode.png</file>
         <file>images/position_mode.png</file>
         <file>images/stitch_mode.png</file>
+        <file>images/stitch_mode.svg</file>
     </qresource>
 </RCC>
