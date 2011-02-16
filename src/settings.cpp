@@ -34,9 +34,9 @@ Settings::Settings()
 
 void Settings::initDemoVersion()
 {
-    QString license = mSettings.value("license", QVariant("")).toString();
-    QString sn      = mSettings.value("serialNumber", QVariant("")).toString();
-    QString email   = mSettings.value("email", QVariant("")).toString();
+    QString license = value("license").toString();
+    QString sn      = value("serialNumber").toString();
+    QString email   = value("email").toString();
 
     if(!License::isValidSerialNumber(sn)) {
         mIsDemoVersion = true;
@@ -143,10 +143,16 @@ QVariant Settings::defaultValue ( const QString& key ) const
 
 QString Settings::userSettingsFolder()
 {
+    //If we're on windows use the DataLocation as you cannot store files in the registry.
+    //Otherwise use the config path to keep all the files together.
+#if Q_WS_WIN
     QString folder = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
     if(!QFileInfo(folder).exists())
         QDir(folder).mkpath(folder);
-    qDebug() << "user settings folder" << folder;
     return folder + "/";
+#else
+    QFileInfo file(mSettings.fileName());
+    return file.absolutePath() + "/";
+#endif
 }
 
