@@ -37,6 +37,7 @@
 #include <QSvgRenderer>
 
 #include <QActionGroup>
+#include <qevent.h>
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -129,8 +130,8 @@ void MainWindow::setupMenus()
     connect(ui->actionPrintPreview, SIGNAL(triggered()), this, SLOT(filePrintPreview()));
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
 
-    connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(close()));
-    connect(ui->actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    connect(ui->actionQuit, SIGNAL(triggered()), qApp, SLOT(close()));
+    connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
     
     
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
@@ -139,10 +140,10 @@ void MainWindow::setupMenus()
     ui->actionSaveAs->setIcon(QIcon::fromTheme("document-save-as"));
 
     ui->actionPrint->setIcon(QIcon::fromTheme("document-print"));
-    ui->actionPrintPreview->setIcon(QIcon::fromTheme("file-print"));
-    ui->actionExport->setIcon(QIcon::fromTheme("export-pdf"));
+    ui->actionPrintPreview->setIcon(QIcon::fromTheme("document-print-preview"));
+    ui->actionExport->setIcon(QIcon::fromTheme("document-export"));
     
-    ui->actionClose->setIcon(QIcon::fromTheme("document-close"));
+    ui->actionQuit->setIcon(QIcon::fromTheme("application-exit"));
 
     //Edit Menu
     connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
@@ -190,6 +191,8 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionColorMode);
     mModeGroup->addAction(ui->actionGridMode);
     mModeGroup->addAction(ui->actionPositionMode);
+    
+    ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color"));
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
     
@@ -199,9 +202,21 @@ void MainWindow::setupMenus()
 
     connect(ui->actionRemoveTab, SIGNAL(triggered()), this, SLOT(removeCurrentTab()));
 
+    ui->actionAddChart->setIcon(QIcon::fromTheme("tab-new")); //insert-chart
+    ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close"));
+
     //Chart Menu
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
     connect(ui->actionEditName, SIGNAL(triggered()), this, SLOT(chartEditName()));
+
+    /*Edit Table Icons in the Theme:
+     *  edit-table-delete-column.png
+     *  edit-table-delete-row.png
+     *  edit-table-insert-column-left.png
+     *  edit-table-insert-column-right.png
+     *  edit-table-insert-row-above.png
+     *  edit-table-insert-row-below.png
+     */
     
     //Tools Menu
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
@@ -514,11 +529,59 @@ void MainWindow::helpAbout()
     QMessageBox::about(this, tr("About Crochet"), aboutInfo);
 }
 
+void MainWindow::aboutToQuit()
+{
+
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    Settings::inst()->setValue("geometry", saveGeometry());
-    Settings::inst()->setValue("windowState", saveState());
-    QMainWindow::closeEvent(event);
+    if(safeToClose()) {
+        Settings::inst()->setValue("geometry", saveGeometry());
+        Settings::inst()->setValue("windowState", saveState());
+        QMainWindow::closeEvent(event);
+    } else {
+        event->ignore();
+    }
+}
+
+bool MainWindow::safeToClose()
+{
+    foreach(QUndoStack *stack, mUndoGroup.stacks()) {
+        if(!stack->isClean())
+            return promptToSave();
+    }
+
+    if(mFile->fileName.isEmpty() && mUndoGroup.stacks().count() > 0)
+        return promptToSave();
+
+    return true;
+}
+
+bool MainWindow::promptToSave()
+{
+    QString niceName = QFileInfo(mFile->fileName).baseName();
+    if(niceName.isEmpty())
+        niceName = "untitled";
+    
+    QMessageBox msgbox(this);
+    msgbox.setText(tr("The document '%1' has unsaved changes.").arg(niceName));
+    msgbox.setInformativeText(tr("Do you want to save the changes?"));
+    msgbox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    
+    int results = msgbox.exec();
+    
+    if(results == QMessageBox::Cancel)
+        return false;
+    else if(results == QMessageBox::Discard)
+        return true;
+    else if (results == QMessageBox::Save) {
+        //FIXME: if the user cancels the fileSave() we should drop them back to the window not close it.
+        fileSave();
+        return true;
+    }
+
+    return false;
 }
 
 void MainWindow::readSettings()
@@ -612,7 +675,6 @@ void MainWindow::menuFileAboutToShow()
 {
     bool state = hasTab();
 
-    ui->actionClose->setEnabled(state);
     ui->actionSave->setEnabled(state);
     ui->actionSaveAs->setEnabled(state);
 
@@ -929,8 +991,11 @@ void MainWindow::removeTab(int tabIndex)
     if(tabIndex < 0)
         return;
 
-    if(ui->tabWidget->count() == 1)
+    //if we're on the last tab close the window.
+    if(ui->tabWidget->count() == 1) {
+        close();
         return;
+    }
 
     //FIXME: either include a warning that this is NOT undo-able or make it undo-able.
     ui->tabWidget->removeTab(tabIndex);

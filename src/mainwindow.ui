@@ -244,8 +244,6 @@
     <addaction name="actionPrintPreview"/>
     <addaction name="actionExport"/>
     <addaction name="separator"/>
-    <addaction name="actionClose"/>
-    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -573,23 +571,12 @@
     <string/>
    </property>
   </action>
-  <action name="actionClose">
-   <property name="text">
-    <string>&amp;Close</string>
-   </property>
-   <property name="toolTip">
-    <string>Close the current pattern</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+W</string>
-   </property>
-  </action>
   <action name="actionQuit">
    <property name="text">
     <string>&amp;Quit</string>
    </property>
    <property name="toolTip">
-    <string>Quit and close all open patterns</string>
+    <string>Close this pattern</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>

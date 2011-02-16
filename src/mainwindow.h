@@ -46,6 +46,8 @@ protected slots:
     void updatePatternColors();
 
     void tabChanged(int newTab);
+
+    void aboutToQuit();
     
 //menu functions/slots:
 private slots:
@@ -101,6 +103,9 @@ private:
     void readSettings();
 
     void checkUpdates();
+
+    bool safeToClose();
+    bool promptToSave();
     
     void exportPdf(QString selection, QString fileName, QSize size, int resolution);
     void exportSvg(QString selection, QString fileName, QSize size);
