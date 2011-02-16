@@ -97,9 +97,10 @@ void StitchLibraryUi::changeStitchSet(QString setName)
     if(!set)
         return;
 
-    StitchSet *curSet = static_cast<StitchSet*>(ui->listView->model());
-    curSet->clearSelection();
-    
+    StitchSet *curSet = qobject_cast<StitchSet*>(ui->listView->model());
+    if(curSet)
+        curSet->clearSelection();
+
     ui->listView->setModel(set);
     ui->listView->update();
 
@@ -108,6 +109,7 @@ void StitchLibraryUi::changeStitchSet(QString setName)
     setupPropertiesBox();
 
     setButtonStates(set);
+
 }
 
 void StitchLibraryUi::setButtonStates(StitchSet *set)
@@ -279,8 +281,9 @@ void StitchLibraryUi::createSet()
     QString text = QInputDialog::getText(this, tr("New Stitch Set"), tr("Stitch set name:"),
                                          QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty()) {
-        StitchCollection::inst()->createStitchSet(text);
-
+        StitchSet *set = StitchCollection::inst()->createStitchSet(text);
+        //WIN32: crashes if there isn't at least one stitch in the set when you add the model to the view.
+        set->createStitch("");
         //switch to the new set.
         updateSourceDropDown(text);
     }
@@ -353,9 +356,10 @@ void StitchLibraryUi::updateSourceDropDown(QString setName)
 {
     if(setName.isEmpty())
         setName = ui->stitchSource->currentText();
-    
+
     ui->stitchSource->clear();
     ui->stitchSource->addItems(StitchCollection::inst()->stitchSetList());
     int index = ui->stitchSource->findText(setName, Qt::MatchExactly);
+
     ui->stitchSource->setCurrentIndex(index);
 }

@@ -41,7 +41,7 @@ StitchCollection::~StitchCollection()
     //mMasterSet->saveXmlFile();
     //FIXME: only save the files if they've changed
     foreach(StitchSet *set, mStitchSets) {
-        if(!set->isTemporary && !set->isBuiltInSet)
+        if(!set->isTemporary)
             set->saveXmlFile();
         delete set;
     }

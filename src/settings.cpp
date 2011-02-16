@@ -14,6 +14,8 @@
 
 #include <QMessageBox>
 
+#include <QDir>
+
 // Global static pointer
 Settings* Settings::mInstance = NULL;
 
@@ -141,8 +143,10 @@ QVariant Settings::defaultValue ( const QString& key ) const
 
 QString Settings::userSettingsFolder()
 {
-    //FIXME: will this work on windows w/ the registry?
-    QFileInfo file(mSettings.fileName());
-    return file.absolutePath() + "/";
+    QString folder = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    if(!QFileInfo(folder).exists())
+        QDir(folder).mkpath(folder);
+    qDebug() << "user settings folder" << folder;
+    return folder + "/";
 }
 

@@ -84,7 +84,7 @@ if(WIN32)
 # ALT: set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
 #endif(MINGW)
 
-    set(crochet_win platforms/win/crochet.rc
+    set(crochet_win ${CMAKE_CURRENT_SOURCE_DIR}/platforms/win/crochet.rc
         )
 elseif(APPLE)
 
