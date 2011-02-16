@@ -27,6 +27,7 @@ set(crochet_qobject_headers
     crochethighlighter.h
     updater.h
     stitchiconui.h
+    undogroup.h
     )
 
 set(crochet_headers

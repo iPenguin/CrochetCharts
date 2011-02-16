@@ -64,6 +64,8 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
         mFile->load();
     }
 
+    setApplicationTitle();
+    
     setupNewTabDialog();
 
     setupMenus();
@@ -86,6 +88,15 @@ void MainWindow::checkUpdates()
     bool checkForUpdates = Settings::inst()->value("checkForUpdates").toBool();
     if(checkForUpdates)
         mUpdater->checkForUpdates(true); //check at startup is always silent.
+}
+
+void MainWindow::setApplicationTitle()
+{
+    QString cleanName = QFileInfo(mFile->fileName).baseName();
+    if(cleanName.isEmpty())
+        cleanName = "untitled";
+    
+    setWindowTitle(QString("%1 - %2[*]").arg(qApp->applicationName()).arg(cleanName));
 }
 
 void MainWindow::setupNewTabDialog()
@@ -130,7 +141,7 @@ void MainWindow::setupMenus()
     connect(ui->actionPrintPreview, SIGNAL(triggered()), this, SLOT(filePrintPreview()));
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
 
-    connect(ui->actionQuit, SIGNAL(triggered()), qApp, SLOT(close()));
+    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
     
     
@@ -230,7 +241,10 @@ void MainWindow::setupMenus()
     //Help Menu
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
 
-
+    
+    //misc items
+    connect(&mUndoGroup, SIGNAL(documentCleanChanged(bool)), this, SLOT(documentIsModified(bool)));
+    
     updateMenuItems();
 }
 
@@ -620,6 +634,7 @@ void MainWindow::fileOpen()
         mFile->load();
     }
 
+    setApplicationTitle();
     updateMenuItems();
     QApplication::restoreOverrideCursor();
 }
@@ -660,6 +675,8 @@ void MainWindow::fileSaveAs()
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     mFile->fileName = fileName;
     mFile->save();
+
+    setApplicationTitle();
     QApplication::restoreOverrideCursor();
 }
 
@@ -749,6 +766,7 @@ void MainWindow::newChart()
     tab->scene()->createChart(rows, cols, defStitch);
 
     updateMenuItems();
+    documentIsModified(true);
 }
 
 ChartTab* MainWindow::createTab()
@@ -999,6 +1017,7 @@ void MainWindow::removeTab(int tabIndex)
 
     //FIXME: either include a warning that this is NOT undo-able or make it undo-able.
     ui->tabWidget->removeTab(tabIndex);
+    documentIsModified(true);
 }
 
 void MainWindow::updatePatternStitches()
@@ -1056,3 +1075,11 @@ void MainWindow::updatePatternColors()
         }
     }
 }
+
+void MainWindow::documentIsModified(bool isModified)
+{
+
+    //TODO: check all possible modificaiton locations.
+    setWindowModified(isModified);
+}
+

@@ -9,7 +9,7 @@
 
 #include "savefile.h"
 #include "updater.h"
-#include <qundogroup.h>
+#include "undogroup.h"
 
 class ChartTab;
 class QPrinter;
@@ -94,6 +94,8 @@ private slots:
     void print(QPrinter *printer);
 
     void changeTabMode(QAction *a);
+
+    void documentIsModified(bool isModified);
     
 private:
     void setupMenus();
@@ -106,6 +108,8 @@ private:
 
     bool safeToClose();
     bool promptToSave();
+
+    void setApplicationTitle();
     
     void exportPdf(QString selection, QString fileName, QSize size, int resolution);
     void exportSvg(QString selection, QString fileName, QSize size);
@@ -138,7 +142,7 @@ private:
     
     QAction *mActionUndo,
             *mActionRedo;
-    QUndoGroup mUndoGroup;
+    UndoGroup mUndoGroup;
 
 };
 
