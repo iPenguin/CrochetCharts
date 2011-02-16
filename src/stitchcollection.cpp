@@ -96,8 +96,12 @@ bool StitchCollection::loadMasterList()
     file.close();
 
     foreach(QString key, mStitchList.keys()) {
-        Stitch *s = findStitchSet(mStitchList.value(key))->findStitch(key);
-        mMasterSet->addStitch(s);
+        StitchSet *set = findStitchSet(mStitchList.value(key));
+        if(set){
+            Stitch *s = set->findStitch(key);
+            if(s)
+                mMasterSet->addStitch(s);
+        }
     }
 
     return true;
