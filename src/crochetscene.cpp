@@ -278,8 +278,10 @@ void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
     CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
     if(!c)
         return;
-    
-    mUndoStack.push(new SetCellColor(c, mEditBgColor));
+
+    if(c->color() != mEditBgColor) {
+        mUndoStack.push(new SetCellColor(c, mEditBgColor));
+    }
     
 }
 
@@ -363,8 +365,10 @@ void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
     if(!c)
         return;
 
-    mUndoStack.push(new SetCellStitch(c, mEditStitch));
-    emit rowChanged(findGridPosition(c).y());
+    if(c->name() != mEditStitch) {
+        mUndoStack.push(new SetCellStitch(c, mEditStitch));
+        emit rowChanged(findGridPosition(c).y());
+    }
 }
 
 void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)

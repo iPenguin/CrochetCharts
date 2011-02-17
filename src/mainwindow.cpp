@@ -44,7 +44,8 @@
 #include <QUndoView>
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
-    : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
+    : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
+    mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     ui->setupUi(this);
