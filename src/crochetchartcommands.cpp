@@ -72,9 +72,8 @@ void SetCellRotation::undo()
     c->setTransform(QTransform().translate(32, 0).rotate(-rotation).translate(-32, 0), true);
 }
 
-bool SetCellRotation::mergeWith(const QUndoCommand* command)
+bool SetCellRotation::mergeWith(const QUndoCommand *command)
 {
-    qDebug() << "mergeWith";
     if(command->id() != id())
         return false;
 

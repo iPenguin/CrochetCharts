@@ -41,16 +41,16 @@ private:
 class SetCellRotation : public QUndoCommand
 {
 public:
-    explicit SetCellRotation(Cell *cell, qreal rot, QUndoCommand* parent = 0);
-
     enum { Id = 1234 };
+    
+    SetCellRotation(Cell *cell, qreal rot, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
 
     bool mergeWith(const QUndoCommand *command);
     
-    int id() { return Id; }
+    int id() const { return Id; }
     
 private:
     qreal rotation;
