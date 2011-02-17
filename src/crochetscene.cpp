@@ -18,6 +18,7 @@
 #include "stitchcollection.h"
 #include "stitchset.h"
 #include "appinfo.h"
+#include "crochetchartcommands.h"
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent), mCurCell(0), mDiff(0.0), mMode(CrochetScene::StitchMode),
@@ -282,9 +283,7 @@ void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
     if(!c)
         return;
     
-    //mCurCell = c;
-
-    c->setColor(mEditBgColor);
+    mUndoStack.push(new SetCellColor(c, mEditBgColor));
     
 }
 
@@ -328,8 +327,8 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
         else
             mDiff += .5;
     }
-    
-    mCurCell->setTransform(QTransform().translate(32, 0).rotate(mDiff).translate(-32, 0), true);
+
+    mUndoStack.push(new SetCellRotation(mCurCell, mDiff));
 }
 
 void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
@@ -368,8 +367,7 @@ void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
     if(!c)
         return;
     
-    //mCurCell = c;
-    c->setStitch(mEditStitch);
+    mUndoStack.push(new SetCellStitch(c, mEditStitch));
 
 }
 

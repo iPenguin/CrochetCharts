@@ -13,7 +13,6 @@ set(crochet_qobject_headers
     crochetscene.h
     licensewizard.h
     licensevalidator.h
-    crochetchartcommands.h
     settingsui.h
     splashscreen.h
     licensehttp.h

@@ -9,6 +9,8 @@
 
 #include "crochetcell.h"
 
+#include <QUndoStack>
+
 class CrochetScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -48,6 +50,8 @@ public:
 
     void setEditFgColor(QColor color) { mEditFgColor = color; }
     void setEditBgColor(QColor color) { mEditBgColor = color; }
+
+    QUndoStack* undoStack() { return &mUndoStack; }
     
 signals:
     void rowChanged(int row);
@@ -107,6 +111,8 @@ private:
     QString mEditStitch;
     QColor mEditFgColor;
     QColor mEditBgColor;
+
+    QUndoStack mUndoStack;
     
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<Cell *> > mGrid;

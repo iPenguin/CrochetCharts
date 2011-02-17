@@ -126,6 +126,11 @@ void ChartTab::zoomOut()
     mView->zoomOut();
 }
 
+QUndoStack* ChartTab::undoStack()
+{
+    return mScene->undoStack();
+}
+
 void ChartTab::setEditBgColor(QColor color)
 {
     mScene->setEditBgColor(color);
