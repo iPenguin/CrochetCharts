@@ -265,6 +265,8 @@
     <addaction name="actionShowPatternStitches"/>
     <addaction name="actionShowPatternColors"/>
     <addaction name="separator"/>
+    <addaction name="actionShowUndoHistory"/>
+    <addaction name="separator"/>
     <addaction name="actionShowMainToolbar"/>
     <addaction name="actionShowEditModeToolbar"/>
     <addaction name="separator"/>
@@ -831,6 +833,14 @@
    </property>
    <property name="toolTip">
     <string>Select a color for the background</string>
+   </property>
+  </action>
+  <action name="actionShowUndoHistory">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Undo History</string>
    </property>
   </action>
  </widget>

@@ -41,6 +41,8 @@
 
 #include <QColorDialog>
 
+#include <QUndoView>
+
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow), mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
 {
@@ -58,8 +60,9 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     checkUpdates();
     
     setupStitchPalette();
-    readSettings();
 
+    setupUndoView();
+    
     mFile = new SaveFile(this);
     if(!fileName.isEmpty()) {
         mFile->fileName = fileName;
@@ -71,6 +74,7 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     setupNewTabDialog();
 
     setupMenus();
+    readSettings();
     QApplication::restoreOverrideCursor();
 }
 
@@ -133,6 +137,17 @@ void MainWindow::setupStitchPalette()
     connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
 }
 
+void MainWindow::setupUndoView()
+{
+    mUndoDock = new QDockWidget(this);
+    mUndoDock->setObjectName("undoHistory");
+    QUndoView *view = new QUndoView(&mUndoGroup, mUndoDock);
+    mUndoDock->setWidget(view);
+    mUndoDock->setWindowTitle(tr("Undo History"));
+    mUndoDock->setFloating(true);
+    mUndoDock->setVisible(false);
+}
+
 void MainWindow::setupMenus()
 {
     //File Menu
@@ -170,6 +185,10 @@ void MainWindow::setupMenus()
     ui->menuEdit->insertAction(ui->actionCopy, mActionUndo);
     ui->menuEdit->insertAction(ui->actionCopy, mActionRedo);
     ui->menuEdit->insertSeparator(ui->actionCopy);
+
+    ui->mainToolBar->insertAction(0, mActionUndo);
+    ui->mainToolBar->insertAction(0, mActionRedo);
+    ui->mainToolBar->insertSeparator(mActionUndo);
     
     mActionUndo->setIcon(QIcon::fromTheme("edit-undo"));
     mActionRedo->setIcon(QIcon::fromTheme("edit-redo"));
@@ -193,6 +212,8 @@ void MainWindow::setupMenus()
     connect(ui->actionShowPatternColors, SIGNAL(triggered()), this, SLOT(viewShowPatternColors()));
     connect(ui->actionShowPatternStitches, SIGNAL(triggered()), this, SLOT(viewShowPatternStitches()));
 
+    connect(ui->actionShowUndoHistory, SIGNAL(triggered()), this, SLOT(viewShowUndoHistory()));
+    
     connect(ui->actionShowMainToolbar, SIGNAL(triggered()), this, SLOT(viewShowMainToolbar()));
     connect(ui->actionShowEditModeToolbar, SIGNAL(triggered()), this, SLOT(viewShowEditModeToolbar()));
     
@@ -720,6 +741,7 @@ void MainWindow::fileSave()
         QApplication::restoreOverrideCursor();
     }
     
+    setWindowModified(false);
 }
 
 void MainWindow::fileSaveAs()
@@ -741,6 +763,7 @@ void MainWindow::fileSaveAs()
     mFile->save();
 
     setApplicationTitle();
+    setWindowModified(false);
     QApplication::restoreOverrideCursor();
 }
 
@@ -784,6 +807,8 @@ void MainWindow::menuViewAboutToShow()
     ui->actionShowPatternColors->setChecked(ui->patternColorsDock->isVisible());
     ui->actionShowPatternStitches->setChecked(ui->patternStitchesDock->isVisible());
 
+    ui->actionShowUndoHistory->setChecked(mUndoDock->isVisible());
+    
     ui->actionShowEditModeToolbar->setChecked(ui->editModeToolBar->isVisible());
     ui->actionShowMainToolbar->setChecked(ui->mainToolBar->isVisible());
     
@@ -893,6 +918,11 @@ void MainWindow::viewShowPatternStitches()
     ui->patternStitchesDock->setVisible(ui->actionShowPatternStitches->isChecked());
 }
 
+void MainWindow::viewShowUndoHistory()
+{
+    mUndoDock->setVisible(ui->actionShowUndoHistory->isChecked());
+}
+
 void MainWindow::viewShowEditModeToolbar()
 {
     ui->editModeToolBar->setVisible(ui->actionShowEditModeToolbar->isChecked());
@@ -936,7 +966,6 @@ void MainWindow::menuModesAboutToShow()
     }   
 }
 
-//TODO: on tab change update the tab's edit mode to the current edit mode?
 void MainWindow::changeTabMode(QAction* a)
 {
     int mode = -1;
@@ -950,9 +979,11 @@ void MainWindow::changeTabMode(QAction* a)
     else if(a == ui->actionPositionMode)
         mode = 13;
 
-    ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
-    if(tab && mode >= 0)
-        tab->setEditMode(mode);
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        if(tab)
+            tab->setEditMode(mode);
+    }
 }
 
 void MainWindow::menuDocumentAboutToShow()

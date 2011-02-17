@@ -68,6 +68,7 @@ private slots:
     void viewShowStitches();
     void viewShowPatternColors();
     void viewShowPatternStitches();
+    void viewShowUndoHistory();
     void viewShowMainToolbar();
     void viewShowEditModeToolbar();
     void viewFullScreen(bool state);
@@ -107,6 +108,7 @@ private:
     void updateMenuItems();
     
     void setupStitchPalette();
+    void setupUndoView();
     void readSettings();
 
     void checkUpdates();
@@ -150,6 +152,8 @@ private:
     
     QAction *mActionUndo,
             *mActionRedo;
+
+    QDockWidget *mUndoDock;
     UndoGroup mUndoGroup;
 
     QString mStitch;
