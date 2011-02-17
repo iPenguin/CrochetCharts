@@ -156,6 +156,7 @@ private:
     QDockWidget *mUndoDock;
     UndoGroup mUndoGroup;
 
+    int mEditMode;
     QString mStitch;
     QColor mFgColor;
     QColor mBgColor;

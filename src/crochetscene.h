@@ -17,10 +17,11 @@ class CrochetScene : public QGraphicsScene
     friend class SaveFile;
 public:
 
-    enum EditMode { StitchMode = 10, //place stitches on the chart.
+    enum EditMode {
+                StitchMode = 10, //place stitches on the chart.
                 ColorMode,       //place colors behind stitches.
                 GridMode,        //draw lines on the grid.
-                PositionMode,    //move the stitches around on the chart.
+                PositionMode     //move the stitches around on the chart.
     };
     
     CrochetScene(QObject *parent = 0);

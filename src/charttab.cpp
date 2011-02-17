@@ -18,9 +18,9 @@
 #include "settings.h"
 #include <QDate>
 
-ChartTab::ChartTab(QWidget *parent) :
+ChartTab::ChartTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent) :
         QWidget(parent)
-{
+{    
     QVBoxLayout *l = new QVBoxLayout(this);
     QSplitter *splitter = new QSplitter(Qt::Vertical, this);
     splitter->setObjectName("chartSplitter");
@@ -33,6 +33,11 @@ ChartTab::ChartTab(QWidget *parent) :
     mView->setScene(mScene);
     mTextView = new CrochetTextView(this, mScene);
 
+    mScene->setEditMode((CrochetScene::EditMode)defEditMode);
+    mScene->setEditStitch(defStitch);
+    mScene->setEditFgColor(defFgColor);
+    mScene->setEditBgColor(defBgColor);
+    
     splitter->addWidget(mView);
     splitter->addWidget(mTextView);
     l->setMargin(0);
@@ -129,6 +134,11 @@ void ChartTab::zoomOut()
 QUndoStack* ChartTab::undoStack()
 {
     return mScene->undoStack();
+}
+
+void ChartTab::createChart(int rows, int cols, QString defStitch)
+{
+    mScene->createChart(rows, cols, defStitch);
 }
 
 void ChartTab::setEditBgColor(QColor color)

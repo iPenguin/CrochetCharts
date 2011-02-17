@@ -27,7 +27,6 @@
 #include "stitchset.h"
 
 #include <QDebug>
-#include "crochetscene.h"
 #include <QInputDialog>
 
 #include <QPrinter>
@@ -41,10 +40,11 @@
 
 #include <QColorDialog>
 
+#include <QUndoStack>
 #include <QUndoView>
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
-    : QMainWindow(parent), ui(new Ui::MainWindow), mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
+    : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     ui->setupUi(this);
@@ -854,7 +854,7 @@ void MainWindow::newChart()
     ui->tabWidget->setCurrentWidget(tab);
 
     //FIXME: this breaks the ability to create a plugin interface for the tabs
-    tab->scene()->createChart(rows, cols, defStitch);
+    tab->createChart(rows, cols, defStitch);
 
     updateMenuItems();
     documentIsModified(true);
@@ -865,7 +865,7 @@ ChartTab* MainWindow::createTab()
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     
-    ChartTab* tab = new ChartTab(ui->tabWidget);
+    ChartTab* tab = new ChartTab(mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
     tab->setPatternColors(&mPatternColors);
     connect(tab, SIGNAL(chartStitchChanged()), this, SLOT(updatePatternStitches()));
@@ -968,21 +968,21 @@ void MainWindow::menuModesAboutToShow()
 
 void MainWindow::changeTabMode(QAction* a)
 {
-    int mode = -1;
+    mEditMode = -1;
     
     if(a == ui->actionStitchMode)
-        mode = 10;
+        mEditMode = 10;
     else if(a == ui->actionColorMode)
-        mode = 11;
+        mEditMode = 11;
     else if(a == ui->actionGridMode)
-        mode = 12;
+        mEditMode = 12;
     else if(a == ui->actionPositionMode)
-        mode = 13;
+        mEditMode = 13;
 
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
         ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
         if(tab)
-            tab->setEditMode(mode);
+            tab->setEditMode(mEditMode);
     }
 }
 

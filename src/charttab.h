@@ -21,7 +21,7 @@ class ChartTab : public QWidget
     Q_OBJECT
     friend class SaveFile;
 public:
-    explicit ChartTab(QWidget *parent = 0);
+    explicit ChartTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent = 0);
     ~ChartTab();
 
     void renderChart(QPainter *painter, QRectF rect = QRectF());
@@ -51,10 +51,13 @@ public slots:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
 
-    CrochetScene* scene() { return mScene; }
-
     QUndoStack* undoStack();
 
+    void createChart(int rows, int cols, QString defStitch);
+    
+private slots:
+    CrochetScene* scene() { return mScene; }
+    
 private:   
     QPointer<ChartView> mView;
     CrochetScene *mScene;
