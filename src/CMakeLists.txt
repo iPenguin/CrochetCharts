@@ -1,6 +1,8 @@
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
+
 file(GLOB crochet_srcs "*.cpp")
+file(GLOB crochet_uis "*.ui")
 
 set(crochet_qobject_headers
     settings.h
@@ -27,23 +29,6 @@ set(crochet_qobject_headers
     updater.h
     stitchiconui.h
     undogroup.h
-    )
-
-set(crochet_headers
-    version.h
-    appinfo.h
-    license.h
-    stitch.h
-    savefile.h
-    )
-
-set(crochet_uis
-    export.ui
-    mainwindow.ui
-    stitcheditor.ui
-    stitchlibrary.ui
-    settings.ui
-    stitchicon.ui
     )
 
 set(crochet_resources
