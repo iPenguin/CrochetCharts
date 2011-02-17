@@ -320,7 +320,7 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
         n = n.nextSibling();
     }
     
-    tab->scene()->appendCell(row, c);
+    tab->scene()->appendCell(row, c, true);
     c->setColor(QColor(color));
     c->setPos(x, y);
     c->setTransform(transform);

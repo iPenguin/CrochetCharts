@@ -33,7 +33,7 @@ public:
 */
     void createRow(int row, int columns, QString stitch);
 
-    void appendCell(int row, Cell *c);
+    void appendCell(int row, Cell *c, bool fromSave = false);
     void insertCell(int row, int colBefore, Cell *c);
 
     int rowCount();

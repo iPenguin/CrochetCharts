@@ -38,13 +38,21 @@ CrochetTextView::~CrochetTextView()
 void CrochetTextView::updateRow(int row)
 {
     QString rowText;
-    QTextCursor curs = cursorAtBlockStart(row);
+    QTextCursor curs = cursorAtRowStart(row);
     
     int cols = mScene->columnCount(row);
-    
+
+    bool firstPass = true;
     for(int c = 0; c < cols; ++c) {
-        rowText += mScene->cell(row, c)->name() + ", ";
+        if(!firstPass)
+            rowText += ", ";
+        rowText += mScene->cell(row, c)->name();
+        firstPass = false;
     }
+
+    curs.movePosition(QTextCursor::StartOfBlock);
+    curs.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+    curs.insertText(rowText);
 
 }
 
@@ -193,6 +201,21 @@ QTextCursor CrochetTextView::cursorAtBlockStart(int pos)
     QTextCursor curs = QTextCursor(textCursor());
     curs.setPosition(pos);
     curs.movePosition(QTextCursor::StartOfBlock);
+    
+    return curs;
+}
+
+QTextCursor CrochetTextView::cursorAtRowStart(int row)
+{
+    QTextCursor curs = QTextCursor(textCursor());
+    curs.movePosition(QTextCursor::Start);
+
+    for(int i = 0; i < row; ++i) {
+        curs.movePosition(QTextCursor::EndOfBlock);
+        if(curs.atEnd())
+            curs.insertText("\n");
+        curs.movePosition(QTextCursor::NextBlock);
+    }
     
     return curs;
 }

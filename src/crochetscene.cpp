@@ -104,7 +104,7 @@ int CrochetScene::columnCount(int row)
     return mGrid[row].count();
 }
 
-void CrochetScene::appendCell(int row, Cell *c)
+void CrochetScene::appendCell(int row, Cell *c, bool fromSave)
 {
     if(mGrid.count() <= row) {
         for(int i = mGrid.count(); i < row + 1; ++i) {
@@ -121,10 +121,11 @@ void CrochetScene::appendCell(int row, Cell *c)
     int i = mGrid[row].count() -1;
     c->setPos(i*64, row*64);
     c->setToolTip(QString::number(i+1));
-    //c->rotate(90);
     c->setColor(QColor(Qt::white));
     c->setObjectName("Cell Object: " + QString::number(i + 1));
-    //emit rowChanged(row);
+
+    if(fromSave)
+        emit rowChanged(row);
 }
 
 void CrochetScene::insertCell(int row, int colBefore, Cell *c)

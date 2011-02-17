@@ -24,7 +24,9 @@ public:
 
     void setCompleter(QCompleter *c);
 
+    //return a cursor for the start of the block containing pos.
     QTextCursor cursorAtBlockStart(int pos);
+    QTextCursor cursorAtRowStart(int row);
     
 protected:
     void keyPressEvent(QKeyEvent *e);
