@@ -42,6 +42,9 @@ private slots:
     
 private:
     QString textUnderCursor() const;
+
+    QString generateTextRow(int row);
+    QStringList parseTextRow(QString text);
     
 private:
     CrochetHighlighter *mHighlighter;

@@ -40,15 +40,7 @@ void CrochetTextView::updateRow(int row)
     QString rowText;
     QTextCursor curs = cursorAtRowStart(row);
     
-    int cols = mScene->columnCount(row);
-
-    bool firstPass = true;
-    for(int c = 0; c < cols; ++c) {
-        if(!firstPass)
-            rowText += ", ";
-        rowText += mScene->cell(row, c)->name();
-        firstPass = false;
-    }
+    rowText = generateTextRow(row);
 
     curs.movePosition(QTextCursor::StartOfBlock);
     curs.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
@@ -64,12 +56,55 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
     QTextCursor curs = cursorAtBlockStart(pos);
 
     int row = curs.blockNumber();
+    QString rowText = curs.block().text();
+    
+    QStringList stitches = parseTextRow(rowText);
+
+    int cols = mScene->columnCount(row);
+
+    int stitchCount = stitches.count();
+
+    if(stitchCount < cols) {
+        for(int i = stitchCount; i < cols; ++i)
+            mScene->removeCell(row, i);
+    }
+
+    for(int c = 0; c < stitchCount; ++c) {
+        QString s = stitches.at(c);
+        s = s.simplified().toLower();
+        Cell* cell = mScene->cell(row, c);
+        if(!cell) {
+            cell = new CrochetCell();
+            mScene->appendCell(row, cell);
+        }
+        mScene->cell(row, c)->setStitch(s);
+    }
+}
+
+QString CrochetTextView::generateTextRow(int row)
+{
+    QString text;
+    int cols = mScene->columnCount(row);
+    
+    bool firstPass = true;
+    for(int c = 0; c < cols; ++c) {
+        if(!firstPass)
+            text += ", ";
+        text += mScene->cell(row, c)->name();
+        firstPass = false;
+    }
+    
+    return text;
+}
+
+QStringList CrochetTextView::parseTextRow(QString text)
+{
     //TODO: add repeat parsing (ie "\[.*\] 3 times" and "\*.*; repeat from \*" )
     //TODO: add color parsing (ie ch3 in C1) save for version 1.x...
     QStringList stitches, tokens, stitchList;
     stitchList = StitchCollection::inst()->stitchList();
-    tokens = curs.block().text().split(",");
-
+    tokens = text.split(",");
+    
     //TODO: break out the parser into a seperate function.
     foreach(QString token, tokens) {
         token = token.simplified().toLower();
@@ -91,26 +126,7 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
             stitches.append(st);
         }
     }
-
-    int cols = mScene->columnCount(row);
-
-    int stitchCount = stitches.count();
-
-    if(stitchCount < cols) {
-        for(int i = stitchCount; i < cols; ++i)
-            mScene->removeCell(row, i);
-    }
-
-    for(int c = 0; c < stitchCount; ++c) {
-        QString s = stitches.at(c);
-        s = s.simplified().toLower();
-        Cell* cell = mScene->cell(row, c);
-        if(!cell) {
-            cell = new CrochetCell();
-            mScene->appendCell(row, cell);
-        }
-        mScene->cell(row, c)->setStitch(s);
-    }
+    return stitches;
 }
 
 void CrochetTextView::createChart(int rows, int cols)
