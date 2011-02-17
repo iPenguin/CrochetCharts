@@ -118,6 +118,7 @@ private:
 
     void updateFgColor();
     void updateBgColor();
+    void setEditMode(int mode);
 
     void setApplicationTitle();
     

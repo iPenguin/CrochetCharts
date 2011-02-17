@@ -555,6 +555,7 @@ void MainWindow::updateBgColor()
         if(tab)
             tab->setEditBgColor(mBgColor);
     }
+    setEditMode(11);
 }
 
 void MainWindow::updateFgColor()
@@ -564,6 +565,7 @@ void MainWindow::updateFgColor()
         if(tab)
             tab->setEditFgColor(mFgColor);
     }
+    setEditMode(11);
 }
 
 void MainWindow::selectStitch(QModelIndex index)
@@ -577,7 +579,8 @@ void MainWindow::selectStitch(QModelIndex index)
         ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditStitch(stitch);
-    }    
+    }
+    setEditMode(10);
 }
 
 void MainWindow::documentNewChart()
@@ -968,17 +971,33 @@ void MainWindow::menuModesAboutToShow()
 
 void MainWindow::changeTabMode(QAction* a)
 {
-    mEditMode = -1;
+    int mode = -1;
     
     if(a == ui->actionStitchMode)
-        mEditMode = 10;
+        mode = 10;
     else if(a == ui->actionColorMode)
-        mEditMode = 11;
+        mode = 11;
     else if(a == ui->actionGridMode)
-        mEditMode = 12;
+        mode = 12;
     else if(a == ui->actionPositionMode)
-        mEditMode = 13;
+        mode = 13;
 
+    setEditMode(mode);
+}
+
+void MainWindow::setEditMode(int mode)
+{
+    mEditMode = mode;
+    
+    if(mode == 10)
+        ui->actionStitchMode->setChecked(true);
+    else if(mode == 11)
+        ui->actionColorMode->setChecked(true);
+    else if(mode == 12)
+        ui->actionGridMode->setChecked(true);
+    else if(mode ==13)
+        ui->actionPositionMode->setChecked(true);
+    
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
         ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
         if(tab)
