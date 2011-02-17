@@ -11,6 +11,7 @@
 #include <QPainter>
 
 #include "stitchcollection.h"
+#include "settings.h"
 
 CrochetTextView::CrochetTextView(QWidget *parent, CrochetScene* scene)
     : QPlainTextEdit(parent), mScene(scene), mCompleter(0)
@@ -41,7 +42,6 @@ void CrochetTextView::updateRow(int row)
     QTextCursor curs = cursorAtRowStart(row);
     
     rowText = generateTextRow(row);
-
     curs.movePosition(QTextCursor::StartOfBlock);
     curs.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
     curs.insertText(rowText);
@@ -81,22 +81,33 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
     }
 }
 
-QString CrochetTextView::generateTextRow(int row)
+QString CrochetTextView::generateTextRow(int row, bool cleanOutput)
 {
+    QString placeholder = Settings::inst()->value("placeholder").toString();
     QString rowText;
     QString curStitch, previousStitch, nextStitch;
     int count = 1;
     bool firstPass = true;
 
+    QStringList rowList;
+
     int cols = mScene->columnCount(row);
+
+    //remove the placeholders before parsing.
     for(int c = 0; c < cols; ++c) {
         curStitch = mScene->cell(row, c)->name();
-        Cell *nextCell = mScene->cell(row, c+1);
-        if(nextCell)
-            nextStitch = nextCell->name();
-        else
-            nextStitch = "";
-        
+        if(cleanOutput) {
+            if(curStitch == placeholder)
+                continue;
+        }
+        rowList.append(curStitch);
+    }
+
+    previousStitch = "";
+    for(int i = 0; i < rowList.count(); ++i) {
+        curStitch = rowList.value(i);
+        nextStitch = rowList.value(i + 1);
+
         if(curStitch != previousStitch) {
             if(!firstPass) rowText += ", ";
             rowText += curStitch;
@@ -107,7 +118,7 @@ QString CrochetTextView::generateTextRow(int row)
             rowText += QString::number(count);
             count = 1;
         }
-        
+
         previousStitch = curStitch;
         firstPass = false;
     }
@@ -171,34 +182,7 @@ void CrochetTextView::addRow(int newRow)
     }
 
     QString rowText;
-    
-    int cols = mScene->columnCount(newRow);
-
-    QString curStitch, previousStitch, nextStitch;
-    int count = 1;
-    bool firstPass = true;
-    
-    for(int c = 0; c < cols; ++c) {
-        curStitch = mScene->cell(newRow, c)->name();
-        Cell *nextCell = mScene->cell(newRow, c+1);
-        if(nextCell)
-            nextStitch = nextCell->name();
-        else
-            nextStitch = "";
-
-        if(!firstPass) rowText += ", ";
-        
-        if(curStitch != previousStitch)
-            rowText += curStitch;
-        if(curStitch == previousStitch)
-            count++;
-        if(curStitch != nextStitch) {
-            rowText += QString::number(count);
-            count = 1;
-        }
-
-        previousStitch = curStitch;
-    }
+    rowText = generateTextRow(newRow);
 
     rowText.append('\n');
     curs.insertText(rowText);
@@ -226,6 +210,18 @@ QTextCursor CrochetTextView::cursorAtRowStart(int row)
     }
     
     return curs;
+}
+
+
+QString CrochetTextView::copyInstructions()
+{
+    QString text;
+    
+    int rows = mScene->rowCount();
+    for(int r = 0; r < rows; ++r)
+        text += tr("Row %1: ").arg(r+1) + generateTextRow(r, true) + "\n";
+    
+    return text;
 }
 
 /************************************************************************

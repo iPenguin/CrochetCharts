@@ -58,8 +58,10 @@ public slots:
     QUndoStack* undoStack();
 
     void createChart(int rows, int cols, QString defStitch);
+
+    void copyInstructions();
     
-private slots:
+private:
     CrochetScene* scene() { return mScene; }
     
 private:   

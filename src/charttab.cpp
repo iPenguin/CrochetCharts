@@ -19,6 +19,7 @@
 #include "settings.h"
 #include <QDate>
 #include <QLayout>
+#include <QClipboard>
 
 ChartTab::ChartTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent) :
         QWidget(parent), ui(new Ui::OptionsBar)
@@ -59,6 +60,8 @@ ChartTab::ChartTab(int defEditMode, QString defStitch, QColor defFgColor, QColor
 
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
+    connect(ui->copyInstructions, SIGNAL(clicked()), this, SLOT(copyInstructions()));
+    
     //click and drag mode.
     //mView->setDragMode(QGraphicsView::ScrollHandDrag);
 }
@@ -166,4 +169,13 @@ void ChartTab::setEditFgColor(QColor color)
 void ChartTab::setEditStitch(QString stitch)
 {
     mScene->setEditStitch(stitch);
+}
+
+void ChartTab::copyInstructions()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+
+    QString instructions = mTextView->copyInstructions();
+    clipboard->setText(instructions);
+    
 }

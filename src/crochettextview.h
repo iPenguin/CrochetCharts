@@ -27,6 +27,8 @@ public:
     //return a cursor for the start of the block containing pos.
     QTextCursor cursorAtBlockStart(int pos);
     QTextCursor cursorAtRowStart(int row);
+
+    QString copyInstructions();
     
 protected:
     void keyPressEvent(QKeyEvent *e);
@@ -43,8 +45,11 @@ private slots:
 private:
     QString textUnderCursor() const;
 
-    //Generates the text for a given row of the chart without trailing \n.
-    QString generateTextRow(int row);
+    /**
+     * Generates the text for a given row of the chart without trailing \n.
+     * If cleanOutput = true remove the placeholder stitches 'x' by default.
+     **/
+    QString generateTextRow(int row, bool cleanOutput = false);
     //returns an ordered list of the stitches found in the text.
     QStringList parseTextRow(QString text);
     
