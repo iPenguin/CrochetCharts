@@ -268,11 +268,6 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
      }
 */
 
-void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    
-}
-
 void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
 {
 
@@ -288,12 +283,12 @@ void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
     
 }
 
-void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     
 }
 
-void CrochetScene::gridModeMouseMove(QGraphicsSceneMouseEvent* e)
+void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     
 }
@@ -303,9 +298,28 @@ void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
     
 }
 
+void CrochetScene::gridModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    
+}
+
 void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     
+}
+
+void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
+{
+    if(e->buttons() != Qt::LeftButton)
+        return;
+    
+    QGraphicsItem *gi = itemAt(e->scenePos());
+    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+    if(!c)
+        return;
+    
+    mCurCell = c;
+    mDiff = 0;
 }
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -332,30 +346,11 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
     mUndoStack.push(new SetCellRotation(mCurCell, mDiff));
 }
 
-void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    if(e->buttons() != Qt::LeftButton)
-        return;
-    
-    QGraphicsItem *gi = itemAt(e->scenePos());
-    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(!c)
-        return;
-    
-    mCurCell = c;
-    mDiff = 0;
-}
-
 void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     if(mCurCell)
         mCurCell = 0;
     mDiff = 0;
-}
-
-void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    
 }
 
 void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
@@ -367,12 +362,28 @@ void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
     CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
     if(!c)
         return;
-    
-    mUndoStack.push(new SetCellStitch(c, mEditStitch));
 
+    mUndoStack.push(new SetCellStitch(c, mEditStitch));
+    emit rowChanged(findGridPosition(c).y());
+}
+
+void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    
 }
 
 void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     
+}
+
+QPoint CrochetScene::findGridPosition(CrochetCell* c)
+{
+    for(int y = 0; y < mGrid.count(); ++y) {
+        if(mGrid[y].contains(c)) {
+            return QPoint(mGrid[y].indexOf(c), y);
+        }
+    }
+
+    return QPoint();
 }

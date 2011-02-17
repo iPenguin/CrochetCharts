@@ -80,6 +80,9 @@ protected:
     void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
     void dropEvent(QGraphicsSceneDragDropEvent *event);
 */
+    //find the x,y positions on the grid for a given cell;
+    QPoint findGridPosition(CrochetCell *c);
+    
 private:
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
