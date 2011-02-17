@@ -11,6 +11,8 @@
 #include "updater.h"
 #include "undogroup.h"
 
+#include <QModelIndex>
+
 class ChartTab;
 class QPrinter;
 class QPainter;
@@ -96,6 +98,9 @@ private slots:
     void changeTabMode(QAction *a);
 
     void documentIsModified(bool isModified);
+
+    void selectColor();
+    void selectStitch(QModelIndex index);
     
 private:
     void setupMenus();
@@ -108,6 +113,9 @@ private:
 
     bool safeToClose();
     bool promptToSave();
+
+    void updateFgColor();
+    void updateBgColor();
 
     void setApplicationTitle();
     
@@ -144,6 +152,9 @@ private:
             *mActionRedo;
     UndoGroup mUndoGroup;
 
+    QString mStitch;
+    QColor mFgColor;
+    QColor mBgColor;
 };
 
 #endif // MAINWINDOW_H

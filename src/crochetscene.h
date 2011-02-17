@@ -43,6 +43,11 @@ public:
 
     void setEditMode(EditMode mode) { mMode = mode; }
     EditMode editMode() { return mMode; }
+
+    void setEditStitch(QString stitch) { mEditStitch = stitch; }
+
+    void setEditFgColor(QColor color) { mEditFgColor = color; }
+    void setEditBgColor(QColor color) { mEditBgColor = color; }
     
 signals:
     void rowChanged(int row);
@@ -98,6 +103,10 @@ private:
     qreal mDiff;
 
     EditMode mMode;
+
+    QString mEditStitch;
+    QColor mEditFgColor;
+    QColor mEditBgColor;
     
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<Cell *> > mGrid;

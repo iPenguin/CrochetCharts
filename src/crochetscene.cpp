@@ -20,7 +20,8 @@
 #include "appinfo.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent), mCurCell(0), mDiff(0.0), mMode(CrochetScene::StitchMode)
+    : QGraphicsScene(parent), mCurCell(0), mDiff(0.0), mMode(CrochetScene::StitchMode),
+    mEditStitch("ch"), mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
 {
     mStitchWidth = 64;
 
@@ -283,7 +284,7 @@ void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
     
     //mCurCell = c;
 
-    c->setColor(Qt::green);
+    c->setColor(mEditBgColor);
     
 }
 
@@ -368,7 +369,7 @@ void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
         return;
     
     //mCurCell = c;
-    c->setStitch("cb");
+    c->setStitch(mEditStitch);
 
 }
 

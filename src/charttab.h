@@ -34,6 +34,11 @@ public:
 
     void setEditMode(int mode);
     int editMode() const;
+
+    void setEditFgColor(QColor color);
+    void setEditBgColor(QColor color);
+
+    void setEditStitch(QString stitch);
     
 signals:
     void chartStitchChanged();

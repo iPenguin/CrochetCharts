@@ -374,6 +374,9 @@
          <height>32</height>
         </size>
        </property>
+       <property name="resizeMode">
+        <enum>QListView::Adjust</enum>
+       </property>
        <property name="gridSize">
         <size>
          <width>56</width>
@@ -428,6 +431,9 @@
          <width>32</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="resizeMode">
+        <enum>QListView::Adjust</enum>
        </property>
        <property name="gridSize">
         <size>
@@ -515,6 +521,9 @@
    <addaction name="actionColorMode"/>
    <addaction name="actionGridMode"/>
    <addaction name="actionPositionMode"/>
+   <addaction name="separator"/>
+   <addaction name="actionColorSelectorFg"/>
+   <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -806,6 +815,22 @@
    </property>
    <property name="text">
     <string>Show Edit Mode Toolbar</string>
+   </property>
+  </action>
+  <action name="actionColorSelectorFg">
+   <property name="text">
+    <string>Foreground Color</string>
+   </property>
+   <property name="toolTip">
+    <string>Select a color for text and line elements</string>
+   </property>
+  </action>
+  <action name="actionColorSelectorBg">
+   <property name="text">
+    <string>Background Color</string>
+   </property>
+   <property name="toolTip">
+    <string>Select a color for the background</string>
    </property>
   </action>
  </widget>

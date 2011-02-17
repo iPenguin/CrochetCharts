@@ -37,10 +37,12 @@
 #include <QSvgRenderer>
 
 #include <QActionGroup>
-#include <qevent.h>
+#include <QCloseEvent>
+
+#include <QColorDialog>
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow), mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     ui->setupUi(this);
@@ -126,6 +128,9 @@ void MainWindow::setupStitchPalette()
     //TODO: setup a proxywidget that can hold header sections?
     //StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->allStitches);
     //ui->allStitches->setItemDelegate(delegate);
+
+    connect(ui->allStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
+    connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
 }
 
 void MainWindow::setupMenus()
@@ -175,6 +180,13 @@ void MainWindow::setupMenus()
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut" /*, QIcon(":/edit-cut.png")*/));
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste" /*, QIcon(":/edit-paste.png")*/));
 
+
+    connect(ui->actionColorSelectorBg, SIGNAL(triggered()), this, SLOT(selectColor()));
+    connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
+    
+    ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
+    ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(mBgColor, QSize(32, 32))));
+    
     //View Menu
     connect(ui->menuView, SIGNAL(aboutToShow()), this, SLOT(menuViewAboutToShow()));
     connect(ui->actionShowStitches, SIGNAL(triggered()), this, SLOT(viewShowStitches()));
@@ -186,8 +198,8 @@ void MainWindow::setupMenus()
     
     connect(ui->actionViewFullScreen, SIGNAL(triggered(bool)), this, SLOT(viewFullScreen(bool)));
 
-    connect(ui->actionZoomIn, SIGNAL(triggered(bool)), this, SLOT(viewZoomIn()));
-    connect(ui->actionZoomOut, SIGNAL(triggered(bool)), this, SLOT(viewZoomOut()));
+    connect(ui->actionZoomIn, SIGNAL(triggered()), this, SLOT(viewZoomIn()));
+    connect(ui->actionZoomOut, SIGNAL(triggered()), this, SLOT(viewZoomOut()));
     
     ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in"));
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out"));
@@ -494,6 +506,58 @@ QPixmap MainWindow::drawColorBox(QColor color, QSize size)
     return pix;
 }
 
+void MainWindow::selectColor()
+{
+    if(sender() == ui->actionColorSelectorBg) {
+        QColor color = QColorDialog::getColor(mBgColor, this, tr("Background Color"));
+        
+        if (color.isValid()) {
+            ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            mBgColor = color;
+            updateBgColor();
+        }
+    } else {
+        QColor color = QColorDialog::getColor(mFgColor, this, tr("Foreground Color"));
+        
+        if (color.isValid()) {
+            ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            mFgColor = color;
+            updateFgColor();
+        }
+    }
+}
+
+void MainWindow::updateBgColor()
+{
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        if(tab)
+            tab->setEditBgColor(mBgColor);
+    }
+}
+
+void MainWindow::updateFgColor()
+{
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        if(tab)
+            tab->setEditFgColor(mFgColor);
+    }
+}
+
+void MainWindow::selectStitch(QModelIndex index)
+{
+    QString stitch = index.data(Qt::DisplayRole).toString();
+
+    if(stitch.isEmpty())
+        return;
+    
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        if(tab)
+            tab->setEditStitch(stitch);
+    }    
+}
 
 void MainWindow::documentNewChart()
 {
@@ -699,7 +763,9 @@ void MainWindow::menuFileAboutToShow()
     ui->actionPrintPreview->setEnabled(state);
     
     ui->actionExport->setEnabled(state);
-    
+
+    ui->actionColorSelectorFg->setEnabled(state);
+    ui->actionColorSelectorBg->setEnabled(state);
 }
 
 void MainWindow::menuEditAboutToShow()

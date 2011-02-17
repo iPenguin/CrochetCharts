@@ -125,3 +125,18 @@ void ChartTab::zoomOut()
 {
     mView->zoomOut();
 }
+
+void ChartTab::setEditBgColor(QColor color)
+{
+    mScene->setEditBgColor(color);
+}
+
+void ChartTab::setEditFgColor(QColor color)
+{
+    mScene->setEditFgColor(color);
+}
+
+void ChartTab::setEditStitch(QString stitch)
+{
+    mScene->setEditStitch(stitch);
+}
