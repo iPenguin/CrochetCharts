@@ -83,18 +83,36 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
 
 QString CrochetTextView::generateTextRow(int row)
 {
-    QString text;
-    int cols = mScene->columnCount(row);
-    
+    QString rowText;
+    QString curStitch, previousStitch, nextStitch;
+    int count = 1;
     bool firstPass = true;
+
+    int cols = mScene->columnCount(row);
     for(int c = 0; c < cols; ++c) {
-        if(!firstPass)
-            text += ", ";
-        text += mScene->cell(row, c)->name();
+        curStitch = mScene->cell(row, c)->name();
+        Cell *nextCell = mScene->cell(row, c+1);
+        if(nextCell)
+            nextStitch = nextCell->name();
+        else
+            nextStitch = "";
+        
+        if(curStitch != previousStitch) {
+            if(!firstPass) rowText += ", ";
+            rowText += curStitch;
+        }
+        if(curStitch == previousStitch)
+            count++;
+        if(curStitch != nextStitch) {
+            rowText += QString::number(count);
+            count = 1;
+        }
+        
+        previousStitch = curStitch;
         firstPass = false;
     }
     
-    return text;
+    return rowText;
 }
 
 QStringList CrochetTextView::parseTextRow(QString text)
@@ -131,39 +149,13 @@ QStringList CrochetTextView::parseTextRow(QString text)
 
 void CrochetTextView::createChart(int rows, int cols)
 {
+    Q_UNUSED(cols);
     QTextCursor curs = QTextCursor(textCursor());
     curs.movePosition(QTextCursor::Start);
     for(int i = 0; i < rows; ++i) {
         curs.movePosition(QTextCursor::NextBlock);
-   
-        QString rowText;
 
-        QString curStitch, previousStitch, nextStitch;
-        int count = 1;
-        bool firstPass = true;
-
-        for(int c = 0; c < cols; ++c) {
-            curStitch = mScene->cell(i, c)->name();
-            Cell *nextCell = mScene->cell(i, c+1);
-            if(nextCell)
-                nextStitch = nextCell->name();
-            else
-                nextStitch = "";
-
-            if(!firstPass) rowText += ", ";
-
-            if(curStitch != previousStitch)
-                rowText += curStitch;
-            if(curStitch == previousStitch)
-                count++;
-            if(curStitch != nextStitch) {
-                rowText += QString::number(count);
-                count = 1;
-            }
-
-            previousStitch = curStitch;
-        }
-
+        QString rowText = generateTextRow(i);
         if(i < rows -1)
             rowText.append('\n');
         curs.insertText(rowText);

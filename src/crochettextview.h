@@ -43,7 +43,9 @@ private slots:
 private:
     QString textUnderCursor() const;
 
+    //Generates the text for a given row of the chart without trailing \n.
     QString generateTextRow(int row);
+    //returns an ordered list of the stitches found in the text.
     QStringList parseTextRow(QString text);
     
 private:
