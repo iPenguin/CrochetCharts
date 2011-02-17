@@ -16,6 +16,10 @@ class CrochetScene;
 class CrochetTextView;
 class QUndoStack;
 
+namespace Ui {
+    class OptionsBar;
+}
+
 class ChartTab : public QWidget
 {
     Q_OBJECT
@@ -67,6 +71,8 @@ private:
     QMap<QString, QMap<QString, qint64> > *mPatternColors;
     
     QString mName;
+
+    Ui::OptionsBar *ui;
 };
 
 #endif // CHARTTAB_H

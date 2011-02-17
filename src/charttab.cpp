@@ -3,6 +3,7 @@
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "charttab.h"
+#include "ui_optionsbar.h"
 
 #include <QVBoxLayout>
 #include <QSplitter>
@@ -17,16 +18,22 @@
 #include "crochettextview.h"
 #include "settings.h"
 #include <QDate>
+#include <QLayout>
 
 ChartTab::ChartTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent) :
-        QWidget(parent)
+        QWidget(parent), ui(new Ui::OptionsBar)
 {    
     QVBoxLayout *l = new QVBoxLayout(this);
     QSplitter *splitter = new QSplitter(Qt::Vertical, this);
     splitter->setObjectName("chartSplitter");
     l->addWidget(splitter);
 
-    mView = new ChartView(this);
+    QWidget *top = new QWidget(this);
+    QVBoxLayout *tl = new QVBoxLayout(top);
+    top->setLayout(tl);
+    top->layout()->setMargin(0);
+    
+    mView = new ChartView(top);
     mScene = new CrochetScene(this);
     connect(mScene, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchChanged(QString,QString)));
     connect(mScene, SIGNAL(colorChanged(QString,QString)), this, SLOT(colorChanged(QString,QString)));
@@ -37,8 +44,13 @@ ChartTab::ChartTab(int defEditMode, QString defStitch, QColor defFgColor, QColor
     mScene->setEditStitch(defStitch);
     mScene->setEditFgColor(defFgColor);
     mScene->setEditBgColor(defBgColor);
-    
-    splitter->addWidget(mView);
+
+    QWidget *w = new QWidget(top);
+    ui->setupUi(w);
+    tl->addWidget(mView);
+    tl->addWidget(w);
+
+    splitter->addWidget(top);
     splitter->addWidget(mTextView);
     l->setMargin(0);
 
