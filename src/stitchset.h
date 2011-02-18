@@ -55,7 +55,11 @@ public:
     bool hasStitch(QString name);
     void addStitch(Stitch *s);
     void createStitch(QString name);
-    
+
+    /**
+     * removes the stitch from the set.
+     * NOTE: this function doesn't delete the stitch.
+     */
     void removeStitch(QString name);
     
     int stitchCount() const;

@@ -30,7 +30,10 @@ StitchSet::StitchSet(QObject *parent, bool isMasterSet, bool isBuiltIn)
 
 StitchSet::~StitchSet()
 {
-//TODO: delete stitches?
+    foreach(Stitch *s, mStitches) {
+        mStitches.removeOne(s);
+        delete s;
+    }   
 }
 
 QString StitchSet::stitchSetFolder()
@@ -497,10 +500,7 @@ int StitchSet::rowCount(const QModelIndex &parent) const
 int StitchSet::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    if(isMasterSet)
-        return 5;
-    else
-        return 6;
+    return 6;
 }
 
 void StitchSet::clearStitches()
