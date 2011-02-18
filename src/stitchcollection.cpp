@@ -316,7 +316,7 @@ StitchSet* StitchCollection::addStitchSet(QString fileName)
     test = findStitchSet(set->name());
     if(test) {
         QMessageBox msgbox;
-        msgbox.setText(tr("A Set with this name already exists in your collection."));
+        msgbox.setText(tr("A Set with this name already exists in your stitch library."));
         msgbox.setInformativeText(tr("What would you like to do with this set?"));
         msgbox.setIcon(QMessageBox::Question);
         QPushButton *overwrite = msgbox.addButton(tr("Overwrite the existing set"), QMessageBox::AcceptRole);

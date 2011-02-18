@@ -58,6 +58,7 @@ public:
 
     //creates a new set to the collection, and returns a pointer to it.
     StitchSet* createStitchSet(QString setName);
+    //Remove and delete setName.
     void removeSet(QString setName);
 
     //add a stitch set from a file, and return a pointer to it.

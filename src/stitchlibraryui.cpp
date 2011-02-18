@@ -23,6 +23,7 @@
 
 //TODO: add a hash based on the sn to the stitch set to grant write access to a stitch set.
 //TODO: add a checkbox in the 'add stitch' header that allows to select all stitches.
+//TODO: make the msgboxes reusbale functions.
 
 StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     : QDialog(parent), ui(new Ui::StitchLibraryDialog)
@@ -119,7 +120,6 @@ void StitchLibraryUi::setButtonStates(StitchSet *set)
     ui->moreBttn->setEnabled(state);
     ui->propertiesBox->setEnabled(state);
     ui->addSelected->setEnabled(state);
-
 }
 
 void StitchLibraryUi::resetLibrary()
@@ -171,6 +171,15 @@ void StitchLibraryUi::removeStitch()
     for(int i = 0; i < set->stitchCount(); ++i) {
         bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
         if(selected) {
+            if(set->stitchCount() == 1) {
+                QMessageBox msgbox(this);
+                msgbox.setText(tr("A set must have at least one stitch."));
+                msgbox.setInformativeText(tr("If you wish to remove this stich you may remove the set."));
+                msgbox.setIcon(QMessageBox::Information);
+                msgbox.setStandardButtons(QMessageBox::Ok);
+                msgbox.exec();
+                return;
+            }
             QString st = set->data(set->index(i, 0), Qt::EditRole).toString();
             Stitch *s = set->findStitch(st);
 
@@ -288,6 +297,33 @@ void StitchLibraryUi::createSet()
     QString text = QInputDialog::getText(this, tr("New Stitch Set"), tr("Stitch set name:"),
                                          QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty()) {
+
+        StitchSet *found = StitchCollection::inst()->findStitchSet(text);
+        if(found) {
+            QMessageBox msgbox;
+            msgbox.setText(tr("A Set with this name already exists in your stitch library."));
+            msgbox.setInformativeText(tr("What would you like to do with this set?"));
+            msgbox.setIcon(QMessageBox::Question);
+            QPushButton *overwrite = msgbox.addButton(tr("Overwrite the existing set"), QMessageBox::AcceptRole);
+            QPushButton *rename = msgbox.addButton(tr("Rename the new stitch set"), QMessageBox::ApplyRole);
+            QPushButton *cancel = msgbox.addButton(tr("Cancel adding the new set"), QMessageBox::RejectRole);
+
+             msgbox.exec();
+             if(msgbox.clickedButton() == overwrite) {
+                StitchCollection::inst()->removeSet(found->name());
+                found = 0;
+             } else if(msgbox.clickedButton() == rename) {
+                 
+                 //TODO: allow the user to 'cancel out' of this loop.
+                 while(!ok || text.isEmpty() || text == found->name() ){
+                     text = QInputDialog::getText(0, tr("New Set Name"), tr("Stitch set name:"),
+                     QLineEdit::Normal, text, &ok);
+                 }
+             } else if (msgbox.clickedButton() == cancel) {
+                 return;
+            }
+        }
+        
         StitchSet *set = StitchCollection::inst()->createStitchSet(text);
         //WIN32: crashes if there isn't at least one stitch in the set when you add the model to the view.
         set->createStitch("");
