@@ -44,18 +44,12 @@ public:
 
     void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     
-//public slots:
-signals:
-    void addStitchToMasterSet(int row);
-    void stitchNameChanged(QString oldName, QString newName);
-
 protected:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
     
 private:
     void loadIcons(QComboBox *cb) const;
     
-    QSignalMapper *mSignalMapper;
 };
 
 #endif //STITCHLIBRARYDELEGATE_H

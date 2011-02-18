@@ -43,8 +43,6 @@ static QRect CheckBoxRect(const QStyleOptionViewItem &itemStyleOptions) {
 StitchLibraryDelegate::StitchLibraryDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
 {
-    mSignalMapper = new QSignalMapper(this);   
-    connect(mSignalMapper, SIGNAL(mapped(int)), this, SIGNAL(addStitchToMasterSet(int)));
 }
 
 void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -201,13 +199,6 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
         case 5: {
             QCheckBox *cb = new QCheckBox(parent);
             return cb;
-            /*
-            QPushButton *pb = new QPushButton(parent);
-            pb->setText(tr("Add Stitch"));
-            mSignalMapper->setMapping(pb, index.row());
-            connect(pb, SIGNAL(clicked(bool)), mSignalMapper, SLOT(map()));
-            return pb;
-            */
         }
         default:
             return new QWidget(parent);
