@@ -170,7 +170,7 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
     switch(index.column()) {
         case Stitch::Name:{
             QLineEdit *editor = new QLineEdit(parent);
-            QRegExpValidator *validator = new QRegExpValidator(QRegExp("[a-zA-Z][a-zA-Z0-9]+"), editor);
+            QRegExpValidator *validator = new QRegExpValidator(QRegExp("[a-zA-Z][a-zA-Z0-9]{,}"), editor);
             editor->setValidator(validator);
             return editor;
         }
