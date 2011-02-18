@@ -23,7 +23,7 @@ public:
 
 private slots:
     void changeStitchSet(QString setName);
-    void addStitchToMasterSet(int row);
+
     void addStitch();
     void removeStitch();
     void addSelected();

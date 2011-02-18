@@ -22,7 +22,6 @@
 #include <QFileDialog>
 
 //TODO: add a hash based on the sn to the stitch set to grant write access to a stitch set.
-//TODO: convert the pushbutton to checkbox for add stitch and add a button at the bottom.
 //TODO: add a checkbox in the 'add stitch' header that allows to select all stitches.
 
 StitchLibraryUi::StitchLibraryUi(QWidget* parent)
@@ -62,7 +61,6 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     
     setupPropertiesBox();
     
-    connect(delegate, SIGNAL(addStitchToMasterSet(int)), this, SLOT(addStitchToMasterSet(int)));
     connect(ui->stitchSource, SIGNAL(currentIndexChanged(QString)),
                 this, SLOT(changeStitchSet(QString)));
 
@@ -118,34 +116,10 @@ void StitchLibraryUi::setButtonStates(StitchSet *set)
     
     ui->removeSet->setEnabled(state);
     ui->addStitch->setEnabled(state);
-    ui->removeStitch->setEnabled(state);
     ui->moreBttn->setEnabled(state);
     ui->propertiesBox->setEnabled(state);
     ui->addSelected->setEnabled(state);
-}
 
-void StitchLibraryUi::addStitchToMasterSet(int row)
-{
-    StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
-    Stitch *s = static_cast<Stitch*>(set->index(row, 0).internalPointer());
-
-    StitchSet *master = StitchCollection::inst()->masterStitchSet();
-    
-    if(master->hasStitch(s->name()) && s != master->findStitch(s->name())) {
-        QMessageBox msgbox;
-        msgbox.setText(tr("A stitch with this name already exists in your set."));
-        msgbox.setInformativeText(tr("Would you like to replace it with this one?"));
-        msgbox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-        //TODO: clean up dialog box.
-        if(msgbox.exec() != QMessageBox::Yes)
-            return;
-    }
-
-    StitchCollection::inst()->addStitchToMasterSet(set, s);
-
-    //TODO: make some other indication that the stitch has 'transfered' as switching 
-    //between active sets is annoying and burdensome.
-    ui->stitchSource->setCurrentIndex(ui->stitchSource->findText(master->name()));
 }
 
 void StitchLibraryUi::resetLibrary()
@@ -192,15 +166,34 @@ void StitchLibraryUi::addStitch()
 
 void StitchLibraryUi::removeStitch()
 {
-    //FIXME: check if the stitch is in the master set, if so remove it or we'll crash!
-    //TODO: warn that we'll also be removing this stitch from the master set.
     StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
 
     for(int i = 0; i < set->stitchCount(); ++i) {
         bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
         if(selected) {
-            qDebug() << set->data(set->index(i, 0), Qt::EditRole).toString();
-            set->removeStitch(set->data(set->index(i, 0), Qt::EditRole).toString());
+            QString st = set->data(set->index(i, 0), Qt::EditRole).toString();
+            Stitch *s = set->findStitch(st);
+
+            if(!set->isMasterSet && StitchCollection::inst()->masterHasStitch(s)) {
+                QMessageBox msgbox(this);
+                msgbox.setText(tr("This stitch is linked to the master set. "
+                                "If you remove this stitch it will be removed from the master list too."));
+                msgbox.setInformativeText(tr("Are you sure you want to remove the stitch?"));
+                msgbox.setIcon(QMessageBox::Question);
+                QPushButton *confirm = msgbox.addButton(tr("Remove stitch from both lists"), QMessageBox::AcceptRole);
+                /*QPushButton *cancel =*/ msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
+
+                msgbox.exec();
+
+                if(msgbox.clickedButton() != confirm)
+                    continue;
+            }
+            
+            StitchCollection::inst()->removeStitchFormMasterSet(s);
+            if(!set->isMasterSet) {
+                set->removeStitch(st);
+                delete s;
+            }
         }
     }
 }
@@ -213,6 +206,20 @@ void StitchLibraryUi::addSelected()
         if(selected) {
             Stitch *s = 0;
             s = static_cast<Stitch*>(set->index(i, 0).internalPointer());
+            StitchSet *master = StitchCollection::inst()->masterStitchSet();
+            
+            if(master->hasStitch(s->name()) && s != master->findStitch(s->name())) {
+                QMessageBox msgbox;
+                msgbox.setText(tr("A stitch with this name already exists in the master set."));
+                msgbox.setInformativeText(tr("Would you like to replace it with this one?"));
+                msgbox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+                //TODO: clean up dialog box.
+                //TODO: add if(cancel) return;
+                if(msgbox.exec() != QMessageBox::Yes)
+                    continue;
+                
+            }
+            
             if(s)
                 StitchCollection::inst()->addStitchToMasterSet(set, s);
             else

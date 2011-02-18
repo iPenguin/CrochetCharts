@@ -37,15 +37,26 @@ StitchCollection::StitchCollection()
 
 StitchCollection::~StitchCollection()
 {
+    qDebug() << "~StitchCollection";
     saveMasterList();
-    //mMasterSet->saveXmlFile();
-    //FIXME: only save the files if they've changed
+
     foreach(StitchSet *set, mStitchSets) {
+        mStitchSets.removeOne(set);
         if(!set->isTemporary)
             set->saveXmlFile();
         delete set;
     }
-    mStitchSets.clear();
+}
+
+void StitchCollection::saveAllSets()
+{
+    saveMasterList();
+    
+    foreach(StitchSet *set, mStitchSets) {
+        if(!set->isTemporary) {
+            set->saveXmlFile();
+        }
+    }
 }
 
 void StitchCollection::loadStitchSets()
@@ -141,6 +152,22 @@ void StitchCollection::addStitchToMasterSet(StitchSet *set, Stitch *s)
     }
     mMasterSet->addStitch(s);
     mStitchList[s->name()] = set->name();
+}
+
+void StitchCollection::removeStitchFormMasterSet(Stitch* s)
+{
+    if(!masterHasStitch(s))
+        return;
+
+    //Don't delete the stitch as this is the master set
+    //and it's only a link to the real stitch.
+    mStitchList.remove(s->name());
+    mMasterSet->removeStitch(s->name());
+}
+
+bool StitchCollection::masterHasStitch(Stitch* s)
+{
+    return mMasterSet->stitches().contains(s);
 }
 
 Stitch* StitchCollection::findStitch(QString name)
@@ -257,7 +284,12 @@ void StitchCollection::removeSet(QString setName)
    StitchSet *set = findStitchSet(setName);
    mStitchSets.removeOne(set);
 
-   //TODO: delete all files and folders
+   QDir setsDir(Settings::inst()->userSettingsFolder() + "sets/");
+   setsDir.rmdir(set->stitchSetFolder());
+   setsDir.remove(set->stitchSetFileName);
+
+   delete set;
+   set = 0;
 }
 
 //FIXME: return a value that can be checked and move the gui dialogs into the libraryui.

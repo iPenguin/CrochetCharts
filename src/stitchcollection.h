@@ -15,7 +15,7 @@ class Stitch;
 class QComboBox;
 
 /**
- * The StitchCollection is a set of StitchSet*s
+ * The StitchCollection is a set of StitchSets
  *
  * The Collection keeps track of all sets. Specifically the Collection
  * keeps track of the builtIn Set, and the masterSet. And knows about
@@ -24,6 +24,8 @@ class QComboBox;
  *
  * The StitchCollection acts as the point of reference for StitchSet
  * based operations such as findStitch();
+ *
+ * The master stitchSet is a link list to the stitches in their sets.
  */
 class StitchCollection : public QObject
 {
@@ -44,12 +46,11 @@ public:
     //create links to the stitches being used from each set/overlay
     void populateMasterSet();
 
+    Stitch* findStitch(QString name);
+    StitchSet* findStitchSet(QString setName);
+
     //fill in a dropdown list for selecting a stitch set.
     QStringList stitchSetList();
-
-    Stitch* findStitch(QString name);
-    
-    StitchSet* findStitchSet(QString setName);
     //list all categories in all sets
     QStringList categoryList() const;
     //list all stitches in the master set by default, optionally show all stitches in all sets.
@@ -62,9 +63,19 @@ public:
     //add a stitch set from a file, and return a pointer to it.
     StitchSet* addStitchSet(QString fileName);
 
+    bool masterHasStitch(Stitch *s);
+    
     void addStitchToMasterSet(StitchSet *set, Stitch *s);
+    /**
+     * This function removes a stitch from the master set.
+     * It can be called on stitches that aren't in the master set
+     * as it checks them before it removes them.
+     */
+    void removeStitchFormMasterSet(Stitch *s);
 
     void resetMasterStitchSet();
+
+    void saveAllSets();
 
 private slots:
     void changeStitchName(QString setName, QString oldName, QString newName);
