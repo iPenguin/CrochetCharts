@@ -7,7 +7,6 @@
 
 #include <QString>
 #include <QList>
-#include <QPointer>
 
 class QSvgRenderer;
 class QPixmap;
@@ -50,8 +49,8 @@ private:
     QString mWrongSide;
 
     QPixmap *mPixmap;
-    QPointer<QSvgRenderer> mSvgRenderer;
-    QPointer<QSvgRenderer> mSvgRendererAlt;
+    QSvgRenderer *mSvgRenderer;
+    QSvgRenderer *mSvgRendererAlt;
 };
 
 #endif //STITCH_H

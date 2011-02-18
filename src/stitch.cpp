@@ -24,6 +24,8 @@ Stitch::~Stitch()
 {
     delete mSvgRenderer;
     mSvgRenderer = 0;
+    delete mSvgRendererAlt;
+    mSvgRenderer = 0;
     delete mPixmap;
     mPixmap = 0;
 }
