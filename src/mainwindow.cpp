@@ -82,7 +82,6 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete StitchCollection::inst();
 }
 
 void MainWindow::checkUpdates()
@@ -1060,12 +1059,14 @@ void MainWindow::toolsStitchLibrary()
         d = 0;
         return;
     }
-
-    qWarning() << "Make this dialog do something.";
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    
+    StitchCollection::inst()->saveAllSets();
 
     delete d;
     d = 0;
-
+    
+    QApplication::restoreOverrideCursor();
 }
 
 void MainWindow::viewZoomIn()
