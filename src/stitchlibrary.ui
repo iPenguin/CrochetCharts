@@ -189,7 +189,7 @@
      <item>
       <widget class="QPushButton" name="createSet">
        <property name="text">
-        <string>&amp;Create Set</string>
+        <string>&amp;Add Set</string>
        </property>
       </widget>
      </item>
@@ -219,7 +219,7 @@
      <item>
       <widget class="QPushButton" name="addStitch">
        <property name="text">
-        <string>Create Stitch</string>
+        <string>Add Stitch</string>
        </property>
       </widget>
      </item>
@@ -233,7 +233,7 @@
      <item>
       <widget class="QPushButton" name="addSelected">
        <property name="text">
-        <string>Add Selected</string>
+        <string>Add Selected To Master</string>
        </property>
       </widget>
      </item>
