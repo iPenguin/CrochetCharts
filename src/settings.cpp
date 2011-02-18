@@ -29,6 +29,7 @@ Settings* Settings::inst()
 
 Settings::Settings()
 {
+    setupValueList();
     initDemoVersion();
 }
 
@@ -74,71 +75,54 @@ QVariant Settings::value(const QString &key) const
 
 QVariant Settings::defaultValue ( const QString& key ) const
 {
+    QVariant value = mValueList.value(key);
+    if(!value.isValid())
+        qWarning() << "There is no default value for the option:" << key;
+    return value;
+}
+
+void Settings::setupValueList() {
+
     //look up values for setting server/webpage for license and update testing.
-    if(key == "licensePage") 
-        return QVariant(AppInfo::liveLicensePage);
-    else if(key == "updatePage")
-        return QVariant(AppInfo::liveUpdatePage);
-
+    mValueList["licensePage"] = QVariant(AppInfo::liveLicensePage);
+    mValueList["updatePage"] = QVariant(AppInfo::liveUpdatePage);
+    
     //license information
-    else if(key == "firstName")
-        return QVariant("");
-    else if(key == "lastName")
-        return QVariant("");
-    else if(key == "email")
-        return QVariant("");
-    else if(key == "serialNumber")
-        return QVariant("");
-    else if(key == "license")
-        return QVariant("");
+    mValueList["firstName"] = QVariant("");
+    mValueList["lastName"] = QVariant("");
+    mValueList["email"] = QVariant("");
+    mValueList["serialNumber"] = QVariant("");
+    mValueList["license"] = QVariant("");
 
+    QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
+    
     //general application options
-    else if(key == "checkForUpdates")
-        return QVariant(true);
-    else if(key == "fileLocation") {
-        QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
-        return QVariant(userDocs);
-    }
-    else if (key == "geometry")
-        return QVariant();
-    else if (key == "windowState")
-        return QVariant();
+    mValueList["checkForUpdates"] = QVariant(true);
+    mValueList["fileLocation"] = QVariant(userDocs);
+
+    mValueList["geometry"] = QVariant("");
+    mValueList["windowState"] = QVariant("");
 
     //round charts options
-    else if(key == "defaultStitch")
-        return QVariant("ch");
-    else if(key == "defaultRows")
-        return QVariant(15);
-    else if(key == "defaultStitches")
-        return QVariant(15);
-    else if(key == "alternateRowColors")
-        return QVariant(true);
-    else if(key == "stitchPrimaryColor")
-        return QVariant("#000000");
-    else if(key == "stitchAlternateColor")
-        return QVariant("#D4E6FC");
-        
+    mValueList["defaultStitch"] = QVariant("ch");
+    mValueList["defaultPlaceholder"] = QVariant("x");
+    mValueList["defaultRows"] = QVariant(15);
+    mValueList["defaultStitches"] = QVariant(15);
     
+    mValueList["alternateRowColors"] = QVariant(true);
+    mValueList["stitchPrimaryColor"] = QVariant("#000000");
+    mValueList["stitchAlternateColor"] = QVariant("#D4E6FC");
+        
     //stitch legend options
-    else if(key == "stitchColumnCount")
-        return QVariant(2);
-    else if(key == "showStitchDescription")
-        return QVariant(true);
-    else if(key == "showWrongSideDescription")
-        return QVariant(false);
+    mValueList["stitchColumnCount"] = QVariant(2);
+    mValueList["showStitchDescription"] = QVariant(true);
+    mValueList["showWrongSideDescription"] = QVariant(false);
 
     //color legend options
-    else if(key == "colorPrefix")
-        return QVariant("C");
-    else if(key == "colorColumnCount")
-        return QVariant(2);
-    else if(key == "showHexValues")
-        return QVariant(false);
-    
-    else {
-        qWarning() << "Unknown setting requested: " << key;
-        return QVariant();
-    }
+    mValueList["colorPrefix"] = QVariant("C");
+    mValueList["colorColumnCount"] = QVariant(2);
+    mValueList["showHexValues"] = QVariant(false);
+
 }
 
 QString Settings::userSettingsFolder()

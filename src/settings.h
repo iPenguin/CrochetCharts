@@ -24,19 +24,23 @@ public:
     
     //The folder where the user's settings are stored. W/trailing slash.
     QString userSettingsFolder();
-    
-private:
-    void initDemoVersion();
-    static Settings *mInstance;
 
     //return the default value of a given key.
     QVariant defaultValue ( const QString& key ) const;
     
+private:
+    void initDemoVersion();
+    static Settings *mInstance;
+    
     Settings();
 
+    void setupValueList();
+    
     QSettings mSettings;
 
     bool mIsDemoVersion;
+
+    QMap<QString, QVariant> mValueList;
 };
 
 #endif //SETTINGS_H

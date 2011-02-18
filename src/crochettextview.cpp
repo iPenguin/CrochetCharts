@@ -83,7 +83,7 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
 
 QString CrochetTextView::generateTextRow(int row, bool cleanOutput)
 {
-    QString placeholder = Settings::inst()->value("placeholder").toString();
+    QString placeholder = Settings::inst()->value("defaultPlaceholder").toString();
     QString rowText;
     QString curStitch, previousStitch, nextStitch;
     int count = 1;

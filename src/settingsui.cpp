@@ -5,12 +5,14 @@
 #include "settingsui.h"
 #include "ui_settings.h"
 
+#include <QDebug>
 #include <QFileDialog>
 
 #include "settings.h"
 #include <QPainter>
 #include <QColorDialog>
 #include "stitchcollection.h"
+
 
 SettingsUi::SettingsUi(QWidget *parent)
     : QDialog(parent), ui(new Ui::SettingsDialog)
@@ -28,6 +30,8 @@ SettingsUi::SettingsUi(QWidget *parent)
 
     connect(ui->primaryColorBttn, SIGNAL(clicked()), this, SLOT(updatePrimaryColor()));
     connect(ui->alternateColorBttn, SIGNAL(clicked()), this, SLOT(updateAlternateColor()));
+
+    connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(buttonClicked(QAbstractButton*)));
     
     loadApplicationSettings();
     loadRoundChartSettings();
@@ -42,12 +46,21 @@ SettingsUi::~SettingsUi()
     ui = 0;
 }
 
+void SettingsUi::buttonClicked(QAbstractButton* button)
+{
+    if(ui->buttonBox->buttonRole(button) ==  QDialogButtonBox::ResetRole) {
+        resetApplicationSettings();
+        resetRoundChartSettings();
+        resetInstructionSettings();
+        resetLegendSettings();
+    }
+        
+}
+
 int SettingsUi::exec()
 {
-    
     int retValue = QDialog::exec();
     
-    //TODO: save values to disk based on retValue;
     if(retValue != QDialog::Accepted)
         return retValue;
     
@@ -59,41 +72,103 @@ int SettingsUi::exec()
     return retValue;
 }
 
+void SettingsUi::load(QWidget* w)
+{
+    QVariant value = Settings::inst()->value(w->objectName());
+    
+    if(w->inherits("QLineEdit")) {
+        qobject_cast<QLineEdit*>(w)->setText(value.toString());
+    } else if (w->inherits("QCheckBox")) {
+        qobject_cast<QCheckBox*>(w)->setChecked(value.toBool());
+    } else if (w->inherits("QSpinBox")) {
+        qobject_cast<QSpinBox*>(w)->setValue(value.toInt());
+    } else if (w->inherits("QComboBox")) {
+        QComboBox *cb = qobject_cast<QComboBox*>(w);
+        int index = cb->findText(value.toString());
+        cb->setCurrentIndex(index);
+    } else {
+        qWarning() << "Trying to load unknown settings type";
+    }
+        
+}
 
+void SettingsUi::loadDefualt(QWidget* w)
+{
+    QVariant value = Settings::inst()->defaultValue(w->objectName());
+    
+    if(w->inherits("QLineEdit")) {
+        qobject_cast<QLineEdit*>(w)->setText(value.toString());
+    } else if (w->inherits("QCheckBox")) {
+        qobject_cast<QCheckBox*>(w)->setChecked(value.toBool());
+    } else if (w->inherits("QSpinBox")) {
+        qobject_cast<QSpinBox*>(w)->setValue(value.toInt());
+    } else if (w->inherits("QComboBox")) {
+        QComboBox *cb = qobject_cast<QComboBox*>(w);
+        int index = cb->findText(value.toString());
+        cb->setCurrentIndex(index);
+    } else {
+        qWarning() << "Trying to load unknown settings type";
+    }
+}
+
+void SettingsUi::save(QWidget* w)
+{
+    QVariant value;
+    if(w->inherits("QLineEdit")) {
+        value = QVariant(qobject_cast<QLineEdit*>(w)->text());
+    } else if (w->inherits("QCheckBox")) {
+        value = QVariant(qobject_cast<QCheckBox*>(w)->isChecked());
+    } else if (w->inherits("QSpinBox")) {
+        value = QVariant(qobject_cast<QSpinBox*>(w)->value());
+    } else if (w->inherits("QComboBox")) {
+        value = QVariant(qobject_cast<QComboBox*>(w)->currentText());
+    } else {
+        qWarning() << "Trying to save unknown settings type";
+    }
+    
+    if(value.isValid())
+        Settings::inst()->setValue(w->objectName(), value);
+}
 
 void SettingsUi::loadApplicationSettings()
 {
     //TODO: use auto completer to help fill in the default file location field.
-    
-    ui->defaultFileLocation->setText(
-        Settings::inst()->value("fileLocation").toString());
-    
-    ui->checkForUpdates->setChecked(
-        Settings::inst()->value("checkForUpdates").toBool());
+
+    ui->defaultFileLocation->setObjectName("fileLocation");
+    ui->checkForUpdates->setObjectName("checkForUpdates");
+
+    load(ui->defaultFileLocation);
+    load(ui->checkForUpdates);
 }
 
 void SettingsUi::saveApplicationSettings()
 {
-    Settings::inst()->setValue("fileLocation", QVariant(ui->defaultFileLocation->text()));
-    Settings::inst()->setValue("checkForUpdates", QVariant(ui->checkForUpdates->isChecked()));
-    
+    save(ui->defaultFileLocation);
+    save(ui->checkForUpdates);    
 }
 
+void SettingsUi::resetApplicationSettings()
+{
+    loadDefualt(ui->defaultFileLocation);
+    loadDefualt(ui->checkForUpdates);
+}
 
 
 void SettingsUi::loadRoundChartSettings()
 {
 
-    ui->defaultRows->setValue(
-        Settings::inst()->value("defaultRows").toInt());
-    ui->defaultStitches->setValue(
-        Settings::inst()->value("defaultStitches").toInt());
+    ui->defaultRows->setObjectName("defaultRows");
+    ui->defaultStitches->setObjectName("defaultStitches");
+
+    load(ui->defaultRows);
+    load(ui->defaultStitches);
 
     ui->defaultStitch->addItems(StitchCollection::inst()->stitchList());
-    int index = ui->defaultStitch->findText(Settings::inst()->value("defaultStitch").toString());
-    ui->defaultStitch->setCurrentIndex(index);
+    ui->defaultStitch->setObjectName("defaultStitch");
+    load(ui->defaultStitch);
 
-    ui->alternateRowColors->setChecked(Settings::inst()->value("alternateRowColors").toBool());
+    ui->alternateRowColors->setObjectName("alternateRowColors");
+    load(ui->alternateRowColors);
     
     QString priColor = Settings::inst()->value("stitchPrimaryColor").toString();
     QString altColor = Settings::inst()->value("stitchAlternateColor").toString();
@@ -103,21 +178,46 @@ void SettingsUi::loadRoundChartSettings()
 
     mPrimaryColor = priColor;
     mAlternateColor = altColor;
+
+    ui->defaultPlaceholder->addItems(StitchCollection::inst()->stitchList());
+    ui->defaultPlaceholder->setObjectName("defaultPlaceholder");
+    load(ui->defaultPlaceholder);
     
 }
 
 void SettingsUi::saveRoundChartSettings()
 {
-    Settings::inst()->setValue("defaultRows", QVariant(ui->defaultRows->value()));
-    Settings::inst()->setValue("defaultStitches", QVariant(ui->defaultStitches->value()));
-    Settings::inst()->setValue("defaultStitch", QVariant(ui->defaultStitch->currentText()));
+    save(ui->defaultRows);
+    save(ui->defaultStitches);
+    save(ui->defaultStitch);
+    save(ui->defaultPlaceholder);
 
-    Settings::inst()->setValue("alternateRowColors", QVariant(ui->alternateRowColors->isChecked()));
+    save(ui->alternateRowColors);
+    
     Settings::inst()->setValue("stitchPrimaryColor", QVariant(mPrimaryColor.name()));
     Settings::inst()->setValue("stitchAlternateColor", QVariant(mAlternateColor.name()));
     
 }
 
+void SettingsUi::resetRoundChartSettings()
+{
+
+    loadDefualt(ui->defaultRows);
+    loadDefualt(ui->defaultStitches);
+    loadDefualt(ui->defaultStitch);
+    loadDefualt(ui->defaultPlaceholder);
+    loadDefualt(ui->alternateRowColors);
+
+    QString priColor = Settings::inst()->defaultValue("stitchPrimaryColor").toString();
+    QString altColor = Settings::inst()->defaultValue("stitchAlternateColor").toString();
+    
+    ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(priColor), QSize(32, 32))));
+    ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(altColor), QSize(32, 32))));
+    
+    mPrimaryColor = priColor;
+    mAlternateColor = altColor;
+    
+}
 
 
 void SettingsUi::loadInstructionSettings()
@@ -130,30 +230,53 @@ void SettingsUi::saveInstructionSettings()
     
 }
 
+void SettingsUi::resetInstructionSettings()
+{
+
+}
 
 
 void SettingsUi::loadLegendSettings()
 {
-    ui->stitchColumnCount->setValue(Settings::inst()->value("stitchColumnCount").toInt());
-    ui->showStitchDescription->setChecked(Settings::inst()->value("showStitchDescription").toBool());
-    ui->showWrongSideDescription->setChecked(Settings::inst()->value("showWrongSideDescription").toBool());
+    ui->stitchColumnCount->setObjectName("stitchColumnCount");
+    ui->showStitchDescription->setObjectName("showStitchDescription");
+    ui->showWrongSideDescription->setObjectName("showWrongSideDescription");
     
-    ui->colorPrefix->setText(Settings::inst()->value("colorPrefix").toString());
-    ui->colorColumnCount->setValue(Settings::inst()->value("colorColumnCount").toInt());
-    ui->showHexValues->setChecked(Settings::inst()->value("showHexValues").toBool());
+    load(ui->stitchColumnCount);
+    load(ui->showStitchDescription);
+    load(ui->showWrongSideDescription);
+    
+    ui->colorPrefix->setObjectName("colorPrefix");
+    ui->colorColumnCount->setObjectName("colorColumnCount");
+    ui->showHexValues->setObjectName("showHexValues");
+
+    load(ui->colorPrefix);
+    load(ui->colorColumnCount);
+    load(ui->showHexValues);
+    
 }
 
 void SettingsUi::saveLegendSettings()
 {
-    Settings::inst()->setValue("stitchColumnCount", QVariant(ui->stitchColumnCount->value()));
-    Settings::inst()->setValue("showStitchDescription", QVariant(ui->showStitchDescription->isChecked()));
-    Settings::inst()->setValue("showWrongSideDescription", QVariant(ui->showWrongSideDescription->isChecked()));
-    
-    Settings::inst()->setValue("colorPrefix", QVariant(ui->colorPrefix->text()));
-    Settings::inst()->setValue("colorColumnCount", QVariant(ui->colorColumnCount->value()));
-    Settings::inst()->setValue("showHexValues", QVariant(ui->showHexValues->isChecked()));
+
+    save(ui->stitchColumnCount);
+    save(ui->showStitchDescription);
+    save(ui->showWrongSideDescription);
+    save(ui->colorPrefix);
+    save(ui->colorColumnCount);
+    save(ui->showHexValues);
+
 }
 
+void SettingsUi::resetLegendSettings()
+{
+    loadDefualt(ui->stitchColumnCount);
+    loadDefualt(ui->showStitchDescription);
+    loadDefualt(ui->showWrongSideDescription);
+    loadDefualt(ui->colorPrefix);
+    loadDefualt(ui->colorColumnCount);
+    loadDefualt(ui->showHexValues);
+}
 
 
 void SettingsUi::selectFolder()

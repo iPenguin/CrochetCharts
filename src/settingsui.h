@@ -7,6 +7,7 @@
 
 #include <QDialog>
 
+class QAbstractButton;
 class QPixmap;
 
 namespace Ui {
@@ -27,7 +28,8 @@ public slots:
 private slots:
     void updatePrimaryColor();
     void updateAlternateColor();
-    
+
+    void buttonClicked(QAbstractButton *button);
 private:
 
     //TODO: Using the same code in MainWindow
@@ -42,6 +44,15 @@ private:
     void saveRoundChartSettings();
     void saveInstructionSettings();
     void saveLegendSettings();
+
+    void resetApplicationSettings();
+    void resetRoundChartSettings();
+    void resetInstructionSettings();
+    void resetLegendSettings();
+
+    void load(QWidget *w);
+    void loadDefualt(QWidget *w);
+    void save(QWidget *w);
     
     Ui::SettingsDialog *ui;
 
