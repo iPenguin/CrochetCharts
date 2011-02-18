@@ -187,6 +187,36 @@
       <number>0</number>
      </property>
      <item>
+      <widget class="QPushButton" name="createSet">
+       <property name="text">
+        <string>&amp;Create Set</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="removeSet">
+       <property name="text">
+        <string>Remove Set</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
       <widget class="QPushButton" name="addStitch">
        <property name="text">
         <string>Create Stitch</string>
@@ -196,7 +226,7 @@
      <item>
       <widget class="QPushButton" name="removeStitch">
        <property name="text">
-        <string>Delete Stitch</string>
+        <string>Remove Stitch</string>
        </property>
       </widget>
      </item>
@@ -232,36 +262,6 @@
      </item>
      <item>
       <spacer name="verticalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Maximum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="createSet">
-       <property name="text">
-        <string>&amp;Create Set</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="removeSet">
-       <property name="text">
-        <string>Delete Set</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer_3">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
@@ -355,7 +355,24 @@
  </widget>
  <tabstops>
   <tabstop>stitchSource</tabstop>
+  <tabstop>moreBttn</tabstop>
   <tabstop>listView</tabstop>
+  <tabstop>setName</tabstop>
+  <tabstop>author</tabstop>
+  <tabstop>email</tabstop>
+  <tabstop>org</tabstop>
+  <tabstop>url</tabstop>
+  <tabstop>createSet</tabstop>
+  <tabstop>removeSet</tabstop>
+  <tabstop>addStitch</tabstop>
+  <tabstop>removeStitch</tabstop>
+  <tabstop>addSelected</tabstop>
+  <tabstop>icons</tabstop>
+  <tabstop>importSet</tabstop>
+  <tabstop>exportSet</tabstop>
+  <tabstop>printSet</tabstop>
+  <tabstop>resetLibrary</tabstop>
+  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -366,8 +383,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>542</x>
-     <y>58</y>
+     <x>743</x>
+     <y>610</y>
     </hint>
     <hint type="destinationlabel">
      <x>489</x>
@@ -382,8 +399,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>542</x>
-     <y>58</y>
+     <x>743</x>
+     <y>610</y>
     </hint>
     <hint type="destinationlabel">
      <x>487</x>
