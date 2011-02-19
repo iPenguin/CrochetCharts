@@ -82,6 +82,9 @@ public:
     //reset the model in all views.
     void refreshSet() { reset(); }
     void clearSelection() { mSelected.clear(); }
+
+    //clear the stitches and load them from the orig file.
+    void reset();
     
 signals:
     void stitchNameChanged(QString setName, QString oldName, QString newName);

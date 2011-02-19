@@ -126,7 +126,6 @@ void StitchSet::loadIcons(QDataStream *in)
     *in >> icons;
         
     foreach(QString key, icons.keys()) {
-        qDebug() << "out file " << stitchSetFolder() + key;
         QFile f(stitchSetFolder() + key);
         f.open(QIODevice::WriteOnly);
         f.write(icons[key]);
@@ -215,6 +214,11 @@ void StitchSet::saveXmlFile(QString fileName)
     }
     
     file.write(data->toLatin1());
+    file.close();
+
+    if(!QFileInfo(fileName + ".orig").exists()) {
+        QFile::copy(fileName, fileName + ".orig");
+    }
     
     delete data;
     data = 0;
@@ -505,5 +509,19 @@ int StitchSet::columnCount(const QModelIndex &parent) const
 
 void StitchSet::clearStitches()
 {
+
+    //TODO: should this delete the stitches too?
     mStitches.clear();
+}
+
+void StitchSet::reset()
+{
+    if(!isMasterSet) {
+        QFile::remove(stitchSetFileName);
+        QFile::copy(stitchSetFileName + ".orig", stitchSetFileName);
+
+        clearStitches();
+    
+        loadXmlFile(stitchSetFileName);
+    }
 }
