@@ -147,19 +147,23 @@ QStringList CrochetTextView::parseTextRow(QString text)
         i++;
     }
 
-    //move this to the token leve where I can use .* to figure out partial match...
-    if(text.contains("["))
-        text.replace("[", "");
-    if(text.contains(QRegExp("\\] [0-9]{1,}")))
-        text.replace(QRegExp("\\] [0-9]{1,}"), "");
-    if(text.contains("]"))
-        text.replace("]", "");
+    rx = QRegExp("\\*(.*); repeat from \\*");
+    i = 0; pos = 0;
+    while ((pos = rx.indexIn(text, pos)) != -1) {
+        QMap<QString, QString> repeat;
+        repeat.insert(rx.cap(1), "2");
+        QString key = prefix + QString::number(i);
+        repeats.insert(key, repeat);
+        text.replace(pos, rx.matchedLength(), key);
+        pos += key.length();
+        i++;
+    }  
     
     stitchList = StitchCollection::inst()->stitchList();
     tokens = text.split(",");
     
     foreach(QString token, tokens) {
-        token = token.simplified().toLower();
+        token = cleanToken(token);
         if(token.startsWith(prefix)) {
             QMap<QString, QString> repeat = repeats.value(token);
             foreach(QString key, repeat.keys()) {
@@ -187,6 +191,23 @@ QStringList CrochetTextView::parseTextRow(QString text)
         }
     }
     return stitches;
+}
+
+QString CrochetTextView::cleanToken(QString token)
+{
+    token = token.simplified().toLower();
+    if(token.startsWith("["))
+        token.replace("[", "");
+    
+    if(token.contains(QRegExp("\\].{,}$")))
+        token.replace(QRegExp("\\].{,}"), "");
+
+    if(token.startsWith("*"))
+        token.replace("*", "");
+    if(token.contains(QRegExp(";.{,}$")))
+        token.replace(QRegExp(";.{,}"), "");
+
+    return token;
 }
 
 void CrochetTextView::createChart(int rows, int cols)

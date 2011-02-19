@@ -52,6 +52,12 @@ private:
     QString generateTextRow(int row, bool cleanOutput = false);
     //returns an ordered list of the stitches found in the text.
     QStringList parseTextRow(QString text);
+
+    /**
+     * This function strips off any incomplete repeat indicators or other
+     * special text input from the user that might be incomplete.
+     */
+    QString cleanToken(QString token);
     
 private:
     CrochetHighlighter *mHighlighter;
