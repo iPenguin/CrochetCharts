@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     StitchCollection *collection = StitchCollection::inst();
     collection->loadStitchSets();
     splash.showMessage(QObject::tr("Populating Master Stitch Set..."));
-    collection->populateMasterSet();
+    collection->setupMasterSet();
 
     splash.showMessage(QObject::tr("Loading Main Window..."));
 

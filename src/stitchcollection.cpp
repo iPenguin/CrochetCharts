@@ -32,14 +32,14 @@ StitchCollection* StitchCollection::inst()
 StitchCollection::StitchCollection()
 { 
     mMasterSet = new StitchSet(this, true);
-    mMasterSet->setName(tr("All Stitches"));
+    mMasterSet->setName(tr("Master Stitch List"));
 }
 
 StitchCollection::~StitchCollection()
 {
     qDebug() << "~StitchCollection";
     saveMasterList();
-
+    
     foreach(StitchSet *set, mStitchSets) {
         mStitchSets.removeOne(set);
         if(!set->isTemporary)
@@ -61,12 +61,23 @@ void StitchCollection::saveAllSets()
 
 void StitchCollection::loadStitchSets()
 {
-    mBuiltIn = new StitchSet(this, false, true);
-    mBuiltIn->loadXmlFile(":/stitches.xml");
-
-    //Load additional stitch sets:
     QString confFolder = Settings::inst()->userSettingsFolder();
+    
+    mBuiltIn = new StitchSet(this, false, true);
 
+    QString masterSet = confFolder + "master.set";
+    if(QFileInfo(masterSet).exists())
+        mBuiltIn->loadXmlFile(masterSet);
+    else {
+        mBuiltIn->loadXmlFile(":/stitches.xml");
+        mBuiltIn->stitchSetFileName = masterSet;
+        mBuiltIn->saveXmlFile();
+    }
+    connect(mBuiltIn, SIGNAL(stitchNameChanged(QString,QString,QString)),
+            this, SLOT(changeStitchName(QString,QString,QString)));
+    
+    mStitchSets.append(mBuiltIn);
+    //Load additional stitch sets:
     QDir dir = QDir(confFolder + "sets/");
     QStringList fileTypes;
     fileTypes << "*.xml";
@@ -80,13 +91,16 @@ void StitchCollection::loadStitchSets()
     }
 }
 
-void StitchCollection::populateMasterSet()
+void StitchCollection::setupMasterSet()
 {
     bool loaded = loadMasterList();
 
     //if there isn't a master stitchset create it from the built in stitches.
     if(!loaded)
         resetMasterStitchSet();
+
+    connect(mMasterSet, SIGNAL(stitchNameChanged(QString,QString,QString)),
+            this, SLOT(changeStitchName(QString,QString,QString)));
 }
 
 bool StitchCollection::loadMasterList()
@@ -114,7 +128,7 @@ bool StitchCollection::loadMasterList()
                 mMasterSet->addStitch(s);
         }
     }
-
+    
     return true;
 }
 
@@ -354,6 +368,9 @@ StitchSet* StitchCollection::addStitchSet(QString fileName)
 
 void StitchCollection::changeStitchName(QString setName, QString oldName, QString newName)
 {
+    if(setName == mMasterSet->name())
+        setName = mStitchList.value(oldName);
+    
     //update the stitchList with the new stitch name.
     if (mStitchList.value(oldName) == setName) {
         mStitchList.remove(oldName);

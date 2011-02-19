@@ -22,7 +22,7 @@
 #include <QFileDialog>
 
 //TODO: add a hash based on the sn to the stitch set to grant write access to a stitch set.
-//TODO: add a checkbox in the 'add stitch' header that allows to select all stitches.
+//TODO: add a check box in the 'add stitch' header that allows to select all stitches.
 //TODO: make the msgboxes reusbale functions.
 
 StitchLibraryUi::StitchLibraryUi(QWidget* parent)
@@ -125,23 +125,38 @@ void StitchLibraryUi::setButtonStates(StitchSet *set)
 void StitchLibraryUi::resetLibrary()
 {
     QMessageBox msgbox;
-    msgbox.setText(tr("If you reset the stitch set you will loose any customizations you have made to the Master Stitch Set."));
+    msgbox.setText(tr("If you reset the stitch library you will lose any changes you have made."));
     msgbox.setInformativeText(tr("Are you sure you want to continue?"));
     msgbox.setIcon(QMessageBox::Question);
     QPushButton *reset = msgbox.addButton(tr("Yes, reset the library"), QMessageBox::AcceptRole);
-    /*QPushButton *cancel =*/ msgbox.addButton(tr("No, keep the library as it is"), QMessageBox::RejectRole);
+    /*QPushButton *cancel =*/ msgbox.addButton(tr("No, keep the library as is"), QMessageBox::RejectRole);
 
     msgbox.exec();
     
     if(msgbox.clickedButton() != reset)
         return;
 
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+//TODO: clean up this code. bring all the reset code together.
+//FIXME: resetting a user set returns it to it's first save. keep user set's in a different folder?
     ui->listView->clearSelection();
+    QString curSet = ui->stitchSource->currentText();
+    
+    updateSourceDropDown(StitchCollection::inst()->masterStitchSet()->name());
+    foreach(StitchSet *set, StitchCollection::inst()->stitchSets()) {
+        set->reset();
+    }
 
+    updateSourceDropDown(StitchCollection::inst()->builtIn()->name());
     StitchCollection::inst()->resetMasterStitchSet();
 
+    if(curSet != StitchCollection::inst()->builtIn()->name())
+        updateSourceDropDown(curSet);
+    
     ui->listView->resizeColumnsToContents();
     ui->listView->resizeRowsToContents();
+
+    QApplication::restoreOverrideCursor();
 }
 
 void StitchLibraryUi::addStitch()

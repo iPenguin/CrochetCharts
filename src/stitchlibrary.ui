@@ -316,7 +316,7 @@
      <item>
       <widget class="QPushButton" name="resetLibrary">
        <property name="text">
-        <string>&amp;Reset Master</string>
+        <string>&amp;Reset Library</string>
        </property>
       </widget>
      </item>

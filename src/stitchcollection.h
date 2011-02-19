@@ -44,7 +44,7 @@ public:
     //load all known stitch sets.
     void loadStitchSets();
     //create links to the stitches being used from each set/overlay
-    void populateMasterSet();
+    void setupMasterSet();
 
     Stitch* findStitch(QString name);
     StitchSet* findStitchSet(QString setName);
