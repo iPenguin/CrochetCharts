@@ -32,6 +32,9 @@ public:
     QPixmap* renderPixmap();
     QSvgRenderer* renderSvg(bool altativeRenderer = false);
 
+    //return a copy of this stitch.
+    Stitch* copy();
+    
 protected:
     void setName(QString n) { mName = n; }
     void setFile(QString f);
