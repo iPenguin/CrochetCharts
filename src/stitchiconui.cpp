@@ -3,7 +3,6 @@
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "stitchiconui.h"
-#include "stitchcollection.h"
 #include "settings.h"
 #include <QDir>
 #include <QFileDialog>

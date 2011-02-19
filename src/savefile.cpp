@@ -19,7 +19,7 @@
 
 #include <QDataStream>
 #include "crochetscene.h"
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 #include "stitchset.h"
 
 #include "mainwindow.h"
@@ -296,7 +296,7 @@ void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
         QDomElement e = n.toElement();
         if(!e.isNull()) {
             if(e.tagName() == "stitch") {
-                Stitch *s = StitchCollection::inst()->findStitch(e.text());
+                Stitch *s = StitchLibrary::inst()->findStitch(e.text());
                 if(s)
                     c->setStitch(s);
             } else if(e.tagName() == "row") {

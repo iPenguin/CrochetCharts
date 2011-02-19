@@ -4,7 +4,7 @@
 \*************************************************/
 #include "stitchlibraryui.h"
 
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 #include "stitchset.h"
 #include "stitchlibrarydelegate.h"
 
@@ -30,9 +30,9 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
 {
     ui->setupUi(this);
 
-    ui->stitchSource->addItems(StitchCollection::inst()->stitchSetList());
+    ui->stitchSource->addItems(StitchLibrary::inst()->stitchSetList());
     
-    StitchSet *master = StitchCollection::inst()->masterStitchSet();
+    StitchSet *master = StitchLibrary::inst()->masterStitchSet();
     ui->listView->setModel(master);
 
     StitchLibraryDelegate *delegate = new StitchLibraryDelegate(ui->listView);
@@ -92,7 +92,7 @@ void StitchLibraryUi::setDialogSize()
 
 void StitchLibraryUi::changeStitchSet(QString setName)
 {
-    StitchSet *set = StitchCollection::inst()->findStitchSet(setName);
+    StitchSet *set = StitchLibrary::inst()->findStitchSet(setName);
     if(!set)
         return;
 
@@ -113,7 +113,7 @@ void StitchLibraryUi::changeStitchSet(QString setName)
 
 void StitchLibraryUi::setButtonStates(StitchSet *set)
 {
-    bool state = (set != StitchCollection::inst()->masterStitchSet());
+    bool state = (set != StitchLibrary::inst()->masterStitchSet());
     
     ui->removeSet->setEnabled(state);
     ui->addStitch->setEnabled(state);
@@ -142,15 +142,15 @@ void StitchLibraryUi::resetLibrary()
     ui->listView->clearSelection();
     QString curSet = ui->stitchSource->currentText();
     
-    updateSourceDropDown(StitchCollection::inst()->masterStitchSet()->name());
-    foreach(StitchSet *set, StitchCollection::inst()->stitchSets()) {
+    updateSourceDropDown(StitchLibrary::inst()->masterStitchSet()->name());
+    foreach(StitchSet *set, StitchLibrary::inst()->stitchSets()) {
         set->reset();
     }
 
-    updateSourceDropDown(StitchCollection::inst()->builtIn()->name());
-    StitchCollection::inst()->resetMasterStitchSet();
+    updateSourceDropDown(StitchLibrary::inst()->builtIn()->name());
+    StitchLibrary::inst()->resetMasterStitchSet();
 
-    if(curSet != StitchCollection::inst()->builtIn()->name())
+    if(curSet != StitchLibrary::inst()->builtIn()->name())
         updateSourceDropDown(curSet);
     
     ui->listView->resizeColumnsToContents();
@@ -198,7 +198,7 @@ void StitchLibraryUi::removeStitch()
             QString st = set->data(set->index(i, 0), Qt::EditRole).toString();
             Stitch *s = set->findStitch(st);
 
-            if(!set->isMasterSet && StitchCollection::inst()->masterHasStitch(s)) {
+            if(!set->isMasterSet && StitchLibrary::inst()->masterHasStitch(s)) {
                 QMessageBox msgbox(this);
                 msgbox.setText(tr("This stitch is linked to the master set. "
                                 "If you remove this stitch it will be removed from the master list too."));
@@ -213,7 +213,7 @@ void StitchLibraryUi::removeStitch()
                     continue;
             }
             
-            StitchCollection::inst()->removeStitchFormMasterSet(s);
+            StitchLibrary::inst()->removeStitchFormMasterSet(s);
             if(!set->isMasterSet) {
                 set->removeStitch(st);
                 delete s;
@@ -230,7 +230,7 @@ void StitchLibraryUi::addSelected()
         if(selected) {
             Stitch *s = 0;
             s = static_cast<Stitch*>(set->index(i, 0).internalPointer());
-            StitchSet *master = StitchCollection::inst()->masterStitchSet();
+            StitchSet *master = StitchLibrary::inst()->masterStitchSet();
             
             if(master->hasStitch(s->name()) && s != master->findStitch(s->name())) {
                 QMessageBox msgbox;
@@ -245,7 +245,7 @@ void StitchLibraryUi::addSelected()
             }
             
             if(s)
-                StitchCollection::inst()->addStitchToMasterSet(set, s);
+                StitchLibrary::inst()->addStitchToMasterSet(set, s);
             else
                 qWarning() << "Error: Couldn't get stitch from the original set.";
         }
@@ -313,7 +313,7 @@ void StitchLibraryUi::createSet()
                                          QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty()) {
 
-        StitchSet *found = StitchCollection::inst()->findStitchSet(text);
+        StitchSet *found = StitchLibrary::inst()->findStitchSet(text);
         if(found) {
             QMessageBox msgbox;
             msgbox.setText(tr("A Set with this name already exists in your stitch library."));
@@ -325,7 +325,7 @@ void StitchLibraryUi::createSet()
 
              msgbox.exec();
              if(msgbox.clickedButton() == overwrite) {
-                StitchCollection::inst()->removeSet(found->name());
+                StitchLibrary::inst()->removeSet(found->name());
                 found = 0;
              } else if(msgbox.clickedButton() == rename) {
                  
@@ -339,7 +339,7 @@ void StitchLibraryUi::createSet()
             }
         }
         
-        StitchSet *set = StitchCollection::inst()->createStitchSet(text);
+        StitchSet *set = StitchLibrary::inst()->createStitchSet(text);
         //WIN32: crashes if there isn't at least one stitch in the set when you add the model to the view.
         set->createStitch("");
         //switch to the new set.
@@ -362,15 +362,15 @@ void StitchLibraryUi::removeSet()
     
     QString setName = ui->stitchSource->currentText();
     
-    StitchCollection::inst()->removeSet(setName);
+    StitchLibrary::inst()->removeSet(setName);
 
     //switch to the master set.
-    updateSourceDropDown(StitchCollection::inst()->masterStitchSet()->name());
+    updateSourceDropDown(StitchLibrary::inst()->masterStitchSet()->name());
 }
 
 void StitchLibraryUi::exportSet()
 {   
-    StitchSet *set = StitchCollection::inst()->findStitchSet(ui->stitchSource->currentText());
+    StitchSet *set = StitchLibrary::inst()->findStitchSet(ui->stitchSource->currentText());
 
     if(Settings::inst()->isDemoVersion()) {
         Settings::inst()->trialVersionMessage(this);
@@ -400,7 +400,7 @@ void StitchLibraryUi::importSet()
     
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     StitchSet *set = 0;
-    set = StitchCollection::inst()->addStitchSet(fileName);
+    set = StitchLibrary::inst()->addStitchSet(fileName);
 
     if(set) {
         set->saveXmlFile();
@@ -416,7 +416,7 @@ void StitchLibraryUi::updateSourceDropDown(QString setName)
         setName = ui->stitchSource->currentText();
 
     ui->stitchSource->clear();
-    ui->stitchSource->addItems(StitchCollection::inst()->stitchSetList());
+    ui->stitchSource->addItems(StitchLibrary::inst()->stitchSetList());
     int index = ui->stitchSource->findText(setName, Qt::MatchExactly);
 
     ui->stitchSource->setCurrentIndex(index);

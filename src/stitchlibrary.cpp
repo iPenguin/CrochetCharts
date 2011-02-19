@@ -2,7 +2,7 @@
 | Copyright (c) 2011 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 
 #include "stitchset.h"
 #include "stitch.h"
@@ -19,25 +19,25 @@
 #include <QInputDialog>
 
 // Global static pointer
-StitchCollection* StitchCollection::mInstance = NULL;
+StitchLibrary* StitchLibrary::mInstance = NULL;
 
 // singleton constructor:
-StitchCollection* StitchCollection::inst()
+StitchLibrary* StitchLibrary::inst()
 {
-   if (!mInstance)   // Only allow one instance of the StitchCollection.
-      mInstance = new StitchCollection();
+   if (!mInstance)   // Only allow one instance of the StitchLibrary.
+      mInstance = new StitchLibrary();
    return mInstance;
 }
 
-StitchCollection::StitchCollection()
+StitchLibrary::StitchLibrary()
 { 
     mMasterSet = new StitchSet(this, true);
     mMasterSet->setName(tr("Master Stitch List"));
 }
 
-StitchCollection::~StitchCollection()
+StitchLibrary::~StitchLibrary()
 {
-    qDebug() << "~StitchCollection";
+    qDebug() << "~StitchLibrary";
     saveMasterList();
     
     foreach(StitchSet *set, mStitchSets) {
@@ -48,7 +48,7 @@ StitchCollection::~StitchCollection()
     }
 }
 
-void StitchCollection::saveAllSets()
+void StitchLibrary::saveAllSets()
 {
     saveMasterList();
     
@@ -59,7 +59,7 @@ void StitchCollection::saveAllSets()
     }
 }
 
-void StitchCollection::loadStitchSets()
+void StitchLibrary::loadStitchSets()
 {
     QString confFolder = Settings::inst()->userSettingsFolder();
     
@@ -91,7 +91,7 @@ void StitchCollection::loadStitchSets()
     }
 }
 
-void StitchCollection::setupMasterSet()
+void StitchLibrary::setupMasterSet()
 {
     bool loaded = loadMasterList();
 
@@ -103,7 +103,7 @@ void StitchCollection::setupMasterSet()
             this, SLOT(changeStitchName(QString,QString,QString)));
 }
 
-bool StitchCollection::loadMasterList()
+bool StitchLibrary::loadMasterList()
 {
     QString confFolder = Settings::inst()->userSettingsFolder();
     QString fileName = confFolder + "stitches.list";
@@ -132,7 +132,7 @@ bool StitchCollection::loadMasterList()
     return true;
 }
 
-void StitchCollection::saveMasterList()
+void StitchLibrary::saveMasterList()
 {
     QString confFolder = Settings::inst()->userSettingsFolder();
     QString fileName = confFolder + "stitches.list";
@@ -147,7 +147,7 @@ void StitchCollection::saveMasterList()
     file.close();
 }
 
-void StitchCollection::resetMasterStitchSet()
+void StitchLibrary::resetMasterStitchSet()
 {
     mMasterSet->clearStitches();
     mStitchList.clear();
@@ -159,7 +159,7 @@ void StitchCollection::resetMasterStitchSet()
     mMasterSet->refreshSet();
 }
 
-void StitchCollection::addStitchToMasterSet(StitchSet *set, Stitch *s)
+void StitchLibrary::addStitchToMasterSet(StitchSet *set, Stitch *s)
 {
     if(mMasterSet->hasStitch(s->name())) {
         mMasterSet->removeStitch(s->name());
@@ -168,7 +168,7 @@ void StitchCollection::addStitchToMasterSet(StitchSet *set, Stitch *s)
     mStitchList[s->name()] = set->name();
 }
 
-void StitchCollection::removeStitchFormMasterSet(Stitch* s)
+void StitchLibrary::removeStitchFormMasterSet(Stitch* s)
 {
     if(!masterHasStitch(s))
         return;
@@ -179,12 +179,12 @@ void StitchCollection::removeStitchFormMasterSet(Stitch* s)
     mMasterSet->removeStitch(s->name());
 }
 
-bool StitchCollection::masterHasStitch(Stitch* s)
+bool StitchLibrary::masterHasStitch(Stitch* s)
 {
     return mMasterSet->stitches().contains(s);
 }
 
-Stitch* StitchCollection::findStitch(QString name)
+Stitch* StitchLibrary::findStitch(QString name)
 {
     Stitch *found = 0;
     found = mMasterSet->findStitch(name);
@@ -193,7 +193,7 @@ Stitch* StitchCollection::findStitch(QString name)
 
 }
 
-StitchSet* StitchCollection::findStitchSet(QString setName)
+StitchSet* StitchLibrary::findStitchSet(QString setName)
 {
     foreach(StitchSet *set, mStitchSets) {
         if(set->name() == setName)
@@ -208,7 +208,7 @@ StitchSet* StitchCollection::findStitchSet(QString setName)
     return 0;
 }
 
-QStringList StitchCollection::stitchSetList()
+QStringList StitchLibrary::stitchSetList()
 {
     QStringList list;
 
@@ -220,7 +220,7 @@ QStringList StitchCollection::stitchSetList()
     return list;
 }
 
-QStringList StitchCollection::categoryList() const
+QStringList StitchLibrary::categoryList() const
 {
     QStringList list;
 
@@ -239,7 +239,7 @@ QStringList StitchCollection::categoryList() const
     return list;
 }
 
-QStringList StitchCollection::stitchList(bool showAllSets) const
+QStringList StitchLibrary::stitchList(bool showAllSets) const
 {
     QStringList list;
 
@@ -261,7 +261,7 @@ QStringList StitchCollection::stitchList(bool showAllSets) const
     return list;
 }
 
-QString StitchCollection::nextSetSaveFile()
+QString StitchLibrary::nextSetSaveFile()
 {
     QString baseName, fileName;
     QString ext = ".xml";
@@ -280,7 +280,7 @@ QString StitchCollection::nextSetSaveFile()
     return fileName;
 }
 
-StitchSet* StitchCollection::createStitchSet(QString setName)
+StitchSet* StitchLibrary::createStitchSet(QString setName)
 {
     if(setName.isEmpty())
         return 0;
@@ -293,7 +293,7 @@ StitchSet* StitchCollection::createStitchSet(QString setName)
     return set;
 }
 
-void StitchCollection::removeSet(QString setName)
+void StitchLibrary::removeSet(QString setName)
 {
    StitchSet *set = findStitchSet(setName);
    mStitchSets.removeOne(set);
@@ -307,7 +307,7 @@ void StitchCollection::removeSet(QString setName)
 }
 
 //FIXME: return a value that can be checked and move the gui dialogs into the libraryui.
-StitchSet* StitchCollection::addStitchSet(QString fileName)
+StitchSet* StitchLibrary::addStitchSet(QString fileName)
 {
     if(fileName.isEmpty())
         return 0;
@@ -366,7 +366,7 @@ StitchSet* StitchCollection::addStitchSet(QString fileName)
     return set;
 }
 
-void StitchCollection::changeStitchName(QString setName, QString oldName, QString newName)
+void StitchLibrary::changeStitchName(QString setName, QString oldName, QString newName)
 {
     if(setName == mMasterSet->name())
         setName = mStitchList.value(oldName);

@@ -10,7 +10,7 @@
 #include <QScrollBar>
 #include <QPainter>
 
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 #include "settings.h"
 
 CrochetTextView::CrochetTextView(QWidget *parent, CrochetScene* scene)
@@ -159,7 +159,7 @@ QStringList CrochetTextView::parseTextRow(QString text)
         i++;
     }  
     
-    stitchList = StitchCollection::inst()->stitchList();
+    stitchList = StitchLibrary::inst()->stitchList();
     tokens = text.split(",");
     
     foreach(QString token, tokens) {

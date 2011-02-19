@@ -19,7 +19,7 @@ set(crochet_qobject_headers
     splashscreen.h
     licensehttp.h
     exportui.h
-    stitchcollection.h
+    stitchlibrary.h
     stitchlibraryui.h
     stitchlibrarydelegate.h
     stitchpalettedelegate.h

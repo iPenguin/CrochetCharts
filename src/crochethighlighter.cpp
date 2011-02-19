@@ -4,7 +4,7 @@
 \*************************************************/
 #include "crochethighlighter.h"
 
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 #include "stitchset.h"
 
 #include <QDebug>
@@ -17,7 +17,7 @@ CrochetHighlighter::CrochetHighlighter(QTextDocument *parent)
     keywordFormat.setForeground(Qt::darkBlue);
     keywordFormat.setFontWeight(QFont::Bold);
 
-    StitchSet* set = StitchCollection::inst()->masterStitchSet();
+    StitchSet* set = StitchLibrary::inst()->masterStitchSet();
     foreach(Stitch* s, set->stitches()) {
         keywordPatterns << s->name();
     }

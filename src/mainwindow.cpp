@@ -17,7 +17,7 @@
 #include "settings.h"
 #include "settingsui.h"
 
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 
 #include "licensewizard.h"
 #include "exportui.h"
@@ -114,7 +114,7 @@ void MainWindow::setupNewTabDialog()
     ui->rows->setValue(rows);
     ui->stitches->setValue(stitches);
 
-    ui->defaultStitch->addItems(StitchCollection::inst()->stitchList());
+    ui->defaultStitch->addItems(StitchLibrary::inst()->stitchList());
     ui->defaultStitch->setCurrentIndex(ui->defaultStitch->findText(defSt));
     
     //TODO: see if you can make "returnPressed" work for the spinboxes.
@@ -126,7 +126,7 @@ void MainWindow::setupNewTabDialog()
 
 void MainWindow::setupStitchPalette()
 {
-    StitchSet *set = StitchCollection::inst()->masterStitchSet();
+    StitchSet *set = StitchLibrary::inst()->masterStitchSet();
     ui->allStitches->setModel(set);
 
     //TODO: setup a proxywidget that can hold header sections?
@@ -470,7 +470,7 @@ void MainWindow::generateStitchLegend(QPainter* painter)
     int columnCount = Settings::inst()->value("stitchColumnCount").toInt();
     
     foreach(QString key, keys) {
-        Stitch *s = StitchCollection::inst()->findStitch(key);
+        Stitch *s = StitchLibrary::inst()->findStitch(key);
         if(!s) {
             qWarning() << "Couldn't find stitch while generating legend: " << key;
             continue;
@@ -1061,7 +1061,7 @@ void MainWindow::toolsStitchLibrary()
     }
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     
-    StitchCollection::inst()->saveAllSets();
+    StitchLibrary::inst()->saveAllSets();
 
     delete d;
     d = 0;
@@ -1150,7 +1150,7 @@ void MainWindow::updatePatternStitches()
         i.next();
         QList<QListWidgetItem*> items = ui->patternStitches->findItems(i.key(), Qt::MatchExactly);
         if(items.count() == 0) {
-            Stitch* s = StitchCollection::inst()->findStitch(i.key());
+            Stitch* s = StitchLibrary::inst()->findStitch(i.key());
             QPixmap pix = QPixmap(QSize(32, 32));
             pix.load(s->file());
             QIcon icon = QIcon(pix);

@@ -11,7 +11,7 @@
 #include "settings.h"
 #include <QPainter>
 #include <QColorDialog>
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 
 
 SettingsUi::SettingsUi(QWidget *parent)
@@ -163,7 +163,7 @@ void SettingsUi::loadRoundChartSettings()
     load(ui->defaultRows);
     load(ui->defaultStitches);
 
-    ui->defaultStitch->addItems(StitchCollection::inst()->stitchList());
+    ui->defaultStitch->addItems(StitchLibrary::inst()->stitchList());
     ui->defaultStitch->setObjectName("defaultStitch");
     load(ui->defaultStitch);
 
@@ -179,7 +179,7 @@ void SettingsUi::loadRoundChartSettings()
     mPrimaryColor = priColor;
     mAlternateColor = altColor;
 
-    ui->defaultPlaceholder->addItems(StitchCollection::inst()->stitchList());
+    ui->defaultPlaceholder->addItems(StitchLibrary::inst()->stitchList());
     ui->defaultPlaceholder->setObjectName("defaultPlaceholder");
     load(ui->defaultPlaceholder);
     

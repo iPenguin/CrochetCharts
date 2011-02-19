@@ -12,7 +12,7 @@
 #include "licensewizard.h"
 #include "settings.h"
 
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 
 #include "splashscreen.h"
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     }
 
     splash.showMessage(QObject::tr("Loading All Stitch Sets..."));
-    StitchCollection *collection = StitchCollection::inst();
+    StitchLibrary *collection = StitchLibrary::inst();
     collection->loadStitchSets();
     splash.showMessage(QObject::tr("Populating Master Stitch Set..."));
     collection->setupMasterSet();

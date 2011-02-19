@@ -15,7 +15,7 @@ set(crochet_app_h
     ../src/stitch.h
     ../src/stitchset.h
     ../src/settings.h
-    ../src/stitchcollection.h
+    ../src/stitchlibrary.h
     )
 
 set(crochet_app_cpp
@@ -24,7 +24,7 @@ set(crochet_app_cpp
     ../src/stitch.cpp
     ../src/stitchset.cpp
     ../src/settings.cpp
-    ../src/stitchcollection.cpp
+    ../src/stitchlibrary.cpp
     )
 
 set(crochet_app_resources

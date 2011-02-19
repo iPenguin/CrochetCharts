@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <qpainter.h>
 #include <qsvgrenderer.h>
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 #include "stitchset.h"
 #include "settings.h"
 #include <QStyleOption>
@@ -73,11 +73,11 @@ void Cell::setStitch(QString s)
 {
     Stitch* stitch = 0;
 
-    stitch = StitchCollection::inst()->findStitch(s);
+    stitch = StitchLibrary::inst()->findStitch(s);
 
     if (!stitch) {
         QString st = Settings::inst()->value("defaultStitch").toString();
-        stitch = StitchCollection::inst()->findStitch(st);
+        stitch = StitchLibrary::inst()->findStitch(st);
     }
 
     setStitch(stitch);

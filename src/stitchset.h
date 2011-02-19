@@ -15,7 +15,7 @@ class QXmlStreamWriter;
 class StitchSet : public QAbstractItemModel
 {
     Q_OBJECT
-    friend class StitchCollection;
+    friend class StitchLibrary;
     friend class StitchLibraryUi;
     friend class SaveFile;
 public:

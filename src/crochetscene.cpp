@@ -15,7 +15,6 @@
 #include <QDebug>
 
 #include "settings.h"
-#include "stitchcollection.h"
 #include "stitchset.h"
 #include "appinfo.h"
 #include "crochetchartcommands.h"
@@ -148,16 +147,13 @@ void CrochetScene::createChart(int rows, int cols, QString stitch)
 void CrochetScene::createRow(int row, int columns, QString stitch)
 {
     Cell *c = 0;
-
-    QString st = stitch;
-    Stitch* s = StitchCollection::inst()->findStitch(st);
     
     QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
         c = new CrochetCell();
         connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
         connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-        c->setStitch(s);
+        c->setStitch(stitch);
         addItem(c);
         modelRow.append(c);
         c->setPos(i*64, row*64);

@@ -22,7 +22,7 @@
 #include <QDir>
 
 #include <QDebug>
-#include "stitchcollection.h"
+#include "stitchlibrary.h"
 #include "stitchset.h"
 #include <QSvgRenderer>
 #include <QMessageBox>
@@ -188,12 +188,12 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
         }
         case Stitch::Category: {
             QComboBox *cb = new QComboBox(parent);
-            cb->addItems(StitchCollection::inst()->categoryList());
+            cb->addItems(StitchLibrary::inst()->categoryList());
             return cb;
         }
         case Stitch::WrongSide: {
             QComboBox *cb = new QComboBox(parent);
-            cb->addItems(StitchCollection::inst()->stitchList(true));
+            cb->addItems(StitchLibrary::inst()->stitchList(true));
             return cb;
         }
         case 5: {
@@ -251,7 +251,7 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
 void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     StitchSet *set = static_cast<StitchSet*>(model);
-    if(set == StitchCollection::inst()->masterStitchSet()) {
+    if(set == StitchLibrary::inst()->masterStitchSet()) {
         //TODO:use an overlay or proxy set for changes to the master set...
         qDebug() << "TODO: use an overlay or proxy set for changes to the master set...";
     }
@@ -280,10 +280,10 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
             
             //is this stitch in the master list? if so is there a stitch with the new name already?
             found = 0;
-            found = StitchCollection::inst()->masterStitchSet()->findStitch(s->name());
+            found = StitchLibrary::inst()->masterStitchSet()->findStitch(s->name());
             if(found && found == s) {
                 Stitch *m = 0;
-                m = StitchCollection::inst()->masterStitchSet()->findStitch(le->text());
+                m = StitchLibrary::inst()->masterStitchSet()->findStitch(le->text());
                 if(m && m != s) {
                     QMessageBox msgbox;
                     msgbox.setText("There is already a stitch with this name in the master list");

@@ -7,7 +7,7 @@
 
 #include <QObject>
 
-class TestStitchCollection : public QObject
+class TestStitchLibrary : public QObject
 {
     Q_OBJECT
 public:

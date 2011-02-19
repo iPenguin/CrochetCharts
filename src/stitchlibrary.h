@@ -15,25 +15,25 @@ class Stitch;
 class QComboBox;
 
 /**
- * The StitchCollection is a set of StitchSets
+ * The StitchLibrary is a set of StitchSets
  *
  * The Collection keeps track of all sets. Specifically the Collection
  * keeps track of the builtIn Set, and the masterSet. And knows about
  * temporary sets that are loaded when a file with custom stitches is
  * opened.
  *
- * The StitchCollection acts as the point of reference for StitchSet
+ * The StitchLibrary acts as the point of reference for StitchSet
  * based operations such as findStitch();
  *
  * The master stitchSet is a link list to the stitches in their sets.
  */
-class StitchCollection : public QObject
+class StitchLibrary : public QObject
 {
     Q_OBJECT
 
 public:
-    static StitchCollection* inst();
-    ~StitchCollection();
+    static StitchLibrary* inst();
+    ~StitchLibrary();
 
     //return the list of stitch sets.
     QList<StitchSet *> stitchSets() { return mStitchSets; }
@@ -82,7 +82,7 @@ private slots:
     void changeStitchName(QString setName, QString oldName, QString newName);
     
 private:
-    StitchCollection();
+    StitchLibrary();
 
     //generates the next file name that can be used for a stitch set.
     QString nextSetSaveFile();
@@ -91,7 +91,7 @@ private:
     bool loadMasterList();
     void saveMasterList();
     
-    static StitchCollection* mInstance;
+    static StitchLibrary* mInstance;
 
     QList<StitchSet*> mStitchSets;
     StitchSet* mMasterSet;
