@@ -128,31 +128,62 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput)
 
 QStringList CrochetTextView::parseTextRow(QString text)
 {
-    //TODO: add repeat parsing (ie "\[.*\] 3 times" and "\*.*; repeat from \*" )
     //TODO: add color parsing (ie ch3 in C1) save for version 1.x...
+    
     QStringList stitches, tokens, stitchList;
+    QRegExp rx("\\[(.*)\\] ([0-9]{1,}) times");
+    rx.setMinimal(true);
+    
+    QMap<QString, QMap<QString, QString> > repeats;
+    QString prefix = ".sws_";
+    int i = 0, pos = 0;
+    while ((pos = rx.indexIn(text, pos)) != -1) {
+        QMap<QString, QString> repeat;
+        repeat.insert(rx.cap(1), rx.cap(2));
+        QString key = prefix + QString::number(i);
+        repeats.insert(key, repeat);
+        text.replace(pos, rx.matchedLength(), key);
+        pos += key.length();
+        i++;
+    }
+
+    //move this to the token leve where I can use .* to figure out partial match...
+    if(text.contains("["))
+        text.replace("[", "");
+    if(text.contains(QRegExp("\\] [0-9]{1,}")))
+        text.replace(QRegExp("\\] [0-9]{1,}"), "");
+    if(text.contains("]"))
+        text.replace("]", "");
+    
     stitchList = StitchCollection::inst()->stitchList();
     tokens = text.split(",");
     
-    //TODO: break out the parser into a seperate function.
     foreach(QString token, tokens) {
         token = token.simplified().toLower();
-        
-        QString st;
-        foreach(QString temp, stitchList) {
-            QRegExp re = QRegExp("^" + temp + "\\s{,}[0-9]{,}$");
-            re.setMinimal(true);
-            if(token.contains(re)) {
-                st = temp;
-                break;
+        if(token.startsWith(prefix)) {
+            QMap<QString, QString> repeat = repeats.value(token);
+            foreach(QString key, repeat.keys()) {
+                int reps = repeat.value(key).toInt();
+                for(int i = 0; i < reps; ++i)
+                    stitches << parseTextRow(key);
             }
-        }
-        
-        token = token.simplified().remove(0, st.length());
-        int count = token.toInt();
-        if(count <= 0) count = 1;
-        for(int i = 0; i < count; ++i) {
-            stitches.append(st);
+        } else {
+            QString st;
+            foreach(QString temp, stitchList) {
+                QRegExp re = QRegExp("^" + temp + "\\s{,}[0-9]{,}$");
+                re.setMinimal(true);
+                if(token.contains(re)) {
+                    st = temp;
+                    break;
+                }
+            }
+
+            token = token.simplified().remove(0, st.length());
+            int count = token.toInt();
+            if(count <= 0) count = 1;
+            for(int i = 0; i < count; ++i) {
+                stitches.append(st);
+            }
         }
     }
     return stitches;
