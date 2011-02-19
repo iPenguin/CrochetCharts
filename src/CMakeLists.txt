@@ -29,6 +29,7 @@ set(crochet_qobject_headers
     updater.h
     stitchiconui.h
     undogroup.h
+    tabinterface.h
     )
 
 set(crochet_resources
