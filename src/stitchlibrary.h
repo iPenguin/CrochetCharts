@@ -2,8 +2,8 @@
 | Copyright (c) 2011 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#ifndef STITCHCOLLECTION_H
-#define STITCHCOLLECTION_H
+#ifndef STITCHLIBRARY_H
+#define STITCHLIBRARY_H
 
 #include <QObject>
 #include <QStringList>
@@ -100,4 +100,4 @@ private:
     QMap<QString, QString> mStitchList;
 };
 
-#endif //STITCHCOLLECTION_H
+#endif //STITCHLIBRARY_H

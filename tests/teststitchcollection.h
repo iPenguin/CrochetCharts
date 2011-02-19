@@ -2,8 +2,8 @@
 | Copyright (c) 2010 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#ifndef TESTSTITCHCOLLECTION_H
-#define TESTSTITCHCOLLECTION_H
+#ifndef TESTSTITCHLIBRARY_H
+#define TESTSTITCHLIBRARY_H
 
 #include <QObject>
 
@@ -16,4 +16,4 @@ private:
 
 };
 
-#endif //TESTSTITCHCOLLECTION_H
+#endif //TESTSTITCHLIBRARY_H
