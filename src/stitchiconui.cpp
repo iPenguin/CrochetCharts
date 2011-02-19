@@ -33,18 +33,21 @@ void StitchIconUi::loadIcons()
     QStringList dirs, setDir;
     QString userFolder = Settings::inst()->userSettingsFolder();
 
-    dirs << ":/stitches";
+
     dirs << userFolder + "icons";
 
     QDir dir;
+/*
     dir.setPath(userFolder + "sets/");
 
+    dirs << ":/stitches";
+    
     //get all set folders.
     foreach(QString folder, dir.entryList(QDir::Dirs)) {
         if(folder != "." && folder != "..")
             dirs << userFolder + "sets/" + folder;
     }
-
+*/
     //get all files from all set folders.
     foreach(QString folder, dirs) {
         dir.setPath(folder);
