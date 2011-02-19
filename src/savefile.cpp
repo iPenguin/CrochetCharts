@@ -5,7 +5,7 @@
 #include "savefile.h"
 #include "appinfo.h"
 
-#include "charttab.h"
+#include "crochettab.h"
 
 #include <QDebug>
 
@@ -89,7 +89,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
     
     for(int i = 0; i < tabCount; ++i) {
         stream->writeStartElement("chart"); //start chart
-        ChartTab* tab = qobject_cast<ChartTab*>(mTabWidget->widget(i));
+        CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
         if(!tab)
             continue;
         stream->writeTextElement("name", mTabWidget->tabText(i));
@@ -252,7 +252,7 @@ void SaveFile::loadColors(QDomElement* element)
 void SaveFile::loadChart(QDomElement *element)
 {
     MainWindow *mw = qobject_cast<MainWindow*>(mParent);
-    ChartTab* tab = mw->createTab();
+    CrochetTab* tab = mw->createTab();
     QString tabName;
 
     mTabWidget->addTab(tab, "");
@@ -279,7 +279,7 @@ void SaveFile::loadChart(QDomElement *element)
     mTabWidget->widget(mTabWidget->indexOf(tab))->show();
 }
 
-void SaveFile::loadCell(ChartTab* tab, QDomElement *element)
+void SaveFile::loadCell(CrochetTab* tab, QDomElement *element)
 {
     CrochetCell* c = new CrochetCell();
     int row, column;

@@ -13,7 +13,7 @@
 
 #include <QModelIndex>
 
-class ChartTab;
+class CrochetTab;
 class QPrinter;
 class QPainter;
 class QActionGroup;
@@ -41,7 +41,7 @@ protected:
     QString nextChartName(QString baseName = tr("Chart"));
     bool docHasChartName(QString name);
 
-    ChartTab* createTab();
+    CrochetTab* createTab();
     
 protected slots:
     void updatePatternStitches();
@@ -131,7 +131,7 @@ private:
 
     QPixmap drawColorBox(QColor color, QSize size);
     
-    ChartTab* curChartTab();
+    CrochetTab* curCrochetTab();
    
     Ui::MainWindow *ui;
     Ui::StitchLibraryDialog *sld;

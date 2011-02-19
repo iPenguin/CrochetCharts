@@ -12,7 +12,7 @@
 #include "savefile.h"
 
 #include "appinfo.h"
-#include "charttab.h"
+#include "crochettab.h"
 
 #include "settings.h"
 #include "settingsui.h"
@@ -317,7 +317,7 @@ void MainWindow::print(QPrinter *printer)
         if(!firstPass)
             printer->newPage();
         
-        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         tab->renderChart(p);
         firstPass = false;
     }
@@ -404,7 +404,7 @@ void MainWindow::exportPdf(QString selection, QString fileName, QSize size, int 
             printer->newPage();
 
         if(selection == tr("All Charts") || selection == ui->tabWidget->tabText(i)) {
-            ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+            CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
             tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
             firstPass = false;
         }
@@ -426,7 +426,7 @@ void MainWindow::exportSvg(QString selection, QString fileName, QSize size)
 
     for(int i = 0; i < tabCount; ++i) {
         if(selection == ui->tabWidget->tabText(i)) {
-            ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+            CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
             tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
         }
     }
@@ -449,7 +449,7 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
     
     for(int i = 0; i < tabCount; ++i) {
         if(selection == ui->tabWidget->tabText(i)) {
-            ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+            CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
             tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
         }
     }
@@ -551,7 +551,7 @@ void MainWindow::selectColor()
 void MainWindow::updateBgColor()
 {
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditBgColor(mBgColor);
     }
@@ -561,7 +561,7 @@ void MainWindow::updateBgColor()
 void MainWindow::updateFgColor()
 {
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditFgColor(mFgColor);
     }
@@ -576,7 +576,7 @@ void MainWindow::selectStitch(QModelIndex index)
         return;
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditStitch(stitch);
     }
@@ -848,7 +848,7 @@ void MainWindow::newChart()
     if(docHasChartName(name))
         name = nextChartName(name);
 
-    ChartTab *tab = createTab();
+    CrochetTab *tab = createTab();
     
     if(name.isEmpty())
         name = nextChartName();
@@ -863,12 +863,12 @@ void MainWindow::newChart()
     documentIsModified(true);
 }
 
-ChartTab* MainWindow::createTab()
+CrochetTab* MainWindow::createTab()
 {
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     
-    ChartTab* tab = new ChartTab(mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
+    CrochetTab* tab = new CrochetTab(mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
     tab->setPatternColors(&mPatternColors);
     connect(tab, SIGNAL(chartStitchChanged()), this, SLOT(updatePatternStitches()));
@@ -945,7 +945,7 @@ void MainWindow::menuModesAboutToShow()
     
     QStringList modes;
     if(hasTab()) {
-        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->currentWidget());
         modes = tab->editModes();
     }
 
@@ -999,7 +999,7 @@ void MainWindow::setEditMode(int mode)
         ui->actionPositionMode->setChecked(true);
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(i));
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditMode(mEditMode);
     }
@@ -1071,7 +1071,7 @@ void MainWindow::toolsStitchLibrary()
 
 void MainWindow::viewZoomIn()
 {
-    ChartTab* tab = curChartTab();
+    CrochetTab* tab = curCrochetTab();
     if(!tab)
         return;
     tab->zoomIn();
@@ -1079,21 +1079,21 @@ void MainWindow::viewZoomIn()
 
 void MainWindow::viewZoomOut()
 {
-    ChartTab* tab = curChartTab();
+    CrochetTab* tab = curCrochetTab();
     if(!tab)
         return;
     tab->zoomOut();
 }
 
-ChartTab* MainWindow::curChartTab()
+CrochetTab* MainWindow::curCrochetTab()
 {
-    ChartTab* tab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
+    CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->currentWidget());
     return tab;
 }
 
 bool MainWindow::hasTab()
 {
-    ChartTab *cTab = qobject_cast<ChartTab*>(ui->tabWidget->currentWidget());
+    CrochetTab *cTab = qobject_cast<CrochetTab*>(ui->tabWidget->currentWidget());
     if(!cTab)
         return false;
 
@@ -1110,7 +1110,7 @@ void MainWindow::tabChanged(int newTab)
     if(newTab == -1)
         return;
 
-    ChartTab *tab = qobject_cast<ChartTab*>(ui->tabWidget->widget(newTab));
+    CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(newTab));
     if(!tab)
         return;
     

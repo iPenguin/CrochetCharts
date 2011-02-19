@@ -2,8 +2,8 @@
 | Copyright (c) 2011 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#ifndef CHARTTAB_H
-#define CHARTTAB_H
+#ifndef CROCHETTAB_H
+#define CROCHETTAB_H
 
 #include <QWidget>
 #include <QMap>
@@ -20,13 +20,13 @@ namespace Ui {
     class OptionsBar;
 }
 
-class ChartTab : public QWidget
+class CrochetTab : public QWidget
 {
     Q_OBJECT
     friend class SaveFile;
 public:
-    explicit ChartTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent = 0);
-    ~ChartTab();
+    explicit CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent = 0);
+    ~CrochetTab();
 
     void renderChart(QPainter *painter, QRectF rect = QRectF());
 
@@ -77,4 +77,4 @@ private:
     Ui::OptionsBar *ui;
 };
 
-#endif // CHARTTAB_H
+#endif // CROCHETTAB_H

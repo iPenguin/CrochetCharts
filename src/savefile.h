@@ -19,7 +19,7 @@ class QXmlStreamWriter;
 
 class QDataStream;
 
-class ChartTab;
+class CrochetTab;
 
 class SaveFile
 {
@@ -47,7 +47,7 @@ private:
     bool loadCustomStitches(QDataStream *stream);
     void loadColors(QDomElement *element);
     void loadChart(QDomElement *element);
-    void loadCell(ChartTab *tab, QDomElement *element);
+    void loadCell(CrochetTab *tab, QDomElement *element);
     QTransform loadTransform(QDomElement *element);
 
     //fileVersion of the file we're working with.

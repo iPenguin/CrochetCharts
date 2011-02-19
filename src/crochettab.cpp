@@ -2,7 +2,7 @@
 | Copyright (c) 2011 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#include "charttab.h"
+#include "crochettab.h"
 #include "ui_optionsbar.h"
 
 #include <QVBoxLayout>
@@ -21,7 +21,7 @@
 #include <QLayout>
 #include <QClipboard>
 
-ChartTab::ChartTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent) :
+CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent) :
         QWidget(parent), ui(new Ui::OptionsBar)
 {    
     QVBoxLayout *l = new QVBoxLayout(this);
@@ -66,7 +66,7 @@ ChartTab::ChartTab(int defEditMode, QString defStitch, QColor defFgColor, QColor
     //mView->setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
-ChartTab::~ChartTab()
+CrochetTab::~CrochetTab()
 {
     delete mView;
     delete mScene;
@@ -76,24 +76,24 @@ ChartTab::~ChartTab()
     mTextView = 0;
 }
 
-QStringList ChartTab::editModes()
+QStringList CrochetTab::editModes()
 {
     QStringList modes;
     modes << tr("Stitch Mode") << tr("Color Mode") << tr("Grid Mode") << tr("Position Mode");
     return modes;
 }
 
-int ChartTab::editMode() const
+int CrochetTab::editMode() const
 {
     return (int) mScene->editMode();
 }
 
-void ChartTab::setEditMode(int mode)
+void CrochetTab::setEditMode(int mode)
 {
     mScene->setEditMode((CrochetScene::EditMode)mode);
 }
 
-void ChartTab::renderChart(QPainter *painter, QRectF rect)
+void CrochetTab::renderChart(QPainter *painter, QRectF rect)
 {
     if(!rect.isValid())
         mScene->render(painter);
@@ -101,7 +101,7 @@ void ChartTab::renderChart(QPainter *painter, QRectF rect)
         mScene->render(painter, rect, mScene->sceneRect());
 }
 
-void ChartTab::stitchChanged(QString oldSt, QString newSt)
+void CrochetTab::stitchChanged(QString oldSt, QString newSt)
 {
     if (!oldSt.isEmpty()) {
         mPatternStitches->operator[](oldSt)--;
@@ -117,7 +117,7 @@ void ChartTab::stitchChanged(QString oldSt, QString newSt)
     emit chartStitchChanged();
 }
 
-void ChartTab::colorChanged(QString oldColor, QString newColor)
+void CrochetTab::colorChanged(QString oldColor, QString newColor)
 {
     if (!oldColor.isEmpty()) {
         mPatternColors->operator[](oldColor)["count"]--;
@@ -136,42 +136,42 @@ void ChartTab::colorChanged(QString oldColor, QString newColor)
     emit chartColorChanged();
 }
 
-void ChartTab::zoomIn()
+void CrochetTab::zoomIn()
 {
     mView->zoomIn();
 }
 
-void ChartTab::zoomOut()
+void CrochetTab::zoomOut()
 {
     mView->zoomOut();
 }
 
-QUndoStack* ChartTab::undoStack()
+QUndoStack* CrochetTab::undoStack()
 {
     return mScene->undoStack();
 }
 
-void ChartTab::createChart(int rows, int cols, QString defStitch)
+void CrochetTab::createChart(int rows, int cols, QString defStitch)
 {
     mScene->createChart(rows, cols, defStitch);
 }
 
-void ChartTab::setEditBgColor(QColor color)
+void CrochetTab::setEditBgColor(QColor color)
 {
     mScene->setEditBgColor(color);
 }
 
-void ChartTab::setEditFgColor(QColor color)
+void CrochetTab::setEditFgColor(QColor color)
 {
     mScene->setEditFgColor(color);
 }
 
-void ChartTab::setEditStitch(QString stitch)
+void CrochetTab::setEditStitch(QString stitch)
 {
     mScene->setEditStitch(stitch);
 }
 
-void ChartTab::copyInstructions()
+void CrochetTab::copyInstructions()
 {
     QClipboard *clipboard = QApplication::clipboard();
 
