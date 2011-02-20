@@ -856,7 +856,6 @@ void MainWindow::newChart()
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
 
-    //FIXME: this breaks the ability to create a plugin interface for the tabs
     tab->createChart(rows, cols, defStitch);
 
     updateMenuItems();
