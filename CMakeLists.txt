@@ -39,6 +39,7 @@ message(STATUS "HunSpell Found: " ${HUNSPELL_FOUND})
 
 if(ARCH_32BIT)
     set(extra_build_flags "-m32")
+    set(extra_link_flags "-m elf_i386")
 endif()
 
 if(SHADOW_FLAG)
@@ -50,6 +51,7 @@ set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 
 set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -ggdb -W -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
 set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -W -Wall -O2")
 set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
