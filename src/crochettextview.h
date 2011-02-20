@@ -58,6 +58,10 @@ private:
      * special text input from the user that might be incomplete.
      */
     QString cleanToken(QString token);
+
+    QMap<QString, QStringList> generateRepeats(QStringList stitches, QString prefix);
+    QString generateText(QStringList row);
+    int matchCount(QStringList stitches, int startPos, int length);
     
 private:
     CrochetHighlighter *mHighlighter;

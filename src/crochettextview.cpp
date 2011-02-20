@@ -12,6 +12,7 @@
 
 #include "stitchlibrary.h"
 #include "settings.h"
+#include <math.h>
 
 CrochetTextView::CrochetTextView(QWidget *parent, CrochetScene* scene)
     : QPlainTextEdit(parent), mScene(scene), mCompleter(0)
@@ -85,45 +86,126 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput)
 {
     QString placeholder = Settings::inst()->value("defaultPlaceholder").toString();
     QString rowText;
-    QString curStitch, previousStitch, nextStitch;
-    int count = 1;
-    bool firstPass = true;
+    QString curStitch;
 
     QStringList rowList;
 
     int cols = mScene->columnCount(row);
 
-    //remove the placeholders before parsing.
+    //create a list of stitches
     for(int c = 0; c < cols; ++c) {
         curStitch = mScene->cell(row, c)->name();
         if(cleanOutput) {
+            //parse out any placeholder stitches before continuing.
             if(curStitch == placeholder)
                 continue;
         }
         rowList.append(curStitch);
     }
 
+    return generateText(rowList);
+}
+
+QString CrochetTextView::generateText(QStringList row)
+{
+    QString text;
+    QString curStitch, previousStitch, nextStitch;
+    QMap<QString, QStringList> data;
+    int count = 1;
+    bool firstPass = true;
+    
+    //TODO: add setting to turn off the repeat code:
+    QString prefix = ".sws_";
+    
+    data = generateRepeats(row, prefix);
+    row = data.value("row");
+    
     previousStitch = "";
-    for(int i = 0; i < rowList.count(); ++i) {
-        curStitch = rowList.value(i);
-        nextStitch = rowList.value(i + 1);
+    for(int i = 0; i < row.count(); ++i) {
+        curStitch = row.value(i);
+        nextStitch = row.value(i + 1);
 
         if(curStitch != previousStitch) {
-            if(!firstPass) rowText += ", ";
-            rowText += curStitch;
+            if(curStitch.startsWith(prefix)) {
+                text += "[" + generateText(data.value(curStitch)) + "] ";
+            } else {
+                if(!firstPass) text += ", ";
+                text += curStitch;
+            }
         }
         if(curStitch == previousStitch)
             count++;
         if(curStitch != nextStitch) {
-            rowText += QString::number(count);
+            text += QString::number(count);
             count = 1;
+            if(curStitch.startsWith(prefix))
+                text += " times";
         }
-
+        
         previousStitch = curStitch;
         firstPass = false;
     }
+
+    return text;
+}
+
+QMap< QString, QStringList > CrochetTextView::generateRepeats(QStringList stitches, QString prefix)
+{
+    QMap<QString, QStringList> data;
+    QStringList row;
+    int count = stitches.count();
+
+    for(int i = 0; i < count; ++i) {
+        QString value = stitches.value(i);
+        for(int j = i + 2; j < count; ++j) {
+            if(stitches.value(i) == stitches.value(j)) {
+                int diff = j - i;
+                int diffSts = false;
+                for(int l = 0; l < diff; ++l) {
+                    if(stitches.value(i + l) != stitches.value(i))
+                        diffSts = true;
+                }
+                if(!diffSts)
+                    continue;
+
+                int count = matchCount(stitches, i, diff);
+
+                if(count > 1) {
+                    QStringList sub;
+                    for(int k = 0; k < diff; ++k) 
+                        sub.append(stitches.value(k));
+                    for(int k = 0; k < count; ++k)
+                        row.append(prefix + QString::number(i));
+                    data.insert(prefix + QString::number(i), sub);
+                    j += (diff * count);
+                    i += (diff * count);
+                }
+            }
+        }
+        if(i < count)
+            row.append(value);
+    }
+
+    data.insert("row", row);
+    return data;
+}
+
+int CrochetTextView::matchCount(QStringList stitches, int startPos, int length)
+{
+    QStringList sub;
+    int count = 0;
+
+    for(int i = 0; i < length; ++i)
+        sub.append(stitches.value(startPos + i));
     
-    return rowText;
+    for(int i = startPos; i < stitches.count(); ++i) {
+
+        if(sub.value(i%length) != stitches.value(i))
+            break;
+        count = floor(double(i + 1 - startPos)/length);
+    }
+    
+    return count;
 }
 
 QStringList CrochetTextView::parseTextRow(QString text)
