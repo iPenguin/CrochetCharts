@@ -159,9 +159,11 @@ void SettingsUi::loadRoundChartSettings()
 
     ui->defaultRows->setObjectName("defaultRows");
     ui->defaultStitches->setObjectName("defaultStitches");
+    ui->generateRepeats->setObjectName("generateRepeats");
 
     load(ui->defaultRows);
     load(ui->defaultStitches);
+    load(ui->generateRepeats);
 
     ui->defaultStitch->addItems(StitchLibrary::inst()->stitchList());
     ui->defaultStitch->setObjectName("defaultStitch");
@@ -192,6 +194,7 @@ void SettingsUi::saveRoundChartSettings()
     save(ui->defaultStitch);
     save(ui->defaultPlaceholder);
 
+    save(ui->generateRepeats);
     save(ui->alternateRowColors);
     
     Settings::inst()->setValue("stitchPrimaryColor", QVariant(mPrimaryColor.name()));
@@ -207,6 +210,7 @@ void SettingsUi::resetRoundChartSettings()
     loadDefualt(ui->defaultStitch);
     loadDefualt(ui->defaultPlaceholder);
     loadDefualt(ui->alternateRowColors);
+    loadDefualt(ui->generateRepeats);
 
     QString priColor = Settings::inst()->defaultValue("stitchPrimaryColor").toString();
     QString altColor = Settings::inst()->defaultValue("stitchAlternateColor").toString();

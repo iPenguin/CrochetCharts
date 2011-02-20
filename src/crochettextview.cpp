@@ -114,11 +114,13 @@ QString CrochetTextView::generateText(QStringList row)
     int count = 1;
     bool firstPass = true;
     
-    //TODO: add setting to turn off the repeat code:
+    bool genRepeats = Settings::inst()->value("generateRepeats").toBool();
     QString prefix = ".sws_";
-    
-    data = generateRepeats(row, prefix);
-    row = data.value("row");
+
+    if(genRepeats) {
+        data = generateRepeats(row, prefix);
+        row = data.value("row");
+    }
     
     previousStitch = "";
     for(int i = 0; i < row.count(); ++i) {

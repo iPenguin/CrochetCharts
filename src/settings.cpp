@@ -112,7 +112,8 @@ void Settings::setupValueList() {
     mValueList["alternateRowColors"] = QVariant(true);
     mValueList["stitchPrimaryColor"] = QVariant("#000000");
     mValueList["stitchAlternateColor"] = QVariant("#D4E6FC");
-        
+    mValueList["generateRepeats"] = QVariant(true);
+    
     //stitch legend options
     mValueList["stitchColumnCount"] = QVariant(2);
     mValueList["showStitchDescription"] = QVariant(true);
