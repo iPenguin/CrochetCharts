@@ -128,12 +128,12 @@ QString CrochetTextView::generateText(QStringList row)
         nextStitch = row.value(i + 1);
 
         if(curStitch != previousStitch) {
+            if(!firstPass) text += ", ";
+            
             if(curStitch.startsWith(prefix)) {
                 text += "[" + generateText(data.value(curStitch)) + "] ";
-            } else {
-                if(!firstPass) text += ", ";
+            } else
                 text += curStitch;
-            }
         }
         if(curStitch == previousStitch)
             count++;
