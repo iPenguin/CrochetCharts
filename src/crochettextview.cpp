@@ -20,6 +20,8 @@ CrochetTextView::CrochetTextView(QWidget *parent, CrochetScene* scene)
     mHighlighter = new CrochetHighlighter(document());
     mCompleter = new QCompleter(this);
     setCompleter(mCompleter);
+
+    connect(StitchLibrary::inst(), SIGNAL(stitchListChanged()), mHighlighter, SLOT(updateRules()));
     
     document()->setMaximumBlockCount(mScene->rowCount());
     

@@ -166,6 +166,8 @@ void StitchLibrary::addStitchToMasterSet(StitchSet *set, Stitch *s)
     }
     mMasterSet->addStitch(s);
     mStitchList[s->name()] = set->name();
+
+    emit stitchListChanged();
 }
 
 void StitchLibrary::removeStitchFormMasterSet(Stitch* s)
@@ -376,4 +378,6 @@ void StitchLibrary::changeStitchName(QString setName, QString oldName, QString n
         mStitchList.remove(oldName);
         mStitchList[newName] = setName;
     }
+    
+    emit stitchListChanged();
 }

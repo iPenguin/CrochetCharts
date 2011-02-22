@@ -12,11 +12,20 @@
 CrochetHighlighter::CrochetHighlighter(QTextDocument *parent)
 : QSyntaxHighlighter(parent)
 {
+    createHighlightRules();
+}
+
+CrochetHighlighter::~CrochetHighlighter()
+{
+}
+
+void CrochetHighlighter::createHighlightRules()
+{
     HighlightingRule rule;
     
     keywordFormat.setForeground(Qt::darkBlue);
     keywordFormat.setFontWeight(QFont::Bold);
-
+    
     StitchSet* set = StitchLibrary::inst()->masterStitchSet();
     foreach(Stitch* s, set->stitches()) {
         keywordPatterns << s->name();
@@ -36,7 +45,7 @@ CrochetHighlighter::CrochetHighlighter(QTextDocument *parent)
     repeatStartExp.setCaseSensitivity(Qt::CaseInsensitive);
     repeatEndExp = QRegExp("; repeat from \\*");
     repeatEndExp.setCaseSensitivity(Qt::CaseInsensitive);
-
+    
     repeat2Start = QRegExp("\\[");
     repeat2Start.setCaseSensitivity(Qt::CaseInsensitive);
     repeat2End = QRegExp("\\] [0-9]+ times");
@@ -44,13 +53,11 @@ CrochetHighlighter::CrochetHighlighter(QTextDocument *parent)
     
 }
 
-CrochetHighlighter::~CrochetHighlighter()
+void CrochetHighlighter::updateRules()
 {
-}
-
-void CrochetHighlighter::resetRules()
-{
-
+    highlightingRules.clear();
+    createHighlightRules();
+    
 }
 
 void CrochetHighlighter::highlightBlock(const QString &text)

@@ -78,6 +78,9 @@ public:
 
     void saveAllSets();
 
+signals:
+    void stitchListChanged();
+    
 private slots:
     void changeStitchName(QString setName, QString oldName, QString newName);
     

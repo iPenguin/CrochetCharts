@@ -14,10 +14,13 @@ public:
     CrochetHighlighter(QTextDocument *parent = 0);
     ~CrochetHighlighter();
 
-    void resetRules();
+    void createHighlightRules();
 
     QStringList keywords() { return keywordPatterns; }
-    
+
+public slots:
+    void updateRules();
+
 protected:
     void highlightBlock(const QString &text);
     
