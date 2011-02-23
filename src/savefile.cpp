@@ -202,8 +202,7 @@ SaveFile::FileError SaveFile::load()
             if (name == "colors")
                 loadColors(&stream);
             else if(name == "chart")
-                //loadChart(&stream);
-                stream.skipCurrentElement();
+                loadChart(&stream);
             else if (name == "stitches") //custom stitches
                 continue;
         }
@@ -231,17 +230,15 @@ void SaveFile::loadColors(QXmlStreamReader *stream)
 
     mw->patternColors().clear();
     
-    while(!(stream->tokenType() == QXmlStreamReader::EndElement && stream->name() == "color")) {
+    while(!(stream->isEndElement() && stream->name() == "colors")) {
         stream->readNext();
         QString tag = stream->name().toString();
-        qDebug() << tag;
+
         if (tag == "color") {
             QMap<QString, qint64> properties;
             properties.insert("count", 0); //count = 0 because we haven't added any cells yet.
             properties.insert("added", (qint64) stream->attributes().value("added").toString().toLongLong());
             mw->patternColors().insert(stream->readElementText(),properties);
-        } else {
-            qWarning() << "Cannot load unknown color property:" << stream->name();
         }
     }
 }
@@ -255,17 +252,15 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
     mTabWidget->addTab(tab, "");
 
     mTabWidget->widget(mTabWidget->indexOf(tab))->hide();
-    
-    while(!(stream->tokenType() == QXmlStreamReader::EndElement && stream->name() == "chart")) {
+
+    while(!(stream->isEndElement() && stream->name() == "chart")) {
         stream->readNext();
         QString tag = stream->name().toString();
-        qDebug() << tag;
+
         if(tag == "name") {
             tabName = stream->readElementText();
         } else if(tag == "cell") {
             loadCell(tab, stream);
-        } else {
-            qWarning() << "Cannot load unknown stitch property" << tag;
         }
     }
     
@@ -285,14 +280,13 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
     
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
-qDebug() << "loadCell" << stream->name() << stream->text();
-    while(!(stream->tokenType() == QXmlStreamReader::EndElement && stream->name() == "chart")) {
+
+    while(!(stream->isEndElement() && stream->name() == "cell")) {
         stream->readNext();
         QString tag = stream->name().toString();
-        qDebug() << tag;
+        
         if(tag == "stitch") {
             QString st = stream->readElementText();
-            qDebug() << "stitch: " << st;
             Stitch *s = StitchLibrary::inst()->findStitch(st);
             if(s)
                 c->setStitch(s);
@@ -310,8 +304,6 @@ qDebug() << "loadCell" << stream->name() << stream->text();
             transform = loadTransform(stream);
         } else if(tag == "angle") {
            angle = stream->readElementText().toDouble();
-        } else {
-            qWarning() << "Cannot load unknown stitch property" << stream->name() << stream->text().toString();
         }
     }
     
@@ -330,10 +322,10 @@ QTransform SaveFile::loadTransform(QXmlStreamReader* stream)
           m21, m22, m23,
           m31, m32, m33;
 
-    while(!(stream->tokenType() == QXmlStreamReader::EndElement && stream->name() == "chart")) {
+    while(!(stream->isEndElement() && stream->name() == "transformation")) {
         stream->readNext();
         QString tag = stream->name().toString();
-        qDebug() << "tag" << tag;
+
         if(tag == "m11") {
             m11 = (qreal)stream->readElementText().toDouble();
         } else if(tag == "m12") {
@@ -352,8 +344,6 @@ QTransform SaveFile::loadTransform(QXmlStreamReader* stream)
             m32 = (qreal)stream->readElementText().toDouble();
         } else if(tag == "m33") {
             m33 = (qreal)stream->readElementText().toDouble();
-        } else {
-            qWarning() << "Cannot load unknown transform property:" << stream->name();
         }
     }
     
