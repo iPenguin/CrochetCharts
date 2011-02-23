@@ -40,6 +40,8 @@ public:
     int columnCount(int row);
 
     Cell* cell(int row, int column);
+    //convert x,y to rows, columns.
+    Cell* cell(QPoint position);
 
     void removeCell(int row, int column);
     void createChart(int rows, int cols, QString stitch);
