@@ -11,10 +11,7 @@
 #include <QString>
 #include <QTabWidget>
 
-class QDomDocument;
-class QDomElement;
-class QDomNode;
-
+class QXmlStreamReader;
 class QXmlStreamWriter;
 
 class QDataStream;
@@ -45,10 +42,10 @@ private:
     bool saveCharts(QXmlStreamWriter *stream);
 
     bool loadCustomStitches(QDataStream *stream);
-    void loadColors(QDomElement *element);
-    void loadChart(QDomElement *element);
-    void loadCell(CrochetTab *tab, QDomElement *element);
-    QTransform loadTransform(QDomElement *element);
+    void loadColors(QXmlStreamReader *stream);
+    void loadChart(QXmlStreamReader *stream);
+    void loadCell(CrochetTab *tab, QXmlStreamReader *stream);
+    QTransform loadTransform(QXmlStreamReader *stream);
 
     //fileVersion of the file we're working with.
     qint32 mCurrentFileVersion;

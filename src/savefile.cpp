@@ -11,10 +11,7 @@
 
 #include <QFile>
 
-#include <QDomDocument>
-#include <QDomElement>
-#include <QDomNode>
-
+#include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
 #include <QDataStream>
@@ -190,30 +187,32 @@ SaveFile::FileError SaveFile::load()
         return SaveFile::Err_OpeningFile;
     }
     
-    QDomDocument doc("pattern");
-    
-    if (!doc.setContent(&file)) {
-        file.close();
-        qWarning() << "Couldn't set the contents of the xml file";
+    QXmlStreamReader stream(&file);
+
+    if(stream.hasError()) {
+        qWarning() << "Error loading saved file: " << stream.errorString();
         return SaveFile::Err_GettingFileContents;
     }
-    file.close();
-    
-    QDomElement docElem = doc.documentElement();
-    
-    QDomNode n = docElem.firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement(); // try to convert the node to an element.
-        if(!e.isNull()) {
-            if(e.tagName() == "colors") {
-                loadColors(&e);
-            } else if(e.tagName() == "chart") {
-                loadChart(&e);
-            } else if (e.tagName() == "stitch") { // custom stitches.
+
+    while (!stream.atEnd() && !stream.hasError())
+    {
+        stream.readNext();
+        if (stream.isStartElement()) {
+            QString name = stream.name().toString();
+            if (name == "colors")
+                loadColors(&stream);
+            else if(name == "chart")
+                //loadChart(&stream);
+                stream.skipCurrentElement();
+            else if (name == "stitches") //custom stitches
                 continue;
-            }
         }
-        n = n.nextSibling();
+    }
+
+    if (stream.hasError()) {
+        qWarning() << "XML error: " << stream.errorString() << endl;
+    } else if (stream.atEnd()) {
+        qWarning() << "Reached end, done" << endl;
     }
 
     return SaveFile::No_Error;
@@ -226,30 +225,28 @@ bool SaveFile::loadCustomStitches(QDataStream* stream)
     return true;
 }
 
-void SaveFile::loadColors(QDomElement* element)
+void SaveFile::loadColors(QXmlStreamReader *stream)
 {
     MainWindow *mw = qobject_cast<MainWindow*>(mParent);
 
     mw->patternColors().clear();
     
-    QDomNode n = element->firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement();
-        if(!e.isNull()) {
-            if(e.tagName() == "color") {
-                QMap<QString, qint64> properties;
-                properties.insert("count", 0); //count = 0 because we haven't added any cells yet.
-                properties.insert("added", (qint64)e.attribute("added").toLongLong());
-                mw->patternColors().insert(e.text(),properties);
-            } else {
-                qWarning() << "Cannot load unknown color property:" << e.tagName() << e.text();
-            }
+    while(!(stream->tokenType() == QXmlStreamReader::EndElement && stream->name() == "color")) {
+        stream->readNext();
+        QString tag = stream->name().toString();
+        qDebug() << tag;
+        if (tag == "color") {
+            QMap<QString, qint64> properties;
+            properties.insert("count", 0); //count = 0 because we haven't added any cells yet.
+            properties.insert("added", (qint64) stream->attributes().value("added").toString().toLongLong());
+            mw->patternColors().insert(stream->readElementText(),properties);
+        } else {
+            qWarning() << "Cannot load unknown color property:" << stream->name();
         }
-        n = n.nextSibling();
     }
 }
 
-void SaveFile::loadChart(QDomElement *element)
+void SaveFile::loadChart(QXmlStreamReader* stream)
 {
     MainWindow *mw = qobject_cast<MainWindow*>(mParent);
     CrochetTab* tab = mw->createTab();
@@ -259,27 +256,25 @@ void SaveFile::loadChart(QDomElement *element)
 
     mTabWidget->widget(mTabWidget->indexOf(tab))->hide();
     
-    QDomNode n = element->firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement();
-        if(!e.isNull()) {
-            if(e.tagName() == "name") {
-                tabName = e.text();
-            } else if(e.tagName() == "cell") {
-                loadCell(tab, &e);
-            } else {
-                qWarning() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
-            }
+    while(!(stream->tokenType() == QXmlStreamReader::EndElement && stream->name() == "chart")) {
+        stream->readNext();
+        QString tag = stream->name().toString();
+        qDebug() << tag;
+        if(tag == "name") {
+            tabName = stream->readElementText();
+        } else if(tag == "cell") {
+            loadCell(tab, stream);
+        } else {
+            qWarning() << "Cannot load unknown stitch property" << tag;
         }
-        n = n.nextSibling();
     }
-
+    
     int index = mTabWidget->indexOf(tab);
     mTabWidget->setTabText(index, tabName);
     mTabWidget->widget(mTabWidget->indexOf(tab))->show();
 }
 
-void SaveFile::loadCell(CrochetTab* tab, QDomElement *element)
+void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
 {
     CrochetCell* c = new CrochetCell();
     int row, column;
@@ -290,34 +285,34 @@ void SaveFile::loadCell(CrochetTab* tab, QDomElement *element)
     
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
-    
-    QDomNode n = element->firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement();
-        if(!e.isNull()) {
-            if(e.tagName() == "stitch") {
-                Stitch *s = StitchLibrary::inst()->findStitch(e.text());
-                if(s)
-                    c->setStitch(s);
-            } else if(e.tagName() == "row") {
-                row = e.text().toInt();
-            } else if(e.tagName() == "column") {
-                column = e.text().toInt();
-            } else if(e.tagName() == "color") {
-                color = e.text();
-            } else if(e.tagName() == "x") {
-                x = e.text().toInt();
-            } else if(e.tagName() == "y") {
-                y = e.text().toInt();
-            } else if(e.tagName() == "transformation") {
-                transform = loadTransform(&e);
-            } else if(e.tagName() == "angle") {
-                angle = e.text().toDouble();
-            } else {
-                qWarning() << "Cannot load stitch" << e.tagName() << e.text();
-            }
+qDebug() << "loadCell" << stream->name() << stream->text();
+    while(!(stream->tokenType() == QXmlStreamReader::EndElement && stream->name() == "chart")) {
+        stream->readNext();
+        QString tag = stream->name().toString();
+        qDebug() << tag;
+        if(tag == "stitch") {
+            QString st = stream->readElementText();
+            qDebug() << "stitch: " << st;
+            Stitch *s = StitchLibrary::inst()->findStitch(st);
+            if(s)
+                c->setStitch(s);
+        } else if(tag == "row") {
+            row = stream->readElementText().toInt();
+        } else if(tag == "column") {
+            column = stream->readElementText().toInt();
+        } else if(tag == "color") {
+            color = stream->readElementText();
+        } else if(tag == "x") {
+            x = stream->readElementText().toInt();
+        } else if(tag == "y") {
+            y = stream->readElementText().toInt();
+        } else if(tag == "transformation") {
+            transform = loadTransform(stream);
+        } else if(tag == "angle") {
+           angle = stream->readElementText().toDouble();
+        } else {
+            qWarning() << "Cannot load unknown stitch property" << stream->name() << stream->text().toString();
         }
-        n = n.nextSibling();
     }
     
     tab->scene()->appendCell(row, c, true);
@@ -327,43 +322,41 @@ void SaveFile::loadCell(CrochetTab* tab, QDomElement *element)
     c->setAngle(angle);
 }
 
-QTransform SaveFile::loadTransform(QDomElement *element)
+QTransform SaveFile::loadTransform(QXmlStreamReader* stream)
 {
     QTransform transform;
 
     qreal m11, m12, m13,
           m21, m22, m23,
           m31, m32, m33;
-    
-    QDomNode n = element->firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement();
-        if(!e.isNull()) {
-            if(e.tagName() == "m11") {
-                m11 = (qreal)e.text().toDouble();
-            } else if(e.tagName() == "m12") {
-                m12 = (qreal)e.text().toDouble();
-            } else if(e.tagName() == "m13") {
-                m13 = (qreal)e.text().toDouble();
-            } else if(e.tagName() == "m21") {
-                m21 = (qreal)e.text().toDouble();
-            } else if(e.tagName() == "m22") {
-                m22 = (qreal)e.text().toDouble();
-            } else if(e.tagName() == "m23") {
-                m23 = (qreal)e.text().toDouble();
-            } else if(e.tagName() == "m31") {
-                m31 = (qreal)e.text().toDouble();
-            } else if(e.tagName() == "m32") {
-                m32 = (qreal)e.text().toDouble();
-            } else if(e.tagName() == "m33") {
-                m33 = (qreal)e.text().toDouble();
-            } else {
-                qWarning() << "Cannot load unknown transform property:" << e.tagName() << e.text();
-            }
-        }
-        n = n.nextSibling();
-    }
 
+    while(!(stream->tokenType() == QXmlStreamReader::EndElement && stream->name() == "chart")) {
+        stream->readNext();
+        QString tag = stream->name().toString();
+        qDebug() << "tag" << tag;
+        if(tag == "m11") {
+            m11 = (qreal)stream->readElementText().toDouble();
+        } else if(tag == "m12") {
+            m12 = (qreal)stream->readElementText().toDouble();
+        } else if(tag == "m13") {
+            m13 = (qreal)stream->readElementText().toDouble();
+        } else if(tag == "m21") {
+            m21 = (qreal)stream->readElementText().toDouble();
+        } else if(tag == "m22") {
+            m22 = (qreal)stream->readElementText().toDouble();
+        } else if(tag == "m23") {
+            m23 = (qreal)stream->readElementText().toDouble();
+        } else if(tag == "m31") {
+            m31 = (qreal)stream->readElementText().toDouble();
+        } else if(tag == "m32") {
+            m32 = (qreal)stream->readElementText().toDouble();
+        } else if(tag == "m33") {
+            m33 = (qreal)stream->readElementText().toDouble();
+        } else {
+            qWarning() << "Cannot load unknown transform property:" << stream->name();
+        }
+    }
+    
     transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
     return transform;
 }
