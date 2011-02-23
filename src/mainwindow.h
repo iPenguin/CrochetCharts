@@ -102,6 +102,7 @@ private slots:
 
     void selectColor();
     void selectStitch(QModelIndex index);
+    void selectColor(QModelIndex index);
     
 private:
     void setupMenus();

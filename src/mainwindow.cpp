@@ -135,6 +135,7 @@ void MainWindow::setupStitchPalette()
 
     connect(ui->allStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
     connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
+    connect(ui->patternColors, SIGNAL(clicked(QModelIndex)), this, SLOT(selectColor(QModelIndex)));
 }
 
 void MainWindow::setupUndoView()
@@ -581,6 +582,18 @@ void MainWindow::selectStitch(QModelIndex index)
             tab->setEditStitch(stitch);
     }
     setEditMode(10);
+}
+
+void MainWindow::selectColor(QModelIndex index)
+{
+    QString color = index.data(Qt::ToolTipRole).toString();
+
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        if(tab)
+            tab->setEditBgColor(color);
+    }
+    setEditMode(11);
 }
 
 void MainWindow::documentNewChart()
