@@ -8,11 +8,12 @@
 #include <QUndoCommand>
 
 #include "cell.h"
+#include "crochetscene.h"
 
 class SetCellStitch : public QUndoCommand
 {
 public:
-     explicit SetCellStitch(Cell *cell, QString newSt, QUndoCommand* parent = 0);
+     explicit SetCellStitch(CrochetScene *s, QPoint pos, QString newSt, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -20,14 +21,15 @@ public:
 private:
     QString oldStitch;
     QString newStitch;
-    Cell *c;
+    QPoint position;
+    CrochetScene *scene;
 };
 
 
 class SetCellColor : public QUndoCommand
 {
 public:
-    explicit SetCellColor(Cell *cell, QColor newCl, QUndoCommand* parent = 0);
+    explicit SetCellColor(CrochetScene *s, QPoint pos, QColor newCl, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -35,7 +37,8 @@ public:
 private:
     QColor oldColor;
     QColor newColor;
-    Cell *c;
+    QPoint position;
+    CrochetScene *scene;
 };
 
 class SetCellRotation : public QUndoCommand
@@ -43,7 +46,7 @@ class SetCellRotation : public QUndoCommand
 public:
     enum { Id = 1234 };
     
-    SetCellRotation(Cell *cell, qreal rot, QUndoCommand* parent = 0);
+    SetCellRotation(CrochetScene *s, QPoint pos, qreal rot, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -54,7 +57,8 @@ public:
     
 private:
     qreal rotation;
-    Cell *c;
+    QPoint position;
+    CrochetScene *scene;
 };
 
 #endif //CROCHETCHARTCOMMANDS_H

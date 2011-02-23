@@ -10,75 +10,82 @@
 /*************************************************\
 | SetCellStitch                                   |
 \*************************************************/
-SetCellStitch::SetCellStitch(Cell *cell, QString newSt, QUndoCommand *parent)
+SetCellStitch::SetCellStitch(CrochetScene *s, QPoint pos, QString newSt, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    c = cell;
-    oldStitch = c->name();
+    position = pos;
+    scene = s;
+    oldStitch = scene->cell(position)->name();
     newStitch = newSt;
     setText(QObject::tr("Change Stitch: %1 -> %2").arg(oldStitch).arg(newStitch));
 }
 
 void SetCellStitch::redo()
 {
-    c->setStitch(newStitch);
+    scene->cell(position)->setStitch(newStitch);
 }
 
 void SetCellStitch::undo()
 {
-    c->setStitch(oldStitch);
+    scene->cell(position)->setStitch(oldStitch);
 }
 
 /*************************************************\
 | SetCellColor                                    |
 \*************************************************/
-SetCellColor::SetCellColor(Cell* cell, QColor newCl, QUndoCommand* parent)
+SetCellColor::SetCellColor(CrochetScene *s, QPoint pos, QColor newCl, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
-    c = cell;
-    oldColor = c->color();
+    position = pos;
+    scene = s;
+    oldColor = scene->cell(position)->color();
     newColor = newCl;
     setText(QObject::tr("Change Color: %1 -> %2").arg(oldColor.name()).arg(newColor.name()));
 }
 
 void SetCellColor::redo()
 {
-    c->setColor(newColor);
+    scene->cell(position)->setColor(newColor);
 }
 
 void SetCellColor::undo()
 {
-    c->setColor(oldColor);
+    scene->cell(position)->setColor(oldColor);
 }
 
 /*************************************************\
 | SetCellRotation                                 |
 \*************************************************/
-SetCellRotation::SetCellRotation(Cell* cell, qreal rot, QUndoCommand* parent)
+SetCellRotation::SetCellRotation(CrochetScene *s, QPoint pos, qreal rot, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
-    c = cell;
+    position = pos;
+    scene = s;
     rotation = rot;
     setText(QObject::tr("Change Position: %1").arg(rotation));
 }
 
 void SetCellRotation::redo()
 {
-    c->setTransform(QTransform().translate(32, 0).rotate(rotation).translate(-32, 0), true);
+    scene->cell(position)->setTransform(QTransform().translate(32, 0).rotate(rotation).translate(-32, 0), true);
 }
 
 void SetCellRotation::undo()
 {
-    c->setTransform(QTransform().translate(32, 0).rotate(-rotation).translate(-32, 0), true);
+    scene->cell(position)->setTransform(QTransform().translate(32, 0).rotate(-rotation).translate(-32, 0), true);
 }
 
 bool SetCellRotation::mergeWith(const QUndoCommand *command)
 {
     if(command->id() != id())
         return false;
-
+    
     const SetCellRotation *other = static_cast<const SetCellRotation*>(command);
-    if(other->c != c)
+
+    Cell *c = scene->cell(position);
+    Cell *otherC = scene->cell(other->position);
+    
+    if(otherC != c)
         return false;
     
     rotation += other->rotation;
