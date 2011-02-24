@@ -69,7 +69,7 @@ void StitchLibrary::loadStitchSets()
     if(QFileInfo(masterSet).exists())
         mBuiltIn->loadXmlFile(masterSet);
     else {
-        mBuiltIn->loadXmlFile(":/stitches.xml");
+        mBuiltIn->loadXmlFile(":/crochet.xml");
         mBuiltIn->stitchSetFileName = masterSet;
         mBuiltIn->saveXmlFile();
     }
