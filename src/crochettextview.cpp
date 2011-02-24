@@ -41,6 +41,10 @@ CrochetTextView::~CrochetTextView()
 
 void CrochetTextView::updateRow(int row)
 {
+    //FIXME: hackish? really what I want is don't update the row if we're editing the row in the textview.
+    if(this->hasFocus())
+        return;
+    
     QString rowText;
     QTextCursor curs = cursorAtRowStart(row);
     

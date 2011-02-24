@@ -103,7 +103,6 @@ int CrochetScene::rowCount()
 
 int CrochetScene::columnCount(int row)
 {
-    
     Q_ASSERT(mGrid.count() > row);
     return mGrid[row].count();
 }
@@ -120,6 +119,7 @@ void CrochetScene::appendCell(int row, Cell *c, bool fromSave)
     mGrid[row].append(c);
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
+    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
     
     //TODO: abstract out setting the position to a seperate function: void setCellPos(Cell *c);
     int i = mGrid[row].count() -1;
@@ -158,6 +158,8 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
         c = new CrochetCell();
         connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
         connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
+        connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
+        
         c->setStitch(stitch);
         addItem(c);
         modelRow.append(c);
@@ -172,12 +174,49 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
     emit rowAdded(row);
 }
 
+/*
+    int rowC = 8;
+    //FIXME: less then 8 stitches gives funny rows.
+    double widthInDegrees = 360.0 / columns;
+    double circumference = ((rowC + (row*6)) - (rowC * 1/3)) * mStitchWidth;  //(columns - (rowC * 1/3)) * mStitchWidth;
+    double diameter = circumference / M_PI;
+    double radius = diameter / 2;
+    qDebug() << widthInDegrees << circumference << diameter << radius;
+  
+    Cell *c;
+ 
+    for(int i = 0; i < columns; ++i) {
+        double degrees = (widthInDegrees*i) - (widthInDegrees/2);
+        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+        qDebug() << degrees << finish;
+        c = new CrochetCell(":/stitches/chain.svg");
+        addItem(c);
+        c->setPos(finish);
+        c->setToolTip(QString::number(i+1));
+        c->rotate(degrees + (widthInDegrees/2));
+    }
+*/
 QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF origin)
 {
     // Convert from degrees to radians via multiplication by PI/180
     double x = (double)(radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
     double y = (double)(radius * sin(angleInDegrees * M_PI / 180)) + origin.y();
     return QPointF(x, y);
+}
+
+void CrochetScene::stitchUpdated(QString oldSt, QString newSt)
+{
+    if(oldSt.isEmpty() || oldSt.isNull())
+        return;
+    
+    CrochetCell *c = qobject_cast<CrochetCell*>(sender());
+    if(!c)
+        return;
+
+    QPoint pos = findGridPosition(c);
+    qDebug() << oldSt << newSt << pos;
+    emit rowChanged(pos.y());
+    
 }
 
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
@@ -245,29 +284,6 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     QGraphicsScene::mouseReleaseEvent(e);
 }
-
-/*
-   int rowC = 8;
-   //FIXME: less then 8 stitches gives funny rows.
-   double widthInDegrees = 360.0 / columns;
-   double circumference = ((rowC + (row*6)) - (rowC * 1/3)) * mStitchWidth;  //(columns - (rowC * 1/3)) * mStitchWidth;
-   double diameter = circumference / M_PI;
-   double radius = diameter / 2;
- qDebug() << widthInDegrees << circumference << diameter << radius;
- 
- Cell *c;
- 
- for(int i = 0; i < columns; ++i) {
-     double degrees = (widthInDegrees*i) - (widthInDegrees/2);
-     QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
-     qDebug() << degrees << finish;
-     c = new CrochetCell(":/stitches/chain.svg");
-     addItem(c);
-     c->setPos(finish);
-     c->setToolTip(QString::number(i+1));
-     c->rotate(degrees + (widthInDegrees/2));
-     }
-*/
 
 void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
 {
@@ -391,21 +407,15 @@ void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!c)
         return;
     
-    if(c->name() != mEditStitch) {
-        QPoint pt = findGridPosition(c);
-        mUndoStack.push(new SetCellStitch(this, pt, mEditStitch));
-        emit rowChanged(pt.y());
-    }
+    if(c->name() != mEditStitch)
+        mUndoStack.push(new SetCellStitch(this, findGridPosition(c), mEditStitch));
 }
 
 void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     if(mCurCell) {
-        if(mCurCell->name() != mEditStitch) {
-            QPoint pt = findGridPosition(mCurCell);
-            mUndoStack.push(new SetCellStitch(this, pt, mEditStitch));
-            emit rowChanged(pt.y());
-        }
+        if(mCurCell->name() != mEditStitch)
+            mUndoStack.push(new SetCellStitch(this, findGridPosition(mCurCell), mEditStitch));
     }
     
     mCurCell = 0;
