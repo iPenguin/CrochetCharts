@@ -278,6 +278,10 @@ void MainWindow::setupMenus()
     
     //misc items
     connect(&mUndoGroup, SIGNAL(documentCleanChanged(bool)), this, SLOT(documentIsModified(bool)));
+
+
+    connect(ui->actionStitchLegend, SIGNAL(triggered()), this, SLOT(stitchLegend()));
+    connect(ui->actionColorLegend, SIGNAL(triggered()), this, SLOT(colorLegend()));
     
     updateMenuItems();
 }
@@ -460,6 +464,26 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
     
 }
 
+void MainWindow::colorLegend()
+{
+    QPainter *p = new QPainter();
+    QPixmap pix = QPixmap(300, 300);
+    p->begin(&pix);
+    generateColorLegend(p);
+    p->end();
+    pix.save("/home/brian/colorLegend.png");
+}
+
+void MainWindow::stitchLegend()
+{
+    QPainter *p = new QPainter();
+    QPixmap pix = QPixmap(300, 300);
+    p->begin(&pix);
+    generateStitchLegend(p);
+    p->end();
+    pix.save("/home/brian/stitchLegend.png");
+}
+
 //TODO: find out if there is a better place for the legend/rendering fucntions.
 void MainWindow::generateStitchLegend(QPainter* painter)
 {
@@ -498,17 +522,28 @@ void MainWindow::generateColorLegend(QPainter* painter)
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     QStringList keys = mPatternColors.keys();
+    QMap<qint64, QString> sortedColors;
+    
+    foreach(QString key, keys) {
+        qint64 added = mPatternColors.value(key).value("added");
+        sortedColors.insert(added, key);
+    }
+    
+    int margin = 5;
 
+    painter->fillRect(QRect(0,0,300,300), Qt::white);
     bool showHexValues = Settings::inst()->value("showHexValues").toBool();
     int columnCount = Settings::inst()->value("colorColumnCount").toInt();
     QString colorNumber = Settings::inst()->value("colorPrefix").toString();
+
+    QList<qint64> sortedKeys = sortedColors.keys();
+
+    QString prefix = Settings::inst()->value("colorPrefix").toString();
     
-    foreach(QString key, keys) {
-        qDebug() << key << mPatternColors.value(key);
-
-        painter->drawPixmap(0,0, drawColorBox(QColor(key), QSize(32, 32)));
-
-        colorNumber += QString::number(mPatternColors.value(key).value("color number"));
+    for(int i = 0; i < sortedKeys.count(); ++i) {
+        QString hex = sortedColors.value(sortedKeys.at(i));
+        painter->drawPixmap(margin + (margin * i) + (i * 32), margin, drawColorBox(QColor(hex), QSize(32, 32)));
+        painter->drawText(margin + (margin * i) + (i * 32), margin + 32 + margin + 12,  prefix + QString::number(i + 1));
         painter->drawText(0,0, colorNumber);
     }
     

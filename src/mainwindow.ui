@@ -280,6 +280,8 @@
     <addaction name="actionAddNotes"/>
     <addaction name="separator"/>
     <addaction name="actionRemoveTab"/>
+    <addaction name="actionStitchLegend"/>
+    <addaction name="actionColorLegend"/>
    </widget>
    <widget class="QMenu" name="menuChart">
     <property name="title">
@@ -841,6 +843,16 @@
    </property>
    <property name="text">
     <string>Show Undo History</string>
+   </property>
+  </action>
+  <action name="actionStitchLegend">
+   <property name="text">
+    <string>Stitch Legend</string>
+   </property>
+  </action>
+  <action name="actionColorLegend">
+   <property name="text">
+    <string>Color Legend</string>
    </property>
   </action>
  </widget>
