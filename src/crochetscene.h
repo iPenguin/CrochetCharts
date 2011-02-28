@@ -55,7 +55,10 @@ public:
     void setEditBgColor(QColor color) { mEditBgColor = color; }
 
     QUndoStack* undoStack() { return &mUndoStack; }
-    
+
+private slots:
+    void stitchUpdated(QString oldSt, QString newSt);
+
 signals:
     void rowChanged(int row);
     void rowsChanged(int startRow);

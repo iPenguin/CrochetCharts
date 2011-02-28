@@ -43,6 +43,8 @@
 #include <QUndoStack>
 #include <QUndoView>
 
+#include "legends.h"
+
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
     mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
@@ -278,6 +280,10 @@ void MainWindow::setupMenus()
     
     //misc items
     connect(&mUndoGroup, SIGNAL(documentCleanChanged(bool)), this, SLOT(documentIsModified(bool)));
+
+
+    connect(ui->actionStitchLegend, SIGNAL(triggered()), this, SLOT(stitchLegend()));
+    connect(ui->actionColorLegend, SIGNAL(triggered()), this, SLOT(cLegend()));
     
     updateMenuItems();
 }
@@ -460,6 +466,46 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
     
 }
 
+void MainWindow::cLegend()
+{
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    QDialog *d = new QDialog(this);
+    QGraphicsView *view = new QGraphicsView(this);
+    QGraphicsScene *scene = new QGraphicsScene(view);
+    QVBoxLayout *l = new QVBoxLayout(d);
+    d->setLayout(l);
+    view->setScene(scene);
+
+    l->addWidget(view);
+    
+    ColorLegend *cl = new ColorLegend(&mPatternColors);
+    scene->addItem(cl);
+
+    QApplication::restoreOverrideCursor();
+
+    //TODO: allow the user to check and uncheck options at this point before generating the file.
+    d->exec();
+    
+    QPainter p(this);
+    QPixmap pix = QPixmap(scene->sceneRect().size().toSize());
+    p.begin(&pix);
+    scene->render(&p);
+    p.end();
+    pix.save("/home/brian/colorLegend.png");    
+    
+}
+
+void MainWindow::stitchLegend()
+{
+    QPainter *p = new QPainter();
+    QPixmap pix = QPixmap(300, 300);
+    p->begin(&pix);
+    generateStitchLegend(p);
+    p->end();
+    pix.save("/home/brian/stitchLegend.png");
+}
+
 //TODO: find out if there is a better place for the legend/rendering fucntions.
 void MainWindow::generateStitchLegend(QPainter* painter)
 {
@@ -469,7 +515,10 @@ void MainWindow::generateStitchLegend(QPainter* painter)
     bool drawDescription = Settings::inst()->value("showStitchDescription").toBool();
     bool drawWrongSide = Settings::inst()->value("showWrongSideDescription").toBool();
     int columnCount = Settings::inst()->value("stitchColumnCount").toInt();
-    
+
+    painter->fillRect(QRect(0, 0, 300, 300 ), Qt::white);
+
+    int i = 1;
     foreach(QString key, keys) {
         Stitch *s = StitchLibrary::inst()->findStitch(key);
         if(!s) {
@@ -477,8 +526,10 @@ void MainWindow::generateStitchLegend(QPainter* painter)
             continue;
         }
 
+        int x = i * 64 + (i * 5);
+        int y = 64;
         if(s->isSvg())
-            s->renderSvg()->render(painter);
+            s->renderSvg()->render(painter, QRect(QPoint(x, y), s->renderSvg()->defaultSize()));
         else
             painter->drawPixmap(0,0, *(s->renderPixmap()));
 
@@ -488,31 +539,15 @@ void MainWindow::generateStitchLegend(QPainter* painter)
             painter->drawText(0,0, s->description());
         if(drawWrongSide)
             painter->drawText(0,0, s->wrongSide());
-        
+
+        ++i;
     }
 
     QApplication::restoreOverrideCursor();
 }
 
-void MainWindow::generateColorLegend(QPainter* painter)
+void MainWindow::generateColorLegend()
 {
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    QStringList keys = mPatternColors.keys();
-
-    bool showHexValues = Settings::inst()->value("showHexValues").toBool();
-    int columnCount = Settings::inst()->value("colorColumnCount").toInt();
-    QString colorNumber = Settings::inst()->value("colorPrefix").toString();
-    
-    foreach(QString key, keys) {
-        qDebug() << key << mPatternColors.value(key);
-
-        painter->drawPixmap(0,0, drawColorBox(QColor(key), QSize(32, 32)));
-
-        colorNumber += QString::number(mPatternColors.value(key).value("color number"));
-        painter->drawText(0,0, colorNumber);
-    }
-    
-    QApplication::restoreOverrideCursor();
     
 }
 

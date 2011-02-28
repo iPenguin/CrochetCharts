@@ -209,9 +209,7 @@ SaveFile::FileError SaveFile::load()
     }
 
     if (stream.hasError()) {
-        qWarning() << "XML error: " << stream.errorString() << endl;
-    } else if (stream.atEnd()) {
-        qWarning() << "Reached end, done" << endl;
+        qWarning() << "XML error: " << stream.errorString();
     }
 
     return SaveFile::No_Error;
@@ -280,6 +278,7 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
     
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
+    QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SLOT(stitchUpdated(QString,QString)));
 
     while(!(stream->isEndElement() && stream->name() == "cell")) {
         stream->readNext();

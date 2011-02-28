@@ -41,6 +41,10 @@ CrochetTextView::~CrochetTextView()
 
 void CrochetTextView::updateRow(int row)
 {
+    //FIXME: hackish? really what I want is don't update the row if we're editing the row in the textview.
+    if(this->hasFocus())
+        return;
+    
     QString rowText;
     QTextCursor curs = cursorAtRowStart(row);
     
@@ -432,10 +436,29 @@ void CrochetTextView::keyPressEvent(QKeyEvent *e)
     }
 
     switch(e->key()) {
+        case Qt::Key_Backspace: { //only eat backspace if we're at the start of the line
+            if(!textCursor().atBlockStart()) {
+                QPlainTextEdit::keyPressEvent(e);
+                return;
+            } else {
+                e->ignore();
+                return;
+            }
+        }
+        case Qt::Key_Delete: { //only eat delete if we're at the end of the line
+            if(!textCursor().atBlockEnd()) {
+                QPlainTextEdit::keyPressEvent(e);
+                return;
+            } else {
+                e->ignore();
+                return;
+            }
+        }
         case Qt::Key_Enter:
         case Qt::Key_Return:
             e->ignore(); //eat enter/return.
             return;
+
         case Qt::Key_Up:
         case Qt::Key_Down:
         case Qt::Key_Left:
