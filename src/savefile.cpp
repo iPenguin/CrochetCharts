@@ -209,9 +209,7 @@ SaveFile::FileError SaveFile::load()
     }
 
     if (stream.hasError()) {
-        qWarning() << "XML error: " << stream.errorString() << endl;
-    } else if (stream.atEnd()) {
-        qWarning() << "Reached end, done" << endl;
+        qWarning() << "XML error: " << stream.errorString();
     }
 
     return SaveFile::No_Error;
