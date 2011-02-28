@@ -468,16 +468,32 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
 
 void MainWindow::cLegend()
 {
-    ColorLegend *cl = new ColorLegend(this);
-    ui->centralWidget->layout()->addWidget(cl);
-    cl->update();
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    QDialog *d = new QDialog(this);
+    QGraphicsView *view = new QGraphicsView(this);
+    QGraphicsScene *scene = new QGraphicsScene(view);
+    QVBoxLayout *l = new QVBoxLayout(d);
+    d->setLayout(l);
+    view->setScene(scene);
+
+    l->addWidget(view);
     
-    //QPainter *p = new QPainter();
-    //QPixmap pix = QPixmap(300, 300);
-    //p->begin(&pix);
-    //generateColorLegend();
-    //p->end();
-    //pix.save("/home/brian/colorLegend.png");
+    ColorLegend *cl = new ColorLegend(&mPatternColors);
+    scene->addItem(cl);
+
+    QApplication::restoreOverrideCursor();
+
+    //TODO: allow the user to check and uncheck options at this point before generating the file.
+    d->exec();
+    
+    QPainter p(this);
+    QPixmap pix = QPixmap(scene->sceneRect().size().toSize());
+    p.begin(&pix);
+    scene->render(&p);
+    p.end();
+    pix.save("/home/brian/colorLegend.png");    
+    
 }
 
 void MainWindow::stitchLegend()
@@ -532,61 +548,6 @@ void MainWindow::generateStitchLegend(QPainter* painter)
 
 void MainWindow::generateColorLegend()
 {
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    QStringList keys = mPatternColors.keys();
-    QMap<qint64, QString> sortedColors;
-    
-    foreach(QString key, keys) {
-        qint64 added = mPatternColors.value(key).value("added");
-        sortedColors.insert(added, key);
-    }
-
-    QPainter *painter = new QPainter();
- 
-    int margin = 5;
-    int iconWidth = 32;
-    int iconHeight = 32;
-    int textHeight = painter->fontMetrics().height();
-
-    bool showHexValues = Settings::inst()->value("showHexValues").toBool();
-    int columnCount = Settings::inst()->value("colorColumnCount").toInt();
-    QString colorNumber = Settings::inst()->value("colorPrefix").toString();
-    QString prefix = Settings::inst()->value("colorPrefix").toString();
-    QList<qint64> sortedKeys = sortedColors.keys();
-
-    int imageHeight = sortedColors.count() * (margin + iconHeight);
-    int imageWidth = margin + iconWidth + margin +
-                        painter->fontMetrics().width(prefix + sortedColors.count()) +
-                        painter->fontMetrics().width(" - #FFFFFF");
-
-    QPixmap pix = QPixmap(imageWidth, imageHeight);
-    painter->begin(&pix);
-                        
-    painter->fillRect(QRect(0,0,imageWidth,imageHeight), Qt::white);
-    
-    for(int i = 0; i < sortedKeys.count(); ++i) {
-        QString hex = sortedColors.value(sortedKeys.at(i));
-        int width = painter->fontMetrics().width(hex);
-        
-        painter->drawPixmap(margin,
-                            margin + ((margin + iconHeight) * i),
-                            drawColorBox(QColor(hex), QSize(iconWidth, iconHeight)));
-        painter->drawText(margin + iconWidth + margin,
-                          margin + ((margin + iconHeight + 12) * i),
-                          prefix + QString::number(i + 1));
-        if(showHexValues)
-            painter->drawText(margin + iconWidth + margin +
-                              painter->fontMetrics().width(prefix + QString::number(i + 1)),
-                              margin + ((margin + iconHeight) * i) + textHeight,
-                              hex);
-        painter->drawText(0,0, colorNumber);
-    }
-
-
-    painter->end();
-    pix.save("/home/brian/colorLegend.png");
-    
-    QApplication::restoreOverrideCursor();
     
 }
 
