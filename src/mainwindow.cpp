@@ -43,6 +43,8 @@
 #include <QUndoStack>
 #include <QUndoView>
 
+#include "legends.h"
+
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
     mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
@@ -281,7 +283,7 @@ void MainWindow::setupMenus()
 
 
     connect(ui->actionStitchLegend, SIGNAL(triggered()), this, SLOT(stitchLegend()));
-    connect(ui->actionColorLegend, SIGNAL(triggered()), this, SLOT(colorLegend()));
+    connect(ui->actionColorLegend, SIGNAL(triggered()), this, SLOT(cLegend()));
     
     updateMenuItems();
 }
@@ -464,14 +466,18 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
     
 }
 
-void MainWindow::colorLegend()
+void MainWindow::cLegend()
 {
-    QPainter *p = new QPainter();
-    QPixmap pix = QPixmap(300, 300);
-    p->begin(&pix);
-    generateColorLegend(p);
-    p->end();
-    pix.save("/home/brian/colorLegend.png");
+    ColorLegend *cl = new ColorLegend(this);
+    ui->centralWidget->layout()->addWidget(cl);
+    cl->update();
+    
+    //QPainter *p = new QPainter();
+    //QPixmap pix = QPixmap(300, 300);
+    //p->begin(&pix);
+    //generateColorLegend();
+    //p->end();
+    //pix.save("/home/brian/colorLegend.png");
 }
 
 void MainWindow::stitchLegend()
@@ -493,7 +499,10 @@ void MainWindow::generateStitchLegend(QPainter* painter)
     bool drawDescription = Settings::inst()->value("showStitchDescription").toBool();
     bool drawWrongSide = Settings::inst()->value("showWrongSideDescription").toBool();
     int columnCount = Settings::inst()->value("stitchColumnCount").toInt();
-    
+
+    painter->fillRect(QRect(0, 0, 300, 300 ), Qt::white);
+
+    int i = 1;
     foreach(QString key, keys) {
         Stitch *s = StitchLibrary::inst()->findStitch(key);
         if(!s) {
@@ -501,8 +510,10 @@ void MainWindow::generateStitchLegend(QPainter* painter)
             continue;
         }
 
+        int x = i * 64 + (i * 5);
+        int y = 64;
         if(s->isSvg())
-            s->renderSvg()->render(painter);
+            s->renderSvg()->render(painter, QRect(QPoint(x, y), s->renderSvg()->defaultSize()));
         else
             painter->drawPixmap(0,0, *(s->renderPixmap()));
 
@@ -512,13 +523,14 @@ void MainWindow::generateStitchLegend(QPainter* painter)
             painter->drawText(0,0, s->description());
         if(drawWrongSide)
             painter->drawText(0,0, s->wrongSide());
-        
+
+        ++i;
     }
 
     QApplication::restoreOverrideCursor();
 }
 
-void MainWindow::generateColorLegend(QPainter* painter)
+void MainWindow::generateColorLegend()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     QStringList keys = mPatternColors.keys();
@@ -528,24 +540,51 @@ void MainWindow::generateColorLegend(QPainter* painter)
         qint64 added = mPatternColors.value(key).value("added");
         sortedColors.insert(added, key);
     }
-    
-    int margin = 5;
 
-    painter->fillRect(QRect(0,0,300,300), Qt::white);
+    QPainter *painter = new QPainter();
+ 
+    int margin = 5;
+    int iconWidth = 32;
+    int iconHeight = 32;
+    int textHeight = painter->fontMetrics().height();
+
     bool showHexValues = Settings::inst()->value("showHexValues").toBool();
     int columnCount = Settings::inst()->value("colorColumnCount").toInt();
     QString colorNumber = Settings::inst()->value("colorPrefix").toString();
-
+    QString prefix = Settings::inst()->value("colorPrefix").toString();
     QList<qint64> sortedKeys = sortedColors.keys();
 
-    QString prefix = Settings::inst()->value("colorPrefix").toString();
+    int imageHeight = sortedColors.count() * (margin + iconHeight);
+    int imageWidth = margin + iconWidth + margin +
+                        painter->fontMetrics().width(prefix + sortedColors.count()) +
+                        painter->fontMetrics().width(" - #FFFFFF");
+
+    QPixmap pix = QPixmap(imageWidth, imageHeight);
+    painter->begin(&pix);
+                        
+    painter->fillRect(QRect(0,0,imageWidth,imageHeight), Qt::white);
     
     for(int i = 0; i < sortedKeys.count(); ++i) {
         QString hex = sortedColors.value(sortedKeys.at(i));
-        painter->drawPixmap(margin + (margin * i) + (i * 32), margin, drawColorBox(QColor(hex), QSize(32, 32)));
-        painter->drawText(margin + (margin * i) + (i * 32), margin + 32 + margin + 12,  prefix + QString::number(i + 1));
+        int width = painter->fontMetrics().width(hex);
+        
+        painter->drawPixmap(margin,
+                            margin + ((margin + iconHeight) * i),
+                            drawColorBox(QColor(hex), QSize(iconWidth, iconHeight)));
+        painter->drawText(margin + iconWidth + margin,
+                          margin + ((margin + iconHeight + 12) * i),
+                          prefix + QString::number(i + 1));
+        if(showHexValues)
+            painter->drawText(margin + iconWidth + margin +
+                              painter->fontMetrics().width(prefix + QString::number(i + 1)),
+                              margin + ((margin + iconHeight) * i) + textHeight,
+                              hex);
         painter->drawText(0,0, colorNumber);
     }
+
+
+    painter->end();
+    pix.save("/home/brian/colorLegend.png");
     
     QApplication::restoreOverrideCursor();
     

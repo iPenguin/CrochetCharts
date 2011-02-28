@@ -105,7 +105,7 @@ private slots:
     void selectColor(QModelIndex index);
 
     void stitchLegend();
-    void colorLegend();
+    void cLegend();
     
 private:
     void setupMenus();
@@ -131,7 +131,7 @@ private:
     void exportImg(QString selection, QString fileName, QSize size, int resolution);
 
     void generateStitchLegend(QPainter *painter);
-    void generateColorLegend(QPainter *painter);
+    void generateColorLegend();
 
     QPixmap drawColorBox(QColor color, QSize size);
     
