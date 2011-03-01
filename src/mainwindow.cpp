@@ -282,8 +282,8 @@ void MainWindow::setupMenus()
     connect(&mUndoGroup, SIGNAL(documentCleanChanged(bool)), this, SLOT(documentIsModified(bool)));
 
 
-    connect(ui->actionStitchLegend, SIGNAL(triggered()), this, SLOT(stitchLegend()));
-    connect(ui->actionColorLegend, SIGNAL(triggered()), this, SLOT(cLegend()));
+    connect(ui->actionStitchLegend, SIGNAL(triggered()), this, SLOT(generateStitchLegend()));
+    connect(ui->actionColorLegend, SIGNAL(triggered()), this, SLOT(generateColorLegend()));
     
     updateMenuItems();
 }
@@ -466,8 +466,19 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
     
 }
 
-void MainWindow::cLegend()
+void MainWindow::generateColorLegend()
 {
+    if(mPatternColors.count() < 1) {
+        QMessageBox msgbox(this);
+        msgbox.setText(tr("There are no colors to put into the key."));
+        msgbox.setInformativeText(tr("A color key will not be generated."));
+        msgbox.setIcon(QMessageBox::Information);
+        msgbox.setStandardButtons(QMessageBox::Ok);
+
+        msgbox.exec();
+        return;
+    }
+    
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     QDialog *d = new QDialog(this);
@@ -496,59 +507,44 @@ void MainWindow::cLegend()
     
 }
 
-void MainWindow::stitchLegend()
+void MainWindow::generateStitchLegend()
 {
-    QPainter *p = new QPainter();
-    QPixmap pix = QPixmap(300, 300);
-    p->begin(&pix);
-    generateStitchLegend(p);
-    p->end();
-    pix.save("/home/brian/stitchLegend.png");
-}
-
-//TODO: find out if there is a better place for the legend/rendering fucntions.
-void MainWindow::generateStitchLegend(QPainter* painter)
-{
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    QStringList keys = mPatternStitches.keys();
-
-    bool drawDescription = Settings::inst()->value("showStitchDescription").toBool();
-    bool drawWrongSide = Settings::inst()->value("showWrongSideDescription").toBool();
-    int columnCount = Settings::inst()->value("stitchColumnCount").toInt();
-
-    painter->fillRect(QRect(0, 0, 300, 300 ), Qt::white);
-
-    int i = 1;
-    foreach(QString key, keys) {
-        Stitch *s = StitchLibrary::inst()->findStitch(key);
-        if(!s) {
-            qWarning() << "Couldn't find stitch while generating legend: " << key;
-            continue;
-        }
-
-        int x = i * 64 + (i * 5);
-        int y = 64;
-        if(s->isSvg())
-            s->renderSvg()->render(painter, QRect(QPoint(x, y), s->renderSvg()->defaultSize()));
-        else
-            painter->drawPixmap(0,0, *(s->renderPixmap()));
-
-        painter->drawText(0,0, s->name());
-
-        if(drawDescription)
-            painter->drawText(0,0, s->description());
-        if(drawWrongSide)
-            painter->drawText(0,0, s->wrongSide());
-
-        ++i;
+    if(mPatternStitches.count() < 1) {
+        QMessageBox msgbox(this);
+        msgbox.setText(tr("There are no colors to put into the key."));
+        msgbox.setInformativeText(tr("A color key will not be generated."));
+        msgbox.setIcon(QMessageBox::Information);
+        msgbox.setStandardButtons(QMessageBox::Ok);
+        
+        msgbox.exec();
+        return;
     }
-
-    QApplication::restoreOverrideCursor();
-}
-
-void MainWindow::generateColorLegend()
-{
     
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    
+    QDialog *d = new QDialog(this);
+    QGraphicsView *view = new QGraphicsView(this);
+    QGraphicsScene *scene = new QGraphicsScene(view);
+    QVBoxLayout *l = new QVBoxLayout(d);
+    d->setLayout(l);
+    view->setScene(scene);
+    
+    l->addWidget(view);
+    
+    StitchLegend *sl = new StitchLegend(&mPatternStitches);
+    scene->addItem(sl);
+    
+    QApplication::restoreOverrideCursor();
+    
+    //TODO: allow the user to check and uncheck options at this point before generating the file.
+    d->exec();
+    
+    QPainter p(this);
+    QPixmap pix = QPixmap(scene->sceneRect().size().toSize());
+    p.begin(&pix);
+    scene->render(&p);
+    p.end();
+    pix.save("/home/brian/stitchLegend.png");
 }
 
 QPixmap MainWindow::drawColorBox(QColor color, QSize size)

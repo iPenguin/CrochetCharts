@@ -8,6 +8,16 @@
 #include <QGraphicsWidget>
 #include <QMap>
 
+namespace Legend {
+    const int margin = 5;
+    
+    const int iconHeight = 32;
+    const int iconWidth = 32;
+
+    QPixmap drawColorBox(QColor color, QSize size);
+    
+}
+
 class ColorLegend : public QGraphicsWidget
 {
     Q_OBJECT
@@ -17,21 +27,37 @@ public:
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-    QPixmap drawColorBox(QColor color, QSize size);
     
 private:
 
     QMap<QString, QMap<QString, qint64> > *mPatternColors;
     QMap<qint64, QString> sortedColors;
     
-    int margin;
-    int iconWidth;
-    int iconHeight;
-
     bool showHexValues;
     int columnCount;
     QString colorNumber;
     QString prefix;
     
 };
+
+
+class StitchLegend : public QGraphicsWidget
+{
+    Q_OBJECT
+public:
+    StitchLegend(QMap<QString, int> *stitches, QGraphicsItem* parent = 0);
+    ~StitchLegend();
+
+protected:
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,  QWidget *widget = 0);
+
+
+private:
+    QMap<QString, int> *mPatternStitches;
+
+    bool drawDescription;
+    bool drawWrongSide;
+    int columnCount;
+};
+
 #endif //LEGENDS_H
