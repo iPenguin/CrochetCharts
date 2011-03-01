@@ -280,10 +280,6 @@ void MainWindow::setupMenus()
     
     //misc items
     connect(&mUndoGroup, SIGNAL(documentCleanChanged(bool)), this, SLOT(documentIsModified(bool)));
-
-
-    connect(ui->actionStitchLegend, SIGNAL(triggered()), this, SLOT(generateStitchLegend()));
-    connect(ui->actionColorLegend, SIGNAL(triggered()), this, SLOT(generateColorLegend()));
     
     updateMenuItems();
 }
@@ -349,48 +345,24 @@ void MainWindow::fileExport()
     if(!hasTab())
         return;
     
-    ExportUi d(ui->tabWidget, this);
+    ExportUi d(ui->tabWidget, &mPatternStitches, &mPatternColors, this);
     if(d.exec() != QDialog::Accepted)
-        return;
-
-    if(Settings::inst()->isDemoVersion()) {
-        Settings::inst()->trialVersionMessage(this);
-        return;
-    }
-    
-    QString filter;
-    if(d.exportType == "pdf")
-        filter = tr("Portable Document Format (pdf)(*.pdf)");
-    else if(d.exportType == "svg")
-        filter = tr("Scaled Vector Graphics (svg)(*.svg *.svgz)");
-    else if(d.exportType == "jpeg")
-        filter = tr("Joint Photographic Experts Group (jpeg)(*.jpeg *.jpg)");
-    else if(d.exportType == "png")
-        filter = tr("Portable Network Graphics (png)(*.png)");
-    else if(d.exportType == "gif")
-        filter = tr("Graphics Interchange Format (gif)(*.gif)");
-    else if(d.exportType == "tiff")
-        filter = tr("Tagged Image File Format (tiff)(*.tiff *.tif)");
-    else if(d.exportType == "bmp")
-        filter = tr("Bitmap (bmp)(*.bmp)");
-    else
-        filter = tr("");
-
-    QString fileLoc = Settings::inst()->value("fileLocation").toString();
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Export Pattern As..."), fileLoc, filter);
-
-    if(fileName.isEmpty())
         return;
 
     if(d.exportType.isEmpty())
         return;
-    
-    if(d.exportType == "pdf")
-        exportPdf(d.selection, fileName, QSize(d.width, d.height), d.resolution);
-    else if(d.exportType == "svg")
-        exportSvg(d.selection, fileName, QSize(d.width, d.height));
-    else
-        exportImg(d.selection, fileName, QSize(d.width, d.height), d.resolution);
+
+    //TODO: add options for legends to the dialog.
+    if(d.selection == tr("Stitch Legend") || d.selection == tr("Color Legend")) {
+
+    } else {
+        if(d.exportType == "pdf")
+            exportPdf(d.selection, d.fileName, QSize(d.width, d.height), d.resolution);
+        else if(d.exportType == "svg")
+            exportSvg(d.selection, d.fileName, QSize(d.width, d.height));
+        else
+            exportImg(d.selection, d.fileName, QSize(d.width, d.height), d.resolution);
+    }
 }
 
 void MainWindow::exportPdf(QString selection, QString fileName, QSize size, int resolution)
@@ -464,87 +436,6 @@ void MainWindow::exportImg(QString selection, QString fileName, QSize size, int 
 
     img.save(fileName /*, file type, img quality.*/); 
     
-}
-
-void MainWindow::generateColorLegend()
-{
-    if(mPatternColors.count() < 1) {
-        QMessageBox msgbox(this);
-        msgbox.setText(tr("There are no colors to put into the key."));
-        msgbox.setInformativeText(tr("A color key will not be generated."));
-        msgbox.setIcon(QMessageBox::Information);
-        msgbox.setStandardButtons(QMessageBox::Ok);
-
-        msgbox.exec();
-        return;
-    }
-    
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-    QDialog *d = new QDialog(this);
-    QGraphicsView *view = new QGraphicsView(this);
-    QGraphicsScene *scene = new QGraphicsScene(view);
-    QVBoxLayout *l = new QVBoxLayout(d);
-    d->setLayout(l);
-    view->setScene(scene);
-
-    l->addWidget(view);
-    
-    ColorLegend *cl = new ColorLegend(&mPatternColors);
-    scene->addItem(cl);
-
-    QApplication::restoreOverrideCursor();
-
-    //TODO: allow the user to check and uncheck options at this point before generating the file.
-    d->exec();
-    
-    QPainter p(this);
-    QPixmap pix = QPixmap(scene->sceneRect().size().toSize());
-    p.begin(&pix);
-    scene->render(&p);
-    p.end();
-    pix.save("/home/brian/colorLegend.png");    
-    
-}
-
-void MainWindow::generateStitchLegend()
-{
-    if(mPatternStitches.count() < 1) {
-        QMessageBox msgbox(this);
-        msgbox.setText(tr("There are no colors to put into the key."));
-        msgbox.setInformativeText(tr("A color key will not be generated."));
-        msgbox.setIcon(QMessageBox::Information);
-        msgbox.setStandardButtons(QMessageBox::Ok);
-        
-        msgbox.exec();
-        return;
-    }
-    
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    
-    QDialog *d = new QDialog(this);
-    QGraphicsView *view = new QGraphicsView(this);
-    QGraphicsScene *scene = new QGraphicsScene(view);
-    QVBoxLayout *l = new QVBoxLayout(d);
-    d->setLayout(l);
-    view->setScene(scene);
-    
-    l->addWidget(view);
-    
-    StitchLegend *sl = new StitchLegend(&mPatternStitches);
-    scene->addItem(sl);
-    
-    QApplication::restoreOverrideCursor();
-    
-    //TODO: allow the user to check and uncheck options at this point before generating the file.
-    d->exec();
-    
-    QPainter p(this);
-    QPixmap pix = QPixmap(scene->sceneRect().size().toSize());
-    p.begin(&pix);
-    scene->render(&p);
-    p.end();
-    pix.save("/home/brian/stitchLegend.png");
 }
 
 QPixmap MainWindow::drawColorBox(QColor color, QSize size)

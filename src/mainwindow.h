@@ -13,6 +13,7 @@
 
 #include <QModelIndex>
 
+class QGraphicsScene;
 class CrochetTab;
 class QPrinter;
 class QPainter;
@@ -103,9 +104,6 @@ private slots:
     void selectColor();
     void selectStitch(QModelIndex index);
     void selectColor(QModelIndex index);
-
-    void generateStitchLegend();
-    void generateColorLegend();
     
 private:
     void setupMenus();
@@ -129,7 +127,7 @@ private:
     void exportPdf(QString selection, QString fileName, QSize size, int resolution);
     void exportSvg(QString selection, QString fileName, QSize size);
     void exportImg(QString selection, QString fileName, QSize size, int resolution);
-
+    
     QPixmap drawColorBox(QColor color, QSize size);
     
     CrochetTab* curCrochetTab();
