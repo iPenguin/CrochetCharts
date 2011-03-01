@@ -25,7 +25,9 @@ public:
     ColorLegend(QMap<QString, QMap<QString, qint64> > *colors, QGraphicsItem *parent = 0);
     ~ColorLegend();
 
+    bool showTitle;
     bool showHexValues;
+    bool showBorder;
     int columnCount;
     QString colorNumber;
     QString prefix;

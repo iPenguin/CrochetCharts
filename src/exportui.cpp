@@ -44,11 +44,15 @@ void ExportUi::setupColorLegendOptions()
     ui->colorHexValue->setChecked(Settings::inst()->value("showHexValues").toBool());
     ui->colorColumns->setValue(Settings::inst()->value("colorColumnCount").toInt());
     ui->colorPrefix->setText(Settings::inst()->value("colorPrefix").toString());
+    ui->colorBorder->setChecked(Settings::inst()->value("showColorBorder").toBool());
+    ui->colorTitle->setChecked(Settings::inst()->value("showColorTitle").toBool());
     
     connect(ui->colorBorder, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorHexValue, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorColumns, SIGNAL(valueChanged(int)), SLOT(updateColorLegend()));
     connect(ui->colorPrefix, SIGNAL(textChanged(QString)), SLOT(updateColorLegend()));
+    connect(ui->colorBorder, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
+    connect(ui->colorTitle, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     
 }
 
@@ -66,6 +70,10 @@ void ExportUi::updateColorLegend()
         cl->columnCount = ui->colorColumns->value();
     if(ui->colorPrefix->text() != cl->prefix)
         cl->prefix = ui->colorPrefix->text();
+    if(ui->colorBorder->isChecked() != cl->showBorder)
+        cl->showBorder = ui->colorBorder->isChecked();
+    if(ui->colorTitle->isChecked() != cl->showTitle)
+        cl->showTitle = ui->colorTitle->isChecked();
     
     scene->update();
 }

@@ -41,6 +41,8 @@ ColorLegend::ColorLegend(QMap<QString, QMap<QString, qint64> > *colors, QGraphic
         sortedColors.insert(added, key);
     }
 
+    showTitle = Settings::inst()->value("showColorTitle").toBool();
+    showBorder = Settings::inst()->value("showColorBorder").toBool();
     showHexValues = Settings::inst()->value("showHexValues").toBool();
     columnCount = Settings::inst()->value("colorColumnCount").toInt();
     colorNumber = Settings::inst()->value("colorPrefix").toString();
@@ -58,6 +60,11 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     Q_UNUSED(widget);
     
     int textHeight = painter->fontMetrics().height();
+    int titleHeight = 0;
+    int titleTextHeight = 0;
+    QString titleText = tr("Color Legend");
+    QFont titleFont;
+    QFont originalFont;
     
     QList<qint64> sortedKeys = sortedColors.keys();
         
@@ -73,14 +80,40 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     int imageWidth =  colWidth * items;
     int imageHeight = itemsPerCol * (Legend::margin + Legend::iconHeight) + Legend::margin;
+
+    if(showTitle) {
+        originalFont = painter->font();
+        titleFont = painter->font();
+        titleFont.setBold(true);
+        titleFont.setPointSize(12);
+        painter->setFont(titleFont);
+        
+        titleHeight += Legend::margin;
+        titleTextHeight = painter->fontMetrics().height();
+        titleHeight += titleTextHeight;
+        titleHeight += Legend::margin;
+
+        //make sure the box is always wide enough to hold the title.
+        int titleWidth = painter->fontMetrics().width(titleText);
+        if(titleWidth > imageWidth)
+            imageWidth = Legend::margin + titleWidth + Legend::margin;
+        
+        imageHeight += titleHeight;
+    }
     
     painter->fillRect(QRect(0,0,imageWidth,imageHeight), Qt::white);
 
+    if(showTitle) {
+        painter->drawText(Legend::margin, Legend::margin + titleTextHeight, titleText);
+        painter->drawLine(0, titleHeight, imageWidth -1, titleHeight);
+        painter->setFont(originalFont);
+    }
+    
     for(int i = 0; i < sortedKeys.count(); ++i) {
         QString hex = sortedColors.value(sortedKeys.at(i));
 
         int x = Legend::margin + ceil(i/itemsPerCol + 0.0) *colWidth;
-        int y = Legend::margin + ((Legend::margin + Legend::iconHeight) * (i%itemsPerCol));
+        int y = Legend::margin + ((Legend::margin + Legend::iconHeight) * (i%itemsPerCol)) + titleHeight;
         
         painter->drawPixmap(x, y, Legend::drawColorBox(QColor(hex), QSize(Legend::iconWidth, Legend::iconHeight)));
         x += Legend::iconWidth + Legend::margin;
@@ -92,6 +125,9 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
             painter->drawText(x, y, " - " + hex.toUpper());
         }
     }
+
+    if(showBorder)
+        painter->drawRect(0, 0, imageWidth - 1, imageHeight - 1);
 
     scene()->setSceneRect(0, 0, imageWidth, imageHeight);
 }

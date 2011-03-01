@@ -123,6 +123,8 @@ void Settings::setupValueList() {
     mValueList["colorPrefix"] = QVariant("C");
     mValueList["colorColumnCount"] = QVariant(2);
     mValueList["showHexValues"] = QVariant(false);
+    mValueList["showColorBorder"] = QVariant(true);
+    mValueList["showColorTitle"] = QVariant(true);
 
 }
 
