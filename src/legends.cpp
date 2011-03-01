@@ -62,8 +62,9 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     QList<qint64> sortedKeys = sortedColors.keys();
         
     int colWidth = Legend::margin + Legend::iconWidth + Legend::margin +
-                     painter->fontMetrics().width(prefix + sortedColors.count()) +
-                     painter->fontMetrics().width(" - #FFFFFF") + Legend::margin;
+                    painter->fontMetrics().width(prefix + sortedColors.count()) + Legend::margin;
+    if(showHexValues)
+        colWidth += painter->fontMetrics().width(" - #FFFFFF");
 
     //if we have more columns then items don't draw a really large white space.
     int items = (sortedKeys.count() < columnCount) ? sortedKeys.count() : columnCount;

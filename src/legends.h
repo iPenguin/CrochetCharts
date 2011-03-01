@@ -25,19 +25,18 @@ public:
     ColorLegend(QMap<QString, QMap<QString, qint64> > *colors, QGraphicsItem *parent = 0);
     ~ColorLegend();
 
+    bool showHexValues;
+    int columnCount;
+    QString colorNumber;
+    QString prefix;
+    
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     
 private:
 
     QMap<QString, QMap<QString, qint64> > *mPatternColors;
-    QMap<qint64, QString> sortedColors;
-    
-    bool showHexValues;
-    int columnCount;
-    QString colorNumber;
-    QString prefix;
-    
+    QMap<qint64, QString> sortedColors;    
 };
 
 
@@ -48,16 +47,16 @@ public:
     StitchLegend(QMap<QString, int> *stitches, QGraphicsItem* parent = 0);
     ~StitchLegend();
 
+    bool drawDescription;
+    bool drawWrongSide;
+    int columnCount;
+    
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,  QWidget *widget = 0);
-
 
 private:
     QMap<QString, int> *mPatternStitches;
 
-    bool drawDescription;
-    bool drawWrongSide;
-    int columnCount;
 };
 
 #endif //LEGENDS_H
