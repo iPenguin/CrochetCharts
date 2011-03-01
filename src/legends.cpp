@@ -125,27 +125,70 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
     int imageHeight = 0;
     int imageWidth = 0;
 
+    double totalHeight = 0.0;
+    QList <int> heights;
+    QList <int> widths;
+    QMap<int, QMap<QString, int> > columns; //"count", and "height", and "width";
+
+    int widestCol = 0;
     foreach(QString key, keys) {
         Stitch *s = StitchLibrary::inst()->findStitch(key);
         if(!s)
             continue;
-
-        QSize size = s->isSvg() ? s->renderSvg()->defaultSize() : s->renderPixmap()->size();
-        imageHeight += size.height() + Legend::margin;
-        //TODO: factor in the flags: showDescription & showWrongside.
-        int itemWidth = Legend::margin + size.width() + Legend::margin + painter->fontMetrics().width(s->name()) + painter->fontMetrics().width(" - " + s->description());
-        if(itemWidth > imageWidth)
-            imageWidth = itemWidth;
         
+        QSize size = s->isSvg() ? s->renderSvg()->defaultSize() : s->renderPixmap()->size();
+        totalHeight += size.height() + Legend::margin;
+        heights.append(size.height());
+        //FIXME: set a reasonable max width for each column and default to it if bigger & cut the text into multiple rows.
+        //TODO: also check the width of the wrong side...
+        //FIXME: doesn't always give correct results.
+        int itemWidth = Legend::margin + size.width() + Legend::margin + painter->fontMetrics().width(s->name()) + painter->fontMetrics().width(" - " + s->description());
+        widths.append(itemWidth);
+        if(itemWidth > widestCol)
+            widestCol = itemWidth;
     }
-    imageHeight += Legend::margin;
+
+    //if we have more columns then items don't draw a really large white space.
+    int items = (keys.count() < columnCount) ? keys.count() : columnCount;
+
+    int avgColHeight = ceil(totalHeight / items);
+
+    int tallestCol = 0;
+    while(heights.count() > 0) {
+        int i = 0;
+        int stackHeight = 0;
+        int stackWidth = 0;
+
+        while(stackHeight < avgColHeight && heights.count() > 0) {
+            
+            stackHeight += heights.takeFirst() + Legend::margin;
+            int w = widths.takeFirst() + Legend::margin;
+            stackWidth = (w > stackWidth ? w : stackWidth);
+            ++i;
+        }
+        QMap <QString, int> props;
+        props.insert("count", i);
+        props.insert("height", stackHeight);
+        props.insert("width", stackWidth);
+        imageWidth += stackWidth;
+        if(stackHeight > tallestCol)
+            tallestCol = stackHeight;
+        columns.insert(columns.count(), props);
+    }
+
+    imageHeight = tallestCol + Legend::margin;
     imageWidth += Legend::margin;
     
     painter->fillRect(QRect(0, 0, imageWidth, imageHeight), Qt::white);
-    
-    int i = 1;
-    imageHeight = 0;
+
+    int i = 0;
     int iconWidth = 0;
+    int column = 0;
+    int columnStart = 0;
+    int curColHeight = Legend::margin;
+    int prevItems = 0;
+    int itemsPerCol = columns.value(0).value("count");
+    
     foreach(QString key, keys) {
         Stitch *s = StitchLibrary::inst()->findStitch(key);
         if(!s) {
@@ -153,9 +196,17 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
             continue;
         }
         
-        int x = Legend::margin;
-        int y = i * Legend::margin + imageHeight;
+        if(floor(double(i - prevItems)/itemsPerCol) > 0) {
+            curColHeight = Legend::margin;
+            prevItems += itemsPerCol;
+            columnStart += columns.value(column).value("width");
+            column++;
+            itemsPerCol = columns.value(column).value("count");
+        }
 
+        int x = Legend::margin + ceil(double(i - prevItems)/itemsPerCol) + columnStart;
+        int y = ((i - prevItems)%itemsPerCol) * Legend::margin + curColHeight;
+        
         int iconHeight = 0;
         
         if(s->isSvg()) {
@@ -167,8 +218,8 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
             iconHeight = s->renderPixmap()->height();
             iconWidth = s->renderPixmap()->width();
         }
-        imageHeight += iconHeight;
-
+        curColHeight += iconHeight;
+        
         //Draw lines around each "cell" of the stitch.
         int y1 = y;
         int counter = iconHeight;
@@ -182,12 +233,12 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         y += textHeight;
         
         painter->drawText(x,y, s->name());
-
+        
         if(drawDescription) {
             int x1 = x + painter->fontMetrics().width(s->name());
             painter->drawText(x1,y, " - " + s->description());
         }
-
+        
         y += textHeight;
         
         if(drawWrongSide) {
@@ -205,11 +256,10 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         
         ++i;
     }
-    imageHeight += (i * Legend::margin);
     
 
-    scene()->setSceneRect(0, 0, imageWidth, imageHeight);
-        
+    
+    scene()->setSceneRect(0,0, imageWidth, imageHeight);
 }
 
 
