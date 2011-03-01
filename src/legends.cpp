@@ -14,6 +14,8 @@
 #include "stitch.h"
 #include <QSvgRenderer>
 
+#include <math.h>
+
 QPixmap Legend::drawColorBox(QColor color, QSize size)
 {
     QPixmap pix = QPixmap(size);
@@ -58,19 +60,26 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     int textHeight = painter->fontMetrics().height();
     
     QList<qint64> sortedKeys = sortedColors.keys();
-    
-    int imageHeight = sortedColors.count() * (Legend::margin + Legend::iconHeight) + Legend::margin;
-    int imageWidth = Legend::margin + Legend::iconWidth + Legend::margin +
+        
+    int colWidth = Legend::margin + Legend::iconWidth + Legend::margin +
                      painter->fontMetrics().width(prefix + sortedColors.count()) +
                      painter->fontMetrics().width(" - #FFFFFF") + Legend::margin;
-        
-    painter->fillRect(QRect(0,0,imageWidth,imageHeight), Qt::white);
+
+    //if we have more columns then items don't draw a really large white space.
+    int items = (sortedKeys.count() < columnCount) ? sortedKeys.count() : columnCount;
     
+    int itemsPerCol = ceil(double(sortedKeys.count()) / double(items));
+
+    int imageWidth =  colWidth * items;
+    int imageHeight = itemsPerCol * (Legend::margin + Legend::iconHeight) + Legend::margin;
+    
+    painter->fillRect(QRect(0,0,imageWidth,imageHeight), Qt::white);
+
     for(int i = 0; i < sortedKeys.count(); ++i) {
         QString hex = sortedColors.value(sortedKeys.at(i));
 
-        int x = Legend::margin;
-        int y = Legend::margin + ((Legend::margin + Legend::iconHeight) * i);
+        int x = Legend::margin + ceil(i/itemsPerCol + 0.0) *colWidth;
+        int y = Legend::margin + ((Legend::margin + Legend::iconHeight) * (i%itemsPerCol));
         
         painter->drawPixmap(x, y, Legend::drawColorBox(QColor(hex), QSize(Legend::iconWidth, Legend::iconHeight)));
         x += Legend::iconWidth + Legend::margin;
