@@ -282,9 +282,16 @@ void SettingsUi::saveLegendSettings()
     save(ui->stitchColumnCount);
     save(ui->showStitchDescription);
     save(ui->showWrongSideDescription);
+    save(ui->showStitchBlock);
+    save(ui->showStitchBorder);
+    save(ui->showStitchTitle);
+    
     save(ui->colorPrefix);
     save(ui->colorColumnCount);
     save(ui->showHexValues);
+    save(ui->showColorBorder);
+    save(ui->showColorTitle);
+    save(ui->colorSortBy);
 
 }
 
@@ -293,11 +300,17 @@ void SettingsUi::resetLegendSettings()
     loadDefualt(ui->stitchColumnCount);
     loadDefualt(ui->showStitchDescription);
     loadDefualt(ui->showWrongSideDescription);
+    loadDefualt(ui->showStitchBlock);
+    loadDefualt(ui->showStitchBorder);
+    loadDefualt(ui->showStitchTitle);
+    
     loadDefualt(ui->colorPrefix);
     loadDefualt(ui->colorColumnCount);
     loadDefualt(ui->showHexValues);
+    loadDefualt(ui->showColorBorder);
+    loadDefualt(ui->showColorTitle);
+    loadDefualt(ui->colorSortBy);
 }
-
 
 void SettingsUi::selectFolder()
 {
