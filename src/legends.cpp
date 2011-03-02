@@ -46,6 +46,7 @@ ColorLegend::ColorLegend(QMap<QString, QMap<QString, qint64> > *colors, QGraphic
     showHexValues = Settings::inst()->value("showHexValues").toBool();
     columnCount = Settings::inst()->value("colorColumnCount").toInt();
     prefix = Settings::inst()->value("colorPrefix").toString();
+    sortBy = Settings::inst()->value("colorSortBy").toString();
     
 }
 
@@ -64,6 +65,10 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     QString titleText = tr("Color Legend");
     QFont titleFont;
     QFont originalFont;
+
+    //TODO: use sortBy to sort the colors!
+    if(!sortBy.isEmpty())
+        qWarning() << "There is no sort code. Cannot sort by" << sortBy;
     
     QList<qint64> sortedKeys = sortedColors.keys();
         

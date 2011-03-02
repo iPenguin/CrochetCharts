@@ -45,6 +45,8 @@ void ExportUi::setupColorLegendOptions()
     ui->colorPrefix->setText(Settings::inst()->value("colorPrefix").toString());
     ui->colorBorder->setChecked(Settings::inst()->value("showColorBorder").toBool());
     ui->colorTitle->setChecked(Settings::inst()->value("showColorTitle").toBool());
+    int index = ui->colorSortBy->findText(Settings::inst()->value("colorSortBy").toString());
+    ui->colorSortBy->setCurrentIndex(index);
     
     connect(ui->colorBorder, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorHexValue, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
@@ -52,6 +54,7 @@ void ExportUi::setupColorLegendOptions()
     connect(ui->colorPrefix, SIGNAL(textChanged(QString)), SLOT(updateColorLegend()));
     connect(ui->colorBorder, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorTitle, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
+    connect(ui->colorSortBy, SIGNAL(currentIndexChanged(int)), SLOT(updateColorLegend()));
     
 }
 
@@ -65,7 +68,7 @@ void ExportUi::setupStitchLegendOptions()
     ui->stitchTitle->setChecked(Settings::inst()->value("showStitchTitle").toBool());
     ui->showStitchDescription->setChecked(Settings::inst()->value("showStitchDescription").toBool());
     ui->showStitchWrongSide->setChecked(Settings::inst()->value("showWrongSideDescription").toBool());
-    ui->showStitchBlocks->setChecked(Settings::inst()->value("showStitchBlocks").toBool());
+    ui->showStitchBlocks->setChecked(Settings::inst()->value("showStitchBlock").toBool());
 
     connect(ui->stitchBorder, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
     connect(ui->stitchColumns, SIGNAL(valueChanged(int)), SLOT(updateStitchLegend()));
@@ -82,6 +85,7 @@ void ExportUi::updateColorLegend()
     cl->prefix = ui->colorPrefix->text();
     cl->showBorder = ui->colorBorder->isChecked();
     cl->showTitle = ui->colorTitle->isChecked();
+    cl->sortBy = ui->colorSortBy->currentText();
     
     scene->update();
 }
