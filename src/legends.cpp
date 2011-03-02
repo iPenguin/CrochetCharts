@@ -41,9 +41,10 @@ ColorLegend::ColorLegend(QMap<QString, QMap<QString, qint64> > *colors, QGraphic
         sortedColors.insert(added, key);
     }
 
+    showTitle = Settings::inst()->value("showColorTitle").toBool();
+    showBorder = Settings::inst()->value("showColorBorder").toBool();
     showHexValues = Settings::inst()->value("showHexValues").toBool();
     columnCount = Settings::inst()->value("colorColumnCount").toInt();
-    colorNumber = Settings::inst()->value("colorPrefix").toString();
     prefix = Settings::inst()->value("colorPrefix").toString();
     
 }
@@ -58,6 +59,11 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     Q_UNUSED(widget);
     
     int textHeight = painter->fontMetrics().height();
+    int titleHeight = 0;
+    int titleTextHeight = 0;
+    QString titleText = tr("Color Legend");
+    QFont titleFont;
+    QFont originalFont;
     
     QList<qint64> sortedKeys = sortedColors.keys();
         
@@ -73,14 +79,40 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     int imageWidth =  colWidth * items;
     int imageHeight = itemsPerCol * (Legend::margin + Legend::iconHeight) + Legend::margin;
+
+    if(showTitle) {
+        originalFont = painter->font();
+        titleFont = painter->font();
+        titleFont.setBold(true);
+        titleFont.setPointSize(12);
+        painter->setFont(titleFont);
+        
+        titleHeight += Legend::margin;
+        titleTextHeight = painter->fontMetrics().height();
+        titleHeight += titleTextHeight;
+        titleHeight += Legend::margin;
+
+        //make sure the box is always wide enough to hold the title.
+        int titleWidth =  Legend::margin + painter->fontMetrics().width(titleText) + Legend::margin;
+        if(titleWidth > imageWidth)
+            imageWidth = titleWidth;
+        
+        imageHeight += titleHeight;
+    }
     
     painter->fillRect(QRect(0,0,imageWidth,imageHeight), Qt::white);
 
+    if(showTitle) {
+        painter->drawText(Legend::margin, Legend::margin + titleTextHeight, titleText);
+        painter->drawLine(0, titleHeight, imageWidth -1, titleHeight);
+        painter->setFont(originalFont);
+    }
+    
     for(int i = 0; i < sortedKeys.count(); ++i) {
         QString hex = sortedColors.value(sortedKeys.at(i));
 
         int x = Legend::margin + ceil(i/itemsPerCol + 0.0) *colWidth;
-        int y = Legend::margin + ((Legend::margin + Legend::iconHeight) * (i%itemsPerCol));
+        int y = Legend::margin + ((Legend::margin + Legend::iconHeight) * (i%itemsPerCol)) + titleHeight;
         
         painter->drawPixmap(x, y, Legend::drawColorBox(QColor(hex), QSize(Legend::iconWidth, Legend::iconHeight)));
         x += Legend::iconWidth + Legend::margin;
@@ -92,6 +124,9 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
             painter->drawText(x, y, " - " + hex.toUpper());
         }
     }
+
+    if(showBorder)
+        painter->drawRect(0, 0, imageWidth - 1, imageHeight - 1);
 
     scene()->setSceneRect(0, 0, imageWidth, imageHeight);
 }
@@ -105,8 +140,10 @@ StitchLegend::StitchLegend(QMap<QString, int> *stitches, QGraphicsItem* parent)
 {
     mPatternStitches = stitches;
 
-    drawDescription = Settings::inst()->value("showStitchDescription").toBool();
-    drawWrongSide = Settings::inst()->value("showWrongSideDescription").toBool();
+    showTitle = Settings::inst()->value("showStitchTitle").toBool();
+    showBorder = Settings::inst()->value("showStitchBorder").toBool();
+    showDescription = Settings::inst()->value("showStitchDescription").toBool();
+    showWrongSide = Settings::inst()->value("showWrongSideDescription").toBool();
     columnCount = Settings::inst()->value("stitchColumnCount").toInt();
     
 }
@@ -123,6 +160,12 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
     QStringList keys = mPatternStitches->keys();
     int textHeight = painter->fontMetrics().height();
 
+    int titleHeight = 0;
+    int titleTextHeight = 0;
+    QString titleText = tr("Stitch Legend");
+    QFont titleFont;
+    QFont originalFont;
+    
     int imageHeight = 0;
     int imageWidth = 0;
 
@@ -143,7 +186,9 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         //FIXME: set a reasonable max width for each column and default to it if bigger & cut the text into multiple rows.
         //TODO: also check the width of the wrong side...
         //FIXME: doesn't always give correct results.
-        int itemWidth = Legend::margin + size.width() + Legend::margin + painter->fontMetrics().width(s->name()) + painter->fontMetrics().width(" - " + s->description());
+        int itemWidth = Legend::margin + size.width() + Legend::margin + painter->fontMetrics().width(s->name());
+        if(showDescription)
+            itemWidth += painter->fontMetrics().width(" - " + s->description());
         widths.append(itemWidth);
         if(itemWidth > widestCol)
             widestCol = itemWidth;
@@ -179,8 +224,35 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 
     imageHeight = tallestCol + Legend::margin;
     imageWidth += Legend::margin;
+
+
+    if(showTitle) {
+        originalFont = painter->font();
+        titleFont = painter->font();
+        titleFont.setBold(true);
+        titleFont.setPointSize(12);
+        painter->setFont(titleFont);
+        
+        titleHeight += Legend::margin;
+        titleTextHeight = painter->fontMetrics().height();
+        titleHeight += titleTextHeight;
+        titleHeight += Legend::margin;
+        
+        //make sure the box is always wide enough to hold the title.
+        int titleWidth =  Legend::margin + painter->fontMetrics().width(titleText) + Legend::margin;
+        if(titleWidth > imageWidth)
+            imageWidth = titleWidth;
+        
+        imageHeight += titleHeight;
+    }
     
     painter->fillRect(QRect(0, 0, imageWidth, imageHeight), Qt::white);
+
+    if(showTitle) {
+        painter->drawText(Legend::margin, Legend::margin + titleTextHeight, titleText);
+        painter->drawLine(0, titleHeight, imageWidth -1, titleHeight);
+        painter->setFont(originalFont);
+    }
 
     int i = 0;
     int iconWidth = 0;
@@ -206,7 +278,7 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         }
 
         int x = Legend::margin + ceil(double(i - prevItems)/itemsPerCol) + columnStart;
-        int y = ((i - prevItems)%itemsPerCol) * Legend::margin + curColHeight;
+        int y = ((i - prevItems)%itemsPerCol) * Legend::margin + curColHeight + titleHeight;
         
         int iconHeight = 0;
         
@@ -221,13 +293,14 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         }
         curColHeight += iconHeight;
         
-        //Draw lines around each "cell" of the stitch.
-        int y1 = y;
-        int counter = iconHeight;
-        while(counter > 0) {
-            painter->drawRect(x, y1, 64, 32);
-            counter -=32;
-            y1 += 32;
+        if(showBlocks) {
+            int y1 = y;
+            int counter = iconHeight;
+            while(counter > 0) {
+                painter->drawRect(x, y1, 64, 32);
+                counter -=32;
+                y1 += 32;
+            }
         }
         
         x += iconWidth + Legend::margin;
@@ -235,19 +308,19 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         
         painter->drawText(x,y, s->name());
         
-        if(drawDescription) {
+        if(showDescription) {
             int x1 = x + painter->fontMetrics().width(s->name());
             painter->drawText(x1,y, " - " + s->description());
         }
         
         y += textHeight;
         
-        if(drawWrongSide) {
+        if(showWrongSide) {
             if(s->wrongSide() != s->name()) {
                 Stitch *ws = StitchLibrary::inst()->findStitch(s->wrongSide());
                 if(ws) {
                     painter->drawText(x,y, ws->name());
-                    if(drawDescription) {
+                    if(showDescription) {
                         int x1 = x + painter->fontMetrics().width(s->name());
                         painter->drawText(x1,y," - " + ws->description());
                     }
@@ -257,8 +330,9 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         
         ++i;
     }
-    
 
+    if(showBorder)
+        painter->drawRect(0, 0, imageWidth -1, imageHeight -1);
     
     scene()->setSceneRect(0,0, imageWidth, imageHeight);
 }

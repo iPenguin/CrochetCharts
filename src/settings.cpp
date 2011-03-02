@@ -118,11 +118,16 @@ void Settings::setupValueList() {
     mValueList["stitchColumnCount"] = QVariant(2);
     mValueList["showStitchDescription"] = QVariant(true);
     mValueList["showWrongSideDescription"] = QVariant(false);
+    mValueList["showStitchTitle"] = QVariant(true);
+    mValueList["showStitchBorder"] = QVariant(true);
+    mValueList["showStitchBlocks"] = QVariant(true);
 
     //color legend options
     mValueList["colorPrefix"] = QVariant("C");
     mValueList["colorColumnCount"] = QVariant(2);
     mValueList["showHexValues"] = QVariant(false);
+    mValueList["showColorBorder"] = QVariant(true);
+    mValueList["showColorTitle"] = QVariant(true);
 
 }
 

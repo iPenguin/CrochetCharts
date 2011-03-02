@@ -17,7 +17,6 @@ ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
 {
     ui->setupUi(this);
     
-    ui->legendView->hide();
     ui->legendView->scale(.6, .6);
     
     setupColorLegendOptions();
@@ -44,11 +43,15 @@ void ExportUi::setupColorLegendOptions()
     ui->colorHexValue->setChecked(Settings::inst()->value("showHexValues").toBool());
     ui->colorColumns->setValue(Settings::inst()->value("colorColumnCount").toInt());
     ui->colorPrefix->setText(Settings::inst()->value("colorPrefix").toString());
+    ui->colorBorder->setChecked(Settings::inst()->value("showColorBorder").toBool());
+    ui->colorTitle->setChecked(Settings::inst()->value("showColorTitle").toBool());
     
     connect(ui->colorBorder, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorHexValue, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorColumns, SIGNAL(valueChanged(int)), SLOT(updateColorLegend()));
     connect(ui->colorPrefix, SIGNAL(textChanged(QString)), SLOT(updateColorLegend()));
+    connect(ui->colorBorder, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
+    connect(ui->colorTitle, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     
 }
 
@@ -56,23 +59,43 @@ void ExportUi::setupStitchLegendOptions()
 {
     sl = new StitchLegend(mStitches);
     ui->stitchLegendOptions->hide();
+
+    ui->stitchBorder->setChecked(Settings::inst()->value("showStitchBorder").toBool());
+    ui->stitchColumns->setValue(Settings::inst()->value("stitchColumnCount").toInt());
+    ui->stitchTitle->setChecked(Settings::inst()->value("showStitchTitle").toBool());
+    ui->showStitchDescription->setChecked(Settings::inst()->value("showStitchDescription").toBool());
+    ui->showStitchWrongSide->setChecked(Settings::inst()->value("showWrongSideDescription").toBool());
+    ui->showStitchBlocks->setChecked(Settings::inst()->value("showStitchBlocks").toBool());
+
+    connect(ui->stitchBorder, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
+    connect(ui->stitchColumns, SIGNAL(valueChanged(int)), SLOT(updateStitchLegend()));
+    connect(ui->stitchTitle, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
+    connect(ui->showStitchDescription, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
+    connect(ui->showStitchWrongSide, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
+    connect(ui->showStitchBlocks, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
 }
 
 void ExportUi::updateColorLegend()
 {
-    if(ui->colorHexValue->isChecked() != cl->showHexValues)
-        cl->showHexValues = ui->colorHexValue->isChecked();
-    if(ui->colorColumns->value() != cl->columnCount)
-        cl->columnCount = ui->colorColumns->value();
-    if(ui->colorPrefix->text() != cl->prefix)
-        cl->prefix = ui->colorPrefix->text();
+    cl->showHexValues = ui->colorHexValue->isChecked();
+    cl->columnCount = ui->colorColumns->value();
+    cl->prefix = ui->colorPrefix->text();
+    cl->showBorder = ui->colorBorder->isChecked();
+    cl->showTitle = ui->colorTitle->isChecked();
     
     scene->update();
 }
 
 void ExportUi::updateStitchLegend()
 {
+    sl->showBorder = ui->stitchBorder->isChecked();
+    sl->columnCount = ui->stitchColumns->value();
+    sl->showTitle = ui->stitchTitle->isChecked();
+    sl->showDescription = ui->showStitchDescription->isChecked();
+    sl->showWrongSide = ui->showStitchWrongSide->isChecked();
+    sl->showBlocks = ui->showStitchBlocks->isChecked();
     
+    scene->update();
 }
 
 void ExportUi::updateExportOptions(QString expType)
@@ -205,7 +228,6 @@ void ExportUi::setSelection(QString selection)
         return;
 
     if(selection == tr("Stitch Legend")) {
-        ui->legendView->show();
         ui->stitchLegendOptions->show();
         ui->colorLegendOptions->hide();
         if(scene->items().contains(cl))
@@ -213,7 +235,6 @@ void ExportUi::setSelection(QString selection)
         if(!scene->items().contains(sl))
             scene->addItem(sl);
     } else if(selection == tr("Color Legend")) {
-        ui->legendView->show();
         ui->stitchLegendOptions->hide();
         ui->colorLegendOptions->show();
         
@@ -224,7 +245,6 @@ void ExportUi::setSelection(QString selection)
     } else {
         ui->stitchLegendOptions->hide();
         ui->colorLegendOptions->hide();
-        ui->legendView->hide();
     }
 }
 
