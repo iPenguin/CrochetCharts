@@ -29,7 +29,6 @@ public:
     bool showHexValues;
     bool showBorder;
     int columnCount;
-    QString colorNumber;
     QString prefix;
     
 protected:
@@ -49,8 +48,11 @@ public:
     StitchLegend(QMap<QString, int> *stitches, QGraphicsItem* parent = 0);
     ~StitchLegend();
 
-    bool drawDescription;
-    bool drawWrongSide;
+    bool showTitle;
+    bool showBorder;
+    bool showDescription;
+    bool showWrongSide;
+    bool showBlocks;
     int columnCount;
     
 protected:

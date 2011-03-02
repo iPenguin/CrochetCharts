@@ -180,14 +180,14 @@
       <item row="0" column="0">
        <widget class="QCheckBox" name="stitchBorder">
         <property name="text">
-         <string>Include border</string>
+         <string>Show Border</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QCheckBox" name="stitchTitle">
         <property name="text">
-         <string>Include title</string>
+         <string>Show Title</string>
         </property>
        </widget>
       </item>
@@ -207,7 +207,28 @@
       <item row="0" column="1">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Column count:</string>
+         <string>Column Count:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="showStitchDescription">
+        <property name="text">
+         <string>Show Descriptions</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="showStitchWrongSide">
+        <property name="text">
+         <string>Show Wrong Side</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="showStitchBlocks">
+        <property name="text">
+         <string>Show Blocks</string>
         </property>
        </widget>
       </item>
@@ -251,7 +272,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>Color prefix:</string>
+         <string>Color Prefix:</string>
         </property>
        </widget>
       </item>
@@ -271,7 +292,7 @@
       <item row="1" column="1">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Column count:</string>
+         <string>Column Count:</string>
         </property>
        </widget>
       </item>
