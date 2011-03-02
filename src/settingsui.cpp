@@ -3,7 +3,7 @@
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "settingsui.h"
-#include "ui_settings.h"
+#include "src/ui_settings.h"
 
 #include <QDebug>
 #include <QFileDialog>
@@ -245,18 +245,34 @@ void SettingsUi::loadLegendSettings()
     ui->stitchColumnCount->setObjectName("stitchColumnCount");
     ui->showStitchDescription->setObjectName("showStitchDescription");
     ui->showWrongSideDescription->setObjectName("showWrongSideDescription");
+    ui->showStitchBlock->setObjectName("showStitchBlock");
+    ui->showStitchTitle->setObjectName("showStitchTitle");
+    ui->showStitchBorder->setObjectName("showStitchBorder");
     
     load(ui->stitchColumnCount);
     load(ui->showStitchDescription);
     load(ui->showWrongSideDescription);
+    load(ui->showStitchBlock);
+    load(ui->showStitchTitle);
+    load(ui->showStitchBorder);
     
     ui->colorPrefix->setObjectName("colorPrefix");
     ui->colorColumnCount->setObjectName("colorColumnCount");
     ui->showHexValues->setObjectName("showHexValues");
+    ui->showColorBorder->setObjectName("showColorBorder");
+    ui->showColorTitle->setObjectName("showColorTitle");
+    ui->colorSortBy->setObjectName("colorSortBy");
 
+    QStringList list;
+    list << tr("Age") << tr("Color") << tr("Quantity");
+    ui->colorSortBy->addItems(list);
+    
     load(ui->colorPrefix);
     load(ui->colorColumnCount);
     load(ui->showHexValues);
+    load(ui->showColorBorder);
+    load(ui->showColorTitle);
+    load(ui->colorSortBy);
     
 }
 

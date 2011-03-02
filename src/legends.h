@@ -30,6 +30,7 @@ public:
     bool showBorder;
     int columnCount;
     QString prefix;
+    QString sortBy;
     
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
