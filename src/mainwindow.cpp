@@ -3,7 +3,7 @@
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "src/ui_mainwindow.h"
 
 #include <QDialog>
 #include <QMessageBox>
@@ -65,11 +65,14 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     setupStitchPalette();
 
     setupUndoView();
-    
+
     mFile = new SaveFile(this);
     if(!fileName.isEmpty()) {
         mFile->fileName = fileName;
-        mFile->load();
+        mFile->load(); //TODO: if not error then hide the dialog.
+        ui->newDocument->hide();
+    } else {
+        openCommandLineFiles();
     }
 
     setApplicationTitle();
@@ -84,6 +87,28 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::openCommandLineFiles()
+{
+    //FIXME: make sure this works on a mac!
+    QStringList arguments = QCoreApplication::arguments();
+    arguments.removeFirst(); // remove the application name from the list.
+  
+    if(arguments.count() < 1)
+        return;
+
+    if(ui->tabWidget->count() < 1) {
+        mFile->fileName = arguments.takeFirst();
+        mFile->load(); //TODO: if !error hide dialog.
+        ui->newDocument->hide();
+    }
+
+    foreach(QString fileName, arguments) {
+        MainWindow *newWin = new MainWindow(0, fileName);
+        newWin->move(x() + 40, y() + 40);
+        newWin->show();
+    }
 }
 
 void MainWindow::checkUpdates()
@@ -649,7 +674,6 @@ void MainWindow::fileOpen()
     if(ui->tabWidget->count() > 0) {
         MainWindow *newWin = new MainWindow(0, fileName);
         newWin->move(x() + 40, y() + 40);
-        newWin->ui->newDocument->hide();
         newWin->show();
     } else {
         ui->newDocument->hide();

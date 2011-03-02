@@ -106,6 +106,8 @@ private slots:
     void selectColor(QModelIndex index);
     
 private:
+    void openCommandLineFiles();
+    
     void setupMenus();
     void updateMenuItems();
     
