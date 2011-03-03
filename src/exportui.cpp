@@ -407,8 +407,10 @@ void ExportUi::exportPdf()
         
         if(selection == tr("All Charts") || selection == mTabWidget->tabText(i)) {
             CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
-            tab->renderChart(p); //QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height))
+            tab->renderChart(p);
             firstPass = false;
+            if(selection != tr("All Charts"))
+                break;
         }
     }
     p->end();
