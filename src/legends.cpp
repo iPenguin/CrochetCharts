@@ -58,14 +58,20 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
+
+    QFont originalFont = painter->font();
+    originalFont.setPixelSize(10);
+    originalFont.setBold(false);
+    originalFont.setItalic(false);
+    originalFont.setUnderline(false);
+    painter->setFont(originalFont);
     
     int textHeight = painter->fontMetrics().height();
     int titleHeight = 0;
     int titleTextHeight = 0;
     QString titleText = tr("Color Legend");
     QFont titleFont;
-    QFont originalFont;
-
+    
     //TODO: use sortBy to sort the colors!
     if(!sortBy.isEmpty())
         qWarning() << "There is no sort code. Cannot sort by" << sortBy;
@@ -75,21 +81,20 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     int colWidth = Legend::margin + Legend::iconWidth + Legend::margin +
                     painter->fontMetrics().width(prefix + sortedColors.count()) + Legend::margin;
     if(showHexValues)
-        colWidth += painter->fontMetrics().width(" - #FFFFFF");
+        colWidth += painter->fontMetrics().width(" - #FFFFFF") + Legend::margin;
 
     //if we have more columns then items don't draw a really large white space.
-    int items = (sortedKeys.count() < columnCount) ? sortedKeys.count() : columnCount;
+    int cols = (sortedKeys.count() < columnCount) ? sortedKeys.count() : columnCount;
     
-    int itemsPerCol = ceil(double(sortedKeys.count()) / double(items));
+    int itemsPerCol = ceil(double(sortedKeys.count()) / double(cols));
 
-    int imageWidth =  colWidth * items;
+    int imageWidth =  colWidth * cols;
     int imageHeight = itemsPerCol * (Legend::margin + Legend::iconHeight) + Legend::margin;
 
     if(showTitle) {
-        originalFont = painter->font();
-        titleFont = painter->font();
+        titleFont = originalFont;
         titleFont.setBold(true);
-        titleFont.setPointSize(12);
+        titleFont.setPixelSize(12);
         painter->setFont(titleFont);
         
         titleHeight += Legend::margin;
@@ -161,6 +166,13 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
+
+    QFont originalFont = painter->font();
+    originalFont.setPixelSize(10);
+    originalFont.setBold(false);
+    originalFont.setItalic(false);
+    originalFont.setUnderline(false);
+    painter->setFont(originalFont);
     
     QStringList keys = mPatternStitches->keys();
     int textHeight = painter->fontMetrics().height();
@@ -169,7 +181,6 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
     int titleTextHeight = 0;
     QString titleText = tr("Stitch Legend");
     QFont titleFont;
-    QFont originalFont;
     
     int imageHeight = 0;
     int imageWidth = 0;
@@ -232,10 +243,9 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 
 
     if(showTitle) {
-        originalFont = painter->font();
-        titleFont = painter->font();
+        titleFont = originalFont;
         titleFont.setBold(true);
-        titleFont.setPointSize(12);
+        titleFont.setPixelSize(12);
         painter->setFont(titleFont);
         
         titleHeight += Legend::margin;

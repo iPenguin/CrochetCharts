@@ -339,6 +339,10 @@ void ExportUi::exportLegendPdf()
     printer->setOutputFormat(QPrinter::PdfFormat);
     printer->setOutputFileName(fileName);
     printer->setResolution(resolution);
+
+    QSizeF size = scene->sceneRect().size();
+    if(pageToChartSize)
+        printer->setPaperSize(size, QPrinter::Point);
     
     p->begin(printer);
     scene->render(p);
@@ -376,12 +380,12 @@ void ExportUi::exportLegendImg()
         return;
     }
     
-    QPainter p(this);
+    QPainter *p = new QPainter(this);
     QPixmap pix = QPixmap(scene->sceneRect().size().toSize());
 
-    p.begin(&pix);
-    scene->render(&p);
-    p.end();
+    p->begin(&pix);
+    scene->render(p);
+    p->end();
     pix.save(fileName);
 }
 
@@ -395,8 +399,9 @@ void ExportUi::exportPdf()
     printer->setOutputFileName(fileName);
     printer->setResolution(resolution);
 
+    QSizeF size = ui->view->scene()->sceneRect().size();
     if(pageToChartSize)
-        printer->setPaperSize(QSizeF((qreal)width, (qreal)height), QPrinter::Point);
+        printer->setPaperSize(size, QPrinter::Point);
     
     p->begin(printer);
     
@@ -407,8 +412,10 @@ void ExportUi::exportPdf()
         
         if(selection == tr("All Charts") || selection == mTabWidget->tabText(i)) {
             CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
-            tab->renderChart(p); //QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height))
+            tab->renderChart(p);
             firstPass = false;
+            if(selection != tr("All Charts"))
+                break;
         }
     }
     p->end();

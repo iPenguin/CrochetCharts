@@ -4,46 +4,34 @@
 \*************************************************/
 #include "mainwindow.h"
 #include "src/ui_mainwindow.h"
-
-#include <QDialog>
-#include <QMessageBox>
-#include <QFileDialog>
-
-#include "savefile.h"
+#include "stitchlibraryui.h"
+#include "licensewizard.h"
+#include "exportui.h"
 
 #include "appinfo.h"
-#include "crochettab.h"
-
 #include "settings.h"
 #include "settingsui.h"
 
+#include "crochettab.h"
 #include "stitchlibrary.h"
-
-#include "licensewizard.h"
-#include "exportui.h"
-#include "stitchlibraryui.h"
-
-#include "stitchpalettedelegate.h"
 #include "stitchset.h"
+#include "stitchpalettedelegate.h"
 
 #include <QDebug>
+#include <QDialog>
+#include <QMessageBox>
+#include <QFileDialog>
 #include <QInputDialog>
+#include <QColorDialog>
 
 #include <QPrinter>
-#include <QtSvg/QSvgGenerator>
 #include <QPrintDialog>
 #include <QPrintPreviewDialog>
-#include <QSvgRenderer>
 
 #include <QActionGroup>
 #include <QCloseEvent>
-
-#include <QColorDialog>
-
 #include <QUndoStack>
 #include <QUndoView>
-
-#include "legends.h"
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
