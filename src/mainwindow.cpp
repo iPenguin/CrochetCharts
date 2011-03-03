@@ -61,9 +61,7 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
     checkUpdates();
-    
     setupStitchPalette();
-
     setupUndoView();
 
     mFile = new SaveFile(this);
@@ -76,7 +74,6 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     }
 
     setApplicationTitle();
-    
     setupNewTabDialog();
 
     setupMenus();
@@ -190,9 +187,7 @@ void MainWindow::setupMenus()
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-    connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(aboutToQuit()));
-    
-    
+  
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
     ui->actionSave->setIcon(QIcon::fromTheme("document-save"));
@@ -280,15 +275,7 @@ void MainWindow::setupMenus()
     //Chart Menu
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
     connect(ui->actionEditName, SIGNAL(triggered()), this, SLOT(chartEditName()));
-
-    /*Edit Table Icons in the Theme:
-     *  edit-table-delete-column.png
-     *  edit-table-delete-row.png
-     *  edit-table-insert-column-left.png
-     *  edit-table-insert-column-right.png
-     *  edit-table-insert-row-above.png
-     *  edit-table-insert-row-below.png
-     */
+    //TODO: get more icons from the theme for use with table editing.
     
     //Tools Menu
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
@@ -301,7 +288,6 @@ void MainWindow::setupMenus()
 
     //Help Menu
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
-
     
     //misc items
     connect(&mUndoGroup, SIGNAL(documentCleanChanged(bool)), this, SLOT(documentIsModified(bool)));
@@ -366,101 +352,11 @@ void MainWindow::filePrintPreview()
 
 void MainWindow::fileExport()
 {
-    //TODO: in the future check for all tab types or a base Tab type.
     if(!hasTab())
         return;
     
     ExportUi d(ui->tabWidget, &mPatternStitches, &mPatternColors, this);
-    if(d.exec() != QDialog::Accepted)
-        return;
-
-    if(d.exportType.isEmpty())
-        return;
-
-    //TODO: add options for legends to the dialog.
-    if(d.selection == tr("Stitch Legend") || d.selection == tr("Color Legend")) {
-
-    } else {
-        if(d.exportType == "pdf")
-            exportPdf(d.selection, d.fileName, QSize(d.width, d.height), d.resolution);
-        else if(d.exportType == "svg")
-            exportSvg(d.selection, d.fileName, QSize(d.width, d.height));
-        else
-            exportImg(d.selection, d.fileName, QSize(d.width, d.height), d.resolution);
-    }
-}
-
-void MainWindow::exportPdf(QString selection, QString fileName, QSize size, int resolution)
-{
-    int tabCount = ui->tabWidget->count();
-    QPainter *p = new QPainter();
-    
-    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
-    printer->setOutputFormat(QPrinter::PdfFormat);
-    printer->setOutputFileName(fileName);
-    printer->setResolution(resolution);
-    
-    p->begin(printer);
-    
-    bool firstPass = true;
-    for(int i = 0; i < tabCount; ++i) {
-        if(!firstPass)
-            printer->newPage();
-
-        if(selection == tr("All Charts") || selection == ui->tabWidget->tabText(i)) {
-            CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-            tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
-            firstPass = false;
-        }
-    }
-    p->end();
-}
-
-void MainWindow::exportSvg(QString selection, QString fileName, QSize size)
-{
-    int tabCount = ui->tabWidget->count();
-    QPainter *p = new QPainter();
-    
-    QSvgGenerator gen;
-    //TODO: fill in more info about the svg.
-    gen.setFileName(fileName);
-    //FIXME: gen.setSize(mScene->sceneRect().size().toSize());
-    
-    p->begin(&gen);
-
-    for(int i = 0; i < tabCount; ++i) {
-        if(selection == ui->tabWidget->tabText(i)) {
-            CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-            tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
-        }
-    }
-    p->end();
-    
-}
-
-void MainWindow::exportImg(QString selection, QString fileName, QSize size, int resolution)
-{
-    int tabCount = ui->tabWidget->count();
-    QPainter *p = new QPainter();
-    
-    double dpm = resolution * (39.3700787);
-    QImage img = QImage(size, QImage::Format_ARGB32); /*mScene->sceneRect().size().toSize()*/
-    img.setDotsPerMeterX(dpm);
-    img.setDotsPerMeterY(dpm);
-
-    p->begin(&img);
-    p->fillRect(0, 0, size.width(), size.height(), QColor(Qt::white));
-    
-    for(int i = 0; i < tabCount; ++i) {
-        if(selection == ui->tabWidget->tabText(i)) {
-            CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-            tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)size.width(), (qreal)size.height())));
-        }
-    }
-    p->end();
-
-    img.save(fileName /*, file type, img quality.*/); 
-    
+    d.exec();
 }
 
 QPixmap MainWindow::drawColorBox(QColor color, QSize size)
@@ -589,11 +485,6 @@ void MainWindow::helpAbout()
 
     aboutInfo.append(licenseInfo);
     QMessageBox::about(this, tr("About Crochet"), aboutInfo);
-}
-
-void MainWindow::aboutToQuit()
-{
-
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -1154,8 +1045,6 @@ void MainWindow::updatePatternColors()
 
 void MainWindow::documentIsModified(bool isModified)
 {
-
     //TODO: check all possible modificaiton locations.
     setWindowModified(isModified);
 }
-

@@ -28,14 +28,16 @@ public:
     int resolution,
         width,
         height;
+    bool pageToChartSize;
     QGraphicsScene *scene;
     
 public slots:
     int exec();
     
 private slots:
+    void exportData();
+    
     void updateExportOptions(QString expType);
-    void setValues();
     void setSelection(QString selection);
 
     void updateColorLegend();
@@ -46,10 +48,15 @@ private:
 
     void setupColorLegendOptions();
     void setupStitchLegendOptions();
+    void setupChartOptions();
     
     void exportLegendPdf();
     void exportLegendSvg();
     void exportLegendImg();
+
+    void exportPdf();
+    void exportSvg();
+    void exportImg();
     
     Ui::ExportDialog *ui;
     QTabWidget *mTabWidget;

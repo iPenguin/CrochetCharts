@@ -49,8 +49,6 @@ protected slots:
     void updatePatternColors();
 
     void tabChanged(int newTab);
-
-    void aboutToQuit();
     
 //menu functions/slots:
 private slots:
@@ -125,10 +123,6 @@ private:
     void setEditMode(int mode);
 
     void setApplicationTitle();
-    
-    void exportPdf(QString selection, QString fileName, QSize size, int resolution);
-    void exportSvg(QString selection, QString fileName, QSize size);
-    void exportImg(QString selection, QString fileName, QSize size, int resolution);
     
     QPixmap drawColorBox(QColor color, QSize size);
     
