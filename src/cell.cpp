@@ -15,8 +15,7 @@
 Cell::Cell(QGraphicsItem *parent) :
         QGraphicsSvgItem(parent), mStitch(0)
 {
-//    this->setCacheMode(QGraphicsItem::ItemCoordinateCache, QSize(32,64));
-
+    this->setCachingEnabled(false);
 }
 
 Cell::~Cell()
