@@ -7,191 +7,160 @@
     <x>0</x>
     <y>0</y>
     <width>618</width>
-    <height>564</height>
+    <height>626</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Export Charts and Legends</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="fileTypeLbl">
-       <property name="text">
-        <string>File Type:</string>
-       </property>
-       <property name="buddy">
-        <cstring>fileType</cstring>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="fileType">
-       <item>
-        <property name="text">
-         <string>pdf</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>svg</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>jpeg</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>png</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>tiff</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>bmp</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
+  <layout class="QGridLayout" name="gridLayout_4">
+   <item row="1" column="0" colspan="4">
     <widget class="QGroupBox" name="optionsGroupBox">
      <property name="enabled">
       <bool>true</bool>
      </property>
      <property name="title">
-      <string>Options</string>
+      <string>Export Options</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLabel" name="heightLbl">
-          <property name="text">
-           <string>Height:</string>
-          </property>
-          <property name="buddy">
-           <cstring>height</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="height">
-          <property name="minimum">
-           <number>10</number>
-          </property>
-          <property name="maximum">
-           <number>100000</number>
-          </property>
-          <property name="value">
-           <number>500</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="widthLbl">
-          <property name="text">
-           <string>Width:</string>
-          </property>
-          <property name="buddy">
-           <cstring>width</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="width">
-          <property name="minimum">
-           <number>10</number>
-          </property>
-          <property name="maximum">
-           <number>100000</number>
-          </property>
-          <property name="value">
-           <number>500</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLabel" name="resolutionLbl">
-          <property name="text">
-           <string>Resolution:</string>
-          </property>
-          <property name="buddy">
-           <cstring>resolution</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="resolution">
-          <property name="minimum">
-           <number>72</number>
-          </property>
-          <property name="maximum">
-           <number>300</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <property name="topMargin">
-         <number>0</number>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="heightLbl">
+        <property name="text">
+         <string>Height:</string>
         </property>
-        <item>
-         <widget class="QLabel" name="selectionLbl">
-          <property name="text">
-           <string>Selection:</string>
-          </property>
-          <property name="buddy">
-           <cstring>chartSelection</cstring>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="chartSelection"/>
-        </item>
-       </layout>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>height</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="height">
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100000</number>
+        </property>
+        <property name="value">
+         <number>500</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="selectionLbl">
+        <property name="text">
+         <string>Selection:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>chartSelection</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QComboBox" name="chartSelection"/>
+      </item>
+      <item row="0" column="3">
+       <widget class="QSpinBox" name="resolution">
+        <property name="minimum">
+         <number>72</number>
+        </property>
+        <property name="maximum">
+         <number>300</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="width">
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100000</number>
+        </property>
+        <property name="value">
+         <number>500</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="resolutionLbl">
+        <property name="text">
+         <string>Resolution:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>resolution</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="widthLbl">
+        <property name="text">
+         <string>Width:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>width</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QCheckBox" name="pageToChartSize">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="pageSizeLbl">
+        <property name="text">
+         <string>Page to Chart Size:</string>
+        </property>
+        <property name="buddy">
+         <cstring>pageToChartSize</cstring>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item>
-    <widget class="QGraphicsView" name="legendView"/>
+   <item row="2" column="0" colspan="4">
+    <widget class="QGraphicsView" name="view">
+     <property name="interactive">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
-   <item>
+   <item row="4" column="0" colspan="4">
     <widget class="QGroupBox" name="stitchLegendOptions">
      <property name="title">
       <string>Stitch Legend Options</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="stitchBorder">
-        <property name="text">
-         <string>Show Border</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="stitchTitle">
-        <property name="text">
-         <string>Show Title</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="2">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Column Count:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>stitchColumns</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
        <widget class="QSpinBox" name="stitchColumns">
         <property name="minimum">
          <number>1</number>
@@ -204,85 +173,149 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label_4">
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="showStitchDescription">
         <property name="text">
-         <string>Column Count:</string>
-        </property>
-        <property name="buddy">
-         <cstring>stitchColumns</cstring>
+         <string/>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="showStitchDescription">
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="showStitchWrongSide">
         <property name="text">
-         <string>Show Descriptions</string>
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Show Wrong Side:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>showStitchWrongSide</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QCheckBox" name="showStitchBlocks">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Show Blocks:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>showStitchBlocks</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Show Title:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>stitchTitle</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="stitchTitle">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QCheckBox" name="showStitchWrongSide">
+       <widget class="QCheckBox" name="stitchBorder">
         <property name="text">
-         <string>Show Wrong Side</string>
+         <string/>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="showStitchBlocks">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Show Blocks</string>
+         <string>Show Border:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>stitchBorder</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>Show Description:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>showStitchDescription</cstring>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="5" column="0" colspan="4">
     <widget class="QGroupBox" name="colorLegendOptions">
      <property name="title">
       <string>Color Legend Options</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="colorBorder">
-        <property name="text">
-         <string>Show Border</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="colorTitle">
-        <property name="text">
-         <string>Show Title</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
+      <item row="3" column="1">
        <widget class="QCheckBox" name="colorHexValue">
         <property name="text">
-         <string>Show Hex Value</string>
+         <string/>
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="1" column="3">
        <widget class="QLineEdit" name="colorPrefix">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>C</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="1" column="2">
        <widget class="QLabel" name="label">
         <property name="text">
          <string>Color Prefix:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
          <cstring>colorPrefix</cstring>
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
+      <item row="2" column="3">
        <widget class="QSpinBox" name="colorColumns">
         <property name="minimum">
          <number>1</number>
@@ -295,17 +328,20 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="2">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>Column Count:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
          <cstring>colorColumns</cstring>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="3" column="3">
        <widget class="QComboBox" name="colorSortBy">
         <item>
          <property name="text">
@@ -324,27 +360,179 @@
         </item>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="2">
        <widget class="QLabel" name="label_3">
         <property name="text">
          <string>Sort by:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buddy">
          <cstring>colorSortBy</cstring>
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Show Title:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>colorTitle</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Show Border:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>colorBorder</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Show Hex Value:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>colorHexValue</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="colorBorder">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="colorTitle">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item>
+   <item row="6" column="0" colspan="4">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Close|QDialogButtonBox::Save</set>
      </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QComboBox" name="fileType">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <item>
+      <property name="text">
+       <string>pdf</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>svg</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>jpeg</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>png</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>tiff</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>bmp</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="fileTypeLbl">
+     <property name="text">
+      <string>File Type:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>fileType</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="4">
+    <widget class="QGroupBox" name="chartOptions">
+     <property name="title">
+      <string>Chart Options</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_5">
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="checkBox">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_14">
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QCheckBox" name="checkBox_2">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -355,6 +543,22 @@
   <tabstop>width</tabstop>
   <tabstop>resolution</tabstop>
   <tabstop>chartSelection</tabstop>
+  <tabstop>pageToChartSize</tabstop>
+  <tabstop>view</tabstop>
+  <tabstop>checkBox</tabstop>
+  <tabstop>checkBox_2</tabstop>
+  <tabstop>stitchTitle</tabstop>
+  <tabstop>stitchBorder</tabstop>
+  <tabstop>showStitchDescription</tabstop>
+  <tabstop>stitchColumns</tabstop>
+  <tabstop>showStitchWrongSide</tabstop>
+  <tabstop>showStitchBlocks</tabstop>
+  <tabstop>colorTitle</tabstop>
+  <tabstop>colorBorder</tabstop>
+  <tabstop>colorHexValue</tabstop>
+  <tabstop>colorPrefix</tabstop>
+  <tabstop>colorColumns</tabstop>
+  <tabstop>colorSortBy</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>

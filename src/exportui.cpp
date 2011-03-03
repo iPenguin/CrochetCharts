@@ -5,10 +5,18 @@
 #include "exportui.h"
 #include "src/ui_export.h"
 
+#include <QDebug>
+
 #include "settings.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
+
+#include <QPrinter> //for pdf
+#include <QSvgGenerator> //for svg
+
+#include "crochettab.h"
+#include "crochetscene.h" // for to connect the crochetscene to the view.
 
 ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
                    QMap<QString, QMap<QString, qint64> > *colors, QWidget *parent)
@@ -17,8 +25,9 @@ ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
 {
     ui->setupUi(this);
     
-    ui->legendView->scale(.6, .6);
-    
+    ui->view->scale(.6, .6);
+
+    setupChartOptions();
     setupColorLegendOptions();
     setupStitchLegendOptions();
     
@@ -30,9 +39,13 @@ ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
     connect(ui->chartSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(setSelection(QString)));
     
     connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(setValues()));
+    connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(exportData()));
 
-    ui->legendView->setScene(scene);
+}
+
+void ExportUi::setupChartOptions()
+{
+
 }
 
 void ExportUi::setupColorLegendOptions()
@@ -114,11 +127,14 @@ void ExportUi::updateExportOptions(QString expType)
         
         ui->resolution->setVisible(true);
         ui->resolutionLbl->setVisible(true);
-
+        ui->resolution->setValue(300);
         ui->height->setVisible(false);
         ui->heightLbl->setVisible(false);
         ui->width->setVisible(false);
         ui->widthLbl->setVisible(false);
+
+        ui->pageToChartSize->setVisible(true);
+        ui->pageSizeLbl->setVisible(true);
 
     } else if(exportType == "svg") {
         //eui->optionsGroupBox->setVisible(false);
@@ -128,12 +144,16 @@ void ExportUi::updateExportOptions(QString expType)
         
         ui->resolution->setVisible(false);
         ui->resolutionLbl->setVisible(false);
-
+        ui->resolution->setValue(300);
+        
         ui->height->setVisible(false);
         ui->heightLbl->setVisible(false);
         ui->width->setVisible(false);
         ui->widthLbl->setVisible(false);
 
+        ui->pageToChartSize->setVisible(false);
+        ui->pageSizeLbl->setVisible(false);
+        
     } else { // jpg, jpeg, png, gif, tiff, bmp, etc.
         ui->optionsGroupBox->setVisible(true);
 
@@ -143,16 +163,21 @@ void ExportUi::updateExportOptions(QString expType)
         
         ui->resolution->setVisible(true);
         ui->resolutionLbl->setVisible(true);
-
+        ui->resolution->setValue(96);
+        
         ui->height->setVisible(true);
         ui->heightLbl->setVisible(true);
         ui->width->setVisible(true);
         ui->widthLbl->setVisible(true);
+
+        ui->pageToChartSize->setVisible(false);
+        ui->pageSizeLbl->setVisible(false);
     }
 }
 
 void ExportUi::generateSelectionList(bool showAll)
 {
+    QString curSelection = ui->chartSelection->currentText();
     ui->chartSelection->clear();
     
     QStringList options;
@@ -169,30 +194,43 @@ void ExportUi::generateSelectionList(bool showAll)
     }
 
     ui->chartSelection->addItems(options);
-    ui->chartSelection->setCurrentIndex(ui->chartSelection->findText(curChart));
+
+    int index = ui->chartSelection->findText(curSelection);
+    if(index > 0)
+        ui->chartSelection->setCurrentIndex(index);
+    else
+        ui->chartSelection->setCurrentIndex(ui->chartSelection->findText(curChart));
+
+    curSelection = ui->chartSelection->currentText();
+    if(curSelection == tr("Stitch Legend") || curSelection == tr("Color Legend")) {
+        ui->view->setScene(scene);
+    } else {
+        CrochetTab *tab = 0;
+        for(int i = 0; i < count; ++i) {
+            if(curSelection == mTabWidget->tabText(i)) {
+                tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+                break;
+            }
+        }
+
+        if(!tab)
+            return;
+        ui->view->setScene(tab->scene());
+    }
 }
 
-void ExportUi::setValues()
+void ExportUi::exportData()
 {
     exportType = ui->fileType->currentText();
     selection = ui->chartSelection->currentText();
     resolution = ui->resolution->text().toInt();
     width = ui->width->text().toInt();
     height = ui->height->text().toInt();
+    pageToChartSize = ui->pageToChartSize->isChecked();
     
-    accept();
-}
-
-int ExportUi::exec()
-{
-    int retValue = QDialog::exec();
-    
-    if(retValue != QDialog::Accepted)
-        return retValue;
-
     if(Settings::inst()->isDemoVersion()) {
         Settings::inst()->trialVersionMessage(this);
-        return QDialog::Rejected;
+        return;
     }
     
     QString filter;
@@ -215,14 +253,36 @@ int ExportUi::exec()
     
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
     fileName = QFileDialog::getSaveFileName(this, tr("Export Pattern As..."), fileLoc, filter);
-
+    
     if(fileName.isEmpty())
-        return QDialog::Rejected;
-
+        return;
+    
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     if(selection == tr("Stitch Legend") || selection == tr("Color Legend")) {
-        exportLegendImg();
+        if(exportType == "pdf")
+            exportLegendPdf();
+        else if (exportType == "svg")
+            exportLegendSvg();
+        else
+            exportLegendImg();
+        
+    } else { //charts
+        if(exportType == "pdf")
+            exportPdf();
+        else if(exportType == "svg")
+            exportSvg();
+        else
+            exportImg();
     }
     
+    QApplication::restoreOverrideCursor();
+}
+
+int ExportUi::exec()
+{
+    int retValue = QDialog::exec();
+    
+
     return retValue;
 }
 
@@ -232,34 +292,75 @@ void ExportUi::setSelection(QString selection)
         return;
 
     if(selection == tr("Stitch Legend")) {
+        ui->view->setScene(scene);
         ui->stitchLegendOptions->show();
         ui->colorLegendOptions->hide();
+        ui->chartOptions->hide();
+        
         if(scene->items().contains(cl))
             scene->removeItem(cl);
         if(!scene->items().contains(sl))
             scene->addItem(sl);
     } else if(selection == tr("Color Legend")) {
+        ui->view->setScene(scene);
         ui->stitchLegendOptions->hide();
         ui->colorLegendOptions->show();
+        ui->chartOptions->hide();
         
         if(scene->items().contains(sl))
             scene->removeItem(sl);
         if(!scene->items().contains(cl))
             scene->addItem(cl);
     } else {
+        CrochetTab *tab = 0;
+        for(int i = 0; i < mTabWidget->count(); ++i) {
+            if(selection == mTabWidget->tabText(i)) {
+                tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+                break;
+            }
+        }
+        
+        if(!tab)
+            return;
+        
+        ui->view->setScene(tab->scene());
+        
         ui->stitchLegendOptions->hide();
         ui->colorLegendOptions->hide();
+        ui->chartOptions->show();
     }
 }
 
 void ExportUi::exportLegendPdf()
 {
+    QPainter *p = new QPainter();
     
+    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
+    printer->setOutputFormat(QPrinter::PdfFormat);
+    printer->setOutputFileName(fileName);
+    printer->setResolution(resolution);
+    
+    p->begin(printer);
+    scene->render(p);
+    p->end();
 }
 
 void ExportUi::exportLegendSvg()
 {
+    QPainter *p = new QPainter();
     
+    QSvgGenerator gen;
+
+    gen.setResolution(resolution);
+    gen.setTitle(QFileInfo(fileName).baseName());
+    gen.setDescription(tr("This file was generated by %1").arg(qApp->applicationName()) );
+    gen.setViewBox(scene->sceneRect());
+    gen.setFileName(fileName);
+    gen.setSize(scene->sceneRect().size().toSize());
+    
+    p->begin(&gen);
+    scene->render(p);
+    p->end();
 }
 
 void ExportUi::exportLegendImg()
@@ -277,9 +378,90 @@ void ExportUi::exportLegendImg()
     
     QPainter p(this);
     QPixmap pix = QPixmap(scene->sceneRect().size().toSize());
-    
+
     p.begin(&pix);
     scene->render(&p);
     p.end();
     pix.save(fileName);
+}
+
+void ExportUi::exportPdf()
+{
+    int tabCount = mTabWidget->count();
+    QPainter *p = new QPainter();
+    
+    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
+    printer->setOutputFormat(QPrinter::PdfFormat);
+    printer->setOutputFileName(fileName);
+    printer->setResolution(resolution);
+
+    if(pageToChartSize)
+        printer->setPaperSize(QSizeF((qreal)width, (qreal)height), QPrinter::Point);
+    
+    p->begin(printer);
+    
+    bool firstPass = true;
+    for(int i = 0; i < tabCount; ++i) {
+        if(!firstPass)
+            printer->newPage();
+        
+        if(selection == tr("All Charts") || selection == mTabWidget->tabText(i)) {
+            CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+            tab->renderChart(p); //QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height))
+            firstPass = false;
+        }
+    }
+    p->end();
+}
+
+void ExportUi::exportSvg()
+{
+    int tabCount = mTabWidget->count();
+    QPainter *p = new QPainter();
+
+    QRectF rect = ui->view->scene()->sceneRect();
+    
+    QSvgGenerator gen;
+    gen.setResolution(resolution);
+    gen.setTitle(QFileInfo(fileName).baseName());
+    gen.setDescription(tr("This file was generated by %1").arg(qApp->applicationName()) );
+    
+    gen.setViewBox(rect);
+    gen.setFileName(fileName);
+    gen.setSize(rect.size().toSize());
+    
+    p->begin(&gen);
+    
+    for(int i = 0; i < tabCount; ++i) {
+        if(selection == mTabWidget->tabText(i)) {
+            CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+            tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height)));
+        }
+    }
+    p->end();
+    
+}
+
+void ExportUi::exportImg()
+{
+    int tabCount = mTabWidget->count();
+    QPainter *p = new QPainter();
+    
+    double dpm = resolution * (39.3700787);
+    QImage img = QImage(QSize(width, height), QImage::Format_ARGB32);
+    img.setDotsPerMeterX(dpm);
+    img.setDotsPerMeterY(dpm);
+    
+    p->begin(&img);
+    p->fillRect(0, 0, width, height, QColor(Qt::white));
+    
+    for(int i = 0; i < tabCount; ++i) {
+        if(selection == mTabWidget->tabText(i)) {
+            CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+            tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height)));
+        }
+    }
+    p->end();
+    
+    img.save(fileName);  
 }

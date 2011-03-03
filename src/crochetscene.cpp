@@ -214,8 +214,9 @@ void CrochetScene::stitchUpdated(QString oldSt, QString newSt)
         return;
 
     QPoint pos = findGridPosition(c);
-    qDebug() << oldSt << newSt << pos;
-    emit rowChanged(pos.y());
+    //FIXME: crash! 
+    qDebug() << "FIXME:" << oldSt << newSt << pos;
+    //emit rowChanged(pos.y());
     
 }
 
