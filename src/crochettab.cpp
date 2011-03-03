@@ -3,7 +3,7 @@
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "crochettab.h"
-#include "ui_optionsbar.h"
+#include "src/ui_optionsbar.h"
 
 #include <QVBoxLayout>
 #include <QSplitter>

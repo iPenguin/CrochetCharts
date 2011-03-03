@@ -24,6 +24,7 @@ class CrochetTab : public QWidget
 {
     Q_OBJECT
     friend class SaveFile;
+    friend class ExportUi;
 public:
     explicit CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent = 0);
     ~CrochetTab();
