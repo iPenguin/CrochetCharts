@@ -44,12 +44,8 @@ qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers} ${testmodel_headers})
 if(WINDOWS)
     add_executable(crochet.exe WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_win})
-    target_link_libraries(crochet.exe "/home/brian/qt-win32/bin/QtSvg4.dll" "/home/brian/qt-win32/bin/QtCore4.dll"
-        "/home/brian/qt-win32/bin/QtGui4.dll" "/home/brian/qt-win32/bin/QtNetwork4.dll" "/home/brian/qt-win32/bin/QtXml4.dll")
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/crochet.exe "/home/brian/qt-win32/bin/QtSvg4.dll" "/home/brian/qt-win32/bin/QtCore4.dll"
-        "/home/brian/qt-win32/bin/QtGui4.dll" "/home/brian/qt-win32/bin/QtNetwork4.dll" "/home/brian/qt-win32/bin/QtXml4.dll"
-        "/home/brian/qt-win32/bin/libgcc_s_dw2-1.dll" "/home/brian/qt-win32/bin/mingwm10.dll" DESTINATION bin)
-
+    target_link_libraries(crochet.exe ${QT_LIBS_WINDOWS})
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/crochet.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION bin)
 else()
     add_executable(crochet MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_mac} ${crochet_nix})

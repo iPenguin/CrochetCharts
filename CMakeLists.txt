@@ -26,10 +26,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
 
 find_package(Qt4 REQUIRED)
 
+#cross compile apple: http://devs.openttd.org/~truebrain/compile-farm/apple-darwin9.txt
 option(UNIT_TESTING  "Build QTestLib Unit Tests" OFF)
 option(ARCH_32BIT "Force 32-bit Build" OFF)
 option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
 option(WINDOWS "Cross Compile for Windows" OFF)
+option(MACOSX "Cross Compile for Mac OS X" OFF)
 
 message(STATUS "Building " ${PROJECT_NAME} " version - " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH} ${VERSION_SHA1})
 message(STATUS "Build Profile - " ${CMAKE_BUILD_TYPE})
@@ -37,6 +39,7 @@ message(STATUS "Unit Testing - " ${UNIT_TESTING})
 message(STATUS "Force 32-bit Builds - " ${ARCH_32BIT})
 message(STATUS "Use -Wshadow when compiling - " ${SHADOW_FLAG})
 message(STATUS "Cross Compile for Windows - " ${WINDOWS})
+message(STATUS "Cross Compile for Mac OS X - " ${MACOSX})
 message(STATUS "HunSpell Found: " ${HUNSPELL_FOUND})
 
 if(WINDOWS)
@@ -48,6 +51,25 @@ if(WINDOWS)
     set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
     set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
     set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+    set(WIN32_LIBS "/home/brian/qt-win32/bin")
+    set(QT_LIBS_WINDOWS "${WIN32_LIBS}/QtSvg4.dll" "${WIN32_LIBS}/QtCore4.dll" "${WIN32_LIBS}/QtGui4.dll"
+                        "${WIN32_LIBS}/QtNetwork4.dll" "${WIN32_LIBS}/QtXml4.dll")
+    set(QT_DEPS_WINDOWS "${WIN32_LIBS}/libgcc_s_dw2-1.dll" "${WIN32_LIBS}/mingwm10.dll")
+elseif (MACOSX)
+    set(CMAKE_SYSTEM_NAME "Darwin")
+    set(CMAKE_C_COMPILER "")
+    set(CMAKE_CXX_COMPILER "")
+    set(CMAKE_FIND_ROOT_PATH "")
+
+    set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+    set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+
+    set(MACOSX_LIBS "")
+    set(QT_LIBS_MACOSX "${MACOSX_LIBS}/QtSvg4.dyn" "${MACOSX_LIBS}/QtCore4.dyn" "${MACOSX_LIBS}/QtGui4.dyn"
+                        "${MACOSX_LIBS}/QtNetwork4.dyn" "${MACOSX_LIBS}/QtXml4.dyn")
+    set(QT_DEPS_MACOSX "${MACOSX_LIBS}/libgcc_s_dw2-1.dyn" "${MACOSX_LIBS}/mingwm10.dyn")
 endif()
 
 if(ARCH_32BIT)
@@ -90,18 +112,9 @@ set(crochet_version
     "${CMAKE_CURRENT_BINARY_DIR}/version.cpp"
     )
 
-if(WIN32)
-#http://public.kitware.com/Bug/view.php?id=4068
-#if(MINGW)
-#  set(CMAKE_RC_COMPILER_INIT windres)
-#  ENABLE_LANGUAGE(RC)
-#  SET(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> <DEFINES> -o <OBJECT> <SOURCE>")
-# ALT: set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
-#endif(MINGW)
-
-    set(crochet_win ${CMAKE_CURRENT_SOURCE_DIR}/platforms/win/crochet.rc
-        )
-elseif(APPLE)
+if(WINDOWS OR WIN32)
+    set(crochet_win ${CMAKE_CURRENT_SOURCE_DIR}/platforms/win/crochet.rc)
+elseif(MACOSX OR APPLE)
 
     set(crochet_mac
         )
