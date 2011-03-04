@@ -29,13 +29,26 @@ find_package(Qt4 REQUIRED)
 option(UNIT_TESTING  "Build QTestLib Unit Tests" OFF)
 option(ARCH_32BIT "Force 32-bit Build" OFF)
 option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
+option(WINDOWS "Cross Compile for Windows" OFF)
 
 message(STATUS "Building " ${PROJECT_NAME} " version - " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH} ${VERSION_SHA1})
 message(STATUS "Build Profile - " ${CMAKE_BUILD_TYPE})
 message(STATUS "Unit Testing - " ${UNIT_TESTING})
 message(STATUS "Force 32-bit Builds - " ${ARCH_32BIT})
 message(STATUS "Use -Wshadow when compiling - " ${SHADOW_FLAG})
+message(STATUS "Cross Compile for Windows - " ${WINDOWS})
 message(STATUS "HunSpell Found: " ${HUNSPELL_FOUND})
+
+if(WINDOWS)
+    set(CMAKE_SYSTEM_NAME "Windows")
+    set(CMAKE_C_COMPILER "/usr/bin/i586-mingw32msvc-gcc")
+    set(CMAKE_CXX_COMPILER "/usr/bin/i586-mingw32msvc-g++")
+    set(CMAKE_FIND_ROOT_PATH "/usr/i586-mingw32msvc")
+
+    set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+    set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+endif()
 
 if(ARCH_32BIT)
     set(extra_build_flags "-m32")
@@ -130,10 +143,34 @@ endif()
 include(InstallRequiredSystemLibraries)
 
 set(CPACK_RESOURCE_FILE_LICENSE  "${CMAKE_CURRENT_SOURCE_DIR}/license.txt")
-#TODO: get the version information from git.
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Chart design software for crochet")
+set(CPACK_PACKAGE_VENDOR "Stitch Works Software")
 set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "crochet-${VERSION_MAJOR}.${VERSION_MINOR}")
+
+if(WINDOWS)
+    set(CPACK_GENERATOR "NSIS")
+    set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/images/crochet_icon.png")
+    set(CPACK_NSIS_PACKAGE_NAME "Crochet")
+    set(CPACK_NSIS_DISPLAY_NAME "Crochet")
+    set(CPACK_NSIS_CONTACT "support@stitchworkssoftware.com")
+    set(CPACK_PACKAGE_EXECUTABLES "crochet.exe" "Crochet")
+    set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CMAKE_PROJECT_NAME}-${VERSION}")
+
+    set(CPACK_NSIS_MENU_LINKS "http://www.stitchworkssoftware.com" "Homepage for Stitch Works Software")
+
+    # this doesn't work for the NSIS installer
+    set(CPACK_CREATE_DESKTOP_LINKS "crochet.exe")
+    set(CPACK_NSIS_MODIFY_PATH "ON")
+
+    # Icon in the add/remove control panel. Must be an .exe file
+    set(CPACK_NSIS_INSTALLED_ICON_NAME bin\\\\crochet.exe)
+
+    set(CPACK_NSIS_URL_INFO_ABOUT "http://www.stitchworkssoftware.com")
+    set(CPACK_NSIS_HELP_LINK "http://www.stitchworkssoftware.com")
+endif()
 
 include(CPack)
 
