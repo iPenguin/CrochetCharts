@@ -52,24 +52,27 @@ if(WINDOWS)
     set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
     set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-    set(WIN32_LIBS "/home/brian/qt-win32/bin")
+    set(WIN32_LIBS "/home/crosscompile/win32")
     set(QT_LIBS_WINDOWS "${WIN32_LIBS}/QtSvg4.dll" "${WIN32_LIBS}/QtCore4.dll" "${WIN32_LIBS}/QtGui4.dll"
                         "${WIN32_LIBS}/QtNetwork4.dll" "${WIN32_LIBS}/QtXml4.dll")
     set(QT_DEPS_WINDOWS "${WIN32_LIBS}/libgcc_s_dw2-1.dll" "${WIN32_LIBS}/mingwm10.dll")
+#TODO: deploy the plugins for images etc.
 elseif (MACOSX)
     set(CMAKE_SYSTEM_NAME "Darwin")
-    set(CMAKE_C_COMPILER "")
-    set(CMAKE_CXX_COMPILER "")
-    set(CMAKE_FIND_ROOT_PATH "")
+    set(CMAKE_C_COMPILER "/home/crosscompile/darwin/bin/i686-apple-darwin8-gcc")
+    set(CMAKE_CXX_COMPILER "/home/crosscompile/darwin/bin/i686-apple-darwin8-g++")
+    set(CMAKE_FIND_ROOT_PATH "/home/crosscompile/darwin/SDKs/MacOSX10.4u.sdk/usr/")
 
     set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
     set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
     set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-    set(MACOSX_LIBS "")
-    set(QT_LIBS_MACOSX "${MACOSX_LIBS}/QtSvg4.dyn" "${MACOSX_LIBS}/QtCore4.dyn" "${MACOSX_LIBS}/QtGui4.dyn"
-                        "${MACOSX_LIBS}/QtNetwork4.dyn" "${MACOSX_LIBS}/QtXml4.dyn")
-    set(QT_DEPS_MACOSX "${MACOSX_LIBS}/libgcc_s_dw2-1.dyn" "${MACOSX_LIBS}/mingwm10.dyn")
+    set(MACOSX_LIBS "/home/crosscompile/darwin/Library/Frameworks")
+    set(QT_LIBS_MACOSX "${MACOSX_LIBS}/QtSvg.framework/Versions/4/QtSvg" "${MACOSX_LIBS}/QtCore.framework/Versions/4/QtCore"
+                       "${MACOSX_LIBS}/QtGui.framework/Versions/4/QtGui" "${MACOSX_LIBS}/QtNetwork.framework/Versions/4/QtNetwork"
+                       "${MACOSX_LIBS}/QtXml.framework/Versions/4/QtXml")
+    set(QT_DEPS_MACOSX "")
+#TODO: deploy the plugins for images etc.
 endif()
 
 if(ARCH_32BIT)
@@ -118,8 +121,8 @@ elseif(MACOSX OR APPLE)
 
     set(crochet_mac
         )
-    set(CMAKE_OSX_ARCHITECTURES "ppc;i386;ppc64;x86_64")
-#TODO: make the version come from the VERSION file or from git.
+    set(CMAKE_OSX_ARCHITECTURES "ppc;i386") #;ppc64;x86_64
+
 #for more see: http://www.mail-archive.com/cmake@cmake.org/msg05498.html
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
 #plutil command line utility to edit plist files.
@@ -131,8 +134,8 @@ elseif(MACOSX OR APPLE)
     set(MACOSX_BUNDLE_BUNDLE_NAME "Crochet")
 
     # Need to copy the icon file
-    exec_program("mkdir -p ${crochet_BINARY_DIR}/src/ Crochet.app/Contents/Resources")
-    exec_program("cp ${crochet_SOURCE_DIR}/platforms/mac/crochet.icns $ {crochet_BINARY_DIR}/src/Crochet.app/Contents/Resources")
+    exec_program("mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
+    exec_program("cp ${CMAKE_CURRENT_SOURCE_DIR}/platforms/mac/crochet.icns ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
 
     # Overload the Info.plist default
     set(CMAKE_MODULE_PATH ${crochet_SOURCE_DIR}/platforms/mac ${CMAKE_MODULE_PATH})
