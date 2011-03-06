@@ -220,7 +220,7 @@ if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
     set(CPACK_NSIS_URL_INFO_ABOUT "http://www.stitchworkssoftware.com")
     set(CPACK_NSIS_HELP_LINK "http://www.stitchworkssoftware.com")
 elseif(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
-
+    set(CPACK_GENERATOR "BUNDLE")
 else()
     set(CPACK_GENERATOR "DEB;RPM")
 
