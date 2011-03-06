@@ -40,7 +40,7 @@ qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
 qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers} ${testmodel_headers})
 
-if(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
+if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
     add_executable(crochet.exe WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_win})
     target_link_libraries(crochet.exe ${QT_LIBS_WINDOWS})

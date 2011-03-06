@@ -29,7 +29,7 @@ find_package(Qt4 REQUIRED)
 
 #cross compile apple: http://devs.openttd.org/~truebrain/compile-farm/apple-darwin9.txt
 option(UNIT_TESTING  "Build the test libraries for this software" OFF)
-option(ARCH_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
+option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
 option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
 set(SWS_RELEASE_PLATFORM "LINUX" CACHE STRING "Compile the software for the given platform (LINUX, DARWIN, WIN32)")
 
@@ -41,10 +41,10 @@ endif()
 
 message("-------------------------------------------------------")
 message(STATUS ${PROJECT_NAME} " Version: " ${SWS_VERSION})
-message(STATUS "Release Platform: " ${SWS_RELEASE_PLATFORM})
-message(STATUS "Build Profile: " ${CMAKE_BUILD_TYPE})
+message(STATUS "SWS Release Platform: " ${SWS_RELEASE_PLATFORM})
+message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
 message(STATUS "Unit Testing: " ${UNIT_TESTING})
-message(STATUS "Force 32-bit Builds: " ${ARCH_32BIT})
+message(STATUS "Force 32bit: " ${FORCE_32BIT})
 message(STATUS "Use -Wshadow: " ${SHADOW_FLAG})
 message(STATUS "Found Hunspell: " ${HUNSPELL_FOUND})
 message("-------------------------------------------------------")
@@ -82,7 +82,7 @@ elseif (${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
 #TODO: deploy the plugins for images etc.
 endif()
 
-if(ARCH_32BIT)
+if(FORCE_32BIT)
     set(extra_build_flags "-m32")
     set(extra_link_flags "-m elf_i386")
 endif()
