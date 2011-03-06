@@ -9,7 +9,9 @@ include(MacroOutOfSourceBuild)
 macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build.")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release Profiling CACHE TYPE INTERNAL FORCE)
-set(CMAKE_BUILD_TYPE "Debug")
+if(${CMAKE_BUILD_TYPE} STREQUAL "")
+    set(CMAKE_BUILD_TYPE "Debug")
+endif()
 
 set (HUNSPELL_FIND_QUIETLY TRUE)
 include(FindHunSpell)
