@@ -1,6 +1,5 @@
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
-
 file(GLOB crochet_srcs "*.cpp")
 file(GLOB crochet_uis "*.ui")
 
@@ -41,19 +40,19 @@ qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
 qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers} ${testmodel_headers})
 
-if(WINDOWS)
+if(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
     add_executable(crochet.exe WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_win})
     target_link_libraries(crochet.exe ${QT_LIBS_WINDOWS})
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/crochet.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION bin)
     install(FILES ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
-else(MACOSX OR APPLE)
+elseif(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
     add_executable(crochet_mac MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_mac})
-    target_link_libraries(crochet_mac ${QT_LIBS_MACOSX})
+    target_link_libraries(crochet_mac ${QT_LIBS_DARWIN})
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/crochet_mac RENAME crochet DESTINATION bin)
-    install(FILES ${QT_LIBS_MACOSX} ${QT_DEPS_MACOSX} DESTINATION libs)
-    install(FILES ${QT_PLUGINS_MACOSX} DESTINATION plugins)
+    install(FILES ${QT_LIBS_DARWIN} ${QT_DEPS_DARWIN} DESTINATION libs)
+    install(FILES ${QT_PLUGINS_DARWIN} DESTINATION plugins)
 else()
     add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_nix})

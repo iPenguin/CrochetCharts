@@ -11,15 +11,16 @@ macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source buil
 set(CMAKE_CONFIGURATION_TYPES Debug Release DebugProfiling CACHE TYPE INTERNAL FORCE)
 set(CMAKE_BUILD_TYPE "Debug")
 
+set (HUNSPELL_FIND_QUIETLY TRUE)
 include(FindHunSpell)
 
 include(GetGitRevisionDescription)
-git_describe(VERSION --tags --dirty=-working)
+git_describe(SWS_VERSION --tags --dirty=-working)
 
-string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
-string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
-string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" VERSION_PATCH "${VERSION}")
-string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" VERSION_SHA1 "${VERSION}")
+string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" SWS_VERSION_MAJOR "${SWS_VERSION}")
+string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" SWS_VERSION_MINOR "${SWS_VERSION}")
+string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" SWS_VERSION_PATCH "${SWS_VERSION}")
+string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" SWS_VERSION_SHA1 "${SWS_VERSION}")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
@@ -27,22 +28,28 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
 find_package(Qt4 REQUIRED)
 
 #cross compile apple: http://devs.openttd.org/~truebrain/compile-farm/apple-darwin9.txt
-option(UNIT_TESTING  "Build QTestLib Unit Tests" OFF)
-option(ARCH_32BIT "Force 32-bit Build" OFF)
+option(UNIT_TESTING  "Build the test libraries for this software" OFF)
+option(ARCH_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
 option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
-option(WINDOWS "Cross Compile for Windows" OFF)
-option(MACOSX "Cross Compile for Mac OS X" OFF)
+set(SWS_RELEASE_PLATFORM "LINUX" CACHE STRING "Compile the software for the given platform (LINUX, DARWIN, WIN32)")
 
-message(STATUS "Building " ${PROJECT_NAME} " version - " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH} ${VERSION_SHA1})
-message(STATUS "Build Profile - " ${CMAKE_BUILD_TYPE})
-message(STATUS "Unit Testing - " ${UNIT_TESTING})
-message(STATUS "Force 32-bit Builds - " ${ARCH_32BIT})
-message(STATUS "Use -Wshadow when compiling - " ${SHADOW_FLAG})
-message(STATUS "Cross Compile for Windows - " ${WINDOWS})
-message(STATUS "Cross Compile for Mac OS X - " ${MACOSX})
-message(STATUS "HunSpell Found: " ${HUNSPELL_FOUND})
+if(APPLE)
+    set(SWS_RELEASE_PLATFORM "DARWIN")
+elseif(WIN32)
+    set(SWS_RELEASE_PLATFORM "WIN32")
+endif()
 
-if(WINDOWS)
+message("-------------------------------------------------------")
+message(STATUS ${PROJECT_NAME} " Version: " ${SWS_VERSION})
+message(STATUS "Release Platform: " ${SWS_RELEASE_PLATFORM})
+message(STATUS "Build Profile: " ${CMAKE_BUILD_TYPE})
+message(STATUS "Unit Testing: " ${UNIT_TESTING})
+message(STATUS "Force 32-bit Builds: " ${ARCH_32BIT})
+message(STATUS "Use -Wshadow: " ${SHADOW_FLAG})
+message(STATUS "Found Hunspell: " ${HUNSPELL_FOUND})
+message("-------------------------------------------------------")
+
+if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
     set(CMAKE_SYSTEM_NAME "Windows")
     set(CMAKE_C_COMPILER "/usr/bin/i586-mingw32msvc-gcc")
     set(CMAKE_CXX_COMPILER "/usr/bin/i586-mingw32msvc-g++")
@@ -57,7 +64,7 @@ if(WINDOWS)
                         "${WIN32_LIBS}/QtNetwork4.dll" "${WIN32_LIBS}/QtXml4.dll")
     set(QT_DEPS_WINDOWS "${WIN32_LIBS}/libgcc_s_dw2-1.dll" "${WIN32_LIBS}/mingwm10.dll")
 #TODO: deploy the plugins for images etc.
-elseif (MACOSX)
+elseif (${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
     set(CMAKE_SYSTEM_NAME "Darwin")
     set(CMAKE_C_COMPILER "/home/crosscompile/darwin/bin/i686-apple-darwin8-gcc")
     set(CMAKE_CXX_COMPILER "/home/crosscompile/darwin/bin/i686-apple-darwin8-g++")
@@ -67,11 +74,11 @@ elseif (MACOSX)
     set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
     set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
-    set(MACOSX_LIBS "/home/crosscompile/darwin/Library/Frameworks")
-    set(QT_LIBS_MACOSX "${MACOSX_LIBS}/QtSvg.framework/Versions/4/QtSvg" "${MACOSX_LIBS}/QtCore.framework/Versions/4/QtCore"
-                       "${MACOSX_LIBS}/QtGui.framework/Versions/4/QtGui" "${MACOSX_LIBS}/QtNetwork.framework/Versions/4/QtNetwork"
-                       "${MACOSX_LIBS}/QtXml.framework/Versions/4/QtXml")
-    set(QT_DEPS_MACOSX "")
+    set(DARWIN_LIBS "/home/crosscompile/darwin/Library/Frameworks")
+    set(QT_LIBS_DARWIN "${DARWIN_LIBS}/QtSvg.framework/Versions/4/QtSvg" "${DARWIN_LIBS}/QtCore.framework/Versions/4/QtCore"
+                       "${DARWIN_LIBS}/QtGui.framework/Versions/4/QtGui" "${DARWIN_LIBS}/QtNetwork.framework/Versions/4/QtNetwork"
+                       "${DARWIN_LIBS}/QtXml.framework/Versions/4/QtXml")
+    set(QT_DEPS_DARWIN "")
 #TODO: deploy the plugins for images etc.
 endif()
 
@@ -84,7 +91,7 @@ if(SHADOW_FLAG)
     list(APPEND extra_build_flags " -Wshadow")
 endif()
 
-set(CMAKE_C_FLAGS "${extra_build_flags} -g -ggdb -W -Wall")
+set(CMAKE_C_FLAGS "${extra_build_flags} -g -ggdb -W -Wall") #-ansi -pedantic
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 
 set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -ggdb -W -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
@@ -111,24 +118,22 @@ include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
 
-set(crochet_version
-    "${CMAKE_CURRENT_BINARY_DIR}/version.cpp"
-    )
+set(crochet_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
 
-if(WINDOWS OR WIN32)
+if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
     set(crochet_win ${CMAKE_CURRENT_SOURCE_DIR}/platforms/win/crochet.rc)
-elseif(MACOSX OR APPLE)
 
-    set(crochet_mac
-        )
+elseif(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
+
+    set(crochet_mac)
     set(CMAKE_OSX_ARCHITECTURES "ppc;i386") #;ppc64;x86_64
 
 #for more see: http://www.mail-archive.com/cmake@cmake.org/msg05498.html
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
 #plutil command line utility to edit plist files.
 #http://rixstep.com/2/20060901,00.shtml
-    set(MACOSX_BUNDLE_INFO_STRING "Crochet - version " ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH})
-    set(MACOSX_BUNDLE_BUNDLE_VERSION ${VERSION_MAJOR} "." ${VERSION_MINOR} "." ${VERSION_PATCH})
+    set(MACOSX_BUNDLE_INFO_STRING "Crochet - version " ${SWS_VERSION_MAJOR} "." ${SWS_VERSION_MINOR} "." ${SWS_VERSION_PATCH})
+    set(MACOSX_BUNDLE_BUNDLE_VERSION ${SWS_VERSION_MAJOR} "." ${SWS_VERSION_MINOR} "." ${SWS_VERSION_PATCH})
     set(MACOSX_BUNDLE_ICON_FILE "platforms/mac/crochet.icns")
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware")
     set(MACOSX_BUNDLE_BUNDLE_NAME "Crochet")
@@ -140,9 +145,8 @@ elseif(MACOSX OR APPLE)
     # Overload the Info.plist default
     set(CMAKE_MODULE_PATH ${crochet_SOURCE_DIR}/platforms/mac ${CMAKE_MODULE_PATH})
 
-else(UNIX)
-    set(crochet_nix
-        )
+else()
+    set(crochet_nix)
 endif()
 
 add_subdirectory(src)
@@ -161,19 +165,19 @@ include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE  "${CMAKE_CURRENT_SOURCE_DIR}/license.txt")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Chart design software for crochet")
 set(CPACK_PACKAGE_VENDOR "Stitch Works Software")
-set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "crochet-${VERSION_MAJOR}.${VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_MAJOR ${SWS_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${SWS_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${SWS_VERSION_PATCH})
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "crochet-${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}")
 
-if(WINDOWS)
+if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/images/crochet_icon.png")
     set(CPACK_NSIS_PACKAGE_NAME "Crochet")
     set(CPACK_NSIS_DISPLAY_NAME "Crochet")
     set(CPACK_NSIS_CONTACT "support@stitchworkssoftware.com")
     set(CPACK_PACKAGE_EXECUTABLES "crochet.exe" "Crochet")
-    set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CMAKE_PROJECT_NAME}-${VERSION}")
+    set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CMAKE_PROJECT_NAME}-${SWS_VERSION}")
 
     set(CPACK_NSIS_MENU_LINKS "http://www.stitchworkssoftware.com" "Homepage for Stitch Works Software")
 
