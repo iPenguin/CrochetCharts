@@ -1,4 +1,4 @@
 #include "../src/version.h"
 
-#define GIT_VERSION "@VERSION@"
+#define GIT_VERSION "@SWS_VERSION@"
 const QString gGIT_VERSION = GIT_VERSION;
