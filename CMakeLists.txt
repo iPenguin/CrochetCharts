@@ -76,7 +76,7 @@ if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
     set(QT_LIBS_WINDOWS "${WIN32_LIBS}/QtSvg4.dll" "${WIN32_LIBS}/QtCore4.dll" "${WIN32_LIBS}/QtGui4.dll"
                         "${WIN32_LIBS}/QtNetwork4.dll" "${WIN32_LIBS}/QtXml4.dll")
     set(QT_DEPS_WINDOWS "${WIN32_LIBS}/libgcc_s_dw2-1.dll" "${WIN32_LIBS}/mingwm10.dll")
-    set(QT_PLUGINS_WINDOWS "${WIN32_BASE}/imageformats" "${WIN32_BASE}/accessible" "${WIN32_BASE}/iconengines")
+    set(QT_PLUGINS_WINDOWS "${WIN32_PLUGINS}/imageformats" "${WIN32_PLUGINS}/accessible" "${WIN32_PLUGINS}/iconengines")
 
 elseif (${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
 
@@ -153,16 +153,6 @@ elseif(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
     set(crochet_mac)
     set(CMAKE_OSX_ARCHITECTURES "ppc;i386") #;ppc64;x86_64
 
-#for more see: http://www.mail-archive.com/cmake@cmake.org/msg05498.html
-#and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
-#plutil command line utility to edit plist files.
-#http://rixstep.com/2/20060901,00.shtml
-    set(MACOSX_BUNDLE_INFO_STRING "Crochet - version ${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
-    set(MACOSX_BUNDLE_BUNDLE_VERSION "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
-    set(MACOSX_BUNDLE_ICON_FILE "platforms/mac/crochet.icns")
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware")
-    set(MACOSX_BUNDLE_BUNDLE_NAME "Crochet")
-
     # Need to copy the icon file
     exec_program("mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
     exec_program("cp ${CMAKE_CURRENT_SOURCE_DIR}/platforms/mac/crochet.icns ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
@@ -198,10 +188,10 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${SWS_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${SWS_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${SWS_VERSION_PATCH})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "crochet-${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}")
+set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/images/crochet_icon.png")
 
 if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
     set(CPACK_GENERATOR "NSIS")
-    set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/images/crochet_icon.png")
     set(CPACK_NSIS_PACKAGE_NAME "Crochet")
     set(CPACK_NSIS_DISPLAY_NAME "Crochet")
     set(CPACK_NSIS_CONTACT "support@stitchworkssoftware.com")
@@ -219,18 +209,27 @@ if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
 
     set(CPACK_NSIS_URL_INFO_ABOUT "http://www.stitchworkssoftware.com")
     set(CPACK_NSIS_HELP_LINK "http://www.stitchworkssoftware.com")
+
 elseif(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
-    set(CPACK_GENERATOR "BUNDLE")
-    #MACOSX_BUNDLE_INFO_STRING
-    #MACOSX_BUNDLE_ICON_FILE
-    #MACOSX_BUNDLE_GUI_IDENTIFIER
-    #MACOSX_BUNDLE_LONG_VERSION_STRING
-    #MACOSX_BUNDLE_BUNDLE_NAME
-    #MACOSX_BUNDLE_SHORT_VERSION_STRING
-    #MACOSX_BUNDLE_BUNDLE_VERSION
-    #sMACOSX_BUNDLE_COPYRIGHT
+    set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
+    set(CPACK_GENERATOR "DragNDrop")
+
+    set(CPACK_PACKAGE_EXECUTABLES "crochet_mac" "Crochet")
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${SWS_VERSION}")
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    set(MACOSX_BUNDLE_COPYRIGHT "Copyright 2010-2011 Stitch Works Software. All rights reserved.")
     #add qt.conf file to bundle as qt needs it to locate the plugins: Contents/Resources/
 
+#for more see: http://www.mail-archive.com/cmake@cmake.org/msg05498.html
+#and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
+#plutil command line utility to edit plist files.
+#http://rixstep.com/2/20060901,00.shtml
+    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    set(MACOSX_BUNDLE_ICON_FILE "platforms/mac/crochet.icns")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware")
+    set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
+    
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")
 
