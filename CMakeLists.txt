@@ -221,8 +221,18 @@ if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
     set(CPACK_NSIS_HELP_LINK "http://www.stitchworkssoftware.com")
 elseif(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
     set(CPACK_GENERATOR "BUNDLE")
+    #MACOSX_BUNDLE_INFO_STRING
+    #MACOSX_BUNDLE_ICON_FILE
+    #MACOSX_BUNDLE_GUI_IDENTIFIER
+    #MACOSX_BUNDLE_LONG_VERSION_STRING
+    #MACOSX_BUNDLE_BUNDLE_NAME
+    #MACOSX_BUNDLE_SHORT_VERSION_STRING
+    #MACOSX_BUNDLE_BUNDLE_VERSION
+    #sMACOSX_BUNDLE_COPYRIGHT
+    #add qt.conf file to bundle as qt needs it to locate the plugins: Contents/Resources/
+
 else()
-    set(CPACK_GENERATOR "DEB;RPM")
+    set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")
 
     #TODO: finish adding the deb and rpm stuff here.
 endif()

@@ -50,6 +50,10 @@ elseif(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
     add_executable(crochet_mac MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_mac})
     target_link_libraries(crochet_mac ${QT_LIBS_DARWIN})
+
+    set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${MACOSX_BUNDLE_ICON_FILE}"
+                PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet_mac RENAME crochet DESTINATION bin)
     install(FILES ${QT_LIBS_DARWIN} ${QT_DEPS_DARWIN} DESTINATION libs)
     install(DIRECTORY ${QT_PLUGINS_DARWIN} DESTINATION plugins)
