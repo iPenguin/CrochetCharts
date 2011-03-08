@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>license.txt</file>
+        <file>resources/license.txt</file>
         <file>crochet.xml</file>
         <file>images/crochet_icon.png</file>
         <file>images/wizard_watermark.png</file>

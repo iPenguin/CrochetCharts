@@ -40,22 +40,34 @@ qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
 qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers} ${testmodel_headers})
 
-if(${SWS_RELEASE_PLATFORM} STREQUAL "WIN32")
+if(${SWS_PLATFORM} STREQUAL "WIN32")
     add_executable(crochet.exe WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_win})
     target_link_libraries(crochet.exe ${QT_LIBS_WINDOWS})
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION bin)
+    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION .)
     install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
-elseif(${SWS_RELEASE_PLATFORM} STREQUAL "DARWIN")
-    add_executable(crochet_mac MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
-                ${crochet_version} ${crochet_mac})
-    target_link_libraries(crochet_mac ${QT_LIBS_DARWIN})
+elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
+    if(${SWS_DARWIN_ARCH} STREQUAL "i386")
+        add_executable(crochet_i386 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+                    ${crochet_version} ${crochet_mac})
+        target_link_libraries(crochet_i386 ${QT_LIBS_DARWIN})
+    else()
+        add_executable(crochet_ppc MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+                    ${crochet_version} ${crochet_mac})
+        target_link_libraries(crochet_ppc ${QT_LIBS_DARWIN})
+    endif()
 
     set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${MACOSX_BUNDLE_ICON_FILE}"
                 PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet_mac RENAME crochet DESTINATION bin)
-    install(FILES ${QT_LIBS_DARWIN} ${QT_DEPS_DARWIN} DESTINATION libs)
+    #TODO: use /home/crosscompile/darwin/bin/i686-apple-darwin8-lipo to join the different archs for the mac into 1 file.
+    #command: i686-apple-darwin8-lipo -create a.out.i386 a.out.x86_64 a.out.ppc a.out.ppc64 -output a.out
+    #Q: would you need to do the same thing for the libraries?
+    # execute_process(. COMMAND i686-apple-darwin8-lipo -create a.out.i386 a.out.ppc -output a.out) and add_to_distclean(a.out)
+
+    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet_i386 RENAME crochet DESTINATION MacOS)
+    install(FILES ${QT_LIBS_DARWIN} DESTINATION lib)
+    install(FILES ${QT_DEPS_DARWIN} DESTINATION Resources)
     install(DIRECTORY ${QT_PLUGINS_DARWIN} DESTINATION plugins)
 else()
     add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
