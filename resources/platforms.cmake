@@ -3,7 +3,7 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
     #If we're on Windows
     if(WIN32)
         set(WIN32_BASE="C:/Qt/2010.05/qt")
-
+        set(SWS_TARGET_WIN "crochet")
     #Cross Compile Settings
     else()
         set(CMAKE_SYSTEM_NAME "Windows")
@@ -16,6 +16,7 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
         set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
         set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
+        set(SWS_TARGET_WIN "crochet.exe")
         set(WIN32_BASE "/home/crosscompile/win32")
     endif()
 
@@ -34,6 +35,12 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
     set(QT_DEPS_WINDOWS "${WIN32_LIBS}/libgcc_s_dw2-1.dll" "${WIN32_LIBS}/mingwm10.dll"
                         "${CMAKE_CURRENT_SOURCE_DIR}/resources/qt.conf")
     set(QT_PLUGINS_WINDOWS "${WIN32_PLUGINS}/imageformats" "${WIN32_PLUGINS}/accessible" "${WIN32_PLUGINS}/iconengines")
+
+    if(WIN32)
+        set(SWS_QT_LIBS "${QT_LIBRARIES}")
+    else()
+        set(SWS_QT_LIBS "${QT_LIBS_WINDOWS}")
+    endif()
 
 elseif (${SWS_PLATFORM} STREQUAL "DARWIN")
 
