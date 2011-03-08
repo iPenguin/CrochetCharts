@@ -74,5 +74,5 @@ else()
                 ${crochet_version} ${crochet_nix})
     target_link_libraries(crochet ${QT_LIBRARIES})
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet DESTINATION bin)
-    #depends(qt4 >= 4.7)
+
 endif()
