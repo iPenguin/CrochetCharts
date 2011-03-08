@@ -20,7 +20,7 @@
 #include "crochetchartcommands.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent), mCurCell(0), mDiff(0.0), mMode(CrochetScene::StitchMode),
+    : QGraphicsScene(parent), mCurCell(0), mDiff(QSizeF(0,0)), mMode(CrochetScene::StitchMode),
     mEditStitch("ch"), mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
 {
     mStitchWidth = 64;
@@ -351,7 +351,7 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
         return;
     
     mCurCell = c;
-    mDiff = 0;
+    mDiff = QSizeF(mCurCell->transform().dx(), mCurCell->transform().dy());
 }
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -361,28 +361,34 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
     
     if(!mCurCell)
         return;
-    
-    if(mDiff == 0) {
-        QPointF origPos = e->buttonDownScenePos(Qt::LeftButton);
-        QPointF curPos = e->scenePos();
-        
-        mDiff = origPos.manhattanLength() - curPos.manhattanLength();
-    } else {
-        //increase rotation speed over time...
-        if(mDiff < 0)
-            mDiff -= .5;
-        else
-            mDiff += .5;
+
+    QPointF curPos = e->scenePos();
+
+    qreal dx = 0, dy = 0;
+    if(!mDiff.isNull()) {
+        dx = mDiff.width();
+        dy = mDiff.height();
     }
 
-    mUndoStack.push(new SetCellRotation(this, findGridPosition(mCurCell), mDiff));
+    qreal deltaX = dx - (e->buttonDownScenePos(Qt::LeftButton).x() - curPos.x());
+    qreal deltaY = dy - (e->buttonDownScenePos(Qt::LeftButton).y() - curPos.y());
+
+    if(deltaX > 64) deltaX = 64;
+    if(deltaX < -64) deltaX = -64;
+
+    if(deltaY > 64) deltaY = 64;
+    if(deltaY < -64) deltaY = -64;
+    
+    mCurCell->setTransform(QTransform().translate(deltaX, deltaY));
+
 }
 
 void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     if(mCurCell)
         mCurCell = 0;
-    mDiff = 0;
+    mDiff.setHeight(0);
+    mDiff.setWidth(0);
 }
 
 void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
