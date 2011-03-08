@@ -378,8 +378,13 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
 
     if(deltaY > 64) deltaY = 64;
     if(deltaY < -64) deltaY = -64;
-    
-    mCurCell->setTransform(QTransform().translate(deltaX, deltaY));
+
+    QTransform trans = mCurCell->transform();
+    QTransform newTrans;
+    newTrans.setMatrix(trans.m11(), trans.m12(), trans.m13(),
+                       trans.m21(), trans.m22(), trans.m23(),
+                       deltaX,      deltaY,      trans.m33());
+    mCurCell->setTransform(newTrans);
 
 }
 
