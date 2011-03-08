@@ -43,7 +43,7 @@ qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers} ${testmodel_headers})
 if(${SWS_PLATFORM} STREQUAL "WIN32")
     add_executable(${SWS_TARGET_WIN} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_win})
-    target_link_libraries(${SWS_TARGET_WIN} ${SWS_QT_LIBS})
+    target_link_libraries(${SWS_TARGET_WIN} ${QT_LIBS_WINDOWS})
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION .)
     install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
 elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
