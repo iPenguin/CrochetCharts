@@ -270,6 +270,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
 void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
 {
     CrochetCell* c = new CrochetCell();
+    Stitch *s = 0;
     int row, column;
     QString color;
     qreal x, y;
@@ -286,9 +287,7 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
         
         if(tag == "stitch") {
             QString st = stream->readElementText();
-            Stitch *s = StitchLibrary::inst()->findStitch(st);
-            if(s)
-                c->setStitch(s);
+            s = StitchLibrary::inst()->findStitch(st);
         } else if(tag == "row") {
             row = stream->readElementText().toInt();
         } else if(tag == "column") {
@@ -306,6 +305,7 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
         }
     }
     
+    c->setStitch(s, (row % 2));
     tab->scene()->appendCell(row, c, true);
     c->setColor(QColor(color));
     c->setPos(x, y);

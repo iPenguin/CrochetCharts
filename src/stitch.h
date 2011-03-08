@@ -30,7 +30,7 @@ public:
     bool isSvg();
 
     QPixmap* renderPixmap();
-    QSvgRenderer* renderSvg(bool altativeRenderer = false);
+    QSvgRenderer* renderSvg(bool useAltRenderer = false);
 
     //return a copy of this stitch.
     Stitch* copy();

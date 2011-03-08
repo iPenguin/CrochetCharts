@@ -160,7 +160,7 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
         connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
         connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
         
-        c->setStitch(stitch);
+        c->setStitch(stitch, (row % 2));
         addItem(c);
         modelRow.append(c);
         c->setPos(i*64, row*64);

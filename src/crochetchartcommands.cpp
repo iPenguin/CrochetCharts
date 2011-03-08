@@ -22,12 +22,12 @@ SetCellStitch::SetCellStitch(CrochetScene *s, QPoint pos, QString newSt, QUndoCo
 
 void SetCellStitch::redo()
 {
-    scene->cell(position)->setStitch(newStitch);
+    scene->cell(position)->setStitch(newStitch, (position.y() % 2));
 }
 
 void SetCellStitch::undo()
 {
-    scene->cell(position)->setStitch(oldStitch);
+    scene->cell(position)->setStitch(oldStitch, (position.y() % 2));
 }
 
 /*************************************************\

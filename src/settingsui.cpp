@@ -169,7 +169,7 @@ void SettingsUi::loadRoundChartSettings()
     ui->defaultStitch->setObjectName("defaultStitch");
     load(ui->defaultStitch);
 
-    ui->alternateRowColors->setObjectName("alternateRowColors");
+    ui->alternateRowColors->setObjectName("useAltColors");
     load(ui->alternateRowColors);
     
     QString priColor = Settings::inst()->value("stitchPrimaryColor").toString();

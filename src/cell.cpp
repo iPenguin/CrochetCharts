@@ -35,7 +35,7 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     QGraphicsSvgItem::paint(painter, option, widget);
 }
 
-void Cell::setStitch(Stitch *s)
+void Cell::setStitch(Stitch* s, bool useAltRenderer)
 {
     if (mStitch != s) {
         QString old;
@@ -47,7 +47,7 @@ void Cell::setStitch(Stitch *s)
         }
         mStitch = s;
         if(s->isSvg() && s->renderSvg()->isValid())
-            setSharedRenderer(s->renderSvg());
+            setSharedRenderer(s->renderSvg(useAltRenderer));
 
         if(doUpdate)
             update();
@@ -68,7 +68,7 @@ void Cell::setColor(QColor c)
     }
 }
 
-void Cell::setStitch(QString s)
+void Cell::setStitch(QString s, bool useAltRenderer)
 {
     Stitch* stitch = 0;
 
@@ -79,7 +79,7 @@ void Cell::setStitch(QString s)
         stitch = StitchLibrary::inst()->findStitch(st);
     }
 
-    setStitch(stitch);
+    setStitch(stitch, useAltRenderer);
 }
 
 int Cell::type() const

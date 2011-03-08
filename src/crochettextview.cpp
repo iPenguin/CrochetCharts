@@ -84,7 +84,7 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
             cell = new CrochetCell();
             mScene->appendCell(row, cell);
         }
-        mScene->cell(row, c)->setStitch(s);
+        mScene->cell(row, c)->setStitch(s, (row % 2));
     }
 }
 
