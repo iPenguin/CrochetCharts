@@ -1,1 +1,1 @@
-README file
+This file contains the readme text

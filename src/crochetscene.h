@@ -113,7 +113,7 @@ private:
 
     //Used in the mouse*Event()s to keep the mouse movements on the same cell.
     CrochetCell *mCurCell;
-    qreal mDiff;
+    QSizeF mDiff;
 
     EditMode mMode;
 

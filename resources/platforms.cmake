@@ -2,8 +2,8 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
 
     #If we're on Windows
     if(WIN32)
-        set(WIN32_BASE="C:/Qt/2010.05/qt")
-
+        set(WIN32_BASE "C:/Qt/2010.05/qt")
+        set(SWS_TARGET_WIN "crochet")
     #Cross Compile Settings
     else()
         set(CMAKE_SYSTEM_NAME "Windows")
@@ -16,6 +16,7 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
         set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
         set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
+        set(SWS_TARGET_WIN "crochet.exe")
         set(WIN32_BASE "/home/crosscompile/win32")
     endif()
 
