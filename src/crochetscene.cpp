@@ -379,6 +379,10 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(deltaY > 64) deltaY = 64;
     if(deltaY < -64) deltaY = -64;
 
+    //snap to grid.
+    if(abs(deltaX) < 4) deltaX = 0;
+    if(abs(deltaY) < 4) deltaY = 0;
+    
     QTransform trans = mCurCell->transform();
     QTransform newTrans;
     newTrans.setMatrix(trans.m11(), trans.m12(), trans.m13(),
