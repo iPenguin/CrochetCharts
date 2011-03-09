@@ -90,18 +90,18 @@ QPixmap* Stitch::renderPixmap()
     return mPixmap;
 }
 
-QSvgRenderer* Stitch::renderSvg(bool alternativeRenderer)
+QSvgRenderer* Stitch::renderSvg(bool useAltRenderer)
 {
     if(!isSvg())
         return 0;
 
     if(!mSvgRenderer->isValid())
         return 0;
-
-    if(!alternativeRenderer)
-        return mSvgRenderer;
-    else
+    bool useAltColors = Settings::inst()->value("useAltColors").toBool();
+    if(useAltRenderer && useAltColors)
         return mSvgRendererAlt;
+    else
+        return mSvgRenderer;
 }
 
 Stitch* Stitch::copy()

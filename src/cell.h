@@ -29,8 +29,8 @@ public:
     void setColor(QColor c = QColor(Qt::white));
     QColor color() const { return mColor; }
     
-    void setStitch(Stitch* s);
-    void setStitch(QString s);
+    void setStitch(Stitch* s, bool useAltRenderer = false);
+    void setStitch(QString s, bool useAltRenderer = false);
     Stitch* stitch() const { return mStitch; }
 
     QString name();

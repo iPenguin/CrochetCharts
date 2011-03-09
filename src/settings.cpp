@@ -103,13 +103,14 @@ void Settings::setupValueList() {
     mValueList["geometry"] = QVariant("");
     mValueList["windowState"] = QVariant("");
 
-    //round charts options
+    //charts options
     mValueList["defaultStitch"] = QVariant("ch");
     mValueList["defaultPlaceholder"] = QVariant("x");
     mValueList["defaultRows"] = QVariant(15);
     mValueList["defaultStitches"] = QVariant(15);
+    mValueList["defaultChartStyle"] = QVariant(tr("Flat"));
     
-    mValueList["alternateRowColors"] = QVariant(true);
+    mValueList["useAltColors"] = QVariant(true);
     mValueList["stitchPrimaryColor"] = QVariant("#000000");
     mValueList["stitchAlternateColor"] = QVariant("#D4E6FC");
     mValueList["generateRepeats"] = QVariant(true);
@@ -125,7 +126,7 @@ void Settings::setupValueList() {
     //color legend options
     mValueList["colorPrefix"] = QVariant("C");
     mValueList["colorColumnCount"] = QVariant(2);
-    mValueList["colorSortBy"] = QVariant("Age");
+    mValueList["colorSortBy"] = QVariant(tr("Age"));
     mValueList["showHexValues"] = QVariant(false);
     mValueList["showColorBorder"] = QVariant(true);
     mValueList["showColorTitle"] = QVariant(true);

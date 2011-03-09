@@ -151,9 +151,16 @@ QUndoStack* CrochetTab::undoStack()
     return mScene->undoStack();
 }
 
-void CrochetTab::createChart(int rows, int cols, QString defStitch)
+void CrochetTab::createChart(QString style, int rows, int cols, QString defStitch)
 {
-    mScene->createChart(rows, cols, defStitch);
+    CrochetScene::ChartStyle st = CrochetScene::Flat;
+    
+    if(style == tr("Flat"))
+        st  = CrochetScene::Flat;
+    else if(style == tr("Round"))
+        st = CrochetScene::Round;
+    
+    mScene->createChart(st, rows, cols, defStitch);
 }
 
 void CrochetTab::setEditBgColor(QColor color)
