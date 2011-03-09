@@ -20,8 +20,9 @@
 #include "crochetchartcommands.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent), mCurCell(0), mDiff(QSizeF(0,0)), mMode(CrochetScene::StitchMode),
-    mEditStitch("ch"), mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
+    : QGraphicsScene(parent), mCurCell(0), mDiff(QSizeF(0,0)),
+    mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode), mEditStitch("ch"),
+    mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
 {
     mStitchWidth = 64;
 
@@ -120,13 +121,9 @@ void CrochetScene::appendCell(int row, Cell *c, bool fromSave)
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
-    
-    //TODO: abstract out setting the position to a seperate function: void setCellPos(Cell *c);
-    int i = mGrid[row].count() -1;
-    c->setPos(i*64, row*64);
-    c->setToolTip(QString::number(i+1));
-    c->setColor(QColor(Qt::white));
-    c->setObjectName("Cell Object: " + QString::number(i + 1));
+
+    int col = mGrid[row].count() -1;
+    setCellPosition(row, col, c);
 
     if(fromSave)
         emit rowChanged(row);
@@ -141,10 +138,42 @@ void CrochetScene::insertCell(int row, int colBefore, Cell *c)
     emit rowChanged(row);
 }
 
-void CrochetScene::createChart(int rows, int cols, QString stitch)
+void CrochetScene::setCellPosition(int row, int column, Cell *c, int columns)
 {
-    for(int i = 0; i < rows; ++i)
-        createRow(i, cols, stitch);
+    if(mStyle == CrochetScene::Round) {
+        //TODO: make this a setting.
+        int rowSpacing = 8;
+        double widthInDegrees = 360.0 / columns;
+        double circumference = (columns + (row*rowSpacing)) * mStitchWidth;
+        double diameter = circumference / M_PI;
+        double radius = diameter / 2;
+        
+        double degrees = widthInDegrees*column;
+        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+        
+        c->setPos(finish.x() - 32, finish.y() - 16);
+        c->setColor(QColor(Qt::white));
+        
+        c->setTransform(QTransform().translate(32,16).rotate(degrees + 90).translate(-32, -16));
+        
+        c->setToolTip(QString::number(column+1));
+        
+    } else {
+        c->setPos(column*64, row*64);
+        c->setToolTip(QString::number(column+1));
+        c->setColor(QColor(Qt::white));
+    }
+}
+
+void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch)
+{
+    mStyle = style;
+    for(int i = 0; i < rows; ++i) {
+        //if(style == CrochetScene::Round)
+        //    createRoundRow(i, cols, stitch);
+        //else if(style == CrochetScene::Flat)
+            createRow(i, cols, stitch);
+    }
     
     emit chartCreated(rows, cols);
 }
@@ -163,39 +192,42 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
         c->setStitch(stitch, (row % 2));
         addItem(c);
         modelRow.append(c);
-        c->setPos(i*64, row*64);
-        c->setToolTip(QString::number(i+1));
-        c->setColor(QColor(Qt::white));
-        //c->rotate(90);
-        c->setObjectName("Cell Object: " + QString::number(i + 1));
+        setCellPosition(row, i, c, columns);
     }
     mGrid.append(modelRow);
     //emit rowChanged(row);
     emit rowAdded(row);
 }
 
-/*
-    int rowC = 8;
-    //FIXME: less then 8 stitches gives funny rows.
+//FIXME: currently unused combine with the createRow function
+void CrochetScene::createRoundRow(int row, int columns, QString stitch)
+{
+    //TODO: make this a setting.
+    int rowSpacing = 8;
     double widthInDegrees = 360.0 / columns;
-    double circumference = ((rowC + (row*6)) - (rowC * 1/3)) * mStitchWidth;  //(columns - (rowC * 1/3)) * mStitchWidth;
+    double circumference = (columns + (row*rowSpacing)) * mStitchWidth;
     double diameter = circumference / M_PI;
     double radius = diameter / 2;
-    qDebug() << widthInDegrees << circumference << diameter << radius;
+
+    addEllipse(-1,-1, 2, 2);
+    QGraphicsEllipseItem *itm = addEllipse(-radius, -radius, diameter, diameter);
+    itm->setZValue(-1);
   
     Cell *c;
- 
+    QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
-        double degrees = (widthInDegrees*i) - (widthInDegrees/2);
-        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
-        qDebug() << degrees << finish;
-        c = new CrochetCell(":/stitches/chain.svg");
+        c = new CrochetCell();
+        c->setStitch(stitch, (row %2));
+
         addItem(c);
-        c->setPos(finish);
-        c->setToolTip(QString::number(i+1));
-        c->rotate(degrees + (widthInDegrees/2));
+        modelRow.append(c);
+        
+        setCellPosition(row, i, c);
     }
-*/
+    mGrid.append(modelRow);
+    emit rowAdded(row);
+}
+
 QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF origin)
 {
     // Convert from degrees to radians via multiplication by PI/180

@@ -18,10 +18,15 @@ class CrochetScene : public QGraphicsScene
 public:
 
     enum EditMode {
-                StitchMode = 10, //place stitches on the chart.
-                ColorMode,       //place colors behind stitches.
-                GridMode,        //draw lines on the grid.
-                PositionMode     //move the stitches around on the chart.
+        StitchMode = 10, //place stitches on the chart.
+        ColorMode,       //place colors behind stitches.
+        GridMode,        //draw lines on the grid.
+        PositionMode     //move the stitches around on the chart.
+    };
+
+    enum ChartStyle {
+        Flat = 100,
+        Round
     };
     
     CrochetScene(QObject *parent = 0);
@@ -32,6 +37,7 @@ public:
 
 */
     void createRow(int row, int columns, QString stitch);
+    void createRoundRow(int row, int columns, QString stitch);
 
     void appendCell(int row, Cell *c, bool fromSave = false);
     void insertCell(int row, int colBefore, Cell *c);
@@ -44,7 +50,7 @@ public:
     Cell* cell(QPoint position);
 
     void removeCell(int row, int column);
-    void createChart(int rows, int cols, QString stitch);
+    void createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch);
 
     void setEditMode(EditMode mode) { mMode = mode; }
     EditMode editMode() { return mMode; }
@@ -87,6 +93,12 @@ protected:
 */
     //find the x,y positions on the grid for a given cell;
     QPoint findGridPosition(CrochetCell *c);
+
+    /**
+     * WARING: This funciton should be called after the cell has been added
+     * to the grid so that it calcs based on the new count of stitches.
+     */
+    void setCellPosition(int row, int column, Cell *c, int columns = 0);
     
 private:
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
@@ -115,6 +127,7 @@ private:
     CrochetCell *mCurCell;
     QSizeF mDiff;
 
+    ChartStyle mStyle;
     EditMode mMode;
 
     QString mEditStitch;
