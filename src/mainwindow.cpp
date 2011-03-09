@@ -32,6 +32,7 @@
 #include <QCloseEvent>
 #include <QUndoStack>
 #include <QUndoView>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent, QString fileName)
     : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
@@ -436,7 +437,15 @@ void MainWindow::documentNewChart()
     ui->stitches->setValue(stitches);
     
     ui->chartTitle->setText(nextChartName());
-    ui->newDocument->show();
+
+    if(ui->newDocument->isVisible()) {
+        QPalette pal = ui->newDocument->palette();
+        mNewDocWidgetColor = ui->newDocument->palette().color(ui->newDocument->backgroundRole());
+        pal.setColor(ui->newDocument->backgroundRole(), ui->newDocument->palette().highlight().color());
+        ui->newDocument->setPalette(pal);
+        QTimer::singleShot(1500, this, SLOT(flashNewDocDialog()));
+    } else 
+        ui->newDocument->show();
 }
 
 void MainWindow::helpAbout()
@@ -669,9 +678,23 @@ void MainWindow::fileNew()
         newWin->show();
         newWin->ui->newDocument->show();
     } else {
-        ui->newDocument->show();
+        if(ui->newDocument->isVisible()) {
+            QPalette pal = ui->newDocument->palette();
+            mNewDocWidgetColor = ui->newDocument->palette().color(ui->newDocument->backgroundRole());
+            pal.setColor(ui->newDocument->backgroundRole(), ui->newDocument->palette().highlight().color());
+            ui->newDocument->setPalette(pal);
+            QTimer::singleShot(1500, this, SLOT(flashNewDocDialog()));
+        } else
+            ui->newDocument->show();
     }
     
+}
+
+void MainWindow::flashNewDocDialog()
+{
+    QPalette pal = ui->newDocument->palette();
+    pal.setColor(ui->newDocument->backgroundRole(), mNewDocWidgetColor);
+    ui->newDocument->setPalette(pal);
 }
 
 void MainWindow::newChart()
