@@ -90,7 +90,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
         if(!tab)
             continue;
         stream->writeTextElement("name", mTabWidget->tabText(i));
-        
+        stream->writeTextElement("style", QString::number(tab->scene()->mStyle));
         int rows = tab->scene()->rowCount();
         
         for(int row = 0; row < rows; ++row) {
@@ -257,6 +257,8 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
 
         if(tag == "name") {
             tabName = stream->readElementText();
+        } else if( tag == "style") {
+            tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
         } else if(tag == "cell") {
             loadCell(tab, stream);
         }
