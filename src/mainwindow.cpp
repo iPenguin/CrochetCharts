@@ -123,14 +123,17 @@ void MainWindow::setupNewTabDialog()
     int rows = Settings::inst()->value("defaultRows").toInt();
     int stitches = Settings::inst()->value("defaultStitches").toInt();
     QString defSt = Settings::inst()->value("defaultStitch").toString();
+    QString defStyle = Settings::inst()->value("defaultChartStyle").toString();
     
     ui->rows->setValue(rows);
     ui->stitches->setValue(stitches);
 
     ui->defaultStitch->addItems(StitchLibrary::inst()->stitchList());
     ui->defaultStitch->setCurrentIndex(ui->defaultStitch->findText(defSt));
+
+    ui->chartStyle->setCurrentIndex(ui->chartStyle->findText(defStyle));
     
-    //TODO: see if you can make "returnPressed" work for the spinboxes.
+    //TODO: see if you can make "returnPressed" focus and click the ok button for the spin boxes.
     connect(ui->chartTitle, SIGNAL(returnPressed()), this, SLOT(newChart()));
     
     connect(ui->newDocBttnBox, SIGNAL(accepted()), this, SLOT(newChart()));
@@ -717,7 +720,9 @@ void MainWindow::newChart()
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
 
-    tab->createChart(rows, cols, defStitch);
+    QString style = ui->chartStyle->currentText();
+    
+    tab->createChart(style, rows, cols, defStitch);
 
     updateMenuItems();
     documentIsModified(true);
