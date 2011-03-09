@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>536</width>
-    <height>293</height>
+    <width>572</width>
+    <height>382</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string/>
+   <string>Settings</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="margin">
@@ -20,7 +20,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -81,13 +81,13 @@
      </widget>
      <widget class="QWidget" name="tab_2">
       <attribute name="title">
-       <string>Round Charts</string>
+       <string>Charts</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Default Handedness:</string>
+          <string>Direction:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -111,7 +111,7 @@
          </item>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
           <string>Default Stitch:</string>
@@ -124,10 +124,10 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
+       <item row="2" column="2">
         <widget class="QComboBox" name="defaultStitch"/>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="label_10">
          <property name="text">
           <string>Default Placeholder:</string>
@@ -140,10 +140,10 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
+       <item row="3" column="2">
         <widget class="QComboBox" name="defaultPlaceholder"/>
        </item>
-       <item row="8" column="1">
+       <item row="9" column="1">
         <widget class="QCheckBox" name="generateRepeats">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -156,7 +156,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="0">
+       <item row="10" column="0">
         <widget class="QLabel" name="label_23">
          <property name="text">
           <string>Alternate Row Colors:</string>
@@ -169,7 +169,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
+       <item row="10" column="1">
         <widget class="QCheckBox" name="alternateRowColors">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -185,7 +185,7 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="2">
+       <item row="10" column="2">
         <widget class="QPushButton" name="primaryColorBttn">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -204,7 +204,7 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="2">
+       <item row="11" column="2">
         <widget class="QPushButton" name="alternateColorBttn">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -223,7 +223,7 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
+       <item row="9" column="0">
         <widget class="QLabel" name="label_22">
          <property name="text">
           <string>GenerateRepeats:</string>
@@ -236,7 +236,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="2">
+       <item row="4" column="2">
         <widget class="QSpinBox" name="defaultRows">
          <property name="minimum">
           <number>1</number>
@@ -249,7 +249,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
           <string>Rows:</string>
@@ -262,7 +262,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="2">
+       <item row="5" column="2">
         <widget class="QSpinBox" name="defaultStitches">
          <property name="minimum">
           <number>1</number>
@@ -275,7 +275,7 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
           <string>Stitches:</string>
@@ -285,6 +285,33 @@
          </property>
          <property name="buddy">
           <cstring>defaultStitches</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QComboBox" name="chartStyle">
+         <item>
+          <property name="text">
+           <string>Flat</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Round</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string>Style:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>chartStyle</cstring>
          </property>
         </widget>
        </item>
@@ -333,13 +360,6 @@
        <string>Legends</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="7" column="2">
-        <widget class="QCheckBox" name="showColorTitle">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0" colspan="6">
         <widget class="QLabel" name="label_20">
          <property name="sizePolicy">
@@ -357,33 +377,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QLabel" name="label_17">
-         <property name="text">
-          <string>Show Description:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>showStitchDescription</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QCheckBox" name="showStitchDescription">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3">
+       <item row="2" column="3">
         <widget class="QLabel" name="label_7">
          <property name="text">
           <string>Column Count:</string>
@@ -396,7 +390,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="1" column="4" colspan="2">
+       <item row="2" column="4" colspan="2">
         <widget class="QSpinBox" name="stitchColumnCount">
          <property name="minimum">
           <number>1</number>
@@ -409,7 +403,132 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
+       <item row="4" column="3">
+        <widget class="QLabel" name="label_16">
+         <property name="text">
+          <string>Show Blocks:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>showStitchBlock</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="4" colspan="2">
+        <widget class="QCheckBox" name="showStitchBlock">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="6">
+        <widget class="QLabel" name="label_21">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Color Legend&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="3">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Color Prefix:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>colorPrefix</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="4" colspan="2">
+        <widget class="QLineEdit" name="colorPrefix">
+         <property name="text">
+          <string>C</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0" colspan="2">
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>Show Border:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>showColorBorder</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="2">
+        <widget class="QCheckBox" name="showColorBorder">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="3">
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Column Count:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>colorColumnCount</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="4" colspan="2">
+        <widget class="QSpinBox" name="colorColumnCount">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>10</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="4" colspan="2">
+        <widget class="QComboBox" name="colorSortBy"/>
+       </item>
+       <item row="9" column="3">
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>Sort By:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>colorSortBy</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
         <widget class="QLabel" name="label_18">
          <property name="text">
           <string>Show Wrong Side:</string>
@@ -422,7 +541,7 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
+       <item row="3" column="4" colspan="2">
         <widget class="QCheckBox" name="showWrongSideDescription">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -435,21 +554,8 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="2" column="3">
-        <widget class="QLabel" name="label_15">
-         <property name="text">
-          <string>Show Title:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>showStitchTitle</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="4" colspan="2">
-        <widget class="QCheckBox" name="showStitchTitle">
+       <item row="4" column="2">
+        <widget class="QCheckBox" name="showStitchDescription">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -461,7 +567,20 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="3" column="0" colspan="2">
+       <item row="4" column="1">
+        <widget class="QLabel" name="label_17">
+         <property name="text">
+          <string>Show Description:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>showStitchDescription</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
         <widget class="QLabel" name="label_19">
          <property name="text">
           <string>Show Border:</string>
@@ -487,21 +606,8 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="3" column="3">
-        <widget class="QLabel" name="label_16">
-         <property name="text">
-          <string>Show Blocks:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>showStitchBlock</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="4" colspan="2">
-        <widget class="QCheckBox" name="showStitchBlock">
+       <item row="2" column="2">
+        <widget class="QCheckBox" name="showStitchTitle">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -513,24 +619,20 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="4" column="0" colspan="6">
-        <widget class="QLabel" name="label_21">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_15">
          <property name="text">
-          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Color Legend&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>Show Title:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>showStitchTitle</cstring>
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="2">
+       <item row="9" column="1">
         <widget class="QLabel" name="label_12">
          <property name="text">
           <string>Show Hex Value:</string>
@@ -543,80 +645,21 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="5" column="2">
+       <item row="9" column="2">
         <widget class="QCheckBox" name="showHexValues">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
-       <item row="5" column="3">
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>Color Prefix:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>colorPrefix</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="4" colspan="2">
-        <widget class="QLineEdit" name="colorPrefix">
-         <property name="text">
-          <string>C</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0" colspan="2">
-        <widget class="QLabel" name="label_13">
-         <property name="text">
-          <string>Show Border:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>showColorBorder</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="2">
-        <widget class="QCheckBox" name="showColorBorder">
+       <item row="7" column="2">
+        <widget class="QCheckBox" name="showColorTitle">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
-       <item row="6" column="3">
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>Column Count:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>colorColumnCount</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="4" colspan="2">
-        <widget class="QSpinBox" name="colorColumnCount">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>10</number>
-         </property>
-         <property name="value">
-          <number>2</number>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0" colspan="2">
+       <item row="7" column="1">
         <widget class="QLabel" name="label_14">
          <property name="text">
           <string>Show Title:</string>
@@ -626,22 +669,6 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="buddy">
           <cstring>showColorTitle</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="4" colspan="2">
-        <widget class="QComboBox" name="colorSortBy"/>
-       </item>
-       <item row="7" column="3">
-        <widget class="QLabel" name="label_11">
-         <property name="text">
-          <string>Sort By:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>colorSortBy</cstring>
          </property>
         </widget>
        </item>
@@ -666,7 +693,29 @@ p, li { white-space: pre-wrap; }
   <tabstop>checkForUpdates</tabstop>
   <tabstop>defaultFileLocation</tabstop>
   <tabstop>folderSelector</tabstop>
+  <tabstop>handedness</tabstop>
+  <tabstop>chartStyle</tabstop>
+  <tabstop>defaultStitch</tabstop>
+  <tabstop>defaultPlaceholder</tabstop>
+  <tabstop>defaultRows</tabstop>
+  <tabstop>defaultStitches</tabstop>
+  <tabstop>generateRepeats</tabstop>
+  <tabstop>alternateRowColors</tabstop>
+  <tabstop>primaryColorBttn</tabstop>
+  <tabstop>alternateColorBttn</tabstop>
   <tabstop>pushButton</tabstop>
+  <tabstop>showStitchTitle</tabstop>
+  <tabstop>showStitchBorder</tabstop>
+  <tabstop>showStitchDescription</tabstop>
+  <tabstop>stitchColumnCount</tabstop>
+  <tabstop>showWrongSideDescription</tabstop>
+  <tabstop>showStitchBlock</tabstop>
+  <tabstop>showColorTitle</tabstop>
+  <tabstop>showColorBorder</tabstop>
+  <tabstop>showHexValues</tabstop>
+  <tabstop>colorPrefix</tabstop>
+  <tabstop>colorColumnCount</tabstop>
+  <tabstop>colorSortBy</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
@@ -678,8 +727,8 @@ p, li { white-space: pre-wrap; }
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>256</x>
-     <y>288</y>
+     <x>260</x>
+     <y>377</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -694,8 +743,8 @@ p, li { white-space: pre-wrap; }
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>324</x>
-     <y>288</y>
+     <x>328</x>
+     <y>377</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -710,12 +759,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>280</x>
-     <y>217</y>
+     <x>298</x>
+     <y>293</y>
     </hint>
     <hint type="destinationlabel">
-     <x>523</x>
-     <y>219</y>
+     <x>559</x>
+     <y>295</y>
     </hint>
    </hints>
   </connection>
@@ -726,12 +775,12 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>280</x>
-     <y>217</y>
+     <x>298</x>
+     <y>293</y>
     </hint>
     <hint type="destinationlabel">
-     <x>523</x>
-     <y>247</y>
+     <x>559</x>
+     <y>329</y>
     </hint>
    </hints>
   </connection>
