@@ -34,25 +34,16 @@ private:
 
     //TODO: Using the same code in MainWindow
     QPixmap drawColorBox(QColor color, QSize size);
+
+    void setupDialogWidgets();
+    void resetDialogWidgets();
+    void saveDialogWidgets();
     
-    void loadApplicationSettings();
-    void loadRoundChartSettings();
-    void loadInstructionSettings();
-    void loadLegendSettings();
+    void load(QObject *w);
+    void loadDefualt(QObject *w);
+    void save(QObject *w);
 
-    void saveApplicationSettings();
-    void saveRoundChartSettings();
-    void saveInstructionSettings();
-    void saveLegendSettings();
-
-    void resetApplicationSettings();
-    void resetRoundChartSettings();
-    void resetInstructionSettings();
-    void resetLegendSettings();
-
-    void load(QWidget *w);
-    void loadDefualt(QWidget *w);
-    void save(QWidget *w);
+    bool isSettingsWidget(QObject* obj);
     
     Ui::SettingsDialog *ui;
 

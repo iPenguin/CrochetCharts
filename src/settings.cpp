@@ -103,31 +103,38 @@ void Settings::setupValueList() {
     mValueList["geometry"] = QVariant("");
     mValueList["windowState"] = QVariant("");
 
+    //instructions
+    mValueList["syntaxColor"] = QVariant("#000080");
+    mValueList["generateTextRepeats"] = QVariant(true);
+    
     //charts options
     mValueList["defaultStitch"] = QVariant("ch");
-    mValueList["defaultPlaceholder"] = QVariant("x");
-    mValueList["defaultRows"] = QVariant(15);
-    mValueList["defaultStitches"] = QVariant(15);
-    mValueList["defaultChartStyle"] = QVariant(tr("Flat"));
+    mValueList["placeholder"] = QVariant("x");
+    mValueList["rowCount"] = QVariant(15);
+    mValueList["stitchCount"] = QVariant(15);
+    mValueList["chartStyle"] = QVariant(tr("Flat"));
     
     mValueList["useAltColors"] = QVariant(true);
     mValueList["stitchPrimaryColor"] = QVariant("#000000");
     mValueList["stitchAlternateColor"] = QVariant("#D4E6FC");
-    mValueList["generateRepeats"] = QVariant(true);
+    mValueList["chartDirection"] = QVariant(tr("Right"));
+
+    mValueList["chartFreeForm"] = QVariant(false);
+    mValueList["chartRowIndicator"] = QVariant(tr("Numbers"));
     
     //stitch legend options
-    mValueList["stitchColumnCount"] = QVariant(2);
+    mValueList["stitchLegendColumnCount"] = QVariant(2);
     mValueList["showStitchDescription"] = QVariant(true);
-    mValueList["showWrongSideDescription"] = QVariant(false);
+    mValueList["showStitchWrongSide"] = QVariant(false);
     mValueList["showStitchTitle"] = QVariant(true);
     mValueList["showStitchBorder"] = QVariant(true);
     mValueList["showStitchBlock"] = QVariant(true);
 
     //color legend options
     mValueList["colorPrefix"] = QVariant("C");
-    mValueList["colorColumnCount"] = QVariant(2);
-    mValueList["colorSortBy"] = QVariant(tr("Age"));
-    mValueList["showHexValues"] = QVariant(false);
+    mValueList["colorLegendColumnCount"] = QVariant(2);
+    mValueList["colorLegendSortBy"] = QVariant(tr("Age"));
+    mValueList["showColorHexValues"] = QVariant(false);
     mValueList["showColorBorder"] = QVariant(true);
     mValueList["showColorTitle"] = QVariant(true);
 
