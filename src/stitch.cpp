@@ -35,7 +35,7 @@ void Stitch::setFile ( QString f )
     if(mFile != f) {
         mFile = f;
         
-        if(!mSvgRenderer->isValid() && isSvg())
+        if(isSvg())
             setupSvgFiles();
         
         if(!mSvgRenderer->isValid() && !isSvg()) {
