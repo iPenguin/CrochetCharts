@@ -94,11 +94,14 @@ protected:
     //find the x,y positions on the grid for a given cell;
     QPoint findGridPosition(CrochetCell *c);
 
+    void redistributeCells(int row);
+    int getClosestRow(QPointF mousePosition);
+    
     /**
      * WARING: This funciton should be called after the cell has been added
      * to the grid so that it calcs based on the new count of stitches.
      */
-    void setCellPosition(int row, int column, Cell *c, int columns = 0);
+    void setCellPosition(int row, int column, Cell *c, int columns = 1);
     
 private:
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
@@ -127,9 +130,11 @@ private:
     CrochetCell *mCurCell;
     QSizeF mDiff;
 
+    int mRowSpacing;
+    
     ChartStyle mStyle;
     EditMode mMode;
-
+    
     QString mEditStitch;
     QColor mEditFgColor;
     QColor mEditBgColor;
