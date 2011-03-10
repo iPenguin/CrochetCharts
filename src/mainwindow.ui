@@ -434,7 +434,7 @@
     </sizepolicy>
    </property>
    <property name="windowTitle">
-    <string>All Stitches</string>
+    <string>Stitches</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
