@@ -271,7 +271,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
 
 void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
 {
-    CrochetCell* c = new CrochetCell();
+    CrochetCell *c = new CrochetCell();
     Stitch *s = 0;
     int row, column;
     QString color;
@@ -297,9 +297,9 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
         } else if(tag == "color") {
             color = stream->readElementText();
         } else if(tag == "x") {
-            x = stream->readElementText().toInt();
+            x = stream->readElementText().toDouble();
         } else if(tag == "y") {
-            y = stream->readElementText().toInt();
+            y = stream->readElementText().toDouble();
         } else if(tag == "transformation") {
             transform = loadTransform(stream);
         } else if(tag == "angle") {
