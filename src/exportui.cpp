@@ -53,12 +53,12 @@ void ExportUi::setupColorLegendOptions()
     cl = new ColorLegend(mColors);
     ui->colorLegendOptions->hide();
 
-    ui->colorHexValue->setChecked(Settings::inst()->value("showHexValues").toBool());
-    ui->colorColumns->setValue(Settings::inst()->value("colorColumnCount").toInt());
+    ui->colorHexValue->setChecked(Settings::inst()->value("showColorHexValues").toBool());
+    ui->colorColumns->setValue(Settings::inst()->value("colorLegendColumnCount").toInt());
     ui->colorPrefix->setText(Settings::inst()->value("colorPrefix").toString());
     ui->colorBorder->setChecked(Settings::inst()->value("showColorBorder").toBool());
     ui->colorTitle->setChecked(Settings::inst()->value("showColorTitle").toBool());
-    int index = ui->colorSortBy->findText(Settings::inst()->value("colorSortBy").toString());
+    int index = ui->colorSortBy->findText(Settings::inst()->value("colorLegendSortBy").toString());
     ui->colorSortBy->setCurrentIndex(index);
     
     connect(ui->colorBorder, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
@@ -77,10 +77,10 @@ void ExportUi::setupStitchLegendOptions()
     ui->stitchLegendOptions->hide();
 
     ui->stitchBorder->setChecked(Settings::inst()->value("showStitchBorder").toBool());
-    ui->stitchColumns->setValue(Settings::inst()->value("stitchColumnCount").toInt());
+    ui->stitchColumns->setValue(Settings::inst()->value("stitchLegendColumnCount").toInt());
     ui->stitchTitle->setChecked(Settings::inst()->value("showStitchTitle").toBool());
     ui->showStitchDescription->setChecked(Settings::inst()->value("showStitchDescription").toBool());
-    ui->showStitchWrongSide->setChecked(Settings::inst()->value("showWrongSideDescription").toBool());
+    ui->showStitchWrongSide->setChecked(Settings::inst()->value("showStitchWrongSide").toBool());
     ui->showStitchBlocks->setChecked(Settings::inst()->value("showStitchBlock").toBool());
 
     connect(ui->stitchBorder, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));

@@ -32,12 +32,15 @@ SettingsUi::SettingsUi(QWidget *parent)
     connect(ui->alternateColorBttn, SIGNAL(clicked()), this, SLOT(updateAlternateColor()));
 
     connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(buttonClicked(QAbstractButton*)));
-    
-    loadApplicationSettings();
-    loadRoundChartSettings();
-    loadInstructionSettings();
-    loadLegendSettings();
 
+    setupDialogWidgets();
+
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        foreach(QObject *obj, ui->tabWidget->widget(i)->children()) {
+            if(isSettingsWidget(obj))
+                load(obj);
+        }
+    }
 }
 
 SettingsUi::~SettingsUi()
@@ -49,12 +52,14 @@ SettingsUi::~SettingsUi()
 void SettingsUi::buttonClicked(QAbstractButton* button)
 {
     if(ui->buttonBox->buttonRole(button) ==  QDialogButtonBox::ResetRole) {
-        resetApplicationSettings();
-        resetRoundChartSettings();
-        resetInstructionSettings();
-        resetLegendSettings();
+        for(int i = 0; i < ui->tabWidget->count(); ++i) {
+            foreach(QObject *obj, ui->tabWidget->widget(i)->children()) {
+                if(isSettingsWidget(obj))
+                    loadDefualt(obj);
+            }
+        }
+        resetDialogWidgets();
     }
-        
 }
 
 int SettingsUi::exec()
@@ -63,16 +68,19 @@ int SettingsUi::exec()
     
     if(retValue != QDialog::Accepted)
         return retValue;
-    
-    saveApplicationSettings();
-    saveRoundChartSettings();
-    saveInstructionSettings();
-    saveLegendSettings();
+
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        foreach(QObject *obj, ui->tabWidget->widget(i)->children()) {
+            if(isSettingsWidget(obj))
+                save(obj);
+        }
+    }
+    saveDialogWidgets();
     
     return retValue;
 }
 
-void SettingsUi::load(QWidget* w)
+void SettingsUi::load(QObject* w)
 {
     QVariant value = Settings::inst()->value(w->objectName());
     
@@ -92,7 +100,7 @@ void SettingsUi::load(QWidget* w)
         
 }
 
-void SettingsUi::loadDefualt(QWidget* w)
+void SettingsUi::loadDefualt(QObject* w)
 {
     QVariant value = Settings::inst()->defaultValue(w->objectName());
     
@@ -111,7 +119,7 @@ void SettingsUi::loadDefualt(QWidget* w)
     }
 }
 
-void SettingsUi::save(QWidget* w)
+void SettingsUi::save(QObject* w)
 {
     QVariant value;
     if(w->inherits("QLineEdit")) {
@@ -130,92 +138,67 @@ void SettingsUi::save(QWidget* w)
         Settings::inst()->setValue(w->objectName(), value);
 }
 
-void SettingsUi::loadApplicationSettings()
+bool SettingsUi::isSettingsWidget(QObject *obj)
 {
+    if(obj->inherits("QLineEdit"))
+        return true;
+    if(obj->inherits("QCheckBox"))
+        return true;
+    if(obj->inherits("QSpinBox"))
+        return true;
+    if(obj->inherits("QComboBox"))
+        return true;
+
+    return false;
+}
+
+
+void SettingsUi::setupDialogWidgets()
+{
+    //Application
     //TODO: use auto completer to help fill in the default file location field.
 
-    ui->defaultFileLocation->setObjectName("fileLocation");
-    ui->checkForUpdates->setObjectName("checkForUpdates");
-
-    load(ui->defaultFileLocation);
-    load(ui->checkForUpdates);
-}
-
-void SettingsUi::saveApplicationSettings()
-{
-    save(ui->defaultFileLocation);
-    save(ui->checkForUpdates);    
-}
-
-void SettingsUi::resetApplicationSettings()
-{
-    loadDefualt(ui->defaultFileLocation);
-    loadDefualt(ui->checkForUpdates);
-}
-
-
-void SettingsUi::loadRoundChartSettings()
-{
-
-    ui->defaultRows->setObjectName("defaultRows");
-    ui->defaultStitches->setObjectName("defaultStitches");
-    ui->generateRepeats->setObjectName("generateRepeats");
-    ui->chartStyle->setObjectName("defaultChartStyle");
-    
-    load(ui->defaultRows);
-    load(ui->defaultStitches);
-    load(ui->generateRepeats);
-    load(ui->chartStyle);
-
+    //Charts
     ui->defaultStitch->addItems(StitchLibrary::inst()->stitchList());
-    ui->defaultStitch->setObjectName("defaultStitch");
-    load(ui->defaultStitch);
 
-    ui->alternateRowColors->setObjectName("useAltColors");
-    load(ui->alternateRowColors);
-    
     QString priColor = Settings::inst()->value("stitchPrimaryColor").toString();
     QString altColor = Settings::inst()->value("stitchAlternateColor").toString();
-
+    
     ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(priColor), QSize(32, 32))));
     ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(altColor), QSize(32, 32))));
-
+    
     mPrimaryColor = priColor;
     mAlternateColor = altColor;
 
-    ui->defaultPlaceholder->addItems(StitchLibrary::inst()->stitchList());
-    ui->defaultPlaceholder->setObjectName("defaultPlaceholder");
-    load(ui->defaultPlaceholder);
+    ui->placeholder->addItems(StitchLibrary::inst()->stitchList());
+    
+    //Instructions
+
+    //Legends
+    QStringList list;
+    list << tr("Age") << tr("Color") << tr("Quantity");
+    ui->colorLegendSortBy->addItems(list);
     
 }
 
-void SettingsUi::saveRoundChartSettings()
+void SettingsUi::saveDialogWidgets()
 {
-    save(ui->defaultRows);
-    save(ui->defaultStitches);
-    save(ui->defaultStitch);
-    save(ui->defaultPlaceholder);
-    save(ui->chartStyle);
-    
-    save(ui->generateRepeats);
-    save(ui->alternateRowColors);
-    
+    //Application
+
+    //Charts
     Settings::inst()->setValue("stitchPrimaryColor", QVariant(mPrimaryColor.name()));
     Settings::inst()->setValue("stitchAlternateColor", QVariant(mAlternateColor.name()));
-    
+
+    //Instructions
+
+    //Legends
 }
 
-void SettingsUi::resetRoundChartSettings()
+void SettingsUi::resetDialogWidgets()
 {
-
-    loadDefualt(ui->defaultRows);
-    loadDefualt(ui->defaultStitches);
-    loadDefualt(ui->defaultStitch);
-    loadDefualt(ui->defaultPlaceholder);
-    loadDefualt(ui->alternateRowColors);
-    loadDefualt(ui->generateRepeats);
-    loadDefualt(ui->chartStyle);
-
+    //Application
+    
+    //Charts
     QString priColor = Settings::inst()->defaultValue("stitchPrimaryColor").toString();
     QString altColor = Settings::inst()->defaultValue("stitchAlternateColor").toString();
     
@@ -225,95 +208,9 @@ void SettingsUi::resetRoundChartSettings()
     mPrimaryColor = priColor;
     mAlternateColor = altColor;
     
-}
-
-
-void SettingsUi::loadInstructionSettings()
-{
-
-}
-
-void SettingsUi::saveInstructionSettings()
-{
+    //Instructions
     
-}
-
-void SettingsUi::resetInstructionSettings()
-{
-
-}
-
-
-void SettingsUi::loadLegendSettings()
-{
-    ui->stitchColumnCount->setObjectName("stitchColumnCount");
-    ui->showStitchDescription->setObjectName("showStitchDescription");
-    ui->showWrongSideDescription->setObjectName("showWrongSideDescription");
-    ui->showStitchBlock->setObjectName("showStitchBlock");
-    ui->showStitchTitle->setObjectName("showStitchTitle");
-    ui->showStitchBorder->setObjectName("showStitchBorder");
-    
-    load(ui->stitchColumnCount);
-    load(ui->showStitchDescription);
-    load(ui->showWrongSideDescription);
-    load(ui->showStitchBlock);
-    load(ui->showStitchTitle);
-    load(ui->showStitchBorder);
-    
-    ui->colorPrefix->setObjectName("colorPrefix");
-    ui->colorColumnCount->setObjectName("colorColumnCount");
-    ui->showHexValues->setObjectName("showHexValues");
-    ui->showColorBorder->setObjectName("showColorBorder");
-    ui->showColorTitle->setObjectName("showColorTitle");
-    ui->colorSortBy->setObjectName("colorSortBy");
-
-    QStringList list;
-    list << tr("Age") << tr("Color") << tr("Quantity");
-    ui->colorSortBy->addItems(list);
-    
-    load(ui->colorPrefix);
-    load(ui->colorColumnCount);
-    load(ui->showHexValues);
-    load(ui->showColorBorder);
-    load(ui->showColorTitle);
-    load(ui->colorSortBy);
-    
-}
-
-void SettingsUi::saveLegendSettings()
-{
-
-    save(ui->stitchColumnCount);
-    save(ui->showStitchDescription);
-    save(ui->showWrongSideDescription);
-    save(ui->showStitchBlock);
-    save(ui->showStitchBorder);
-    save(ui->showStitchTitle);
-    
-    save(ui->colorPrefix);
-    save(ui->colorColumnCount);
-    save(ui->showHexValues);
-    save(ui->showColorBorder);
-    save(ui->showColorTitle);
-    save(ui->colorSortBy);
-
-}
-
-void SettingsUi::resetLegendSettings()
-{
-    loadDefualt(ui->stitchColumnCount);
-    loadDefualt(ui->showStitchDescription);
-    loadDefualt(ui->showWrongSideDescription);
-    loadDefualt(ui->showStitchBlock);
-    loadDefualt(ui->showStitchBorder);
-    loadDefualt(ui->showStitchTitle);
-    
-    loadDefualt(ui->colorPrefix);
-    loadDefualt(ui->colorColumnCount);
-    loadDefualt(ui->showHexValues);
-    loadDefualt(ui->showColorBorder);
-    loadDefualt(ui->showColorTitle);
-    loadDefualt(ui->colorSortBy);
+    //Legends
 }
 
 void SettingsUi::selectFolder()
@@ -325,7 +222,7 @@ void SettingsUi::selectFolder()
     if(folder.isEmpty())
         return;
 
-    ui->defaultFileLocation->setText(folder);
+    ui->fileLocation->setText(folder);
 }
 
 QPixmap SettingsUi::drawColorBox(QColor color, QSize size)
@@ -349,7 +246,6 @@ void SettingsUi::updatePrimaryColor()
         mPrimaryColor = color;
     }
 }
-
 
 void SettingsUi::updateAlternateColor()
 {

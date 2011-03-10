@@ -43,10 +43,10 @@ ColorLegend::ColorLegend(QMap<QString, QMap<QString, qint64> > *colors, QGraphic
 
     showTitle = Settings::inst()->value("showColorTitle").toBool();
     showBorder = Settings::inst()->value("showColorBorder").toBool();
-    showHexValues = Settings::inst()->value("showHexValues").toBool();
-    columnCount = Settings::inst()->value("colorColumnCount").toInt();
+    showHexValues = Settings::inst()->value("showColorHexValues").toBool();
+    columnCount = Settings::inst()->value("colorLegendColumnCount").toInt();
     prefix = Settings::inst()->value("colorPrefix").toString();
-    sortBy = Settings::inst()->value("colorSortBy").toString();
+    sortBy = Settings::inst()->value("colorLegendSortBy").toString();
     
 }
 
@@ -153,8 +153,8 @@ StitchLegend::StitchLegend(QMap<QString, int> *stitches, QGraphicsItem* parent)
     showTitle = Settings::inst()->value("showStitchTitle").toBool();
     showBorder = Settings::inst()->value("showStitchBorder").toBool();
     showDescription = Settings::inst()->value("showStitchDescription").toBool();
-    showWrongSide = Settings::inst()->value("showWrongSideDescription").toBool();
-    columnCount = Settings::inst()->value("stitchColumnCount").toInt();
+    showWrongSide = Settings::inst()->value("showStitchWrongSide").toBool();
+    columnCount = Settings::inst()->value("stitchLegendColumnCount").toInt();
     
 }
 

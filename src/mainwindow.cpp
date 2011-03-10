@@ -120,10 +120,10 @@ void MainWindow::setApplicationTitle()
 
 void MainWindow::setupNewTabDialog()
 {
-    int rows = Settings::inst()->value("defaultRows").toInt();
-    int stitches = Settings::inst()->value("defaultStitches").toInt();
+    int rows = Settings::inst()->value("rowCount").toInt();
+    int stitches = Settings::inst()->value("stitchCount").toInt();
     QString defSt = Settings::inst()->value("defaultStitch").toString();
-    QString defStyle = Settings::inst()->value("defaultChartStyle").toString();
+    QString defStyle = Settings::inst()->value("chartStyle").toString();
     
     ui->rows->setValue(rows);
     ui->stitches->setValue(stitches);
@@ -433,8 +433,8 @@ void MainWindow::selectColor(QModelIndex index)
 
 void MainWindow::documentNewChart()
 {
-    int rows = Settings::inst()->value("defaultRows").toInt();
-    int stitches = Settings::inst()->value("defaultStitches").toInt();
+    int rows = Settings::inst()->value("rowCount").toInt();
+    int stitches = Settings::inst()->value("stitchCount").toInt();
     
     ui->rows->setValue(rows);
     ui->stitches->setValue(stitches);
