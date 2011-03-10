@@ -116,11 +116,12 @@ void Settings::setupValueList() {
     
     mValueList["useAltColors"] = QVariant(true);
     mValueList["stitchPrimaryColor"] = QVariant("#000000");
-    mValueList["stitchAlternateColor"] = QVariant("#D4E6FC");
+    mValueList["stitchAlternateColor"] = QVariant("#3366AA");
     mValueList["chartDirection"] = QVariant(tr("Right"));
 
     mValueList["chartFreeForm"] = QVariant(false);
     mValueList["chartRowIndicator"] = QVariant(tr("Numbers"));
+    mValueList["chartIndicatorColor"] = QVariant("#C00000");
     
     //stitch legend options
     mValueList["stitchLegendColumnCount"] = QVariant(2);
