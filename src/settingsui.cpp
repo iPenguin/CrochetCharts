@@ -18,7 +18,9 @@ SettingsUi::SettingsUi(QWidget *parent)
     : QDialog(parent), ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
-    ui->tabWidget->setCurrentIndex(0); //in case the form gets saved on the wrong tab.
+    
+    //in case the form gets saved on the wrong tab.
+    ui->tabWidget->setCurrentIndex(0);
 
 #ifdef Q_WS_MAC
     this->setWindowTitle(tr("Preferences"));
@@ -26,13 +28,8 @@ SettingsUi::SettingsUi(QWidget *parent)
     this->setWindowTitle(tr("Options"));
 #endif //Q_WS_MAC
 
-    connect(ui->folderSelector, SIGNAL(clicked()), this, SLOT(selectFolder()));
-
-    connect(ui->primaryColorBttn, SIGNAL(clicked()), this, SLOT(updatePrimaryColor()));
-    connect(ui->alternateColorBttn, SIGNAL(clicked()), this, SLOT(updateAlternateColor()));
-
-    connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(buttonClicked(QAbstractButton*)));
-
+    connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
+    
     setupDialogWidgets();
 
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
@@ -152,67 +149,6 @@ bool SettingsUi::isSettingsWidget(QObject *obj)
     return false;
 }
 
-
-void SettingsUi::setupDialogWidgets()
-{
-    //Application
-    //TODO: use auto completer to help fill in the default file location field.
-
-    //Charts
-    ui->defaultStitch->addItems(StitchLibrary::inst()->stitchList());
-
-    QString priColor = Settings::inst()->value("stitchPrimaryColor").toString();
-    QString altColor = Settings::inst()->value("stitchAlternateColor").toString();
-    
-    ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(priColor), QSize(32, 32))));
-    ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(altColor), QSize(32, 32))));
-    
-    mPrimaryColor = priColor;
-    mAlternateColor = altColor;
-
-    ui->placeholder->addItems(StitchLibrary::inst()->stitchList());
-    
-    //Instructions
-
-    //Legends
-    QStringList list;
-    list << tr("Age") << tr("Color") << tr("Quantity");
-    ui->colorLegendSortBy->addItems(list);
-    
-}
-
-void SettingsUi::saveDialogWidgets()
-{
-    //Application
-
-    //Charts
-    Settings::inst()->setValue("stitchPrimaryColor", QVariant(mPrimaryColor.name()));
-    Settings::inst()->setValue("stitchAlternateColor", QVariant(mAlternateColor.name()));
-
-    //Instructions
-
-    //Legends
-}
-
-void SettingsUi::resetDialogWidgets()
-{
-    //Application
-    
-    //Charts
-    QString priColor = Settings::inst()->defaultValue("stitchPrimaryColor").toString();
-    QString altColor = Settings::inst()->defaultValue("stitchAlternateColor").toString();
-    
-    ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(priColor), QSize(32, 32))));
-    ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(altColor), QSize(32, 32))));
-    
-    mPrimaryColor = priColor;
-    mAlternateColor = altColor;
-    
-    //Instructions
-    
-    //Legends
-}
-
 void SettingsUi::selectFolder()
 {
     QString defLoc = Settings::inst()->value("fileLocation").toString();
@@ -237,22 +173,105 @@ QPixmap SettingsUi::drawColorBox(QColor color, QSize size)
     return pix;
 }
 
-void SettingsUi::updatePrimaryColor()
+void SettingsUi::setColor()
 {
-    QColor color = QColorDialog::getColor(mPrimaryColor, this, tr("Primary Row Color"));
+    QPushButton *b = static_cast<QPushButton*>(sender());
+    QColor color = QColorDialog::getColor(mPrimaryColor, this, tr("Select Color"));
 
     if (color.isValid()) {
-        ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
-        mPrimaryColor = color;
+        if(b->objectName() == "primaryColorBttn") {
+            ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            mPrimaryColor = color;
+        } else if(b->objectName() == "alternateColorBttn") {
+            ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            mAlternateColor = color;
+        } else if(b->objectName() == "dotColorBttn") {
+            ui->dotColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            mDotColor = color;
+        } else if(b->objectName() == "keywordColorBttn") {
+            ui->keywordColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            mKeywordColor = color;
+        }
     }
 }
 
-void SettingsUi::updateAlternateColor()
+void SettingsUi::setupDialogWidgets()
 {
-    QColor color = QColorDialog::getColor(mAlternateColor, this, tr("Alternate Row Color"));
+    //Application
+    //TODO: use auto completer to help fill in the default file location field.
+    connect(ui->folderSelector, SIGNAL(clicked()), SLOT(selectFolder()));
     
-    if (color.isValid()) {
-        ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
-        mAlternateColor = color;
-    }
+    //Charts
+    connect(ui->primaryColorBttn, SIGNAL(clicked()), SLOT(setColor()));
+    connect(ui->alternateColorBttn, SIGNAL(clicked()), SLOT(setColor()));
+    connect(ui->dotColorBttn, SIGNAL(clicked()), SLOT(setColor()));
+    
+    ui->defaultStitch->addItems(StitchLibrary::inst()->stitchList());
+    
+    QString priColor = Settings::inst()->value("stitchPrimaryColor").toString();
+    ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(priColor), QSize(32, 32))));
+    mPrimaryColor = priColor;
+    
+    QString altColor = Settings::inst()->value("stitchAlternateColor").toString();
+    ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(altColor), QSize(32, 32))));
+    mAlternateColor = altColor;
+
+    QString dotColor = Settings::inst()->value("chartIndicatorColor").toString();
+    ui->dotColorBttn->setIcon(QIcon(drawColorBox(QColor(dotColor), QSize(32, 32))));
+    mDotColor = dotColor;
+    
+    ui->placeholder->addItems(StitchLibrary::inst()->stitchList());
+    
+    //Instructions
+    connect(ui->keywordColorBttn, SIGNAL(clicked()), SLOT(setColor()));
+
+    QString keywordColor = Settings::inst()->value("syntaxColor").toString();
+    ui->keywordColorBttn->setIcon(QIcon(drawColorBox(QColor(keywordColor), QSize(32, 32))));
+    mKeywordColor = keywordColor;
+    
+    //Legends
+    QStringList list;
+    list << tr("Age") << tr("Color") << tr("Quantity");
+    ui->colorLegendSortBy->addItems(list);
+    
+}
+
+void SettingsUi::saveDialogWidgets()
+{
+    //Application
+    
+    //Charts
+    Settings::inst()->setValue("stitchPrimaryColor", QVariant(mPrimaryColor.name()));
+    Settings::inst()->setValue("stitchAlternateColor", QVariant(mAlternateColor.name()));
+    Settings::inst()->setValue("chartIndicatorColor", QVariant(mDotColor.name()));
+
+    //Instructions
+    Settings::inst()->setValue("syntaxColor", QVariant(mKeywordColor.name()));
+    
+    //Legends
+}
+
+void SettingsUi::resetDialogWidgets()
+{
+    //Application
+    
+    //Charts
+    QString color = Settings::inst()->defaultValue("stitchPrimaryColor").toString();
+    ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+    mPrimaryColor = color;
+    
+    color = Settings::inst()->defaultValue("stitchAlternateColor").toString();
+    ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+    mAlternateColor = color;
+
+    color = Settings::inst()->defaultValue("chartIndicatorColor").toString();
+    ui->dotColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+    mDotColor = color;
+    
+    //Instructions
+    color = Settings::inst()->defaultValue("syntaxColor").toString();
+    ui->keywordColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+    mKeywordColor = color;
+    
+    //Legends
 }

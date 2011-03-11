@@ -26,8 +26,7 @@ public slots:
     void selectFolder();
 
 private slots:
-    void updatePrimaryColor();
-    void updateAlternateColor();
+    void setColor();
 
     void buttonClicked(QAbstractButton *button);
 private:
@@ -49,6 +48,8 @@ private:
 
     QColor mPrimaryColor;
     QColor mAlternateColor;
+    QColor mDotColor;
+    QColor mKeywordColor;
     
 };
 

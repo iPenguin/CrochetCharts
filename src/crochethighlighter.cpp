@@ -8,6 +8,7 @@
 #include "stitchset.h"
 
 #include <QDebug>
+#include "settings.h"
 
 CrochetHighlighter::CrochetHighlighter(QTextDocument *parent)
 : QSyntaxHighlighter(parent)
@@ -22,8 +23,9 @@ CrochetHighlighter::~CrochetHighlighter()
 void CrochetHighlighter::createHighlightRules()
 {
     HighlightingRule rule;
-    
-    keywordFormat.setForeground(Qt::darkBlue);
+
+    QColor color = QColor(Settings::inst()->value("syntaxColor").toString());
+    keywordFormat.setForeground(QBrush(color));
     keywordFormat.setFontWeight(QFont::Bold);
     
     StitchSet* set = StitchLibrary::inst()->masterStitchSet();
@@ -39,7 +41,7 @@ void CrochetHighlighter::createHighlightRules()
         highlightingRules.append(rule);
     }
     
-    repeatFormat.setForeground(Qt::darkBlue);
+    repeatFormat.setForeground(color);
     repeatFormat.setFontWeight(QFont::Bold);
     repeatStartExp = QRegExp("\\*");
     repeatStartExp.setCaseSensitivity(Qt::CaseInsensitive);
