@@ -15,11 +15,17 @@
 Cell::Cell(QGraphicsItem *parent) :
         QGraphicsSvgItem(parent), mStitch(0)
 {
-    this->setCachingEnabled(false);
+    setCachingEnabled(false);
+    setAcceptHoverEvents(true);
 }
 
 Cell::~Cell()
 {
+}
+
+QGraphicsItem::GraphicsItemFlags Cell::flags() const
+{
+    return QGraphicsSvgItem::flags() | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable;
 }
 
 QRectF Cell::boundingRect() const
@@ -80,11 +86,6 @@ void Cell::setStitch(QString s, bool useAltRenderer)
     }
 
     setStitch(stitch, useAltRenderer);
-}
-
-int Cell::type() const
-{
-    return Cell::Type;
 }
 
 QString Cell::name()

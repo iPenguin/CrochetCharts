@@ -14,14 +14,14 @@ class Cell : public QGraphicsSvgItem
     friend class SaveFile;
 public:
 
-    enum {Type = UserType + 1 };
+    enum { Type = UserType + 1 };
     
     explicit Cell(QGraphicsItem* parent = 0);
     ~Cell();
 
     QRectF boundingRect() const;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
-    int type () const;
+    int type () const { return Cell::Type; }
 
     void setAngle(double angle) { mAngle = angle; }
     double angle() const { return mAngle; }
@@ -34,6 +34,8 @@ public:
     Stitch* stitch() const { return mStitch; }
 
     QString name();
+
+    QGraphicsItem::GraphicsItemFlags flags() const;
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);

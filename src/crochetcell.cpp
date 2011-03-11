@@ -12,11 +12,17 @@
 #include <qstyleoption.h>
 
 CrochetCell::CrochetCell()
+    : mHighlight(false)
 {
 }
 
 CrochetCell::~CrochetCell()
 {
+}
+
+QGraphicsItem::GraphicsItemFlags CrochetCell::flags() const
+{
+    return Cell::flags() | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable;
 }
 
 QRectF CrochetCell::boundingRect () const
@@ -28,6 +34,8 @@ void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 {
     if(color() != Qt::white)
         painter->fillRect(option->rect, color());
+    if(mHighlight)
+        painter->fillRect(option->rect, option->palette.highlight());
     
     if(stitch()->isSvg())
         Cell::paint(painter, option, widget);
@@ -36,9 +44,4 @@ void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     
     QRect rect =QRect(option->rect.x() + (option->rect.width()/2), option->rect.y() + (option->rect.height()/2),
                       (option->rect.width()/2), (option->rect.height()/2));
-}
-
-int CrochetCell::type () const
-{
-    return CrochetCell::Type;
 }

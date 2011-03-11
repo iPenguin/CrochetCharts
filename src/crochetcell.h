@@ -19,14 +19,18 @@ public:
 
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-    int type() const;
+
+    int type() const { return Type; }
+    GraphicsItemFlags flags() const;
+
+    void setHighlight(bool state) { mHighlight = state; update(); }
 
 signals:
 
 public slots:
 
 private:
-
+    bool mHighlight;
 
 };
 
