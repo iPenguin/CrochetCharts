@@ -36,6 +36,7 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     
     mView = new ChartView(top);
     mScene = new CrochetScene(this);
+    connect(mView, SIGNAL(selectionChanged(QPolygonF)), mScene, SLOT(updateSelection(QPolygonF)));
     connect(mScene, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchChanged(QString,QString)));
     connect(mScene, SIGNAL(colorChanged(QString,QString)), this, SLOT(colorChanged(QString,QString)));
     mView->setScene(mScene);

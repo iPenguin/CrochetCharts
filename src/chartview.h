@@ -6,6 +6,7 @@
 #define CHARTVIEW_H
 
 #include <QGraphicsView>
+#include <QRubberBand>
 
 class ChartView : public QGraphicsView
 {
@@ -19,14 +20,18 @@ public:
     //zoom takes the mouseDelta which is usually +/- 120;
     void zoom(int mouseDelta);
 
+signals:
+    void selectionChanged(QPolygonF selection);
+    
 protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
-    void scrollContentsBy(int dx, int dy);
     void wheelEvent(QWheelEvent *event);
     
 private:
 
+    QRubberBand *mRubberBand;
+    QPoint mRubberBandStart;
 };
 #endif //CHARTVIEW_H

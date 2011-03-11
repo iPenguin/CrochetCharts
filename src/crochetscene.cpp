@@ -20,8 +20,9 @@
 #include "crochetchartcommands.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent), mCurCell(0), mDiff(QSizeF(0,0)), mRowSpacing(8),
-    mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode), mEditStitch("ch"),
+    : QGraphicsScene(parent), mCurCell(0), mDiff(QSizeF(0,0)), mHighlightCell(0),
+    mRowSpacing(8), mStyle(CrochetScene::Flat),
+    mMode(CrochetScene::StitchMode), mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
 {
     mStitchWidth = 64;
@@ -260,6 +261,18 @@ void CrochetScene::stitchUpdated(QString oldSt, QString newSt)
     
 }
 
+void CrochetScene::updateSelection(QPolygonF selection)
+{
+    qDebug() << "selection changed, do something useful!" << selection <<  selectedItems().count();
+
+    QPainterPath path;
+    path.addPolygon(selection);
+    setSelectionArea(path);
+
+    
+    qDebug() << selectedItems().count();
+}
+
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     switch(mMode) {
@@ -284,6 +297,8 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
 void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
+    highlightCell(e);
+    
     switch(mMode) {
         case CrochetScene::StitchMode:
             stitchModeMouseMove(e);
@@ -305,7 +320,7 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 }
 
 void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
-{
+{    
     switch(mMode) {
         case CrochetScene::StitchMode:
             stitchModeMouseRelease(e);
@@ -324,6 +339,26 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     }
 
     QGraphicsScene::mouseReleaseEvent(e);
+}
+
+void CrochetScene::highlightCell(QGraphicsSceneMouseEvent *e)
+{
+    QGraphicsItem *gi = itemAt(e->scenePos());
+    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+
+    if(!c) {
+        if(mHighlightCell)
+            mHighlightCell->setHighlight(false);
+        mHighlightCell = 0;
+        return;
+    }    
+    qDebug() << c->type();
+    if(mHighlightCell && mHighlightCell != c)
+        mHighlightCell->setHighlight(false);
+    
+    mHighlightCell = c;
+    mHighlightCell->setHighlight(true);
+    
 }
 
 void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)

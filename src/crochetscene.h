@@ -31,11 +31,7 @@ public:
     
     CrochetScene(QObject *parent = 0);
     ~CrochetScene();
-/*
-    void setCell(int row, int column, Stitch *s);
-    void insertCell(int row, int columnBefore, Stitch *s);
 
-*/
     void createRow(int row, int columns, QString stitch);
     void createRoundRow(int row, int columns, QString stitch);
 
@@ -65,6 +61,8 @@ public:
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
 
+    void updateSelection(QPolygonF selection);
+    
 signals:
     void rowChanged(int row);
     void rowsChanged(int startRow);
@@ -104,6 +102,8 @@ protected:
     void setCellPosition(int row, int column, Cell *c, int columns = 1);
     
 private:
+    void highlightCell(QGraphicsSceneMouseEvent *e);
+    
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
     void gridModeMouseMove(QGraphicsSceneMouseEvent *e);
@@ -129,6 +129,7 @@ private:
     //Used in the mouse*Event()s to keep the mouse movements on the same cell.
     CrochetCell *mCurCell;
     QSizeF mDiff;
+    CrochetCell *mHighlightCell;
 
     int mRowSpacing;
     
