@@ -263,14 +263,9 @@ void CrochetScene::stitchUpdated(QString oldSt, QString newSt)
 
 void CrochetScene::updateSelection(QPolygonF selection)
 {
-    qDebug() << "selection changed, do something useful!" << selection <<  selectedItems().count();
-
     QPainterPath path;
     path.addPolygon(selection);
     setSelectionArea(path);
-
-    
-    qDebug() << selectedItems().count();
 }
 
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
@@ -298,7 +293,7 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
     highlightCell(e);
-    
+
     switch(mMode) {
         case CrochetScene::StitchMode:
             stitchModeMouseMove(e);
@@ -320,7 +315,8 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 }
 
 void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
-{    
+{
+    qDebug() << "release:" << e->scenePos();
     switch(mMode) {
         case CrochetScene::StitchMode:
             stitchModeMouseRelease(e);
@@ -509,6 +505,7 @@ void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
+    //FIXME: foreach(stitch in selection()) create an undo group event.
     if(mCurCell) {
         if(mCurCell->name() != mEditStitch)
             mUndoStack.push(new SetCellStitch(this, findGridPosition(mCurCell), mEditStitch));

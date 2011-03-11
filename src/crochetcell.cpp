@@ -14,6 +14,7 @@
 CrochetCell::CrochetCell()
     : mHighlight(false)
 {
+    setFlag(QGraphicsItem::ItemIsMovable);
 }
 
 void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

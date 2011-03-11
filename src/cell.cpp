@@ -17,15 +17,11 @@ Cell::Cell(QGraphicsItem *parent) :
 {
     setCachingEnabled(false);
     setAcceptHoverEvents(true);
+    setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
 Cell::~Cell()
 {
-}
-
-QGraphicsItem::GraphicsItemFlags Cell::flags() const
-{
-    return QGraphicsSvgItem::flags() | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable;
 }
 
 QRectF Cell::boundingRect() const
@@ -89,7 +85,7 @@ void Cell::setStitch(QString s, bool useAltRenderer)
 QString Cell::name()
 {
     if(mStitch)
-        mStitch->name();
+        return mStitch->name();
     else
         return QString();
 }

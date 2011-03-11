@@ -24,7 +24,7 @@ void ChartView::mousePressEvent(QMouseEvent *event)
 {
     //FIXME: somehow this code has to be set only when the modes are correct.
     //move code into the scene and static_cast() view->... ??
-    if(event->buttons() == Qt::LeftButton && false) {
+    if(event->buttons() == Qt::LeftButton) {
         mRubberBandStart = event->pos();
         if(!mRubberBand)
             mRubberBand = new QRubberBand(QRubberBand::Rectangle, this);
