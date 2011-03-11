@@ -34,8 +34,6 @@ public:
     Stitch* stitch() const { return mStitch; }
 
     QString name();
-
-    QGraphicsItem::GraphicsItemFlags flags() const;
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);
