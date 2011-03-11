@@ -188,11 +188,7 @@ bool StitchLibrary::masterHasStitch(Stitch* s)
 
 Stitch* StitchLibrary::findStitch(QString name)
 {
-    Stitch *found = 0;
-    found = mMasterSet->findStitch(name);
-    
-    return found;
-
+    return mMasterSet->findStitch(name);
 }
 
 StitchSet* StitchLibrary::findStitchSet(QString setName)

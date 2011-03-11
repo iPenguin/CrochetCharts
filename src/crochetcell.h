@@ -15,14 +15,9 @@ public:
     enum {Type = UserType + 10 };
     
     CrochetCell();
-    ~CrochetCell();
-
-    QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
     int type() const { return Type; }
-    GraphicsItemFlags flags() const;
-
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     void setHighlight(bool state) { mHighlight = state; update(); }
 
 signals:

@@ -8,26 +8,12 @@
 #include <QDebug>
 
 #include <QApplication>
-#include <qpainter.h>
-#include <qstyleoption.h>
+#include <QPainter>
+#include <QStyleOption>
 
 CrochetCell::CrochetCell()
     : mHighlight(false)
 {
-}
-
-CrochetCell::~CrochetCell()
-{
-}
-
-QGraphicsItem::GraphicsItemFlags CrochetCell::flags() const
-{
-    return Cell::flags() | QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable;
-}
-
-QRectF CrochetCell::boundingRect () const
-{
-    return Cell::boundingRect();
 }
 
 void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
