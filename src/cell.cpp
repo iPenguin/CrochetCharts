@@ -76,9 +76,7 @@ void Cell::setColor(QColor c)
 
 void Cell::setStitch(QString s, bool useAltRenderer)
 {
-    Stitch* stitch = 0;
-
-    stitch = StitchLibrary::inst()->findStitch(s);
+    Stitch* stitch = StitchLibrary::inst()->findStitch(s);
 
     if (!stitch) {
         QString st = Settings::inst()->value("defaultStitch").toString();
@@ -90,10 +88,8 @@ void Cell::setStitch(QString s, bool useAltRenderer)
 
 QString Cell::name()
 {
-    if (!mStitch)
-        return QString();
+    if(mStitch)
+        mStitch->name();
     else
-        return mStitch->name();
+        return QString();
 }
-
-

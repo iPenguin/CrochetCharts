@@ -352,7 +352,7 @@ void CrochetScene::highlightCell(QGraphicsSceneMouseEvent *e)
         mHighlightCell = 0;
         return;
     }    
-    qDebug() << c->type();
+
     if(mHighlightCell && mHighlightCell != c)
         mHighlightCell->setHighlight(false);
     
