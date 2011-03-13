@@ -860,7 +860,7 @@ void MainWindow::setEditMode(int mode)
         ui->actionColorMode->setChecked(true);
     else if(mode == 12)
         ui->actionGridMode->setChecked(true);
-    else if(mode ==13)
+    else if(mode == 13)
         ui->actionPositionMode->setChecked(true);
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {

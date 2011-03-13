@@ -268,6 +268,17 @@ void CrochetScene::updateSelection(QPolygonF selection)
     setSelectionArea(path);
 }
 
+QPoint CrochetScene::findGridPosition(CrochetCell* c)
+{
+    for(int y = 0; y < mGrid.count(); ++y) {
+        if(mGrid[y].contains(c)) {
+            return QPoint(mGrid[y].indexOf(c), y);
+        }
+    }
+    
+    return QPoint();
+}
+
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     switch(mMode) {
@@ -305,13 +316,13 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             gridModeMouseMove(e);
             break;
         case CrochetScene::PositionMode:
+            //TODO: limit movement to a square if not free move.
             positionModeMouseMove(e);
+            QGraphicsScene::mouseMoveEvent(e);
             break;
         default:
             break;
     }
-    
-    QGraphicsScene::mouseMoveEvent(e);
 }
 
 void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
@@ -432,40 +443,6 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
-    if(e->buttons() != Qt::LeftButton)
-        return;
-    
-    if(!mCurCell)
-        return;
-
-    QPointF curPos = e->scenePos();
-
-    qreal dx = 0, dy = 0;
-    if(!mDiff.isNull()) {
-        dx = mDiff.width();
-        dy = mDiff.height();
-    }
-
-    qreal deltaX = dx - (e->buttonDownScenePos(Qt::LeftButton).x() - curPos.x());
-    qreal deltaY = dy - (e->buttonDownScenePos(Qt::LeftButton).y() - curPos.y());
-
-    if(deltaX > 64) deltaX = 64;
-    if(deltaX < -64) deltaX = -64;
-
-    if(deltaY > 64) deltaY = 64;
-    if(deltaY < -64) deltaY = -64;
-
-    //snap to grid.
-    if(abs(deltaX) < 4) deltaX = 0;
-    if(abs(deltaY) < 4) deltaY = 0;
-    
-    QTransform trans = mCurCell->transform();
-    QTransform newTrans;
-    newTrans.setMatrix(trans.m11(), trans.m12(), trans.m13(),
-                       trans.m21(), trans.m22(), trans.m23(),
-                       deltaX,      deltaY,      trans.m33());
-    mCurCell->setTransform(newTrans);
-
 }
 
 void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
@@ -512,15 +489,4 @@ void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     }
     
     mCurCell = 0;
-}
-
-QPoint CrochetScene::findGridPosition(CrochetCell* c)
-{
-    for(int y = 0; y < mGrid.count(); ++y) {
-        if(mGrid[y].contains(c)) {
-            return QPoint(mGrid[y].indexOf(c), y);
-        }
-    }
-
-    return QPoint();
 }
