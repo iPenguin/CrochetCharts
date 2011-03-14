@@ -21,6 +21,7 @@
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent), mCurCell(0), mDiff(QSizeF(0,0)), mHighlightCell(0),
+    mRubberBand(0), mRubberBandStart(QPointF(0,0)),
     mRowSpacing(8), mStyle(CrochetScene::Flat),
     mMode(CrochetScene::StitchMode), mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
@@ -268,6 +269,27 @@ void CrochetScene::updateSelection(QPolygonF selection)
     setSelectionArea(path);
 }
 
+void CrochetScene::updateRubberBand(int dx, int dy) 
+{
+
+    if(mRubberBandStart.isNull())
+        return;
+
+    mRubberBandStart.setX(mRubberBandStart.x() + dx);
+    mRubberBandStart.setY(mRubberBandStart.y() + dy);
+}
+
+QPoint CrochetScene::findGridPosition(CrochetCell* c)
+{
+    for(int y = 0; y < mGrid.count(); ++y) {
+        if(mGrid[y].contains(c)) {
+            return QPoint(mGrid[y].indexOf(c), y);
+        }
+    }
+    
+    return QPoint();
+}
+
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     switch(mMode) {
@@ -305,13 +327,13 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             gridModeMouseMove(e);
             break;
         case CrochetScene::PositionMode:
+            //TODO: limit movement to a square if not free move.
             positionModeMouseMove(e);
+            QGraphicsScene::mouseMoveEvent(e);
             break;
         default:
             break;
     }
-    
-    QGraphicsScene::mouseMoveEvent(e);
 }
 
 void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
@@ -420,6 +442,14 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
         
     if(e->buttons() != Qt::LeftButton)
         return;
+
+    mRubberBandStart = e->scenePos();
+    if(!mRubberBand) {
+        QWidget *view = qobject_cast<QWidget*>(parent());
+        mRubberBand = new QRubberBand(QRubberBand::Rectangle, view);
+    }
+    mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
+    mRubberBand->show();
     
     QGraphicsItem *gi = itemAt(e->scenePos());
     CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
@@ -432,40 +462,8 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
-    if(e->buttons() != Qt::LeftButton)
-        return;
-    
-    if(!mCurCell)
-        return;
-
-    QPointF curPos = e->scenePos();
-
-    qreal dx = 0, dy = 0;
-    if(!mDiff.isNull()) {
-        dx = mDiff.width();
-        dy = mDiff.height();
-    }
-
-    qreal deltaX = dx - (e->buttonDownScenePos(Qt::LeftButton).x() - curPos.x());
-    qreal deltaY = dy - (e->buttonDownScenePos(Qt::LeftButton).y() - curPos.y());
-
-    if(deltaX > 64) deltaX = 64;
-    if(deltaX < -64) deltaX = -64;
-
-    if(deltaY > 64) deltaY = 64;
-    if(deltaY < -64) deltaY = -64;
-
-    //snap to grid.
-    if(abs(deltaX) < 4) deltaX = 0;
-    if(abs(deltaY) < 4) deltaY = 0;
-    
-    QTransform trans = mCurCell->transform();
-    QTransform newTrans;
-    newTrans.setMatrix(trans.m11(), trans.m12(), trans.m13(),
-                       trans.m21(), trans.m22(), trans.m23(),
-                       deltaX,      deltaY,      trans.m33());
-    mCurCell->setTransform(newTrans);
-
+    if(mRubberBand)
+        mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), e->scenePos().toPoint()).normalized());
 }
 
 void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
@@ -474,6 +472,9 @@ void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
         mCurCell = 0;
     mDiff.setHeight(0);
     mDiff.setWidth(0);
+
+    if(mRubberBand)
+        mRubberBand->hide();
 }
 
 void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
@@ -512,15 +513,4 @@ void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     }
     
     mCurCell = 0;
-}
-
-QPoint CrochetScene::findGridPosition(CrochetCell* c)
-{
-    for(int y = 0; y < mGrid.count(); ++y) {
-        if(mGrid[y].contains(c)) {
-            return QPoint(mGrid[y].indexOf(c), y);
-        }
-    }
-
-    return QPoint();
 }
