@@ -9,7 +9,7 @@
 #include <QScrollBar>
 
 ChartView::ChartView(QWidget *parent)
-    : QGraphicsView(parent), mRubberBand(0), mRubberBandStart(QPoint(0,0))
+    : QGraphicsView(parent)
 {
     //DONT USE THESE IF the mousePress & move & release code is in use.
     //setDragMode(QGraphicsView::RubberBandDrag);
@@ -21,75 +21,60 @@ ChartView::~ChartView()
 }
 
 void ChartView::mousePressEvent(QMouseEvent *event)
-{
-    //FIXME: somehow this code has to be set only when the modes are correct.
-    //move code into the scene and static_cast() view->... ??
-    if(event->buttons() == Qt::LeftButton) {
-        mRubberBandStart = event->pos();
-        if(!mRubberBand)
-            mRubberBand = new QRubberBand(QRubberBand::Rectangle, this);
-        mRubberBand->setGeometry(QRect(mRubberBandStart, QSize()));
-        mRubberBand->show();
-    }
-    
+{    
     QGraphicsView::mousePressEvent(event);
 }
 
 void ChartView::mouseMoveEvent(QMouseEvent *event)
 {
-    int delta = 5;
+    int deltaX = 0;
+    int deltaY = 0;
 
     if(event->buttons() == Qt::LeftButton) {
         
-        if(event->pos().x() < delta) {
+        if(event->pos().x() < 5) {
             int diff = horizontalScrollBar()->value() - horizontalScrollBar()->minimum();
-            if(diff < delta)
-                delta = diff;
+            if(diff < deltaX)
+                deltaX = -diff;
+            else
+                deltaX = -5;
             
-            horizontalScrollBar()->setValue(horizontalScrollBar()->value() - delta);
-            mRubberBandStart.setX(mRubberBandStart.x() + delta);
-            
-        } else if (event->pos().x() > viewport()->width() - delta) {
+        } else if (event->pos().x() > viewport()->width() - 5) {
             int diff = horizontalScrollBar()->maximum() - horizontalScrollBar()->value();
-            if(diff < delta)
-                delta = diff;
-            
-            horizontalScrollBar()->setValue(horizontalScrollBar()->value() + delta);
-            mRubberBandStart.setX(mRubberBandStart.x() - delta);
+            if(diff < deltaX)
+                deltaX = diff;
+            else
+                deltaX = 5;
         }
 
-        delta = 5;
-        if(event->pos().y() < delta) {
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() + deltaX);
+        
+        if(event->pos().y() < 5) {
             int diff = verticalScrollBar()->value() - verticalScrollBar()->minimum();
-            if(diff < delta)
-                delta = diff;
+            if(diff < deltaY)
+                deltaY = -diff;
+            else
+                deltaY = -5;
             
-            verticalScrollBar()->setValue(verticalScrollBar()->value() - delta);
-            mRubberBandStart.setY(mRubberBandStart.y() + delta);
-            
-        } else if( event->pos().y() > viewport()->height() - delta) {
+        } else if( event->pos().y() > viewport()->height() - 5) {
             int diff = verticalScrollBar()->maximum() - verticalScrollBar()->value();
-            if(diff < delta)
-                delta = diff;
-            
-            verticalScrollBar()->setValue(verticalScrollBar()->value() + delta);
-            mRubberBandStart.setY(mRubberBandStart.y() - delta);
+            if(diff < deltaY)
+                deltaY = diff;
+            else
+                deltaY = 5;
         }
-
-        if(mRubberBand)
-            mRubberBand->setGeometry(QRect(mRubberBandStart, event->pos()).normalized());
+        
+        verticalScrollBar()->setValue(verticalScrollBar()->value() + deltaY);
+        
+        if(deltaX > 0 && deltaY > 0)
+            emit scrollBarChanged(deltaX, deltaY);
     }
-
+    
     QGraphicsView::mouseMoveEvent(event);
 }
 
 void ChartView::mouseReleaseEvent(QMouseEvent *event)
 {
-    if(mRubberBand) {
-        mRubberBand->hide();
-        emit selectionChanged(mapToScene(QRect(mRubberBandStart, event->pos()).normalized()));
-    }
-    
     QGraphicsView::mouseReleaseEvent(event);
 }
 

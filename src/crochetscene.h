@@ -10,6 +10,7 @@
 #include "crochetcell.h"
 
 #include <QUndoStack>
+#include <QRubberBand>
 
 class CrochetScene : public QGraphicsScene
 {
@@ -57,6 +58,9 @@ public:
     void setEditBgColor(QColor color) { mEditBgColor = color; }
 
     QUndoStack* undoStack() { return &mUndoStack; }
+
+public slots:
+    void updateRubberBand(int dx, int dy);
 
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
@@ -131,6 +135,9 @@ private:
     QSizeF mDiff;
     CrochetCell *mHighlightCell;
 
+    QRubberBand *mRubberBand;
+    QPointF mRubberBandStart;
+    
     int mRowSpacing;
     
     ChartStyle mStyle;

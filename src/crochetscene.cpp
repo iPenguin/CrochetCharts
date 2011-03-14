@@ -21,6 +21,7 @@
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent), mCurCell(0), mDiff(QSizeF(0,0)), mHighlightCell(0),
+    mRubberBand(0), mRubberBandStart(QPointF(0,0)),
     mRowSpacing(8), mStyle(CrochetScene::Flat),
     mMode(CrochetScene::StitchMode), mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
@@ -268,6 +269,16 @@ void CrochetScene::updateSelection(QPolygonF selection)
     setSelectionArea(path);
 }
 
+void CrochetScene::updateRubberBand(int dx, int dy) 
+{
+
+    if(mRubberBandStart.isNull())
+        return;
+
+    mRubberBandStart.setX(mRubberBandStart.x() + dx);
+    mRubberBandStart.setY(mRubberBandStart.y() + dy);
+}
+
 QPoint CrochetScene::findGridPosition(CrochetCell* c)
 {
     for(int y = 0; y < mGrid.count(); ++y) {
@@ -431,6 +442,14 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
         
     if(e->buttons() != Qt::LeftButton)
         return;
+
+    mRubberBandStart = e->scenePos();
+    if(!mRubberBand) {
+        QWidget *view = qobject_cast<QWidget*>(parent());
+        mRubberBand = new QRubberBand(QRubberBand::Rectangle, view);
+    }
+    mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
+    mRubberBand->show();
     
     QGraphicsItem *gi = itemAt(e->scenePos());
     CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
@@ -443,6 +462,8 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
+    if(mRubberBand)
+        mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), e->scenePos().toPoint()).normalized());
 }
 
 void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
@@ -451,6 +472,9 @@ void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
         mCurCell = 0;
     mDiff.setHeight(0);
     mDiff.setWidth(0);
+
+    if(mRubberBand)
+        mRubberBand->hide();
 }
 
 void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
