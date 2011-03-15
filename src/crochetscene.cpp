@@ -24,8 +24,8 @@
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent), mCurCell(0), mDiff(QSizeF(0,0)), mHighlightCell(0),
     mRubberBand(0), mRubberBandStart(QPointF(0,0)),
-    mRowSpacing(8), mStyle(CrochetScene::Flat),
-    mMode(CrochetScene::StitchMode), mEditStitch("ch"),
+    mRowSpacing(8), mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode),
+    mFreeForm(false), mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
 {
     mStitchWidth = 64;
@@ -295,6 +295,13 @@ QPoint CrochetScene::findGridPosition(CrochetCell* c)
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     QGraphicsScene::mousePressEvent(e);
+
+    QGraphicsItem *gi = itemAt(e->scenePos());
+    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+    if(!c)
+        return;
+    
+    mCurCell = c;
     
     switch(mMode) {
         case CrochetScene::StitchMode:
@@ -330,7 +337,6 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             gridModeMouseMove(e);
             break;
         case CrochetScene::PositionMode:
-            //TODO: limit movement to a square if not free move.
             QGraphicsScene::mouseMoveEvent(e);
             positionModeMouseMove(e);
             break;
@@ -357,6 +363,9 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         default:
             break;
     }
+
+    if(mCurCell)
+        mCurCell = 0;
 
     QGraphicsScene::mouseReleaseEvent(e);
 }
@@ -386,14 +395,7 @@ void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
 
     if(e->buttons() != Qt::LeftButton)
         return;
-    
-    QGraphicsItem *gi = itemAt(e->scenePos());
-    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(!c)
-        return;
-
-    mCurCell = c;
-    
+        
 }
 
 void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -417,7 +419,6 @@ void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
             mUndoStack.push(new SetCellColor(this, findGridPosition(mCurCell), mEditBgColor));
     }
     
-    mCurCell = 0;
 }
 
 void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
@@ -466,21 +467,16 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
-    
-    
     if(mRubberBand) {
         ChartView *view = qobject_cast<ChartView*>(parent());
         QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));    
     
         mRubberBand->setGeometry(rect.normalized());
-
     }
 }
 
 void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    if(mCurCell)
-        mCurCell = 0;
     mDiff.setHeight(0);
     mDiff.setWidth(0);
 

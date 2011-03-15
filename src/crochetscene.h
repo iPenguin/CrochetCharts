@@ -142,6 +142,8 @@ private:
     
     ChartStyle mStyle;
     EditMode mMode;
+
+    bool mFreeForm;
     
     QString mEditStitch;
     QColor mEditFgColor;
