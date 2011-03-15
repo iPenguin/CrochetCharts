@@ -35,7 +35,7 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     top->layout()->setMargin(0);
     
     mView = new ChartView(top);
-    mScene = new CrochetScene(this);
+    mScene = new CrochetScene(mView);
 
     connect(mView, SIGNAL(scrollBarChanged(int,int)), mScene, SLOT(updateRubberBand(int,int)));
     

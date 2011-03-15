@@ -14,6 +14,8 @@
 
 #include <QDebug>
 
+#include "chartview.h"
+
 #include "settings.h"
 #include "stitchset.h"
 #include "appinfo.h"
@@ -292,6 +294,8 @@ QPoint CrochetScene::findGridPosition(CrochetCell* c)
 
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
+    QGraphicsScene::mousePressEvent(e);
+    
     switch(mMode) {
         case CrochetScene::StitchMode:
             stitchModeMousePress(e);
@@ -303,13 +307,12 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
             gridModeMousePress(e);
             break;
         case CrochetScene::PositionMode:
-            positionModeMousePress(e);
+            if(selectedItems().count() <= 0)
+                positionModeMousePress(e);
             break;
         default:
             break;
     }
-            
-    QGraphicsScene::mousePressEvent(e);
 }
 
 void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -328,8 +331,8 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             break;
         case CrochetScene::PositionMode:
             //TODO: limit movement to a square if not free move.
-            positionModeMouseMove(e);
             QGraphicsScene::mouseMoveEvent(e);
+            positionModeMouseMove(e);
             break;
         default:
             break;
@@ -338,7 +341,6 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 
 void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-    qDebug() << "release:" << e->scenePos();
     switch(mMode) {
         case CrochetScene::StitchMode:
             stitchModeMouseRelease(e);
@@ -443,11 +445,13 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
 
-    mRubberBandStart = e->scenePos();
-    if(!mRubberBand) {
-        QWidget *view = qobject_cast<QWidget*>(parent());
+    ChartView *view = qobject_cast<ChartView*>(parent());
+    
+    if(!mRubberBand)
         mRubberBand = new QRubberBand(QRubberBand::Rectangle, view);
-    }
+
+    mRubberBandStart = view->mapFromScene(e->scenePos());
+
     mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
     mRubberBand->show();
     
@@ -462,8 +466,15 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
-    if(mRubberBand)
-        mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), e->scenePos().toPoint()).normalized());
+    
+    
+    if(mRubberBand) {
+        ChartView *view = qobject_cast<ChartView*>(parent());
+        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));    
+    
+        mRubberBand->setGeometry(rect.normalized());
+
+    }
 }
 
 void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
@@ -473,8 +484,19 @@ void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
     mDiff.setHeight(0);
     mDiff.setWidth(0);
 
-    if(mRubberBand)
+    if(mRubberBand) {
+        ChartView *view = qobject_cast<ChartView*>(parent());
+        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
+        
+        QPolygonF p = view->mapToScene(rect.normalized());
+        QPainterPath path;
+        path.addPolygon(p);
+        setSelectionArea(path);
+        
         mRubberBand->hide();
+        delete mRubberBand;
+        mRubberBand = 0;
+    }
 }
 
 void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
