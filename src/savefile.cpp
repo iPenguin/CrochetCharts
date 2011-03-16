@@ -91,13 +91,15 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
             continue;
         stream->writeTextElement("name", mTabWidget->tabText(i));
         stream->writeTextElement("style", QString::number(tab->scene()->mStyle));
+        stream->writeTextElement("freeform", tab->scene()->mFreeForm ? "1" : "0");
+        
         int rows = tab->scene()->rowCount();
         
         for(int row = 0; row < rows; ++row) {
             int cols = tab->scene()->columnCount(row);
             
             for(int col = 0; col < cols; ++col) {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(tab->scene()->cell(row, col));
+                CrochetCell* c = tab->scene()->cell(row, col);
                 if(!c)
                     continue;
                 stream->writeStartElement("cell"); //start cell
@@ -108,7 +110,9 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
                 //TODO: make sure the numbers are translating correctly to xml and back.
                 stream->writeTextElement("x", QString::number(c->pos().x()));
                 stream->writeTextElement("y", QString::number(c->pos().y()));
-
+                stream->writeTextElement("anchor_x", QString::number(c->mAnchor.x()));
+                stream->writeTextElement("anchor_y", QString::number(c->mAnchor.y()));
+                
                 stream->writeStartElement("transformation");
                     QTransform trans = c->transform();
                     stream->writeTextElement("m11", QString::number(trans.m11()));
@@ -257,8 +261,10 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
 
         if(tag == "name") {
             tabName = stream->readElementText();
-        } else if( tag == "style") {
+        } else if(tag == "style") {
             tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
+        } else if(tag == "freeform") {
+            tab->scene()->mFreeForm = (bool)stream->readElementText().toInt();
         } else if(tag == "cell") {
             loadCell(tab, stream);
         }
@@ -275,7 +281,7 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
     Stitch *s = 0;
     int row, column;
     QString color;
-    qreal x, y;
+    qreal x, y, anchorX = 0, anchorY = 0;
     QTransform transform;
     double angle;
     
@@ -300,16 +306,22 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
             x = stream->readElementText().toDouble();
         } else if(tag == "y") {
             y = stream->readElementText().toDouble();
+        } else if(tag == "anchor_x") {
+            anchorX = stream->readElementText().toDouble();
+        } else if(tag == "anchor_y") {
+            anchorY = stream->readElementText().toDouble();
         } else if(tag == "transformation") {
             transform = loadTransform(stream);
         } else if(tag == "angle") {
            angle = stream->readElementText().toDouble();
         }
     }
-    
+
     c->setStitch(s, (row % 2));
     tab->scene()->appendCell(row, c, true);
+    c->setObjectName(QString::number(row) + "," + QString::number(column));
     c->setColor(QColor(color));
+    c->setAnchor(anchorX, anchorY);
     c->setPos(x, y);
     c->setTransform(transform);
     c->setAngle(angle);
