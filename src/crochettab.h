@@ -61,6 +61,9 @@ public slots:
     void createChart(QString style, int rows, int cols, QString defStitch);
 
     void copyInstructions();
+
+private slots:
+    void showChartOptions();
     
 private:
     CrochetScene* scene() { return mScene; }

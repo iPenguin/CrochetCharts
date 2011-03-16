@@ -64,10 +64,11 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
 
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
-    connect(ui->copyInstructions, SIGNAL(clicked()), this, SLOT(copyInstructions()));
+    ui->chartOptionsBox->setVisible(false);
+    connect(ui->moreBttn, SIGNAL(clicked()), SLOT(showChartOptions()));
     
-    //click and drag mode.
-    //mView->setDragMode(QGraphicsView::ScrollHandDrag);
+    connect(ui->copyInstructions, SIGNAL(clicked()), SLOT(copyInstructions()));
+    
 }
 
 CrochetTab::~CrochetTab()
@@ -189,4 +190,15 @@ void CrochetTab::copyInstructions()
     QString instructions = mTextView->copyInstructions();
     clipboard->setText(instructions);
     
+}
+
+void CrochetTab::showChartOptions()
+{
+    if(ui->moreBttn->text() == tr("&More >>")) {
+        ui->moreBttn->setText(tr("&Less <<"));
+        ui->chartOptionsBox->setVisible(true);
+    } else {
+        ui->moreBttn->setText(tr("&More >>"));
+        ui->chartOptionsBox->setVisible(false);
+    }
 }
