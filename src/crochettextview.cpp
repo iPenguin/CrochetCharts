@@ -79,7 +79,7 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
     for(int c = 0; c < stitchCount; ++c) {
         QString s = stitches.at(c);
         s = s.simplified().toLower();
-        Cell* cell = mScene->cell(row, c);
+        CrochetCell* cell = mScene->cell(row, c);
         if(!cell) {
             cell = new CrochetCell();
             mScene->appendCell(row, cell);

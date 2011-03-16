@@ -36,15 +36,15 @@ public:
     void createRow(int row, int columns, QString stitch);
     void createRoundRow(int row, int columns, QString stitch);
 
-    void appendCell(int row, Cell *c, bool fromSave = false);
-    void insertCell(int row, int colBefore, Cell *c);
+    void appendCell(int row, CrochetCell *c, bool fromSave = false);
 
     int rowCount();
     int columnCount(int row);
 
-    Cell* cell(int row, int column);
+    //if you have the position in x, y use the overload function
+    CrochetCell* cell(int row, int column);
     //convert x,y to rows, columns.
-    Cell* cell(QPoint position);
+    CrochetCell* cell(QPoint position);
 
     void removeCell(int row, int column);
     void createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch);
@@ -103,7 +103,7 @@ protected:
      * WARING: This funciton should be called after the cell has been added
      * to the grid so that it calcs based on the new count of stitches.
      */
-    void setCellPosition(int row, int column, Cell *c, int columns = 1);
+    void setCellPosition(int row, int column, CrochetCell *c, int columns = 1, bool updateAnchor = false);
     
 private:
     void highlightCell(QGraphicsSceneMouseEvent *e);
@@ -152,7 +152,7 @@ private:
     QUndoStack mUndoStack;
     
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
-    QList<QList<Cell *> > mGrid;
+    QList<QList<CrochetCell *> > mGrid;
 };
 
 #endif //CROCHETSCENE_H

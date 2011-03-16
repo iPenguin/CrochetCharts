@@ -77,7 +77,7 @@ void CrochetScene::initDemoBackground()
     }
 }
 
-Cell* CrochetScene::cell(int row, int column)
+CrochetCell* CrochetScene::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
     if(mGrid[row].count() <= column)
@@ -86,7 +86,7 @@ Cell* CrochetScene::cell(int row, int column)
     return mGrid[row][column];
 }
 
-Cell* CrochetScene::cell(QPoint position)
+CrochetCell* CrochetScene::cell(QPoint position)
 {
     return cell(position.y(), position.x());
 }
@@ -112,12 +112,12 @@ int CrochetScene::columnCount(int row)
     return mGrid[row].count();
 }
 
-void CrochetScene::appendCell(int row, Cell *c, bool fromSave)
+void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
 {
     //append any missing rows.
     if(mGrid.count() <= row) {
         for(int i = mGrid.count(); i < row + 1; ++i) {
-            QList<Cell*> row;
+            QList<CrochetCell*> row;
             mGrid.append(row);
         }
     }
@@ -140,16 +140,7 @@ void CrochetScene::appendCell(int row, Cell *c, bool fromSave)
     }
 }
 
-void CrochetScene::insertCell(int row, int colBefore, Cell *c)
-{
-    Q_ASSERT(mGrid.count() > row);
-    
-    addItem(c);
-    mGrid[row].insert(colBefore, c);
-    emit rowChanged(row);
-}
-
-void CrochetScene::setCellPosition(int row, int column, Cell *c, int columns)
+void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
 {
     if(mStyle == CrochetScene::Round) {
         double widthInDegrees = 360.0 / columns;
@@ -160,11 +151,15 @@ void CrochetScene::setCellPosition(int row, int column, Cell *c, int columns)
         double degrees = widthInDegrees*column;
         QPointF finish = calcPoint(radius, degrees, QPointF(0,0));        
         c->setPos(finish.x() - 32, finish.y() - 16);
+        if(updateAnchor || c->anchor().isNull())
+            c->setAnchor(finish.x() - 32, finish.y() - 16);
         c->setTransform(QTransform().translate(32,16).rotate(degrees + 90).translate(-32, -16));
         c->setToolTip(QString::number(column+1));
         
     } else {
         c->setPos(column*64, row*64);
+        if(updateAnchor || c->anchor().isNull())
+            c->setAnchor(column*64, row*64);
         c->setToolTip(QString::number(column+1));
         c->setColor(QColor(Qt::white));
     }
@@ -177,8 +172,8 @@ void CrochetScene::redistributeCells(int row)
     int columns = mGrid[row].count();
 
     for(int i = 0; i < columns; ++i) {
-        Cell *c = mGrid[row].at(i);
-        setCellPosition(row, i, c, columns);
+        CrochetCell *c = mGrid[row].at(i);
+        setCellPosition(row, i, c, columns, true);
     }
 }
 
@@ -193,9 +188,9 @@ void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int col
 
 void CrochetScene::createRow(int row, int columns, QString stitch)
 {
-    Cell *c = 0;
+    CrochetCell *c = 0;
     
-    QList<Cell*> modelRow;
+    QList<CrochetCell*> modelRow;
     for(int i = 0; i < columns; ++i) {
         c = new CrochetCell();
         connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
@@ -216,8 +211,8 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
 //FIXME: currently unused combine with the createRow function
 void CrochetScene::createRoundRow(int row, int columns, QString stitch)
 {
-    Cell *c;
-    QList<Cell*> modelRow;
+    CrochetCell *c;
+    QList<CrochetCell*> modelRow;
     for(int i = 0; i < columns; ++i) {
         c = new CrochetCell();
         c->setStitch(stitch, (row %2));

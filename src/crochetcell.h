@@ -20,9 +20,12 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     void setHighlight(bool state) { mHighlight = state; update(); }
 
+    QPointF anchor() { return mAnchor; }
 signals:
 
 public slots:
+    void setAnchor(QPointF a) { mAnchor = a; }
+    void setAnchor(qreal x, qreal y) { mAnchor = QPointF(x, y); }
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);

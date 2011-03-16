@@ -82,8 +82,8 @@ bool SetCellRotation::mergeWith(const QUndoCommand *command)
     
     const SetCellRotation *other = static_cast<const SetCellRotation*>(command);
 
-    Cell *c = scene->cell(position);
-    Cell *otherC = scene->cell(other->position);
+    CrochetCell *c = scene->cell(position);
+    CrochetCell *otherC = scene->cell(other->position);
     
     if(otherC != c)
         return false;

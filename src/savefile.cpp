@@ -99,7 +99,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
             int cols = tab->scene()->columnCount(row);
             
             for(int col = 0; col < cols; ++col) {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(tab->scene()->cell(row, col));
+                CrochetCell* c = tab->scene()->cell(row, col);
                 if(!c)
                     continue;
                 stream->writeStartElement("cell"); //start cell
@@ -316,14 +316,14 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
            angle = stream->readElementText().toDouble();
         }
     }
-    
+
     c->setStitch(s, (row % 2));
     tab->scene()->appendCell(row, c, true);
+    c->setObjectName(QString::number(row) + "," + QString::number(column));
     c->setColor(QColor(color));
+    c->setAnchor(anchorX, anchorY);
     c->setPos(x, y);
     c->setTransform(transform);
-    //c->mAnchor.setX(anchorX);
-    //c->mAnchor.setY(anchorY);
     c->setAngle(angle);
 }
 

@@ -40,18 +40,16 @@ QVariant CrochetCell::itemChange(GraphicsItemChange change, const QVariant &valu
     if(change == ItemPositionChange && scene()) {
         QPointF newPos = value.toPointF();
         qreal x, y;
-        if(mAnchor.isNull())
-            mAnchor = newPos;
+
         //FIXME: this should get the value of the freeFrom from the chart/tab. or scene() qobject_cast... ??
         bool freeForm = Settings::inst()->value("chartFreeForm").toBool();
-        if(!freeForm) {
+        if(!freeForm && !mAnchor.isNull()) {
             x = qMin(mAnchor.x() + 64, qMax(newPos.x(), mAnchor.x() - 64));
             y = qMin(mAnchor.y() + 64, qMax(newPos.y(), mAnchor.y() - 64));
         } else {
             x = newPos.x();
             y = newPos.y();
         }
-        
         return QVariant(QPointF(x, y));
     }
     
