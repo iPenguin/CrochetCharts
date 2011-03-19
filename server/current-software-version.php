@@ -39,6 +39,8 @@ function get_current_version($software)
         $html .= "</tr>\n";
     }
 
+    $html .= "</table>\n";
+
     print $html;
 
 ?>
