@@ -32,10 +32,19 @@ function get_current_version($software)
 
     foreach($product as $software) {
         $info = get_current_version($software);
+        
         $html .= "<tr>\n";
         $html .= "<td>".$software."</td>\n";
-        $html .= "<td><a href=\"".$info[3]."\">".$info[0].".".$info[1].".".$info[2]."</a></td>\n";
-        $html .= "<td>".date("j M Y", strtotime($info[4]))."</td>\n";
+        
+        if(is_empty($info)) {
+            $html .= "<td>--</td>\n"; 
+            $html .= "<td>--</td>\n"; 
+        
+        } else {
+            $html .= "<td><a href=\"".$info[3]."\">".$info[0].".".$info[1].".".$info[2]."</a></td>\n";
+            $html .= "<td>".date("j M Y", strtotime($info[4]))."</td>\n";
+        }
+        
         $html .= "</tr>\n";
     }
 
