@@ -10,8 +10,8 @@ function get_current_version($software)
 {
     $r = mysql_query("SELECT MAX(id) as id FROM `versions` WHERE software='".strtolower($software)."';");
     $row = mysql_fetch_row($r);
-    $r = mysql_query("SELECT major, minor, patch, release_url, timestamp FROM `versions` WHERE id=".$row[0].";");
 
+    $r = mysql_query("SELECT major, minor, patch, release_url, timestamp FROM `versions` WHERE id=".$row[0].";");
     $row = mysql_fetch_row($r);
 
     return $row;
@@ -20,28 +20,27 @@ function get_current_version($software)
     //TODO: add some id's and class' so it can be CSS-ified.
 
     $product[] = "Crochet";
-    $product[] = "Cross Stitch";
-    $product[] = "Weaving";
 
     $html = "<table>\n";
-    $html .= "<tr>\n";
-    $html .= "<th align=\"left\">Software</th>\n";
-    $html .= "<th align=\"left\">Version</th>\n";
-    $html .= "<th align=\"left\">Release Date</th>\n";
-    $html .= "</tr>\n";
+#    $html .= "<tr>\n";
+#    $html .= "<th align=\"left\">Software</th>\n";
+#    $html .= "<th align=\"left\">Version</th>\n";
+#    $html .= "<th align=\"left\">Released</th>\n";
+#    $html .= "</tr>\n";
 
     foreach($product as $software) {
         $info = get_current_version($software);
         
         $html .= "<tr>\n";
         $html .= "<td>".$software."</td>\n";
-        
-        if(is_empty($info)) {
-            $html .= "<td>--</td>\n"; 
-            $html .= "<td>--</td>\n"; 
+
+        $version = $info[0].".".$info[1].".".$info[2];
+
+        if(empty($info) || $version == "0.0.0") {
+            $html .= "<td colspan = 2>Coming Soon</td>\n";
         
         } else {
-            $html .= "<td><a href=\"".$info[3]."\">".$info[0].".".$info[1].".".$info[2]."</a></td>\n";
+            $html .= "<td><a href=\"".$info[3]."\">".$version."</a></td>\n";
             $html .= "<td>".date("j M Y", strtotime($info[4]))."</td>\n";
         }
         
