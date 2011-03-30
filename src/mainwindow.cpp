@@ -268,6 +268,7 @@ void MainWindow::setupMenus()
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
     connect(ui->actionEditName, SIGNAL(triggered()), this, SLOT(chartEditName()));
     //TODO: get more icons from the theme for use with table editing.
+    //http://doc.qt.nokia.com/4.7/qstyle.html#StandardPixmap-enum
     
     //Tools Menu
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
