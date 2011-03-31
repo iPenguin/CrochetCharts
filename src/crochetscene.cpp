@@ -140,6 +140,13 @@ void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
     }
 }
 
+void CrochetScene::insertCell(QPoint p, CrochetCell* c)
+{
+    //TODO: simplify the connect() statements...
+    addItem(c);
+    mGrid[p.y()].insert(p.x(), c);
+}
+
 void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
 {
     if(mStyle == CrochetScene::Round) {
@@ -235,6 +242,34 @@ int CrochetScene::getClosestRow(QPointF mousePosition)
     return row;
 }
 
+int CrochetScene::getClosestColumn(QPointF mousePosition)
+{
+    int row = getClosestRow(mousePosition);
+    /*
+              |
+          -,- | +,-
+        ------+------
+          -,+ | +,+
+              |
+    */
+    qreal tanx = mousePosition.y() / mousePosition.x();
+    qreal rads = atan(tanx);
+    qreal angleX = rads * 180 / M_PI;
+    qreal angle = 0.0;
+    if (mousePosition.x() >= 0 && mousePosition.y() >= 0)
+        angle = angleX;
+    else if(mousePosition.x() <= 0 && mousePosition.y() >= 0)
+        angle = 180 + angleX;
+    else if(mousePosition.x() <= 0 && mousePosition.y() <= 0)
+        angle = 180 + angleX;
+    else if(mousePosition.x() >= 0 && mousePosition.y() <= 0)
+        angle = 360 + angleX;
+
+    qreal degreesPerPos = 360.0 / mGrid[row].count();
+
+    return ceil(angle / degreesPerPos);
+}
+
 QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF origin)
 {
     // Convert from degrees to radians via multiplication by PI/180
@@ -293,10 +328,8 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
     QGraphicsItem *gi = itemAt(e->scenePos());
     CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(!c)
-        return;
-    
-    mCurCell = c;
+    if(c)
+        mCurCell = c;
     
     switch(mMode) {
         case CrochetScene::StitchMode:
@@ -387,9 +420,6 @@ void CrochetScene::highlightCell(QGraphicsSceneMouseEvent *e)
 
 void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
 {
-
-    if(e->buttons() != Qt::LeftButton)
-        return;
         
 }
 
@@ -418,7 +448,17 @@ void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
 {
-    
+    //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
+   int y = getClosestRow(e->scenePos());
+   int x = getClosestColumn(e->scenePos());
+qDebug() << mGrid[y];
+   CrochetCell *c = new CrochetCell();
+   c->setStitch(mEditStitch, (y % 2));
+   c->setColor();
+   insertCell(QPoint(x, y), c);
+   setCellPosition(y, x, c, mGrid[y].count(), true);
+qDebug() << mGrid[y];
+   redistributeCells(y);
 }
 
 void CrochetScene::gridModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -451,13 +491,8 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
     mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
     mRubberBand->show();
     
-    QGraphicsItem *gi = itemAt(e->scenePos());
-    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(!c)
-        return;
-    
-    mCurCell = c;
-    mDiff = QSizeF(mCurCell->transform().dx(), mCurCell->transform().dy());
+    if(mCurCell)
+        mDiff = QSizeF(mCurCell->transform().dx(), mCurCell->transform().dy());
 }
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -492,15 +527,7 @@ void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
 {
-    if(e->buttons() != Qt::LeftButton)
-        return;
-    
-    QGraphicsItem *gi = itemAt(e->scenePos());
-    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(!c)
-        return;
 
-    mCurCell = c;
 }
 
 void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)

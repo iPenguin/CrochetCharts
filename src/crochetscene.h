@@ -38,6 +38,9 @@ public:
 
     void appendCell(int row, CrochetCell *c, bool fromSave = false);
 
+    //p(x = column, y = row)
+    void insertCell(QPoint p, CrochetCell *c);
+    
     int rowCount();
     int columnCount(int row);
 
@@ -98,6 +101,7 @@ protected:
 
     void redistributeCells(int row);
     int getClosestRow(QPointF mousePosition);
+    int getClosestColumn(QPointF mousePosition);
     
     /**
      * WARING: This funciton should be called after the cell has been added
