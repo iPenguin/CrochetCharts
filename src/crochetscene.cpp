@@ -215,24 +215,6 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
     emit rowAdded(row);
 }
 
-//FIXME: currently unused combine with the createRow function
-void CrochetScene::createRoundRow(int row, int columns, QString stitch)
-{
-    CrochetCell *c;
-    QList<CrochetCell*> modelRow;
-    for(int i = 0; i < columns; ++i) {
-        c = new CrochetCell();
-        c->setStitch(stitch, (row %2));
-
-        addItem(c);
-        modelRow.append(c);
-        c->setColor(QColor(Qt::white));
-        setCellPosition(row, i, c);
-    }
-    mGrid.append(modelRow);
-    emit rowAdded(row);
-}
-
 int CrochetScene::getClosestRow(QPointF mousePosition)
 {
     qreal circumference = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y()) * 2 * M_PI;
@@ -420,7 +402,7 @@ void CrochetScene::highlightCell(QGraphicsSceneMouseEvent *e)
 
 void CrochetScene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
 {
-        
+    Q_UNUSED(e);
 }
 
 void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -439,6 +421,7 @@ void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
+    Q_UNUSED(e);
     if(mCurCell) {
         if(mCurCell->color() != mEditBgColor)
             mUndoStack.push(new SetCellColor(this, findGridPosition(mCurCell), mEditBgColor));
@@ -449,26 +432,40 @@ void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
-   int y = getClosestRow(e->scenePos());
-   int x = getClosestColumn(e->scenePos());
-qDebug() << mGrid[y];
-   CrochetCell *c = new CrochetCell();
-   c->setStitch(mEditStitch, (y % 2));
-   c->setColor();
-   insertCell(QPoint(x, y), c);
-   setCellPosition(y, x, c, mGrid[y].count(), true);
-qDebug() << mGrid[y];
-   redistributeCells(y);
+    int y = getClosestRow(e->scenePos());
+    int x = getClosestColumn(e->scenePos());
+    
+    if(e->buttons() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
+
+        CrochetCell *c = new CrochetCell();
+        c->setStitch(mEditStitch, (y % 2));
+        c->setColor();
+        insertCell(QPoint(x, y), c);
+        setCellPosition(y, x, c, mGrid[y].count(), true);
+
+    } else {
+        if(!mCurCell)
+            return;
+
+        CrochetCell *c = mGrid[y].takeAt(x);
+        removeItem(c);
+        delete c;
+        c = 0;
+        mCurCell = 0;
+        mHighlightCell = 0;
+    }
+
+    redistributeCells(y);
 }
 
 void CrochetScene::gridModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
-    
+    Q_UNUSED(e);
 }
 
 void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    
+    Q_UNUSED(e);
 }
 
 void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
@@ -527,7 +524,7 @@ void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
 {
-
+    Q_UNUSED(e);
 }
 
 void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -546,6 +543,7 @@ void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
+    Q_UNUSED(e);
     //FIXME: foreach(stitch in selection()) create an undo group event.
     if(mCurCell) {
         if(mCurCell->name() != mEditStitch)

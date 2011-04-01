@@ -34,7 +34,6 @@ public:
     ~CrochetScene();
 
     void createRow(int row, int columns, QString stitch);
-    void createRoundRow(int row, int columns, QString stitch);
 
     void appendCell(int row, CrochetCell *c, bool fromSave = false);
 
