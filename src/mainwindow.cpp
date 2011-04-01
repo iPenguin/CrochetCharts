@@ -469,6 +469,9 @@ void MainWindow::helpAbout()
     QString email = Settings::inst()->value("email").toString();
     QString sn = Settings::inst()->value("serialNumber").toString();
 
+    QString dedication = tr("<p>This version is dedicated to my Nana (Apr 28, 1927 - Feb 21, 2011)</p>");
+    aboutInfo.append(dedication);
+    
     QString licenseInfo;
 
     if(Settings::inst()->isDemoVersion()) {
