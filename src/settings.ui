@@ -84,33 +84,6 @@
        <string>Charts</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Direction:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>chartDirection</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QComboBox" name="chartDirection">
-         <item>
-          <property name="text">
-           <string>Right</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Left</string>
-          </property>
-         </item>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
@@ -220,33 +193,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
-        <widget class="QLabel" name="label_24">
-         <property name="text">
-          <string>Style:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>chartStyle</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
-        <widget class="QComboBox" name="chartStyle">
-         <item>
-          <property name="text">
-           <string>Flat</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Round</string>
-          </property>
-         </item>
-        </widget>
-       </item>
        <item row="2" column="3">
         <widget class="QLabel" name="label_10">
          <property name="text">
@@ -348,6 +294,33 @@
         <widget class="QCheckBox" name="chartFreeForm">
          <property name="text">
           <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="4">
+        <widget class="QComboBox" name="chartStyle">
+         <item>
+          <property name="text">
+           <string>Flat</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Round</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="5" column="3">
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string>Style:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>chartStyle</cstring>
          </property>
         </widget>
        </item>
@@ -741,13 +714,11 @@ p, li { white-space: pre-wrap; }
   <tabstop>checkForUpdates</tabstop>
   <tabstop>fileLocation</tabstop>
   <tabstop>folderSelector</tabstop>
-  <tabstop>chartDirection</tabstop>
   <tabstop>defaultStitch</tabstop>
   <tabstop>rowCount</tabstop>
   <tabstop>useAltColors</tabstop>
   <tabstop>primaryColorBttn</tabstop>
   <tabstop>alternateColorBttn</tabstop>
-  <tabstop>chartStyle</tabstop>
   <tabstop>placeholder</tabstop>
   <tabstop>stitchCount</tabstop>
   <tabstop>chartRowIndicator</tabstop>

@@ -250,6 +250,7 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionColorMode);
     mModeGroup->addAction(ui->actionGridMode);
     mModeGroup->addAction(ui->actionPositionMode);
+    mModeGroup->addAction(ui->actionAngleMode);
     
     ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color"));
 
@@ -268,6 +269,7 @@ void MainWindow::setupMenus()
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
     connect(ui->actionEditName, SIGNAL(triggered()), this, SLOT(chartEditName()));
     //TODO: get more icons from the theme for use with table editing.
+    //http://doc.qt.nokia.com/4.7/qstyle.html#StandardPixmap-enum
     
     //Tools Menu
     connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
@@ -468,6 +470,9 @@ void MainWindow::helpAbout()
     QString email = Settings::inst()->value("email").toString();
     QString sn = Settings::inst()->value("serialNumber").toString();
 
+    QString dedication = tr("<p>This version is dedicated to my Nana (Apr 28, 1927 - Feb 21, 2011)</p>");
+    aboutInfo.append(dedication);
+    
     QString licenseInfo;
 
     if(Settings::inst()->isDemoVersion()) {
@@ -846,6 +851,8 @@ void MainWindow::changeTabMode(QAction* a)
         mode = 12;
     else if(a == ui->actionPositionMode)
         mode = 13;
+    else if(a == ui->actionAngleMode)
+        mode = 14;
 
     setEditMode(mode);
 }
