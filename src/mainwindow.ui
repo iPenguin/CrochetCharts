@@ -271,6 +271,7 @@
     <addaction name="actionColorMode"/>
     <addaction name="actionGridMode"/>
     <addaction name="actionPositionMode"/>
+    <addaction name="actionAngleMode"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -481,6 +482,7 @@
    <addaction name="actionColorMode"/>
    <addaction name="actionGridMode"/>
    <addaction name="actionPositionMode"/>
+   <addaction name="actionAngleMode"/>
    <addaction name="separator"/>
    <addaction name="actionColorSelectorFg"/>
    <addaction name="actionColorSelectorBg"/>
@@ -799,6 +801,17 @@
    </property>
    <property name="text">
     <string>Show Undo History</string>
+   </property>
+  </action>
+  <action name="actionAngleMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Angle Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Turn the stitches on the chart</string>
    </property>
   </action>
  </widget>

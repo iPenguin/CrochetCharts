@@ -304,6 +304,24 @@ QPoint CrochetScene::findGridPosition(CrochetCell* c)
     return QPoint();
 }
 
+qreal CrochetScene::scenePosToAngle(QPointF pt)
+{
+    qreal tanx = pt.y() / pt.x();
+    qreal rads = atan(tanx);
+    qreal angleX = rads * 180 / M_PI;
+    qreal angle = 0.0;
+    if (pt.x() >= 0 && pt.y() >= 0)
+        angle = angleX;
+    else if(pt.x() <= 0 && pt.y() >= 0)
+        angle = 180 + angleX;
+    else if(pt.x() <= 0 && pt.y() <= 0)
+        angle = 180 + angleX;
+    else if(pt.x() >= 0 && pt.y() <= 0)
+        angle = 360 + angleX;
+    
+    return angle;
+}
+
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     QGraphicsScene::mousePressEvent(e);
@@ -326,6 +344,9 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::PositionMode:
             if(selectedItems().count() <= 0)
                 positionModeMousePress(e);
+            break;
+        case CrochetScene::AngleMode:
+            angleModeMousePress(e);
             break;
         default:
             break;
@@ -350,6 +371,9 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             QGraphicsScene::mouseMoveEvent(e);
             positionModeMouseMove(e);
             break;
+        case CrochetScene::AngleMode:
+            angleModeMouseMove(e);
+            break;
         default:
             break;
     }
@@ -369,6 +393,9 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
         case CrochetScene::PositionMode:
             positionModeMouseRelease(e);
+            break;
+        case CrochetScene::AngleMode:
+            angleModeMouseRelease(e);
             break;
         default:
             break;
@@ -551,4 +578,33 @@ void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     }
     
     mCurCell = 0;
+}
+
+void CrochetScene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
+{
+    if(mCurCell)
+        mCurCellRotation = mCurCell->rotation();
+}
+
+void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
+{
+    if(!mCurCell)
+        return;
+
+    QPointF origin = mCurCell->mapToScene(32, 0);
+    QPointF first = e->buttonDownScenePos(Qt::LeftButton);
+    QPointF second = e->scenePos();
+    QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
+    QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
+    qreal angle1 = scenePosToAngle(rel1);
+    qreal angle2 = scenePosToAngle(rel2);
+
+    qreal final = mCurCellRotation - (angle1 - angle2);
+    mCurCell->setTransform(
+        QTransform().translate(32,0).rotate(final).translate(-32, 0));
+}
+
+void CrochetScene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
+{
+    mCurCellRotation = 0;
 }

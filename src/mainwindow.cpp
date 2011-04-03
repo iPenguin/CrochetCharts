@@ -250,6 +250,7 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionColorMode);
     mModeGroup->addAction(ui->actionGridMode);
     mModeGroup->addAction(ui->actionPositionMode);
+    mModeGroup->addAction(ui->actionAngleMode);
     
     ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color"));
 
@@ -850,6 +851,8 @@ void MainWindow::changeTabMode(QAction* a)
         mode = 12;
     else if(a == ui->actionPositionMode)
         mode = 13;
+    else if(a == ui->actionAngleMode)
+        mode = 14;
 
     setEditMode(mode);
 }

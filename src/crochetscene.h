@@ -22,7 +22,8 @@ public:
         StitchMode = 10, //place stitches on the chart.
         ColorMode,       //place colors behind stitches.
         GridMode,        //draw lines on the grid.
-        PositionMode     //move the stitches around on the chart.
+        PositionMode,    //move the stitches around on the chart.
+        AngleMode        //adjust the angle of the
     };
 
     enum ChartStyle {
@@ -101,6 +102,8 @@ protected:
     void redistributeCells(int row);
     int getClosestRow(QPointF mousePosition);
     int getClosestColumn(QPointF mousePosition);
+
+    qreal scenePosToAngle(QPointF pt);
     
     /**
      * WARING: This funciton should be called after the cell has been added
@@ -126,6 +129,10 @@ private:
     void gridModeMouseRelease(QGraphicsSceneMouseEvent *e);
     void positionModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
+    void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void angleModeMousePress(QGraphicsSceneMouseEvent *e);
+    void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
+
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
     
@@ -137,6 +144,7 @@ private:
     CrochetCell *mCurCell;
     QSizeF mDiff;
     CrochetCell *mHighlightCell;
+    qreal mCurCellRotation;
 
     QRubberBand *mRubberBand;
     QPointF mRubberBandStart;
