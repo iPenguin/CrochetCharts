@@ -251,6 +251,7 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionGridMode);
     mModeGroup->addAction(ui->actionPositionMode);
     mModeGroup->addAction(ui->actionAngleMode);
+    mModeGroup->addAction(ui->actionStrechMode);
     
     ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color"));
 
@@ -853,7 +854,9 @@ void MainWindow::changeTabMode(QAction* a)
         mode = 13;
     else if(a == ui->actionAngleMode)
         mode = 14;
-
+    else if(a == ui->actionStrechMode)
+        mode = 15;
+    
     setEditMode(mode);
 }
 
@@ -869,6 +872,10 @@ void MainWindow::setEditMode(int mode)
         ui->actionGridMode->setChecked(true);
     else if(mode == 13)
         ui->actionPositionMode->setChecked(true);
+    else if(mode == 14)
+        ui->actionAngleMode->setChecked(true);
+    else if(mode == 15)
+        ui->actionStrechMode->setChecked(true);
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
         CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));

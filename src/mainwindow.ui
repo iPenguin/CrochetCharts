@@ -272,6 +272,7 @@
     <addaction name="actionGridMode"/>
     <addaction name="actionPositionMode"/>
     <addaction name="actionAngleMode"/>
+    <addaction name="actionStrechMode"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -483,6 +484,7 @@
    <addaction name="actionGridMode"/>
    <addaction name="actionPositionMode"/>
    <addaction name="actionAngleMode"/>
+   <addaction name="actionStrechMode"/>
    <addaction name="separator"/>
    <addaction name="actionColorSelectorFg"/>
    <addaction name="actionColorSelectorBg"/>
@@ -812,6 +814,17 @@
    </property>
    <property name="toolTip">
     <string>Turn the stitches on the chart</string>
+   </property>
+  </action>
+  <action name="actionStrechMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Strech Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Strech the stitch</string>
    </property>
   </action>
  </widget>

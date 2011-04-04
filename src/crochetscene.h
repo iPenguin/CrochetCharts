@@ -23,7 +23,8 @@ public:
         ColorMode,       //place colors behind stitches.
         GridMode,        //draw lines on the grid.
         PositionMode,    //move the stitches around on the chart.
-        AngleMode        //adjust the angle of the
+        AngleMode,       //adjust the angle of the
+        StrechMode       //strech the stitches.
     };
 
     enum ChartStyle {
@@ -132,6 +133,10 @@ private:
     void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
     void angleModeMousePress(QGraphicsSceneMouseEvent *e);
     void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
+
+    void strechModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void strechModeMousePress(QGraphicsSceneMouseEvent *e);
+    void strechModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
