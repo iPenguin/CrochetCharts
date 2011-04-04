@@ -151,16 +151,18 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
 {
     if(mStyle == CrochetScene::Round) {
         double widthInDegrees = 360.0 / columns;
-        double circumference = ((row+1)*mRowSpacing) * mStitchWidth;
+        int cols = (row == 0) ? columns : mGrid[0].count();
+        qreal rowOneCirc = ((mRowSpacing + mStitchWidth) * cols);
+        double circumference = (row*mRowSpacing) * mStitchWidth + rowOneCirc;
         double diameter = circumference / M_PI;
         double radius = diameter / 2;
         
         double degrees = widthInDegrees*column;
         QPointF finish = calcPoint(radius, degrees, QPointF(0,0));        
-        c->setPos(finish.x() - 32, finish.y() - 16);
+        c->setPos(finish.x() - 32, finish.y());
         if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(finish.x() - 32, finish.y() - 16);
-        c->setTransform(QTransform().translate(32,16).rotate(degrees + 90).translate(-32, -16));
+            c->setAnchor(finish.x() - 32, finish.y());
+        c->setTransform(QTransform().translate(32,0).rotate(degrees + 90).translate(-32, 0));
         c->setToolTip(QString::number(column+1));
         
     } else {
@@ -188,7 +190,7 @@ void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int col
 {
     mStyle = style;
     for(int i = 0; i < rows; ++i)
-            createRow(i, cols, stitch);
+            createRow(i, cols + i*8, stitch);
     
     emit chartCreated(rows, cols);
 }
@@ -218,9 +220,12 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
 int CrochetScene::getClosestRow(QPointF mousePosition)
 {
     qreal circumference = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y()) * 2 * M_PI;
-    qreal temp = circumference / mStitchWidth;
-    int row = round(temp / mRowSpacing) - 1;
-    
+
+    qreal rowOneCirc = ((mRowSpacing + mStitchWidth) * mGrid[0].count());
+    qreal temp = circumference - rowOneCirc;
+    qreal temp2 = temp / mStitchWidth;
+    //TODO: see if there is a way to finess the numbers here...?   
+    int row = round(temp2 / mRowSpacing);
     return row;
 }
 
@@ -348,6 +353,9 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::AngleMode:
             angleModeMousePress(e);
             break;
+        case CrochetScene::StrechMode:
+            strechModeMousePress(e);
+            break;
         default:
             break;
     }
@@ -355,7 +363,7 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
 void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
-    highlightCell(e);
+    //highlightCell(e);
 
     switch(mMode) {
         case CrochetScene::StitchMode:
@@ -373,6 +381,9 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             break;
         case CrochetScene::AngleMode:
             angleModeMouseMove(e);
+            break;
+        case CrochetScene::StrechMode:
+            strechModeMouseMove(e);
             break;
         default:
             break;
@@ -396,6 +407,9 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
         case CrochetScene::AngleMode:
             angleModeMouseRelease(e);
+            break;
+        case CrochetScene::StrechMode:
+            strechModeMouseRelease(e);
             break;
         default:
             break;
@@ -582,8 +596,18 @@ void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
 {
-    if(mCurCell)
-        mCurCellRotation = mCurCell->rotation();
+    if(mCurCell) {
+        qreal value = acos(mCurCell->transform().m11()) / M_PI * 180;
+qDebug() << value;
+        if(e->scenePos().x() < 0 && e->scenePos().y() >= 0)
+            mCurCellRotation = 180 - value;
+        else if(e->scenePos().x() < 0 && e->scenePos().y() < 0)
+            mCurCellRotation = 180 - value;
+        else
+            mCurCellRotation = value;
+        qDebug() << mCurCellRotation;
+    }
+   
 }
 
 void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -600,11 +624,36 @@ void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     qreal angle2 = scenePosToAngle(rel2);
 
     qreal final = mCurCellRotation - (angle1 - angle2);
+    
     mCurCell->setTransform(
         QTransform().translate(32,0).rotate(final).translate(-32, 0));
 }
 
 void CrochetScene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
+    Q_UNUSED(e);
     mCurCellRotation = 0;
+}
+
+void CrochetScene::strechModeMousePress(QGraphicsSceneMouseEvent* e)
+{
+    Q_UNUSED(e);
+}
+
+void CrochetScene::strechModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    if(!mCurCell)
+        return;
+    
+    QPointF start = e->buttonDownScenePos(Qt::LeftButton);
+    QPointF cur = e->scenePos();
+    qreal scale = (start.manhattanLength() - cur.manhattanLength()) / 64;
+
+    QTransform trans = mCurCell->transform().scale(1, 1 + scale);
+    mCurCell->setTransform(trans);
+}
+
+void CrochetScene::strechModeMouseRelease(QGraphicsSceneMouseEvent* e)
+{
+    Q_UNUSED(e);
 }
