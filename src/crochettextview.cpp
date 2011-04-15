@@ -108,8 +108,22 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput)
         }
         rowList.append(curStitch);
     }
+    rowText = generateText(rowList);
 
-    return generateText(rowList);
+    if(cleanOutput) {
+        //capitalize the first letter.
+        for(int i = 0; i < rowText.count(); ++i) {
+            qDebug() << rowText.at(i).isLetter();
+            if(rowText.at(i).isLetter()) {
+                rowText[i] = rowText.at(i).toUpper();
+                break;
+            }
+        }
+
+        rowText += ".";
+    }
+
+    return rowText;
 }
 
 QString CrochetTextView::generateText(QStringList row)
