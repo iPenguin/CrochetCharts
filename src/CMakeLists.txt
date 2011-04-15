@@ -51,7 +51,8 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
         add_executable(Crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_mac})
         target_link_libraries(Crochet ${QT_LIBRARIES})
-    #    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/Crochet RENAME crochet DESTINATION MacOS)
+        install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/Crochet RENAME crochet DESTINATION MacOS)
+        #install(TARGETS ${CMAKE_CURRENT_BINARY_DIR}/Crochet BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
     else()
         if(${SWS_DARWIN_ARCH} STREQUAL "i386")
             add_executable(crochet_i386 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
