@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python2.7
 #
 # Script by Brian C. Milco <bcmilco@gmail.com>
 #
@@ -49,11 +49,18 @@ def main():
     if(args.icns != None):
         shutil.copy(args.icns, appName + '.app/Contents/Resources/' + appName + '.icns')
 
+    qtconf = '../qt.conf'
     if(args.qtconf != None):
-        shutil.copy(args.qtconf, appName + '.app/Contents/Resources/')
+        qtconf = args.qtconf
 
-    if args.frameworks != None:
-        for f in args.frameworks:
+    shutil.copy(qtconf, appName + '.app/Contents/Resources/')
+
+    fworks = [ "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/QtSvg.framework/Versions/4/QtSvg", "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/QtCore.framework/Versions/4/QtCore",
+               "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/QtGui.framework/Versions/4/QtGui", "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/QtNetwork.framework/Versions/4/QtNetwork",
+               "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/QtXml.framework/Versions/4/QtXml" ]
+    if fworks != None: #args.frameworks != None:
+        for f in fworks: #args.frameworks:
+            print f
             shutil.copy(f, appName + '.app/Contents/Frameworks/')
 
     if args.plugins != None:

@@ -52,7 +52,7 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
     set(CPACK_OSX_PACKAGE_VERSION "10.4") #min package version
 
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${SWS_VERSION}")
-    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${CPACK_PACKAGE_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
     #add qt.conf file to bundle as qt needs it to locate the plugins: Contents/Resources/
 
@@ -60,8 +60,8 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
 #plutil command line utility to edit plist files.
 #http://rixstep.com/2/20060901,00.shtml
-    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
-    set(MACOSX_BUNDLE_BUNDLE_VERSION "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${CPACK_PACKAGE_VERSION}")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION "${CPACK_PACKAGE_VERSION}")
     set(MACOSX_BUNDLE_ICON_FILE "resources/mac/crochet.icns")
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
