@@ -10,8 +10,7 @@
 if [ "x$4" == "x" ]; then
 {
     echo "usage:"
-    echo "APPNAME bundle-name binary-file plist-file icns-file
-{frameworks}"
+    echo "APPNAME bundle-name binary-file plist-file icns-file {frameworks}"
 }
 else
 {

@@ -131,7 +131,7 @@ EvaluatePage::EvaluatePage(QWidget *parent)
 
     emailLabel = new QLabel(tr("&Email address:"));
     emailLineEdit = new QLineEdit(this);
-    emailLineEdit->setValidator(new QRegExpValidator(AppInfo::emailRegExp, this));
+    emailLineEdit->setValidator(new QRegExpValidator(AppInfo::inst()->emailRegExp, this));
     emailLabel->setBuddy(emailLineEdit);
 
     licenseNumberLineEdit = new QLineEdit(this);
@@ -160,7 +160,7 @@ int EvaluatePage::nextId() const
 bool EvaluatePage::validatePage()
 {
     //Look up the licensePage value so I can use a testing server if I need to, otherwise it
-    //should always default to the live server as specified in AppInfo::licensePage;
+    //should always default to the live server as specified in AppInfo::inst()->licensePage;
     QString path = Settings::inst()->value("licensePage").toString();
     path = QString(path).arg("").arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);
@@ -203,7 +203,7 @@ RegisterPage::RegisterPage(QWidget *parent)
     emailLabel = new QLabel(tr("&Email:"));
     emailLineEdit = new QLineEdit(this);
     emailLabel->setBuddy(emailLineEdit);
-    emailLineEdit->setValidator(new QRegExpValidator(AppInfo::emailRegExp, this));
+    emailLineEdit->setValidator(new QRegExpValidator(AppInfo::inst()->emailRegExp, this));
 
     serialNumberLabel = new QLabel(tr("&Serial Number:"));
     serialNumberLineEdit = new QLineEdit(this);
@@ -246,7 +246,7 @@ void RegisterPage::initializePage()
 bool RegisterPage::validatePage()
 {
     //Look up the licensePage value so I can use a testing server if I need to, otherwise it
-    //should always default to the live server as specified in AppInfo::licensePage;
+    //should always default to the live server as specified in AppInfo::inst()->licensePage;
     QString path = Settings::inst()->value("licensePage").toString();
     path = QString(path).arg(serialNumberLineEdit->text()).arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);

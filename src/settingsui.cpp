@@ -3,7 +3,7 @@
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "settingsui.h"
-#include "src/ui_settings.h"
+#include "ui_settings.h"
 
 #include <QDebug>
 #include <QFileDialog>

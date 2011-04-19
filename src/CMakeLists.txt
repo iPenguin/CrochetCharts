@@ -47,14 +47,30 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION .)
     install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
 elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
-    if(${SWS_DARWIN_ARCH} STREQUAL "i386")
-        add_executable(crochet_i386 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
-                    ${crochet_version} ${crochet_mac})
-        target_link_libraries(crochet_i386 ${QT_LIBS_DARWIN})
+    if(APPLE)
+        add_executable(Crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+                ${crochet_version} ${crochet_mac})
+        target_link_libraries(Crochet ${QT_LIBRARIES})
+        install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/Crochet RENAME crochet DESTINATION MacOS)
+        #install(TARGETS ${CMAKE_CURRENT_BINARY_DIR}/Crochet BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
     else()
-        add_executable(crochet_ppc MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+        if(${SWS_DARWIN_ARCH} STREQUAL "i386")
+            add_executable(crochet_i386 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                     ${crochet_version} ${crochet_mac})
-        target_link_libraries(crochet_ppc ${QT_LIBS_DARWIN})
+            target_link_libraries(crochet_i386 ${QT_LIBS_DARWIN})
+            install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet_i386 RENAME crochet DESTINATION MacOS)
+        else()
+            add_executable(crochet_ppc MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+                    ${crochet_version} ${crochet_mac})
+            target_link_libraries(crochet_ppc ${QT_LIBS_DARWIN})
+            install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet_ppc RENAME crochet DESTINATION MacOS)
+        endif()
+    endif()
+
+    find_program(APPLE_RESOURCE Rez /Developer/Tools)
+    if(APPLE_RESOURCE)
+        add_custom_command(TARGET Crochet POST_BUILD COMMAND ${APPLE_RESOURCE}
+            ARGS Carbon.r -o ${CMAKE_CURRENT_BINARY_DIR}/Crochet COMMENT "Resource Fork")
     endif()
 
     set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${MACOSX_BUNDLE_ICON_FILE}"
@@ -65,8 +81,7 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
     #Q: would you need to do the same thing for the libraries?
     # execute_process(. COMMAND i686-apple-darwin8-lipo -create a.out.i386 a.out.ppc -output a.out) and add_to_distclean(a.out)
 
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet_i386 RENAME crochet DESTINATION MacOS)
-    install(FILES ${QT_LIBS_DARWIN} DESTINATION lib)
+    install(FILES ${QT_LIBS_DARWIN} DESTINATION Frameworks)
     install(FILES ${QT_DEPS_DARWIN} DESTINATION Resources)
     install(DIRECTORY ${QT_PLUGINS_DARWIN} DESTINATION plugins)
 else()

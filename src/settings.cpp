@@ -84,8 +84,8 @@ QVariant Settings::defaultValue ( const QString& key ) const
 void Settings::setupValueList() {
 
     //look up values for setting server/webpage for license and update testing.
-    mValueList["licensePage"] = QVariant(AppInfo::liveLicensePage);
-    mValueList["updatePage"] = QVariant(AppInfo::liveUpdatePage);
+    mValueList["licensePage"] = QVariant(AppInfo::inst()->liveLicensePage);
+    mValueList["updatePage"] = QVariant(AppInfo::inst()->liveUpdatePage);
     
     //license information
     mValueList["firstName"] = QVariant("");

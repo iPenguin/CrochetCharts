@@ -14,6 +14,7 @@ class QPixmap;
 class Stitch
 {
     friend class StitchSet;
+    friend class TestStitch;
 public:
 
     enum StitchParts { Name = 0, Icon, Description, Category, WrongSide };

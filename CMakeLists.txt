@@ -32,8 +32,10 @@ find_package(Qt4 REQUIRED)
 option(UNIT_TESTING  "Build the test libraries for this software" OFF)
 option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
 option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
+option(SWS_USE_LLVM "Use the llvm compiler" OFF)
 set(SWS_PLATFORM "LINUX" CACHE STRING "Compile the software for the given platform (LINUX, DARWIN, WIN32)")
 set(SWS_DARWIN_ARCH "i386" CACHE STRING "Compile for PowerPC or Intel: (i386, ppc)")
+
 #if we're on the other platforms automatically set the release platform.
 if(APPLE)
     set(SWS_PLATFORM "DARWIN")
@@ -43,6 +45,7 @@ endif()
 
 message("-------------------------------------------------------")
 message(STATUS ${PROJECT_NAME} " Version: " ${SWS_VERSION})
+message(STATUS "Use the LLVM compiler: " ${SWS_USE_LLVM})
 message(STATUS "SWS Release Platform: " ${SWS_PLATFORM})
 if(${SWS_PLATFORM} STREQUAL "DARWIN")
     message(STATUS "Darwin Architechture: " ${SWS_DARWIN_ARCH})
@@ -58,6 +61,11 @@ message("-------------------------------------------------------")
 # Platform and Cross Compile variables
 ###########################################################################
 include("resources/platforms.cmake")
+
+if(SWS_USE_LLVM)
+    set(CMAKE_C_COMPILER "/usr/bin/clang")
+    set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+endif()
 
 if(FORCE_32BIT)
     set(extra_build_flags "-m32")

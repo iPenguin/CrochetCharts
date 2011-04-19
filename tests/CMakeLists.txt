@@ -25,6 +25,8 @@ set(crochet_app_cpp
     ../src/stitchset.cpp
     ../src/settings.cpp
     ../src/stitchlibrary.cpp
+    ../src/version.h
+    ${CMAKE_BINARY_DIR}/version.cpp
     )
 
 set(crochet_app_resources

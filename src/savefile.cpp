@@ -38,7 +38,7 @@ SaveFile::~SaveFile()
  QDataStream out(&file);
  
  // Write a header with a "magic number" and a version
- out << AppInfo::magicNumber;
+ out << AppInfo::inst()->magicNumber;
  out << (qint32)mFileVersion;
  
  out.setVersion(QDataStream::Qt_4_7);
@@ -163,7 +163,7 @@ void SaveFile::saveColors(QXmlStreamWriter* stream)
  // Read and check the header
  quint32 magic;
  in >> magic;
- if (magic != AppInfo::magicNumber)
+ if (magic != AppInfo::inst()->magicNumber)
      return SaveFile::Err_WrongFileType;
  
  qint32 version;

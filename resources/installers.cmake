@@ -23,6 +23,17 @@ set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/images/installer.bmp")
 set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
 set(CPACK_PACKAGE_EXECUTABLES "crochet")
 
+set(plugin_dest_dir bin)
+set(qtconf_dest_dir bin)
+set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/Crochet")
+
+if(APPLE)
+   install(CODE "
+   include(BundleUtilities)
+   fixup_bundle(\"${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app\" \"\${QT_PLUGINS_DARWIN}\" \"${QT_LIBS_DARWIN}\")"
+   COMPONENT Runtime)
+endif()
+
 if(${SWS_PLATFORM} STREQUAL "WIN32")
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
@@ -52,7 +63,7 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
     set(CPACK_OSX_PACKAGE_VERSION "10.4") #min package version
 
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${SWS_VERSION}")
-    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${CPACK_PACKAGE_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
     #add qt.conf file to bundle as qt needs it to locate the plugins: Contents/Resources/
 
@@ -60,15 +71,15 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
 #plutil command line utility to edit plist files.
 #http://rixstep.com/2/20060901,00.shtml
-    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
-    set(MACOSX_BUNDLE_BUNDLE_VERSION "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${CPACK_PACKAGE_VERSION}")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION "${CPACK_PACKAGE_VERSION}")
     set(MACOSX_BUNDLE_ICON_FILE "resources/mac/crochet.icns")
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
 
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")
-
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Brian Milco")
     set(CPACK_RPM_PACKAGE_LICENSE "Commercial")
     set(CPACK_RPM_PACKAGE_GROUP "Amusements/Graphics")
 
