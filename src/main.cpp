@@ -32,6 +32,9 @@ int main(int argc, char *argv[])
     splash.showMessage(QObject::tr("Loading..."));
     qApp->processEvents();
 
+
+    AppInfoClass *apc = new AppInfoClass;
+   
     QString userSn = Settings::inst()->value("serialNumber").toString();
     QString userLicense = Settings::inst()->value("license").toString();
     QString userEmail = Settings::inst()->value("email").toString();

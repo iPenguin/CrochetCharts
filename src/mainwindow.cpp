@@ -3,7 +3,7 @@
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "mainwindow.h"
-#include "src/ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include "stitchlibraryui.h"
 #include "licensewizard.h"
 #include "exportui.h"

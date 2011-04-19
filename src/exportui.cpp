@@ -3,7 +3,7 @@
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "exportui.h"
-#include "src/ui_export.h"
+#include "ui_export.h"
 
 #include <QDebug>
 
