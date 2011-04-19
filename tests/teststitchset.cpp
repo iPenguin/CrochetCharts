@@ -13,7 +13,7 @@ void TestStitchSet::setupStitchSet()
 {
     //TODO: make a couple of test sets of stitches.
     QVERIFY(mSet->stitchCount() == 0);
-    mSet->loadXmlStitchSet(":/crochet.xml");
+    mSet->loadXmlFile(":/crochet.xml");
 
     
     QVERIFY(mSet->stitchCount() == 10);
