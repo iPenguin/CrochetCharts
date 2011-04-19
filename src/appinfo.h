@@ -7,7 +7,6 @@
 
 #include <QString>
 #include <QRegExp>
-#include "version.h"
 #include <qobject.h>
 
 namespace AppInfo {
@@ -17,7 +16,7 @@ namespace AppInfo {
     const QString appOrgDomain = "StitchWorksSoftware.com";
     const QString appOrgContact = "http://StitchWorksSoftware.com/contact";
 
-    const QString appVersion = gGIT_VERSION;
+    const QString appVersion = "0.5.80";  //gGIT_VERSION;
     const QString appBuildInfo = QString(__DATE__) + " " + QString(__TIME__);
 
     const QRegExp emailRegExp = QRegExp("[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,4}");
@@ -36,5 +35,15 @@ namespace AppInfo {
     const quint32 magicNumber = 0x95973530;
     const quint32 magicNumberSet = 0x53095973;
 }
+
+class AppInfoClass
+{
+public:
+    AppInfoClass();
+
+    const QString appName;
+    const QString appOrg;
+
+};
 
 #endif // APPINFO_H
