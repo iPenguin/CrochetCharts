@@ -38,7 +38,7 @@ Updater::Updater(QWidget* parent)
 
     QString sn = Settings::inst()->value("serialNumber").toString();
     //software, version, os, serial number
-    mUrl = QUrl(QString(url).arg(AppInfo::appName.toLower()).arg(AppInfo::appVersion).arg(os).arg(sn));
+    mUrl = QUrl(QString(url).arg(AppInfo::inst()->appName.toLower()).arg(AppInfo::inst()->appVersion).arg(os).arg(sn));
 
     mProgDialog = new QProgressDialog(this);
 }
@@ -82,7 +82,7 @@ void Updater::httpFinished()
         if(urls.count() == 2) {
             QMessageBox msgbox(this);
             msgbox.setIcon(QMessageBox::Information);
-            msgbox.setText(tr("There is a new version of %1.").arg(AppInfo::appName));
+            msgbox.setText(tr("There is a new version of %1.").arg(AppInfo::inst()->appName));
             msgbox.setInformativeText(tr("Would you like to download the new version?"));
             /*QPushButton *downloadNow =*/ msgbox.addButton(tr("Download the new version"), QMessageBox::ActionRole);
             QPushButton *seeNotes    = msgbox.addButton(tr("See what has changed"), QMessageBox::HelpRole);
@@ -101,7 +101,7 @@ void Updater::httpFinished()
             
         } else if(!mSilent) {
             QMessageBox::information(this, tr("Check for Updates"),
-                            tr("There are no updates at this time.").arg(AppInfo::appName), QMessageBox::Ok);
+                            tr("There are no updates at this time.").arg(AppInfo::inst()->appName), QMessageBox::Ok);
         }
     }
     

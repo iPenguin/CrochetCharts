@@ -82,7 +82,7 @@ void LicenseHttp::httpFinished()
                                     "Please make sure you are connected to the internet. If you have a firewall "
                                     "running please make sure it allows this software to connect to the internet. "
                                     "If you are still having problems please contact Stitch Works Software at %2")
-                                 .arg(AppInfo::appName).arg(AppInfo::appOrgContact));
+                                 .arg(AppInfo::inst()->appName).arg(AppInfo::inst()->appOrgContact));
     } else {
         emit licenseCompleted(data, false);
     }

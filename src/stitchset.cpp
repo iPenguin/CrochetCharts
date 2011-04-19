@@ -82,7 +82,7 @@ void StitchSet::loadDataFile(QString fileName, QString dest)
     qint32 version;
     in >> magicNumber;
 
-    if(magicNumber != AppInfo::magicNumberSet)
+    if(magicNumber != AppInfo::inst()->magicNumberSet)
         return; //TODO: nice error message. not a set file.
 
     in >> version;
@@ -234,7 +234,7 @@ void StitchSet::saveDataFile(QString fileName)
 
     QDataStream out(&file);
 
-    out << AppInfo::magicNumberSet;
+    out << AppInfo::inst()->magicNumberSet;
     out << (qint32)StitchSet::Version_1_0_0;
     out.setVersion(QDataStream::Qt_4_7);
 

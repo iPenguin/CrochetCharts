@@ -50,7 +50,7 @@ void CrochetScene::initDemoBackground()
         double fontSize = 32.0;
         QFont demoFont = QFont();
         demoFont.setPointSize(fontSize);
-        QString demoString = AppInfo::demoString;
+        QString demoString = AppInfo::inst()->demoString;
 
         QFontMetrics fm = QFontMetrics(demoFont);
         double stringWidth = fm.width(demoString);

@@ -20,10 +20,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     
-    qApp->setApplicationName(AppInfo::appName);
-    qApp->setApplicationVersion(AppInfo::appVersion);
-    qApp->setOrganizationName(AppInfo::appOrg);
-    qApp->setOrganizationDomain(AppInfo::appOrgDomain);
+    qApp->setApplicationName(AppInfo::inst()->appName);
+    qApp->setApplicationVersion(AppInfo::inst()->appVersion);
+    qApp->setOrganizationName(AppInfo::inst()->appOrg);
+    qApp->setOrganizationDomain(AppInfo::inst()->appOrgDomain);
 
     Q_INIT_RESOURCE(crochet);
 
@@ -31,9 +31,6 @@ int main(int argc, char *argv[])
     splash.show();
     splash.showMessage(QObject::tr("Loading..."));
     qApp->processEvents();
-
-
-    AppInfoClass *apc = new AppInfoClass;
    
     QString userSn = Settings::inst()->value("serialNumber").toString();
     QString userLicense = Settings::inst()->value("license").toString();
