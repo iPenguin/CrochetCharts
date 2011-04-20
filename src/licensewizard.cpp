@@ -299,7 +299,7 @@ int ConclusionPage::nextId() const
 
 void ConclusionPage::initializePage()
 {
-    QFile f(":/license.txt");
+    QFile f(":/resources/license.txt");
     if(!f.open(QIODevice::ReadOnly))
         return;
     QString licenseText = f.readAll();
@@ -320,7 +320,7 @@ void ConclusionPage::initializePage()
     }
     //else do an upgrade.
 
-    licenseEdit->setHtml(licenseText);
+    licenseEdit->setText(licenseText);
     licenseEdit->setReadOnly(true);
 
     Settings::inst()->setValue("firstName", QVariant(fname));
