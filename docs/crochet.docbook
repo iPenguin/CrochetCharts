@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE book PUBLIC '-//OASIS//DTD DocBook XML V4.5//EN' 'http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd'
 [ <!ENTITY sws "Stitch Works Software">
+  <!ENTITY appName "<application>Crochet Charts</application>">
+  <!ENTITY introduction SYSTEM "introduction.docbook">
+  <!ENTITY options SYSTEM "options.docbook">
   <!ENTITY lyxarrow "-&gt;">
   <!ENTITY ldquo "&quot;">
   <!ENTITY rdquo "&quot;">
   <!ENTITY nbsp " ">
 ]>
 
-<book id="crochet-charts-user-guide">
+<!--NOTE: use link to link in the documentation and ulink for linking to actual urls -->
+
+<book id="crochet-charts-user-guide" lang="en">
     <bookinfo>
         <author>
             <firstname>Brian</firstname><surname>Milco</surname>
@@ -17,25 +22,28 @@
             </affiliation>
         </author>
         <copyright><year>2011</year><holder>&sws;</holder></copyright>
-        <title>Crochet Charts User Guide</title>
-        <productname>Crochet Charts</productname>
+        <title>&appName; User Guide</title>
+        <productname>&appName;</productname>
         <productnumber>1.0</productnumber>
-
+        <abstract>
+            <para>
+                &appName; is an application specially
+                designed to allow you to create design charts for crochet.
+            </para>
+        </abstract>
         <cover>
-            <para role="tagline">The Official Crochet Charts User Guide</para>
+            <para role="tagline">The Official &appName; User Guide</para>
             <mediaobject>
                 <imageobject>
-                    <imagedata fileref="front-cover.png" />
+                    <imagedata fileref="images/cover-front.png" />
                 </imageobject>
             </mediaobject>
         </cover>
     </bookinfo>
 
-    <preface><title>Introduction</title>
-        <para>This is the user guide for Crochet Charts by Stitch Works Software. If you have any questions that are not answered in this document please <ulink url="http://StitchWorksSoftware.com/contact">contact me</ulink> and let me know so that I can answer your questions and improve this guide.</para>
-    </preface>
+    &introduction;
    
-    <chapter><title>Installation</title>
+    <chapter id="installation"><title>Installation</title>
         <para>Because this software is licensed per user you may install it on multiple computers including any combination of the supported platforms below. If you need help installing on a second platform please <ulink url="http://StitchWorksSoftware.com/contact">contact me</ulink>.</para>
         <sect2><title>Windows</title>
             <sect3><title>Notes on Windows Vista</title>
@@ -51,7 +59,7 @@
         </sect2>
     </chapter>
     
-    <chapter><title>Creating Charts</title>
+    <chapter id="creating-charts"><title>Creating Charts</title>
         <sect2><title>Flat Charts</title>
         <screenshot>
             <info>
@@ -59,8 +67,10 @@
             </info>
             <mediaobject>
                 <imageobject>
-                    <imagedata fileref="images/crochet-mainwindow.png" />
+                    <imagedata fileref="images/crochet-mainwindow.png" format="PNG" />
                 </imageobject>
+                <textobject><phrase>The main window showing a basic round chart</phrase></textobject>
+                <caption><para>The main window showing a basic round chart</para></caption>
             </mediaobject>
         </screenshot>
         
@@ -69,15 +79,17 @@
         </sect2>
     </chapter>
     
-    <chapter><title>Exporting Files</title>
+    <chapter id="exporting-files"><title>Exporting Files</title>
         <para>All pieces of your work can be exported to formats that are commonly used on websites, in magazines, and in publication.</para>
         <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP. The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image. For this reason they are commonly used in magazines and publication. JPEG and PNG are also sometimes accepted by magazines and publications. If they publisher will accept them they usually want a resolution of 300 dpi. Before sending a file to a publisher you should ask them what file types they will accept.</para>
-        <para>To export any part of your document as images goto File&lyxarrow;Export. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
+        <para>To export any part of your document as images goto <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
 
         <sect2><title>Charts</title>
+        <para>To undo or redo edits you have made on the chart you can press <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo> or <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Y</keycap></keycombo> respectively.</para>
+            <note><para>On some platforms the key combo is different</para></note>
         </sect2>
         <sect2><title>Instructions</title>
-            <para>On the main window you can export the written instructions for the chart by pressing the &ldquo;Copy Instructions&rdquo; button on the left between the chart and the instructions. This button will add the row numbers, remove any placeholder stitches, and clean up the text to be generally publication ready. This clean version of the text will automatically be copied to the clipboard where you can then paste it directly into another application.</para>
+        <para>On the main window you can export the written instructions for the chart by pressing the <guibutton>Copy Instructions</guibutton> button on the left between the chart and the instructions. This button will add the row numbers, remove any placeholder stitches, and clean up the text to be generally publication ready. This clean version of the text will automatically be copied to the clipboard where you can then paste it directly into another application.</para>
         </sect2>
         <sect2><title>Legends</title>
             <sect3><title>Stitch Legends</title>
@@ -87,7 +99,7 @@
         </sect2>
     </chapter>
 
-    <chapter><title>Stitch Library</title>
+    <chapter id="stitch-library"><title>Stitch Library</title>
         <sect2><title>Creating New Stitches</title>
         </sect2>
         <sect2><title>Creating New Stitch Sets</title>
@@ -96,37 +108,9 @@
         </sect2>
     </chapter>
 
-    <chapter><title>Options&nbsp;/&nbsp;Preferences</title>
-        <para>The options have been divided into sections. The first section contains the general application settings. The Chart section contains settings that effect the layout and output of the charts. The Instructions section contains settings that effect how the written instructions are generated and exported as plain text. The Legend section contains the default settings for generating the legends. These settings can usually be overridden at the point of use.</para>
-        <sect2><title>Application</title>
-            <itemizedlist>
-                <listitem><para><emphasis role="bold">Check for updates on startup</emphasis> - Every time you start this software it will attempt to connect to StitchWorksSoftware.com to check for updates. If an update is found you will be prompted to download it.</para></listitem>
-                <listitem><para><emphasis role="bold">File Location</emphasis> - This is the default folder that opens when you go to load or save a file.</para></listitem>
-            </itemizedlist>
-        </sect2>
-        <sect2><title>Charts</title>
-            <itemizedlist>
-                <listitem><para><emphasis role="bold">Default Stitch</emphasis> - The default stitch used when creating new charts.</para></listitem>
-                <listitem><para><emphasis role="bold">Default Placeholder</emphasis> - This stitch will be removed from the final text instructions when copying from the software.</para></listitem>
-                <listitem><para><emphasis role="bold">Rows</emphasis> - The default number of rows on new charts.</para></listitem>
-                <listitem><para><emphasis role="bold">Stitches</emphasis> - The default number of stitches on a new chart.</para></listitem>
-                <listitem><para><emphasis role="bold">Free form</emphasis> - Allow the stitches to be moved anywhere.</para></listitem>
-                <listitem><para><emphasis role="bold">Alternate row colors</emphasis> - Use the Primary&nbsp;/&nbsp;Alternate colors to draw the stitches in each row.</para></listitem>
-                <listitem><para><emphasis role="bold">Row indicator</emphasis> - Use either a number, a dot, or both to indicate where the rows start.</para></listitem>
-                <listitem><para><emphasis role="bold">Indicator color</emphasis> - What color to use for the indicator.</para></listitem>
-            </itemizedlist>
-        </sect2>
-        <sect2><title>Instructions</title>
-        </sect2>
-        <sect2><title>Legends</title>
-            <sect3><title>Stitch Legends</title>
-            </sect3>
-            <sect3><title>Color Legends</title>
-            </sect3>
-        </sect2>
-    </chapter>
+    &options;
     
-    <chapter><title>Troubleshooting</title>
+    <chapter id="troubleshooting"><title>Troubleshooting</title>
         <para>If you find a defect, or unexpected behavior in this software please <ulink url="http://StitchWorksSoftware.com/contact">contact me</ulink>. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
     </chapter>
     

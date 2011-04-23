@@ -1,0 +1,59 @@
+    <chapter id="options-preferences"><title>Options&nbsp;/&nbsp;Preferences</title>
+        <para>The options have been divided into sections. The first section contains the general application settings. The Chart section contains settings that effect the layout and output of the charts. The Instructions section contains settings that effect how the written instructions are generated and exported as plain text. The Legend section contains the default settings for generating the legends. These settings can usually be overridden at the point of use.</para>
+        <sect2><title>Application</title>
+            <variablelist>
+                <varlistentry>
+                    <term>Check for updates on startup</term>
+                    <listitem><para>Every time you start this software it will attempt to connect to StitchWorksSoftware.com to check for updates. If an update is found you will be prompted to download it.</para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>File Location</term>
+                    <listitem><para>This is the default folder that opens when you go to load or save a file.</para></listitem>
+                </varlistentry>
+            </variablelist>
+        </sect2>
+        <sect2><title>Charts</title>
+            <variablelist>
+                <varlistentry>
+                    <term>Default Stitch</term>
+                    <listitem><para>The default stitch used when creating new charts.</para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Default Placeholder</term>
+                    <listitem><para>This stitch will be removed from the final text instructions when copying from the software.</para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Rows</term>
+                    <listitem><para>The default number of rows on new charts.</para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Stitches</term>
+                    <listitem><para>The default number of stitches on a new chart.</para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Free form</term>
+                    <listitem><para>Allow the stitches to be moved anywhere.</para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Alternate row colors</term>
+                    <listitem><para>Use the Primary&nbsp;/&nbsp;Alternate colors to draw the stitches in each row.</para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Row indicator</term>
+                    <listitem><para>Use either a number, a dot, or both to indicate where the rows start.</para></listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Indicator color</term>
+                    <listitem><para>What color to use for the indicator.</para></listitem>
+                </varlistentry>
+            </variablelist>
+        </sect2>
+        <sect2><title>Instructions</title>
+        </sect2>
+        <sect2><title>Legends</title>
+            <sect3><title>Stitch Legends</title>
+            </sect3>
+            <sect3><title>Color Legends</title>
+            </sect3>
+        </sect2>
+    </chapter>
