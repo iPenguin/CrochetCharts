@@ -1,11 +1,13 @@
 include(InstallRequiredSystemLibraries)
 
-set(PROJECT_DESCRIPTION  "Chart desing software for crochet")
-set(PROJECT_COPYRIGHT    "Copyright (c) 2010-2011 Stitch Works Software")
-set(PROJECT_CONTACT      "support@stitchworkssoftware.com")
-set(PROJECT_VENDOR       "Stitch Works Software")
-set(ORG_WEBSITE          "www.stitchworkssoftware.com")
 
+set(PROJECT_DESCRIPTION  "Chart desing software for crochet")
+set(PROJECT_VENDOR       "Stitch Works Software")
+set(PROJECT_LIFE         "2010-2011")
+set(PROJECT_CONTACT      "support@StitchWorksSoftware.com")
+set(ORG_WEBSITE          "www.StitchWorksSoftware.com")
+set(PROJECT_VERSION      "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-license.txt")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-readme.txt")
@@ -14,7 +16,7 @@ set(CPACK_PACKAGE_DECRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/resources/install
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR ${PROJECT_VENDOR})
-set(CPACK_PACKAGE_VERSION "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 set(CPACK_PACKAGE_VERSION_MAJOR ${SWS_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${SWS_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${SWS_VERSION_PATCH})
@@ -63,7 +65,7 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
     set(CPACK_OSX_PACKAGE_VERSION "10.4") #min package version
 
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${SWS_VERSION}")
-    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${CPACK_PACKAGE_VERSION}")
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
     #add qt.conf file to bundle as qt needs it to locate the plugins: Contents/Resources/
 
@@ -71,8 +73,8 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
 #plutil command line utility to edit plist files.
 #http://rixstep.com/2/20060901,00.shtml
-    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${CPACK_PACKAGE_VERSION}")
-    set(MACOSX_BUNDLE_BUNDLE_VERSION "${CPACK_PACKAGE_VERSION}")
+    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${PROJECT_VERSION}")
+    set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_ICON_FILE "resources/mac/crochet.icns")
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")

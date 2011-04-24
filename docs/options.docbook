@@ -4,7 +4,7 @@
             <variablelist>
                 <varlistentry>
                     <term>Check for updates on startup</term>
-                    <listitem><para>Every time you start this software it will attempt to connect to StitchWorksSoftware.com to check for updates. If an update is found you will be prompted to download it.</para></listitem>
+                    <listitem><para>Every time you start this software it will attempt to connect to &website; to check for updates. If an update is found you will be prompted to download it.</para></listitem>
                 </varlistentry>
                 <varlistentry>
                     <term>File Location</term>

@@ -62,6 +62,11 @@ message("-------------------------------------------------------")
 ###########################################################################
 include("resources/platforms.cmake")
 
+###################################################################################
+#CPack includes to create installers
+###################################################################################
+include("${CMAKE_CURRENT_SOURCE_DIR}/resources/installers.cmake")
+
 if(FORCE_32BIT)
     set(extra_build_flags "-m32")
     set(extra_link_flags "-m elf_i386")
@@ -111,8 +116,3 @@ endif()
 if(UNIT_TESTING)
     add_subdirectory(tests)
 endif()
-
-###################################################################################
-#CPack includes to create installers
-###################################################################################
-include("${CMAKE_CURRENT_SOURCE_DIR}/resources/installers.cmake")

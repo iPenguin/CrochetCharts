@@ -1,0 +1,16 @@
+<!-- Entities for the documentation
+Copyright 2011 Stitch Works Software.
+by: Brian C. Milco <brian@StitchWorksSoftware.com>
+-->
+
+<!ENTITY sws            "@PROJECT_VENDOR@">
+<!ENTITY appName        "<application>@PROJECT_NAME@</application>">
+<!ENTITY contact        "support@StitchWorksSoftware.com" >
+<!ENTITY contactme      "<ulink url='http://StitchWorksSoftware.com/contact'>contact me</ulink>">
+<!ENTITY website        "@ORG_WEBSITE@">
+<!ENTITY life           "@PROJECT_LIFE@">
+<!ENTITY appVersion     "@PROJECT_VERSION@">
+<!ENTITY ldquo          "&quot;">
+<!ENTITY rdquo          "&quot;">
+<!ENTITY nbsp           " ">
+
