@@ -8,6 +8,8 @@
 #include <QObject>
 #include <QSettings>
 
+class MainWindow;
+
 class Settings : public QObject
 {
     Q_OBJECT
@@ -27,6 +29,9 @@ public:
 
     //return the default value of a given key.
     QVariant defaultValue ( const QString& key ) const;
+
+    //list of open files. All files should be appened toLower().
+    QMap<QString, MainWindow*> files;
     
 private:
     void initDemoVersion();
@@ -41,6 +46,7 @@ private:
     bool mIsDemoVersion;
 
     QMap<QString, QVariant> mValueList;
+
 };
 
 #endif //SETTINGS_H

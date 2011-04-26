@@ -84,9 +84,18 @@ void MainWindow::openCommandLineFiles()
     if(arguments.count() < 1)
         return;
 
+    foreach(QString file, arguments) {
+        if(Settings::inst()->files.contains(file.toLower()))
+            arguments.takeFirst();
+    }
+    
+    if(arguments.count() < 1)
+        return;
+    
     if(ui->tabWidget->count() < 1) {
         mFile->fileName = arguments.takeFirst();
         mFile->load(); //TODO: if !error hide dialog.
+        Settings::inst()->files.insert(mFile->fileName.toLower(), this);
         ui->newDocument->hide();
     }
 
@@ -94,6 +103,7 @@ void MainWindow::openCommandLineFiles()
         MainWindow *newWin = new MainWindow(0, fileName);
         newWin->move(x() + 40, y() + 40);
         newWin->show();
+        Settings::inst()->files.insert(mFile->fileName.toLower(), newWin);
     }
 }
 
@@ -498,6 +508,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if(safeToClose()) {
         Settings::inst()->setValue("geometry", saveGeometry());
         Settings::inst()->setValue("windowState", saveState());
+
+        Settings::inst()->files.remove(mFile->fileName.toLower());
+        
         QMainWindow::closeEvent(event);
     } else {
         event->ignore();
@@ -568,18 +581,27 @@ void MainWindow::fileOpen()
         return;
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    if(ui->tabWidget->count() > 0) {
-        MainWindow *newWin = new MainWindow(0, fileName);
-        newWin->move(x() + 40, y() + 40);
-        newWin->show();
-    } else {
-        ui->newDocument->hide();
-        mFile->fileName = fileName;
-        mFile->load();
-    }
 
-    setApplicationTitle();
-    updateMenuItems();
+    if(!Settings::inst()->files.contains(fileName.toLower())) {
+        if(ui->tabWidget->count() > 0) {
+            MainWindow *newWin = new MainWindow(0, fileName);
+            newWin->move(x() + 40, y() + 40);
+            newWin->show();
+            Settings::inst()->files.insert(fileName.toLower(), newWin);
+        } else {
+            ui->newDocument->hide();
+            mFile->fileName = fileName;
+            mFile->load();
+            Settings::inst()->files.insert(mFile->fileName.toLower(), this);
+        }
+
+        setApplicationTitle();
+        updateMenuItems();
+    } else {
+        //show the window if it's already open.
+        MainWindow *win = Settings::inst()->files.find(fileName.toLower()).value();
+        win->raise();
+    }
     QApplication::restoreOverrideCursor();
 }
 
@@ -618,6 +640,12 @@ void MainWindow::fileSaveAs()
         return;
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    //update the list of open files.
+    if(Settings::inst()->files.contains(mFile->fileName.toLower()))
+        Settings::inst()->files.remove(mFile->fileName.toLower());
+    Settings::inst()->files.insert(fileName.toLower(), this);
+    
     mFile->fileName = fileName;
     mFile->save();
 
