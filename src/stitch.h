@@ -35,6 +35,9 @@ public:
 
     //return a copy of this stitch.
     Stitch* copy();
+
+    //reload the svg with new colors.
+    void reload();
     
 protected:
     void setName(QString n) { mName = n; }

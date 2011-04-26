@@ -203,3 +203,8 @@ void CrochetTab::showChartOptions()
         ui->chartOptionsBox->setVisible(false);
     }
 }
+
+void CrochetTab::sceneUpdate()
+{
+    mScene->update();
+}

@@ -377,3 +377,9 @@ void StitchLibrary::changeStitchName(QString setName, QString oldName, QString n
     
     emit stitchListChanged();
 }
+
+void StitchLibrary::reloadAllStitches()
+{
+    foreach(StitchSet *set, mStitchSets)
+        set->reloadStitches();
+}

@@ -78,6 +78,8 @@ public:
 
     void saveAllSets();
 
+    void reloadAllStitches();
+
 signals:
     void stitchListChanged();
     

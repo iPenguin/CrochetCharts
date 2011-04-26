@@ -44,6 +44,8 @@ public:
     void setEditBgColor(QColor color);
 
     void setEditStitch(QString stitch);
+
+    void sceneUpdate();
     
 signals:
     void chartStitchChanged();
