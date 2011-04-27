@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE book [
+<!ENTITY % sgml.features "IGNORE">
+<!ENTITY % xml.features "INCLUDE">
+<!ENTITY % dbcent PUBLIC "-//OASIS//ENTITIES DocBook Character Entities V4.5//EN" "/usr/local/docbook/dbcentx.mod">
+%dbcent;
+<!ENTITY % allent SYSTEM "../build/docs/application.ent">
+%allent;
+]>
+
+<!--NOTE: use link to link in the documentation and ulink for linking to actual urls -->
+<book xmlns="http://docbook.org/ns/docbook" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+    xmlns:svg="http://www.w3.org/2000/svg" 
+    xmlns:html="http://www.w3.org/1999/xhtml" 
+    xmlns:db="http://docbook.org/ns/docbook" 
+    id="crochet-charts-user-guide" xml:lang="en" version="5.0">
+
+    <bookinfo>
+        <author>
+            <firstname>Brian</firstname><surname>Milco</surname>
+            <affiliation>
+                <orgname>&sws;</orgname>
+                <address role="email">&contact;</address>
+            </affiliation>
+            <address>
+                <city>Chico</city>
+                <street>PO Box 1067</street>
+                <postcode>95927</postcode>
+                <country>USA</country>
+            </address>
+        </author>
+        <copyright>
+            <year>&life;</year>
+            <holder>&sws;</holder>
+        </copyright>
+        <title>&appName; User Guide</title>
+        <productname>&appName;</productname>
+        <productnumber>&appVersion;</productnumber>
+        <abstract>
+            <para>
+                &appName; is an application specially
+                designed to allow you to create design charts for crochet.
+            </para>
+        </abstract>
+        <cover>
+            <para role="tagline">The Official &appName; User Guide</para>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="images/cover-front.png" format="PNG" />
+                </imageobject>
+            </mediaobject>
+        </cover>
+    </bookinfo>
+
+    <!--<xi:include href="introduction.docbook" />-->
+
+    <chapter id="installation"><title>Installation</title>
+        <para>Because this software is licensed per user you may install it on multiple computers including any combination of the supported platforms below. If you need help installing on a second platform please &contactme;.</para>
+        <sect2><title>Windows</title>
+            <sect3><title>Notes on Windows Vista</title>
+            </sect3>
+        </sect2>
+        <sect2><title>Mac</title>
+            <sect3><title>Notes on Mac OS X 10.7 Lion</title>
+            </sect3>
+        </sect2>
+        <sect2><title>Linux</title>
+            <sect3><title>Notes on other Distributions</title>
+            </sect3>
+        </sect2>
+    </chapter>
+    
+    <chapter id="creating-charts"><title>Creating Charts</title>
+        <sect2><title>Flat Charts</title>
+        <screenshot>
+            <info>
+                <bibliomisc role="resolution">640x480x256</bibliomisc>
+            </info>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="images/crochet-mainwindow.png" format="PNG" />
+                </imageobject>
+                <textobject><phrase>The main window showing a basic round chart</phrase></textobject>
+                <caption><para>The main window showing a basic round chart</para></caption>
+            </mediaobject>
+        </screenshot>
+        
+        </sect2>
+        <sect2><title>Round Charts</title>
+        </sect2>
+    </chapter>
+    
+    <chapter id="exporting-files"><title>Exporting Files</title>
+        <para>All pieces of your work can be exported to formats that are commonly used on websites, in magazines, and in publication.</para>
+        <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP. The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image. For this reason they are commonly used in magazines and publication. JPEG and PNG are also sometimes accepted by magazines and publications. If they publisher will accept them they usually want a resolution of 300 dpi. Before sending a file to a publisher you should ask them what file types they will accept.</para>
+        <para>To export any part of your document as images goto <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
+
+        <sect2><title>Charts</title>
+        <para>To undo or redo edits you have made on the chart you can press <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo> or <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Y</keycap></keycombo> respectively.</para>
+            <note><para>On some platforms the key combo is different</para></note>
+        </sect2>
+        <sect2><title>Instructions</title>
+        <para>On the main window you can export the written instructions for the chart by pressing the <guibutton>Copy Instructions</guibutton> button on the left between the chart and the instructions. This button will add the row numbers, remove any placeholder stitches, and clean up the text to be generally publication ready. This clean version of the text will automatically be copied to the clipboard where you can then paste it directly into another application.</para>
+        </sect2>
+        <sect2><title>Legends</title>
+            <sect3><title>Stitch Legends</title>
+            </sect3>
+            <sect3><title>Color Legends</title>
+            </sect3>
+        </sect2>
+    </chapter>
+
+    <chapter id="stitch-library"><title>Stitch Library</title>
+        <sect2><title>Creating New Stitches</title>
+        </sect2>
+        <sect2><title>Creating New Stitch Sets</title>
+        </sect2>
+        <sect2><title>Importing&nbsp;/&nbsp;Exporting Stitch Sets</title>
+        </sect2>
+    </chapter>
+
+    <!--<xi:include href="options.docbook"/>-->
+    
+    <chapter id="troubleshooting"><title>Troubleshooting</title>
+        <para>If you find a defect, or unexpected behavior in this software please &contactme;. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
+    </chapter>
+    
+</book>

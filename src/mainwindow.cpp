@@ -84,9 +84,18 @@ void MainWindow::openCommandLineFiles()
     if(arguments.count() < 1)
         return;
 
+    foreach(QString file, arguments) {
+        if(Settings::inst()->files.contains(file.toLower()))
+            arguments.takeFirst();
+    }
+    
+    if(arguments.count() < 1)
+        return;
+    
     if(ui->tabWidget->count() < 1) {
         mFile->fileName = arguments.takeFirst();
         mFile->load(); //TODO: if !error hide dialog.
+        Settings::inst()->files.insert(mFile->fileName.toLower(), this);
         ui->newDocument->hide();
     }
 
@@ -94,6 +103,7 @@ void MainWindow::openCommandLineFiles()
         MainWindow *newWin = new MainWindow(0, fileName);
         newWin->move(x() + 40, y() + 40);
         newWin->show();
+        Settings::inst()->files.insert(mFile->fileName.toLower(), newWin);
     }
 }
 
@@ -180,16 +190,16 @@ void MainWindow::setupMenus()
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
   
-    ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
-    ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
-    ui->actionSave->setIcon(QIcon::fromTheme("document-save"));
-    ui->actionSaveAs->setIcon(QIcon::fromTheme("document-save-as"));
+    ui->actionOpen->setIcon(QIcon::fromTheme("document-open", QIcon(":/images/fileopen.png")));
+    ui->actionNew->setIcon(QIcon::fromTheme("document-new", QIcon(":/images/filenew.png")));
+    ui->actionSave->setIcon(QIcon::fromTheme("document-save", QIcon(":/images/filesave.png")));
+    ui->actionSaveAs->setIcon(QIcon::fromTheme("document-save-as", QIcon(":/images/filesave.png")));
 
-    ui->actionPrint->setIcon(QIcon::fromTheme("document-print"));
-    ui->actionPrintPreview->setIcon(QIcon::fromTheme("document-print-preview"));
-    ui->actionExport->setIcon(QIcon::fromTheme("document-export"));
+    ui->actionPrint->setIcon(QIcon::fromTheme("document-print", QIcon(":/images/fileprint.png")));
+    ui->actionPrintPreview->setIcon(QIcon::fromTheme("document-print-preview", QIcon(":/images/document-print-preview.png")));
+    ui->actionExport->setIcon(QIcon::fromTheme("document-export", QIcon(":/images/exportpdf.png")));
     
-    ui->actionQuit->setIcon(QIcon::fromTheme("application-exit"));
+    ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
 
     //Edit Menu
     connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
@@ -205,14 +215,14 @@ void MainWindow::setupMenus()
     ui->mainToolBar->insertAction(0, mActionRedo);
     ui->mainToolBar->insertSeparator(mActionUndo);
     
-    mActionUndo->setIcon(QIcon::fromTheme("edit-undo"));
-    mActionRedo->setIcon(QIcon::fromTheme("edit-redo"));
+    mActionUndo->setIcon(QIcon::fromTheme("edit-undo", QIcon(":/images/editundo.png")));
+    mActionRedo->setIcon(QIcon::fromTheme("edit-redo", QIcon(":/images/editredo.png")));
     mActionUndo->setShortcut(QKeySequence::Undo);
     mActionRedo->setShortcut(QKeySequence::Redo);
     
-    ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy" /*, QIcon(":/edit-copy.png")*/));
-    ui->actionCut->setIcon(QIcon::fromTheme("edit-cut" /*, QIcon(":/edit-cut.png")*/));
-    ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste" /*, QIcon(":/edit-paste.png")*/));
+    ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/images/editcopy.png")));
+    ui->actionCut->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/editcut.png")));
+    ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/editpaste.png")));
 
 
     connect(ui->actionColorSelectorBg, SIGNAL(triggered()), this, SLOT(selectColor()));
@@ -237,8 +247,8 @@ void MainWindow::setupMenus()
     connect(ui->actionZoomIn, SIGNAL(triggered()), this, SLOT(viewZoomIn()));
     connect(ui->actionZoomOut, SIGNAL(triggered()), this, SLOT(viewZoomOut()));
     
-    ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in"));
-    ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out"));
+    ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in", QIcon(":/images/zoomin.png")));
+    ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out", QIcon(":/images/zoomout.png")));
     ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
 
@@ -253,7 +263,7 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionAngleMode);
     mModeGroup->addAction(ui->actionStrechMode);
     
-    ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color"));
+    ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color", QIcon(":/images/fill-color.png")));
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
     
@@ -263,8 +273,8 @@ void MainWindow::setupMenus()
 
     connect(ui->actionRemoveTab, SIGNAL(triggered()), this, SLOT(removeCurrentTab()));
 
-    ui->actionAddChart->setIcon(QIcon::fromTheme("tab-new")); //insert-chart
-    ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close"));
+    ui->actionAddChart->setIcon(QIcon::fromTheme("tab-new", QIcon(":/images/new_chart.svg"))); //insert-chart
+    ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
 
     //Chart Menu
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
@@ -498,6 +508,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if(safeToClose()) {
         Settings::inst()->setValue("geometry", saveGeometry());
         Settings::inst()->setValue("windowState", saveState());
+
+        Settings::inst()->files.remove(mFile->fileName.toLower());
+        
         QMainWindow::closeEvent(event);
     } else {
         event->ignore();
@@ -556,6 +569,7 @@ void MainWindow::toolsOptions()
 {
     SettingsUi dialog(this);
     dialog.exec();
+    curCrochetTab()->sceneUpdate();
 }
 
 void MainWindow::fileOpen()
@@ -568,18 +582,27 @@ void MainWindow::fileOpen()
         return;
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    if(ui->tabWidget->count() > 0) {
-        MainWindow *newWin = new MainWindow(0, fileName);
-        newWin->move(x() + 40, y() + 40);
-        newWin->show();
-    } else {
-        ui->newDocument->hide();
-        mFile->fileName = fileName;
-        mFile->load();
-    }
 
-    setApplicationTitle();
-    updateMenuItems();
+    if(!Settings::inst()->files.contains(fileName.toLower())) {
+        if(ui->tabWidget->count() > 0) {
+            MainWindow *newWin = new MainWindow(0, fileName);
+            newWin->move(x() + 40, y() + 40);
+            newWin->show();
+            Settings::inst()->files.insert(fileName.toLower(), newWin);
+        } else {
+            ui->newDocument->hide();
+            mFile->fileName = fileName;
+            mFile->load();
+            Settings::inst()->files.insert(mFile->fileName.toLower(), this);
+        }
+
+        setApplicationTitle();
+        updateMenuItems();
+    } else {
+        //show the window if it's already open.
+        MainWindow *win = Settings::inst()->files.find(fileName.toLower()).value();
+        win->raise();
+    }
     QApplication::restoreOverrideCursor();
 }
 
@@ -618,6 +641,12 @@ void MainWindow::fileSaveAs()
         return;
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    //update the list of open files.
+    if(Settings::inst()->files.contains(mFile->fileName.toLower()))
+        Settings::inst()->files.remove(mFile->fileName.toLower());
+    Settings::inst()->files.insert(fileName.toLower(), this);
+    
     mFile->fileName = fileName;
     mFile->save();
 

@@ -28,6 +28,9 @@
        <string>New Chart Options</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
@@ -185,7 +188,7 @@
      <x>0</x>
      <y>0</y>
      <width>894</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -490,6 +493,10 @@
    <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/filenew.png</normaloff>:/images/filenew.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;New</string>
    </property>
@@ -501,6 +508,10 @@
    </property>
   </action>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/fileopen.png</normaloff>:/images/fileopen.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Open...</string>
    </property>
@@ -512,6 +523,10 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/filesave.png</normaloff>:/images/filesave.png</iconset>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
@@ -725,7 +740,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../crochet.qrc">
+    <iconset>
      <normaloff>:/images/color_mode.png</normaloff>:/images/color_mode.png</iconset>
    </property>
    <property name="text">

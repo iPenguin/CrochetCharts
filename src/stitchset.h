@@ -87,8 +87,10 @@ public:
     void refreshSet() { reset(); }
     void clearSelection() { mSelected.clear(); }
 
-    //clear the stitches and load them from the orig file.
+    //remove the stitches from the set and load them from the .orig file.
     void reset();
+    //reload the svgs from file -- update the colors used.
+    void reloadStitches();
     
 signals:
     void stitchNameChanged(QString setName, QString oldName, QString newName);

@@ -226,6 +226,8 @@ int CrochetScene::getClosestRow(QPointF mousePosition)
     qreal temp2 = temp / mStitchWidth;
     //TODO: see if there is a way to finess the numbers here...?   
     int row = round(temp2 / mRowSpacing);
+    if(row < 0)
+        row = 0;
     return row;
 }
 
@@ -473,7 +475,7 @@ void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
-    int y = getClosestRow(e->scenePos());
+    int y = getClosestRow(e->scenePos());   
     int x = getClosestColumn(e->scenePos());
     
     if(e->buttons() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {

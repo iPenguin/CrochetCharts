@@ -525,3 +525,10 @@ void StitchSet::reset()
         loadXmlFile(stitchSetFileName);
     }
 }
+
+void StitchSet::reloadStitches()
+{
+    foreach(Stitch *s, mStitches) {
+        s->reload();
+    }
+}
