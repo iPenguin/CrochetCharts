@@ -15,7 +15,7 @@
 CrochetCell::CrochetCell()
     : mHighlight(false)
 {
-    setFlag(QGraphicsItem::ItemIsMovable);
+    //setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges); //enable itemChange to pick up move changes.
 }
 

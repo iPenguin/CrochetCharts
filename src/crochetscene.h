@@ -16,6 +16,7 @@ class CrochetScene : public QGraphicsScene
 {
     Q_OBJECT
     friend class SaveFile;
+    friend class SetCellRotation;
 public:
 
     enum EditMode {
@@ -147,6 +148,8 @@ private:
 
     //Used in the mouse*Event()s to keep the mouse movements on the same cell.
     CrochetCell *mCurCell;
+    QPointF mStartPos;
+    //The difference between where the user clicked on the object and the (x,y) of the object.
     QSizeF mDiff;
     CrochetCell *mHighlightCell;
     qreal mCurCellRotation;
