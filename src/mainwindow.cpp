@@ -190,16 +190,16 @@ void MainWindow::setupMenus()
 
     connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
   
-    ui->actionOpen->setIcon(QIcon::fromTheme("document-open" /*, QIcon(":/file-open.png")*/));
-    ui->actionNew->setIcon(QIcon::fromTheme("document-new"));
-    ui->actionSave->setIcon(QIcon::fromTheme("document-save"));
-    ui->actionSaveAs->setIcon(QIcon::fromTheme("document-save-as"));
+    ui->actionOpen->setIcon(QIcon::fromTheme("document-open", QIcon(":/images/fileopen.png")));
+    ui->actionNew->setIcon(QIcon::fromTheme("document-new", QIcon(":/images/filenew.png")));
+    ui->actionSave->setIcon(QIcon::fromTheme("document-save", QIcon(":/images/filesave.png")));
+    ui->actionSaveAs->setIcon(QIcon::fromTheme("document-save-as", QIcon(":/images/filesave.png")));
 
-    ui->actionPrint->setIcon(QIcon::fromTheme("document-print"));
-    ui->actionPrintPreview->setIcon(QIcon::fromTheme("document-print-preview"));
-    ui->actionExport->setIcon(QIcon::fromTheme("document-export"));
+    ui->actionPrint->setIcon(QIcon::fromTheme("document-print", QIcon(":/images/fileprint.png")));
+    ui->actionPrintPreview->setIcon(QIcon::fromTheme("document-print-preview", QIcon(":/images/document-print-preview.png")));
+    ui->actionExport->setIcon(QIcon::fromTheme("document-export", QIcon(":/images/exportpdf.png")));
     
-    ui->actionQuit->setIcon(QIcon::fromTheme("application-exit"));
+    ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
 
     //Edit Menu
     connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
@@ -215,14 +215,14 @@ void MainWindow::setupMenus()
     ui->mainToolBar->insertAction(0, mActionRedo);
     ui->mainToolBar->insertSeparator(mActionUndo);
     
-    mActionUndo->setIcon(QIcon::fromTheme("edit-undo"));
-    mActionRedo->setIcon(QIcon::fromTheme("edit-redo"));
+    mActionUndo->setIcon(QIcon::fromTheme("edit-undo", QIcon(":/images/editundo.png")));
+    mActionRedo->setIcon(QIcon::fromTheme("edit-redo", QIcon(":/images/editredo.png")));
     mActionUndo->setShortcut(QKeySequence::Undo);
     mActionRedo->setShortcut(QKeySequence::Redo);
     
-    ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy" /*, QIcon(":/edit-copy.png")*/));
-    ui->actionCut->setIcon(QIcon::fromTheme("edit-cut" /*, QIcon(":/edit-cut.png")*/));
-    ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste" /*, QIcon(":/edit-paste.png")*/));
+    ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/images/editcopy.png")));
+    ui->actionCut->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/editcut.png")));
+    ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/editpaste.png")));
 
 
     connect(ui->actionColorSelectorBg, SIGNAL(triggered()), this, SLOT(selectColor()));
@@ -247,8 +247,8 @@ void MainWindow::setupMenus()
     connect(ui->actionZoomIn, SIGNAL(triggered()), this, SLOT(viewZoomIn()));
     connect(ui->actionZoomOut, SIGNAL(triggered()), this, SLOT(viewZoomOut()));
     
-    ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in"));
-    ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out"));
+    ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in", QIcon(":/images/zoomin.png")));
+    ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out", QIcon(":/images/zoomout.png")));
     ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
 
@@ -263,7 +263,7 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionAngleMode);
     mModeGroup->addAction(ui->actionStrechMode);
     
-    ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color"));
+    ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color", QIcon(":/images/fill-color.png")));
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
     
@@ -273,8 +273,8 @@ void MainWindow::setupMenus()
 
     connect(ui->actionRemoveTab, SIGNAL(triggered()), this, SLOT(removeCurrentTab()));
 
-    ui->actionAddChart->setIcon(QIcon::fromTheme("tab-new")); //insert-chart
-    ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close"));
+    ui->actionAddChart->setIcon(QIcon::fromTheme("tab-new", QIcon(":/images/new_chart.svg"))); //insert-chart
+    ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
 
     //Chart Menu
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
