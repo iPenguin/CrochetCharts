@@ -32,7 +32,7 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     QWidget *top = new QWidget(this);
     QVBoxLayout *tl = new QVBoxLayout(top);
     top->setLayout(tl);
-    top->layout()->setMargin(0);
+    top->setContentsMargins(0, 0, 0, 0);
     
     mView = new ChartView(top);
     mScene = new CrochetScene(mView);
@@ -55,9 +55,16 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     tl->addWidget(mView);
     tl->addWidget(w);
 
+    ui->horizontalLayout->setMargin(0);
+    
     splitter->addWidget(top);
     splitter->addWidget(mTextView);
     l->setMargin(0);
+    tl->setMargin(0);
+    w->setContentsMargins(0, 0, 0, 0);
+    splitter->setContentsMargins(0, 0, 0, 0);
+    
+    setContentsMargins(0, 0, 0, 0);
 
     mView->setMinimumSize(width(), height()*2/3);
     splitter->setStretchFactor(0, 8);
