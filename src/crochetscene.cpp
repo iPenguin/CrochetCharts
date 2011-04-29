@@ -647,12 +647,12 @@ void CrochetScene::strechModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurCell)
         return;
     
-    QPointF start = e->buttonDownScenePos(Qt::LeftButton);
     QPointF cur = e->scenePos();
-    qreal scale = (start.manhattanLength() - cur.manhattanLength()) / 64;
+    
+    qreal scale = (mStartPos.manhattanLength() - cur.manhattanLength()) / 64;
 
-    QTransform trans = mCurCell->transform().scale(1, 1 + scale);
-    mCurCell->setTransform(trans);
+    mUndoStack.push(new SetCellScale(this, findGridPosition(mCurCell), scale));
+    mStartPos = e->scenePos();
 }
 
 void CrochetScene::strechModeMouseRelease(QGraphicsSceneMouseEvent* e)

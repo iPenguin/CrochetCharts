@@ -63,8 +63,6 @@ private:
     CrochetScene *scene;
 };
 
-
-
 class SetCellCoordinates : public QUndoCommand
 {
 public:
@@ -85,6 +83,28 @@ private:
     QPoint position;
 
     CrochetScene *scene;
+};
+
+class SetCellScale : public QUndoCommand
+{
+public:
+    enum { Id = 1236 };
+
+    SetCellScale(CrochetScene *s, QPoint pos, qreal scl, QUndoCommand* parent = 0);
+    
+    void undo();
+    void redo();
+    
+    bool mergeWith(const QUndoCommand *command);
+    
+    int id() const { return Id; }
+    
+private:
+    qreal scale;
+    QPoint position;
+    
+    CrochetScene *scene;
+    
 };
 
 #endif //CROCHETCHARTCOMMANDS_H

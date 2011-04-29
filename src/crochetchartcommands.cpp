@@ -139,3 +139,47 @@ bool SetCellCoordinates::mergeWith(const QUndoCommand *command)
     setText(QObject::tr("Change cell position"));
     return true;
 }
+ 
+/*************************************************\
+ | SetCellScale                                   |
+\*************************************************/
+SetCellScale::SetCellScale(CrochetScene *s, QPoint pos, qreal scl, QUndoCommand* parent)
+: QUndoCommand(parent)
+{
+    scene = s;
+    position = pos;
+    scale = scl;
+    qDebug() << "scale" << scale;
+    setText(QObject::tr("Change cell position"));
+    
+}
+
+void SetCellScale::undo()
+{
+    QTransform trans = scene->cell(position)->transform().scale(1, 1 - scale);
+    scene->cell(position)->setTransform(trans);
+}
+
+void SetCellScale::redo()
+{
+    QTransform trans = scene->cell(position)->transform().scale(1, 1 + scale);
+    scene->cell(position)->setTransform(trans);
+}
+
+bool SetCellScale::mergeWith(const QUndoCommand *command)
+{
+    if(command->id() != id())
+        return false;
+    
+    const SetCellScale *other = static_cast<const SetCellScale*>(command);
+    
+    CrochetCell *c = scene->cell(position);
+    CrochetCell *otherC = scene->cell(other->position);
+    
+    if(otherC != c)
+        return false;
+    
+    scale += other->scale;
+    setText(QObject::tr("Change cell position"));
+    return true;
+}
