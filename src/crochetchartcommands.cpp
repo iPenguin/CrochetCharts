@@ -149,20 +149,26 @@ SetCellScale::SetCellScale(CrochetScene *s, QPoint pos, qreal scl, QUndoCommand*
     scene = s;
     position = pos;
     scale = scl;
-    qDebug() << "scale" << scale;
     setText(QObject::tr("Change cell position"));
     
 }
 
 void SetCellScale::undo()
 {
-    QTransform trans = scene->cell(position)->transform().scale(1, 1 - scale);
+    QTransform trans = scene->cell(position)->transform().scale(1, scene->cell(position)->transform().m22() - scale);
     scene->cell(position)->setTransform(trans);
 }
 
 void SetCellScale::redo()
 {
-    QTransform trans = scene->cell(position)->transform().scale(1, 1 + scale);
+    qreal delta;
+    QTransform t = scene->cell(position)->transform();
+    if(scale > 0)
+        delta = 0.05;
+    else
+        delta = -0.05;
+    
+    QTransform trans = scene->cell(position)->transform().scale(1, 1 + delta);
     scene->cell(position)->setTransform(trans);
 }
 
