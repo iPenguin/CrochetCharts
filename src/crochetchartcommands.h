@@ -46,7 +46,7 @@ class SetCellRotation : public QUndoCommand
 public:
     enum { Id = 1234 };
     
-    SetCellRotation(CrochetScene *s, QPoint pos, qreal rot, QUndoCommand* parent = 0);
+    SetCellRotation(CrochetScene *s, QPoint pos, qreal baseRot, qreal diff, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -56,9 +56,55 @@ public:
     int id() const { return Id; }
     
 private:
-    qreal rotation;
+    qreal baseRotation;
     QPoint position;
+    qreal delta;
+    
     CrochetScene *scene;
+};
+
+class SetCellCoordinates : public QUndoCommand
+{
+public:
+    enum { Id = 1235 };
+
+    SetCellCoordinates(CrochetScene *s, QPoint pos, QPointF oldPos, QPointF newPos, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    bool mergeWith(const QUndoCommand *command);
+
+    int id() const { return Id; }
+
+private:
+    QPointF oldCoord;
+    QPointF newCoord;
+    QPoint position;
+
+    CrochetScene *scene;
+};
+
+class SetCellScale : public QUndoCommand
+{
+public:
+    enum { Id = 1236 };
+
+    SetCellScale(CrochetScene *s, QPoint pos, qreal scl, QUndoCommand* parent = 0);
+    
+    void undo();
+    void redo();
+    
+    bool mergeWith(const QUndoCommand *command);
+    
+    int id() const { return Id; }
+    
+private:
+    qreal scale;
+    QPoint position;
+    
+    CrochetScene *scene;
+    
 };
 
 #endif //CROCHETCHARTCOMMANDS_H

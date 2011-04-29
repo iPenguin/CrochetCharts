@@ -22,7 +22,7 @@
 #include "crochetchartcommands.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent), mCurCell(0), mDiff(QSizeF(0,0)), mHighlightCell(0),
+    : QGraphicsScene(parent), mCurCell(0), mStartPos(QPointF(0,0)), mDiff(QSizeF(0,0)), mHighlightCell(0),
     mRubberBand(0), mRubberBandStart(QPointF(0,0)),
     mRowSpacing(8), mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode),
     mFreeForm(false), mEditStitch("ch"),
@@ -335,8 +335,11 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
     QGraphicsItem *gi = itemAt(e->scenePos());
     CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(c)
+    if(c) {
         mCurCell = c;
+        mStartPos = mCurCell->pos();
+        mDiff = QSizeF(e->scenePos().x() - mStartPos.x(), e->scenePos().y() - mStartPos.y());
+    }
     
     switch(mMode) {
         case CrochetScene::StitchMode:
@@ -417,8 +420,11 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
     }
 
-    if(mCurCell)
+    if(mCurCell) {
+        mDiff = QSizeF(0,0);
+        mStartPos = QPointF(0,0);
         mCurCell = 0;
+    }
 
     QGraphicsScene::mouseReleaseEvent(e);
 }
@@ -512,7 +518,7 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
 }
 
 void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
-{
+{   
     if(e->buttons() == Qt::RightButton && mStyle == CrochetScene::Round) {
         int row = getClosestRow(e->scenePos());
         redistributeCells(row);
@@ -531,8 +537,6 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
     mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
     mRubberBand->show();
     
-    if(mCurCell)
-        mDiff = QSizeF(mCurCell->transform().dx(), mCurCell->transform().dy());
 }
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -542,14 +546,14 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
         QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));    
     
         mRubberBand->setGeometry(rect.normalized());
+    } else if (mCurCell) {
+        QPointF curPos =  QPointF(e->scenePos().x() - mDiff.width(), e->scenePos().y() - mDiff.height());
+        mUndoStack.push(new SetCellCoordinates(this, findGridPosition(mCurCell), mStartPos, curPos));
     }
 }
 
 void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    mDiff.setHeight(0);
-    mDiff.setWidth(0);
-
     if(mRubberBand) {
         ChartView *view = qobject_cast<ChartView*>(parent());
         QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
@@ -600,14 +604,12 @@ void CrochetScene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
 {
     if(mCurCell) {
         qreal value = acos(mCurCell->transform().m11()) / M_PI * 180;
-qDebug() << value;
         if(e->scenePos().x() < 0 && e->scenePos().y() >= 0)
             mCurCellRotation = 180 - value;
         else if(e->scenePos().x() < 0 && e->scenePos().y() < 0)
             mCurCellRotation = 180 - value;
         else
             mCurCellRotation = value;
-        qDebug() << mCurCellRotation;
     }
    
 }
@@ -624,11 +626,9 @@ void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
     qreal angle1 = scenePosToAngle(rel1);
     qreal angle2 = scenePosToAngle(rel2);
+    ;
+    mUndoStack.push(new SetCellRotation(this, findGridPosition(mCurCell), mCurCellRotation, (angle1 - angle2)));
 
-    qreal final = mCurCellRotation - (angle1 - angle2);
-    
-    mCurCell->setTransform(
-        QTransform().translate(32,0).rotate(final).translate(-32, 0));
 }
 
 void CrochetScene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
@@ -647,12 +647,12 @@ void CrochetScene::strechModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurCell)
         return;
     
-    QPointF start = e->buttonDownScenePos(Qt::LeftButton);
     QPointF cur = e->scenePos();
-    qreal scale = (start.manhattanLength() - cur.manhattanLength()) / 64;
+    
+    qreal scale = (mStartPos.manhattanLength() - cur.manhattanLength()) / 64;
 
-    QTransform trans = mCurCell->transform().scale(1, 1 + scale);
-    mCurCell->setTransform(trans);
+    mUndoStack.push(new SetCellScale(this, findGridPosition(mCurCell), scale));
+    mStartPos = e->scenePos();
 }
 
 void CrochetScene::strechModeMouseRelease(QGraphicsSceneMouseEvent* e)
