@@ -56,13 +56,12 @@ void SetCellColor::undo()
 /*************************************************\
 | SetCellRotation                                 |
 \*************************************************/
-SetCellRotation::SetCellRotation(CrochetScene *s, QPoint pos, QPointF fst, QPointF snd, qreal baseRot, QUndoCommand* parent)
+SetCellRotation::SetCellRotation(CrochetScene *s, QPoint pos, qreal baseRot, qreal diff, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     position = pos;
     scene = s;
-    first = fst;
-    second = snd;
+    delta = diff;
     baseRotation = baseRot;
     setText(QObject::tr("Change cell rotation"));
     
@@ -70,38 +69,21 @@ SetCellRotation::SetCellRotation(CrochetScene *s, QPoint pos, QPointF fst, QPoin
 
 void SetCellRotation::redo()
 {
-
-    QPointF origin = scene->cell(position)->mapToScene(32, 0);
-    
-    QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
-    QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
-    qreal angle1 = scene->scenePosToAngle(rel1);
-    qreal angle2 = scene->scenePosToAngle(rel2);
-    
-    qreal final = baseRotation - (angle1 - angle2);
+    qreal final = baseRotation - delta;
     
     scene->cell(position)->setTransform(QTransform().translate(32, 0).rotate(final).translate(-32, 0));
 }
 
 void SetCellRotation::undo()
 {
-    QPointF origin = scene->cell(position)->mapToScene(32, 0);
-    
-    QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
-    QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
-    qreal angle1 = scene->scenePosToAngle(rel1);
-    qreal angle2 = scene->scenePosToAngle(rel2);
-    
-    qreal final = baseRotation - (angle1 - angle2);
-    
-    scene->cell(position)->setTransform(QTransform().translate(32, 0).rotate(final).translate(-32, 0));
+    scene->cell(position)->setTransform(QTransform().translate(32, 0).rotate(baseRotation).translate(-32, 0));
 }
 
 bool SetCellRotation::mergeWith(const QUndoCommand *command)
 {
     if(command->id() != id())
         return false;
-    
+    //return false;
     const SetCellRotation *other = static_cast<const SetCellRotation*>(command);
 
     CrochetCell *c = scene->cell(position);
@@ -110,8 +92,7 @@ bool SetCellRotation::mergeWith(const QUndoCommand *command)
     if(otherC != c)
         return false;
 
-    baseRotation = other->baseRotation;
-    first = other->first;
+    delta = other->delta;
     setText(QObject::tr("Change cell rotation"));
     return true;
 }

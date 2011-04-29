@@ -46,7 +46,7 @@ class SetCellRotation : public QUndoCommand
 public:
     enum { Id = 1234 };
     
-    SetCellRotation(CrochetScene *s, QPoint pos, QPointF fst, QPointF snd, qreal baseRot, QUndoCommand* parent = 0);
+    SetCellRotation(CrochetScene *s, QPoint pos, qreal baseRot, qreal diff, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -58,13 +58,10 @@ public:
 private:
     qreal baseRotation;
     QPoint position;
-    QPointF first;
-    QPointF second;
+    qreal delta;
     
     CrochetScene *scene;
 };
-
-
 
 
 

@@ -619,10 +619,15 @@ void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     if(!mCurCell)
         return;
 
+    QPointF origin = mCurCell->mapToScene(32, 0);
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
     QPointF second = e->scenePos();
-
-    mUndoStack.push(new SetCellRotation(this, findGridPosition(mCurCell), first, second, mCurCellRotation));
+    QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
+    QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
+    qreal angle1 = scenePosToAngle(rel1);
+    qreal angle2 = scenePosToAngle(rel2);
+    ;
+    mUndoStack.push(new SetCellRotation(this, findGridPosition(mCurCell), mCurCellRotation, (angle1 - angle2)));
 
 }
 
