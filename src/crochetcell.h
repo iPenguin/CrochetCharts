@@ -21,6 +21,10 @@ public:
     void setHighlight(bool state) { mHighlight = state; update(); }
 
     QPointF anchor() { return mAnchor; }
+
+    qreal scale() const { return mScale; }
+    void setScale(qreal newScale);
+    
 signals:
 
 public slots:
@@ -31,6 +35,8 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     
 private:
+    qreal mScale;
+    
     bool mHighlight;
 
     QPointF mAnchor;

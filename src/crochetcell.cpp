@@ -13,7 +13,7 @@
 #include "settings.h"
 
 CrochetCell::CrochetCell()
-    : mHighlight(false)
+     : mScale(1.0), mHighlight(false)
 {
     //setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges); //enable itemChange to pick up move changes.
@@ -55,4 +55,14 @@ QVariant CrochetCell::itemChange(GraphicsItemChange change, const QVariant &valu
     
     return QGraphicsItem::itemChange(change, value);
 
+}
+
+void CrochetCell::setScale(qreal newScale)
+{
+    if(newScale != mScale) {
+        mScale = newScale;
+        qDebug() << "cell scale" << mScale;
+        QTransform trans =  transform().scale(1, newScale);
+        setTransform(trans);
+    }
 }
