@@ -99,7 +99,7 @@ bool SetCellRotation::mergeWith(const QUndoCommand *command)
 
 
 /*************************************************\
-| SetCellCoordinates*                             |
+| SetCellCoordinates                              |
 \*************************************************/
 SetCellCoordinates::SetCellCoordinates(CrochetScene *s, QPoint pos, QPointF oldPos, QPointF newPos, QUndoCommand* parent)
     : QUndoCommand(parent)
@@ -148,29 +148,48 @@ SetCellScale::SetCellScale(CrochetScene *s, QPoint pos, qreal scl, QUndoCommand*
 {
     scene = s;
     position = pos;
-    scale = scl;
-    qDebug() << "scale" << scale;
-    setText(QObject::tr("Change cell position"));
+
+    if(scl > 0)
+        delta = 0.075;
+    else if(scl < 0)
+        delta = -0.075;
+    else
+        delta = 0;
+    deltas.append(delta);
+    baseSize.append(1.0);
     
+    setText(QObject::tr("Change cell position"));
 }
 
 void SetCellScale::undo()
 {
-    QTransform trans = scene->cell(position)->transform().scale(1, 1 - scale);
-    scene->cell(position)->setTransform(trans);
+
+    CrochetCell *c = scene->cell(position);
+
+    qreal change = c->scale();
+    for(int i = deltas.count() - 1; i >= 0; --i) {
+        qreal value = deltas.at(i);
+        qreal baseS = baseSize.at(i);
+        change = (1.0 + value)/c->scale();
+        qDebug() << c->scale() << 1.0 + value << change << baseS;
+        c->setScale(change);
+    }
 }
 
 void SetCellScale::redo()
 {
-    QTransform trans = scene->cell(position)->transform().scale(1, 1 + scale);
-    scene->cell(position)->setTransform(trans);
+    CrochetCell *c = scene->cell(position);
+
+    foreach(qreal change, deltas) {
+        c->setScale(c->scale() + change);
+    }
 }
 
 bool SetCellScale::mergeWith(const QUndoCommand *command)
 {
     if(command->id() != id())
         return false;
-    
+    //return false;
     const SetCellScale *other = static_cast<const SetCellScale*>(command);
     
     CrochetCell *c = scene->cell(position);
@@ -178,8 +197,11 @@ bool SetCellScale::mergeWith(const QUndoCommand *command)
     
     if(otherC != c)
         return false;
+
+    if(other->delta != 0)
+        deltas.append(other->delta);
+        baseSize.append(other->baseSize);
     
-    scale += other->scale;
     setText(QObject::tr("Change cell position"));
     return true;
 }

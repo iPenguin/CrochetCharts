@@ -371,13 +371,25 @@ QTextCursor CrochetTextView::cursorAtRowStart(int row)
 
 QString CrochetTextView::copyInstructions()
 {
+    QStringList rowText;
     QString text;
     
     int rows = mScene->rowCount();
-    for(int r = 0; r < rows; ++r)
-        text += tr("Row %1: ").arg(r+1) + generateTextRow(r, true) + "\n";
-    
+    for(int r = 0; r < rows; ++r) {
+        rowText << generateTextRow(r, true);
+    }
+    return "FIXME";
+/*FIXME:get the variables corrected.
+    for(int i = 0; i < rowText.count(); ++i) {
+        
+        if(rowText.contains(text)) {
+            
+            text += tr("Row %1: Repeat row %2.\n").arg(i+1).arg(repRow);
+        } else
+            text += tr("Row %1: ").arg(i+1) + text + "\n";
+    }
     return text;
+*/
 }
 
 /************************************************************************

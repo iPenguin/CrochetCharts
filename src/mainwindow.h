@@ -85,6 +85,7 @@ private slots:
     void menuChartAboutToShow();
     void chartEditName();
 
+    void menuToolsAboutToShow();
     void toolsOptions();
     void toolsRegisterSoftware();
     void toolsStitchLibrary();
