@@ -29,8 +29,6 @@ CrochetScene::CrochetScene(QObject *parent)
     mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
 {
     mStitchWidth = 64;
-
-    initDemoBackground();
 }
 
 CrochetScene::~CrochetScene()
@@ -189,9 +187,15 @@ void CrochetScene::redistributeCells(int row)
 void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch)
 {
     mStyle = style;
-    for(int i = 0; i < rows; ++i)
-            createRow(i, cols + i*8, stitch);
-    
+    //FIXME: i*8 for flat should be just i to create a square.
+    for(int i = 0; i < rows; ++i) {
+        int pad = 0;
+        if(mStyle == CrochetScene::Round)
+            pad = i*8;
+        
+        createRow(i, cols + pad, stitch);
+    }
+    initDemoBackground();
     emit chartCreated(rows, cols);
 }
 

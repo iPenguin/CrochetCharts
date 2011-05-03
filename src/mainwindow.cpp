@@ -312,6 +312,11 @@ void MainWindow::updateMenuItems()
 
 void MainWindow::filePrint()
 {
+    if(Settings::inst()->isDemoVersion()) {
+        Settings::inst()->trialVersionMessage(this);
+        return;
+    }
+    
     //TODO: page count isn't working...
     QPrinter *printer = new QPrinter();
     QPrintDialog *dialog = new QPrintDialog(printer, this);
@@ -347,6 +352,11 @@ void MainWindow::print(QPrinter *printer)
 
 void MainWindow::filePrintPreview()
 {
+    if(Settings::inst()->isDemoVersion()) {
+        Settings::inst()->trialVersionMessage(this);
+        return;
+    }
+    
     //FIXME: this isn't working
     QPrinter *printer = new QPrinter(QPrinter::HighResolution);
     QPrintPreviewDialog *dialog = new QPrintPreviewDialog(printer, this);

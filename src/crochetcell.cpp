@@ -61,7 +61,6 @@ void CrochetCell::setScale(qreal newScale)
 {
     if(newScale != mScale) {
         mScale = newScale;
-        qDebug() << "cell scale" << mScale;
         QTransform trans =  transform().scale(1, newScale);
         setTransform(trans);
     }

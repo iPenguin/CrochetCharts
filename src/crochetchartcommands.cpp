@@ -167,10 +167,11 @@ void SetCellScale::undo()
     CrochetCell *c = scene->cell(position);
 
     qreal change = c->scale();
-    for(int i = deltas.count(); i >= 0; --i) {
+    for(int i = deltas.count() - 1; i >= 0; --i) {
         qreal value = deltas.at(i);
         qreal baseS = baseSize.at(i);
-        change = baseS/(1.0 + value);
+        change = (1.0 + value)/c->scale();
+        qDebug() << c->scale() << 1.0 + value << change << baseS;
         c->setScale(change);
     }
 }
@@ -178,7 +179,10 @@ void SetCellScale::undo()
 void SetCellScale::redo()
 {
     CrochetCell *c = scene->cell(position);
-    c->setScale(1 + delta);
+
+    foreach(qreal change, deltas) {
+        c->setScale(c->scale() + change);
+    }
 }
 
 bool SetCellScale::mergeWith(const QUndoCommand *command)
