@@ -283,14 +283,12 @@ void MainWindow::setupMenus()
     //http://doc.qt.nokia.com/4.7/qstyle.html#StandardPixmap-enum
     
     //Tools Menu
-    connect(ui->actionOptions, SIGNAL(triggered()), this, SLOT(toolsOptions()));
-    connect(ui->actionRegisterSoftware, SIGNAL(triggered()), this, SLOT(toolsRegisterSoftware()));
-    connect(ui->actionStitchLibrary, SIGNAL(triggered()), this, SLOT(toolsStitchLibrary()));
-    connect(ui->actionCheckForUpdates, SIGNAL(triggered()), this, SLOT(toolsCheckForUpdates()));
+    connect(ui->menuTools, SIGNAL(aboutToShow()), SLOT(menuToolsAboutToShow()));
+    connect(ui->actionOptions, SIGNAL(triggered()), SLOT(toolsOptions()));
+    connect(ui->actionRegisterSoftware, SIGNAL(triggered()), SLOT(toolsRegisterSoftware()));
+    connect(ui->actionStitchLibrary, SIGNAL(triggered()), SLOT(toolsStitchLibrary()));
+    connect(ui->actionCheckForUpdates, SIGNAL(triggered()), SLOT(toolsCheckForUpdates()));
     
-    if(!Settings::inst()->isDemoVersion())
-        ui->actionRegisterSoftware->setVisible(false);
-
     //Help Menu
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
     
@@ -573,6 +571,12 @@ void MainWindow::readSettings()
     restoreGeometry(Settings::inst()->value("geometry").toByteArray());
     restoreState(Settings::inst()->value("windowState").toByteArray());
 
+}
+
+void MainWindow::menuToolsAboutToShow()
+{
+    if(!Settings::inst()->isDemoVersion())
+        ui->actionRegisterSoftware->setVisible(false);    
 }
 
 void MainWindow::toolsOptions()
