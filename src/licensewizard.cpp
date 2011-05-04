@@ -59,19 +59,20 @@ void LicenseWizard::showHelp()
 
     switch (currentId()) {
         case Page_Intro:
-            message = tr("The decision you make here will affect which page you get to see next.");
+            message = tr("You may evaluate the software before you purchase a serial number and register the software.");
             break;
         case Page_Evaluate:
-            message = tr("Make sure to provide a valid email address, such as toni.buddenbrook@example.de.");
+            message = tr("Please provide your name, and a valid email address.");
             break;
         case Page_Register:
-            message = tr("If you don't provide an upgrade key, you will be asked to fill in your details.");
+            message = tr("If you do not provide a valid email and serial number you cannot proceed.");
             break;
         case Page_Conclusion:
             message = tr("You must accept the terms and conditions of the license to proceed.");
             break;
         default:
-            message = tr("This help is likely not to be of any help.");
+            message = tr("There is no help available for this page. Please contact %1 by using the form at %2")
+                        .arg(AppInfo::inst()->appOrg).arg(AppInfo::inst()->appOrgContact);
     }
 
     QMessageBox::information(this, tr("License Wizard Help"), message);
@@ -85,7 +86,7 @@ IntroPage::IntroPage(bool regOnly, QWidget *parent)
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/wizard_watermark.png"));
 
     topLabel = new QLabel(tr("This wizard will walk you through the registration of "
-                             "<i>%1</i>&trade;.").arg(qApp->applicationName()));
+                             "<i>%1</i>.").arg(qApp->applicationName()));
     topLabel->setWordWrap(true);
 
     registerRadioButton = new QRadioButton(tr("&Register your copy"));
@@ -112,12 +113,11 @@ int IntroPage::nextId() const
 }
 
 EvaluatePage::EvaluatePage(QWidget *parent)
-    : QWizardPage(parent)
+    : QWizardPage(parent), mLicHttp(0)
 {
     mAllowNextPage = false;
-    mLicHttp = new LicenseHttp(this);
 
-    setTitle(tr("Evaluate <i>%1</i>&trade;").arg(qApp->applicationName()));
+    setTitle(tr("Evaluate <i>%1</i>").arg(qApp->applicationName()));
     setSubTitle(tr("Please fill all fields. Make sure to provide a valid "
                    "email address (e.g., john.smith@example.com)."));
 
@@ -165,6 +165,8 @@ bool EvaluatePage::validatePage()
     path = QString(path).arg("").arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);
 
+    if(!mLicHttp)
+        mLicHttp = new LicenseHttp(this);
     mLicHttp->downloadFile(url);
     connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), this, SLOT(getLicense(QString,bool)));
 
@@ -175,19 +177,20 @@ void EvaluatePage::getLicense(QString license, bool errors)
 {
     if(errors) {
         mAllowNextPage = false;
-        QMessageBox::information(this, "Error", "Unable to register with the server.");
+        QMessageBox::information(this, "Error", tr("%1 was unable to register with the server."
+                            "If this problem persists please contact %1 by using the form at %2")
+                            .arg(AppInfo::inst()->appOrg).arg(AppInfo::inst()->appOrgContact));
     }
 
     setField("evaluate.license", QVariant(license));
     mAllowNextPage = true;
-    this->wizard()->next();
+    wizard()->next();
 }
 
 RegisterPage::RegisterPage(QWidget *parent)
-    : QWizardPage(parent)
+    : QWizardPage(parent), mLicHttp(0)
 {
     mAllowNextPage = false;
-    mLicHttp = new LicenseHttp(this);
 
     setTitle(tr("Register Your Copy of <i>%1</i>&trade;").arg(qApp->applicationName()));
     setSubTitle(tr("Please fill in all fields. The Serial Number should use the form XXXX-XXX-XXXX and it should include the dashes."));
@@ -251,8 +254,10 @@ bool RegisterPage::validatePage()
     path = QString(path).arg(serialNumberLineEdit->text()).arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);
 
+    if(!mLicHttp)
+        mLicHttp = new LicenseHttp(this);
     mLicHttp->downloadFile(url);
-    connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), this, SLOT(getLicense(QString,bool)));
+    connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), SLOT(getLicense(QString,bool)));
 
     return mAllowNextPage;
 }
@@ -261,7 +266,10 @@ void RegisterPage::getLicense(QString license, bool errors)
 {
     if(errors) {
         mAllowNextPage = false;
-        QMessageBox::information(this, "Error", "Unable to register with the server.");
+        //FIXME: consolidate this with the code from the eval page.
+        QMessageBox::information(this, "Error", tr("%1 was unable to register with the server."
+        "If this problem persists please contact %1 by using the form at %2")
+        .arg(AppInfo::inst()->appOrg).arg(AppInfo::inst()->appOrgContact));
     }
 
     setField("register.license", QVariant(license));

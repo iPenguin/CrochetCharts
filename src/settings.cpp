@@ -6,7 +6,6 @@
 
 #include "license.h"
 
-#include <QApplication>
 #include <QDebug>
 #include "appinfo.h"
 #include <QDesktopServices>
@@ -54,9 +53,10 @@ void Settings::initDemoVersion()
 void Settings::trialVersionMessage(QWidget *parent)
 {
     QMessageBox msgbox(parent);
-    msgbox.setWindowTitle(qApp->applicationName());
+    msgbox.setWindowTitle(AppInfo::inst()->appName);
     msgbox.setText(tr("This feature is disabled in the demo version."));
-    msgbox.setInformativeText(tr("There are some example output files and screen shots on the website."));
+    msgbox.setInformativeText(tr("There are example output files and screen shots available at http://%1/%2.")
+        .arg(AppInfo::inst()->appOrgDomain).arg(AppInfo::inst()->appName));
     msgbox.setStandardButtons(QMessageBox::Ok);
     msgbox.setIcon(QMessageBox::Information);
     

@@ -10,8 +10,6 @@
 #include <QNetworkAccessManager>
 #include <QUrl>
 
-class QFile;
-
 class LicenseHttp : public QWidget
 {
     Q_OBJECT
@@ -25,14 +23,12 @@ signals:
 
 private slots:
     void startRequest();
-    void httpFinished();
-    void httpReadyRead();
+    void httpFinished(QNetworkReply *reply);
 
 private:
     QUrl mUrl;
     QNetworkAccessManager qnam;
     QNetworkReply *reply;
-    QFile *file;
     int httpGetId;
     bool httpRequestAborted;
 };
