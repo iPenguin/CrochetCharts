@@ -495,7 +495,7 @@ void MainWindow::helpAbout()
     QString licenseInfo;
 
     if(Settings::inst()->isDemoVersion()) {
-        licenseInfo = QString(tr("<p>This is a demo version licensed to:<br />"
+        licenseInfo = QString(tr("<p>This is a demo license granted to:<br />"
                               "Name: %1 %2<br />"
                               "Email: %3<br /></p>")
                               .arg(fName).arg(lName).arg(email));

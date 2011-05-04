@@ -44,8 +44,8 @@ void LicenseHttp::httpFinished(QNetworkReply *reply)
         QMessageBox::information(this, tr("%1 Registration").arg(AppInfo::inst()->appOrg),
                                  tr("%1 was unable to connect to the server to register this software. "
                                     "Please make sure you are connected to the internet. If you have a firewall "
-                                    "running please make sure it allows this software to connect to the internet. "
-                                    "If you are still having problems please contact %2 at %3")
+                                    "running please make sure it allows %1 to connect to the internet. "
+                                    "If you are still having problems please contact %2 using the form at %3")
                                  .arg(AppInfo::inst()->appName).arg(AppInfo::inst()->appOrg).arg(AppInfo::inst()->appOrgContact));
         return;
     }

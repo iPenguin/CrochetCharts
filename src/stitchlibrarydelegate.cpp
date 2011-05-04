@@ -273,6 +273,7 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
                 QMessageBox msgbox;
                 //TODO: return to the editor with the bad data.
                 msgbox.setText(tr("A stitch with this name already exists in the set."));
+                msgbox.setIcon(QMessageBox::Warning);
                 msgbox.exec();
 
                 break;
@@ -287,6 +288,7 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
                 if(m && m != s) {
                     QMessageBox msgbox;
                     msgbox.setText("There is already a stitch with this name in the master list");
+                    msgbox.setIcon(QMessageBox::Warning);
                     msgbox.exec();
                     //TODO: offer to remove the stitch already there with this name.
 

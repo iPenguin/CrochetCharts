@@ -328,12 +328,12 @@ StitchSet* StitchLibrary::addStitchSet(QString fileName)
     test = findStitchSet(set->name());
     if(test) {
         QMessageBox msgbox;
-        msgbox.setText(tr("A Set with this name already exists in your stitch library."));
-        msgbox.setInformativeText(tr("What would you like to do with this set?"));
+        msgbox.setText(tr("A stitch set with the name '%1' already exists in your library.").arg(set->name()));
+        msgbox.setInformativeText(tr("What would you like to do?"));
         msgbox.setIcon(QMessageBox::Question);
-        QPushButton *overwrite = msgbox.addButton(tr("Overwrite the existing set"), QMessageBox::AcceptRole);
-        QPushButton *rename = msgbox.addButton(tr("Rename the new stitch set"), QMessageBox::ApplyRole);
-        /*QPushButton *cancel =*/ msgbox.addButton(tr("Cancel adding the new set"), QMessageBox::RejectRole);
+        QPushButton *overwrite = msgbox.addButton(tr("Replace the existing set"), QMessageBox::AcceptRole);
+        QPushButton *rename = msgbox.addButton(tr("Rename the new set"), QMessageBox::ApplyRole);
+        /*QPushButton *cancel =*/ msgbox.addButton(tr("Don't add the new set"), QMessageBox::RejectRole);
 
         msgbox.exec();
         

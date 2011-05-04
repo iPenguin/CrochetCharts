@@ -63,7 +63,7 @@ void LicenseWizard::showHelp()
 
     switch (currentId()) {
         case Page_Intro:
-            message = tr("You may evaluate the software before you purchase a serial number and register the software.");
+            message = tr("You may evaluate the software before you purchase a serial number and register it.");
             break;
         case Page_Evaluate:
             message = tr("Please provide your name, and a valid email address.");

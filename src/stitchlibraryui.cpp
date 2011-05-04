@@ -187,6 +187,7 @@ void StitchLibraryUi::removeStitch()
         bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
         if(selected) {
             if(set->stitchCount() == 1) {
+                //FIXME: make this a question, if yes remove set.
                 QMessageBox msgbox(this);
                 msgbox.setText(tr("A set must have at least one stitch."));
                 msgbox.setInformativeText(tr("If you wish to remove this stich you may remove the set."));
@@ -205,7 +206,7 @@ void StitchLibraryUi::removeStitch()
                 msgbox.setInformativeText(tr("Are you sure you want to remove the stitch?"));
                 msgbox.setIcon(QMessageBox::Question);
                 QPushButton *confirm = msgbox.addButton(tr("Remove stitch from both lists"), QMessageBox::AcceptRole);
-                /*QPushButton *cancel =*/ msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
+                /*QPushButton *cancel =*/ msgbox.addButton(tr("Don't remove the stitch"), QMessageBox::RejectRole);
 
                 msgbox.exec();
 
@@ -234,14 +235,20 @@ void StitchLibraryUi::addSelected()
             
             if(master->hasStitch(s->name()) && s != master->findStitch(s->name())) {
                 QMessageBox msgbox;
-                msgbox.setText(tr("A stitch with this name already exists in the master set."));
+                msgbox.setText(tr("A stitch with the name '%1' already exists in the master set.").arg(s->name()));
                 msgbox.setInformativeText(tr("Would you like to replace it with this one?"));
-                msgbox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-                //TODO: clean up dialog box.
-                //TODO: add if(cancel) return;
-                if(msgbox.exec() != QMessageBox::Yes)
-                    continue;
+                QPushButton *confirm = msgbox.addButton(tr("Replace the existing stitch"), QMessageBox::AcceptRole);
+                QPushButton *no      = msgbox.addButton(tr("Keep this stitch as is"), QMessageBox::InvalidRole);
+                QPushButton *cancel  = msgbox.addButton(tr("Stop adding stitches"), QMessageBox::DestructiveRole);
+
+                msgbox.exec();
                 
+                if(msgbox.clickedButton() == no)
+                    continue;
+                else if(msgbox.clickedButton() == cancel)
+                    return;
+                //else if
+                Q_UNUSED(confirm);
             }
             
             if(s)
@@ -316,12 +323,12 @@ void StitchLibraryUi::createSet()
         StitchSet *found = StitchLibrary::inst()->findStitchSet(text);
         if(found) {
             QMessageBox msgbox;
-            msgbox.setText(tr("A Set with this name already exists in your stitch library."));
-            msgbox.setInformativeText(tr("What would you like to do with this set?"));
+            msgbox.setText(tr("A stitch set with the name '%1' already exists in your library.").arg(text));
+            msgbox.setInformativeText(tr("What would you like to do?"));
             msgbox.setIcon(QMessageBox::Question);
-            QPushButton *overwrite = msgbox.addButton(tr("Overwrite the existing set"), QMessageBox::AcceptRole);
-            QPushButton *rename = msgbox.addButton(tr("Rename the new stitch set"), QMessageBox::ApplyRole);
-            QPushButton *cancel = msgbox.addButton(tr("Cancel adding the new set"), QMessageBox::RejectRole);
+            QPushButton *overwrite = msgbox.addButton(tr("Replace the existing set"), QMessageBox::AcceptRole);
+            QPushButton *rename = msgbox.addButton(tr("Change the name of the new set"), QMessageBox::ApplyRole);
+            QPushButton *cancel = msgbox.addButton(tr("Don't add the new set"), QMessageBox::RejectRole);
 
              msgbox.exec();
              if(msgbox.clickedButton() == overwrite) {
@@ -354,7 +361,7 @@ void StitchLibraryUi::removeSet()
     msgbox.setInformativeText(tr("Are you sure you want to remove the set?"));
     msgbox.setIcon(QMessageBox::Question);
     QPushButton *remove = msgbox.addButton(tr("Yes, remove the set and it's files"),QMessageBox::AcceptRole);
-    /*QPushButton *keep =*/ msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
+    /*QPushButton *keep =*/ msgbox.addButton(tr("No, keep the set as is"), QMessageBox::RejectRole);
 
     msgbox.exec();
     if(msgbox.clickedButton() != remove)

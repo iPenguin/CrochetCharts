@@ -83,9 +83,9 @@ void StitchIconUi::addIcon()
     if(destInfo.exists()) {
         QMessageBox msgbox(this);
         msgbox.setText(tr("A file with the name '%1' already exists.").arg(srcInfo.fileName()));
-        msgbox.setInformativeText(tr("Would you like to overwrite the existing file?"));
+        msgbox.setInformativeText(tr("Would you like to replace the existing file?"));
         msgbox.setIcon(QMessageBox::Question);
-        QPushButton *overwrite = msgbox.addButton(tr("Overwrite the file"), QMessageBox::AcceptRole);
+        QPushButton *overwrite = msgbox.addButton(tr("Replace existing file"), QMessageBox::AcceptRole);
         /*QPushButton *cancel =*/ msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
         
         msgbox.exec();
