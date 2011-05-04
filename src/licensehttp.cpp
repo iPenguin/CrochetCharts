@@ -38,7 +38,7 @@ void LicenseHttp::downloadFile(QUrl url)
     file = new QFile(path + "/" + fName);
 
     if (!file->open(QIODevice::WriteOnly)){
-        QMessageBox::information(this, tr("HTTP"), tr("Unable to save the file %1: %2.")
+        QMessageBox::information(this, tr("HTTP"), tr("Unable to retrieve the license information from %1: %2")
                                  .arg(file->fileName()).arg(file->errorString()));
         delete file;
         file = 0;
@@ -77,12 +77,12 @@ void LicenseHttp::httpFinished()
 
     if (reply->error()) {
         file->remove();
-        QMessageBox::information(this, tr("Stitch Works Registration"),
+        QMessageBox::information(this, tr("%1 Registration").arg(AppInfo::inst()->appOrg),
                                  tr("%1 was unable to connect to the server to register this software. "
                                     "Please make sure you are connected to the internet. If you have a firewall "
                                     "running please make sure it allows this software to connect to the internet. "
-                                    "If you are still having problems please contact Stitch Works Software at %2")
-                                 .arg(AppInfo::inst()->appName).arg(AppInfo::inst()->appOrgContact));
+                                    "If you are still having problems please contact %2 at %3")
+                                 .arg(AppInfo::inst()->appName).arg(AppInfo::inst()->appOrg).arg(AppInfo::inst()->appOrgContact));
     } else {
         emit licenseCompleted(data, false);
     }

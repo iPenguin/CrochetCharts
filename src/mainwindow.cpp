@@ -547,6 +547,7 @@ bool MainWindow::promptToSave()
     QMessageBox msgbox(this);
     msgbox.setText(tr("The document '%1' has unsaved changes.").arg(niceName));
     msgbox.setInformativeText(tr("Do you want to save the changes?"));
+    msgbox.setIcon(QMessageBox::Warning);
     msgbox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     
     int results = msgbox.exec();
