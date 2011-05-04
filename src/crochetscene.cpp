@@ -63,7 +63,7 @@ void CrochetScene::initDemoBackground()
         for(int c = 0; c < ceil(demoCols); ++c) {
             for(int i = 0; i < ceil(demoRows); ++i) {
                 demoText = addSimpleText(demoString, demoFont);
-                demoText->setBrush(QBrush(QColor(Qt::lightGray)));
+                demoText->setBrush(QBrush(QColor("#ECECEC")));
                 QPointF point = QPointF(rect.left() + c*stringWidth , rect.top() + i*(2*fontSize));
                 demoText->setPos(point);
                 demoText->setZValue(-1);
