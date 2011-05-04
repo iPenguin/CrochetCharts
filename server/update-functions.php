@@ -34,7 +34,7 @@ function generate_download_url($software, $version, $os)
             $url .= '.dmg';
             break;
         case 'linux':
-            $url .= '.bin';
+            $url .= '.deb';
             break;
         default:
             $url .= '.exe';
