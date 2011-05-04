@@ -68,6 +68,7 @@ private:
 
     LicenseHttp *mLicHttp;
     bool mAllowNextPage;
+    bool mDownloadFile;
 };
 
 class RegisterPage : public QWizardPage
@@ -97,6 +98,7 @@ private:
 
     LicenseHttp *mLicHttp;
     bool mAllowNextPage;
+    bool mDownloadFile;
 };
 
 class ConclusionPage : public QWizardPage

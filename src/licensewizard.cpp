@@ -113,8 +113,13 @@ int IntroPage::nextId() const
 }
 
 EvaluatePage::EvaluatePage(QWidget *parent)
-    : QWizardPage(parent), mLicHttp(0)
+    : QWizardPage(parent), mLicHttp(0), mDownloadFile(false)
 {
+    if(!mLicHttp) {
+        mLicHttp = new LicenseHttp(this);
+        connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), SLOT(getLicense(QString,bool)));
+    }
+    
     mAllowNextPage = false;
 
     setTitle(tr("Evaluate <i>%1</i>").arg(qApp->applicationName()));
@@ -157,24 +162,35 @@ int EvaluatePage::nextId() const
     return LicenseWizard::Page_Conclusion;
 }
 
+/**
+ * validatePage()
+ * Some Notes: The first time this function is called it spawns a thread that checks the server
+ * for a license and returns before the thread has completed so we don't allow movement to the
+ * next page.
+ * Once the thread returns it calls getLicense and wizard()->next(); where the validatePage function
+ * is called again. To prevent a second thread from trying to get the license I've used mDownloadFile.
+ */
 bool EvaluatePage::validatePage()
 {
-    //Look up the licensePage value so I can use a testing server if I need to, otherwise it
-    //should always default to the live server as specified in AppInfo::inst()->licensePage;
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     QString path = Settings::inst()->value("licensePage").toString();
     path = QString(path).arg("").arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);
 
-    if(!mLicHttp)
-        mLicHttp = new LicenseHttp(this);
-    mLicHttp->downloadFile(url);
-    connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), this, SLOT(getLicense(QString,bool)));
-
+    if(mDownloadFile)
+        mDownloadFile = false;
+    else {
+        mLicHttp->downloadFile(url);
+        mDownloadFile = true;
+    }
+    
+    QApplication::restoreOverrideCursor();
     return mAllowNextPage;
 }
 
 void EvaluatePage::getLicense(QString license, bool errors)
 {
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     if(errors) {
         mAllowNextPage = false;
         QMessageBox::information(this, "Error", tr("%1 was unable to register with the server."
@@ -185,11 +201,17 @@ void EvaluatePage::getLicense(QString license, bool errors)
     setField("evaluate.license", QVariant(license));
     mAllowNextPage = true;
     wizard()->next();
+    QApplication::restoreOverrideCursor();
 }
 
 RegisterPage::RegisterPage(QWidget *parent)
-    : QWizardPage(parent), mLicHttp(0)
+    : QWizardPage(parent), mLicHttp(0), mDownloadFile(false)
 {
+    if(!mLicHttp) {
+        mLicHttp = new LicenseHttp(this);
+        connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), SLOT(getLicense(QString,bool)));
+    }
+    
     mAllowNextPage = false;
 
     setTitle(tr("Register Your Copy of <i>%1</i>&trade;").arg(qApp->applicationName()));
@@ -246,24 +268,35 @@ void RegisterPage::initializePage()
     emailLineEdit->setText(email);
 }
 
+/**
+ * validatePage()
+ * Some Notes: The first time this function is called it spawns a thread that checks the server
+ * for a license and returns before the thread has completed so we don't allow movement to the
+ * next page.
+ * Once the thread returns it calls getLicense and wizard()->next(); where the validatePage function
+ * is called again. To prevent a second thread from trying to get the license I've used mDownloadFile.
+ */
 bool RegisterPage::validatePage()
 {
-    //Look up the licensePage value so I can use a testing server if I need to, otherwise it
-    //should always default to the live server as specified in AppInfo::inst()->licensePage;
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     QString path = Settings::inst()->value("licensePage").toString();
     path = QString(path).arg(serialNumberLineEdit->text()).arg(emailLineEdit->text()).arg(firstNameLineEdit->text()).arg(lastNameLineEdit->text());
     QUrl url(path);
 
-    if(!mLicHttp)
-        mLicHttp = new LicenseHttp(this);
-    mLicHttp->downloadFile(url);
-    connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), SLOT(getLicense(QString,bool)));
-
+    if(mDownloadFile)
+        mDownloadFile = false;
+    else {
+        mLicHttp->downloadFile(url);
+        mDownloadFile = true;
+    }
+    
+    QApplication::restoreOverrideCursor();
     return mAllowNextPage;
 }
 
 void RegisterPage::getLicense(QString license, bool errors)
 {
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     if(errors) {
         mAllowNextPage = false;
         //FIXME: consolidate this with the code from the eval page.
@@ -275,6 +308,7 @@ void RegisterPage::getLicense(QString license, bool errors)
     setField("register.license", QVariant(license));
     mAllowNextPage = true;
     this->wizard()->next();
+    QApplication::restoreOverrideCursor();
 }
 
 int RegisterPage::nextId() const
