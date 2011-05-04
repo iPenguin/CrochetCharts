@@ -237,8 +237,9 @@ void StitchLibraryUi::addSelected()
                 QMessageBox msgbox;
                 msgbox.setText(tr("A stitch with the name '%1' already exists in the master set.").arg(s->name()));
                 msgbox.setInformativeText(tr("Would you like to replace it with this one?"));
+                msgbox.setIcon(QMessageBox::Question);
                 QPushButton *confirm = msgbox.addButton(tr("Replace the existing stitch"), QMessageBox::AcceptRole);
-                QPushButton *no      = msgbox.addButton(tr("Keep this stitch as is"), QMessageBox::InvalidRole);
+                QPushButton *no      = msgbox.addButton(tr("Keep this stitch as is"), QMessageBox::ApplyRole);
                 QPushButton *cancel  = msgbox.addButton(tr("Stop adding stitches"), QMessageBox::DestructiveRole);
 
                 msgbox.exec();
