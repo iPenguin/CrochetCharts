@@ -184,7 +184,7 @@ void EvaluatePage::getLicense(QString license, bool errors)
 
     setField("evaluate.license", QVariant(license));
     mAllowNextPage = true;
-    this->wizard()->next();
+    wizard()->next();
 }
 
 RegisterPage::RegisterPage(QWidget *parent)
@@ -257,7 +257,7 @@ bool RegisterPage::validatePage()
     if(!mLicHttp)
         mLicHttp = new LicenseHttp(this);
     mLicHttp->downloadFile(url);
-    connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), this, SLOT(getLicense(QString,bool)));
+    connect(mLicHttp, SIGNAL(licenseCompleted(QString,bool)), SLOT(getLicense(QString,bool)));
 
     return mAllowNextPage;
 }
