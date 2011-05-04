@@ -29,6 +29,10 @@
 
 #include <QDebug>
 
+
+/*****************************************************\
+ * License Wizard
+ *****************************************************/
 LicenseWizard::LicenseWizard(bool regOnly, QWidget *parent)
     : QWizard(parent)
 {
@@ -79,6 +83,9 @@ void LicenseWizard::showHelp()
     lastHelpMessage = message;
 }
 
+/*****************************************************\
+ * Intro Page
+ *****************************************************/
 IntroPage::IntroPage(bool regOnly, QWidget *parent)
     : QWizardPage(parent)
 {
@@ -112,6 +119,9 @@ int IntroPage::nextId() const
     }
 }
 
+/*****************************************************\
+ * Evaluate Page
+ *****************************************************/
 EvaluatePage::EvaluatePage(QWidget *parent)
     : QWizardPage(parent), mLicHttp(0), mDownloadFile(false)
 {
@@ -204,6 +214,9 @@ void EvaluatePage::getLicense(QString license, bool errors)
     QApplication::restoreOverrideCursor();
 }
 
+/*****************************************************\
+ * Register Page
+ *****************************************************/
 RegisterPage::RegisterPage(QWidget *parent)
     : QWizardPage(parent), mLicHttp(0), mDownloadFile(false)
 {
@@ -316,12 +329,16 @@ int RegisterPage::nextId() const
     return LicenseWizard::Page_Conclusion;
 }
 
+/*****************************************************\
+ *Conclusion Page
+ *****************************************************/
 ConclusionPage::ConclusionPage(QWidget *parent)
     : QWizardPage(parent)
 {
     setTitle(tr("Complete Your Registration"));
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/wizard_watermark.png"));
-
+    setFinalPage(true);
+    
     licenseEdit = new QTextEdit;
 
     agreeCheckBox = new QCheckBox(tr("I agree to the terms of the license"));
@@ -345,9 +362,10 @@ void ConclusionPage::initializePage()
     if(!f.open(QIODevice::ReadOnly))
         return;
     QString licenseText = f.readAll();
+    
+    licenseEdit->setText(licenseText);
+    licenseEdit->setReadOnly(true);
 
-
-    QString sn, license, email, fname, lname;
     if (wizard()->hasVisitedPage(LicenseWizard::Page_Register)) {
         sn      = field("register.serialNumber").toString();
         license = field("register.license").toString();
@@ -361,15 +379,22 @@ void ConclusionPage::initializePage()
         email   = field("evaluate.email").toString();
     }
     //else do an upgrade.
+    
+}
 
-    licenseEdit->setText(licenseText);
-    licenseEdit->setReadOnly(true);
+bool ConclusionPage::validatePage()
+{
+    bool isValid = QWizardPage::validatePage();
 
-    Settings::inst()->setValue("firstName", QVariant(fname));
-    Settings::inst()->setValue("lastName", QVariant(lname));
-    Settings::inst()->setValue("email", QVariant(email));
-    Settings::inst()->setValue("serialNumber", QVariant(sn));
-    Settings::inst()->setValue("license", QVariant(license));
+    if(isValid) {
+        Settings::inst()->setValue("firstName", QVariant(fname));
+        Settings::inst()->setValue("lastName", QVariant(lname));
+        Settings::inst()->setValue("email", QVariant(email));
+        Settings::inst()->setValue("serialNumber", QVariant(sn));
+        Settings::inst()->setValue("license", QVariant(license));
+    }
+
+    return isValid;
 }
 
 void ConclusionPage::setVisible(bool visible)
@@ -394,14 +419,4 @@ void ConclusionPage::printButtonClicked()
     QPrintDialog dialog(&printer, this);
     if (dialog.exec())
         licenseEdit->print(&printer);
-}
-
-void ConclusionPage::cleanupPage()
-{
-    //the back button has been pressed, clear the data entered...
-    Settings::inst()->setValue("firstName", "");
-    Settings::inst()->setValue("lastName", "");
-    Settings::inst()->setValue("email", "");
-    Settings::inst()->setValue("serialNumber", "");
-    Settings::inst()->setValue("license", "");
 }

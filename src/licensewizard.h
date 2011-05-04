@@ -111,14 +111,20 @@ public:
     void initializePage();
     int nextId() const;
     void setVisible(bool visible);
-    void cleanupPage();
 
+    bool validatePage();
+    
 private slots:
     void printButtonClicked();
 
 private:
     QTextEdit *licenseEdit;
     QCheckBox *agreeCheckBox;
+    QString sn,
+            license,
+            email,
+            fname,
+            lname;
 };
 
 #endif // LICENSEWIZARD_H
