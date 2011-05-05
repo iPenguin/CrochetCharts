@@ -34,7 +34,7 @@
 #include <QUndoView>
 #include <QTimer>
 
-MainWindow::MainWindow(QWidget *parent, QString fileName)
+MainWindow::MainWindow(QStringList fileNames, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
     mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
 {
@@ -52,15 +52,9 @@ MainWindow::MainWindow(QWidget *parent, QString fileName)
     checkUpdates();
     setupStitchPalette();
     setupUndoView();
-
+    
     mFile = new SaveFile(this);
-    if(!fileName.isEmpty()) {
-        mFile->fileName = fileName;
-        mFile->load(); //TODO: if not error then hide the dialog.
-        ui->newDocument->hide();
-    } else {
-        openCommandLineFiles();
-    }
+    loadFiles(fileNames);
 
     setApplicationTitle();
     setupNewTabDialog();
@@ -75,32 +69,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::openCommandLineFiles()
+void MainWindow::loadFiles(QStringList fileNames)
 {
-    //FIXME: make sure this works on a mac!
-    QStringList arguments = QCoreApplication::arguments();
-    arguments.removeFirst(); // remove the application name from the list.
-  
-    if(arguments.count() < 1)
+    
+    if(fileNames.count() < 1)
         return;
 
-    foreach(QString file, arguments) {
-        if(Settings::inst()->files.contains(file.toLower()))
-            arguments.takeFirst();
-    }
-    
-    if(arguments.count() < 1)
-        return;
-    
     if(ui->tabWidget->count() < 1) {
-        mFile->fileName = arguments.takeFirst();
+        mFile->fileName = fileNames.takeFirst();
         mFile->load(); //TODO: if !error hide dialog.
         Settings::inst()->files.insert(mFile->fileName.toLower(), this);
         ui->newDocument->hide();
     }
 
-    foreach(QString fileName, arguments) {
-        MainWindow *newWin = new MainWindow(0, fileName);
+    foreach(QString fileName, fileNames) {
+        QStringList files;
+        files.append(fileName);
+        MainWindow *newWin = new MainWindow(files);
         newWin->move(x() + 40, y() + 40);
         newWin->show();
         Settings::inst()->files.insert(mFile->fileName.toLower(), newWin);
@@ -601,7 +586,9 @@ void MainWindow::fileOpen()
 
     if(!Settings::inst()->files.contains(fileName.toLower())) {
         if(ui->tabWidget->count() > 0) {
-            MainWindow *newWin = new MainWindow(0, fileName);
+            QStringList files;
+            files.append(fileName);
+            MainWindow *newWin = new MainWindow(files);
             newWin->move(x() + 40, y() + 40);
             newWin->show();
             Settings::inst()->files.insert(fileName.toLower(), newWin);
