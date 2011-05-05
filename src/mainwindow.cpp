@@ -278,7 +278,7 @@ void MainWindow::setupMenus()
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
     
     //misc items
-    connect(&mUndoGroup, SIGNAL(documentCleanChanged(bool)), this, SLOT(documentIsModified(bool)));
+    connect(&mUndoGroup, SIGNAL(isModified(bool)), this, SLOT(documentIsModified(bool)));
     
     updateMenuItems();
 }
