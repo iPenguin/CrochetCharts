@@ -68,6 +68,7 @@ private:
 
     LicenseHttp *mLicHttp;
     bool mAllowNextPage;
+    bool mDownloadFile;
 };
 
 class RegisterPage : public QWizardPage
@@ -97,6 +98,7 @@ private:
 
     LicenseHttp *mLicHttp;
     bool mAllowNextPage;
+    bool mDownloadFile;
 };
 
 class ConclusionPage : public QWizardPage
@@ -109,14 +111,20 @@ public:
     void initializePage();
     int nextId() const;
     void setVisible(bool visible);
-    void cleanupPage();
 
+    bool validatePage();
+    
 private slots:
     void printButtonClicked();
 
 private:
     QTextEdit *licenseEdit;
     QCheckBox *agreeCheckBox;
+    QString sn,
+            license,
+            email,
+            fname,
+            lname;
 };
 
 #endif // LICENSEWIZARD_H

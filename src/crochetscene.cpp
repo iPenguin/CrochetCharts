@@ -187,7 +187,7 @@ void CrochetScene::redistributeCells(int row)
 void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch)
 {
     mStyle = style;
-    //FIXME: i*8 for flat should be just i to create a square.
+
     for(int i = 0; i < rows; ++i) {
         int pad = 0;
         if(mStyle == CrochetScene::Round)

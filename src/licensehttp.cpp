@@ -12,6 +12,7 @@
 #include "appinfo.h"
 
 #include <QDebug>
+#include <QApplication>
 
 LicenseHttp::LicenseHttp(QWidget *parent) :
     QWidget(parent)
@@ -20,8 +21,9 @@ LicenseHttp::LicenseHttp(QWidget *parent) :
 
 void LicenseHttp::downloadFile(QUrl url)
 {
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     mUrl = url;
-qDebug() << "downloadFile should only be called once" << url;
+
     // schedule the request
     httpRequestAborted = false;
     startRequest();
@@ -38,17 +40,18 @@ void LicenseHttp::httpFinished(QNetworkReply *reply)
     QString data = reply->readAll();
 
     if (reply->error()) {
+        QApplication::restoreOverrideCursor();
         QMessageBox::information(this, tr("%1 Registration").arg(AppInfo::inst()->appOrg),
                                  tr("%1 was unable to connect to the server to register this software. "
                                     "Please make sure you are connected to the internet. If you have a firewall "
-                                    "running please make sure it allows this software to connect to the internet. "
-                                    "If you are still having problems please contact %2 at %3")
+                                    "running please make sure it allows %1 to connect to the internet. "
+                                    "If you are still having problems please contact %2 using the form at %3")
                                  .arg(AppInfo::inst()->appName).arg(AppInfo::inst()->appOrg).arg(AppInfo::inst()->appOrgContact));
         return;
     }
-
-    emit licenseCompleted(data, false);
    
     reply->deleteLater();
     reply = 0;
+    QApplication::restoreOverrideCursor();
+    emit licenseCompleted(data, false);
 }

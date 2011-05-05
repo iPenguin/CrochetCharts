@@ -80,12 +80,6 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
 
 CrochetTab::~CrochetTab()
 {
-    delete mView;
-    delete mScene;
-    delete mTextView;
-    mView = 0;
-    mScene = 0;
-    mTextView = 0;
 }
 
 QStringList CrochetTab::editModes()

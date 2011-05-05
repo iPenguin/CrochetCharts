@@ -29,7 +29,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     friend class SaveFile;
 public:
-    explicit MainWindow(QWidget *parent = 0, QString fileName = "");
+    explicit MainWindow(QStringList fileNames = QStringList(), QWidget *parent = 0);
     ~MainWindow();
 
     bool hasTab();
@@ -105,7 +105,7 @@ private slots:
     void selectColor(QModelIndex index);
     
 private:
-    void openCommandLineFiles();
+    void loadFiles(QStringList fileNames);
     
     void setupMenus();
     void updateMenuItems();

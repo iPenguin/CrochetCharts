@@ -53,7 +53,10 @@ int main(int argc, char *argv[])
 
     splash.showMessage(QObject::tr("Loading Main Window..."));
 
-    MainWindow w;
+    QStringList arguments = QCoreApplication::arguments();
+    arguments.removeFirst(); // remove the application name from the list.
+    
+    MainWindow w(arguments);
     w.show();
     splash.finish(&w);
     return a.exec();

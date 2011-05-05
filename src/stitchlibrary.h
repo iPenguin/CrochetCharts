@@ -76,6 +76,7 @@ public:
 
     void resetMasterStitchSet();
 
+    //save all changes in the sets out to the xml files.
     void saveAllSets();
 
     void reloadAllStitches();
