@@ -504,7 +504,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
         if(Settings::inst()->files.contains(mFile->fileName))
             Settings::inst()->files.remove(mFile->fileName.toLower());
-        
+
         QMainWindow::closeEvent(event);
     } else {
         event->ignore();
@@ -513,11 +513,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 bool MainWindow::safeToClose()
 {
+    //if this file is dirty, save and return.
     foreach(QUndoStack *stack, mUndoGroup.stacks()) {
         if(!stack->isClean())
             return promptToSave();
     }
 
+    //if this is an unsaved file prompt and return.
     if(mFile->fileName.isEmpty() && mUndoGroup.stacks().count() > 0)
         return promptToSave();
 
