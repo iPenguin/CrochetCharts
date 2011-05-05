@@ -974,21 +974,11 @@ void MainWindow::toolsCheckForUpdates()
 
 void MainWindow::toolsStitchLibrary()
 {
-    StitchLibraryUi *d = new StitchLibraryUi(this);
-    int value = d->exec();
+    StitchLibraryUi d(this);
+    d.exec();
     
-    if(value != QDialog::Accepted) {
-        delete d;
-        d = 0;
-        return;
-    }
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    
     StitchLibrary::inst()->saveAllSets();
-
-    delete d;
-    d = 0;
-    
     QApplication::restoreOverrideCursor();
 }
 
