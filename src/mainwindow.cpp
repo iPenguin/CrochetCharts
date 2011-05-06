@@ -513,15 +513,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 bool MainWindow::safeToClose()
 {
-    //if this file is dirty, save and return.
-    foreach(QUndoStack *stack, mUndoGroup.stacks()) {
-        if(!stack->isClean())
+    if(isWindowModified())
             return promptToSave();
-    }
-
-    //if this is an unsaved file prompt and return.
-    if(mFile->fileName.isEmpty() && mUndoGroup.stacks().count() > 0)
-        return promptToSave();
 
     return true;
 }
@@ -941,8 +934,12 @@ void MainWindow::chartEditName()
     bool ok;
     QString newName = QInputDialog::getText(this, tr("Set Chart Name"), tr("Chart name:"),
                                             QLineEdit::Normal, currentName, &ok);
-    if(ok && !newName.isEmpty())
+    if(ok && !newName.isEmpty()) {
         ui->tabWidget->setTabText(curTab, newName);
+        qDebug() << newName << currentName;
+        if(newName != currentName)
+            documentIsModified(true);
+    }
 }
 
 void MainWindow::toolsRegisterSoftware()
