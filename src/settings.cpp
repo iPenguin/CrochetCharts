@@ -100,6 +100,9 @@ void Settings::setupValueList() {
     mValueList["checkForUpdates"] = QVariant(true);
     mValueList["fileLocation"] = QVariant(userDocs);
 
+    mValueList["maxRecentFiles"] = QVariant(5);
+    mValueList["recentFiles"] = QVariant(QStringList());
+    
     mValueList["geometry"] = QVariant("");
     mValueList["windowState"] = QVariant("");
 
