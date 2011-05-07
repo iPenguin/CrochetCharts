@@ -66,13 +66,14 @@ void LicenseWizard::showHelp()
             message = tr("You may evaluate the software before you purchase a serial number and register it.");
             break;
         case Page_Evaluate:
-            message = tr("Please provide your name, and a valid email address.");
+            message = tr("Your name and a valid email address will be used to generate a demo license for your use in evaluating this software.");
             break;
         case Page_Register:
-            message = tr("If you do not provide a valid email and serial number you cannot proceed.");
+            message = tr("If you do not provide a valid email and serial number you will not be able to register this software."
+                "The information you provide here will be used to generate a license to run the software.");
             break;
         case Page_Conclusion:
-            message = tr("You must accept the terms and conditions of the license to proceed.");
+            message = tr("You must accept the terms and conditions of the license to if you wish to use the software.");
             break;
         default:
             message = tr("There is no help available for this page. Please contact %1 by using the form at %2")
@@ -92,8 +93,9 @@ IntroPage::IntroPage(bool regOnly, QWidget *parent)
     setTitle(tr("Introduction"));
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/wizard_watermark.png"));
 
-    topLabel = new QLabel(tr("This wizard will walk you through the registration of "
-                             "<i>%1</i>.").arg(qApp->applicationName()));
+    topLabel = new QLabel(tr("This wizard will walk you through the registration of <i>%1</i>. "
+                "This licensing wizard requires you to be connected to the internet. "
+                ).arg(qApp->applicationName()));
     topLabel->setWordWrap(true);
 
     registerRadioButton = new QRadioButton(tr("&Register your copy"));
@@ -346,6 +348,7 @@ ConclusionPage::ConclusionPage(QWidget *parent)
     registerField("conclusion.agree*", agreeCheckBox);
 
     QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(new QLabel(tr("An internet connection is no longer required to run this software.")));
     layout->addWidget(licenseEdit);
     layout->addWidget(agreeCheckBox);
     setLayout(layout);

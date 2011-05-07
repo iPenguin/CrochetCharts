@@ -79,6 +79,7 @@ void MainWindow::loadFiles(QStringList fileNames)
         mFile->fileName = fileNames.takeFirst();
         mFile->load(); //TODO: if !error hide dialog.
         Settings::inst()->files.insert(mFile->fileName.toLower(), this);
+        mRecentFiles.prepend(mFile->fileName.toLower());
         ui->newDocument->hide();
     }
 
@@ -89,6 +90,7 @@ void MainWindow::loadFiles(QStringList fileNames)
         newWin->move(x() + 40, y() + 40);
         newWin->show();
         Settings::inst()->files.insert(mFile->fileName.toLower(), newWin);
+        mRecentFiles.prepend(mFile->fileName.toLower());
     }
 }
 
@@ -163,17 +165,18 @@ void MainWindow::setupUndoView()
 void MainWindow::setupMenus()
 {
     //File Menu
-    connect(ui->menuFile, SIGNAL(aboutToShow()), this, SLOT(menuFileAboutToShow()));
-    connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(fileNew()));
-    connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
-    connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(fileSave()));
-    connect(ui->actionSaveAs, SIGNAL(triggered()), this, SLOT(fileSaveAs()));
+    connect(ui->menuFile, SIGNAL(aboutToShow()), SLOT(menuFileAboutToShow()));
+    connect(ui->menuFile, SIGNAL(aboutToShow()), SLOT(menuRecentFilesAboutToShow()));
+    connect(ui->actionNew, SIGNAL(triggered()), SLOT(fileNew()));
+    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(fileOpen()));
+    connect(ui->actionSave, SIGNAL(triggered()), SLOT(fileSave()));
+    connect(ui->actionSaveAs, SIGNAL(triggered()), SLOT(fileSaveAs()));
 
-    connect(ui->actionPrint, SIGNAL(triggered()), this, SLOT(filePrint()));
-    connect(ui->actionPrintPreview, SIGNAL(triggered()), this, SLOT(filePrintPreview()));
-    connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(fileExport()));
+    connect(ui->actionPrint, SIGNAL(triggered()), SLOT(filePrint()));
+    connect(ui->actionPrintPreview, SIGNAL(triggered()), SLOT(filePrintPreview()));
+    connect(ui->actionExport, SIGNAL(triggered()), SLOT(fileExport()));
 
-    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
+    connect(ui->actionQuit, SIGNAL(triggered()), SLOT(close()));
   
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open", QIcon(":/images/fileopen.png")));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new", QIcon(":/images/filenew.png")));
@@ -186,6 +189,8 @@ void MainWindow::setupMenus()
     
     ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
 
+    setupRecentFiles();
+    
     //Edit Menu
     connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
 
@@ -278,9 +283,59 @@ void MainWindow::setupMenus()
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
     
     //misc items
-    connect(&mUndoGroup, SIGNAL(documentCleanChanged(bool)), this, SLOT(documentIsModified(bool)));
+    connect(&mUndoGroup, SIGNAL(isModified(bool)), this, SLOT(documentIsModified(bool)));
     
     updateMenuItems();
+}
+
+void MainWindow::menuRecentFilesAboutToShow()
+{
+    //update which items in the recent list we can see.
+    int maxRecentFiles = Settings::inst()->value("maxRecentFiles").toInt();
+    for(int i = 0; i < mRecentFilesActs.count(); ++i) {
+        QAction *a = mRecentFilesActs.at(i);
+        if(i < maxRecentFiles)
+            a->setVisible(true);
+        else
+            a->setVisible(false);
+    }
+}
+
+void MainWindow::setupRecentFiles()
+{
+    mRecentFiles = Settings::inst()->value("recentFiles").toStringList();
+    int maxRecentFiles = Settings::inst()->value("maxRecentFiles").toInt();
+    qDebug() << mRecentFiles;
+    for(int i = 0; i < mRecentFiles.count(); ++i) {
+        QString text = tr("&%1 %2").arg(i + 1).arg(QFileInfo(mRecentFiles[i]).fileName());
+        QAction *a = new QAction(this);
+
+        a->setText(text);
+        a->setData(mRecentFiles[i]);
+        if(i < maxRecentFiles)
+            a->setVisible(true);
+        else
+            a->setVisible(false);
+        mRecentFilesActs.append(a);
+    }
+
+    ui->menuOpenRecent->addActions(mRecentFilesActs);
+}
+
+void MainWindow::saveRecentFiles()
+{
+    int maxRecentFiles = Settings::inst()->value("maxRecentFiles").toInt();
+    
+    QStringList subList;
+
+    //when saving the recent files to disk only save the amount the user wants to see.
+    if(mRecentFiles.count() > maxRecentFiles) {
+        for(int i = 0; i < maxRecentFiles; ++i)
+            subList.append(mRecentFiles.at(i));
+    } else
+        subList = mRecentFiles;
+    
+    Settings::inst()->setValue("recentFiles", QVariant(subList));
 }
 
 void MainWindow::updateMenuItems()
@@ -501,6 +556,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if(safeToClose()) {
         Settings::inst()->setValue("geometry", saveGeometry());
         Settings::inst()->setValue("windowState", saveState());
+        saveRecentFiles();
 
         if(Settings::inst()->files.contains(mFile->fileName))
             Settings::inst()->files.remove(mFile->fileName.toLower());
@@ -513,15 +569,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 bool MainWindow::safeToClose()
 {
-    //if this file is dirty, save and return.
-    foreach(QUndoStack *stack, mUndoGroup.stacks()) {
-        if(!stack->isClean())
+    if(isWindowModified())
             return promptToSave();
-    }
-
-    //if this is an unsaved file prompt and return.
-    if(mFile->fileName.isEmpty() && mUndoGroup.stacks().count() > 0)
-        return promptToSave();
 
     return true;
 }
@@ -600,6 +649,7 @@ void MainWindow::fileOpen()
             mFile->load();
             Settings::inst()->files.insert(mFile->fileName.toLower(), this);
         }
+        mRecentFiles.append(fileName.toLower());
 
         setApplicationTitle();
         updateMenuItems();
@@ -941,8 +991,12 @@ void MainWindow::chartEditName()
     bool ok;
     QString newName = QInputDialog::getText(this, tr("Set Chart Name"), tr("Chart name:"),
                                             QLineEdit::Normal, currentName, &ok);
-    if(ok && !newName.isEmpty())
+    if(ok && !newName.isEmpty()) {
         ui->tabWidget->setTabText(curTab, newName);
+        qDebug() << newName << currentName;
+        if(newName != currentName)
+            documentIsModified(true);
+    }
 }
 
 void MainWindow::toolsRegisterSoftware()

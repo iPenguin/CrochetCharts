@@ -20,38 +20,25 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Application</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="margin">
-        <number>4</number>
-       </property>
-       <item>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="1">
         <widget class="QCheckBox" name="checkForUpdates">
          <property name="text">
-          <string>Check for Updates on Startup</string>
+          <string/>
          </property>
          <property name="checked">
           <bool>true</bool>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="1" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>File Location:</string>
-           </property>
-           <property name="buddy">
-            <cstring>fileLocation</cstring>
-           </property>
-          </widget>
-         </item>
          <item>
           <widget class="QLineEdit" name="fileLocation"/>
          </item>
@@ -64,7 +51,20 @@
          </item>
         </layout>
        </item>
-       <item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="maxRecentFiles">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>50</number>
+         </property>
+         <property name="value">
+          <number>5</number>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -76,6 +76,39 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Maximum Recent Files:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>File Location:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>fileLocation</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_26">
+         <property name="text">
+          <string>Check for Updates on Startup:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

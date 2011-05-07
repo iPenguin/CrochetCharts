@@ -53,6 +53,7 @@ protected slots:
 //menu functions/slots:
 private slots:
     void menuFileAboutToShow();
+    void menuRecentFilesAboutToShow();
     void fileNew();
     void fileOpen();
     void fileSave();
@@ -108,6 +109,8 @@ private:
     void loadFiles(QStringList fileNames);
     
     void setupMenus();
+    void setupRecentFiles();
+    void saveRecentFiles();
     void updateMenuItems();
     
     void setupStitchPalette();
@@ -156,6 +159,9 @@ private:
     QAction *mActionUndo,
             *mActionRedo;
 
+    QStringList mRecentFiles;
+    QList<QAction*> mRecentFilesActs;
+    
     QDockWidget *mUndoDock;
     UndoGroup mUndoGroup;
 

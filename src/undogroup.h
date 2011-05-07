@@ -13,13 +13,13 @@ class UndoGroup : public QUndoGroup
 public:
     UndoGroup(QObject *parent = 0);
 
+    void addStack(QUndoStack *stack);
+    
 signals:
-    void documentCleanChanged(bool clean);
+    void isModified(bool clean);
     
 private slots:
     void checkAllCleanStates();
 
-private:
-    bool mClean;
 };
 #endif //UNDOGROUP_H
