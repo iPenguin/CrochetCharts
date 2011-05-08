@@ -58,6 +58,6 @@ int main(int argc, char *argv[])
     
     MainWindow w(arguments);
     w.show();
-    splash.finish(&w);
+    //splash.finish(&w);
     return a.exec();
 }
