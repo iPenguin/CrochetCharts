@@ -16,6 +16,7 @@ class CrochetScene : public QGraphicsScene
 {
     Q_OBJECT
     friend class SaveFile;
+    friend class SaveThread;
     friend class SetCellRotation;
 public:
 

@@ -79,7 +79,7 @@ void MainWindow::loadFiles(QStringList fileNames)
         mFile->fileName = fileNames.takeFirst();
         mFile->load(); //TODO: if !error hide dialog.
         Settings::inst()->files.insert(mFile->fileName.toLower(), this);
-        mRecentFiles.prepend(mFile->fileName.toLower());
+        addToRecentFiles(mFile->fileName);
         ui->newDocument->hide();
     }
 
@@ -90,7 +90,7 @@ void MainWindow::loadFiles(QStringList fileNames)
         newWin->move(x() + 40, y() + 40);
         newWin->show();
         Settings::inst()->files.insert(mFile->fileName.toLower(), newWin);
-        mRecentFiles.prepend(mFile->fileName.toLower());
+        addToRecentFiles(fileName);
     }
 }
 
@@ -189,7 +189,8 @@ void MainWindow::setupMenus()
     
     ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
 
-    setupRecentFiles();
+    QStringList files = Settings::inst()->value("recentFiles").toStringList();
+    setupRecentFiles(files);
     
     //Edit Menu
     connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
@@ -288,28 +289,45 @@ void MainWindow::setupMenus()
     updateMenuItems();
 }
 
-void MainWindow::menuRecentFilesAboutToShow()
+void MainWindow::openRecentFile()
 {
-    //update which items in the recent list we can see.
-    int maxRecentFiles = Settings::inst()->value("maxRecentFiles").toInt();
-    for(int i = 0; i < mRecentFilesActs.count(); ++i) {
-        QAction *a = mRecentFilesActs.at(i);
-        if(i < maxRecentFiles)
-            a->setVisible(true);
-        else
-            a->setVisible(false);
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action) {
+        QStringList files;
+        files.append(action->data().toString());
+        loadFiles(files);
     }
+    QApplication::restoreOverrideCursor();
 }
 
-void MainWindow::setupRecentFiles()
+void MainWindow::addToRecentFiles(QString fileName)
 {
-    mRecentFiles = Settings::inst()->value("recentFiles").toStringList();
+
+    if(mRecentFiles.contains(fileName))
+        mRecentFiles.removeAll(fileName);
+    mRecentFiles.prepend(fileName);
+}
+
+void MainWindow::menuRecentFilesAboutToShow()
+{
+    setupRecentFiles();
+}
+
+void MainWindow::setupRecentFiles(QStringList files)
+{
+    if(files.count() > 0)
+        mRecentFiles = files;
+    
     int maxRecentFiles = Settings::inst()->value("maxRecentFiles").toInt();
-    qDebug() << mRecentFiles;
+    mRecentFilesActs.clear();
+   
+    
     for(int i = 0; i < mRecentFiles.count(); ++i) {
         QString text = tr("&%1 %2").arg(i + 1).arg(QFileInfo(mRecentFiles[i]).fileName());
         QAction *a = new QAction(this);
-
+        connect(a, SIGNAL(triggered()), SLOT(openRecentFile()));
+        
         a->setText(text);
         a->setData(mRecentFiles[i]);
         if(i < maxRecentFiles)
@@ -319,6 +337,7 @@ void MainWindow::setupRecentFiles()
         mRecentFilesActs.append(a);
     }
 
+    ui->menuOpenRecent->clear();
     ui->menuOpenRecent->addActions(mRecentFilesActs);
 }
 
@@ -649,7 +668,8 @@ void MainWindow::fileOpen()
             mFile->load();
             Settings::inst()->files.insert(mFile->fileName.toLower(), this);
         }
-        mRecentFiles.append(fileName.toLower());
+        
+        addToRecentFiles(fileName);
 
         setApplicationTitle();
         updateMenuItems();

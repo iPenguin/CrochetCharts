@@ -104,12 +104,14 @@ private slots:
     void selectColor();
     void selectStitch(QModelIndex index);
     void selectColor(QModelIndex index);
+
+    void openRecentFile();
     
 private:
     void loadFiles(QStringList fileNames);
     
     void setupMenus();
-    void setupRecentFiles();
+    void setupRecentFiles(QStringList files = QStringList());
     void saveRecentFiles();
     void updateMenuItems();
     
@@ -159,6 +161,7 @@ private:
     QAction *mActionUndo,
             *mActionRedo;
 
+    void addToRecentFiles(QString fileName);
     QStringList mRecentFiles;
     QList<QAction*> mRecentFilesActs;
     

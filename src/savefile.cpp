@@ -19,6 +19,8 @@
 #include "stitchlibrary.h"
 #include "stitchset.h"
 
+#include "savethread.h"
+
 #include "mainwindow.h"
 
 SaveFile::SaveFile(QWidget* parent)
@@ -266,7 +268,8 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         } else if(tag == "freeform") {
             tab->scene()->mFreeForm = (bool)stream->readElementText().toInt();
         } else if(tag == "cell") {
-            loadCell(tab, stream);
+            SaveThread *sth = new SaveThread(tab, stream);
+            sth->run();
         }
     }
     
