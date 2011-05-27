@@ -190,10 +190,20 @@ void StitchLibraryUi::removeStitch()
                 //FIXME: make this a question, if yes remove set.
                 QMessageBox msgbox(this);
                 msgbox.setText(tr("A set must have at least one stitch."));
-                msgbox.setInformativeText(tr("If you wish to remove this stich you may remove the set."));
+                msgbox.setInformativeText(tr("If you wish to remove this stich you must remove the set."));
                 msgbox.setIcon(QMessageBox::Information);
-                msgbox.setStandardButtons(QMessageBox::Ok);
+                QPushButton *removeSet = msgbox.addButton(tr("Remove the stitch set"), QMessageBox::AcceptRole);
+                /*QPushButton *keepStitch =*/ msgbox.addButton(tr("Keep the last stitch"), QMessageBox::RejectRole);
+                
                 msgbox.exec();
+
+                if(msgbox.clickedButton() == removeSet) {
+                    StitchLibrary::inst()->removeSet(set->name());
+                    
+                    //switch to the master set.
+                    updateSourceDropDown(StitchLibrary::inst()->masterStitchSet()->name());
+                }
+                
                 return;
             }
             QString st = set->data(set->index(i, 0), Qt::EditRole).toString();
