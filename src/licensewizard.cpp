@@ -91,7 +91,7 @@ IntroPage::IntroPage(bool regOnly, QWidget *parent)
     : QWizardPage(parent)
 {
     setTitle(tr("Introduction"));
-    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/wizard_watermark.png"));
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark.svg"));
 
     topLabel = new QLabel(tr("This wizard will walk you through the registration of <i>%1</i>. "
                 "This licensing wizard requires you to be connected to the internet. "
@@ -338,7 +338,7 @@ ConclusionPage::ConclusionPage(QWidget *parent)
     : QWizardPage(parent)
 {
     setTitle(tr("Complete Your Registration"));
-    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/wizard_watermark.png"));
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark.svg"));
     setFinalPage(true);
     
     licenseEdit = new QTextEdit;

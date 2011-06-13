@@ -255,6 +255,10 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionStrechMode);
     
     ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color", QIcon(":/images/fill-color.png")));
+    ui->actionGridMode->setIcon(QIcon::fromTheme("mode-insert", QIcon(":/images/insert_stitch.svg")));
+    ui->actionPositionMode->setIcon(QIcon::fromTheme("mode-position", QIcon(":/images/position_stitch.svg")));
+    ui->actionAngleMode->setIcon(QIcon::fromTheme("mode-angle", QIcon(":/images/rotate_stitch.svg")));
+    ui->actionStrechMode->setIcon(QIcon::fromTheme("mode-strech", QIcon(":/images/strech_mode.svg")));
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
     
