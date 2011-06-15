@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../crochet.qrc">
-    <normaloff>:/images/crochet_icon.png</normaloff>:/images/crochet_icon.png</iconset>
+    <normaloff>:/images/splashscreen.png</normaloff>:/images/splashscreen.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -732,7 +732,7 @@
    </property>
    <property name="icon">
     <iconset resource="../crochet.qrc">
-     <normaloff>:/images/stitch_mode.png</normaloff>:/images/stitch_mode.png</iconset>
+     <normaloff>:/images/stitch_mode.svg</normaloff>:/images/stitch_mode.svg</iconset>
    </property>
    <property name="text">
     <string>Stitch Mode</string>
@@ -761,7 +761,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="../crochet.qrc">
+    <iconset>
      <normaloff>:/images/grid_mode.png</normaloff>:/images/grid_mode.png</iconset>
    </property>
    <property name="text">
@@ -777,7 +777,7 @@
    </property>
    <property name="icon">
     <iconset resource="../crochet.qrc">
-     <normaloff>:/images/position_mode.png</normaloff>:/images/position_mode.png</iconset>
+     <normaloff>:/images/position_stitch.svg</normaloff>:/images/position_stitch.svg</iconset>
    </property>
    <property name="text">
     <string>Position Mode</string>

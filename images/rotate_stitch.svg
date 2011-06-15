@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64px"
+   height="64px"
+   id="svg9968"
+   version="1.1"
+   inkscape:version="0.48.0 r9654"
+   sodipodi:docname="rotate_stitch.svg">
+  <defs
+     id="defs9970" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.88"
+     inkscape:cx="16.566438"
+     inkscape:cy="32"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="1212"
+     inkscape:window-height="1004"
+     inkscape:window-x="1276"
+     inkscape:window-y="-3"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata9973">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5.06699991;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 7.4083294,31.815818 C 1.7797896,27.914099 1.9357048,18.495124 5.299238,14.427192 8.6627724,10.358993 15.959543,8.281558 21.231481,8.281558"
+       id="path9095"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="czs" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 14.553038,4.924758 c 2.830164,1.2517 5.666961,2.423 8.163165,3.6993 -2.465876,1.7811 -4.859622,3.329 -6.913165,5.0507"
+       id="path9097"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
+    <g
+       style="font-size:41.66669845999999922px;font-style:normal;font-weight:400;fill:none;stroke:#94c2ff;stroke-width:8.00712298999999916;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Ubuntu"
+       transform="matrix(-0.73708971,-0.00632531,0.00454693,-0.52982112,63.375409,65.70534)"
+       font-size="41.6667"
+       font-weight="400"
+       font-style="normal"
+       id="g6180">
+      <path
+         inkscape:connector-curvature="0"
+         vector-effect="none"
+         d="m 62.9091,35.7273 c 0,10.5938 -13.228,19.1818 -29.5455,19.1818 -16.3175,0 -29.54542,-8.588 -29.54542,-19.1818 0,-10.5939 13.22792,-19.1818 29.54542,-19.1818 16.3175,0 29.5455,8.5879 29.5455,19.1818"
+         id="path6182"
+         style="stroke-width:8.00712298999999916;stroke-miterlimit:4;stroke-dasharray:none;stroke:#94c2ff;stroke-opacity:1" />
+    </g>
+    <g
+       style="font-size:41.66669846px;font-style:normal;font-weight:400;fill:none;stroke:#3366aa;stroke-width:8.00712299;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Ubuntu"
+       transform="matrix(-0.64681927,-0.35350542,0.25410045,-0.46493446,41.868643,72.850337)"
+       font-size="41.6667"
+       font-weight="400"
+       font-style="normal"
+       id="g6180-4">
+      <path
+         inkscape:connector-curvature="0"
+         vector-effect="none"
+         d="m 62.9091,35.7273 c 0,10.5938 -13.228,19.1818 -29.5455,19.1818 -16.3175,0 -29.54542,-8.588 -29.54542,-19.1818 0,-10.5939 13.22792,-19.1818 29.54542,-19.1818 16.3175,0 29.5455,8.5879 29.5455,19.1818"
+         id="path6182-5"
+         style="stroke-width:8.00712299;stroke-miterlimit:4;stroke-dasharray:none" />
+    </g>
+  </g>
+</svg>
