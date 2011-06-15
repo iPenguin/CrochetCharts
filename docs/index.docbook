@@ -73,6 +73,8 @@
     </chapter>
     
     <chapter id="creating-charts"><title>Creating Charts</title>
+        <para>While you are editing the chart their are six (6) primary ways to edit the chart. You can Change the stitch, color, position, rotation, and height of the stitches, you can also add new stitches to existing rows in round charts.
+        </para>
         <sect2><title>Flat Charts</title>
         <screenshot>
             <info>
