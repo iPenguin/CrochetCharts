@@ -23,7 +23,7 @@ set(CPACK_PACKAGE_VERSION_PATCH ${SWS_VERSION_PATCH})
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/images/installer.bmp")
 set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
-set(CPACK_PACKAGE_EXECUTABLES "crochet")
+set(CPACK_PACKAGE_EXECUTABLES "crochet;Crochet")
 
 set(plugin_dest_dir bin)
 set(qtconf_dest_dir bin)
