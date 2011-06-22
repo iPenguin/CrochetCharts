@@ -44,7 +44,7 @@
 
   ;TargetMinimalOS 5.1 ; Windows XP
 
-  !include "/home/brian/crochet.git/cmake/modules/FileAssociation.nsh" ;Allow files to be associated with this application.
+  !include "C:\Documents and Settings\Brian Milco\My Documents\crochet.git\cmake\modules\FileAssociation.nsh" ;Allow files to be associated with this application.
 
   ;end options added by Brian Milco
 
