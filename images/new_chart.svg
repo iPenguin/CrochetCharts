@@ -13,7 +13,7 @@
    height="64"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
+   inkscape:version="0.48.1 r9760"
    sodipodi:docname="new_chart.svg">
   <defs
      id="defs4" />
@@ -25,16 +25,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2"
-     inkscape:cx="108.96646"
+     inkscape:cx="20.46646"
      inkscape:cy="-8.8090967"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1212"
-     inkscape:window-height="1004"
-     inkscape:window-x="1276"
-     inkscape:window-y="-3"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="1280"
+     inkscape:window-height="675"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -53,7 +53,7 @@
      id="layer1"
      transform="translate(0,-988.36218)">
     <path
-       style="fill:#00ff00;stroke:#00be00;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#00ff00;stroke:#00be00;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 60.103553,1038.3407 -20.5,0"
        id="path2985-6"
        inkscape:connector-curvature="0" />
@@ -625,7 +625,7 @@
          style="stroke-width:12.33391476;stroke-miterlimit:4;stroke-dasharray:none" />
     </g>
     <path
-       style="fill:#00ff00;stroke:#00be00;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#00ff00;stroke:#00be00;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 49.853553,1028.0907 0,20.5"
        id="path2985"
        inkscape:connector-curvature="0" />
