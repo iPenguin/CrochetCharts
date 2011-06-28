@@ -5,34 +5,35 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>Crochet</string>
+	<string>${CMAKE_PROJECT_NAME}</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Crochet charting software</string>
+	<string>${PROJECT_DESCRIPTION}</string>
 	<key>CFBundleIconFile</key>
-	<string>crochet.icns</string>
+	<string>${PROJECT_MACOSX_ICON}</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.StitchWorksSoftware</string>
+	<string>${MACOSX_BUNGLE_GUI_IDENTIFIER}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
-	<string>Crochet version 1.0</string>
+	<string>${MACOSX_BUNDLE_LONG_VERSION_STRING}</string>
 	<key>CFBundleName</key>
-	<string>Crochet</string>
+	<string>${MACOSX_BUNDLE_BUNDLE_NAME}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>${MACOSX_BUNDLE_SHORT_VERSION_STRING}</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>${MACOSX_BUNDLE_BUNDLE_VERSION}</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
 	<key>LSRequiresCarbon</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright 2011 Stitch Works Software.</string>
+	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>
 
+    
 <!--Register file types: http://stackoverflow.com/questions/1460193/set-default-file-association-mac-os-x-java-package-maker-installer -->
     <key>CFBundleDocumentTypes</key>
     <array>
@@ -98,5 +99,6 @@
             </dict>
         </dict>
     </array>
+
 </dict>
 </plist>

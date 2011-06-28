@@ -8,6 +8,7 @@ set(PROJECT_CONTACT      "support@StitchWorksSoftware.com")
 set(ORG_WEBSITE          "www.StitchWorksSoftware.com")
 set(PROJECT_VERSION      "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
 set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
+set(PROJECT_MACOSX_ICON  "crochet.icns")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-license.txt")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-readme.txt")
@@ -62,6 +63,7 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
 elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
     set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_BINARY_DRAGNDROP ON)
 
     set(CPACK_OSX_PACKAGE_VERSION "10.4") #min package version
 
@@ -76,10 +78,11 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
 #http://rixstep.com/2/20060901,00.shtml
     set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
-    set(MACOSX_BUNDLE_ICON_FILE "resources/mac/crochet.icns")
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware")
+    set(MACOSX_BUNDLE_ICON_FILE "${PROJECT_MACOSX_ICON}")
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/images/crochet.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware.crochet")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
-
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Brian Milco")

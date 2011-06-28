@@ -37,53 +37,23 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
     set(QT_PLUGINS_WINDOWS "${WIN32_PLUGINS}/imageformats" "${WIN32_PLUGINS}/accessible" "${WIN32_PLUGINS}/iconengines")
 
 elseif (${SWS_PLATFORM} STREQUAL "DARWIN")
+    set(APPS "${CMAKE_INSTALL_PREFIX}/bin/Crochet")
+   
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources/qt.conf" "[Paths]\nPlugins = plugins\n")
 
-    #if we're on a Mac
-    if(APPLE)
-        set(CMAKE_OSX_ARCHITECTURES "i386;x86_64") #";x86_64;ppc64;")
+    set(CMAKE_OSX_ARCHITECTURES "i386;x86_64") #";x86_64;ppc64;")
 
-        set(DARWIN_LIBS "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/")
-        set(DARWIN_PLUGINS "/Developer/Applications/Qt/plugins")
-    #Cross Compile Settings
-    else()
-        set(CMAKE_SYSTEM_NAME "Darwin")
-
-        if(${SWS_DARWIN_ARCH} STREQUAL "i386")
-            set(CMAKE_C_COMPILER "/home/crosscompile/darwin/bin/i686-apple-darwin8-gcc")
-            set(CMAKE_CXX_COMPILER "/home/crosscompile/darwin/bin/i686-apple-darwin8-g++")
-            set(CMAKE_FIND_ROOT_PATH "/home/crosscompile/darwin/SDKs/MacOSX10.4u.sdk/usr/")
-        else()
-            set(CMAKE_C_COMPILER "/home/crosscompile/darwin/bin/powerpc-apple-darwin8-gcc")
-            set(CMAKE_CXX_COMPILER "/home/crosscompile/darwin/bin/powerpc-apple-darwin8-g++")
-            set(CMAKE_FIND_ROOT_PATH "/home/crosscompile/darwin/SDKs/MacOSX10.4u.sdk/usr/")
-            include_directories("/home/crosscompile/darwin/SDKs/MacOSX10.4u.sdk/usr/lib/gcc/powerpc-apple-darwin8/4.0.1/include")
-        endif()
-
-        set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-        set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-        set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-
-        set(DARWIN_LIBS "/home/crosscompile/darwin/Library/Frameworks")
-        set(DARWIN_PLUGINS "/home/crosscompile/darwin/Developer/Applications/Qt/plugins")
-
-        set(CMAKE_OSX_ARCHITECTURES "ppc;i386") #";x86_64;ppc64;")
-
-    endif()
+    set(DARWIN_LIBS "/Developer/SDKs/MacOSX10.4u.sdk/Library/Frameworks/")
+    set(DARWIN_PLUGINS "/Developer/Applications/Qt/plugins")
 
     set(crochet_mac)
 	
     # Need to copy the icon file
-    #exec_program("mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
-    #exec_program("cp ${CMAKE_CURRENT_SOURCE_DIR}/resources/mac/crochet.icns ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
+    exec_program("mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
+    exec_program("cp ${CMAKE_CURRENT_SOURCE_DIR}/images/crochet.icns ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
 
-    set(QT_LIBS_DARWIN "${DARWIN_LIBS}/QtSvg.framework/Versions/4/QtSvg" "${DARWIN_LIBS}/QtCore.framework/Versions/4/QtCore"
-           "${DARWIN_LIBS}/QtGui.framework/Versions/4/QtGui" "${DARWIN_LIBS}/QtNetwork.framework/Versions/4/QtNetwork"
-           "${DARWIN_LIBS}/QtXml.framework/Versions/4/QtXml")
-
-    set(QT_PLUGINS_DARWIN "${DARWIN_PLUGINS}/imageformats" "${DARWIN_PLUGINS}/accessible" "${DARWIN_PLUGINS}/iconengines")
-
-    # Overload the module path so my Info.plist is the first one found
-    set(CMAKE_MODULE_PATH ${crochet_SOURCE_DIR}/resources/mac ${CMAKE_MODULE_PATH})
+    exec_program("mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/PlugIns")
+    exec_program("cp -R ${DARWIN_PLUGINS}/imageformats ${DARWIN_PLUGINS}/accessible ${DARWIN_PLUGINS}/iconengines ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/PlugIns")
 
     set(QT_DEPS_DARWIN "${CMAKE_CURRENT_SOURCE_DIR}/resources/qt.conf")
 

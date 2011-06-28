@@ -52,8 +52,7 @@ def main():
     qtconf = '../qt.conf'
     if(args.qtconf != None):
         qtconf = args.qtconf
-
-    shutil.copy(qtconf, appName + '.app/Contents/Resources/')
+        shutil.copy(qtconf, appName + '.app/Contents/Resources/')
 
     fworks = [ "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/QtSvg.framework/Versions/4/QtSvg", "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/QtCore.framework/Versions/4/QtCore",
                "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/QtGui.framework/Versions/4/QtGui", "/Developer/SDKs/MacOSX10.6.sdk/Library/Frameworks/QtNetwork.framework/Versions/4/QtNetwork",
