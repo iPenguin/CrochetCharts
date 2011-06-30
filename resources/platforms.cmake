@@ -39,7 +39,8 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
 elseif (${SWS_PLATFORM} STREQUAL "DARWIN")
     set(APPS "${CMAKE_INSTALL_PREFIX}/bin/Crochet")
    
-    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources/qt.conf" "[Paths]\nPlugins = plugins\n")
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" "[Paths]\nPlugins = plugins\n")
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" DESTINATION .)
 
     set(CMAKE_OSX_ARCHITECTURES "i386;x86_64") #";x86_64;ppc64;")
 
@@ -49,13 +50,13 @@ elseif (${SWS_PLATFORM} STREQUAL "DARWIN")
     set(crochet_mac)
 	
     # Need to copy the icon file
-    exec_program("mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
-    exec_program("cp ${CMAKE_CURRENT_SOURCE_DIR}/images/crochet.icns ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
+    #exec_program("mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
+    #exec_program("cp ${CMAKE_CURRENT_SOURCE_DIR}/images/crochet.icns ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/Resources")
 
-    exec_program("mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/PlugIns")
-    exec_program("cp -R ${DARWIN_PLUGINS}/imageformats ${DARWIN_PLUGINS}/accessible ${DARWIN_PLUGINS}/iconengines ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/PlugIns")
+    #exec_program("mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/PlugIns")
+    #exec_program("cp -R ${DARWIN_PLUGINS}/imageformats ${DARWIN_PLUGINS}/accessible ${DARWIN_PLUGINS}/iconengines ${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app/Contents/PlugIns")
 
-    set(QT_DEPS_DARWIN "${CMAKE_CURRENT_SOURCE_DIR}/resources/qt.conf")
+    #set(QT_DEPS_DARWIN "${CMAKE_CURRENT_SOURCE_DIR}/resources/qt.conf")
 
 else() #LINUX
     set(crochet_nix)

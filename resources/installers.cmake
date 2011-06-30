@@ -8,7 +8,7 @@ set(PROJECT_CONTACT      "support@StitchWorksSoftware.com")
 set(ORG_WEBSITE          "www.StitchWorksSoftware.com")
 set(PROJECT_VERSION      "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
 set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
-set(PROJECT_MACOSX_ICON  "crochet.icns")
+set(PROJECT_MACOSX_ICON  "Crochet.icns")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-license.txt")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-readme.txt")
@@ -30,12 +30,12 @@ set(plugin_dest_dir bin)
 set(qtconf_dest_dir bin)
 set(APPS "\${CMAKE_INSTALL_PREFIX}/Crochet/bin")
 
-if(APPLE)
-   install(CODE "
-   include(BundleUtilities)
-   fixup_bundle(\"${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app\" \"\${QT_PLUGINS_DARWIN}\" \"${QT_LIBS_DARWIN}\")"
-   COMPONENT Runtime)
-endif()
+#if(APPLE)
+#   install(CODE "
+#   include(BundleUtilities)
+#   fixup_bundle(\"${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app\" \"\${QT_PLUGINS_DARWIN}\" \"${QT_LIBS_DARWIN}\")"
+#   COMPONENT Runtime)
+#endif()
 
 if(${SWS_PLATFORM} STREQUAL "WIN32")
     set(CPACK_GENERATOR "NSIS")
@@ -62,7 +62,16 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
 
 elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
-    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
+    set(CPACK_GENERATOR "Bundle")
+    set(CPACK_BUNDLE_NAME "${PROJECT_NAME}")
+    set(CPACK_BUNDLE_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist")
+    set(CPACK_BUNDLE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/images/crochet.icns")
+    
+    set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
+    set(CPACK_DMG_DS_STORE "${CMAKE_CURRENT_SOURCE_DIR}/resources/mac/MacDmgDsStore")
+    set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_CURRENT_SOURCE_DIR}/images/dmg_background.png")
+
     set(CPACK_BINARY_DRAGNDROP ON)
 
     set(CPACK_OSX_PACKAGE_VERSION "10.4") #min package version
@@ -83,6 +92,10 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
     
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware.crochet")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
+
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
+                ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
+
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Brian Milco")

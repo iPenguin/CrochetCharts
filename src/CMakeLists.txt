@@ -47,11 +47,13 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION .)
     install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
 elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
-    add_executable(Crochet MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+    add_executable(Crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_mac})
     target_link_libraries(Crochet ${QT_LIBRARIES})
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/Crochet DESTINATION MacOS)
-    #install(TARGETS ${CMAKE_CURRENT_BINARY_DIR}/Crochet BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
+    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/Crochet DESTINATION ../MacOS)
+    
+    install(CODE "include(BundleUtilities)
+    fixup_bundle(\"${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app\" \"\" \"${QT_LIBRARIES}\")" COMPONENT Runtime)
 
     find_program(APPLE_RESOURCE Rez /Developer/Tools)
     if(APPLE_RESOURCE)
