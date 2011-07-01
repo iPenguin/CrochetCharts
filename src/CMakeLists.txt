@@ -51,9 +51,19 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
             ${crochet_version} ${crochet_mac})
     target_link_libraries(Crochet ${QT_LIBRARIES})
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/Crochet DESTINATION ../MacOS)
-    
-    install(CODE "include(BundleUtilities)
-    fixup_bundle(\"${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app\" \"\" \"${QT_LIBRARIES}\")" COMPONENT Runtime)
+
+    set(LIBS QtCore QtGui QtNetwork QtSvg QtXml)
+    foreach(support_lib ${LIBS})
+        set(support_path ${support_lib}.framework/Versions/4)
+        install(FILES "${DARWIN_LIBS}/${support_path}/${support_lib}" DESTINATION ../Frameworks/${support_path} COMPONENT Runtime)
+    endforeach()
+
+    install(DIRECTORY "${DARWIN_LIBS}/QtGui.framework/Resources/qt_menu.nib" DESTINATION ../Frameworks/QtGui.framework/Resources COMPONENT Runtime)
+
+    install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ../PlugIns COMPONENT Runtime)
+    install(DIRECTORY "${QT_PLUGINS_DIR}/accessible" DESTINATION ../PlugIns COMPONENT Runtime)
+    install(DIRECTORY "${QT_PLUGINS_DIR}/iconengines" DESTINATION ../PlugIns COMPONENT Runtime)
+
 
     find_program(APPLE_RESOURCE Rez /Developer/Tools)
     if(APPLE_RESOURCE)
@@ -69,9 +79,6 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
     #Q: would you need to do the same thing for the libraries?
     # execute_process(. COMMAND i686-apple-darwin8-lipo -create a.out.i386 a.out.ppc -output a.out) and add_to_distclean(a.out)
 
-    #install(FILES ${QT_LIBS_DARWIN} DESTINATION Frameworks)
-    #install(FILES ${QT_DEPS_DARWIN} DESTINATION Resources)
-    #install(DIRECTORY ${QT_PLUGINS_DARWIN} DESTINATION plugins)
 else()
     add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
                 ${crochet_version} ${crochet_nix})

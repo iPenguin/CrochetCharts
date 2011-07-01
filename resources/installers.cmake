@@ -30,13 +30,6 @@ set(plugin_dest_dir bin)
 set(qtconf_dest_dir bin)
 set(APPS "\${CMAKE_INSTALL_PREFIX}/Crochet/bin")
 
-#if(APPLE)
-#   install(CODE "
-#   include(BundleUtilities)
-#   fixup_bundle(\"${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app\" \"\${QT_PLUGINS_DARWIN}\" \"${QT_LIBS_DARWIN}\")"
-#   COMPONENT Runtime)
-#endif()
-
 if(${SWS_PLATFORM} STREQUAL "WIN32")
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
@@ -75,11 +68,10 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
     set(CPACK_BINARY_DRAGNDROP ON)
 
     set(CPACK_OSX_PACKAGE_VERSION "10.4") #min package version
-
+    
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${SWS_VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
-    #add qt.conf file to bundle as qt needs it to locate the plugins: Contents/Resources/
 
 #for more see: http://www.mail-archive.com/cmake@cmake.org/msg05498.html
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
