@@ -30,20 +30,20 @@ set(plugin_dest_dir bin)
 set(qtconf_dest_dir bin)
 set(APPS "\${CMAKE_INSTALL_PREFIX}/Crochet/bin")
 
-if(${SWS_PLATFORM} STREQUAL "WIN32")
+if(WIN32)
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_CONTACT ${CPACK_PACKAGE_CONTACT})
     set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CMAKE_PROJECT_NAME}-${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}")
 
-    set(CPACK_NSIS_MENU_LINKS "${ORG_WEBSITE}" "Homepage for ${PROJECT_VENDOR}")
+	install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
+    set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}")
 
     # this doesn't work for the NSIS installer
     #set(CPACK_CREATE_DESKTOP_LINKS "crochet")
 
-    #CPACK_NSIS_CREATE_ICONS_EXTRA -- set(CPACK_NSIS_CREATE_ICONS "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
-    set(CPACK_NSIS_CREATE_ICONS "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
+    set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
     #CPACK_NSIS_DELETE_ICONS_EXTRA
     # Icon in the add/remove control panel. Must be an .exe file
     set(CPACK_NSIS_INSTALLED_ICON_NAME "crochet.exe")
@@ -53,7 +53,7 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
 
     set(CPACK_NSIS_MUI_FINISHPAGE_RUN "crochet.exe")
 
-elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
+elseif(APPLE)
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
     set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
     set(CPACK_GENERATOR "Bundle")

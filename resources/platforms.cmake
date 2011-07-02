@@ -1,31 +1,13 @@
-if(${SWS_PLATFORM} STREQUAL "WIN32")
+if(WIN32)
 
-    #If we're on Windows
-    if(WIN32)
-        set(WIN32_BASE "C:/Qt/2010.05/qt")
-        set(SWS_TARGET_WIN "crochet")
-    #Cross Compile Settings
-    else()
-        set(CMAKE_SYSTEM_NAME "Windows")
-        set(CMAKE_C_COMPILER "/usr/bin/i586-mingw32msvc-gcc")
-        set(CMAKE_CXX_COMPILER "/usr/bin/i586-mingw32msvc-g++")
-        set(CMAKE_FIND_ROOT_PATH "/usr/i586-mingw32msvc")
-        set(CMAKE_RC_COMPILER "/usr/bin/i586-mingw32msvc-windres")
-
-        set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
-        set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
-        set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
-
-        set(SWS_TARGET_WIN "crochet.exe")
-        set(WIN32_BASE "/home/crosscompile/win32")
-    endif()
+	set(WIN32_BASE "C:/Qt/2010.05/qt")
+	set(SWS_TARGET_WIN "crochet")
 
     #generate the embeded icon for the exe file.
     set(CMAKE_RC_COMPILER_INIT windres)
     enable_language(RC)
     set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
     set(crochet_win ${CMAKE_CURRENT_SOURCE_DIR}/resources/win/crochet.rc)
-
 
     set(WIN32_LIBS "${WIN32_BASE}/bin")
     set(WIN32_PLUGINS "${WIN32_BASE}/plugins")
@@ -36,7 +18,7 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
                         "${CMAKE_CURRENT_SOURCE_DIR}/resources/qt.conf")
     set(QT_PLUGINS_WINDOWS "${WIN32_PLUGINS}/imageformats" "${WIN32_PLUGINS}/accessible" "${WIN32_PLUGINS}/iconengines")
 
-elseif (${SWS_PLATFORM} STREQUAL "DARWIN")
+elseif (APPLE)
     set(APPS "${CMAKE_INSTALL_PREFIX}/bin/Crochet")
    
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" "[Paths]\nPlugins = plugins\n")
