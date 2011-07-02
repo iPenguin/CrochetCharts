@@ -3,7 +3,6 @@
         <file>resources/license.txt</file>
         <file>crochet.xml</file>
         <file>images/splashscreen.png</file>
-        <file>images/fill-color.png</file>
         <file>images/stitch_mode.svg</file>
         <file>images/editcopy.png</file>
         <file>images/editcut.png</file>
@@ -44,5 +43,6 @@
         <file>images/rotate_stitch.svg</file>
         <file>images/position_stitch.svg</file>
         <file>images/strech_mode.svg</file>
+        <file>images/fill_color.svg</file>
     </qresource>
 </RCC>

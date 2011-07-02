@@ -8,6 +8,7 @@ set(PROJECT_CONTACT      "support@StitchWorksSoftware.com")
 set(ORG_WEBSITE          "www.StitchWorksSoftware.com")
 set(PROJECT_VERSION      "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
 set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
+set(PROJECT_MACOSX_ICON  "Crochet.icns")
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-license.txt")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-readme.txt")
@@ -29,27 +30,20 @@ set(plugin_dest_dir bin)
 set(qtconf_dest_dir bin)
 set(APPS "\${CMAKE_INSTALL_PREFIX}/Crochet/bin")
 
-if(APPLE)
-   install(CODE "
-   include(BundleUtilities)
-   fixup_bundle(\"${CMAKE_CURRENT_BINARY_DIR}/src/Crochet.app\" \"\${QT_PLUGINS_DARWIN}\" \"${QT_LIBS_DARWIN}\")"
-   COMPONENT Runtime)
-endif()
-
-if(${SWS_PLATFORM} STREQUAL "WIN32")
+if(WIN32)
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_CONTACT ${CPACK_PACKAGE_CONTACT})
     set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CMAKE_PROJECT_NAME}-${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}")
 
-    set(CPACK_NSIS_MENU_LINKS "${ORG_WEBSITE}" "Homepage for ${PROJECT_VENDOR}")
+	install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
+    set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}")
 
     # this doesn't work for the NSIS installer
     #set(CPACK_CREATE_DESKTOP_LINKS "crochet")
 
-    #CPACK_NSIS_CREATE_ICONS_EXTRA -- set(CPACK_NSIS_CREATE_ICONS "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
-    set(CPACK_NSIS_CREATE_ICONS "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
+    set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
     #CPACK_NSIS_DELETE_ICONS_EXTRA
     # Icon in the add/remove control panel. Must be an .exe file
     set(CPACK_NSIS_INSTALLED_ICON_NAME "crochet.exe")
@@ -59,16 +53,25 @@ if(${SWS_PLATFORM} STREQUAL "WIN32")
 
     set(CPACK_NSIS_MUI_FINISHPAGE_RUN "crochet.exe")
 
-elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
+elseif(APPLE)
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
-    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
+    set(CPACK_GENERATOR "Bundle")
+    set(CPACK_BUNDLE_NAME "${PROJECT_NAME}")
+    set(CPACK_BUNDLE_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist")
+    set(CPACK_BUNDLE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/images/crochet.icns")
+    
+    set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
+    set(CPACK_DMG_DS_STORE "${CMAKE_CURRENT_SOURCE_DIR}/resources/mac/MacDmgDsStore")
+    set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_CURRENT_SOURCE_DIR}/images/dmg_background.png")
+
+    set(CPACK_BINARY_DRAGNDROP ON)
 
     set(CPACK_OSX_PACKAGE_VERSION "10.4") #min package version
-
+    
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${SWS_VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
-    #add qt.conf file to bundle as qt needs it to locate the plugins: Contents/Resources/
 
 #for more see: http://www.mail-archive.com/cmake@cmake.org/msg05498.html
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
@@ -76,9 +79,14 @@ elseif(${SWS_PLATFORM} STREQUAL "DARWIN")
 #http://rixstep.com/2/20060901,00.shtml
     set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
-    set(MACOSX_BUNDLE_ICON_FILE "resources/mac/crochet.icns")
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware")
+    set(MACOSX_BUNDLE_ICON_FILE "${PROJECT_MACOSX_ICON}")
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/images/crochet.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware.crochet")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
+
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
+                ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
 
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")

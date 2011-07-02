@@ -52,7 +52,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget *parent)
     checkUpdates();
     setupStitchPalette();
     setupUndoView();
-    
+   
     mFile = new SaveFile(this);
     loadFiles(fileNames);
 
@@ -74,7 +74,7 @@ void MainWindow::loadFiles(QStringList fileNames)
     
     if(fileNames.count() < 1)
         return;
-
+qDebug() << fileNames;
     if(ui->tabWidget->count() < 1) {
         mFile->fileName = fileNames.takeFirst();
         mFile->load(); //TODO: if !error hide dialog.
@@ -254,7 +254,7 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionAngleMode);
     mModeGroup->addAction(ui->actionStrechMode);
     
-    ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color", QIcon(":/images/fill-color.png")));
+    ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color", QIcon(":/images/fill_color.svg")));
     ui->actionGridMode->setIcon(QIcon::fromTheme("mode-insert", QIcon(":/images/insert_stitch.svg")));
     ui->actionPositionMode->setIcon(QIcon::fromTheme("mode-position", QIcon(":/images/position_stitch.svg")));
     ui->actionAngleMode->setIcon(QIcon::fromTheme("mode-angle", QIcon(":/images/rotate_stitch.svg")));
