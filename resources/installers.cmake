@@ -30,7 +30,7 @@ set(plugin_dest_dir bin)
 set(qtconf_dest_dir bin)
 set(APPS "\${CMAKE_INSTALL_PREFIX}/Crochet/bin")
 
-if(WIN32)
+#if(WIN32)
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_NAME}")
@@ -53,7 +53,8 @@ if(WIN32)
 
     set(CPACK_NSIS_MUI_FINISHPAGE_RUN "crochet.exe")
 
-elseif(APPLE)
+#else
+if(APPLE)
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
     set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
     set(CPACK_GENERATOR "Bundle")
