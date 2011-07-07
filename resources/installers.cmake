@@ -37,7 +37,9 @@ set(APPS "\${CMAKE_INSTALL_PREFIX}/Crochet/bin")
     set(CPACK_NSIS_CONTACT ${CPACK_PACKAGE_CONTACT})
     set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CMAKE_PROJECT_NAME}-${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}")
 
-	install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
+    set(CPACK_CMAKE_MODULES_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
+
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
     set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}")
 
     # this doesn't work for the NSIS installer
