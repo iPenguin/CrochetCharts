@@ -151,7 +151,6 @@ void MainWindow::setupStitchPalette()
     //TODO: setup a proxywidget that can hold header sections?
     StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->allStitches);
     ui->allStitches->setItemDelegate(delegate);
-    ui->allStitches->hideColumn(1);
     ui->allStitches->hideColumn(2);
     ui->allStitches->hideColumn(3);
     ui->allStitches->hideColumn(4);
@@ -501,8 +500,17 @@ void MainWindow::updateFgColor()
 
 void MainWindow::selectStitch(QModelIndex index)
 {
-    QString stitch = index.data(Qt::DisplayRole).toString();
-
+    QModelIndex idx;
+    
+    if(sender() == ui->allStitches) {
+        const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+        idx = model->mapToSource(model->index(index.row(), 0));
+        
+    } else
+        idx = index;
+    
+    QString stitch = idx.data(Qt::DisplayRole).toString();
+qDebug() << "Stitch Name" << stitch;
     if(stitch.isEmpty())
         return;
     

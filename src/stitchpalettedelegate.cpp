@@ -20,25 +20,24 @@ StitchPaletteDelegate::StitchPaletteDelegate(QWidget *parent)
 
 void StitchPaletteDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    if(index.column() == 0) {
-        int pad = 5;
-        int iconWidth = 64;
+    int pad = 5;
 
-        const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
-        QModelIndex idx = model->mapToSource(index);
-        
-        Stitch *s = static_cast<Stitch*>(idx.internalPointer());
-        QRect rect = option.rect;
-
-        if(option.state & QStyle::State_Selected)
-            painter->fillRect(option.rect, option.palette.highlight());
-        else if(option.state & QStyle::State_MouseOver)
-            painter->fillRect(option.rect, option.palette.highlight().color().light(190));
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+    QModelIndex idx = model->mapToSource(index);
     
+    Stitch *s = static_cast<Stitch*>(idx.internalPointer());
+    QRect rect = option.rect;
+
+    if(option.state & QStyle::State_Selected)
+        painter->fillRect(option.rect, option.palette.highlight());
+    else if(option.state & QStyle::State_MouseOver)
+        painter->fillRect(option.rect, option.palette.highlight().color().light(190));
+
+    if(index.column() == 0) {
+        painter->drawText(rect.left() + pad, rect.top() + option.fontMetrics.height(), s->name());  
+    } else if(index.column() == 1) {
         QPixmap pix = *(s->renderPixmap());
-        
-        painter->drawPixmap(rect.left() + pad, rect.top() + pad, pix);
-        painter->drawText(rect.left() + iconWidth + (2*pad), rect.top() + pad + (pix.height()/2), s->name());  
+        painter->drawPixmap(rect.left() + pad, rect.top() + pad, pix);      
     }
 }
 
@@ -46,10 +45,8 @@ QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const 
 {   
     Q_UNUSED(option);
     
-    if(!index.isValid()) {
-        qDebug() << "invalid index";
+    if(!index.isValid())
         return QSize();
-    }
 
     const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
     QModelIndex idx = model->mapToSource(index);
@@ -87,4 +84,3 @@ QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const 
 
     return QSize(100, s->renderPixmap()->size().height());
 }
-
