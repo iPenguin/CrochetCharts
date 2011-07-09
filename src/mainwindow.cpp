@@ -510,7 +510,7 @@ void MainWindow::selectStitch(QModelIndex index)
         idx = index;
     
     QString stitch = idx.data(Qt::DisplayRole).toString();
-qDebug() << "Stitch Name" << stitch;
+
     if(stitch.isEmpty())
         return;
     
