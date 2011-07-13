@@ -30,14 +30,16 @@ set(plugin_dest_dir bin)
 set(qtconf_dest_dir bin)
 set(APPS "\${CMAKE_INSTALL_PREFIX}/Crochet/bin")
 
-if(WIN32)
+#if(WIN32)
     set(CPACK_GENERATOR "NSIS")
     set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_CONTACT ${CPACK_PACKAGE_CONTACT})
     set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${CMAKE_PROJECT_NAME}-${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}")
 
-	install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
+    set(CPACK_CMAKE_MODULES_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
+
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
     set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}")
 
     # this doesn't work for the NSIS installer
@@ -53,7 +55,8 @@ if(WIN32)
 
     set(CPACK_NSIS_MUI_FINISHPAGE_RUN "crochet.exe")
 
-elseif(APPLE)
+#else
+if(APPLE)
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
     set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
     set(CPACK_GENERATOR "Bundle")

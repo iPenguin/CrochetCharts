@@ -1,7 +1,7 @@
 if(WIN32)
 
-	set(WIN32_BASE "C:/Qt/2010.05/qt")
-	set(SWS_TARGET_WIN "crochet")
+    set(WIN32_BASE "C:/Qt/2010.05/qt")
+    set(SWS_TARGET_WIN "crochet")
 
     #generate the embeded icon for the exe file.
     set(CMAKE_RC_COMPILER_INIT windres)

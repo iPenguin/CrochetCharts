@@ -9,6 +9,9 @@
 #include <QPixmap>
 
 #include <QDebug>
+#include <QSvgRenderer>
+
+#include <QSortFilterProxyModel>
 
 StitchPaletteDelegate::StitchPaletteDelegate(QWidget *parent)
     : QStyledItemDelegate(parent)
@@ -17,37 +20,42 @@ StitchPaletteDelegate::StitchPaletteDelegate(QWidget *parent)
 
 void StitchPaletteDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    int pad = 5;
+
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+    QModelIndex idx = model->mapToSource(index);
+    
+    Stitch *s = static_cast<Stitch*>(idx.internalPointer());
+    QRect rect = option.rect;
+
+    if(option.state & QStyle::State_Selected)
+        painter->fillRect(option.rect, option.palette.highlight());
+    else if(option.state & QStyle::State_MouseOver)
+        painter->fillRect(option.rect, option.palette.highlight().color().light(190));
+
     if(index.column() == 0) {
-        int pad = 5;
-        int iconWidth = 32;
-        int iconHeight = 32;
-
-        Stitch *s = static_cast<Stitch*>(index.internalPointer());
-        QRect rect = option.rect;
-
-        if(option.state == QStyle::State_Selected)
-            painter->fillRect(rect, option.palette.highlight());
-        
-        //TODO: move image loading/caching into the stitch class.
-        QPixmap pix = QPixmap(iconWidth, iconHeight);
-        pix.load(":/stitches/chain.svg");
-        painter->drawPixmap(rect.left() + pad, rect.top() + pad, pix);
-        painter->drawText(rect.left() + iconWidth + (2*pad), rect.top() + pad, s->name());
-       
+        painter->drawText(rect.left() + pad, rect.top() + option.fontMetrics.height(), s->name());  
+    } else if(index.column() == 1) {
+        QPixmap pix = *(s->renderPixmap());
+        painter->drawPixmap(rect.left() + pad, rect.top() + pad, pix);      
     }
 }
 
 QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-/*
+{   
+    Q_UNUSED(option);
+    
     if(!index.isValid())
-        return QSize(100, 10);
-*/
-    Stitch *s = static_cast<Stitch*>(index.internalPointer());
-    if(!s)
-        return QSize(100, 42);
+        return QSize();
 
-    QString text;
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+    QModelIndex idx = model->mapToSource(index);
+    Stitch *s = static_cast<Stitch*>(idx.internalPointer());
+                
+    if(!s)  
+        return QSize();
+
+    QString text = "";
 
     switch(index.column()) {
         case 0:
@@ -69,8 +77,10 @@ QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const 
             text = "";
             break;
     }
-    QSize textSize = option.fontMetrics.size(Qt::TextWordWrap, text);
-    
-    return QSize(textSize.width(), 42);
-}
 
+    if(index.column() > 1) {
+        return QSize(0,0);
+    }
+
+    return QSize(100, s->renderPixmap()->size().height());
+}

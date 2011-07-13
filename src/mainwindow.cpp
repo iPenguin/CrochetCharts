@@ -34,6 +34,8 @@
 #include <QUndoView>
 #include <QTimer>
 
+#include <QSortFilterProxyModel>
+
 MainWindow::MainWindow(QStringList fileNames, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
     mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
@@ -74,7 +76,7 @@ void MainWindow::loadFiles(QStringList fileNames)
     
     if(fileNames.count() < 1)
         return;
-qDebug() << fileNames;
+
     if(ui->tabWidget->count() < 1) {
         mFile->fileName = fileNames.takeFirst();
         mFile->load(); //TODO: if !error hide dialog.
@@ -139,12 +141,20 @@ void MainWindow::setupNewTabDialog()
 
 void MainWindow::setupStitchPalette()
 {
+
     StitchSet *set = StitchLibrary::inst()->masterStitchSet();
-    ui->allStitches->setModel(set);
+    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+
+    proxyModel->setSourceModel(set);
+    ui->allStitches->setModel(proxyModel);
 
     //TODO: setup a proxywidget that can hold header sections?
-    //StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->allStitches);
-    //ui->allStitches->setItemDelegate(delegate);
+    StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->allStitches);
+    ui->allStitches->setItemDelegate(delegate);
+    ui->allStitches->hideColumn(2);
+    ui->allStitches->hideColumn(3);
+    ui->allStitches->hideColumn(4);
+    ui->allStitches->hideColumn(5);
 
     connect(ui->allStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
     connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
@@ -490,7 +500,16 @@ void MainWindow::updateFgColor()
 
 void MainWindow::selectStitch(QModelIndex index)
 {
-    QString stitch = index.data(Qt::DisplayRole).toString();
+    QModelIndex idx;
+    
+    if(sender() == ui->allStitches) {
+        const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+        idx = model->mapToSource(model->index(index.row(), 0));
+        
+    } else
+        idx = index;
+    
+    QString stitch = idx.data(Qt::DisplayRole).toString();
 
     if(stitch.isEmpty())
         return;
@@ -1017,7 +1036,6 @@ void MainWindow::chartEditName()
                                             QLineEdit::Normal, currentName, &ok);
     if(ok && !newName.isEmpty()) {
         ui->tabWidget->setTabText(curTab, newName);
-        qDebug() << newName << currentName;
         if(newName != currentName)
             documentIsModified(true);
     }
