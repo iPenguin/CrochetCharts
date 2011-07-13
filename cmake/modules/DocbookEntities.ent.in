@@ -4,7 +4,7 @@ by: Brian C. Milco <brian@StitchWorksSoftware.com>
 -->
 
 <!ENTITY sws            "@PROJECT_VENDOR@">
-<!ENTITY appName        "<application>@PROJECT_NAME@</application>">
+<!ENTITY appName        "@PROJECT_NAME@">
 <!ENTITY contact        "support@StitchWorksSoftware.com" >
 <!ENTITY contactme      "<ulink url='http://StitchWorksSoftware.com/contact'>contact me</ulink>">
 <!ENTITY website        "@ORG_WEBSITE@">

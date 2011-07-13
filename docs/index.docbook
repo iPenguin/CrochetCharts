@@ -3,7 +3,6 @@
 <!ENTITY % sgml.features "IGNORE">
 <!ENTITY % xml.features "INCLUDE">
 <!ENTITY % dbcent PUBLIC "-//OASIS//ENTITIES DocBook Character Entities V4.5//EN" "/usr/local/docbook/dbcentx.mod">
-%dbcent;
 <!ENTITY % allent SYSTEM "../build/docs/application.ent">
 %allent;
 ]>
@@ -15,7 +14,7 @@
     xmlns:svg="http://www.w3.org/2000/svg" 
     xmlns:html="http://www.w3.org/1999/xhtml" 
     xmlns:db="http://docbook.org/ns/docbook" 
-    id="crochet-charts-user-guide" xml:lang="en" version="5.0">
+    id="crochet-charts-user-guide" lang="en" version="5.0">
 
     <bookinfo>
         <author>
@@ -35,12 +34,12 @@
             <year>&life;</year>
             <holder>&sws;</holder>
         </copyright>
-        <title>&appName; User Guide</title>
+        <title><application>&appName;</application> User Guide</title>
         <productname>&appName;</productname>
         <productnumber>&appVersion;</productnumber>
         <abstract>
             <para>
-                &appName; is an application specially
+                <application>&appName;</application> is an application specially
                 designed to allow you to create design charts for crochet.
             </para>
         </abstract>
@@ -54,7 +53,10 @@
         </cover>
     </bookinfo>
 
-    <!--<xi:include href="introduction.docbook" />-->
+   <preface id="introduction" version="5.0" xmlns="http://docbook.org/ns/docbook">
+       <title>Introduction</title>
+       <para>This is the user guide for <application>&appName;</application> by &sws;. If you have any questions that are not answered in this document please &contactme; and let me know so that I can answer your questions and improve this guide.</para>
+   </preface>
 
     <chapter id="installation"><title>Installation</title>
         <para>Because this software is licensed per user you may install it on multiple computers including any combination of the supported platforms below. If you need help installing on a second platform please &contactme;.</para>
@@ -123,7 +125,7 @@
         </sect2>
     </chapter>
 
-    <!--<xi:include href="options.docbook"/>-->
+   <!--<xi:include href="options.docbook"/>-->
     
     <chapter id="troubleshooting"><title>Troubleshooting</title>
         <para>If you find a defect, or unexpected behavior in this software please &contactme;. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
