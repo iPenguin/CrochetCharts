@@ -1,0 +1,7 @@
+[Desktop Entry]
+# Installed by xdg-mime from Nokia-QtCreator.xml
+Type=MimeType
+MimeType=application/vnd.nokia.qt.creatorproject
+Icon=application-vnd.nokia.qt.creatorproject
+Comment[en]=Qt Creator Project
+Patterns=*.creator;

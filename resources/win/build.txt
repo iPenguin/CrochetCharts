@@ -1,0 +1,14 @@
+Creating an installer for windows:
+
+cmake, qt, and nsis should be installed.
+
+Path should contain: C:\Program Files\CMake 2.8\bin;C:\Program Files\Git\cmd;C:\Program Files\NSIS;C:\Qt\2010.05\qt\bin;C:\Qt\2010.05\mingw\bin
+
+-open a shell: cmd
+-cd to build dir
+cmake ../[src dir]
+mingw32-make.exe
+
+-make sure a copy of the help files is installed.
+
+cpack

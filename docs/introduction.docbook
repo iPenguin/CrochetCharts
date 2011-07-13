@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-
-    <preface id="introduction"><title>Introduction</title>
-        <para>This is the user guide for &appName; by &sws;. If you have any questions that are not answered in this document please &contactme; and let me know so that I can answer your questions and improve this guide.</para>
-    </preface>

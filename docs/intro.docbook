@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+    <preface id="introduction" version="5.0" xmlns="http://docbook.org/ns/docbook">
+        <title>Introduction</title>
+        <para>This is the user guide for <application>&appName;</application> by &sws;. If you have any questions that are not answered in this document please &contactme; and let me know so that I can answer your questions and improve this guide.</para>
+    </preface>

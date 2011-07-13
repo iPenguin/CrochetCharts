@@ -1,4 +1,6 @@
-    <chapter id="options-preferences"><title>Options&nbsp;/&nbsp;Preferences</title>
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="options-preferences" version="5.0" xmlns="http://docbook.org/ns/docbook">
+    <title>Options&nbsp;/&nbsp;Preferences</title>
         <para>The options have been divided into sections. The first section contains the general application settings. The Chart section contains settings that effect the layout and output of the charts. The Instructions section contains settings that effect how the written instructions are generated and exported as plain text. The Legend section contains the default settings for generating the legends. These settings can usually be overridden at the point of use.</para>
         <sect2><title>Application</title>
             <variablelist>
@@ -57,3 +59,4 @@
             </sect3>
         </sect2>
     </chapter>
+    
