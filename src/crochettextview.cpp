@@ -26,11 +26,11 @@ CrochetTextView::CrochetTextView(QWidget *parent, CrochetScene* scene)
     document()->setMaximumBlockCount(mScene->rowCount());
     
     //update this text view
-    connect(mScene, SIGNAL(rowChanged(int)), this, SLOT(updateRow(int)));
-    //connect(mScene, SIGNAL(rowAdded(int)), this, SLOT(addRow(int)));
-    connect(mScene, SIGNAL(chartCreated(int,int)), this, SLOT(createChart(int,int)));
+    connect(mScene, SIGNAL(rowChanged(int)), SLOT(updateRow(int)));
+    //connect(mScene, SIGNAL(rowAdded(int)), SLOT(addRow(int)));
+    connect(mScene, SIGNAL(chartCreated(int,int)), SLOT(createChart(int,int)));
     //update the data model.
-    connect(document(), SIGNAL(contentsChange(int,int,int)), this, SLOT(updateScene(int,int,int)));
+    connect(document(), SIGNAL(contentsChange(int,int,int)), SLOT(updateScene(int,int,int)));
 
     setupLineNumberArea();
 }
@@ -41,6 +41,7 @@ CrochetTextView::~CrochetTextView()
 
 void CrochetTextView::updateRow(int row)
 {
+    qDebug() << "updateRow start";
     //FIXME: hackish? really what I want is don't update the row if we're editing the row in the textview.
     if(this->hasFocus())
         return;
