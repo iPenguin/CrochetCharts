@@ -68,7 +68,7 @@ endfunction()
 
 function(_DOCBOOK_HTMLHELP input)
 #xsltproc /home/brian/Downloads/docbook-xsl-1.76.1/htmlhelp/htmlhelp.xsl ../../docs/crochet.docbook
-    set(working "${CMAKE_CURRENT_BINARY_DIR}/htmlhelp")
+    set(working "${CMAKE_BINARY_DIR}/docs/htmlhelp")
     make_directory(${working})
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
