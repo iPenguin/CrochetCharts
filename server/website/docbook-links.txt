@@ -1,0 +1,11 @@
+http://opensource.bureau-cornavin.com/crash-course/en/doc-structure.html
+
+http://www.dpawson.co.uk/docbook/
+
+http://www.explain.com.au/oss/docbook/index.html
+
+http://ds9a.nl/docbook/minimal-page.html
+
+http://www.jejik.com/articles/2008/12/docbook_xml_to_pdf_on_debian_lenny/
+
+http://stackoverflow.com/questions/4643531/cmake-how-to-run-bash-command-only-when-a-file-is-updated

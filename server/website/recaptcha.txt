@@ -1,0 +1,3 @@
+recaptcha:
+pub: 6Le0ocISAAAAAAcOwIcFw8yZCSVrZf0T086of-V7
+private: 6Le0ocISAAAAAF8PqpBwyPVaMXjy8MksKb31-0HE

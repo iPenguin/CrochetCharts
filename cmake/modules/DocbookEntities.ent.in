@@ -5,8 +5,10 @@ by: Brian C. Milco <brian@StitchWorksSoftware.com>
 
 <!ENTITY sws            "@PROJECT_VENDOR@">
 <!ENTITY appName        "@PROJECT_NAME@">
-<!ENTITY contact        "support@StitchWorksSoftware.com" >
-<!ENTITY contactme      "<ulink url='http://StitchWorksSoftware.com/contact'>contact me</ulink>">
+<!ENTITY baseUrl        "StitchWorksSoftware.com">
+<!ENTITY contact        "support@&baseUrl;" >
+<!ENTITY contactme      "<ulink url='http://&baseUrl;/contact'>contact me</ulink>">
+<!ENTITY downloadUrl    "http://&baseUrl;/downloads">
 <!ENTITY website        "@ORG_WEBSITE@">
 <!ENTITY life           "@PROJECT_LIFE@">
 <!ENTITY appVersion     "@PROJECT_VERSION@">
