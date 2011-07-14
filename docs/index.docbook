@@ -14,6 +14,15 @@
     id="crochet-charts-user-guide" lang="en" version="5.0">
 
     <bookinfo>
+        <title>The Official <application>&appName;</application> User Guide</title>
+        <subtitle>Version &appVersion;</subtitle>
+        <productname>&appName;</productname>
+        <productnumber>&appVersion;</productnumber>
+        <edition>&appVersion;</edition>
+        <copyright>
+            <year>&life;</year>
+            <holder>&sws;</holder>
+        </copyright>
         <author>
             <firstname>Brian</firstname><surname>Milco</surname>
             <affiliation>
@@ -27,28 +36,19 @@
                 <country>USA</country>
             </address>
         </author>
-        <copyright>
-            <year>&life;</year>
-            <holder>&sws;</holder>
-        </copyright>
-        <title><application>&appName;</application> User Guide</title>
-        <productname>&appName;</productname>
-        <productnumber>&appVersion;</productnumber>
         <abstract>
             <para>
                 <application>&appName;</application> is an application specially
                 designed to allow you to create design charts for crochet patterns.
-                This document will describe the features and abilities of <application>&appName;.</application>
+                This document will describe the features and abilities of <application>&appName;</application>.
             </para>
         </abstract>
-        <cover>
-            <para role="tagline">The Official &appName; User Guide</para>
-            <mediaobject>
-                <imageobject>
-                    <imagedata fileref="images/cover-front.png" format="PNG" />
-                </imageobject>
-            </mediaobject>
-        </cover>
+
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/cover.png" format="PNG" />
+            </imageobject>
+        </mediaobject>
     </bookinfo>
 
 
@@ -65,7 +65,7 @@
         To install on multiple platforms you may goto the the <ulink url="&downloadUrl;">downloads page</ulink> and download the installer for other platforms.
         You will need your serial number to complete the installtion. The serial number can be found in the <link linkend="helpAbout">About dialog</link>.
         If you need help installing on a second platform please <ulink href="&contactUrl;">contact me</ulink>.</para>
-        <sect2><title>Windows</title>
+        <section><title>Windows</title>
             <para>&appName; will run on Microsoft Windows XP, Windows Vista, and Windows 7. To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
             <para>To install double click the installer and follow the instructions in the Installation Wizard.</para>
             <screenshot>
@@ -116,8 +116,8 @@
                     <caption>Finish page for the installation of &appName;</caption>
                 </mediaobject>
             </screenshot>
-        </sect2>
-        <sect2><title>Mac</title>
+        </section>
+        <section><title>Mac</title>
             <para>&appName; will run on Mac OS X version 10.4-10.7 (Tiger, Leopard, Snow Leopard, Lion)  To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
             <para>Once the file has been downloaded you can install the software by dragging and dropping the software into the Applications folder.</para>
             <screenshot>
@@ -136,11 +136,11 @@
                     <caption>Drag the &appName; sheep over the fence and into the Applications folder.</caption>
                 </mediaobject>
             </screenshot>
-        </sect2>
-        <sect2><title>Linux</title>
+        </section>
+        <section><title>Linux</title>
             <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer. If you're having any problems please <ulink href="&contactUrl;">contact me</ulink></para>
 
-        </sect2>
+        </section>
     </chapter>
 
 
@@ -157,7 +157,7 @@
         </screenshot>
         <para>While editing the chart you can change the stitch, color, position, rotation, and height of the stitches, you can also add new stitches and new rows.
         </para>
-        <sect2><title>Flat Charts</title>
+        <section><title>Flat Charts</title>
         <screenshot>
             <mediaobject>
                 <imageobject>
@@ -167,8 +167,8 @@
             </mediaobject>
         </screenshot>
         
-        </sect2>
-        <sect2><title>Round Charts</title>
+        </section>
+        <section><title>Round Charts</title>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -178,7 +178,7 @@
                 </mediaobject>
             </screenshot>
 
-        </sect2>
+        </section>
     </chapter>
 
 
@@ -188,11 +188,11 @@
         <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP. The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image. For this reason they are commonly used in magazines and publication. JPEG and PNG are also sometimes accepted by magazines and publications, however if the publisher accepts them they usually want a resolution of 300 DPI. Before sending a file to a publisher you should ask them what file types they will accept.</para>
         <para>To export any part of your document as images goto <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
 
-        <sect2><title>Charts</title>
+        <section><title>Charts</title>
         <para>To undo or redo edits you have made on the chart you can press <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo> or <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Y</keycap></keycombo> respectively.</para>
             <note><para>On some platforms the key combo is different</para></note>
-        </sect2>
-        <sect2><title>Instructions</title>
+        </section>
+        <section><title>Instructions</title>
         <para>On the main interface you can export the written instructions for the chart by pressing the <guibutton>Copy Instructions</guibutton> button on the left between the chart and the instructions. This button will add the row numbers, remove any placeholder stitches, and clean up the text to be generally publication ready. This clean version of the text will automatically be copied to the clipboard where you can then paste it directly into another application.</para>
         <screenshot>
             <mediaobject>
@@ -203,8 +203,8 @@
             </mediaobject>
         </screenshot>
 
-        </sect2>
-        <sect2><title>Legends</title>
+        </section>
+        <section><title>Legends</title>
             <sect3><title>Stitch Legends</title>
                 <para>When you export a stitch legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <link linkend="options-legends-stitch">Options/Preferences</link>.</para>
                 <screenshot>
@@ -227,18 +227,18 @@
                     </mediaobject>
                 </screenshot>
             </sect3>
-        </sect2>
+        </section>
     </chapter>
 
 
 
     <chapter id="stitch-library"><title>Stitch Library</title>
-        <sect2><title>Creating New Stitches</title>
-        </sect2>
-        <sect2><title>Creating New Stitch Sets</title>
-        </sect2>
-        <sect2><title>Importing / Exporting Stitch Sets</title>
-        </sect2>
+        <section><title>Creating New Stitches</title>
+        </section>
+        <section><title>Creating New Stitch Sets</title>
+        </section>
+        <section><title>Importing / Exporting Stitch Sets</title>
+        </section>
     </chapter>
 
 
@@ -254,7 +254,7 @@
                 <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
             </mediaobject>
         </screenshot>
-       <sect2>
+       <section>
            <title>Application</title>
            <variablelist>
                <varlistentry>
@@ -270,8 +270,8 @@
                    </listitem>
                </varlistentry>
            </variablelist>
-       </sect2>
-       <sect2>
+       </section>
+       <section>
            <title>Charts</title>
            <screenshot>
                 <mediaobject>
@@ -327,8 +327,8 @@
                     <listitem><para>What color to use for the indicator.</para></listitem>
                 </varlistentry>
             </variablelist>
-        </sect2>
-        <sect2><title>Instructions</title>
+        </section>
+        <section><title>Instructions</title>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -337,8 +337,8 @@
                     <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
                 </mediaobject>
             </screenshot>
-        </sect2>
-        <sect2 id="options-legends"><title>Legends</title>
+        </section>
+        <section id="options-legends"><title>Legends</title>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -351,7 +351,7 @@
             </sect3>
             <sect3 id="options-legends-color"><title>Color Legends</title>
             </sect3>
-        </sect2>
+        </section>
     </chapter>
 
     <chapter>
@@ -381,9 +381,9 @@
 
     <chapter id="help"><title>Help</title>
         <para></para>
-        <sect2 id="helpAbout"><title>About this software</title>
+        <section id="helpAbout"><title>About</title>
             <para></para>
-        </sect2>
+        </section>
     </chapter>
 
 

@@ -31,10 +31,11 @@ function(_DOCBOOK_PDF input version)
 
     set(outputBaseName "${working}/Crochet User Guide ${version}")
     
-    set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/fo/docbook.xsl")
+    set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/mystyle.xsl")
+    #set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/fo/docbook.xsl")
 
     execute_process(
-        COMMAND "/usr/bin/xsltproc" -o ${outputBaseName}.fo --xinclude --stringparam use.extensions 0 --stringparam fop1.extensions 1 ${xslFile} "${input}"
+        COMMAND "/usr/bin/xsltproc" -o ${outputBaseName}.fo --stringparam fop1.extensions 1 ${xslFile} "${input}"
         OUTPUT_FILE ${outputBaseName}.fo
         OUTPUT_VARIABLE _output
     )

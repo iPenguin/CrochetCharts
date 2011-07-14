@@ -12,3 +12,4 @@ by: Brian C. Milco <brian@StitchWorksSoftware.com>
 <!ENTITY website        "@ORG_WEBSITE@">
 <!ENTITY life           "@PROJECT_LIFE@">
 <!ENTITY appVersion     "@PROJECT_VERSION@">
+<!ENTITY copyright      "@PROJECT_COPYRIGHT@">
