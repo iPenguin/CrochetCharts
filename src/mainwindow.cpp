@@ -38,7 +38,7 @@
 #include <QDesktopServices>
 
 MainWindow::MainWindow(QStringList fileNames, QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
+    : QMainWindow(parent), ui(new Ui::MainWindow), mUpdater(0), mEditMode(10), mStitch("ch"),
     mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -102,6 +102,7 @@ void MainWindow::loadFiles(QStringList fileNames)
 
 void MainWindow::checkUpdates(bool silent)
 {
+qDebug() << "Check for Updates";
     if(mUpdater) {
         delete mUpdater;
         mUpdater = 0;
@@ -113,7 +114,7 @@ void MainWindow::checkUpdates(bool silent)
     ui->centralWidget->layout()->addWidget(mUpdater); 
         
     mUpdater->checkForUpdates(silent); //check at startup is always silent.
-
+qDebug() << "Check for Updates end";
 }
 
 void MainWindow::setApplicationTitle()

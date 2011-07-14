@@ -15,7 +15,9 @@ if(WIN32)
     set(QT_LIBS_WINDOWS "${WIN32_LIBS}/QtSvg4.dll" "${WIN32_LIBS}/QtCore4.dll" "${WIN32_LIBS}/QtGui4.dll"
                         "${WIN32_LIBS}/QtNetwork4.dll" "${WIN32_LIBS}/QtXml4.dll")
     set(QT_DEPS_WINDOWS "${WIN32_LIBS}/libgcc_s_dw2-1.dll" "${WIN32_LIBS}/mingwm10.dll"
-                        "${CMAKE_CURRENT_SOURCE_DIR}/resources/qt.conf")
+                        "${CMAKE_CURRENT_SOURCE_DIR}/resources/qt.conf" "C:/OpenSSL-Win32/libeay32.dll"
+                        "C:/OpenSSL-Win32/ssleay32.dll")
+
     set(QT_PLUGINS_WINDOWS "${WIN32_PLUGINS}/imageformats" "${WIN32_PLUGINS}/accessible" "${WIN32_PLUGINS}/iconengines")
 
 elseif (APPLE)
