@@ -96,10 +96,8 @@ set(crochet_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
 
 add_subdirectory(src)
 
-if(UNIX AND NOT APPLE)
-    if(SWS_DOCS)
-        add_subdirectory(docs)
-    endif()
+if(SWS_DOCS)
+	add_subdirectory(docs)
 endif()
 
 if(UNIT_TESTING)
