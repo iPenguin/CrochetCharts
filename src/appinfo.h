@@ -27,6 +27,7 @@ public:
     const QString appOrgContact;
     
     const QString appVersion;
+    const QString appVersionShort;
     const QString appBuildInfo;
     
     const QRegExp emailRegExp;
@@ -54,6 +55,7 @@ private:
         appOrgContact("http://StitchWorksSoftware.com/contact"),
 
         appVersion(gGIT_VERSION),
+        appVersionShort(gGIT_VERSION_SHORT),
         appBuildInfo(QString(__DATE__) + " " + QString(__TIME__)),
 
         emailRegExp(QRegExp("[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,4}")),
