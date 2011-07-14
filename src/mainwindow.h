@@ -119,7 +119,7 @@ private:
     void setupUndoView();
     void readSettings();
 
-    void checkUpdates();
+    void checkUpdates(bool silent = true);
 
     bool safeToClose();
     bool promptToSave();

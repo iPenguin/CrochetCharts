@@ -51,7 +51,10 @@ MainWindow::MainWindow(QStringList fileNames, QWidget *parent)
     setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
-    checkUpdates();
+    bool checkForUpdates = Settings::inst()->value("checkForUpdates").toBool();
+    if(checkForUpdates)
+        checkUpdates();
+    
     setupStitchPalette();
     setupUndoView();
    
@@ -96,16 +99,20 @@ void MainWindow::loadFiles(QStringList fileNames)
     }
 }
 
-void MainWindow::checkUpdates()
+void MainWindow::checkUpdates(bool silent)
 {
-    //TODO: check for updates in a seperate thread.
+    if(mUpdater) {
+        delete mUpdater;
+        mUpdater = 0;
+    }
+    
+    //TODO: check for updates in a separate thread.
     mUpdater = new Updater(this);
     // append the updater to the centralWidget to keep it out of the way of the menus.
     ui->centralWidget->layout()->addWidget(mUpdater); 
         
-    bool checkForUpdates = Settings::inst()->value("checkForUpdates").toBool();
-    if(checkForUpdates)
-        mUpdater->checkForUpdates(true); //check at startup is always silent.
+    mUpdater->checkForUpdates(silent); //check at startup is always silent.
+
 }
 
 void MainWindow::setApplicationTitle()
@@ -1056,7 +1063,7 @@ void MainWindow::toolsRegisterSoftware()
 void MainWindow::toolsCheckForUpdates()
 {
     bool silent = false;
-    mUpdater->checkForUpdates(silent);
+    checkUpdates(silent);
 }
 
 void MainWindow::toolsStitchLibrary()
