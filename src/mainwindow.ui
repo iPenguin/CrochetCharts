@@ -488,7 +488,6 @@
    <addaction name="actionAngleMode"/>
    <addaction name="actionStrechMode"/>
    <addaction name="separator"/>
-   <addaction name="actionColorSelectorFg"/>
    <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">
@@ -555,7 +554,7 @@
     <string>Export parts of the pattern to other file types</string>
    </property>
    <property name="shortcut">
-    <string/>
+    <string>Ctrl+Shift+X</string>
    </property>
   </action>
   <action name="actionQuit">
@@ -602,6 +601,9 @@
    <property name="text">
     <string>&amp;Options...</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+O</string>
+   </property>
   </action>
   <action name="actionAddChart">
    <property name="text">
@@ -609,6 +611,9 @@
    </property>
    <property name="toolTip">
     <string>Add a chart to the current pattern</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actionAddNotes">
@@ -636,6 +641,9 @@
    <property name="text">
     <string>Stitch Library</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
   <action name="actionShowStitches">
    <property name="checkable">
@@ -657,6 +665,9 @@
    <property name="text">
     <string>Crochet Help</string>
    </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
   </action>
   <action name="actionViewFullScreen">
    <property name="checkable">
@@ -667,6 +678,9 @@
    </property>
    <property name="toolTip">
     <string>Make the application use the entire screen</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
    </property>
   </action>
   <action name="actionShowPatternStitches">
@@ -703,10 +717,16 @@
    <property name="text">
     <string>&amp;Print...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
   </action>
   <action name="actionPrintPreview">
    <property name="text">
     <string>Print Preview...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+P</string>
    </property>
   </action>
   <action name="actionCheckForUpdates">
@@ -733,6 +753,9 @@
    <property name="toolTip">
     <string>Edit the stitches used on the chart</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+1</string>
+   </property>
   </action>
   <action name="actionColorMode">
    <property name="checkable">
@@ -748,6 +771,9 @@
    <property name="toolTip">
     <string>Edit the colors used on the chart</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+2</string>
+   </property>
   </action>
   <action name="actionGridMode">
    <property name="checkable">
@@ -758,10 +784,13 @@
      <normaloff>:/images/insert_stitch.svg</normaloff>:/images/insert_stitch.svg</iconset>
    </property>
    <property name="text">
-    <string>Grid Mode</string>
+    <string>Row Mode</string>
    </property>
    <property name="toolTip">
-    <string>Edit lines and points used on the chart</string>
+    <string>Edit the stitch count of a row</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+3</string>
    </property>
   </action>
   <action name="actionPositionMode">
@@ -777,6 +806,9 @@
    </property>
    <property name="toolTip">
     <string>Edit the positioning of the stitches on the chart</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+4</string>
    </property>
   </action>
   <action name="actionShowMainToolbar">
@@ -833,6 +865,9 @@
    <property name="toolTip">
     <string>Turn the stitches on the chart</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+5</string>
+   </property>
   </action>
   <action name="actionStrechMode">
    <property name="checkable">
@@ -847,6 +882,9 @@
    </property>
    <property name="toolTip">
     <string>Strech the stitch</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+6</string>
    </property>
   </action>
  </widget>

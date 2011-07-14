@@ -85,7 +85,7 @@ CrochetTab::~CrochetTab()
 QStringList CrochetTab::editModes()
 {
     QStringList modes;
-    modes << tr("Stitch Mode") << tr("Color Mode") << tr("Grid Mode") << tr("Position Mode")
+    modes << tr("Stitch Mode") << tr("Color Mode") << tr("Row Mode") << tr("Position Mode")
             << tr("Angle Mode") << tr("Strech Mode");
     return modes;
 }
