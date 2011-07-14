@@ -40,7 +40,8 @@
         <abstract>
             <para>
                 <application>&appName;</application> is an application specially
-                designed to allow you to create design charts for crochet.
+                designed to allow you to create design charts for crochet patterns.
+                This document will describe the features and abilities of <application>&appName;</application>
             </para>
         </abstract>
         <cover>
@@ -68,8 +69,9 @@
         You will need your serial number to complete the installtion. The serial number can be found in the <link linkend="helpAbout">About dialog</link>.
         If you need help installing on a second platform please &contactme;.</para>
         <sect2><title>Windows</title>
-            <sect3><title>Notes on Windows Vista</title>
-            </sect3>
+            <para>&appName; will run on Microsoft Windows XP, Windows Vista, and Windows 7. To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
+            <para>To install double click the installer and follow the instructions in the Installation Wizard.</para>
+            
         </sect2>
         <sect2><title>Mac</title>
             <sect3><title>Notes on Mac OS X 10.7 Lion</title>
