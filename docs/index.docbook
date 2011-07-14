@@ -1,8 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE book [
-<!ENTITY % sgml.features "IGNORE">
-<!ENTITY % xml.features "INCLUDE">
-<!ENTITY % dbcent PUBLIC "-//OASIS//ENTITIES DocBook Character Entities V4.5//EN" "/usr/local/docbook/dbcentx.mod">
 <!ENTITY % allent SYSTEM "../build/docs/application.ent">
 %allent;
 ]>
@@ -17,6 +14,15 @@
     id="crochet-charts-user-guide" lang="en" version="5.0">
 
     <bookinfo>
+        <title>The Official <application>&appName;</application> User Guide</title>
+        <subtitle>Version &appVersion;</subtitle>
+        <productname>&appName;</productname>
+        <productnumber>&appVersion;</productnumber>
+        <edition>&appVersion;</edition>
+        <copyright>
+            <year>&life;</year>
+            <holder>&sws;</holder>
+        </copyright>
         <author>
             <firstname>Brian</firstname><surname>Milco</surname>
             <affiliation>
@@ -30,36 +36,27 @@
                 <country>USA</country>
             </address>
         </author>
-        <copyright>
-            <year>&life;</year>
-            <holder>&sws;</holder>
-        </copyright>
-        <title><application>&appName;</application> User Guide</title>
-        <productname>&appName;</productname>
-        <productnumber>&appVersion;</productnumber>
         <abstract>
             <para>
                 <application>&appName;</application> is an application specially
                 designed to allow you to create design charts for crochet patterns.
-                This document will describe the features and abilities of <application>&appName;</application>
+                This document will describe the features and abilities of <application>&appName;</application>.
             </para>
         </abstract>
-        <cover>
-            <para role="tagline">The Official &appName; User Guide</para>
-            <mediaobject>
-                <imageobject>
-                    <imagedata fileref="images/cover-front.png" format="PNG" />
-                </imageobject>
-            </mediaobject>
-        </cover>
+
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="images/cover.png" format="PNG" />
+            </imageobject>
+        </mediaobject>
     </bookinfo>
 
 
 
-   <preface id="introduction" version="5.0" xmlns="http://docbook.org/ns/docbook">
-       <title>Introduction</title>
-       <para>This is the user guide for <application>&appName;</application> by &sws;. If you have any questions that are not answered in this document please &contactme; and let me know so that I can answer your questions and improve this guide.</para>
-   </preface>
+    <preface id="introduction" version="5.0" xmlns="http://docbook.org/ns/docbook">
+        <title>Introduction</title>
+        <para>This is the user guide for <application>&appName;</application> by &sws;. If you have any questions that are not answered in this document please <ulink href="&contactUrl;">contact me</ulink> and let me know so that I can answer your questions and improve this guide.</para>
+    </preface>
 
 
 
@@ -67,170 +64,334 @@
         <para>Because this software is licensed per user you may install it on multiple computers including any combination of the supported platforms below.
         To install on multiple platforms you may goto the the <ulink url="&downloadUrl;">downloads page</ulink> and download the installer for other platforms.
         You will need your serial number to complete the installtion. The serial number can be found in the <link linkend="helpAbout">About dialog</link>.
-        If you need help installing on a second platform please &contactme;.</para>
-        <sect2><title>Windows</title>
+        If you need help installing on a second platform please <ulink href="&contactUrl;">contact me</ulink>.</para>
+        <section><title>Windows</title>
             <para>&appName; will run on Microsoft Windows XP, Windows Vista, and Windows 7. To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
             <para>To install double click the installer and follow the instructions in the Installation Wizard.</para>
-            
-        </sect2>
-        <sect2><title>Mac</title>
-            <sect3><title>Notes on Mac OS X 10.7 Lion</title>
-            </sect3>
-        </sect2>
-        <sect2><title>Linux</title>
-            <sect3><title>Notes on other Distributions</title>
-            </sect3>
-        </sect2>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/install-win1.png" format="PNG" />
+                    </imageobject>
+                    <caption>The intro screen of the installation wizard</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/install-win2.png" format="PNG" />
+                    </imageobject>
+                    <caption>The license agreement page of the wizard</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/install-win3.png" format="PNG" />
+                    </imageobject>
+                    <caption>Choose the installation path for &appName;</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/install-win4.png" format="PNG" />
+                    </imageobject>
+                    <caption>Choose the Start Menu folder for &appName;</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/install-win5.png" format="PNG" />
+                    </imageobject>
+                    <caption>The installer will install the needed files for &appName;</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/install-win6.png" format="PNG" />
+                    </imageobject>
+                    <caption>Finish page for the installation of &appName;</caption>
+                </mediaobject>
+            </screenshot>
+        </section>
+        <section><title>Mac</title>
+            <para>&appName; will run on Mac OS X version 10.4-10.7 (Tiger, Leopard, Snow Leopard, Lion)  To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
+            <para>Once the file has been downloaded you can install the software by dragging and dropping the software into the Applications folder.</para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/install-mac1.png" format="PNG" />
+                    </imageobject>
+                    <caption>Mac license agreement page for &appName;</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/install-mac2.png" format="PNG" />
+                    </imageobject>
+                    <caption>Drag the &appName; sheep over the fence and into the Applications folder.</caption>
+                </mediaobject>
+            </screenshot>
+        </section>
+        <section><title>Linux</title>
+            <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer. If you're having any problems please <ulink href="&contactUrl;">contact me</ulink></para>
+
+        </section>
     </chapter>
 
 
 
     <chapter id="creating-charts"><title>Creating Charts</title>
-        <para>While you are editing the chart their are six (6) primary ways to edit the chart. You can Change the stitch, color, position, rotation, and height of the stitches, you can also add new stitches to existing rows in round charts.
-        </para>
-        <sect2><title>Flat Charts</title>
+        <para>When you first open &appName; you are presented with a blank window with a "New Chart Options" dialog at the top. This dialog gives you quick access to create a new document and chart. Form it you can set the basic informaiton about the new chart. If you select a Round chart the number of stitches is the number that is used on the inner most row. Subsequent rows will have increasing numbers of stitches. All of these values can be changed later while you edit the chart.</para>
         <screenshot>
             <mediaobject>
                 <imageobject>
-                    <imagedata width="400" fileref="images/crochet-mainwindow.png" format="PNG" />
+                    <imagedata width="400" fileref="images/document-new.png" format="PNG" />
                 </imageobject>
-                <textobject><phrase>The main window showing a basic round chart</phrase></textobject>
-                <caption><para>The main window showing a basic round chart</para></caption>
+                <caption>The main window showing the New Chart Options dialog</caption>
+            </mediaobject>
+        </screenshot>
+        <para>While editing the chart you can change the stitch, color, position, rotation, and height of the stitches, you can also add new stitches and new rows.
+        </para>
+        <section><title>Flat Charts</title>
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/document-new-flat.png" format="PNG" />
+                </imageobject>
+                <caption>The main window showing a basic flat chart</caption>
             </mediaobject>
         </screenshot>
         
-        </sect2>
-        <sect2><title>Round Charts</title>
-        </sect2>
+        </section>
+        <section><title>Round Charts</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/document-new-round.png" format="PNG" />
+                    </imageobject>
+                    <caption>The main window showing a basic round chart</caption>
+                </mediaobject>
+            </screenshot>
+
+        </section>
     </chapter>
 
 
 
     <chapter id="exporting-files"><title>Exporting Files</title>
         <para>All pieces of your work can be exported to formats that are commonly used on websites, in magazines, and in publication.</para>
-        <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP. The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image. For this reason they are commonly used in magazines and publication. JPEG and PNG are also sometimes accepted by magazines and publications. If they publisher will accept them they usually want a resolution of 300 dpi. Before sending a file to a publisher you should ask them what file types they will accept.</para>
-        <para>To export any part of your document as images goto <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
+        <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP. The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image. For this reason they are commonly used in magazines and publication. JPEG and PNG are also sometimes accepted by magazines and publications, however if the publisher accepts them they usually want a resolution of 300 DPI. Before sending a file to a publisher you should ask them what file types they will accept.</para>
+        <para>To export any part of your document as images goto <emphasis role="bold"><menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice></emphasis>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
 
-        <sect2><title>Charts</title>
+        <section><title>Charts</title>
         <para>To undo or redo edits you have made on the chart you can press <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo> or <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Y</keycap></keycombo> respectively.</para>
             <note><para>On some platforms the key combo is different</para></note>
-        </sect2>
-        <sect2><title>Instructions</title>
-        <para>On the main window you can export the written instructions for the chart by pressing the <guibutton>Copy Instructions</guibutton> button on the left between the chart and the instructions. This button will add the row numbers, remove any placeholder stitches, and clean up the text to be generally publication ready. This clean version of the text will automatically be copied to the clipboard where you can then paste it directly into another application.</para>
-        </sect2>
-        <sect2><title>Legends</title>
+        </section>
+        <section><title>Instructions</title>
+        <para>On the main interface you can export the written instructions for the chart by pressing the <guibutton>Copy Instructions</guibutton> button on the left between the chart and the instructions. This button will add the row numbers, remove any placeholder stitches, and clean up the text to be generally publication ready. This clean version of the text will automatically be copied to the clipboard where you can then paste it directly into another application.</para>
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/export-copy-instructions.png" format="PNG" />
+                </imageobject>
+                <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+            </mediaobject>
+        </screenshot>
+
+        </section>
+        <section><title>Legends</title>
             <sect3><title>Stitch Legends</title>
+                <para>When you export a stitch legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <link linkend="options-legends-stitch">Options/Preferences</link>.</para>
+                <screenshot>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata width="400" fileref="images/export-stitch-legend.png" format="PNG" />
+                        </imageobject>
+                        <caption>Options window for export a Stitch Legend</caption>
+                    </mediaobject>
+                </screenshot>
             </sect3>
             <sect3><title>Color Legends</title>
+                <para>When you export a color legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <link linkend="options-legends-color">Options/Preferences</link>.</para>
+                <screenshot>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata width="400" fileref="images/export-color-legend.png" format="PNG" />
+                        </imageobject>
+                        <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+                    </mediaobject>
+                </screenshot>
             </sect3>
-        </sect2>
+        </section>
     </chapter>
 
 
 
     <chapter id="stitch-library"><title>Stitch Library</title>
-        <sect2><title>Creating New Stitches</title>
-        </sect2>
-        <sect2><title>Creating New Stitch Sets</title>
-        </sect2>
-        <sect2><title>Importing&nbsp;/&nbsp;Exporting Stitch Sets</title>
-        </sect2>
+        <section><title>Creating New Stitches</title>
+        </section>
+        <section><title>Creating New Stitch Sets</title>
+        </section>
+        <section><title>Importing / Exporting Stitch Sets</title>
+        </section>
     </chapter>
 
 
 
    <chapter id="options-preferences" version="5.0" xmlns="http://docbook.org/ns/docbook">
-       <title>Options&nbsp;/&nbsp;Preferences</title>
+       <title>Options / Preferences</title>
        <para>The options have been divided into sections. The first section contains the general application settings. The Chart section contains settings that effect the layout and output of the charts. The Instructions section contains settings that effect how the written instructions are generated and exported as plain text. The Legend section contains the default settings for generating the legends. These settings can usually be overridden at the point of use.</para>
-       <sect2>
+       <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/options-application.png" format="PNG" />
+                </imageobject>
+                <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+            </mediaobject>
+        </screenshot>
+       <section>
            <title>Application</title>
            <variablelist>
                <varlistentry>
-                   <term>Check for updates on startup</term>
+                   <term><emphasis role="bold">Check for updates on Startup</emphasis></term>
                    <listitem>
-                       <para>Every time you start this software it will attempt to connect to &website; to check for updates. If an update is found you will be prompted to download it.</para>
+                       <para>Every time you start this software it will attempt to connect to &website; to check for updates. If an update is found you will be prompted to download it.
+                       You can still check for updates manually even if this feature is disabled.</para>
+                       <para>To checkout for updates manually goto <emphasis role="bold"><menuchoice><guimenu>Tools</guimenu><guimenuitem>Check for Updates</guimenuitem></menuchoice></emphasis></para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>File Location</term>
+                   <term><emphasis role="bold">File Location</emphasis></term>
                    <listitem>
                        <para>This is the default folder that opens when you go to load or save a file.</para>
                    </listitem>
                </varlistentry>
            </variablelist>
-       </sect2>
-       <sect2>
+       </section>
+       <section>
            <title>Charts</title>
+           <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/options-charts.png" format="PNG" />
+                    </imageobject>
+                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+                </mediaobject>
+            </screenshot>
            <variablelist>
                <varlistentry>
-                   <term>Default Stitch</term>
+                   <term><emphasis role="bold">Default Stitch</emphasis></term>
                    <listitem>
-                       <para>The default stitch used when creating new charts.</para>
+                       <para>The default stitch used when creating new charts. This can be overridden when you create a new chart.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Default Placeholder</term>
+                   <term><emphasis role="bold">Default Placeholder</emphasis></term>
                    <listitem>
-                       <para>This stitch will be removed from the final text instructions when copying from the software.</para>
+                       <para>Any cells set with the placeholder stitch will not be output in the written instructions.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Rows</term>
+                   <term><emphasis role="bold">Rows</emphasis></term>
                    <listitem>
                        <para>The default number of rows on new charts.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Stitches</term>
+                   <term><emphasis role="bold">Stitches</emphasis></term>
                    <listitem>
                        <para>The default number of stitches on a new chart.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Free form</term>
+                   <term><emphasis role="bold">Free form</emphasis></term>
                    <listitem>
                        <para>Allow the stitches to be moved anywhere.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Alternate row colors</term>
+                   <term><emphasis role="bold">Alternate row colors</emphasis></term>
                    <listitem>
-                       <para>Use the Primary&nbsp;/&nbsp;Alternate colors to draw the stitches in each row.</para>
+                       <para>Use the Primary / Alternate colors to draw the stitches in each row.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                    <term>Row indicator</term>
+                    <term><emphasis role="bold">Row indicator</emphasis></term>
                     <listitem><para>Use either a number, a dot, or both to indicate where the rows start.</para></listitem>
                 </varlistentry>
                 <varlistentry>
-                    <term>Indicator color</term>
+                    <term><emphasis role="bold">Indicator color</emphasis></term>
                     <listitem><para>What color to use for the indicator.</para></listitem>
                 </varlistentry>
             </variablelist>
-        </sect2>
-        <sect2><title>Instructions</title>
-        </sect2>
-        <sect2><title>Legends</title>
-            <sect3><title>Stitch Legends</title>
+        </section>
+        <section><title>Instructions</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/options-instructions.png" format="PNG" />
+                    </imageobject>
+                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+                </mediaobject>
+            </screenshot>
+        </section>
+        <section id="options-legends"><title>Legends</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/options-legends.png" format="PNG" />
+                    </imageobject>
+                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+                </mediaobject>
+            </screenshot>
+            <sect3 id="options-legends-stitch"><title>Stitch Legends</title>
             </sect3>
-            <sect3><title>Color Legends</title>
+            <sect3 id="options-legends-color"><title>Color Legends</title>
             </sect3>
-        </sect2>
+        </section>
     </chapter>
 
-
+    <chapter>
+        <title>Tools</title>
+        <sect1>
+            <title>Check for Updates</title>
+            <para></para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" scalefit="1" fileref="images/tools-updates.png" format="PNG" />
+                    </imageobject>
+                    <caption>No updates</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" scalefit="1" fileref="images/tools-updates-new.png" format="PNG" />
+                    </imageobject>
+                    <caption>A new version is available</caption>
+                </mediaobject>
+            </screenshot>
+        </sect1>
+        
+    </chapter>
 
     <chapter id="help"><title>Help</title>
         <para></para>
-        <sect2 id="helpAbout"><title>About this software</title>
+        <section id="helpAbout"><title>About</title>
             <para></para>
-        </sect2>
+        </section>
     </chapter>
 
 
     
     <chapter id="troubleshooting"><title>Troubleshooting</title>
-        <para>If you find a defect, or unexpected behavior in this software please &contactme;. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
+        <para>If you find a defect, or unexpected behavior in this software please <ulink href="&contactUrl;">contact me</ulink>. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
     </chapter>
 
 

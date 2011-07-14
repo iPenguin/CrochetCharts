@@ -77,7 +77,6 @@ private slots:
 
     void menuModesAboutToShow();
     
-    void menuDocumentAboutToShow();
     void documentNewChart();
     void newChart();
     void removeCurrentTab();
@@ -92,6 +91,7 @@ private slots:
     void toolsStitchLibrary();
     void toolsCheckForUpdates();
 
+    void helpCrochetHelp();
     void helpAbout();
 
 private slots:
@@ -119,7 +119,7 @@ private:
     void setupUndoView();
     void readSettings();
 
-    void checkUpdates();
+    void checkUpdates(bool silent = true);
 
     bool safeToClose();
     bool promptToSave();

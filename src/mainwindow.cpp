@@ -35,6 +35,7 @@
 #include <QTimer>
 
 #include <QSortFilterProxyModel>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QStringList fileNames, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
@@ -51,7 +52,10 @@ MainWindow::MainWindow(QStringList fileNames, QWidget *parent)
     setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
-    checkUpdates();
+    bool checkForUpdates = Settings::inst()->value("checkForUpdates").toBool();
+    if(checkForUpdates)
+        checkUpdates();
+    
     setupStitchPalette();
     setupUndoView();
    
@@ -96,16 +100,20 @@ void MainWindow::loadFiles(QStringList fileNames)
     }
 }
 
-void MainWindow::checkUpdates()
+void MainWindow::checkUpdates(bool silent)
 {
-    //TODO: check for updates in a seperate thread.
+    if(mUpdater) {
+        delete mUpdater;
+        mUpdater = 0;
+    }
+    
+    //TODO: check for updates in a separate thread.
     mUpdater = new Updater(this);
     // append the updater to the centralWidget to keep it out of the way of the menus.
     ui->centralWidget->layout()->addWidget(mUpdater); 
         
-    bool checkForUpdates = Settings::inst()->value("checkForUpdates").toBool();
-    if(checkForUpdates)
-        mUpdater->checkForUpdates(true); //check at startup is always silent.
+    mUpdater->checkForUpdates(silent); //check at startup is always silent.
+
 }
 
 void MainWindow::setApplicationTitle()
@@ -272,16 +280,13 @@ void MainWindow::setupMenus()
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
     
-    //Document Menu
-    connect(ui->menuDocument, SIGNAL(aboutToShow()), this, SLOT(menuDocumentAboutToShow()));
+    //Charts Menu
     connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
-
     connect(ui->actionRemoveTab, SIGNAL(triggered()), this, SLOT(removeCurrentTab()));
 
     ui->actionAddChart->setIcon(QIcon::fromTheme("tab-new", QIcon(":/images/new_chart.svg"))); //insert-chart
     ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
-
-    //Chart Menu
+    
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
     connect(ui->actionEditName, SIGNAL(triggered()), this, SLOT(chartEditName()));
     //TODO: get more icons from the theme for use with table editing.
@@ -295,7 +300,8 @@ void MainWindow::setupMenus()
     connect(ui->actionCheckForUpdates, SIGNAL(triggered()), SLOT(toolsCheckForUpdates()));
     
     //Help Menu
-    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
+    connect(ui->actionAbout, SIGNAL(triggered()), SLOT(helpAbout()));
+    connect(ui->actionCrochetHelp, SIGNAL(triggered()), SLOT(helpCrochetHelp()));
     
     //misc items
     connect(&mUndoGroup, SIGNAL(isModified(bool)), this, SLOT(documentIsModified(bool)));
@@ -377,7 +383,6 @@ void MainWindow::updateMenuItems()
     menuEditAboutToShow();
     menuViewAboutToShow();
     menuModesAboutToShow();
-    menuDocumentAboutToShow();
     menuChartAboutToShow();
 }
 
@@ -554,6 +559,24 @@ void MainWindow::documentNewChart()
         ui->newDocument->show();
 }
 
+void MainWindow::helpCrochetHelp()
+{
+    QString path = QFileInfo(QApplication::applicationFilePath()).path();
+    QString file = QString("Crochet_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
+
+    QString url = QString("%1/%2").arg(path).arg(file);
+
+    if(QFile(url).exists())
+        QDesktopServices::openUrl(QUrl(url));
+    else {
+
+//TODO: check linux /usr/share path.
+        url = QString("%1/../docs/pdf/%2").arg(path).arg(file);
+        QDesktopServices::openUrl(QUrl(url));
+    }
+    
+}
+
 void MainWindow::helpAbout()
 {
     QString aboutInfo = QString(tr("<h1>%1</h1>"
@@ -663,7 +686,8 @@ void MainWindow::toolsOptions()
 {
     SettingsUi dialog(this);
     dialog.exec();
-    curCrochetTab()->sceneUpdate();
+    if(curCrochetTab())
+        curCrochetTab()->sceneUpdate();
 }
 
 void MainWindow::fileOpen()
@@ -1011,16 +1035,10 @@ void MainWindow::setEditMode(int mode)
     }
 }
 
-void MainWindow::menuDocumentAboutToShow()
-{
-    bool state = hasTab();
-
-    ui->actionRemoveTab->setEnabled(state);
-}
-
 void MainWindow::menuChartAboutToShow()
 {
     bool state = hasTab();
+    ui->actionRemoveTab->setEnabled(state);
     ui->actionEditName->setEnabled(state);       
 }
 
@@ -1055,7 +1073,7 @@ void MainWindow::toolsRegisterSoftware()
 void MainWindow::toolsCheckForUpdates()
 {
     bool silent = false;
-    mUpdater->checkForUpdates(silent);
+    checkUpdates(silent);
 }
 
 void MainWindow::toolsStitchLibrary()

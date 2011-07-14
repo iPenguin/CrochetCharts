@@ -40,33 +40,35 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
 
     setDialogSize();
 
+    //TODO: Wrong Side.
+    ui->listView->hideColumn(4);
+
     ui->propertiesBox->setVisible(false);
-    connect(ui->moreBttn, SIGNAL(clicked()), this, SLOT(hideProperties()));
-    connect(ui->printSet, SIGNAL(clicked()), this, SLOT(printStitchSet()));
+    connect(ui->moreBttn, SIGNAL(clicked()), SLOT(hideProperties()));
+    connect(ui->printSet, SIGNAL(clicked()), SLOT(printStitchSet()));
     
-    connect(ui->addStitch, SIGNAL(clicked()), this, SLOT(addStitch()));
-    connect(ui->removeStitch, SIGNAL(clicked()), this, SLOT(removeStitch()));
-    connect(ui->addSelected, SIGNAL(clicked()), this, SLOT(addSelected()));
+    connect(ui->addStitch, SIGNAL(clicked()), SLOT(addStitch()));
+    connect(ui->removeStitch, SIGNAL(clicked()), SLOT(removeStitch()));
+    connect(ui->addSelected, SIGNAL(clicked()), SLOT(addSelected()));
 
-    connect(ui->createSet, SIGNAL(clicked()), this, SLOT(createSet()));
-    connect(ui->removeSet, SIGNAL(clicked()), this, SLOT(removeSet()));
+    connect(ui->createSet, SIGNAL(clicked()), SLOT(createSet()));
+    connect(ui->removeSet, SIGNAL(clicked()), SLOT(removeSet()));
     
-    connect(ui->importSet, SIGNAL(clicked()), this, SLOT(importSet()));
-    connect(ui->exportSet, SIGNAL(clicked()), this, SLOT(exportSet()));
+    connect(ui->importSet, SIGNAL(clicked()), SLOT(importSet()));
+    connect(ui->exportSet, SIGNAL(clicked()), SLOT(exportSet()));
 
-    connect(ui->setName, SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
-    connect(ui->author,  SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
-    connect(ui->email,   SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
-    connect(ui->org,     SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
-    connect(ui->url,     SIGNAL(editingFinished()), this, SLOT(updateStitchSetProperties()));
+    connect(ui->setName, SIGNAL(editingFinished()), SLOT(updateStitchSetProperties()));
+    connect(ui->author,  SIGNAL(editingFinished()), SLOT(updateStitchSetProperties()));
+    connect(ui->email,   SIGNAL(editingFinished()), SLOT(updateStitchSetProperties()));
+    connect(ui->org,     SIGNAL(editingFinished()), SLOT(updateStitchSetProperties()));
+    connect(ui->url,     SIGNAL(editingFinished()), SLOT(updateStitchSetProperties()));
     
     setupPropertiesBox();
     
-    connect(ui->stitchSource, SIGNAL(currentIndexChanged(QString)),
-                this, SLOT(changeStitchSet(QString)));
+    connect(ui->stitchSource, SIGNAL(currentIndexChanged(QString)), SLOT(changeStitchSet(QString)));
 
-    connect(ui->resetLibrary, SIGNAL(clicked()), this, SLOT(resetLibrary()));
-    connect(ui->icons, SIGNAL(clicked()), this, SLOT(iconDialog()));
+    connect(ui->resetLibrary, SIGNAL(clicked()), SLOT(resetLibrary()));
+    connect(ui->icons, SIGNAL(clicked()), SLOT(iconDialog()));
 
     setButtonStates(master);
 }

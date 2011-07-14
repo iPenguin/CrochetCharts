@@ -7,12 +7,9 @@ by: Brian C. Milco <brian@StitchWorksSoftware.com>
 <!ENTITY appName        "@PROJECT_NAME@">
 <!ENTITY baseUrl        "StitchWorksSoftware.com">
 <!ENTITY contact        "support@&baseUrl;" >
-<!ENTITY contactme      "<ulink url='http://&baseUrl;/contact'>contact me</ulink>">
+<!ENTITY contactUrl     "http://&baseUrl;/contact">
 <!ENTITY downloadUrl    "http://&baseUrl;/downloads">
 <!ENTITY website        "@ORG_WEBSITE@">
 <!ENTITY life           "@PROJECT_LIFE@">
 <!ENTITY appVersion     "@PROJECT_VERSION@">
-<!ENTITY ldquo          "&quot;">
-<!ENTITY rdquo          "&quot;">
-<!ENTITY nbsp           " ">
-
+<!ENTITY copyright      "@PROJECT_COPYRIGHT@">

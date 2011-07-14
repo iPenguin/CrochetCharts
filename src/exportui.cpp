@@ -27,6 +27,12 @@ ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
     
     ui->view->scale(.6, .6);
 
+    //TODO: use later...
+    ui->showStitchWrongSide->hide();
+    ui->showStitchWrongSideLbl->hide();
+    ui->colorSortBy->hide();
+    ui->colorSortByLbl->hide();
+    
     setupChartOptions();
     setupColorLegendOptions();
     setupStitchLegendOptions();

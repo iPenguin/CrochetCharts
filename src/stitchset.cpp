@@ -509,8 +509,8 @@ int StitchSet::columnCount(const QModelIndex &parent) const
 
 void StitchSet::clearStitches()
 {
-
-    //TODO: should this delete the stitches too?
+    foreach(Stitch *s, mStitches)
+        removeStitch(s->name());
     mStitches.clear();
 }
 

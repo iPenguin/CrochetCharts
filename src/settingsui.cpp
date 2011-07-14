@@ -29,6 +29,13 @@ SettingsUi::SettingsUi(QWidget *parent)
 #endif //Q_WS_MAC
 
     connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
+
+
+    //TODO: add later for expanded use of software.
+    ui->showStitchWrongSide->hide();
+    ui->showStitchWrongSideLbl->hide();
+    ui->colorLegendSortBy->hide();
+    ui->colorSortByLbl->hide();
     
     setupDialogWidgets();
 

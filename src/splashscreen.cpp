@@ -36,7 +36,7 @@ void SplashScreen::drawContents (QPainter *painter)
     painter->drawText(QRect(40, 175, 400, 100), tr("By %1").arg(AppInfo::inst()->appOrg));
     
     painter->setFont(origFont);
-    QString version = QString("Version: %1").arg(AppInfo::inst()->appVersion);
+    QString version = QString("Version: %1").arg(AppInfo::inst()->appVersionShort);
     painter->drawText(QRectF(75, 230, 250, 50), version);
     painter->drawText(QRectF(75, 245, 250, 50), mMessage);
 }
