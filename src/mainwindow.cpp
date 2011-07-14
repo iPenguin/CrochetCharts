@@ -279,16 +279,13 @@ void MainWindow::setupMenus()
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
     
-    //Document Menu
-    connect(ui->menuDocument, SIGNAL(aboutToShow()), this, SLOT(menuDocumentAboutToShow()));
+    //Charts Menu
     connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
-
     connect(ui->actionRemoveTab, SIGNAL(triggered()), this, SLOT(removeCurrentTab()));
 
     ui->actionAddChart->setIcon(QIcon::fromTheme("tab-new", QIcon(":/images/new_chart.svg"))); //insert-chart
     ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
-
-    //Chart Menu
+    
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
     connect(ui->actionEditName, SIGNAL(triggered()), this, SLOT(chartEditName()));
     //TODO: get more icons from the theme for use with table editing.
@@ -384,7 +381,6 @@ void MainWindow::updateMenuItems()
     menuEditAboutToShow();
     menuViewAboutToShow();
     menuModesAboutToShow();
-    menuDocumentAboutToShow();
     menuChartAboutToShow();
 }
 
@@ -1019,16 +1015,10 @@ void MainWindow::setEditMode(int mode)
     }
 }
 
-void MainWindow::menuDocumentAboutToShow()
-{
-    bool state = hasTab();
-
-    ui->actionRemoveTab->setEnabled(state);
-}
-
 void MainWindow::menuChartAboutToShow()
 {
     bool state = hasTab();
+    ui->actionRemoveTab->setEnabled(state);
     ui->actionEditName->setEnabled(state);       
 }
 

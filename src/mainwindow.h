@@ -77,7 +77,6 @@ private slots:
 
     void menuModesAboutToShow();
     
-    void menuDocumentAboutToShow();
     void documentNewChart();
     void newChart();
     void removeCurrentTab();
