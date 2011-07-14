@@ -565,14 +565,14 @@ void MainWindow::helpCrochetHelp()
     QString file = QString("Crochet_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
 
     QString url = QString("%1/%2").arg(path).arg(file);
-
-    if(QFile(url).exists())
-        QDesktopServices::openUrl(QUrl(url));
-    else {
+    
+    if(QFile(url).exists()) {
+        QDesktopServices::openUrl(QUrl("file:///" + url, QUrl::TolerantMode));
+    } else {
 
 //TODO: check linux /usr/share path.
-        url = QString("%1/../docs/pdf/%2").arg(path).arg(file);
-        QDesktopServices::openUrl(QUrl(url));
+        url = QString("file:///%1/../docs/pdf/%2").arg(path).arg(file);
+        QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
     }
     
 }
