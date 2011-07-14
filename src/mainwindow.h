@@ -91,6 +91,7 @@ private slots:
     void toolsStitchLibrary();
     void toolsCheckForUpdates();
 
+    void helpCrochetHelp();
     void helpAbout();
 
 private slots:

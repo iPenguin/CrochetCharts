@@ -35,6 +35,7 @@
 #include <QTimer>
 
 #include <QSortFilterProxyModel>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QStringList fileNames, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mEditMode(10), mStitch("ch"),
@@ -299,7 +300,8 @@ void MainWindow::setupMenus()
     connect(ui->actionCheckForUpdates, SIGNAL(triggered()), SLOT(toolsCheckForUpdates()));
     
     //Help Menu
-    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(helpAbout()));
+    connect(ui->actionAbout, SIGNAL(triggered()), SLOT(helpAbout()));
+    connect(ui->actionCrochetHelp, SIGNAL(triggered()), SLOT(helpCrochetHelp()));
     
     //misc items
     connect(&mUndoGroup, SIGNAL(isModified(bool)), this, SLOT(documentIsModified(bool)));
@@ -555,6 +557,24 @@ void MainWindow::documentNewChart()
         QTimer::singleShot(1500, this, SLOT(flashNewDocDialog()));
     } else 
         ui->newDocument->show();
+}
+
+void MainWindow::helpCrochetHelp()
+{
+    QString path = QFileInfo(QApplication::applicationFilePath()).path();
+    QString file = QString("Crochet_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
+
+    QString url = QString("%1/%2").arg(path).arg(file);
+
+    if(QFile(url).exists())
+        QDesktopServices::openUrl(QUrl(url));
+    else {
+
+//TODO: check linux /usr/share path.
+        url = QString("%1/../docs/pdf/%2").arg(path).arg(file);
+        QDesktopServices::openUrl(QUrl(url));
+    }
+    
 }
 
 void MainWindow::helpAbout()
