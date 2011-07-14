@@ -1,6 +1,6 @@
 #
 # This file contains functions to generate documentaion from docbook files.
-#
+# TODO: make sure that docbook-xsl-ns package is installed
 # by: Brian C. Milco <bcmilco@gmail.com>
 #
 #
@@ -12,7 +12,7 @@ function(_DOCBOOK_HTML input version)
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
 
-    set(xslFile "/usr/share/xml/docbook/stylesheet/nwalsh/html/docbook.xsl")
+    set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/html/docbook.xsl")
 
     execute_process(
         COMMAND "/usr/bin/xsltproc" --xinclude  -o ${working}/index.html "${xslFile}" "${input}"
@@ -30,18 +30,11 @@ function(_DOCBOOK_PDF input version)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
 
     set(outputBaseName "${working}/Crochet User Guide ${version}")
-message(${outputBaseName})
-    #set(xslFile "/usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl")
-    set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl/fo/docbook.xsl")
+    
+    set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/fo/docbook.xsl")
 
     execute_process(
-        COMMAND "/usr/bin/xmllint" --xinclude "${input}"
-        OUTPUT_FILE "${outputBaseName}.xml"
-        OUTPUT_VARIABLE _output
-    )
-
-    execute_process(
-        COMMAND "/usr/bin/xsltproc" -o ${outputBaseName}.fo --xinclude --stringparam use.extensions 0 --stringparam fop1.extensions 1 ${xslFile} "${outputBaseName}.xml"
+        COMMAND "/usr/bin/xsltproc" -o ${outputBaseName}.fo --xinclude --stringparam use.extensions 0 --stringparam fop1.extensions 1 ${xslFile} "${input}"
         OUTPUT_FILE ${outputBaseName}.fo
         OUTPUT_VARIABLE _output
     )
@@ -62,7 +55,7 @@ function(_DOCBOOK_PAGES input version)
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
 
-    set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl/roundtrip/dbk2pages.xsl")
+    set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/roundtrip/dbk2pages.xsl")
     set(outputFile "${working}/index.xml")
 
     execute_process(
@@ -80,7 +73,7 @@ function(_DOCBOOK_HTMLHELP input version)
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
 
-    set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl/htmlhelp/htmlhelp.xsl")
+    set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/htmlhelp/htmlhelp.xsl")
     execute_process(
         COMMAND "/usr/bin/xsltproc" ${xslFile} "${input}"
         WORKING_DIRECTORY ${working}
@@ -91,7 +84,6 @@ endfunction()
 
 
 function(DOCBOOK_GENERATE format inFile version)
-message(${version})
     if(format STREQUAL "html")
         _docbook_html("${inFile}" "${version}")
     elseif(format STREQUAL "pdf")

@@ -1,19 +1,19 @@
 include(DocbookDocGeneration)
 
 if(UNIX AND NOT APPLE)
-	configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/DocbookEntities.ent.in
+    configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/DocbookEntities.ent.in
                 ${CMAKE_CURRENT_BINARY_DIR}/application.ent)
 
-	#message(STATUS "Createing documentation: html")
-	#docbook_generate(html "${CMAKE_CURRENT_SOURCE_DIR}/index.docbook" "${SWS_VERSION}")
-	message(STATUS "Createing documentation: pdf")
-	docbook_generate(pdf "${CMAKE_CURRENT_SOURCE_DIR}/index.docbook" "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
-	#message(STATUS "Createing documentation: pages")
-	#docbook_generate(pages "${CMAKE_CURRENT_SOURCE_DIR}/index.docbook" "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
-	#message(STATUS "Createing documentation: htmlhelp")
-	#docbook_generate(htmlhelp "${CMAKE_CURRENT_SOURCE_DIR}/index.docbook" "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    #message(STATUS "Createing documentation: html")
+    #docbook_generate(html "${CMAKE_CURRENT_SOURCE_DIR}/index.docbook" "${SWS_VERSION}")
+    message(STATUS "Createing documentation: pdf")
+    docbook_generate(pdf "${CMAKE_CURRENT_SOURCE_DIR}/index.docbook" "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    #message(STATUS "Createing documentation: pages")
+    #docbook_generate(pages "${CMAKE_CURRENT_SOURCE_DIR}/index.docbook" "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+    #message(STATUS "Createing documentation: htmlhelp")
+    #docbook_generate(htmlhelp "${CMAKE_CURRENT_SOURCE_DIR}/index.docbook" "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
 
-	message("-------------------------------------------------------")
+    message("-------------------------------------------------------")
 endif()
 
 if(WIN32)
