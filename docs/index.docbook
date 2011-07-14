@@ -186,7 +186,7 @@
     <chapter id="exporting-files"><title>Exporting Files</title>
         <para>All pieces of your work can be exported to formats that are commonly used on websites, in magazines, and in publication.</para>
         <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP. The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image. For this reason they are commonly used in magazines and publication. JPEG and PNG are also sometimes accepted by magazines and publications, however if the publisher accepts them they usually want a resolution of 300 DPI. Before sending a file to a publisher you should ask them what file types they will accept.</para>
-        <para>To export any part of your document as images goto <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
+        <para>To export any part of your document as images goto <emphasis role="bold"><menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice></emphasis>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
 
         <section><title>Charts</title>
         <para>To undo or redo edits you have made on the chart you can press <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo> or <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Y</keycap></keycombo> respectively.</para>
@@ -258,13 +258,15 @@
            <title>Application</title>
            <variablelist>
                <varlistentry>
-                   <term>Check for updates on startup</term>
+                   <term><emphasis role="bold">Check for updates on Startup</emphasis></term>
                    <listitem>
-                       <para>Every time you start this software it will attempt to connect to &website; to check for updates. If an update is found you will be prompted to download it.</para>
+                       <para>Every time you start this software it will attempt to connect to &website; to check for updates. If an update is found you will be prompted to download it.
+                       You can still check for updates manually even if this feature is disabled.</para>
+                       <para>To checkout for updates manually goto <emphasis role="bold"><menuchoice><guimenu>Tools</guimenu><guimenuitem>Check for Updates</guimenuitem></menuchoice></emphasis></para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>File Location</term>
+                   <term><emphasis role="bold">File Location</emphasis></term>
                    <listitem>
                        <para>This is the default folder that opens when you go to load or save a file.</para>
                    </listitem>
@@ -283,47 +285,47 @@
             </screenshot>
            <variablelist>
                <varlistentry>
-                   <term>Default Stitch</term>
+                   <term><emphasis role="bold">Default Stitch</emphasis></term>
                    <listitem>
-                       <para>The default stitch used when creating new charts.</para>
+                       <para>The default stitch used when creating new charts. This can be overridden when you create a new chart.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Default Placeholder</term>
+                   <term><emphasis role="bold">Default Placeholder</emphasis></term>
                    <listitem>
-                       <para>This stitch will be removed from the final text instructions when copying from the software.</para>
+                       <para>Any cells set with the placeholder stitch will not be output in the written instructions.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Rows</term>
+                   <term><emphasis role="bold">Rows</emphasis></term>
                    <listitem>
                        <para>The default number of rows on new charts.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Stitches</term>
+                   <term><emphasis role="bold">Stitches</emphasis></term>
                    <listitem>
                        <para>The default number of stitches on a new chart.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Free form</term>
+                   <term><emphasis role="bold">Free form</emphasis></term>
                    <listitem>
                        <para>Allow the stitches to be moved anywhere.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Alternate row colors</term>
+                   <term><emphasis role="bold">Alternate row colors</emphasis></term>
                    <listitem>
                        <para>Use the Primary / Alternate colors to draw the stitches in each row.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                    <term>Row indicator</term>
+                    <term><emphasis role="bold">Row indicator</emphasis></term>
                     <listitem><para>Use either a number, a dot, or both to indicate where the rows start.</para></listitem>
                 </varlistentry>
                 <varlistentry>
-                    <term>Indicator color</term>
+                    <term><emphasis role="bold">Indicator color</emphasis></term>
                     <listitem><para>What color to use for the indicator.</para></listitem>
                 </varlistentry>
             </variablelist>

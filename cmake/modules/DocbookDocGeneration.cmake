@@ -11,11 +11,12 @@ function(_DOCBOOK_HTML input version)
     make_directory(${working})
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
-
+    #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/mystyle.css DESTINATION ${working})
+    #--stringparam html.stylesheet mystyle.css
     set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/html/docbook.xsl")
 
     execute_process(
-        COMMAND "/usr/bin/xsltproc" --xinclude  -o ${working}/index.html "${xslFile}" "${input}"
+        COMMAND "/usr/bin/xsltproc" --xinclude -o ${working}/index.html "${xslFile}" "${input}"
         OUTPUT_FILE ${working}/index.html
         OUTPUT_VARIABLE _output
     )
@@ -32,7 +33,6 @@ function(_DOCBOOK_PDF input version)
     set(outputBaseName "${working}/Crochet User Guide ${version}")
     
     set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/mystyle.xsl")
-    #set(xslFile "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/fo/docbook.xsl")
 
     execute_process(
         COMMAND "/usr/bin/xsltproc" -o ${outputBaseName}.fo --stringparam fop1.extensions 1 ${xslFile} "${input}"
