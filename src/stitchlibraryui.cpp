@@ -40,6 +40,9 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
 
     setDialogSize();
 
+    //TODO: Wrong Side.
+    ui->listView->hideColumn(4);
+
     ui->propertiesBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked()), SLOT(hideProperties()));
     connect(ui->printSet, SIGNAL(clicked()), SLOT(printStitchSet()));
