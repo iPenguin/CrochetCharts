@@ -40,20 +40,21 @@ if(WIN32)
     set(CPACK_CMAKE_MODULES_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
 
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
-    set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}")
-
+    set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}"
+							  "${PROJECT_NAME}_User_Guide_${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}.pdf" "${PROJECT_NAME} Help")
     # this doesn't work for the NSIS installer
-    #set(CPACK_CREATE_DESKTOP_LINKS "crochet")
+    #set(CPACK_CREATE_DESKTOP_LINKS "crochet.exe")
 
     set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
-    #CPACK_NSIS_DELETE_ICONS_EXTRA
+
     # Icon in the add/remove control panel. Must be an .exe file
     set(CPACK_NSIS_INSTALLED_ICON_NAME "crochet.exe")
 
     set(CPACK_NSIS_URL_INFO_ABOUT "${ORG_WEBSITE}")
     set(CPACK_NSIS_HELP_LINK "${ORG_WEBSITE}")
 
-    set(CPACK_NSIS_MUI_FINISHPAGE_RUN "crochet.exe")
+	set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\${PROJECT_NAME}.exe\\\"'")
+    set(CPACK_NSIS_MUI_FINISHPAGE_RUN "crochet")
 
 elseif(APPLE)
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
