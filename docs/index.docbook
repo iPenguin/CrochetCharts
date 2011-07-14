@@ -38,7 +38,7 @@
             <para>
                 <application>&appName;</application> is an application specially
                 designed to allow you to create design charts for crochet patterns.
-                This document will describe the features and abilities of <application>&appName;</application>
+                This document will describe the features and abilities of <application>&appName;.</application>
             </para>
         </abstract>
         <cover>
@@ -73,7 +73,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win1.png" format="PNG" />
                     </imageobject>
-                    <caption><para>The intro screen of the installation wizard</para></caption>
+                    <caption>The intro screen of the installation wizard</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -81,7 +81,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win2.png" format="PNG" />
                     </imageobject>
-                    <caption><para>The license agreement page of the wizard</para></caption>
+                    <caption>The license agreement page of the wizard</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -89,7 +89,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win3.png" format="PNG" />
                     </imageobject>
-                    <caption><para>Choose the installation path for &appName;</para></caption>
+                    <caption>Choose the installation path for &appName;</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -97,7 +97,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win4.png" format="PNG" />
                     </imageobject>
-                    <caption><para>Choose the Start Menu folder for &appName;</para></caption>
+                    <caption>Choose the Start Menu folder for &appName;</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -105,7 +105,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win5.png" format="PNG" />
                     </imageobject>
-                    <caption><para>The installer will install the needed files for &appName;</para></caption>
+                    <caption>The installer will install the needed files for &appName;</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -113,7 +113,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win6.png" format="PNG" />
                     </imageobject>
-                    <caption><para>Finish page for the installation of &appName;</para></caption>
+                    <caption>Finish page for the installation of &appName;</caption>
                 </mediaobject>
             </screenshot>
         </sect2>
@@ -125,7 +125,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-mac1.png" format="PNG" />
                     </imageobject>
-                    <caption><para>Mac license agreement page for &appName;</para></caption>
+                    <caption>Mac license agreement page for &appName;</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -133,7 +133,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-mac2.png" format="PNG" />
                     </imageobject>
-                    <caption><para>Drag the &appName; sheep over the fence and into the Applications folder.</para></caption>
+                    <caption>Drag the &appName; sheep over the fence and into the Applications folder.</caption>
                 </mediaobject>
             </screenshot>
         </sect2>
@@ -152,7 +152,7 @@
                 <imageobject>
                     <imagedata width="400" fileref="images/document-new.png" format="PNG" />
                 </imageobject>
-                <caption><para>The main window showing the New Chart Options dialog</para></caption>
+                <caption>The main window showing the New Chart Options dialog</caption>
             </mediaobject>
         </screenshot>
         <para>While editing the chart you can change the stitch, color, position, rotation, and height of the stitches, you can also add new stitches and new rows.
@@ -161,9 +161,9 @@
         <screenshot>
             <mediaobject>
                 <imageobject>
-                    <imagedata width="400" fileref="images/new-document-flat.png" format="PNG" />
+                    <imagedata width="400" fileref="images/document-new-flat.png" format="PNG" />
                 </imageobject>
-                <caption><para>The main window showing a basic flat chart</para></caption>
+                <caption>The main window showing a basic flat chart</caption>
             </mediaobject>
         </screenshot>
         
@@ -174,7 +174,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/document-new-round.png" format="PNG" />
                     </imageobject>
-                    <caption><para>The main window showing a basic round chart</para></caption>
+                    <caption>The main window showing a basic round chart</caption>
                 </mediaobject>
             </screenshot>
 
@@ -199,7 +199,7 @@
                 <imageobject>
                     <imagedata width="400" fileref="images/export-copy-instructions.png" format="PNG" />
                 </imageobject>
-                <caption><para>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</para></caption>
+                <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
             </mediaobject>
         </screenshot>
 
@@ -212,7 +212,7 @@
                         <imageobject>
                             <imagedata width="400" fileref="images/export-stitch-legend.png" format="PNG" />
                         </imageobject>
-                        <caption><para>Options window for export a Stitch Legend</para></caption>
+                        <caption>Options window for export a Stitch Legend</caption>
                     </mediaobject>
                 </screenshot>
             </sect3>
@@ -223,7 +223,7 @@
                         <imageobject>
                             <imagedata width="400" fileref="images/export-color-legend.png" format="PNG" />
                         </imageobject>
-                        <caption><para>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</para></caption>
+                        <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
                     </mediaobject>
                 </screenshot>
             </sect3>
@@ -251,7 +251,7 @@
                 <imageobject>
                     <imagedata width="400" fileref="images/options-application.png" format="PNG" />
                 </imageobject>
-                <caption><para>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</para></caption>
+                <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
             </mediaobject>
         </screenshot>
        <sect2>
@@ -278,7 +278,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/options-charts.png" format="PNG" />
                     </imageobject>
-                    <caption><para>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</para></caption>
+                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
                 </mediaobject>
             </screenshot>
            <variablelist>
@@ -334,7 +334,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/options-instructions.png" format="PNG" />
                     </imageobject>
-                    <caption><para>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</para></caption>
+                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
                 </mediaobject>
             </screenshot>
         </sect2>
@@ -344,7 +344,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/options-legends.png" format="PNG" />
                     </imageobject>
-                    <caption><para>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</para></caption>
+                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
                 </mediaobject>
             </screenshot>
             <sect3 id="options-legends-stitch"><title>Stitch Legends</title>
@@ -354,7 +354,30 @@
         </sect2>
     </chapter>
 
-
+    <chapter>
+        <title>Tools</title>
+        <sect1>
+            <title>Check for Updates</title>
+            <para></para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" scalefit="1" fileref="images/tools-updates.png" format="PNG" />
+                    </imageobject>
+                    <caption>No updates</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" scalefit="1" fileref="images/tools-updates-new.png" format="PNG" />
+                    </imageobject>
+                    <caption>A new version is available</caption>
+                </mediaobject>
+            </screenshot>
+        </sect1>
+        
+    </chapter>
 
     <chapter id="help"><title>Help</title>
         <para></para>
