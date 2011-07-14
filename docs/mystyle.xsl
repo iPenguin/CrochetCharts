@@ -41,15 +41,6 @@
                 font-family="{$title.font.family}">
             Published by &sws;
         </fo:block>
-        <fo:block xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xsl:use-attribute-sets="book.titlepage.recto.style"
-                text-align="center"
-                font-size="12pt"
-                space-before="18.6624pt"
-                font-weight="bold"
-                font-family="{$title.font.family}">
-            &copyright;
-        </fo:block>
     </xsl:template>
 
 </xsl:stylesheet>
