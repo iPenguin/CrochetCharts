@@ -663,7 +663,8 @@ void MainWindow::toolsOptions()
 {
     SettingsUi dialog(this);
     dialog.exec();
-    curCrochetTab()->sceneUpdate();
+    if(curCrochetTab())
+        curCrochetTab()->sceneUpdate();
 }
 
 void MainWindow::fileOpen()
