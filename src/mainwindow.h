@@ -111,8 +111,7 @@ private:
     void loadFiles(QStringList fileNames);
     
     void setupMenus();
-    void setupRecentFiles(QStringList files = QStringList());
-    void saveRecentFiles();
+    void setupRecentFiles();
     void updateMenuItems();
     
     void setupStitchPalette();
@@ -162,7 +161,6 @@ private:
             *mActionRedo;
 
     void addToRecentFiles(QString fileName);
-    QStringList mRecentFiles;
     QList<QAction*> mRecentFilesActs;
     
     QDockWidget *mUndoDock;

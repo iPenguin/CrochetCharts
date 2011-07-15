@@ -102,7 +102,6 @@ void MainWindow::loadFiles(QStringList fileNames)
 
 void MainWindow::checkUpdates(bool silent)
 {
-qDebug() << "Check for Updates";
     if(mUpdater) {
         delete mUpdater;
         mUpdater = 0;
@@ -114,7 +113,6 @@ qDebug() << "Check for Updates";
     ui->centralWidget->layout()->addWidget(mUpdater); 
         
     mUpdater->checkForUpdates(silent); //check at startup is always silent.
-qDebug() << "Check for Updates end";
 }
 
 void MainWindow::setApplicationTitle()
@@ -208,8 +206,7 @@ void MainWindow::setupMenus()
     
     ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
 
-    QStringList files = Settings::inst()->value("recentFiles").toStringList();
-    setupRecentFiles(files);
+    setupRecentFiles();
     
     //Edit Menu
     connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
@@ -314,7 +311,7 @@ void MainWindow::openRecentFile()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     QAction *action = qobject_cast<QAction *>(sender());
-    if (action) {
+    if (action && QFileInfo(action->data().toString()).exists()) {
         QStringList files;
         files.append(action->data().toString());
         loadFiles(files);
@@ -325,9 +322,9 @@ void MainWindow::openRecentFile()
 void MainWindow::addToRecentFiles(QString fileName)
 {
 
-    if(mRecentFiles.contains(fileName))
-        mRecentFiles.removeAll(fileName);
-    mRecentFiles.prepend(fileName);
+    if(Settings::inst()->recentFiles.contains(fileName))
+        Settings::inst()->recentFiles.removeAll(fileName);
+    Settings::inst()->recentFiles.prepend(fileName);
 }
 
 void MainWindow::menuRecentFilesAboutToShow()
@@ -335,22 +332,33 @@ void MainWindow::menuRecentFilesAboutToShow()
     setupRecentFiles();
 }
 
-void MainWindow::setupRecentFiles(QStringList files)
+void MainWindow::setupRecentFiles()
 {
-    if(files.count() > 0)
-        mRecentFiles = files;
+    QStringList files;
+    QStringList list = Settings::inst()->recentFiles;
     
     int maxRecentFiles = Settings::inst()->value("maxRecentFiles").toInt();
     mRecentFilesActs.clear();
-   
+
+    int i = 0;
+    //remove any files that have been deleted or are not available.
+    foreach(QString file, list) {
+        if(QFileInfo(file).exists()) {
+            files.append(file);
+            i++;
+            if(i >= maxRecentFiles)
+                break;
+        }
+    }
     
-    for(int i = 0; i < mRecentFiles.count(); ++i) {
-        QString text = tr("&%1 %2").arg(i + 1).arg(QFileInfo(mRecentFiles[i]).fileName());
+    for(int i = 0; i < files.count(); ++i) {
+
+        QString text = tr("&%1 %2").arg(i + 1).arg(QFileInfo(files[i]).fileName());
         QAction *a = new QAction(this);
         connect(a, SIGNAL(triggered()), SLOT(openRecentFile()));
         
         a->setText(text);
-        a->setData(mRecentFiles[i]);
+        a->setData(files[i]);
         if(i < maxRecentFiles)
             a->setVisible(true);
         else
@@ -360,22 +368,9 @@ void MainWindow::setupRecentFiles(QStringList files)
 
     ui->menuOpenRecent->clear();
     ui->menuOpenRecent->addActions(mRecentFilesActs);
-}
 
-void MainWindow::saveRecentFiles()
-{
-    int maxRecentFiles = Settings::inst()->value("maxRecentFiles").toInt();
-    
-    QStringList subList;
-
-    //when saving the recent files to disk only save the amount the user wants to see.
-    if(mRecentFiles.count() > maxRecentFiles) {
-        for(int i = 0; i < maxRecentFiles; ++i)
-            subList.append(mRecentFiles.at(i));
-    } else
-        subList = mRecentFiles;
-    
-    Settings::inst()->setValue("recentFiles", QVariant(subList));
+    //update the master list.
+    Settings::inst()->recentFiles = files;
 }
 
 void MainWindow::updateMenuItems()
@@ -622,7 +617,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if(safeToClose()) {
         Settings::inst()->setValue("geometry", saveGeometry());
         Settings::inst()->setValue("windowState", saveState());
-        saveRecentFiles();
 
         if(Settings::inst()->files.contains(mFile->fileName))
             Settings::inst()->files.remove(mFile->fileName.toLower());
