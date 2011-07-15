@@ -63,7 +63,7 @@
     <chapter id="installation"><title>Installation</title>
         <para>Because this software is licensed per user you may install it on multiple computers including any combination of the supported platforms below.
         To install on multiple platforms you may goto the the <ulink url="&downloadUrl;">downloads page</ulink> and download the installer for other platforms.
-        You will need your serial number to complete the installtion. The serial number can be found in the <link linkend="helpAbout">About dialog</link>.
+        You will need your serial number to complete the installtion. The serial number can be found in the <emphasis role="bold"><link linkend="helpAbout">About dialog</link></emphasis>.
         If you need help installing on a second platform please <ulink href="&contactUrl;">contact me</ulink>.</para>
         <section><title>Windows</title>
             <para>&appName; will run on Microsoft Windows XP, Windows Vista, and Windows 7. To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
@@ -206,7 +206,7 @@
         </section>
         <section><title>Legends</title>
             <sect3><title>Stitch Legends</title>
-                <para>When you export a stitch legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <link linkend="options-legends-stitch">Options/Preferences</link>.</para>
+                <para>When you export a stitch legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <emphasis role="bold"><link linkend="options-legends-stitch">Options/Preferences</link></emphasis>.</para>
                 <screenshot>
                     <mediaobject>
                         <imageobject>
@@ -217,7 +217,7 @@
                 </screenshot>
             </sect3>
             <sect3><title>Color Legends</title>
-                <para>When you export a color legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <link linkend="options-legends-color">Options/Preferences</link>.</para>
+                <para>When you export a color legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <emphasis role="bold"><link linkend="options-legends-color">Options/Preferences</link></emphasis>.</para>
                 <screenshot>
                     <mediaobject>
                         <imageobject>
@@ -232,21 +232,113 @@
 
 
 
-    <chapter id="stitch-library"><title>Stitch Library</title>
-        <section><title>Creating New Stitches</title>
+    <chapter id="stitch-library">
+        <title>Stitch Library</title>
+        <para>The Stitch Library can consist of multiple sets of stitches.
+            Each set must have unique stitch names in it, but you may have multiple stitches with the same name across sets. 
+            The Master Stitch List contains all the stitches that will appear in the Stitches list in the main window. You can customize this list
+            however you want. The Default Crochet Stitches is the list of stitches that comes with the software.            
+        </para>
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/stitch-library.png" format="PNG" />
+                </imageobject>
+                <caption>The main window of the Stitch Library</caption>
+            </mediaobject>
+        </screenshot>
+        <para>To open the Stitch Library goto <emphasis role="bold"><menuchoice><guimenu>Tools</guimenu><guimenuitem>Stitch Library</guimenuitem></menuchoice></emphasis>.
+        From here you can add and remove Stitches, Stitch Sets and Icons, print the set and reset the library.
+        </para>
+        <section>
+            <title>Creating New Stitch Sets</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="150" fileref="images/stitch-library-add-set.png" format="PNG" />
+                    </imageobject>
+                    <caption>The prompt for a new Stitch Set</caption>
+                </mediaobject>
+            </screenshot>
+            <para>To create a new Stitch Set click on the <guibutton>Add Set</guibutton> button. you will be prompted to enter a set name.
+            Once you have entered a new set name that list will be loaded in the Stitch Library with a new stitch ready for editing.
+            From this point you can edit the stitch like normal and add more stitches to the set.
+            </para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/stitch-library-new-set.png" format="PNG" />
+                    </imageobject>
+                    <caption>A new Stitch Set displayed in the library</caption>
+                </mediaobject>
+            </screenshot>
+            <para>
+            </para>
         </section>
-        <section><title>Creating New Stitch Sets</title>
+        <section>
+            <title>Creating New Stitches</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="150" fileref="images/stitch-library-new-stitch.png" format="PNG" />
+                    </imageobject>
+                    <caption>The prompt for a new Stitch</caption>
+                </mediaobject>
+            </screenshot>
+            <para>To create a new stitch click on the <guibutton>Add Stitch</guibutton> button and supply a new name for the stitch.
+            You will then be dropped back to the Stitch Library with a new row added containing the name of the new stitch, and a question mark for an icon.
+            To change any of the information about the stitch just click on each section.
+            The Icon and Categories will open a drop down lists that you have to click on again to show you the possible options.
+            If you want to add icons to the list of selections you can <emphasis role="bold"><link linkend="stitch-library-custom-icons">add your own custom icons</link></emphasis>.
+            </para>
         </section>
-        <section><title>Importing / Exporting Stitch Sets</title>
+        <section>
+            <title>Adding Stitches to the Master Stitch List</title>
+            <para>To use custom stitches to create charts you have to include the stitches in the Master Stitch List.
+                To include your custom stitches check the "Selected" check box next to the stitch or stitches you wish
+                to add and press the <guibutton>Add Selected To Master</guibutton> button.
+            </para>
+            <para>The Master Stitch List like any stitch set can only have uniquely named stitches. If you try to include a stitch name
+                that is already in the list you will be prompted with a choice of how to proceed.
+            </para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/stitch-library-add-to-master-prompt.png" format="PNG" />
+                    </imageobject>
+                    <caption>You will be prompted if the stitch already exists</caption>
+                </mediaobject>
+            </screenshot>
+        </section>
+        <section>
+            <title>Importing / Exporting Stitch Sets</title>
+        </section>
+        <section id="stitch-library-custom-icons">
+            <title>Adding Custom Icons</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/stitch-library-icon-list.png" format="PNG" />
+                    </imageobject>
+                    <caption>The prompt for a new Stitch</caption>
+                </mediaobject>
+            </screenshot>
+            <para>
+            </para>
+        </section>
+        <section>
+            <title>Creating an Icon</title>
+            <para>
+            </para>
         </section>
     </chapter>
 
 
 
-   <chapter id="options-preferences" version="5.0" xmlns="http://docbook.org/ns/docbook">
-       <title>Options / Preferences</title>
-       <para>The options have been divided into sections. The first section contains the general application settings. The Chart section contains settings that effect the layout and output of the charts. The Instructions section contains settings that effect how the written instructions are generated and exported as plain text. The Legend section contains the default settings for generating the legends. These settings can usually be overridden at the point of use.</para>
-       <screenshot>
+    <chapter id="options-preferences" version="5.0" xmlns="http://docbook.org/ns/docbook">
+        <title>Options / Preferences</title>
+        <para>The options have been divided into sections. The first section contains the general application settings. The Chart section contains settings that effect the layout and output of the charts. The Instructions section contains settings that effect how the written instructions are generated and exported as plain text. The Legend section contains the default settings for generating the legends. These settings can usually be overridden at the point of use.</para>
+        <screenshot>
             <mediaobject>
                 <imageobject>
                     <imagedata width="400" fileref="images/options-application.png" format="PNG" />
@@ -254,9 +346,9 @@
                 <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
             </mediaobject>
         </screenshot>
-       <section>
-           <title>Application</title>
-           <variablelist>
+        <section>
+            <title>Application</title>
+            <variablelist>
                <varlistentry>
                    <term><emphasis role="bold">Check for updates on Startup</emphasis></term>
                    <listitem>
