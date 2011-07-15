@@ -20,7 +20,7 @@ class LicenseWizard : public QWizard
     Q_OBJECT
 
 public:
-    enum { Page_Intro, Page_Evaluate, Page_Register, Page_Conclusion };
+    enum { Page_Intro, Page_License, Page_Evaluate, Page_Register, Page_Conclusion };
 
     LicenseWizard(bool regOnly = false, QWidget *parent = 0);
 
@@ -42,6 +42,27 @@ private:
     QLabel *topLabel;
     QRadioButton *registerRadioButton;
     QRadioButton *evaluateRadioButton;
+};
+
+class LicensePage : public QWizardPage
+{
+    Q_OBJECT
+public:
+    LicensePage(QWidget *parent = 0);
+    
+    bool validatePage();
+    int nextId() const;
+
+    void initializePage();
+    
+    void setVisible(bool visible);
+
+private slots:
+    void printButtonClicked();
+
+private:
+    QTextEdit *licenseView;
+    QCheckBox *agreeCheckbox;    
 };
 
 class EvaluatePage : public QWizardPage

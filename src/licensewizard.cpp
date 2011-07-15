@@ -38,6 +38,7 @@ LicenseWizard::LicenseWizard(bool regOnly, QWidget *parent)
 {
 
     setPage(Page_Intro, new IntroPage(regOnly));
+    setPage(Page_License, new LicensePage);
     setPage(Page_Evaluate, new EvaluatePage);
     setPage(Page_Register, new RegisterPage);
     setPage(Page_Conclusion, new ConclusionPage);
@@ -64,6 +65,9 @@ void LicenseWizard::showHelp()
     switch (currentId()) {
         case Page_Intro:
             message = tr("You may evaluate the software before you purchase a serial number and register it.");
+            break;
+        case Page_License:
+            message = tr("This is the license agreement that governs the use of this software. If you do not agree with these terms then you may not use the software.");
             break;
         case Page_Evaluate:
             message = tr("Your name and a valid email address will be used to generate a demo license for your use in evaluating this software.");
@@ -97,14 +101,17 @@ IntroPage::IntroPage(bool regOnly, QWidget *parent)
                 "This licensing wizard requires you to be connected to the internet. "
                 ).arg(qApp->applicationName()));
     topLabel->setWordWrap(true);
-
+        
     registerRadioButton = new QRadioButton(tr("&Register your copy"));
     evaluateRadioButton = new QRadioButton(tr("&Evaluate this software"));
+
+    registerField("intro.type", evaluateRadioButton);
     registerRadioButton->setChecked(true);
 
     evaluateRadioButton->setEnabled(!regOnly);
     evaluateRadioButton->setVisible(!regOnly);
 
+    
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(topLabel);
     layout->addWidget(registerRadioButton);
@@ -114,11 +121,77 @@ IntroPage::IntroPage(bool regOnly, QWidget *parent)
 
 int IntroPage::nextId() const
 {
-    if (evaluateRadioButton->isChecked()) {
+    return LicenseWizard::Page_License;
+}
+
+/*****************************************************\
+ * License Page
+ *****************************************************/
+LicensePage::LicensePage(QWidget *parent)
+    : QWizardPage(parent)
+{
+    licenseView = new QTextEdit;
+
+    agreeCheckbox = new QCheckBox(tr("I agree to the terms of the license"));
+
+    registerField("license.agree*", agreeCheckbox);
+
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(new QLabel(tr("You must agree to the End User License Agreement before you can use this software.")));
+    layout->addWidget(licenseView);
+    layout->addWidget(agreeCheckbox);
+    setLayout(layout);
+}
+
+void LicensePage::initializePage()
+{
+    QFile f(":/resources/license.txt");
+    if(!f.open(QIODevice::ReadOnly))
+        return;
+    QString licenseText = f.readAll();
+
+    licenseView->setText(licenseText);
+    licenseView->setReadOnly(true);
+    
+}
+
+
+bool LicensePage::validatePage()
+{
+    return true;
+}
+
+int LicensePage::nextId() const
+{
+    if (field("intro.type").toBool()) {
         return LicenseWizard::Page_Evaluate;
     } else {
         return LicenseWizard::Page_Register;
     }
+}
+
+void LicensePage::setVisible(bool visible)
+{
+    QWizardPage::setVisible(visible);
+
+    if (visible) {
+        wizard()->setButtonText(QWizard::CustomButton1, tr("&Print"));
+        wizard()->setOption(QWizard::HaveCustomButton1, true);
+        connect(wizard(), SIGNAL(customButtonClicked(int)),
+                this, SLOT(printButtonClicked()));
+    } else {
+        wizard()->setOption(QWizard::HaveCustomButton1, false);
+        disconnect(wizard(), SIGNAL(customButtonClicked(int)),
+                   this, SLOT(printButtonClicked()));
+    }
+}
+
+void LicensePage::printButtonClicked()
+{
+    QPrinter printer;
+    QPrintDialog dialog(&printer, this);
+    if (dialog.exec())
+        licenseView->print(&printer);
 }
 
 /*****************************************************\
