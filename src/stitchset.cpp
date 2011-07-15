@@ -265,7 +265,6 @@ void StitchSet::saveIcons(QDataStream *out)
         if(!s->file().startsWith(":/")) {
             QFile f(s->file());
             f.open(QIODevice::ReadOnly);
-            qDebug() << "file name" << QFileInfo(s->file()).fileName();
             icons.insert(QFileInfo(s->file()).fileName(), f.readAll());
             f.close();
         }

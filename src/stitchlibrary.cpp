@@ -37,7 +37,6 @@ StitchLibrary::StitchLibrary()
 
 StitchLibrary::~StitchLibrary()
 {
-    qDebug() << "~StitchLibrary";
     saveMasterList();
     
     foreach(StitchSet *set, mStitchSets) {
