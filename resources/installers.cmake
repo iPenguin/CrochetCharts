@@ -90,6 +90,15 @@ elseif(APPLE)
 
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
                 ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
+    
+    install(CODE "
+        set(VERSION_STR \"@SWS_VERSION_MAJOR@.@SWS_VERSION_MINOR@.@SWS_VERSION_PATCH@\")
+        file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_STR@.pdf\" 
+             DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@\")
+        file(RENAME \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@/@PROJECT_NAME@_User_Guide_@VERSION_STR@.pdf\" 
+        \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@/User Guide.pdf\")
+        " COMPONENT Runtime)
+
 
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")
