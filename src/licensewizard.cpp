@@ -340,17 +340,17 @@ ConclusionPage::ConclusionPage(QWidget *parent)
     setTitle(tr("Complete Your Registration"));
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark.svg"));
     setFinalPage(true);
+
+    QLabel *lbl = new QLabel(tr("An internet connection is no longer required to run this software. "
+        "However if you are connected when you start the program it will check for updates."));
+    lbl->setWordWrap(true);
     
-    licenseEdit = new QTextEdit;
-
-    agreeCheckBox = new QCheckBox(tr("I agree to the terms of the license"));
-
-    registerField("conclusion.agree*", agreeCheckBox);
-
+    finalComments = new QLabel(this);
+    finalComments->setWordWrap(true);
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(new QLabel(tr("An internet connection is no longer required to run this software.")));
-    layout->addWidget(licenseEdit);
-    layout->addWidget(agreeCheckBox);
+    layout->addWidget(lbl);
+    layout->addWidget(finalComments);
+
     setLayout(layout);
 }
 
@@ -361,25 +361,26 @@ int ConclusionPage::nextId() const
 
 void ConclusionPage::initializePage()
 {
-    QFile f(":/resources/license.txt");
-    if(!f.open(QIODevice::ReadOnly))
-        return;
-    QString licenseText = f.readAll();
-    
-    licenseEdit->setText(licenseText);
-    licenseEdit->setReadOnly(true);
-
     if (wizard()->hasVisitedPage(LicenseWizard::Page_Register)) {
         sn      = field("register.serialNumber").toString();
         license = field("register.license").toString();
         fname   = field("register.first_name").toString();
         lname   = field("register.last_name").toString();
         email   = field("register.email").toString();
+
+        finalComments->setText(tr("<br />Thank you for purchasing %1, I appreciate your business."
+            "If you have any questions please <a href=\"http://StitchWorksSoftware.com/contact\">contact me</a>.<br /><br />"
+            "Brian Milco<br />Owner, Stitch Works Software").arg(AppInfo::inst()->appName));
+        
     } else if (wizard()->hasVisitedPage(LicenseWizard::Page_Evaluate)) {
         license = field("evaluate.license").toString();
         fname   = field("evaluate.first_name").toString();
         lname   = field("evaluate.last_name").toString();
         email   = field("evaluate.email").toString();
+        
+        finalComments->setText(tr("<br />Thanks for taking the time to evaluate %1. I hope you find this software useful. "
+            "If you have any questions please <a href=\"http://StitchWorksSoftware.com/contact\">contact me</a>.<br /><br />"
+            "Brian Milco<br />Owner, Stitch Works Software").arg(AppInfo::inst()->appName));
     }
     //else do an upgrade.
     
@@ -398,28 +399,4 @@ bool ConclusionPage::validatePage()
     }
 
     return isValid;
-}
-
-void ConclusionPage::setVisible(bool visible)
-{
-    QWizardPage::setVisible(visible);
-
-    if (visible) {
-        wizard()->setButtonText(QWizard::CustomButton1, tr("&Print"));
-        wizard()->setOption(QWizard::HaveCustomButton1, true);
-        connect(wizard(), SIGNAL(customButtonClicked(int)),
-                this, SLOT(printButtonClicked()));
-    } else {
-        wizard()->setOption(QWizard::HaveCustomButton1, false);
-        disconnect(wizard(), SIGNAL(customButtonClicked(int)),
-                   this, SLOT(printButtonClicked()));
-    }
-}
-
-void ConclusionPage::printButtonClicked()
-{
-    QPrinter printer;
-    QPrintDialog dialog(&printer, this);
-    if (dialog.exec())
-        licenseEdit->print(&printer);
 }

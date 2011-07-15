@@ -110,16 +110,11 @@ public:
 
     void initializePage();
     int nextId() const;
-    void setVisible(bool visible);
 
     bool validatePage();
-    
-private slots:
-    void printButtonClicked();
 
 private:
-    QTextEdit *licenseEdit;
-    QCheckBox *agreeCheckBox;
+    QLabel *finalComments;
     QString sn,
             license,
             email,
