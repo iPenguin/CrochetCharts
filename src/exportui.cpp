@@ -32,6 +32,8 @@ ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
     ui->showStitchWrongSideLbl->hide();
     ui->colorSortBy->hide();
     ui->colorSortByLbl->hide();
+    //FIXME: chart options...
+    ui->chartOptions->hide();
     
     setupChartOptions();
     setupColorLegendOptions();
@@ -333,7 +335,8 @@ void ExportUi::setSelection(QString selection)
         
         ui->stitchLegendOptions->hide();
         ui->colorLegendOptions->hide();
-        ui->chartOptions->show();
+//FIXME: Chart Options.
+        ui->chartOptions->hide();
     }
 }
 

@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QStringList>
 
 class MainWindow;
 
@@ -15,6 +16,7 @@ class Settings : public QObject
     Q_OBJECT
 public:
     static Settings* inst();
+    ~Settings();
 
     void setValue(const QString &key, const QVariant &value);
     QVariant value(const QString &key) const;
@@ -30,8 +32,11 @@ public:
     //return the default value of a given key.
     QVariant defaultValue ( const QString& key ) const;
 
-    //list of open files. All files should be appened toLower().
+    //list of open files. All files should be added toLower().
     QMap<QString, MainWindow*> files;
+
+    //list of recent files. All strings added case sensitively (they'll be used to open the files).
+    QStringList recentFiles;
     
 private:
     void initDemoVersion();

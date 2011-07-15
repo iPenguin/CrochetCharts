@@ -10,10 +10,7 @@ set(PROJECT_VERSION      "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSIO
 set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
 set(PROJECT_MACOSX_ICON  "Crochet.icns")
 
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-license.txt")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-readme.txt")
-set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-welcome.txt")
-set(CPACK_PACKAGE_DECRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/resources/installer-description.txt")
+#set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/license.txt")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR ${PROJECT_VENDOR})
@@ -40,20 +37,21 @@ if(WIN32)
     set(CPACK_CMAKE_MODULES_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
 
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
-    set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}")
-
+    set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}"
+							  "${PROJECT_NAME}_User_Guide_${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}.pdf" "${PROJECT_NAME} Help")
     # this doesn't work for the NSIS installer
-    #set(CPACK_CREATE_DESKTOP_LINKS "crochet")
+    #set(CPACK_CREATE_DESKTOP_LINKS "crochet.exe")
 
     set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
-    #CPACK_NSIS_DELETE_ICONS_EXTRA
+
     # Icon in the add/remove control panel. Must be an .exe file
     set(CPACK_NSIS_INSTALLED_ICON_NAME "crochet.exe")
 
     set(CPACK_NSIS_URL_INFO_ABOUT "${ORG_WEBSITE}")
     set(CPACK_NSIS_HELP_LINK "${ORG_WEBSITE}")
 
-    set(CPACK_NSIS_MUI_FINISHPAGE_RUN "crochet.exe")
+	set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\${PROJECT_NAME}.exe\\\"'")
+    set(CPACK_NSIS_MUI_FINISHPAGE_RUN "crochet")
 
 elseif(APPLE)
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
@@ -89,6 +87,15 @@ elseif(APPLE)
 
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
                 ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
+    
+    install(CODE "
+        set(VERSION_STR \"@SWS_VERSION_MAJOR@.@SWS_VERSION_MINOR@.@SWS_VERSION_PATCH@\")
+        file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_STR@.pdf\" 
+             DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@\")
+        file(RENAME \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@/@PROJECT_NAME@_User_Guide_@VERSION_STR@.pdf\" 
+        \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@/User Guide.pdf\")
+        " COMPONENT Runtime)
+
 
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")

@@ -1,6 +1,7 @@
 Creating an installer for windows:
 
-cmake, qt, and nsis should be installed.
+cmake, qt, and nsis should be installed. install openSSL for checking for versions and downloading updates.
+http://www.slproweb.com/products/Win32OpenSSL.html Install the light version. check the ${QT_DEPS_WINDOWS} for the ssl dlls.
 
 Path should contain: C:\Program Files\CMake 2.8\bin;C:\Program Files\Git\cmd;C:\Program Files\NSIS;C:\Qt\2010.05\qt\bin;C:\Qt\2010.05\mingw\bin
 

@@ -30,6 +30,12 @@ Settings::Settings()
 {
     setupValueList();
     initDemoVersion();
+    recentFiles = value("recentFiles").toStringList();
+}
+
+Settings::~Settings()
+{
+    setValue("recentFiles", QVariant(recentFiles));
 }
 
 void Settings::initDemoVersion()

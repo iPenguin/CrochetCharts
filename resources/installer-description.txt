@@ -1,5 +1,0 @@
-DESCRIPTION
-===========
-
-This file is a description of the package
-
