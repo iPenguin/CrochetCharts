@@ -7,17 +7,17 @@ This is an agreement between Licensor (Stitch Works Software) and Licensee, who 
 
 The Licensee acknowledges that this is only a limited nonexclusive license. Licensor is and remains the owner of all titles, rights, and interests in the Software (and any copies thereof) and specifically reserve all rights not expressly granted under this EULA.
 
-In the event that you fail to comply with this EULA, Stitch Works Software may terminate the license and you must destroy all copies of the Software (with all other rights of both parties and all other provisions of this EULA surviving any such termination).
-
-The Licensee is granted permission to install the Software on more than one computer system, as long as the Licensee is the only person who will use the software. Licensee will not make copies of the Software or allow copies of the Software to be made by others, unless authorized by this License Agreement. Licensee may make copies of the Software for backup purposes only.
+The Licensee is granted permission to install the Software on more than one computer system, as long as the Licensee is the only person who will use the software. The Licensee will not make copies of the Software or allow copies of the Software to be made by others, unless authorized by this License Agreement. The Licensee may make copies of the Software for backup purposes only.
 
 You may not decompile, disassemble or reverse engineer the Software or otherwise attempt to gain access to its source code, except to the extent that such restrictions are expressly prohibited by law.
 
 The Licensee shall not use the Software Trial Application for a purpose other than the sole purpose of determining whether to purchase a license to a commercial version of the Software.
 
+In the event that you fail to comply with this EULA, Stitch Works Software may terminate the license and you must destroy all copies of the Software (with all other rights of both parties and all other provisions of this EULA surviving any such termination).
+
 DISCLAIMER OF WARRANTY
 
-THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
 
 IF APPLICABLE LAW REQUIRES ANY WARRANTIES WITH RESPECT TO THE SOFTWARE, ALL SUCH WARRANTIES ARE LIMITED IN DURATION TO NINETY (90) DAYS FROM THE DATE OF DELIVERY.
 
@@ -27,7 +27,7 @@ LIMITATION OF LIABILITY
 
 IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW WILL ANY COPYRIGHT HOLDER, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 
-STITCH WORKS SOFTWARE'S TOTAL LIABILITY TO YOU FOR ACTUAL DAMAGES FOR ANY CAUSE WHATSOEVER WILL BE LIMITED TO $1.
+Stitch Works Software's total liability to you for actual damages for any cause whatsoever will be limited to one dollar ($1).
 
 ADDITIONAL
 
@@ -35,7 +35,7 @@ The limitations or exclusions of warranties, remedies or liability contained in 
 
 If any provision of this EULA shall be held by a court of competent jurisdiction to be contrary to law, that provision will be enforced to the maximum extent permissible, and the remaining provisions of this EULA will remain in full force and effect.
 
-All questions concerning this EULA shall be directed to: Stitch Works Software, http://StitchWorksSoftware.com/contact .
+All questions concerning this EULA shall be directed to: Stitch Works Software, support@StitchWorksSoftware.com.
 
 GOVERNING LAW AND VENUE
 
