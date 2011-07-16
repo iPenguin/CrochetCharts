@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Crochet</string>
+   <string>Crochet Charts</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../crochet.qrc">

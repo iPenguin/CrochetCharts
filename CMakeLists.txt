@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
-project(Crochet)
+project(CrochetCharts)
+
+set(SWS_PROJECT_NAME "Crochet Charts")
 
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable...
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 #Forces out of source builds just in case.
 include(MacroOutOfSourceBuild)
-macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build.")
+macro_ensure_out_of_source_build("${SWS_PROJECT_NAME} requires an out of source build.")
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release Profile CACHE TYPE INTERNAL FORCE)
 if(CMAKE_BUILD_TYPE STREQUAL "")
@@ -35,7 +37,7 @@ option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
 option(SWS_DOCS "Create docbook documentation" ON)
 
 message("-------------------------------------------------------")
-message(STATUS ${PROJECT_NAME} " Version: " ${SWS_VERSION})
+message(STATUS ${SWS_PROJECT_NAME} " Version: " ${SWS_VERSION})
 message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
 message(STATUS "Unit Testing: " ${UNIT_TESTING})
 message(STATUS "Force 32bit: " ${FORCE_32BIT})
