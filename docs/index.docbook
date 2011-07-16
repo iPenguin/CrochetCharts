@@ -4,7 +4,6 @@
 %allent;
 ]>
 
-<!--NOTE: use link to link in the documentation and ulink for linking to actual urls -->
 <book xmlns="http://docbook.org/ns/docbook" 
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:xi="http://www.w3.org/2001/XInclude"
@@ -14,8 +13,8 @@
     id="crochet-charts-user-guide" lang="en" version="5.0">
 
     <bookinfo>
-        <title>The Official <application>&appName;</application> User Guide</title>
-        <subtitle>Version &appVersion;</subtitle>
+        <title>The Official &appName; User Guide</title>
+        <subtitle>For Version &appVersion;</subtitle>
         <productname>&appName;</productname>
         <productnumber>&appVersion;</productnumber>
         <edition>&appVersion;</edition>
@@ -26,8 +25,8 @@
         <author>
             <firstname>Brian</firstname><surname>Milco</surname>
             <affiliation>
+                <jobtitle>Owner</jobtitle>
                 <orgname>&sws;</orgname>
-                <address role="email">&contact;</address>
             </affiliation>
             <address>
                 <city>Chico</city>
@@ -63,7 +62,8 @@
     <chapter id="installation"><title>Installation</title>
         <para>Because this software is licensed per user you may install it on multiple computers including any combination of the supported platforms below.
         To install on multiple platforms you may goto the the <ulink url="&downloadUrl;">downloads page</ulink> and download the installer for other platforms.
-        You will need your serial number to complete the installtion. The serial number can be found in the <emphasis role="bold"><link linkend="helpAbout">About dialog</link></emphasis>.
+        You will need your serial number to complete the installation. The serial number can be found in the
+        <link linkend="helpAbout">About dialog</link>.
         If you need help installing on a second platform please <ulink url="&contactUrl;">contact me</ulink>.</para>
         <section><title>Windows</title>
             <para>&appName; will run on Microsoft Windows XP, Windows Vista, and Windows 7. To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
@@ -146,7 +146,13 @@
 
 
     <chapter id="creating-charts"><title>Creating Charts</title>
-        <para>When you first open &appName; you are presented with a blank window with a "New Chart Options" dialog at the top. This dialog gives you quick access to create a new document and chart. Form it you can set the basic informaiton about the new chart. If you select a Round chart the number of stitches is the number that is used on the inner most row. Subsequent rows will have increasing numbers of stitches. All of these values can be changed later while you edit the chart.</para>
+        <para>When you first open &appName; you are presented with a blank window with a "New Chart Options" dialog at the top.
+            This dialog gives you quick access to create a new document and chart.
+            Form it you can set the basic information about the new chart.
+            If you select a Round chart the number of stitches is the number that is used on the inner most row.
+            Subsequent rows will have increasing numbers of stitches.
+            All of these values can be changed later while you edit the chart.
+        </para>
         <screenshot>
             <mediaobject>
                 <imageobject>
@@ -186,7 +192,7 @@
     <chapter id="exporting-files"><title>Exporting Files</title>
         <para>All pieces of your work can be exported to formats that are commonly used on websites, in magazines, and in publication.</para>
         <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP. The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image. For this reason they are commonly used in magazines and publication. JPEG and PNG are also sometimes accepted by magazines and publications, however if the publisher accepts them they usually want a resolution of 300 DPI. Before sending a file to a publisher you should ask them what file types they will accept.</para>
-        <para>To export any part of your document as images goto <emphasis role="bold"><menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice></emphasis>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
+        <para>To export any part of your document as images goto <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
 
         <section><title>Charts</title>
         <para>To undo or redo edits you have made on the chart you can press <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo> or <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Y</keycap></keycombo> respectively.</para>
@@ -206,7 +212,7 @@
         </section>
         <section><title>Legends</title>
             <sect3><title>Stitch Legends</title>
-                <para>When you export a stitch legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <emphasis role="bold"><link linkend="options-legends-stitch">Options/Preferences</link></emphasis>.</para>
+                <para>When you export a stitch legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <link linkend="options-legends-stitch">Options/Preferences</link>.</para>
                 <screenshot>
                     <mediaobject>
                         <imageobject>
@@ -217,7 +223,7 @@
                 </screenshot>
             </sect3>
             <sect3><title>Color Legends</title>
-                <para>When you export a color legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <emphasis role="bold"><link linkend="options-legends-color">Options/Preferences</link></emphasis>.</para>
+                <para>When you export a color legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <link linkend="options-legends-color">Options/Preferences</link>.</para>
                 <screenshot>
                     <mediaobject>
                         <imageobject>
@@ -247,7 +253,7 @@
                 <caption>The main window of the Stitch Library</caption>
             </mediaobject>
         </screenshot>
-        <para>To open the Stitch Library goto <emphasis role="bold"><menuchoice><guimenu>Tools</guimenu><guimenuitem>Stitch Library</guimenuitem></menuchoice></emphasis>.
+        <para>To open the Stitch Library goto <menuchoice><guimenu>Tools</guimenu><guimenuitem>Stitch Library</guimenuitem></menuchoice>.
         From here you can add and remove Stitches, Stitch Sets and Icons, print the set and reset the library.
         </para>
         <section>
@@ -289,7 +295,7 @@
             You will then be dropped back to the Stitch Library with a new row added containing the name of the new stitch, and a question mark for an icon.
             To change any of the information about the stitch just click on each section.
             The Icon and Categories will open a drop down lists that you have to click on again to show you the possible options.
-            If you want to add icons to the list of selections you can <emphasis role="bold"><link linkend="stitch-library-custom-icons">add your own custom icons</link></emphasis>.
+            If you want to add icons to the list of selections you can <link linkend="stitch-library-custom-icons">add your own custom icons</link>.
             </para>
         </section>
         <section>
@@ -340,7 +346,7 @@
                     <caption>Adding new icons</caption>
                 </mediaobject>
             </screenshot>
-            <para>To add custom icons click on the <guibutton>Manage Icons</guibutton> button in the <emphasis role="bold"><link linkend="stitch-library">Stitch Library</link></emphasis>.
+            <para>To add custom icons click on the <guibutton>Manage Icons</guibutton> button in the <link linkend="stitch-library">Stitch Library</link>.
             This will take you to the Stitch Icon List where you can Add Icons, Remove Icons and Save Icons.
             </para>
             <para>When you Add an Icon to the Stitch Library the software makes a copy of the icon so that it cannot be moved or lost. Removing the icon will also remove the copy.
@@ -395,35 +401,47 @@
     <chapter id="options-preferences">
         <title>Options / Preferences</title>
         <para>The options have been divided into sections. The first section contains the general application settings.
-            The Chart section contains settings that effect the layout and output of the charts.
+            The Charts section contains settings that effect the creation and layout of charts.
             The Instructions section contains settings that effect how the written instructions are generated and exported as plain text.
-            The Legend section contains the default settings for generating the legends. These settings can usually be overridden at the point of use.
+            The Legend section contains the default settings for generating stitch and color legends.
+            All of these settings can usually be overridden at the point of use.
         </para>
-        <screenshot>
-            <mediaobject>
-                <imageobject>
-                    <imagedata width="400" fileref="images/options-application.png" format="PNG" />
-                </imageobject>
-                <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
-            </mediaobject>
-        </screenshot>
+        <para>If you change the settings and you are unhappy with them you can always return the application to the default state
+            by clicking the <guibutton>Restore Defaults</guibutton> button.
+        </para>
         
         <section id="options-application">
             <title>Application</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/options-application.png" format="PNG" />
+                    </imageobject>
+                    <caption>The application options dialog</caption>
+                </mediaobject>
+            </screenshot>
             <variablelist>
                <?dbfo list-presentation="blocks"?>
                <varlistentry>
-                   <term><emphasis role="bold">Check for updates on Startup</emphasis></term>
+                   <term>Check for updates on Startup</term>
                    <listitem>
                        <para>Every time you start this software it will attempt to connect to &website; to check for updates. If an update is found you will be prompted to download it.
                        You can still check for updates manually even if this feature is disabled.</para>
-                       <para>To checkout for updates manually goto <emphasis role="bold"><menuchoice><guimenu>Tools</guimenu><guimenuitem>Check for Updates</guimenuitem></menuchoice></emphasis></para>
+                       <para>To checkout for updates manually goto <menuchoice><guimenu>Tools</guimenu><guimenuitem>Check for Updates</guimenuitem></menuchoice></para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term><emphasis role="bold">File Location</emphasis></term>
+                   <term>File Location</term>
                    <listitem>
                        <para>This is the default folder that opens when you go to load or save a file.</para>
+                   </listitem>
+               </varlistentry>
+               <varlistentry>
+                   <term>Maximum Recent Files</term>
+                   <listitem>
+                       <para>This option allows you to specify how many recent files to list in
+                           <menuchoice><guimenu>File</guimenu><guimenuitem>Recent Files</guimenuitem></menuchoice>.
+                        </para>
                    </listitem>
                </varlistentry>
            </variablelist>
@@ -436,54 +454,54 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/options-charts.png" format="PNG" />
                     </imageobject>
-                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+                    <caption>The chart options dialog</caption>
                 </mediaobject>
             </screenshot>
  
            <variablelist>
                <?dbfo list-presentation="blocks"?> 
                <varlistentry>
-                   <term><emphasis role="bold">Default Stitch</emphasis></term>
+                   <term>Default Stitch</term>
                    <listitem>
                        <para>The default stitch used when creating new charts. This can be overridden when you create a new chart.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term><emphasis role="bold">Default Placeholder</emphasis></term>
+                   <term>Default Placeholder</term>
                    <listitem>
                        <para>Any cells set with the placeholder stitch will not be output in the written instructions.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term><emphasis role="bold">Rows</emphasis></term>
+                   <term>Rows</term>
                    <listitem>
                        <para>The default number of rows on new charts.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term><emphasis role="bold">Stitches</emphasis></term>
+                   <term>Stitches</term>
                    <listitem>
                        <para>The default number of stitches on a new chart.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term><emphasis role="bold">Free form</emphasis></term>
+                   <term>Free form</term>
                    <listitem>
                        <para>Allow the stitches to be moved anywhere.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term><emphasis role="bold">Alternate row colors</emphasis></term>
+                   <term>Alternate row colors</term>
                    <listitem>
                        <para>Use the Primary / Alternate colors to draw the stitches in each row.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                    <term><emphasis role="bold">Row indicator</emphasis></term>
+                    <term>Row indicator</term>
                     <listitem><para>Use either a number, a dot, or both to indicate where the rows start.</para></listitem>
                 </varlistentry>
                 <varlistentry>
-                    <term><emphasis role="bold">Indicator color</emphasis></term>
+                    <term>Indicator color</term>
                     <listitem><para>What color to use for the indicator.</para></listitem>
                 </varlistentry>
             </variablelist>
@@ -497,7 +515,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/options-instructions.png" format="PNG" />
                     </imageobject>
-                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+                    <caption>The instruction options dialog</caption>
                 </mediaobject>
             </screenshot>
         </section>
@@ -509,7 +527,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/options-legends.png" format="PNG" />
                     </imageobject>
-                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+                    <caption>The legend options dialog</caption>
                 </mediaobject>
             </screenshot>
 
@@ -531,7 +549,7 @@
                 <variablelist>
                     <?dbfo list-presentation="blocks"?>
                     <varlistentry>
-                        <term><emphasis role="bold">Show Title</emphasis></term>
+                        <term>Show Title</term>
                         <listitem>
                             <para>This will remove the title block and the top of the legend.
                             </para>
@@ -547,7 +565,7 @@
                     </varlistentry>                   
                     
                     <varlistentry>
-                        <term><emphasis role="bold">Show Border</emphasis></term>
+                        <term>Show Border</term>
                         <listitem>
                             <screenshot>
                                 <mediaobject>
@@ -561,7 +579,7 @@
                     </varlistentry>
                     
                     <varlistentry>
-                        <term><emphasis role="bold">Show Description</emphasis></term>
+                        <term>Show Description</term>
                         <listitem>
                             <screenshot>
                                 <mediaobject>
@@ -575,7 +593,7 @@
                     </varlistentry>
                     
                     <varlistentry>
-                        <term><emphasis role="bold">Column Count</emphasis></term>
+                        <term>Column Count</term>
                         <listitem>
                             <screenshot>
                                 <mediaobject>
@@ -589,7 +607,7 @@
                     </varlistentry>
                     
                     <varlistentry>
-                        <term><emphasis role="bold">Show Blocks</emphasis></term>
+                        <term>Show Blocks</term>
                         <listitem>
                             <screenshot>
                                 <mediaobject>
@@ -620,7 +638,7 @@
                 <variablelist>
                     <?dbfo list-presentation="blocks"?>
                     <varlistentry>
-                        <term><emphasis role="bold">Show Title</emphasis></term>
+                        <term>Show Title</term>
                         <listitem>
                             <screenshot>
                                 <mediaobject>
@@ -633,7 +651,7 @@
                         </listitem>
                     </varlistentry>
                     <varlistentry>
-                        <term><emphasis role="bold">Show Border</emphasis></term>
+                        <term>Show Border</term>
                         <listitem>
                             <screenshot>
                                 <mediaobject>
@@ -646,7 +664,7 @@
                         </listitem>
                     </varlistentry>
                     <varlistentry>
-                        <term><emphasis role="bold">Show Hex Value</emphasis></term>
+                        <term>Show Hex Value</term>
                         <listitem>
                             <screenshot>
                                 <mediaobject>
@@ -659,7 +677,7 @@
                         </listitem>
                     </varlistentry>
                     <varlistentry>
-                        <term><emphasis role="bold">Color Prefix</emphasis></term>
+                        <term>Color Prefix</term>
                         <listitem>
                             <screenshot>
                                 <mediaobject>
@@ -680,7 +698,7 @@
                         </listitem>
                     </varlistentry>
                     <varlistentry>
-                        <term><emphasis role="bold">Column Count</emphasis></term>
+                        <term>Column Count</term>
                         <listitem>
                             <screenshot>
                                 <mediaobject>
