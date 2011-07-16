@@ -19,7 +19,7 @@ function get_current_version($software)
 }
     //TODO: add some id's and class' so it can be CSS-ified.
 
-    $product[] = "Crochet";
+    $product[] = "Crochet Charts";
 
     $html = "<table>\n";
 #    $html .= "<tr>\n";
