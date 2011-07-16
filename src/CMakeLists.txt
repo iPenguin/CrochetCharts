@@ -40,17 +40,17 @@ qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
 qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers} ${testmodel_headers})
 
+    add_executable(${PROJECT_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+                ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
+    target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES})
+
 if(WIN32)
-    add_executable(${SWS_TARGET_WIN} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
-                ${crochet_version} ${crochet_win})
-    target_link_libraries(${SWS_TARGET_WIN} ${QT_LIBS_WINDOWS})
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION .)
+
+    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION .)
     install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
+    
 elseif(APPLE)
-    add_executable(Crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
-            ${crochet_version} ${crochet_mac})
-    target_link_libraries(Crochet ${QT_LIBRARIES})
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/Crochet DESTINATION ../MacOS)
+    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
 
     set(LIBS QtCore QtGui QtNetwork QtSvg QtXml)
     foreach(support_lib ${LIBS})
@@ -66,17 +66,15 @@ elseif(APPLE)
 
     find_program(APPLE_RESOURCE Rez /Developer/Tools)
     if(APPLE_RESOURCE)
-        add_custom_command(TARGET Crochet POST_BUILD COMMAND ${APPLE_RESOURCE}
-            ARGS Carbon.r -o ${CMAKE_CURRENT_BINARY_DIR}/Crochet COMMENT "Resource Fork")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${APPLE_RESOURCE}
+            ARGS Carbon.r -o ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} COMMENT "Resource Fork")
     endif()
 
     set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${MACOSX_BUNDLE_ICON_FILE}"
                 PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
 else()
-    add_executable(crochet ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
-                ${crochet_version} ${crochet_nix})
-    target_link_libraries(crochet ${QT_LIBRARIES})
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/crochet DESTINATION bin)
+
+    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION bin)
 
 endif()

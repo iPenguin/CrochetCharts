@@ -269,12 +269,6 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionPositionMode);
     mModeGroup->addAction(ui->actionAngleMode);
     mModeGroup->addAction(ui->actionStrechMode);
-    
-    ui->actionColorMode->setIcon(QIcon::fromTheme("fill-color", QIcon(":/images/fill_color.svg")));
-    ui->actionGridMode->setIcon(QIcon::fromTheme("mode-insert", QIcon(":/images/insert_stitch.svg")));
-    ui->actionPositionMode->setIcon(QIcon::fromTheme("mode-position", QIcon(":/images/position_stitch.svg")));
-    ui->actionAngleMode->setIcon(QIcon::fromTheme("mode-angle", QIcon(":/images/rotate_stitch.svg")));
-    ui->actionStrechMode->setIcon(QIcon::fromTheme("mode-strech", QIcon(":/images/strech_mode.svg")));
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
     
@@ -558,7 +552,7 @@ void MainWindow::documentNewChart()
 void MainWindow::helpCrochetHelp()
 {
     QString path = QFileInfo(QApplication::applicationFilePath()).path();
-    QString file = QString("Crochet_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
+    QString file = QString("Crochet_Charts_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
 
     QString url = QString("%1/%2").arg(path).arg(file);
     
@@ -609,7 +603,7 @@ void MainWindow::helpAbout()
     }
 
     aboutInfo.append(licenseInfo);
-    QMessageBox::about(this, tr("About Crochet"), aboutInfo);
+    QMessageBox::about(this, tr("About Crochet Charts"), aboutInfo);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

@@ -48,7 +48,7 @@ private:
     static AppInfo *mInstance;
     
     AppInfo() :
-        appName("Crochet"),
+        appName("Crochet Charts"),
         appOrg("Stitch Works Software"),
     
         appOrgDomain("StitchWorksSoftware.com"), 

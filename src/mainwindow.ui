@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Crochet</string>
+   <string>Crochet Charts</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../crochet.qrc">
-    <normaloff>:/images/splashscreen.png</normaloff>:/images/splashscreen.png</iconset>
+    <normaloff>:/images/crochet.ico</normaloff>:/images/crochet.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">

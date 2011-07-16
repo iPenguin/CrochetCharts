@@ -1,7 +1,6 @@
 if(WIN32)
 
     set(WIN32_BASE "C:/Qt/2010.05/qt")
-    set(SWS_TARGET_WIN "crochet")
 
     #generate the embeded icon for the exe file.
     set(CMAKE_RC_COMPILER_INIT windres)
@@ -21,7 +20,6 @@ if(WIN32)
     set(QT_PLUGINS_WINDOWS "${WIN32_PLUGINS}/imageformats" "${WIN32_PLUGINS}/accessible" "${WIN32_PLUGINS}/iconengines")
 
 elseif (APPLE)
-    set(APPS "${CMAKE_INSTALL_PREFIX}/bin/Crochet")
    
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" "[Paths]\nPlugins = plugins\n")
     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" DESTINATION .)

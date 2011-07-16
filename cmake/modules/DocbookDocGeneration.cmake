@@ -30,7 +30,7 @@ function(_DOCBOOK_PDF input version)
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
 
-    set(outputBaseName "${working}/Crochet_User_Guide_${version}")
+    set(outputBaseName "${working}/${PROJECT_NAME}_User_Guide_${version}")
     
     set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/mystyle.xsl")
 
