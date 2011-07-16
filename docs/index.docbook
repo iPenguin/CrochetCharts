@@ -55,7 +55,7 @@
 
     <preface id="introduction" version="5.0" xmlns="http://docbook.org/ns/docbook">
         <title>Introduction</title>
-        <para>This is the user guide for <application>&appName;</application> by &sws;. If you have any questions that are not answered in this document please <ulink href="&contactUrl;">contact me</ulink> and let me know so that I can answer your questions and improve this guide.</para>
+        <para>This is the user guide for <application>&appName;</application> by &sws;. If you have any questions that are not answered in this document please <ulink url="&contactUrl;">contact me</ulink> and let me know so that I can answer your questions and improve this guide.</para>
     </preface>
 
 
@@ -64,7 +64,7 @@
         <para>Because this software is licensed per user you may install it on multiple computers including any combination of the supported platforms below.
         To install on multiple platforms you may goto the the <ulink url="&downloadUrl;">downloads page</ulink> and download the installer for other platforms.
         You will need your serial number to complete the installtion. The serial number can be found in the <emphasis role="bold"><link linkend="helpAbout">About dialog</link></emphasis>.
-        If you need help installing on a second platform please <ulink href="&contactUrl;">contact me</ulink>.</para>
+        If you need help installing on a second platform please <ulink url="&contactUrl;">contact me</ulink>.</para>
         <section><title>Windows</title>
             <para>&appName; will run on Microsoft Windows XP, Windows Vista, and Windows 7. To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
             <para>To install double click the installer and follow the instructions in the Installation Wizard.</para>
@@ -138,7 +138,7 @@
             </screenshot>
         </section>
         <section><title>Linux</title>
-            <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer. If you're having any problems please <ulink href="&contactUrl;">contact me</ulink></para>
+            <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer. If you're having any problems please <ulink url="&contactUrl;">contact me</ulink></para>
 
         </section>
     </chapter>
@@ -312,6 +312,23 @@
         </section>
         <section>
             <title>Importing / Exporting Stitch Sets</title>
+            <para>If you have a set of stitches that you want to share with your friends, co-workers, or others you can Export the set.
+                To export the Stitch Set in the Stitch Library click on the <guibutton>Export Set</guibutton> and you will be prompted to
+                supply a file name. The currently displayed set will be exported into a single stand alone file that other users of the
+                software can import and use themselves.
+            </para>
+            <para>To import a pre-existing set go into the Stitch Library and click on the <guibutton>Import Set</guibutton> button.
+            You will be prompted to select the file you wish to import. If the name of the set conflicts with a set you already have in
+            the library you will be prompted to give the set a new name, override the existing set, or to not import the new set.
+        </para>
+        <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/stitch-library-import-set-conflict.png" format="PNG" />
+                    </imageobject>
+                    <caption>You will be prompted if the stitch already exists</caption>
+                </mediaobject>
+            </screenshot>
         </section>
         <section id="stitch-library-custom-icons">
             <title>Adding Custom Icons</title>
@@ -320,24 +337,68 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/stitch-library-icon-list.png" format="PNG" />
                     </imageobject>
-                    <caption>The prompt for a new Stitch</caption>
+                    <caption>Adding new icons</caption>
                 </mediaobject>
             </screenshot>
-            <para>
+            <para>To add custom icons click on the <guibutton>Manage Icons</guibutton> button in the <emphasis role="bold"><link linkend="stitch-library">Stitch Library</link></emphasis>.
+            This will take you to the Stitch Icon List where you can Add Icons, Remove Icons and Save Icons.
+            </para>
+            <para>When you Add an Icon to the Stitch Library the software makes a copy of the icon so that it cannot be moved or lost. Removing the icon will also remove the copy.
+                The Save Icon function allows you to duplicate custom icons saved in the Stitch Library and copy them to a useful location.
             </para>
         </section>
         <section>
             <title>Creating an Icon</title>
+            <para>To create icons for &appName; you should use your favorite drawing program to create files in one of the following formats:</para>
+            <variablelist>
+                <?dbfo list-presentation="blocks"?>
+                <varlistentry>
+                    <term>SVG</term><term>SVGZ</term>
+                    <listitem>Can have a transparent background and scales properly</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>PNG</term>
+                    <listitem>Can have a transparent background, but does not scale nicely</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>GIF</term>
+                    <listitem>Can have a transparent background, but does not scale nicely</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>JPG</term><term>JPEG</term>
+                    <listitem>Does not have a transparent background, and does not scale nicely</listitem>
+                </varlistentry>
+            </variablelist>
             <para>
+                Transparent backgrounds are useful if you want to place color behind the stitches or if some of the stitches overlap.
+                Proper scaling is good because it means that no mater how large the chart the stitches will always look good.
+            </para>
+            <para>
+                I recommend using the SVG file format when possible.
+                SVG is not as well known a format as the others so here are a few applications that can generate SVG files if you choose to use it:
+                    <ulink url="http://inkscape.org">Inkscape</ulink>,
+                    <ulink url="http://libreoffice.org">LibreOffice</ulink> Draw,
+                    <ulink url="http://openoffice.org">OpenOffice</ulink> Draw, and
+                    <ulink url="http://docs.google.com">Google Docs</ulink>, among others.
+            </para>
+            <para>I recommend a canvas size of 64x64 px as the default size.
+                If you need to use a different size I recommend changing the size in increments of 32.
+                So a chain stitch is 64x32, a single crochet is 64x64 and a double crochet is 64x96.
+            </para>
+            <para>If you want your stitches to match the existing stitches I'm using a stroke width of 4.0 and rounded caps and joints.
             </para>
         </section>
     </chapter>
 
 
 
-    <chapter id="options-preferences" version="5.0" xmlns="http://docbook.org/ns/docbook">
+    <chapter id="options-preferences">
         <title>Options / Preferences</title>
-        <para>The options have been divided into sections. The first section contains the general application settings. The Chart section contains settings that effect the layout and output of the charts. The Instructions section contains settings that effect how the written instructions are generated and exported as plain text. The Legend section contains the default settings for generating the legends. These settings can usually be overridden at the point of use.</para>
+        <para>The options have been divided into sections. The first section contains the general application settings.
+            The Chart section contains settings that effect the layout and output of the charts.
+            The Instructions section contains settings that effect how the written instructions are generated and exported as plain text.
+            The Legend section contains the default settings for generating the legends. These settings can usually be overridden at the point of use.
+        </para>
         <screenshot>
             <mediaobject>
                 <imageobject>
@@ -346,9 +407,11 @@
                 <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
             </mediaobject>
         </screenshot>
-        <section>
+        
+        <section id="options-application">
             <title>Application</title>
             <variablelist>
+               <?dbfo list-presentation="blocks"?>
                <varlistentry>
                    <term><emphasis role="bold">Check for updates on Startup</emphasis></term>
                    <listitem>
@@ -365,7 +428,8 @@
                </varlistentry>
            </variablelist>
        </section>
-       <section>
+       
+       <section id="options-charts">
            <title>Charts</title>
            <screenshot>
                 <mediaobject>
@@ -375,7 +439,9 @@
                     <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
                 </mediaobject>
             </screenshot>
+ 
            <variablelist>
+               <?dbfo list-presentation="blocks"?> 
                <varlistentry>
                    <term><emphasis role="bold">Default Stitch</emphasis></term>
                    <listitem>
@@ -421,8 +487,11 @@
                     <listitem><para>What color to use for the indicator.</para></listitem>
                 </varlistentry>
             </variablelist>
+            
         </section>
-        <section><title>Instructions</title>
+        
+        <section id="options-instructions">
+            <title>Instructions</title>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -432,7 +501,9 @@
                 </mediaobject>
             </screenshot>
         </section>
-        <section id="options-legends"><title>Legends</title>
+        
+        <section id="options-legends">
+            <title>Legends</title>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -441,18 +512,209 @@
                     <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
                 </mediaobject>
             </screenshot>
-            <sect3 id="options-legends-stitch"><title>Stitch Legends</title>
+
+                        
+            <sect3 id="options-legends-stitch">
+                <title>Stitch Legends</title>
+                <para>When exporting a Stitch Legend any of the options below can be used together to create the stitch legend of your choosing.
+                    These values can be overridden in the Export dialog.
+                </para>
+                <screenshot>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata width="400" fileref="images/legend-stitch-all.png" format="PNG" />
+                        </imageobject>
+                        <caption>An example stitch legend with all options turned on and column count set to 4</caption>
+                    </mediaobject>
+                </screenshot>
+                
+                <variablelist>
+                    <?dbfo list-presentation="blocks"?>
+                    <varlistentry>
+                        <term><emphasis role="bold">Show Title</emphasis></term>
+                        <listitem>
+                            <para>This will remove the title block and the top of the legend.
+                            </para>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="400" fileref="images/legend-stitch-no-title.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>The stitch legend without the title</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>                   
+                    
+                    <varlistentry>
+                        <term><emphasis role="bold">Show Border</emphasis></term>
+                        <listitem>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="400" fileref="images/legend-stitch-no-border.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example stitch legend with all options turned on and column count set to 4</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>
+                    
+                    <varlistentry>
+                        <term><emphasis role="bold">Show Description</emphasis></term>
+                        <listitem>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="200" fileref="images/legend-stitch-no-description.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example stitch legend with all options turned on and column count set to 4</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>
+                    
+                    <varlistentry>
+                        <term><emphasis role="bold">Column Count</emphasis></term>
+                        <listitem>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="200" fileref="images/legend-stitch-2-columns.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example stitch legend with all options turned on and column count set to 4</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>
+                    
+                    <varlistentry>
+                        <term><emphasis role="bold">Show Blocks</emphasis></term>
+                        <listitem>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="400" fileref="images/legend-stitch-with-blocks.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example stitch legend with all options turned on and column count set to 4</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>
+                    
+                </variablelist>
             </sect3>
-            <sect3 id="options-legends-color"><title>Color Legends</title>
+            
+            <sect3 id="options-legends-color">
+                <title>Color Legends</title>
+
+                <screenshot>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata width="300" fileref="images/legend-color-all.png" format="PNG" />
+                        </imageobject>
+                        <caption>An example color legend with all options turned on</caption>
+                    </mediaobject>
+                </screenshot>
+
+                <variablelist>
+                    <?dbfo list-presentation="blocks"?>
+                    <varlistentry>
+                        <term><emphasis role="bold">Show Title</emphasis></term>
+                        <listitem>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="300" fileref="images/legend-color-no-title.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example color legend with all options turned on</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><emphasis role="bold">Show Border</emphasis></term>
+                        <listitem>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="300" fileref="images/legend-color-no-border.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example color legend with all options turned on</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><emphasis role="bold">Show Hex Value</emphasis></term>
+                        <listitem>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="150" fileref="images/legend-color-no-hex-value.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example color legend with all options turned on</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><emphasis role="bold">Color Prefix</emphasis></term>
+                        <listitem>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="300" fileref="images/legend-color-no-prefix.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example color legend with all options turned on</caption>
+                                </mediaobject>
+                            </screenshot>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="300" fileref="images/legend-color-color-prefix.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example color legend with all options turned on</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term><emphasis role="bold">Column Count</emphasis></term>
+                        <listitem>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="400" fileref="images/legend-color-7-columns.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example color legend with all options turned on</caption>
+                                </mediaobject>
+                            </screenshot>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="300" fileref="images/legend-color-7-columns-only.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>An example color legend with all options turned on</caption>
+                                </mediaobject>
+                            </screenshot>
+                        </listitem>
+                    </varlistentry>
+                </variablelist>
+
             </sect3>
+            
         </section>
+        
     </chapter>
 
     <chapter>
         <title>Tools</title>
         <sect1>
             <title>Check for Updates</title>
-            <para></para>
+            <para>By default the software will silently check for updates every time you start the software.
+                If it find an update you will be prompted to update the software.
+            </para>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -483,7 +745,7 @@
 
     
     <chapter id="troubleshooting"><title>Troubleshooting</title>
-        <para>If you find a defect, or unexpected behavior in this software please <ulink href="&contactUrl;">contact me</ulink>. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
+        <para>If you find a defect, or unexpected behavior in this software please <ulink url="&contactUrl;">contact me</ulink>. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
     </chapter>
 
 
