@@ -88,7 +88,7 @@ void StitchLibraryUi::setDialogSize()
     for(int i = 0; i < 5; ++i)
         width += ui->listView->columnWidth(i);
 
-    ui->listView->setMinimumSize(QSize(width+25 + 125, height));
+    ui->listView->setMinimumSize(QSize(width+ 25 + 75, height));
 
 }
 
