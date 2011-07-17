@@ -17,10 +17,13 @@ function(DOCBOOK_GENERATE format input version)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
 
     set(xsltproc "/usr/bin/xsltproc")
-    set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
+    set(docbookBasePath "C:\\cygwin\\usr\\share\\xml\\docbook\\stylesheet\\docbook-xsl-ns")
     
-    if(APPLE OR WIN32)    
+    if(APPLE)
         set(fop "/opt/fop/fop")
+    elseif(WIN32)
+        set(xsltproc "xsltproc")
+        set(fop "fop.cmd")
     else()
         set(fop "/usr/bin/fop")
     endif()
@@ -34,9 +37,7 @@ function(DOCBOOK_GENERATE format input version)
 
             execute_process(
                 COMMAND "${xsltproc}" --xinclude -o "${working}/index.html" "${xslFile}" "${input}"
-                OUTPUT_FILE "${working}/index.html"
                 OUTPUT_VARIABLE _output)
-
         
     elseif(format STREQUAL "pdf")
 
@@ -45,13 +46,11 @@ function(DOCBOOK_GENERATE format input version)
             set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/mystyle.xsl")
 
             execute_process(
-                COMMAND "${xsltproc}" -o "${outputBaseName}.fo" --stringparam fop1.extensions 1 ${xslFile} "${input}"
-                OUTPUT_FILE "${outputBaseName}.fo"
+                COMMAND "${xsltproc}" -o "${outputBaseName}.fo" --stringparam fop1.extensions 1 "${xslFile}" "${input}"
                 OUTPUT_VARIABLE _output)
 
             execute_process(
                 COMMAND "${fop}" -fo "${outputBaseName}.fo" -pdf "${outputBaseName}.pdf"
-                OUTPUT_FILE "${outputBaseName}.pdf"
                 OUTPUT_VARIABLE _output)
 
     elseif(format STREQUAL "pages")
@@ -60,7 +59,6 @@ function(DOCBOOK_GENERATE format input version)
 
             execute_process(
                 COMMAND "${xsltproc}" -o "${outputFile}" --stringparam pages.template template-pages.xml ${xslFile} "${input}"
-                OUTPUT_FILE "${outputFile}"
                 OUTPUT_VARIABLE _output)
             
     elseif(format STREQUAL "htmlhelp")
