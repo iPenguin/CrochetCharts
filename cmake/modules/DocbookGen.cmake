@@ -16,16 +16,16 @@ function(DOCBOOK_GENERATE format input version)
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
 
+    set(xsltproc "/usr/bin/xsltproc")
+    
     if(APPLE)
-        set(xsltproc "/usr/bin/xsltproc")
+        
         set(fop "/opt/fop/fop")
         set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
     elseif(WIN32)
-        set(xsltproc "C:\\cygwin\\opt\\bin\\xsltproc")
-        set(fop "C:\\cygwin\\opt\\fop\\fop")
-        set(docbookBasePath "C:\\cygwin\\usr\\share\\xml\\docbook\\stylesheet\\docbook-xsl-ns")
+        set(fop "/opt/fop/fop")
+        set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
     else()
-        set(xsltproc "/usr/bin/xsltproc")
         set(fop "/usr/bin/fop")
         set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
     
