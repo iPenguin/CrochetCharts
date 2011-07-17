@@ -25,6 +25,7 @@ string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" SWS_VERSION_MAJOR "${SWS_VERSION}")
 string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" SWS_VERSION_MINOR "${SWS_VERSION}")
 string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" SWS_VERSION_PATCH "${SWS_VERSION}")
 string(REGEX REPLACE "^[0-9]+\\.[0-9]+\\.[0-9]+(.*)" "\\1" SWS_VERSION_SHA1 "${SWS_VERSION}")
+set(SWS_VERSION_SHORT "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)

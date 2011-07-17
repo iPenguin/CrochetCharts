@@ -1,8 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE book [
-<!ENTITY % allent SYSTEM "../build/docs/application.ent">
-%allent;
-]>
+<!DOCTYPE book>
 
 <book xmlns="http://docbook.org/ns/docbook" 
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -13,20 +10,20 @@
     id="crochet-charts-user-guide" lang="en" version="5.0">
 
     <bookinfo>
-        <title>The Official &appName; User Guide</title>
-        <subtitle>For Version &appVersion;</subtitle>
-        <productname>&appName;</productname>
-        <productnumber>&appVersion;</productnumber>
-        <edition>&appVersion;</edition>
+        <title>The Official @SWS_PROJECT_NAME@ User Guide</title>
+        <subtitle>For Version @PROJECT_VERSION@</subtitle>
+        <productname>@SWS_PROJECT_NAME@</productname>
+        <productnumber>@PROJECT_VERSION@</productnumber>
+        <edition>@PROJECT_VERSION@</edition>
         <copyright>
-            <year>&life;</year>
-            <holder>&sws;</holder>
+            <year>@PROJECT_LIFE@</year>
+            <holder>@PROJECT_VENDOR@</holder>
         </copyright>
         <author>
             <firstname>Brian</firstname><surname>Milco</surname>
             <affiliation>
                 <jobtitle>Owner</jobtitle>
-                <orgname>&sws;</orgname>
+                <orgname>@PROJECT_VENDOR@</orgname>
             </affiliation>
             <address>
                 <city>Chico</city>
@@ -37,9 +34,9 @@
         </author>
         <abstract>
             <para>
-                <application>&appName;</application> is an application specially
+                <application>@SWS_PROJECT_NAME@</application> is an application specially
                 designed to allow you to create design charts for crochet patterns.
-                This document will describe the features and abilities of <application>&appName;</application>.
+                This document will describe the features and abilities of <application>@SWS_PROJECT_NAME@</application>.
             </para>
         </abstract>
 
@@ -54,19 +51,19 @@
 
     <preface id="introduction" version="5.0" xmlns="http://docbook.org/ns/docbook">
         <title>Introduction</title>
-        <para>This is the user guide for <application>&appName;</application> by &sws;. If you have any questions that are not answered in this document please <ulink url="&contactUrl;">contact me</ulink> and let me know so that I can answer your questions and improve this guide.</para>
+        <para>This is the user guide for <application>@SWS_PROJECT_NAME@</application> by @PROJECT_VENDOR@. If you have any questions that are not answered in this document please <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know so that I can answer your questions and improve this guide.</para>
     </preface>
 
 
 
     <chapter id="installation"><title>Installation</title>
         <para>Because this software is licensed per user you may install it on multiple computers including any combination of the supported platforms below.
-        To install on multiple platforms you may goto the the <ulink url="&downloadUrl;">downloads page</ulink> and download the installer for other platforms.
+        To install on multiple platforms you may goto the the <ulink url="@ORG_DOWNLOAD@">downloads page</ulink> and download the installer for other platforms.
         You will need your serial number to complete the installation. The serial number can be found in the
         <link linkend="helpAbout">About dialog</link>.
-        If you need help installing on a second platform please <ulink url="&contactUrl;">contact me</ulink>.</para>
+        If you need help installing on a second platform please <ulink url="@ORG_CONTACT@">contact me</ulink>.</para>
         <section><title>Windows</title>
-            <para>&appName; will run on Microsoft Windows XP, Windows Vista, and Windows 7. To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
+            <para>@SWS_PROJECT_NAME@ will run on Microsoft Windows XP, Windows Vista, and Windows 7. To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
             <para>To install double click the installer and follow the instructions in the Installation Wizard.</para>
             <screenshot>
                 <mediaobject>
@@ -89,7 +86,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win3.png" format="PNG" />
                     </imageobject>
-                    <caption>Choose the installation path for &appName;</caption>
+                    <caption>Choose the installation path for @SWS_PROJECT_NAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -97,7 +94,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win4.png" format="PNG" />
                     </imageobject>
-                    <caption>Choose the Start Menu folder for &appName;</caption>
+                    <caption>Choose the Start Menu folder for @SWS_PROJECT_NAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -105,7 +102,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win5.png" format="PNG" />
                     </imageobject>
-                    <caption>The installer will install the needed files for &appName;</caption>
+                    <caption>The installer will install the needed files for @SWS_PROJECT_NAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -113,24 +110,24 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win6.png" format="PNG" />
                     </imageobject>
-                    <caption>Finish page for the installation of &appName;</caption>
+                    <caption>Finish page for the installation of @SWS_PROJECT_NAME@</caption>
                 </mediaobject>
             </screenshot>
         </section>
         <section><title>Mac</title>
-            <para>&appName; will run on Mac OS X version 10.4-10.7 (Tiger, Leopard, Snow Leopard, Lion)  To install the software you can download the setup file from <ulink url="&downloadUrl;">the &sws; website</ulink>.</para>
+            <para>@SWS_PROJECT_NAME@ will run on Mac OS X version 10.4-10.7 (Tiger, Leopard, Snow Leopard, Lion)  To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
             <para>Once the file has been downloaded you can install the software by dragging and dropping the software into the Applications folder.</para>
             <screenshot>
                 <mediaobject>
                     <imageobject>
                         <imagedata width="400" fileref="images/install-mac.png" format="PNG" />
                     </imageobject>
-                    <caption>The Mac installer for &appName;</caption>
+                    <caption>The Mac installer for @SWS_PROJECT_NAME@</caption>
                 </mediaobject>
             </screenshot>
         </section>
         <section><title>Linux</title>
-            <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer. If you're having any problems please <ulink url="&contactUrl;">contact me</ulink></para>
+            <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer. If you're having any problems please <ulink url="@ORG_CONTACT@">contact me</ulink></para>
 
         </section>
     </chapter>
@@ -138,7 +135,7 @@
 
 
     <chapter id="creating-charts"><title>Creating Charts</title>
-        <para>When you first open &appName; you are presented with a blank window with a "New Chart Options" dialog at the top.
+        <para>When you first open @SWS_PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
             This dialog gives you quick access to create a new document and chart.
             Form it you can set the basic information about the new chart.
             If you select a Round chart the number of stitches is the number that is used on the inner most row.
@@ -347,7 +344,7 @@
         </section>
         <section>
             <title>Creating an Icon</title>
-            <para>To create icons for &appName; you should use your favorite drawing program to create files in one of the following formats:</para>
+            <para>To create icons for @SWS_PROJECT_NAME@ you should use your favorite drawing program to create files in one of the following formats:</para>
             <variablelist>
                 <?dbfo list-presentation="blocks"?>
                 <varlistentry>
@@ -417,7 +414,7 @@
                <varlistentry>
                    <term>Check for updates on Startup</term>
                    <listitem>
-                       <para>Every time you start this software it will attempt to connect to &website; to check for updates. If an update is found you will be prompted to download it.
+                       <para>Every time you start this software it will attempt to connect to @ORG_WEBSITE@ to check for updates. If an update is found you will be prompted to download it.
                        You can still check for updates manually even if this feature is disabled.</para>
                        <para>To checkout for updates manually goto <menuchoice><guimenu>Tools</guimenu><guimenuitem>Check for Updates</guimenuitem></menuchoice></para>
                    </listitem>
@@ -755,7 +752,7 @@
 
     
     <chapter id="troubleshooting"><title>Troubleshooting</title>
-        <para>If you find a defect, or unexpected behavior in this software please <ulink url="&contactUrl;">contact me</ulink>. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
+        <para>If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact me</ulink>. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
     </chapter>
 
 

@@ -17,23 +17,14 @@ function(DOCBOOK_GENERATE format input version)
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
 
     set(xsltproc "/usr/bin/xsltproc")
+    set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
     
-    if(APPLE)
-        
+    if(APPLE OR WIN32)    
         set(fop "/opt/fop/fop")
-        set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
-    elseif(WIN32)
-        set(fop "/opt/fop/fop")
-        set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
     else()
         set(fop "/usr/bin/fop")
-        set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
-    
     endif()
 
-message("xsl:" ${xsltproc})
-message("fop:" ${fop})
-message("doc:" ${docbookBasePath})
     if(format STREQUAL "html")
             set(xslFile "${docbookBasePath}/html/docbook.xsl")
 
@@ -81,7 +72,7 @@ message("doc:" ${docbookBasePath})
                 OUTPUT_VARIABLE _output)
         
     else()
-        message ( FATAL_ERROR "Unsupported output format." )
+        message ( FATAL_ERROR "${format} is not supported by this cmake module. Please choose from html, pdf, pages, or htmlhelp" )
 
     endif()
 

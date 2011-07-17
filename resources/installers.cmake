@@ -4,13 +4,15 @@ include(InstallRequiredSystemLibraries)
 set(PROJECT_DESCRIPTION  "Chart desing software for crochet")
 set(PROJECT_VENDOR       "Stitch Works Software")
 set(PROJECT_LIFE         "2010-2011")
-set(PROJECT_CONTACT      "support@StitchWorksSoftware.com")
-set(ORG_WEBSITE          "www.StitchWorksSoftware.com")
-set(PROJECT_VERSION      "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}")
+set(ORG_BASE_URL         "StitchWorksSoftware.com")
+set(PROJECT_CONTACT      "support@${ORG_BASE_URL}")
+set(ORG_CONTACT          "http://${ORG_BASE_URL}/contact")
+set(ORG_DOWNLOAD         "http://${ORG_BASE_URL}/downloads")
+set(ORG_WEBSITE          "www.${ORG_BASE_URL}")
+set(PROJECT_VERSION      "${SWS_VERSION_SHORT}")
 set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
 set(PROJECT_MACOSX_ICON  "Crochet Charts.icns")
 
-#set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/resources/license.txt")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR ${PROJECT_VENDOR})
@@ -35,7 +37,7 @@ if(WIN32)
 
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
     set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}"
-                              "${PROJECT_NAME}_User_Guide_${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_PATCH}.pdf" "${SWS_PROJECT_NAME} Help")
+                              "${PROJECT_NAME}_User_Guide_${SWS_VERSION_SHORT}.pdf" "${SWS_PROJECT_NAME} Help")
     # this doesn't work for the NSIS installer
     #set(CPACK_CREATE_DESKTOP_LINKS "crochet.exe")
 
