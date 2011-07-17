@@ -16,20 +16,24 @@ function(DOCBOOK_GENERATE format input version)
 
     file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${working})
 
-    if(UNIX)
+    if(APPLE)
         set(xsltproc "/usr/bin/xsltproc")
-    else(WIN32)
-        set(xsltproc "/opt/bin/xsltproc")
-    endif()
-
-    if(APPLE OR WIN32)
         set(fop "/opt/fop/fop")
+        set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
+    elseif(WIN32)
+        set(xsltproc "C:\\cygwin\\opt\\bin\\xsltproc")
+        set(fop "C:\\cygwin\\opt\\fop\\fop")
+        set(docbookBasePath "C:\\cygwin\\usr\\share\\xml\\docbook\\stylesheet\\docbook-xsl-ns")
     else()
+        set(xsltproc "/usr/bin/xsltproc")
         set(fop "/usr/bin/fop")
+        set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
+    
     endif()
 
-    set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
-
+message("xsl:" ${xsltproc})
+message("fop:" ${fop})
+message("doc:" ${docbookBasePath})
     if(format STREQUAL "html")
             set(xslFile "${docbookBasePath}/html/docbook.xsl")
 
@@ -38,8 +42,8 @@ function(DOCBOOK_GENERATE format input version)
             #--stringparam html.stylesheet mystyle.css
 
             execute_process(
-                COMMAND "${xsltproc}" --xinclude -o ${working}/index.html "${xslFile}" "${input}"
-                OUTPUT_FILE ${working}/index.html
+                COMMAND "${xsltproc}" --xinclude -o "${working}/index.html" "${xslFile}" "${input}"
+                OUTPUT_FILE "${working}/index.html"
                 OUTPUT_VARIABLE _output)
 
         
@@ -50,13 +54,13 @@ function(DOCBOOK_GENERATE format input version)
             set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/mystyle.xsl")
 
             execute_process(
-                COMMAND "${xsltproc}" -o ${outputBaseName}.fo --stringparam fop1.extensions 1 ${xslFile} "${input}"
-                OUTPUT_FILE ${outputBaseName}.fo
+                COMMAND "${xsltproc}" -o "${outputBaseName}.fo" --stringparam fop1.extensions 1 ${xslFile} "${input}"
+                OUTPUT_FILE "${outputBaseName}.fo"
                 OUTPUT_VARIABLE _output)
 
             execute_process(
                 COMMAND "${fop}" -fo "${outputBaseName}.fo" -pdf "${outputBaseName}.pdf"
-                OUTPUT_FILE ${outputBaseName}.pdf
+                OUTPUT_FILE "${outputBaseName}.pdf"
                 OUTPUT_VARIABLE _output)
 
     elseif(format STREQUAL "pages")
@@ -64,8 +68,8 @@ function(DOCBOOK_GENERATE format input version)
             set(outputFile "${working}/index.xml")
 
             execute_process(
-                COMMAND "${xsltproc}" -o ${outputFile} --stringparam pages.template template-pages.xml ${xslFile} "${input}"
-                OUTPUT_FILE ${outputFile}
+                COMMAND "${xsltproc}" -o "${outputFile}" --stringparam pages.template template-pages.xml ${xslFile} "${input}"
+                OUTPUT_FILE "${outputFile}"
                 OUTPUT_VARIABLE _output)
             
     elseif(format STREQUAL "htmlhelp")
@@ -73,7 +77,7 @@ function(DOCBOOK_GENERATE format input version)
             
             execute_process(
                 COMMAND "/usr/bin/xsltproc" ${xslFile} "${input}"
-                WORKING_DIRECTORY ${working}
+                WORKING_DIRECTORY "${working}"
                 OUTPUT_VARIABLE _output)
         
     else()
