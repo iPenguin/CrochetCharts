@@ -123,17 +123,9 @@
             <screenshot>
                 <mediaobject>
                     <imageobject>
-                        <imagedata width="400" fileref="images/install-mac1.png" format="PNG" />
+                        <imagedata width="400" fileref="images/install-mac.png" format="PNG" />
                     </imageobject>
-                    <caption>Mac license agreement page for &appName;</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/install-mac2.png" format="PNG" />
-                    </imageobject>
-                    <caption>Drag the &appName; sheep over the fence and into the Applications folder.</caption>
+                    <caption>The Mac installer for &appName;</caption>
                 </mediaobject>
             </screenshot>
         </section>

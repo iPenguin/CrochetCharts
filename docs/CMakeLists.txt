@@ -1,6 +1,6 @@
 include(DocbookDocGeneration)
 
-if(UNIX AND NOT APPLE)
+if(UNIX)
     configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/DocbookEntities.ent.in
                 ${CMAKE_CURRENT_BINARY_DIR}/application.ent)
 

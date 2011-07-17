@@ -40,8 +40,14 @@ function(_DOCBOOK_PDF input version)
         OUTPUT_VARIABLE _output
     )
 
+    if(APPLE)
+        set(fop "/opt/fop/fop")
+    else()
+        set(fop "/usr/bin/fop")
+    endif()
+
     execute_process(
-        COMMAND "/usr/bin/fop" -fo "${outputBaseName}.fo" -pdf "${outputBaseName}.pdf"
+        COMMAND "${fop}" -fo "${outputBaseName}.fo" -pdf "${outputBaseName}.pdf"
         OUTPUT_FILE ${outputBaseName}.pdf
         OUTPUT_VARIABLE _output
     )
