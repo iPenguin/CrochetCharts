@@ -6,7 +6,6 @@
 #
 
 function(_DOCBOOK_HTML input version)
-#xsltproc -o index.html /usr/share/xml/docbook/stylesheet/nwalsh/html/docbook.xsl ../../docs/crochet.docbook
     set(working "${CMAKE_CURRENT_BINARY_DIR}/html")
     make_directory(${working})
 
@@ -34,18 +33,24 @@ function(_DOCBOOK_PDF input version)
     
     set(xslFile "${CMAKE_CURRENT_SOURCE_DIR}/mystyle.xsl")
 
+    if(UNIX)
+        set(xsltproc "/usr/bin/xsltproc")
+    else(WIN32)
+        set(xsltproc "/opt/bin/xsltproc")
+    endif()
+    message("XsltProc:" ${xsltproc})
     execute_process(
-        COMMAND "/usr/bin/xsltproc" -o ${outputBaseName}.fo --stringparam fop1.extensions 1 ${xslFile} "${input}"
+        COMMAND "${xsltproc}" -o ${outputBaseName}.fo --stringparam fop1.extensions 1 ${xslFile} "${input}"
         OUTPUT_FILE ${outputBaseName}.fo
         OUTPUT_VARIABLE _output
     )
 
-    if(APPLE)
+    if(APPLE OR WIN32)
         set(fop "/opt/fop/fop")
     else()
         set(fop "/usr/bin/fop")
     endif()
-
+    message("Fop:" ${fop})
     execute_process(
         COMMAND "${fop}" -fo "${outputBaseName}.fo" -pdf "${outputBaseName}.pdf"
         OUTPUT_FILE ${outputBaseName}.pdf
