@@ -4,6 +4,7 @@
     <file>resources/license.txt</file>
     <file>crochet.xml</file>
     <file>images/splashscreen.png</file>
+    <file>images/splashscreen.svg</file>
     <file>images/stitch_mode.svg</file>
     <file>images/editcopy.png</file>
     <file>images/editcut.png</file>

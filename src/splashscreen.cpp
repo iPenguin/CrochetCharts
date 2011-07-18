@@ -23,22 +23,22 @@ void SplashScreen::drawContents (QPainter *painter)
     painter->drawPixmap(rect, this->pixmap());
 
     QFont origFont = painter->font();
-
+/*
     QFont titleFont = QFont(origFont.family());
     titleFont.setPointSize(50);    
 
     painter->setFont(titleFont);
-    painter->drawText(QRect(25, 100, 400, 100), AppInfo::inst()->appName);
+    painter->drawText(QRect(25, 200, 400, 100), AppInfo::inst()->appName);
 
     QFont byFont = QFont(origFont.family());
-    byFont.setPointSize(16);
+    byFont.setPointSize(30);
     painter->setFont(byFont);
-    painter->drawText(QRect(40, 175, 400, 100), tr("By %1").arg(AppInfo::inst()->appOrg));
-    
+    painter->drawText(QRect(25, 125, 400, 100), AppInfo::inst()->appOrg);
+ */   
     painter->setFont(origFont);
     QString version = QString("Version: %1").arg(AppInfo::inst()->appVersionShort);
-    painter->drawText(QRectF(75, 230, 250, 50), version);
-    painter->drawText(QRectF(75, 245, 250, 50), mMessage);
+    painter->drawText(QRectF(75, 280, 250, 50), version);
+    painter->drawText(QRectF(75, 295, 250, 50), mMessage);
 }
 
 void SplashScreen::showMessage (const QString &message)
