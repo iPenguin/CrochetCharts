@@ -67,6 +67,9 @@
       </item>
       <item row="0" column="3">
        <widget class="QSpinBox" name="resolution">
+        <property name="suffix">
+         <string> dpi</string>
+        </property>
         <property name="minimum">
          <number>72</number>
         </property>
