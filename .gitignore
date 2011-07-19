@@ -1,6 +1,6 @@
 build
 *~
-CMakeLists.txt.user
+CMakeLists.txt.user*
 *.kdev4
 *.swp
 .swp.*
