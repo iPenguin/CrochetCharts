@@ -552,7 +552,7 @@ void MainWindow::documentNewChart()
 void MainWindow::helpCrochetHelp()
 {
     QString path = QFileInfo(QApplication::applicationFilePath()).path();
-    QString file = QString("Crochet_Charts_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
+    QString file = QString("CrochetCharts_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
 
     QString url = QString("%1/%2").arg(path).arg(file);
     
@@ -1073,6 +1073,8 @@ void MainWindow::toolsStitchLibrary()
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     StitchLibrary::inst()->saveAllSets();
     QApplication::restoreOverrideCursor();
+
+    StitchLibrary::inst()->reloadAllStitches();
 }
 
 void MainWindow::viewZoomIn()
