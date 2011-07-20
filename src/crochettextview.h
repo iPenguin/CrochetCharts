@@ -49,7 +49,7 @@ private:
      * Generates the text for a given row of the chart without trailing \n.
      * If cleanOutput = true remove the placeholder stitches 'x' by default.
      **/
-    QString generateTextRow(int row, bool cleanOutput = false);
+    QString generateTextRow(int row, bool cleanOutput = false, bool useRepeats = false);
     //returns an ordered list of the stitches found in the text.
     QStringList parseTextRow(QString text);
 
@@ -60,7 +60,11 @@ private:
     QString cleanToken(QString token);
 
     QMap<QString, QStringList> generateRepeats(QStringList stitches, QString prefix);
-    QString generateText(QStringList row);
+
+    /**
+     * Take a list of stitches and convert them into a crochet sentence.
+     */
+    QString generateText(QStringList row, bool useRepeats = false);
     int matchCount(QStringList stitches, int startPos, int length);
     
 private:

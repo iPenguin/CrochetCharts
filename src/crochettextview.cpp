@@ -89,7 +89,7 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
     }
 }
 
-QString CrochetTextView::generateTextRow(int row, bool cleanOutput)
+QString CrochetTextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
 {
     QString placeholder = Settings::inst()->value("placeholder").toString();
     QString rowText;
@@ -109,7 +109,7 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput)
         }
         rowList.append(curStitch);
     }
-    rowText = generateText(rowList);
+    rowText = generateText(rowList, useRepeats);
 
     if(cleanOutput) {
         //capitalize the first letter.
@@ -127,7 +127,7 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput)
     return rowText;
 }
 
-QString CrochetTextView::generateText(QStringList row)
+QString CrochetTextView::generateText(QStringList row, bool useRepeats)
 {
     QString text;
     QString curStitch, previousStitch, nextStitch;
@@ -138,7 +138,8 @@ QString CrochetTextView::generateText(QStringList row)
     bool genRepeats = Settings::inst()->value("generateTextRepeats").toBool();
     QString prefix = ".sws_";
 
-    if(genRepeats) {
+    //FIXME: useRepeats is a hard coded solution to prevent the software from acting weird.
+    if(genRepeats && useRepeats) {
         data = generateRepeats(row, prefix);
         row = data.value("row");
     }
@@ -377,10 +378,10 @@ QString CrochetTextView::copyInstructions()
     
     int rows = mScene->rowCount();
     for(int r = 0; r < rows; ++r) {
-        rowText << generateTextRow(r, true);
+        rowText << generateTextRow(r, true, true);
     }
-    return "FIXME";
-/*FIXME:get the variables corrected.
+    //return "FIXME";
+/*/FIXME:get the variables corrected.
     for(int i = 0; i < rowText.count(); ++i) {
         
         if(rowText.contains(text)) {
@@ -389,8 +390,9 @@ QString CrochetTextView::copyInstructions()
         } else
             text += tr("Row %1: ").arg(i+1) + text + "\n";
     }
+    */
     return text;
-*/
+
 }
 
 /************************************************************************
