@@ -41,7 +41,7 @@ CrochetTextView::~CrochetTextView()
 
 void CrochetTextView::updateRow(int row)
 {
-    qDebug() << "updateRow start";
+    
     //FIXME: hackish? really what I want is don't update the row if we're editing the row in the textview.
     if(this->hasFocus())
         return;
@@ -53,7 +53,7 @@ void CrochetTextView::updateRow(int row)
     curs.movePosition(QTextCursor::StartOfBlock);
     curs.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
     curs.insertText(rowText);
-
+    
 }
 
 void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
@@ -91,6 +91,7 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
 
 QString CrochetTextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
 {
+    
     QString placeholder = Settings::inst()->value("placeholder").toString();
     QString rowText;
     QString curStitch;
@@ -114,7 +115,7 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput, bool useRepe
     if(cleanOutput) {
         //capitalize the first letter.
         for(int i = 0; i < rowText.count(); ++i) {
-            qDebug() << rowText.at(i).isLetter();
+            
             if(rowText.at(i).isLetter()) {
                 rowText[i] = rowText.at(i).toUpper();
                 break;
@@ -380,17 +381,24 @@ QString CrochetTextView::copyInstructions()
     for(int r = 0; r < rows; ++r) {
         rowText << generateTextRow(r, true, true);
     }
-    //return "FIXME";
-/*/FIXME:get the variables corrected.
+
     for(int i = 0; i < rowText.count(); ++i) {
+        QString row = rowText[i];
+        //don't match rows that are already repeats.
+        if(row.startsWith(tr("Repeat row")))
+            continue;
         
-        if(rowText.contains(text)) {
-            
-            text += tr("Row %1: Repeat row %2.\n").arg(i+1).arg(repRow);
-        } else
-            text += tr("Row %1: ").arg(i+1) + text + "\n";
+        if(rowText.count(row) > 1) {
+            for(int j = i + 1; j < rowText.count(); ++j) {
+                if(rowText[j] == row)
+                    rowText[j] = tr("Repeat row %1.").arg(i+1);
+            }
+        }
     }
-    */
+
+    for(int i = 0; i < rowText.count(); ++i)
+        text += tr("Row %1: %2\n").arg(i+1).arg(rowText[i]);
+
     return text;
 
 }
