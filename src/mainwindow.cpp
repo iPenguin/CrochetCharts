@@ -310,6 +310,8 @@ void MainWindow::openRecentFile()
         files.append(action->data().toString());
         loadFiles(files);
     }
+
+    updateMenuItems();
     QApplication::restoreOverrideCursor();
 }
 
