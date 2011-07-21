@@ -11,7 +11,6 @@
 
 #include <QUndoStack>
 #include <QRubberBand>
-#include "indicator.h"
 
 class CrochetScene : public QGraphicsScene
 {
@@ -176,7 +175,6 @@ private:
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<CrochetCell *> > mGrid;
 
-    QList<Indicator *> mIndicators;
 };
 
 #endif //CROCHETSCENE_H
