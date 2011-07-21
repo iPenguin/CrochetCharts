@@ -268,7 +268,7 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionGridMode);
     mModeGroup->addAction(ui->actionPositionMode);
     mModeGroup->addAction(ui->actionAngleMode);
-    mModeGroup->addAction(ui->actionStrechMode);
+    mModeGroup->addAction(ui->actionStretchMode);
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
     
@@ -994,7 +994,7 @@ void MainWindow::changeTabMode(QAction* a)
         mode = 13;
     else if(a == ui->actionAngleMode)
         mode = 14;
-    else if(a == ui->actionStrechMode)
+    else if(a == ui->actionStretchMode)
         mode = 15;
     
     setEditMode(mode);
@@ -1015,7 +1015,7 @@ void MainWindow::setEditMode(int mode)
     else if(mode == 14)
         ui->actionAngleMode->setChecked(true);
     else if(mode == 15)
-        ui->actionStrechMode->setChecked(true);
+        ui->actionStretchMode->setChecked(true);
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
         CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));

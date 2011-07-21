@@ -11,6 +11,7 @@
 
 #include <QUndoStack>
 #include <QRubberBand>
+#include "indicator.h"
 
 class CrochetScene : public QGraphicsScene
 {
@@ -26,7 +27,8 @@ public:
         GridMode,        //draw lines on the grid.
         PositionMode,    //move the stitches around on the chart.
         AngleMode,       //adjust the angle of the
-        StrechMode       //strech the stitches.
+        StretchMode,       //stretch the stitches.
+        IndicatorMode
     };
 
     enum ChartStyle {
@@ -136,9 +138,9 @@ private:
     void angleModeMousePress(QGraphicsSceneMouseEvent *e);
     void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
-    void strechModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void strechModeMousePress(QGraphicsSceneMouseEvent *e);
-    void strechModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
+    void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
@@ -173,6 +175,8 @@ private:
     
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<CrochetCell *> > mGrid;
+
+    QList<Indicator *> mIndicators;
 };
 
 #endif //CROCHETSCENE_H

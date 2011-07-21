@@ -44,7 +44,7 @@
     <file>images/insert_stitch.svg</file>
     <file>images/rotate_stitch.svg</file>
     <file>images/position_stitch.svg</file>
-    <file>images/strech_mode.svg</file>
+    <file>images/stretch_mode.svg</file>
     <file>images/fill_color.svg</file>
   </qresource>
 </RCC>

@@ -362,8 +362,8 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::AngleMode:
             angleModeMousePress(e);
             break;
-        case CrochetScene::StrechMode:
-            strechModeMousePress(e);
+        case CrochetScene::StretchMode:
+            stretchModeMousePress(e);
             break;
         default:
             break;
@@ -391,8 +391,8 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::AngleMode:
             angleModeMouseMove(e);
             break;
-        case CrochetScene::StrechMode:
-            strechModeMouseMove(e);
+        case CrochetScene::StretchMode:
+            stretchModeMouseMove(e);
             break;
         default:
             break;
@@ -417,8 +417,8 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::AngleMode:
             angleModeMouseRelease(e);
             break;
-        case CrochetScene::StrechMode:
-            strechModeMouseRelease(e);
+        case CrochetScene::StretchMode:
+            stretchModeMouseRelease(e);
             break;
         default:
             break;
@@ -641,12 +641,12 @@ void CrochetScene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
     mCurCellRotation = 0;
 }
 
-void CrochetScene::strechModeMousePress(QGraphicsSceneMouseEvent* e)
+void CrochetScene::stretchModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
 }
 
-void CrochetScene::strechModeMouseMove(QGraphicsSceneMouseEvent* e)
+void CrochetScene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(!mCurCell)
         return;
@@ -659,7 +659,7 @@ void CrochetScene::strechModeMouseMove(QGraphicsSceneMouseEvent* e)
     mStartPos = e->scenePos();
 }
 
-void CrochetScene::strechModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void CrochetScene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
 }

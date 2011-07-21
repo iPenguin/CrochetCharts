@@ -275,7 +275,7 @@
     <addaction name="actionGridMode"/>
     <addaction name="actionPositionMode"/>
     <addaction name="actionAngleMode"/>
-    <addaction name="actionStrechMode"/>
+    <addaction name="actionStretchMode"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -486,7 +486,7 @@
    <addaction name="actionGridMode"/>
    <addaction name="actionPositionMode"/>
    <addaction name="actionAngleMode"/>
-   <addaction name="actionStrechMode"/>
+   <addaction name="actionStretchMode"/>
    <addaction name="separator"/>
    <addaction name="actionColorSelectorBg"/>
   </widget>
@@ -869,19 +869,19 @@
     <string>Alt+5</string>
    </property>
   </action>
-  <action name="actionStrechMode">
+  <action name="actionStretchMode">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="../crochet.qrc">
-     <normaloff>:/images/strech_mode.svg</normaloff>:/images/strech_mode.svg</iconset>
+     <normaloff>:/images/stretch_mode.svg</normaloff>:/images/stretch_mode.svg</iconset>
    </property>
    <property name="text">
-    <string>Strech Mode</string>
+    <string>Stretch Mode</string>
    </property>
    <property name="toolTip">
-    <string>Strech the stitch</string>
+    <string>Stretch the stitch</string>
    </property>
    <property name="shortcut">
     <string>Alt+6</string>
