@@ -11,6 +11,7 @@
 #include <QPainter>
 #include <QStyleOption>
 #include "settings.h"
+#include "crochetscene.h"
 
 CrochetCell::CrochetCell()
      : mScale(1.0), mHighlight(false)
@@ -41,8 +42,10 @@ QVariant CrochetCell::itemChange(GraphicsItemChange change, const QVariant &valu
         QPointF newPos = value.toPointF();
         qreal x, y;
 
-        //FIXME: this should get the value of the freeFrom from the chart/tab. or scene() qobject_cast... ??
-        bool freeForm = Settings::inst()->value("chartFreeForm").toBool();
+        //FIXME: I really don't like having to do cast to CrochetScene in the CrochetCell!
+        CrochetScene *s = static_cast<CrochetScene*>(scene());
+        
+        bool freeForm = s->isFreeForm();
         if(!freeForm && !mAnchor.isNull()) {
             x = qMin(mAnchor.x() + 64, qMax(newPos.x(), mAnchor.x() - 64));
             y = qMin(mAnchor.y() + 64, qMax(newPos.y(), mAnchor.y() - 64));

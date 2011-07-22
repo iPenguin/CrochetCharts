@@ -66,8 +66,12 @@ public:
 
     QUndoStack* undoStack() { return &mUndoStack; }
 
+    bool isFreeForm() { return mFreeForm; }
+    void setFreeForm(bool value) { mFreeForm = value; }
+
 public slots:
     void updateRubberBand(int dx, int dy);
+    void updateFreeForm(bool state);
 
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
