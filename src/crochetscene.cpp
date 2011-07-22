@@ -29,6 +29,7 @@ CrochetScene::CrochetScene(QObject *parent)
     mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
 {
     mStitchWidth = 64;
+    mFreeForm = Settings::inst()->value("chartFreeForm").toBool();
 }
 
 CrochetScene::~CrochetScene()
@@ -273,6 +274,8 @@ QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF or
 
 void CrochetScene::stitchUpdated(QString oldSt, QString newSt)
 {
+    Q_UNUSED(newSt);
+    
     if(oldSt.isEmpty() || oldSt.isNull())
         return;
     
@@ -281,8 +284,7 @@ void CrochetScene::stitchUpdated(QString oldSt, QString newSt)
         return;
 
     QPoint pos = findGridPosition(c);
-    //FIXME: crash! 
-    qDebug() << "FIXME:" << oldSt << newSt << pos;
+    //TODO: this used to crash... does it still?
     emit rowChanged(pos.y());
     
 }
@@ -662,4 +664,9 @@ void CrochetScene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 void CrochetScene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
+}
+
+void CrochetScene::updateFreeForm(bool state)
+{
+    mFreeForm = state;
 }

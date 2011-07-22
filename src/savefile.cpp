@@ -255,6 +255,10 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
 
     mTabWidget->addTab(tab, "");
 
+    //when placing cells on the chart we don't want to break anything the user has created.
+    bool isFreeForm = true;
+    tab->scene()->setFreeForm(isFreeForm);
+    
     mTabWidget->widget(mTabWidget->indexOf(tab))->hide();
 
     while(!(stream->isEndElement() && stream->name() == "chart")) {
@@ -266,13 +270,14 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         } else if(tag == "style") {
             tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
         } else if(tag == "freeform") {
-            tab->scene()->mFreeForm = (bool)stream->readElementText().toInt();
+            isFreeForm = (bool)stream->readElementText().toInt();
         } else if(tag == "cell") {
             SaveThread *sth = new SaveThread(tab, stream);
             sth->run();
         }
     }
-    
+
+    tab->setFreeForm(isFreeForm);
     int index = mTabWidget->indexOf(tab);
     mTabWidget->setTabText(index, tabName);
     mTabWidget->widget(mTabWidget->indexOf(tab))->show();

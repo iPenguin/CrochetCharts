@@ -49,7 +49,7 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     mScene->setEditStitch(defStitch);
     mScene->setEditFgColor(defFgColor);
     mScene->setEditBgColor(defBgColor);
-
+    
     QWidget *w = new QWidget(top);
     ui->setupUi(w);
     tl->addWidget(mView);
@@ -73,9 +73,14 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
 
     ui->chartOptionsBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked()), SLOT(showChartOptions()));
+
+    //FIXME: Add more chart options and re-enable this part of the ui later.
+    ui->moreBttn->hide();
     
     connect(ui->copyInstructions, SIGNAL(clicked()), SLOT(copyInstructions()));
-    
+
+    ui->chartFreeForm->setChecked(mScene->isFreeForm());
+    connect(ui->chartFreeForm, SIGNAL(toggled(bool)), mScene, SLOT(updateFreeForm(bool)));
 }
 
 CrochetTab::~CrochetTab()
@@ -208,4 +213,9 @@ void CrochetTab::showChartOptions()
 void CrochetTab::sceneUpdate()
 {
     mScene->update();
+}
+
+void CrochetTab::setFreeForm(bool value)
+{
+    ui->chartFreeForm->setChecked(value);
 }

@@ -11,7 +11,6 @@
 
 #include <QUndoStack>
 #include <QRubberBand>
-#include "indicator.h"
 
 class CrochetScene : public QGraphicsScene
 {
@@ -67,8 +66,12 @@ public:
 
     QUndoStack* undoStack() { return &mUndoStack; }
 
+    bool isFreeForm() { return mFreeForm; }
+    void setFreeForm(bool value) { mFreeForm = value; }
+
 public slots:
     void updateRubberBand(int dx, int dy);
+    void updateFreeForm(bool state);
 
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
@@ -176,7 +179,6 @@ private:
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<CrochetCell *> > mGrid;
 
-    QList<Indicator *> mIndicators;
 };
 
 #endif //CROCHETSCENE_H
