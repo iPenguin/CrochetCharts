@@ -11,9 +11,12 @@ class Indicator : public QGraphicsItem
 {
     
 public:
+    enum {Type = UserType + 15 };
+
     Indicator();
     ~Indicator();
 
+    int type() const { return Type; }
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
