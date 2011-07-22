@@ -188,7 +188,7 @@
      <x>0</x>
      <y>0</y>
      <width>894</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -487,6 +487,7 @@
    <addaction name="actionPositionMode"/>
    <addaction name="actionAngleMode"/>
    <addaction name="actionStretchMode"/>
+   <addaction name="actionIndicatorMode"/>
    <addaction name="separator"/>
    <addaction name="actionColorSelectorBg"/>
   </widget>
@@ -885,6 +886,20 @@
    </property>
    <property name="shortcut">
     <string>Alt+6</string>
+   </property>
+  </action>
+  <action name="actionIndicatorMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Indicator Mode</string>
+   </property>
+   <property name="toolTip">
+    <string>Add indicators to the chart</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+7</string>
    </property>
   </action>
  </widget>

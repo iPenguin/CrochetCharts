@@ -9,6 +9,7 @@
 #include <QFontMetrics>
 #include <QGraphicsSimpleTextItem>
 #include <QGraphicsSceneEvent>
+#include <QApplication> //start drag min distance.
 
 #include <math.h>
 
@@ -23,7 +24,7 @@
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent), mCurCell(0), mStartPos(QPointF(0,0)), mDiff(QSizeF(0,0)), mHighlightCell(0),
-    mRubberBand(0), mRubberBandStart(QPointF(0,0)),
+    mRubberBand(0), mRubberBandStart(QPointF(0,0)), mMoving(false),
     mRowSpacing(8), mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode),
     mFreeForm(false), mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
@@ -365,6 +366,9 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::StretchMode:
             stretchModeMousePress(e);
             break;
+        case CrochetScene::IndicatorMode:
+            indicatorModeMousePress(e);
+            break;
         default:
             break;
     }
@@ -394,6 +398,9 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::StretchMode:
             stretchModeMouseMove(e);
             break;
+        case CrochetScene::IndicatorMode:
+            indicatorModeMouseMove(e);
+            break;
         default:
             break;
     }
@@ -419,6 +426,9 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
         case CrochetScene::StretchMode:
             stretchModeMouseRelease(e);
+            break;
+        case CrochetScene::IndicatorMode:
+            indicatorModeMouseRelease(e);
             break;
         default:
             break;
@@ -662,4 +672,42 @@ void CrochetScene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 void CrochetScene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
+}
+
+void CrochetScene::indicatorModeMousePress(QGraphicsSceneMouseEvent *e)
+{
+    qDebug() << "Mouse Press";
+
+}
+
+void CrochetScene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
+{
+    if(e->buttons() != Qt::LeftButton)
+        return;
+    if (QLineF(e->screenPos(), e->buttonDownScreenPos(Qt::LeftButton)).length() < QApplication::startDragDistance())
+        return;
+    mMoving = true;
+
+    QGraphicsItem *gi = itemAt(e->scenePos());
+    Indicator *i = qgraphicsitem_cast<Indicator*>(gi);
+    if(!i)
+        return;
+
+    QPointF curPos =  QPointF(e->scenePos().x() - mStartPos.x(), e->scenePos().y() - mStartPos.y());
+    i->setPos(curPos);
+    //mUndoStack.push(new SetCellCoordinates(this, findGridPosition(mCurCell), mStartPos, curPos));
+}
+
+void CrochetScene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
+{
+    //if we're moving another indicator we shouldn't be creating a new one.
+    if(mMoving) {
+        mMoving = false;
+        return;
+    }
+
+    Indicator *i = new Indicator();
+    addItem(i);
+    mIndicators.append(i);
+    i->setPos(e->buttonDownScenePos(Qt::LeftButton));
 }

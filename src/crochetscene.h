@@ -142,6 +142,10 @@ private:
     void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
+    void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void indicatorModeMousePress(QGraphicsSceneMouseEvent *e);
+    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
+
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
     
@@ -160,6 +164,9 @@ private:
     QRubberBand *mRubberBand;
     QPointF mRubberBandStart;
     
+    //Is the user moving an indicator.
+    bool mMoving;
+
     int mRowSpacing;
     
     ChartStyle mStyle;
