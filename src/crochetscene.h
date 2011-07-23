@@ -12,6 +12,8 @@
 #include <QUndoStack>
 #include <QRubberBand>
 
+#include "indicator.h"
+
 class CrochetScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -159,6 +161,9 @@ private:
     //Used in the mouse*Event()s to keep the mouse movements on the same cell.
     CrochetCell *mCurCell;
     QPointF mStartPos;
+
+    Indicator *mCurIndicator;
+    
     //The difference between where the user clicked on the object and the (x,y) of the object.
     QSizeF mDiff;
     CrochetCell *mHighlightCell;
@@ -186,6 +191,7 @@ private:
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<CrochetCell *> > mGrid;
 
+    QList<Indicator*> mIndicators;
 };
 
 #endif //CROCHETSCENE_H

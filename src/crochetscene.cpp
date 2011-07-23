@@ -23,7 +23,8 @@
 #include "crochetchartcommands.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent), mCurCell(0), mStartPos(QPointF(0,0)), mDiff(QSizeF(0,0)), mHighlightCell(0),
+    : QGraphicsScene(parent), mCurCell(0), mStartPos(QPointF(0,0)), mCurIndicator(0),
+    mDiff(QSizeF(0,0)), mHighlightCell(0),
     mRubberBand(0), mRubberBandStart(QPointF(0,0)), mMoving(false),
     mRowSpacing(8), mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode),
     mFreeForm(false), mEditStitch("ch"),
@@ -75,6 +76,11 @@ void CrochetScene::initDemoBackground()
         //restore original rect. letting the demo text overflow off the scene.
         setSceneRect(rect);
     }
+}
+
+void CrochetScene::updateFreeForm(bool state)
+{
+    mFreeForm = state;
 }
 
 CrochetCell* CrochetScene::cell(int row, int column)
@@ -342,10 +348,15 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
     QGraphicsItem *gi = itemAt(e->scenePos());
     CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+    Indicator *i = qgraphicsitem_cast<Indicator*>(gi);
+    
     if(c) {
         mCurCell = c;
         mStartPos = mCurCell->pos();
         mDiff = QSizeF(e->scenePos().x() - mStartPos.x(), e->scenePos().y() - mStartPos.y());
+    } else if(i) {
+        mCurIndicator = i;
+        mStartPos = i->pos();
     }
     
     switch(mMode) {
@@ -440,6 +451,11 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         mDiff = QSizeF(0,0);
         mStartPos = QPointF(0,0);
         mCurCell = 0;
+    }
+
+    if(mCurIndicator) {
+        mStartPos = QPoint(0,0);
+        mCurIndicator = 0;
     }
 
     QGraphicsScene::mouseReleaseEvent(e);
@@ -675,11 +691,6 @@ void CrochetScene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
 }
-
-void CrochetScene::updateFreeForm(bool state)
-{
-    mFreeForm = state;
-}
     
 void CrochetScene::indicatorModeMousePress(QGraphicsSceneMouseEvent *e)
 {
@@ -691,22 +702,32 @@ void CrochetScene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
 {
     if(e->buttons() != Qt::LeftButton)
         return;
-    if (QLineF(e->screenPos(), e->buttonDownScreenPos(Qt::LeftButton)).length() < QApplication::startDragDistance())
-        return;
+
     mMoving = true;
 
-    QGraphicsItem *gi = itemAt(e->scenePos());
-    Indicator *i = qgraphicsitem_cast<Indicator*>(gi);
-    if(!i)
+    if(!mCurIndicator)
         return;
 
-    QPointF curPos =  QPointF(e->scenePos().x() - mStartPos.x(), e->scenePos().y() - mStartPos.y());
-    i->setPos(curPos);
-    //mUndoStack.push(new SetCellCoordinates(this, findGridPosition(mCurCell), mStartPos, curPos));
+    QPointF start = e->buttonDownScenePos(Qt::LeftButton);
+    
+    QPointF delta =  QPointF(e->scenePos().x() - start.x(), e->scenePos().y() - start.y());
+    QPointF newPos = QPointF(mStartPos.x() + delta.x(), mStartPos.y() + delta.y());
+    
+    mCurIndicator->setPos(newPos);
+
 }
 
 void CrochetScene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
+    //if right click or ctrl-click remove the indicator.
+    if(e->button() == Qt::RightButton || (e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {
+        if(mCurIndicator) {
+            mIndicators.removeOne(mCurIndicator);
+            delete mCurIndicator;
+        }
+        return;
+    }
+
     //if we're moving another indicator we shouldn't be creating a new one.
     if(mMoving) {
         mMoving = false;
