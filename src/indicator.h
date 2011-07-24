@@ -5,12 +5,18 @@
 #ifndef INDICATOR_H
 #define INDICATOR_H
 
-#include <QGraphicsItem>
-//#include <QGraphicsTextItem>
+//#include <QGraphicsItem>
+#include <QGraphicsTextItem>
 
-class Indicator : public QGraphicsItem //public QGraphicsTextItem
+class QFocusEvent;
+class QGraphicsItem;
+class QGraphicsScene;
+class QGraphicsSceneMouseEvent;
+
+class Indicator : public QGraphicsTextItem //public QGraphicsItem,
 {
-    //Q_OBJECT
+    Q_OBJECT
+    friend class SaveFile;
 public:
     enum {Type = UserType + 15 };
 
@@ -20,14 +26,17 @@ public:
     int type() const { return Type; }
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-/*
-    QPointF pos();
-    QString text();
 
-    QColor bgColor();
-    QColor textColor();
-  */  
-/*
+    QString text() { return mText; }
+    void setText(QString t) { mText = t; }
+
+    QColor bgColor() { return mBgColor; }
+    void setBgColor(QColor c) { mBgColor = c; }
+
+    QColor textColor() { return mTextColor; }
+    void setTextColor(QColor c) { mTextColor = c; }
+
+
 signals:
     void lostFocus(Indicator *item);
     void selectedChange(QGraphicsItem *item);
@@ -37,8 +46,11 @@ protected:
     void focusOutEvent(QFocusEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
-*/  
 private:
+    QString mText;
+
+    QColor mBgColor;
+    QColor mTextColor;
 
 };
 #endif //INDICATOR_H

@@ -113,6 +113,8 @@ protected:
     int getClosestRow(QPointF mousePosition);
     int getClosestColumn(QPointF mousePosition);
 
+    QList<Indicator*> indicators() { return mIndicators; }
+
     qreal scenePosToAngle(QPointF pt);
     
     /**

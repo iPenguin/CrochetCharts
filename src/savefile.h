@@ -52,6 +52,8 @@ private:
     void loadCell(CrochetTab *tab, QXmlStreamReader *stream);
     QTransform loadTransform(QXmlStreamReader *stream);
 
+    void loadIndicator(CrochetTab *tab, QXmlStreamReader *stream);
+
     //fileVersion of the file we're working with.
     qint32 mCurrentFileVersion;
     //fileVersion of the current version of the software.

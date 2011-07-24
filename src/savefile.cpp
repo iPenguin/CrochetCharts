@@ -19,6 +19,8 @@
 #include "stitchlibrary.h"
 #include "stitchset.h"
 
+#include "indicator.h"
+
 #include "savethread.h"
 
 #include "mainwindow.h"
@@ -132,7 +134,19 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
                 stream->writeEndElement(); //end cell
             }
         }
-        
+
+        foreach(Indicator *i, tab->scene()->indicators()) {
+            stream->writeStartElement("indicator");
+
+                stream->writeTextElement("x", QString::number(i->pos().x()));
+                stream->writeTextElement("y", QString::number(i->pos().y()));
+                stream->writeTextElement("text", i->text());
+                stream->writeTextElement("textColor", i->textColor().name());
+                stream->writeTextElement("bgColor", i->bgColor().name());
+
+            stream->writeEndElement(); //end indicator
+        }
+
         stream->writeEndElement(); // end chart
     }
     
@@ -274,6 +288,8 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         } else if(tag == "cell") {
             SaveThread *sth = new SaveThread(tab, stream);
             sth->run();
+        } else if(tag == "indicator") {
+            loadIndicator(tab, stream);
         }
     }
 
@@ -333,6 +349,39 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
     c->setPos(x, y);
     c->setTransform(transform);
     c->setAngle(angle);
+}
+
+void SaveFile::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
+{
+    Indicator *i = new Indicator();
+
+    qreal x, y;
+    QString textColor, bgColor;
+    QString text;
+
+    while(!(stream->isEndElement() && stream->name() == "indicator")) {
+        stream->readNext();
+        QString tag = stream->name().toString();
+
+        if(tag == "x") {
+            x = stream->readElementText().toDouble();
+        } else if(tag == "y") {
+            y = stream->readElementText().toDouble();
+        } else if(tag == "text") {
+            text = stream->readElementText();
+        } else if(tag == "textColor") {
+            textColor = stream->readElementText();
+        } else if(tag == "bgColor") {
+            bgColor = stream->readElementText();
+        }
+    }
+
+    tab->scene()->addItem(i);
+    tab->scene()->indicators().append(i);
+    i->setPos(x,y);
+    i->setText(text);
+    i->setTextColor(textColor);
+    i->setBgColor(bgColor);
 }
 
 QTransform SaveFile::loadTransform(QXmlStreamReader* stream)
