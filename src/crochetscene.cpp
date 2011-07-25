@@ -23,7 +23,9 @@
 #include "crochetchartcommands.h"
 
 CrochetScene::CrochetScene(QObject *parent)
-    : QGraphicsScene(parent), mCurCell(0), mStartPos(QPointF(0,0)), mCurIndicator(0),
+    : QGraphicsScene(parent),
+    flatWidth(64), flatHeight(64),
+    mCurCell(0), mStartPos(QPointF(0,0)), mCurIndicator(0),
     mDiff(QSizeF(0,0)), mHighlightCell(0),
     mRubberBand(0), mRubberBandStart(QPointF(0,0)), mMoving(false),
     mRowSpacing(8), mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode),
@@ -172,9 +174,9 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
         c->setToolTip(QString::number(column+1));
         
     } else {
-        c->setPos(column*64, row*64);
+        c->setPos(column*flatWidth, row*flatHeight);
         if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(column*64, row*64);
+            c->setAnchor(column*flatWidth, row*flatHeight);
         c->setToolTip(QString::number(column+1));
         c->setColor(QColor(Qt::white));
     }
@@ -513,11 +515,27 @@ void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
 {
+    Q_UNUSED(e);
+}
+
+void CrochetScene::gridModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    Q_UNUSED(e);
+}
+
+void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
+{
     //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
-    int y = getClosestRow(e->scenePos());   
-    int x = getClosestColumn(e->scenePos());
-    
-    if(e->buttons() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
+    int x,y;
+    if(mStyle == CrochetScene::Round) {
+        y = getClosestRow(e->scenePos());
+        x = getClosestColumn(e->scenePos());
+    } else if (mStyle == CrochetScene::Flat) {
+        x = ceil(e->scenePos().x() / flatWidth) - 1;
+        y = ceil(e->scenePos().y() / flatHeight) - 1;
+    }   
+
+    if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
         CrochetCell *c = new CrochetCell();
         c->setStitch(mEditStitch, (y % 2));
@@ -538,16 +556,6 @@ void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
     }
 
     redistributeCells(y);
-}
-
-void CrochetScene::gridModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-}
-
-void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
 }
 
 void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)

@@ -36,6 +36,9 @@ public:
         Flat = 100,
         Round
     };
+
+    const int flatWidth;
+    const int flatHeight;
     
     CrochetScene(QObject *parent = 0);
     ~CrochetScene();
