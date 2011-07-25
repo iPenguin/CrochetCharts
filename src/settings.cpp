@@ -151,16 +151,9 @@ void Settings::setupValueList() {
 
 QString Settings::userSettingsFolder()
 {
-    //If we're on windows use the DataLocation as you cannot store files in the registry.
-    //Otherwise use the config path to keep all the files together.
-#ifdef Q_WS_WIN
     QString folder = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
     if(!QFileInfo(folder).exists())
         QDir(folder).mkpath(folder);
     return folder + "/";
-#else
-    QFileInfo file(mSettings.fileName());
-    return file.absolutePath() + "/";
-#endif
 }
 

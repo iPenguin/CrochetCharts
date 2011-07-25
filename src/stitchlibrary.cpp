@@ -382,3 +382,16 @@ void StitchLibrary::reloadAllStitches()
     foreach(StitchSet *set, mStitchSets)
         set->reloadStitches();
 }
+
+QString StitchLibrary::findStitchSetName(QString folderName)
+{
+    if(!folderName.endsWith("/"))
+        folderName.append("/");
+
+    foreach(StitchSet *set, mStitchSets) {
+        if(set->stitchSetFolder() == folderName)
+            return set->name();
+    }
+
+    return QString("Unknown set");
+}

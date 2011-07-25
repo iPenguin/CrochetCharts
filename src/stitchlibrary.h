@@ -81,6 +81,9 @@ public:
 
     void reloadAllStitches();
 
+    //find the name of a stitch set based on the storage location of the set.
+    QString findStitchSetName(QString folderName);
+
 signals:
     void stitchListChanged();
     

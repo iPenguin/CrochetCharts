@@ -8,6 +8,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include "stitchlibrary.h"
+
 StitchIconUi::StitchIconUi(QWidget *parent)
     : QDialog(parent), ui(new Ui::StitchIconDialog)
 {
@@ -36,24 +38,24 @@ void StitchIconUi::loadIcons()
     dirs << userFolder + "icons";
 
     QDir dir;
-/*
-    dir.setPath(userFolder + "sets/");
 
-    dirs << ":/stitches";
+    dir.setPath(userFolder + "sets/");
     
     //get all set folders.
     foreach(QString folder, dir.entryList(QDir::Dirs)) {
         if(folder != "." && folder != "..")
             dirs << userFolder + "sets/" + folder;
     }
-*/
+
     //get all files from all set folders.
     foreach(QString folder, dirs) {
         dir.setPath(folder);
         foreach(QString file, dir.entryList(QDir::Files)) {
             QIcon icon = QIcon(folder + "/" + file);
             QString name = QFileInfo(file).baseName();
-            QListWidgetItem *item = new QListWidgetItem(icon, name, ui->iconList);
+            QString setName = StitchLibrary::inst()->findStitchSetName(folder);
+            QString description = QString("%1 (from %2)").arg(name).arg(setName);
+            QListWidgetItem *item = new QListWidgetItem(icon, description, ui->iconList);
             item->setData(Qt::UserRole, QVariant(folder + "/" + file));
             item->setToolTip(folder + "/" + file);
             ui->iconList->addItem(item);
