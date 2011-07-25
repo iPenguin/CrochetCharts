@@ -5,17 +5,16 @@
 #ifndef INDICATOR_H
 #define INDICATOR_H
 
-//#include <QGraphicsItem>
-#include <QGraphicsTextItem>
+#include <QGraphicsItem>
 
 class QFocusEvent;
 class QGraphicsItem;
 class QGraphicsScene;
 class QGraphicsSceneMouseEvent;
 
-class Indicator : public QGraphicsTextItem //public QGraphicsItem,
+class Indicator : public QGraphicsItem
 {
-    Q_OBJECT
+
     friend class SaveFile;
 public:
     enum {Type = UserType + 15 };
@@ -35,16 +34,6 @@ public:
 
     QColor textColor() { return mTextColor; }
     void setTextColor(QColor c) { mTextColor = c; }
-
-
-signals:
-    void lostFocus(Indicator *item);
-    void selectedChange(QGraphicsItem *item);
-    
-protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-    void focusOutEvent(QFocusEvent *event);
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     QString mText;

@@ -23,7 +23,8 @@ QRectF Indicator::boundingRect() const
 
 void Indicator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
     QString color = Settings::inst()->value("chartIndicatorColor").toString();
     painter->setPen(QColor(color));
     painter->setBackgroundMode(Qt::OpaqueMode);
@@ -33,26 +34,3 @@ void Indicator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     //QGraphicsTextItem::paint(painter, option, widget);
     
 }
-/*
-QVariant Indicator::itemChange(GraphicsItemChange change,
-                      const QVariant &value)
- {
-     if (change == QGraphicsItem::ItemSelectedHasChanged)
-         emit selectedChange(this);
-     return value;
- }
-
- void Indicator::focusOutEvent(QFocusEvent *event)
- {
-     setTextInteractionFlags(Qt::NoTextInteraction);
-     emit lostFocus(this);
-     QGraphicsTextItem::focusOutEvent(event);
- }
-
- void Indicator::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
- {
-     if (textInteractionFlags() == Qt::NoTextInteraction)
-         setTextInteractionFlags(Qt::TextEditorInteraction);
-     QGraphicsTextItem::mouseDoubleClickEvent(event);
- }
- */

@@ -413,6 +413,7 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             break;
         case CrochetScene::IndicatorMode:
             indicatorModeMouseMove(e);
+            QGraphicsScene::mouseMoveEvent(e);
             break;
         default:
             break;
@@ -694,7 +695,6 @@ void CrochetScene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     
 void CrochetScene::indicatorModeMousePress(QGraphicsSceneMouseEvent *e)
 {
-    qDebug() << "Mouse Press";
 
 }
 
@@ -737,5 +737,10 @@ void CrochetScene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
     Indicator *i = new Indicator();
     addItem(i);
     mIndicators.append(i);
-    i->setPos(e->buttonDownScenePos(Qt::LeftButton));
+    QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
+//FIXME: dont hard code the offset for the indicator.
+    pt = QPointF(pt.x() - 10, pt.y() - 10);
+    i->setPos(pt);
+    //connect(i, SIGNAL(lostFocus(Indicator*)), this, SLOT(editorLostFocus(Indicator*)));
+    //connect(i, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
 }
