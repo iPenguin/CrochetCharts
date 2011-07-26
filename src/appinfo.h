@@ -10,6 +10,10 @@
 #include <QRegExp>
 #include <qobject.h>
 
+/**
+ * singleton class to supply general application-wide info to all classes.
+ */
+
 class AppInfo
 {
 public:
@@ -32,9 +36,11 @@ public:
     
     const QRegExp emailRegExp;
     
-    //To use licensePage: QString test = QString(liveLicensePage).arg(1).arg(2).arg(3).arg(4);
-    //WARNING: NEVER change the value of the live pages to a testing server! if you need to use
-    //a testing server set the licensePage and/or updatePage variables in the default config file!
+    /**
+     * To use licensePage: QString test = QString(liveLicensePage).arg(1).arg(2).arg(3).arg(4);\n
+     * WARNING: NEVER change the value of the live pages to a testing server! if you need to use\n
+     * a testing server set the licensePage and/or updatePage variables in the default config file!\n
+     */
     const QString liveLicensePage;
     
     const QString liveUpdatePage;

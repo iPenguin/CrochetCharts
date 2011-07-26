@@ -24,6 +24,16 @@ set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
 set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${SWS_PROJECT_NAME}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${SWS_PROJECT_NAME}")
 
+#FIXME: use the FindDoxygen.cmake module.
+if(DOXYGEN)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/Doxyfile.in
+                ${CMAKE_BINARY_DIR}/Doxyfile)
+    execute_process(
+                COMMAND "/usr/bin/doxygen" "${CMAKE_BINARY_DIR}/Doxyfile"
+                WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+                OUTPUT_VARIABLE _output)
+endif()
+
 if(WIN32)
 
 	set(CPACK_PACKAGE_ICON "C:\\\\Documents and Settings\\\\Brian Milco\\\\My Documents\\\\crochet.git\\\\images\\\\installer.bmp")

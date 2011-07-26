@@ -7,6 +7,9 @@
 
 #include <QGraphicsView>
 
+/**
+ * The default view on the ChartScene.
+ */
 class ChartView : public QGraphicsView
 {
     Q_OBJECT

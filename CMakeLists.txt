@@ -36,6 +36,7 @@ option(UNIT_TESTING  "Build the test libraries for this software" OFF)
 option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
 option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
 option(SWS_DOCS "Create docbook documentation" ON)
+option(DOXYGEN "Create Doxygen documentation" OFF)
 
 message("-------------------------------------------------------")
 message(STATUS ${SWS_PROJECT_NAME} " Version: " ${SWS_VERSION})
@@ -45,6 +46,7 @@ message(STATUS "Force 32bit: " ${FORCE_32BIT})
 message(STATUS "Create Documentation: " ${SWS_DOCS})
 message(STATUS "Use -Wshadow: " ${SHADOW_FLAG})
 message(STATUS "Found Hunspell: " ${HUNSPELL_FOUND})
+message(STATUS "Doxygen Docs: " ${DOXYGEN})
 message("-------------------------------------------------------")
 
 ###########################################################################
