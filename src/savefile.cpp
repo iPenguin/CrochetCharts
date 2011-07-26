@@ -27,6 +27,7 @@
 
 #include "mainwindow.h"
 #include <QFileInfo>
+#include <QDir>
 
 SaveFile::SaveFile(QWidget* parent) :
     isSaved(false),
@@ -58,8 +59,13 @@ SaveFile::FileError SaveFile::save()
 
     out.setVersion(QDataStream::Qt_4_7);
 
-    saveCustomIcons(&out);
-    
+    if(!mInternalStitchSet) {
+        mInternalStitchSet = new StitchSet();
+        mInternalStitchSet->isTemporary = true;
+        StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
+    } else
+        mInternalStitchSet->clearStitches();
+
     //start xml save...
     QString *data = new QString();
     QXmlStreamWriter stream(data);
@@ -69,7 +75,11 @@ SaveFile::FileError SaveFile::save()
     stream.writeStartElement("pattern"); //start pattern
     //TODO: dont need to set the version when saving into a binary file.
     stream.writeAttribute("version", QString::number(SaveFile::Version_1_0));
+
+    //create the StitchSet then save the icons.
     saveCustomStitches(&stream);
+    mInternalStitchSet->saveIcons(&out);
+
     saveColors(&stream);
     saveCharts(&stream);
     stream.writeEndElement();
@@ -85,46 +95,20 @@ SaveFile::FileError SaveFile::save()
     return SaveFile::No_Error;
 }
 
-/**
- * FIXME: make the save code in the StitchSet class work in a way that will allow the
- * SaveFile class to utilize the code from there to save custom icons in the save file.
- */
-void SaveFile::saveCustomIcons(QDataStream *dataStream)
-{
-    CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(0));
-    QStringList stitches = tab->patternStitches()->keys();
-    QMap<QString, QByteArray> icons;
-    foreach(QString st, stitches) {
-        Stitch *s = StitchLibrary::inst()->findStitch(st);
-        if(!s)
-            continue;
-        
-        if(!s->file().startsWith(":/")) {
-            QFile f(s->file());
-            f.open(QIODevice::ReadOnly);
-            icons.insert(QFileInfo(s->file()).fileName(), f.readAll());
-            f.close();
-        }
-    }
-    
-    *dataStream << icons;
-}
-
 void SaveFile::saveCustomStitches(QXmlStreamWriter* stream)
 {
     CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(0));
-    StitchSet *set = new StitchSet();
-    
-    set->setName(QString("[%1]").arg(fileName));
+
+    //FIXME: fileName includes the whole path.
+    mInternalStitchSet->setName(QString("[%1]").arg(QFileInfo(fileName).fileName()));
     QStringList stitches = tab->patternStitches()->keys();
-    QMap<QString, QByteArray> icons;
 
     foreach(QString st, stitches) {
         Stitch *s = StitchLibrary::inst()->findStitch(st);
-        set->addStitch(s->copy());
+        mInternalStitchSet->addStitch(s->copy());
     }
 
-    set->saveXmlStitchSet(stream, true);
+    mInternalStitchSet->saveXmlStitchSet(stream, true);
 }
 
 bool SaveFile::saveCharts(QXmlStreamWriter *stream)
@@ -154,7 +138,6 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
                 stream->writeTextElement("row", QString::number(row));
                 stream->writeTextElement("column", QString::number(col));
                 stream->writeTextElement("color", c->color().name());
-                //TODO: make sure the numbers are translating correctly to xml and back.
                 stream->writeTextElement("x", QString::number(c->pos().x()));
                 stream->writeTextElement("y", QString::number(c->pos().y()));
                 stream->writeTextElement("anchor_x", QString::number(c->mAnchor.x()));
@@ -257,6 +240,12 @@ SaveFile::FileError SaveFile::load()
         in.setVersion(QDataStream::Qt_4_7);
 
     mInternalStitchSet = new StitchSet();
+    mInternalStitchSet->isTemporary = true;
+    mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
+    QString dest = mInternalStitchSet->stitchSetFileName;
+    QFileInfo info(dest);
+    QDir(info.path()).mkpath(info.path() + "/" + info.baseName());
+
     mInternalStitchSet->loadIcons(&in);
 
     QByteArray docData;
@@ -269,8 +258,8 @@ SaveFile::FileError SaveFile::load()
         return SaveFile::Err_GettingFileContents;
     }
     
-    while (!stream.atEnd() && !stream.hasError())
-    {
+    while (!stream.atEnd() && !stream.hasError()) {
+
         stream.readNext();
         if (stream.isStartElement()) {
             QString name = stream.name().toString();
@@ -279,11 +268,11 @@ SaveFile::FileError SaveFile::load()
             else if(name == "chart")
                 loadChart(&stream);
             else if(name == "stitch_set")
-                continue;
-                //FIXME: Rewrite the code for StitchSet to use QXmlStream(Reader/Writer).
-                //mInternalStitchSet->loadXmlStitchSet(&stream, true);
+                mInternalStitchSet->loadXmlStitchSet(&stream, true);
         }
     }
+
+    StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
 
     return SaveFile::No_Error;
 }
@@ -465,4 +454,10 @@ QTransform SaveFile::loadTransform(QXmlStreamReader* stream)
     
     transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
     return transform;
+}
+
+void SaveFile::cleanUp()
+{
+    if(mInternalStitchSet)
+        StitchLibrary::inst()->removeSet(mInternalStitchSet);
 }

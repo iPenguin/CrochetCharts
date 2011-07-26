@@ -107,7 +107,7 @@ signals:
     void stitchNameChanged(QString setName, QString oldName, QString newName);
     
 protected:
-    void loadXmlStitchSet(QDomElement *element, bool loadIcons = false);
+    void loadXmlStitchSet(QXmlStreamReader *stream, bool loadIcons = false);
     void saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons = false);
 
     void saveIcons(QDataStream *out);
@@ -119,7 +119,9 @@ private:
      * path name for the icon.
      * FIXME: remove the loadIcon parameter?
      */
-    void loadXmlStitch(QDomElement *element, bool loadIcon = false);
+    void loadXmlStitch(QXmlStreamReader *stream, bool loadIcon = false);
+
+    bool removeDir(const QString &dirName);
 
     QList<Stitch*> mStitches;
     //list of checked items

@@ -30,6 +30,7 @@ class QComboBox;
 class StitchLibrary : public QObject
 {
     Q_OBJECT
+    friend class SaveFile;
 
 public:
     static StitchLibrary* inst();
@@ -60,9 +61,12 @@ public:
     StitchSet* createStitchSet(QString setName);
     //Remove and delete setName.
     void removeSet(QString setName);
+    //remove a set like a save file set.
+    void removeSet(StitchSet *set);
 
     //add a stitch set from a file, and return a pointer to it.
     StitchSet* addStitchSet(QString fileName);
+    void addStitchSet(StitchSet *set);
 
     bool masterHasStitch(Stitch *s);
     
@@ -84,6 +88,10 @@ public:
     //find the name of a stitch set based on the storage location of the set.
     QString findStitchSetName(QString folderName);
 
+protected:
+    //generates the next file name that can be used for a stitch set.
+    QString nextSetSaveFile();
+
 signals:
     void stitchListChanged();
     
@@ -92,9 +100,6 @@ private slots:
     
 private:
     StitchLibrary();
-
-    //generates the next file name that can be used for a stitch set.
-    QString nextSetSaveFile();
 
     //loads the list of stitches and where the stitches are being pulled from.
     bool loadMasterList();

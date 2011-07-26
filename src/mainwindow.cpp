@@ -615,8 +615,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
         Settings::inst()->setValue("geometry", saveGeometry());
         Settings::inst()->setValue("windowState", saveState());
 
-        if(Settings::inst()->files.contains(mFile->fileName))
+        if(Settings::inst()->files.contains(mFile->fileName.toLower()))
             Settings::inst()->files.remove(mFile->fileName.toLower());
+
+        mFile->cleanUp();
 
         QMainWindow::closeEvent(event);
     } else {

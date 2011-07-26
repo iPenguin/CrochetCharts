@@ -293,14 +293,21 @@ StitchSet* StitchLibrary::createStitchSet(QString setName)
 void StitchLibrary::removeSet(QString setName)
 {
    StitchSet *set = findStitchSet(setName);
-   mStitchSets.removeOne(set);
+   removeSet(set);
+}
 
-   QDir setsDir(Settings::inst()->userSettingsFolder() + "sets/");
-   setsDir.rmdir(set->stitchSetFolder());
-   setsDir.remove(set->stitchSetFileName);
+void StitchLibrary::removeSet(StitchSet *set)
+{
+    if(mStitchSets.contains(set)) {
+        mStitchSets.removeOne(set);
 
-   delete set;
-   set = 0;
+        QDir setsDir(Settings::inst()->userSettingsFolder() + "sets/");
+        setsDir.rmdir(set->stitchSetFolder());
+        setsDir.remove(set->stitchSetFileName);
+
+        delete set;
+        set = 0;
+    }
 }
 
 //FIXME: return a value that can be checked and move the gui dialogs into the libraryui.
@@ -323,6 +330,7 @@ StitchSet* StitchLibrary::addStitchSet(QString fileName)
 
     set->loadDataFile(fileName, dest);
 
+    //FIXME: The stitchset shouldnt contain any gui elements like a messagebox.
     StitchSet *test = 0;
     test = findStitchSet(set->name());
     if(test) {
@@ -361,6 +369,12 @@ StitchSet* StitchLibrary::addStitchSet(QString fileName)
     connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)), this, SLOT(changeStitchName(QString,QString,QString)));
     mStitchSets.append(set);
     return set;
+}
+
+void StitchLibrary::addStitchSet(StitchSet *set)
+{
+    connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)), this, SLOT(changeStitchName(QString,QString,QString)));
+    mStitchSets.append(set);
 }
 
 void StitchLibrary::changeStitchName(QString setName, QString oldName, QString newName)

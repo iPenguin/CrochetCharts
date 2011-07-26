@@ -40,6 +40,8 @@ public:
 
     bool isOldFileVersion() { return false; }
 
+    void cleanUp();
+
     bool isSaved;
     QString fileName;
     
@@ -60,12 +62,11 @@ private:
     qint32 mCurrentFileVersion;
     //fileVersion of the current version of the software.
     qint32 mFileVersion;
-
-    StitchSet *mInternalStitchSet;
     
     QTabWidget* mTabWidget;
 
     QWidget* mParent;
 
+    StitchSet *mInternalStitchSet;
 };
 #endif //SAVEFILE_H

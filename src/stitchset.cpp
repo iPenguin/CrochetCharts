@@ -5,6 +5,7 @@
 #include "stitchset.h"
 
 #include <QFile>
+#include <QDir>
 
 #include <QXmlStreamWriter> //write the xml file
 
@@ -33,7 +34,40 @@ StitchSet::~StitchSet()
     foreach(Stitch *s, mStitches) {
         mStitches.removeOne(s);
         delete s;
-    }   
+    }
+    if(isTemporary)
+        removeDir(stitchSetFolder());
+}
+
+
+/**
+ * Delete a directory along with all of its contents.
+ *
+ * This function was stolen from http://john.nachtimwald.com/2010/06/08/qt-remove-directory-and-its-contents/
+ * \param dirName Path of directory to remove.
+ * \return true on success; false on error.
+ */
+bool StitchSet::removeDir(const QString &dirName)
+{
+    bool result = true;
+    QDir dir(dirName);
+
+    if (dir.exists(dirName)) {
+        foreach(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
+            if (info.isDir()) {
+                result = removeDir(info.absoluteFilePath());
+            } else {
+                result = QFile::remove(info.absoluteFilePath());
+            }
+
+            if (!result) {
+                return result;
+            }
+        }
+        result = dir.rmdir(dirName);
+    }
+
+    return result;
 }
 
 QString StitchSet::stitchSetFolder()
@@ -53,18 +87,24 @@ bool StitchSet::loadXmlFile(QString fileName)
         return false;
     }
     
-    QDomDocument doc("stitchset");
-    
-    if (!doc.setContent(&file)) {
-        qWarning() << "could not get contents of file";
-        file.close();
+    QXmlStreamReader stream(file.readAll());
+    file.close();
+
+    while(!stream.atEnd() && !stream.hasError()) {
+
+        stream.readNext();
+        if(stream.isStartElement()) {
+            QString name = stream.name().toString();
+            if(name == "stitch_set")
+                loadXmlStitchSet(&stream);
+        }
+    }
+
+    if(stream.hasError()) {
+        qWarning() << "Error loading saved file: " << stream.errorString();
         return false;
     }
-    file.close();
-    
-    QDomElement docElem = doc.documentElement();
-    
-    loadXmlStitchSet(&docElem);
+
     return true;
 }
 
@@ -113,22 +153,18 @@ void StitchSet::loadDataFile(QString fileName, QString dest)
     
     loadIcons(&in);
 
-    QDomDocument doc("stitchset");
-
     QByteArray docData;
-    
     in >> docData;
-
-    if (!doc.setContent(QString(docData))) {
-        qWarning() << "Could not load file contents.";
-        file.close();
-        return;
-    }
     file.close();
     
-    QDomElement docElem = doc.documentElement();
+    QXmlStreamReader stream(docData);
+
+    if(stream.hasError()) {
+        qWarning() << "Error parsing xml data.";
+        return;
+    }
     
-    loadXmlStitchSet(&docElem, true);
+    loadXmlStitchSet(&stream, true);
 
 }
 
@@ -136,7 +172,7 @@ void StitchSet::loadIcons(QDataStream *in)
 {
     QMap<QString, QByteArray> icons;
     *in >> icons;
-        
+
     foreach(QString key, icons.keys()) {
         QFile f(stitchSetFolder() + key);
         f.open(QIODevice::WriteOnly);
@@ -145,57 +181,57 @@ void StitchSet::loadIcons(QDataStream *in)
     }
 }
 
-void StitchSet::loadXmlStitchSet(QDomElement *element, bool loadIcons)
-{    
-    QDomNode n = element->firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement(); // try to convert the node to an element.
-        if(!e.isNull()) {
-
-            if(e.tagName() == "name")
-                setName(e.text());
-            else if(e.tagName() == "author")
-                setAuthor(e.text());
-            else if(e.tagName() == "email")
-                setEmail(e.text());
-            else if(e.tagName() == "org")
-                setOrg(e.text());
-            else if(e.tagName() == "url")
-                setUrl(e.text());
-            else if(e.tagName() == "stitch")
-                loadXmlStitch(&e, loadIcons);
+void StitchSet::loadXmlStitchSet(QXmlStreamReader *stream, bool loadIcons)
+{
+    while (!(stream->isEndElement() && stream->name() == "stitch_set"))
+    {
+        stream->readNext();
+        if (stream->isStartElement()) {
+            QString name = stream->name().toString();
+            if(name == "name")
+                setName(stream->readElementText());
+            else if(name == "author")
+                setAuthor(stream->readElementText());
+            else if(name == "email")
+                setEmail(stream->readElementText());
+            else if(name == "org")
+                setOrg(stream->readElementText());
+            else if(name == "url")
+                setUrl(stream->readElementText());
+            else if(name == "stitch")
+                loadXmlStitch(stream, loadIcons);
             else
-                 qWarning() << "Could not load part of the stitch set:" << e.tagName() << e.text();
+                 qWarning() << "Could not load part of the stitch set:" << name << stream->readElementText();
         }
-        n = n.nextSibling();
     }
 }
 
-void StitchSet::loadXmlStitch(QDomElement *element, bool loadIcon)
+void StitchSet::loadXmlStitch(QXmlStreamReader *stream, bool loadIcon)
 {
     Stitch *s = new Stitch();
 
-    QDomNode n = element->firstChild();
-    while(!n.isNull()) {
-        QDomElement e = n.toElement();
-        if(!e.isNull()) {
-            if(e.tagName() == "name")
-                s->setName(e.text());
-            else if(e.tagName() == "icon") {
-                if(loadIcon && !e.text().startsWith(":/"))
-                    s->setFile(stitchSetFolder() + e.text());
+    while (!(stream->isEndElement() && stream->name() == "stitch"))
+    {
+        stream->readNext();
+        if (stream->isStartElement()) {
+            QString name = stream->name().toString();
+            if(name == "name")
+                s->setName(stream->readElementText());
+            else if(name == "icon") {
+                QString filePath = stream->readElementText();
+                if(loadIcon && !filePath.startsWith(":/"))
+                    s->setFile(stitchSetFolder() + filePath);
                 else
-                    s->setFile(e.text());
-            } else if(e.tagName() == "description")
-                s->setDescription(e.text());
-            else if(e.tagName() == "category")
-                s->setCategory(e.text());
-            else if(e.tagName() == "ws")
-                s->setWrongSide(e.text());
+                    s->setFile(filePath);
+            } else if(name == "description")
+                s->setDescription(stream->readElementText());
+            else if(name == "category")
+                s->setCategory(stream->readElementText());
+            else if(name == "ws")
+                s->setWrongSide(stream->readElementText());
             else
-                qWarning() << "Cannot load unknown stitch property:" << e.tagName() << e.text();
+                qWarning() << "Cannot load unknown stitch property:" << name << stream->readElementText();
         }
-        n = n.nextSibling();
     }
     addStitch(s);
 }
@@ -275,6 +311,7 @@ void StitchSet::saveIcons(QDataStream *out)
     QMap<QString, QByteArray> icons;
     foreach(Stitch *s, mStitches) {
         if(!s->file().startsWith(":/")) {
+
             QFile f(s->file());
             f.open(QIODevice::ReadOnly);
             icons.insert(QFileInfo(s->file()).fileName(), f.readAll());
