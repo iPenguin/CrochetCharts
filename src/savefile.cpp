@@ -28,8 +28,12 @@
 #include "mainwindow.h"
 #include <QFileInfo>
 
-SaveFile::SaveFile(QWidget* parent)
-    : isSaved(false), fileName(""), mFileVersion(SaveFile::Version_1_0), mParent(parent)
+SaveFile::SaveFile(QWidget* parent) :
+    isSaved(false),
+    fileName(""),
+    mFileVersion(SaveFile::Version_1_0),
+    mParent(parent),
+    mInternalStitchSet(0)
 {
     mTabWidget = static_cast<MainWindow*>(mParent)->tabWidget();
 }
@@ -38,20 +42,25 @@ SaveFile::~SaveFile()
 {
 }
 
-/*File Save:
- //TODO: add stitches and make this a QDataStream.
- QFile file(fileName);
- file.open(QIODevice::WriteOnly);
- QDataStream out(&file);
- 
- // Write a header with a "magic number" and a version
- out << AppInfo::inst()->magicNumber;
- out << (qint32)mFileVersion;
- 
- out.setVersion(QDataStream::Qt_4_7);
- */
 SaveFile::FileError SaveFile::save()
 {
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly)) {
+        //TODO: some nice dialog to warn the user.
+        qWarning() << "Couldn't open file for writing..." << fileName;
+        return SaveFile::Err_OpeningFile;
+    }
+    
+    QDataStream out(&file);
+    // Write a header with a "magic number" and a version
+    out << AppInfo::inst()->magicNumber;
+    out << (qint32)mFileVersion;
+
+    out.setVersion(QDataStream::Qt_4_7);
+
+    saveCustomIcons(&out);
+    
+    //start xml save...
     QString *data = new QString();
     QXmlStreamWriter stream(data);
     stream.setAutoFormatting(true);
@@ -60,23 +69,19 @@ SaveFile::FileError SaveFile::save()
     stream.writeStartElement("pattern"); //start pattern
     //TODO: dont need to set the version when saving into a binary file.
     stream.writeAttribute("version", QString::number(SaveFile::Version_1_0));
+    saveCustomStitches(&stream);
     saveColors(&stream);
     saveCharts(&stream);
     stream.writeEndElement();
     
     stream.writeEndDocument();
 
-    QFile file(fileName);
-
-    if(!file.open(QIODevice::WriteOnly)) {
-        //TODO: some nice dialog to warn the user.
-        qWarning() << "Couldn't open file for writing..." << fileName;
-        return SaveFile::Err_OpeningFile;
-    }
-
-    file.write(data->toLatin1());
+    //put xml into binary file.
+    out << data->toLatin1();
     file.close();
-
+    delete data;
+    data = 0;
+    
     return SaveFile::No_Error;
 }
 
@@ -84,8 +89,9 @@ SaveFile::FileError SaveFile::save()
  * FIXME: make the save code in the StitchSet class work in a way that will allow the
  * SaveFile class to utilize the code from there to save custom icons in the save file.
  */
-void SaveFile::saveCustomIcons(CrochetTab *tab, QDataStream *dataStream)
+void SaveFile::saveCustomIcons(QDataStream *dataStream)
 {
+    CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(0));
     QStringList stitches = tab->patternStitches()->keys();
     QMap<QString, QByteArray> icons;
     foreach(QString st, stitches) {
@@ -104,13 +110,21 @@ void SaveFile::saveCustomIcons(CrochetTab *tab, QDataStream *dataStream)
     *dataStream << icons;
 }
 
-void SaveFile::saveCustomStitches(CrochetTab *tab, QXmlStreamWriter* stream)
+void SaveFile::saveCustomStitches(QXmlStreamWriter* stream)
 {
+    CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(0));
+    StitchSet *set = new StitchSet();
+    
+    set->setName(QString("[%1]").arg(fileName));
     QStringList stitches = tab->patternStitches()->keys();
     QMap<QString, QByteArray> icons;
+
     foreach(QString st, stitches) {
-        
+        Stitch *s = StitchLibrary::inst()->findStitch(st);
+        set->addStitch(s->copy());
     }
+
+    set->saveXmlStitchSet(stream, true);
 }
 
 bool SaveFile::saveCharts(QXmlStreamWriter *stream)
@@ -199,33 +213,7 @@ void SaveFile::saveColors(QXmlStreamWriter* stream)
     stream->writeEndElement(); // end colors
 }
 
-/*File Load:
- //TODO: add stitches and make this a QDataStream.*
- QFile file(fileName);
- file.open(QIODevice::ReadOnly);
- QDataStream in(&file);
- 
- // Read and check the header
- quint32 magic;
- in >> magic;
- if (magic != AppInfo::inst()->magicNumber)
-     return SaveFile::Err_WrongFileType;
- 
- qint32 version;
- in >> version;
- 
- if (version <= SaveFile::Version_1_0)
-     in.setVersion(QDataStream::Qt_4_7);
- 
- if (version > mFileVersion)
-     return SaveFile::Err_UnknownFileVersion;
- 
- // Read the data
-     //in >> lots_of_interesting_data;
-     //if (version >= 120)
-     //    in >> data_new_in_XXX_version_1_2;
-     //in >> other_interesting_data;
-*/
+
 SaveFile::FileError SaveFile::load()
 {
     QFile file(fileName);
@@ -235,45 +223,69 @@ SaveFile::FileError SaveFile::load()
         qWarning() << "Couldn't open file for reading..." << fileName;
         return SaveFile::Err_OpeningFile;
     }
+
+    QDataStream in(&file);
+
+    quint32 magicNumber;
+    qint32 version;
+    in >> magicNumber;
+
+    if(magicNumber != AppInfo::inst()->magicNumber) {
+        //TODO: nice error message. not a set file.
+        qWarning() << "This is not a pattern file";
+        file.close();
+        return SaveFile::Err_WrongFileType;
+    }
+
+    in >> version;
+
+    if(version < SaveFile::Version_1_0) {
+        //TODO: unknown version.
+        qWarning() << "Unknown file version";
+        file.close();
+        return SaveFile::Err_UnknownFileVersion;
+    }
+
+    if(version > mFileVersion) {
+        //TODO: unknown file version
+        qWarning() << "This file was created with a newer version of the software.";
+        file.close();
+        return SaveFile::Err_UnknownFileVersion;
+    }
+
+    if(version == SaveFile::Version_1_0)
+        in.setVersion(QDataStream::Qt_4_7);
+
+    mInternalStitchSet = new StitchSet();
+    mInternalStitchSet->loadIcons(&in);
+
+    QByteArray docData;
+    in >> docData;
     
-    QXmlStreamReader stream(&file);
+    QXmlStreamReader stream(docData);
 
     if(stream.hasError()) {
         qWarning() << "Error loading saved file: " << stream.errorString();
         return SaveFile::Err_GettingFileContents;
     }
-
+    
     while (!stream.atEnd() && !stream.hasError())
     {
         stream.readNext();
         if (stream.isStartElement()) {
             QString name = stream.name().toString();
-            if (name == "colors")
+            if(name == "colors")
                 loadColors(&stream);
             else if(name == "chart")
                 loadChart(&stream);
-            else if (name == "stitches") //custom stitches
+            else if(name == "stitch_set")
                 continue;
+                //FIXME: Rewrite the code for StitchSet to use QXmlStream(Reader/Writer).
+                //mInternalStitchSet->loadXmlStitchSet(&stream, true);
         }
     }
 
-    if (stream.hasError()) {
-        qWarning() << "XML error: " << stream.errorString();
-    }
-
     return SaveFile::No_Error;
-}
-
-bool SaveFile::loadCustomImages(QDataStream* dataStream)
-{
-    Q_UNUSED(dataStream);
-    return true;
-}
-
-void SaveFile::loadCustomStitches(QXmlStreamReader* stream)
-{
-    Q_UNUSED(stream);
-    
 }
 
 void SaveFile::loadColors(QXmlStreamReader *stream)

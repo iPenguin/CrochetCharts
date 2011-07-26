@@ -82,16 +82,28 @@ void StitchSet::loadDataFile(QString fileName, QString dest)
     qint32 version;
     in >> magicNumber;
 
-    if(magicNumber != AppInfo::inst()->magicNumberSet)
-        return; //TODO: nice error message. not a set file.
+    if(magicNumber != AppInfo::inst()->magicNumberSet) {
+        //TODO: nice error message. not a set file.
+        qWarning() << "This is not a set file";
+        file.close();
+        return;
+    }
 
     in >> version;
     
-    if(version < StitchSet::Version_1_0_0)
-        return; //TODO: unknown version.
+    if(version < StitchSet::Version_1_0_0) {
+        //TODO: unknown version.
+        qWarning() << "Unknown file version";
+        file.close();
+        return;
+    }
 
-    if(version > mSaveFileVersion)
-        return; //TODO: unknown file version
+    if(version > mSaveFileVersion) {
+        //TODO: unknown file version
+        qWarning() << "This file was created with a newer version of the software.";
+        file.close();
+        return;
+    }
 
 
     if(version == StitchSet::Version_1_0_0)
@@ -108,7 +120,7 @@ void StitchSet::loadDataFile(QString fileName, QString dest)
     in >> docData;
 
     if (!doc.setContent(QString(docData))) {
-        qWarning() << "could not get contents of file";
+        qWarning() << "Could not load file contents.";
         file.close();
         return;
     }

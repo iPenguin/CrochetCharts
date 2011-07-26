@@ -29,14 +29,25 @@ public:
     StitchSet(QObject *parent = 0, bool isMasterSet = false, bool isBuiltIn = false);
     ~StitchSet();
 
-    //load icons tells the function to test/replace the icon file names.
+    /**
+     * loadXmlFile loads the stitchset from the user directory.
+     */
     bool loadXmlFile(QString fileName);
-    //if you don't pass in a fileName the default setFileName will be used.
+
+    /**
+     *  saveXmlFile saves the stitchset to the user directory for later use.
+     * If you don't pass in a fileName the default setFileName will be used.
+     */
     void saveXmlFile(QString fileName = "");
 
-    //load stitchset with icon data.
+    /**
+     * load binary .set stitch set files.
+     */
     void loadDataFile(QString fileName, QString dest);
-    //save stitchset with icon data.
+
+    /**
+     * save binary .set stitch set files.
+     */
     void saveDataFile(QString fileName);
 
     const QString name() const { return mName; }
@@ -103,6 +114,11 @@ protected:
     void loadIcons(QDataStream *in);
     
 private:
+    /**
+     * load the individual stitch. \param loadIcon tells the function to generate the complete
+     * path name for the icon.
+     * FIXME: remove the loadIcon parameter?
+     */
     void loadXmlStitch(QDomElement *element, bool loadIcon = false);
 
     QList<Stitch*> mStitches;

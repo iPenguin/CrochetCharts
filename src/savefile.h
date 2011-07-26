@@ -11,6 +11,8 @@
 #include <QString>
 #include <QTabWidget>
 
+#include "stitchset.h"
+
 #ifdef Q_WS_MAC
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -42,13 +44,11 @@ public:
     QString fileName;
     
 private:
-    void saveCustomIcons(CrochetTab *tab, QDataStream *dataStream);
-    void saveCustomStitches(CrochetTab *tab, QXmlStreamWriter *stream);
+    void saveCustomIcons(QDataStream *dataStream);
+    void saveCustomStitches(QXmlStreamWriter *stream);
     void saveColors(QXmlStreamWriter *stream);
     bool saveCharts(QXmlStreamWriter *stream);
 
-    bool loadCustomImages(QDataStream *dataStream);
-    void loadCustomStitches(QXmlStreamReader *stream);
     void loadColors(QXmlStreamReader *stream);
     void loadChart(QXmlStreamReader *stream);
     void loadCell(CrochetTab *tab, QXmlStreamReader *stream);
@@ -61,8 +61,11 @@ private:
     //fileVersion of the current version of the software.
     qint32 mFileVersion;
 
+    StitchSet *mInternalStitchSet;
+    
     QTabWidget* mTabWidget;
 
     QWidget* mParent;
+
 };
 #endif //SAVEFILE_H
