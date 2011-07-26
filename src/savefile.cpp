@@ -14,6 +14,8 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
+#include <QStringList>
+
 #include <QDataStream>
 #include "crochetscene.h"
 #include "stitchlibrary.h"
@@ -24,6 +26,7 @@
 #include "savethread.h"
 
 #include "mainwindow.h"
+#include <QFileInfo>
 
 SaveFile::SaveFile(QWidget* parent)
     : isSaved(false), fileName(""), mFileVersion(SaveFile::Version_1_0), mParent(parent)
@@ -77,11 +80,37 @@ SaveFile::FileError SaveFile::save()
     return SaveFile::No_Error;
 }
 
-bool SaveFile::saveCustomStitches(QDataStream* stream)
+/**
+ * FIXME: make the save code in the StitchSet class work in a way that will allow the
+ * SaveFile class to utilize the code from there to save custom icons in the save file.
+ */
+void SaveFile::saveCustomIcons(CrochetTab *tab, QDataStream *dataStream)
 {
-    Q_UNUSED(stream);
-    //TODO: save everything into a DataStream
-    return true;
+    QStringList stitches = tab->patternStitches()->keys();
+    QMap<QString, QByteArray> icons;
+    foreach(QString st, stitches) {
+        Stitch *s = StitchLibrary::inst()->findStitch(st);
+        if(!s)
+            continue;
+        
+        if(!s->file().startsWith(":/")) {
+            QFile f(s->file());
+            f.open(QIODevice::ReadOnly);
+            icons.insert(QFileInfo(s->file()).fileName(), f.readAll());
+            f.close();
+        }
+    }
+    
+    *dataStream << icons;
+}
+
+void SaveFile::saveCustomStitches(CrochetTab *tab, QXmlStreamWriter* stream)
+{
+    QStringList stitches = tab->patternStitches()->keys();
+    QMap<QString, QByteArray> icons;
+    foreach(QString st, stitches) {
+        
+    }
 }
 
 bool SaveFile::saveCharts(QXmlStreamWriter *stream)
@@ -235,11 +264,16 @@ SaveFile::FileError SaveFile::load()
     return SaveFile::No_Error;
 }
 
-bool SaveFile::loadCustomStitches(QDataStream* stream)
+bool SaveFile::loadCustomImages(QDataStream* dataStream)
+{
+    Q_UNUSED(dataStream);
+    return true;
+}
+
+void SaveFile::loadCustomStitches(QXmlStreamReader* stream)
 {
     Q_UNUSED(stream);
-    //TODO: load everything from a DataStream
-    return true;
+    
 }
 
 void SaveFile::loadColors(QXmlStreamReader *stream)

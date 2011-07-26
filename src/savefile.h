@@ -36,17 +36,19 @@ public:
     SaveFile::FileError save();
     SaveFile::FileError load();
 
-    bool isOldFileVersion();
+    bool isOldFileVersion() { return false; }
 
     bool isSaved;
     QString fileName;
     
 private:
-    bool saveCustomStitches(QDataStream *stream);   
+    void saveCustomIcons(CrochetTab *tab, QDataStream *dataStream);
+    void saveCustomStitches(CrochetTab *tab, QXmlStreamWriter *stream);
     void saveColors(QXmlStreamWriter *stream);
     bool saveCharts(QXmlStreamWriter *stream);
 
-    bool loadCustomStitches(QDataStream *stream);
+    bool loadCustomImages(QDataStream *dataStream);
+    void loadCustomStitches(QXmlStreamReader *stream);
     void loadColors(QXmlStreamReader *stream);
     void loadChart(QXmlStreamReader *stream);
     void loadCell(CrochetTab *tab, QXmlStreamReader *stream);

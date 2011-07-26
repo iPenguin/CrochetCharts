@@ -65,6 +65,9 @@ public slots:
 
     void copyInstructions();
 
+protected:
+    QMap<QString, int>* patternStitches() { return mPatternStitches; }
+    
 private slots:
     void showChartOptions();
 
