@@ -20,7 +20,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -295,17 +295,17 @@
         <widget class="QComboBox" name="chartRowIndicator">
          <item>
           <property name="text">
-           <string>None</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Numbers</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>Dots</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Text</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Dots and Text</string>
           </property>
          </item>
         </widget>

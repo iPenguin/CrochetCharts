@@ -376,8 +376,7 @@ void SaveFile::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
         }
     }
 
-    tab->scene()->addItem(i);
-    tab->scene()->indicators().append(i);
+    tab->scene()->addIndicator(i);
     i->setPos(x,y);
     i->setText(text);
     i->setTextColor(textColor);
