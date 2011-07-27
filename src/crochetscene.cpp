@@ -21,6 +21,7 @@
 #include "stitchset.h"
 #include "appinfo.h"
 #include "crochetchartcommands.h"
+#include "indicatorundo.h"
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent),
@@ -94,11 +95,15 @@ void CrochetScene::addIndicator(Indicator* i)
 void CrochetScene::removeIndicator(QPointF pos)
 {
     QGraphicsItem *item = itemAt(pos);
-    if(!item)
+    if(!item) {
+        qWarning() << "removeIndicator: Could not find item at: " << pos;
         return;
+    }
     Indicator *i = qgraphicsitem_cast<Indicator*>(item);
-    if(!i)
+    if(!i) {
+        qWarning() << "removeIndicator: Could not find indicator at: " << pos;
         return;
+    }
 
     mIndicators.removeOne(i);
     removeItem(i);
@@ -742,7 +747,7 @@ void CrochetScene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
     QPointF delta =  QPointF(e->scenePos().x() - start.x(), e->scenePos().y() - start.y());
     QPointF newPos = QPointF(mStartPos.x() + delta.x(), mStartPos.y() + delta.y());
     
-    mCurIndicator->setPos(newPos);
+    undoStack()->push(new MoveIndicator(this, mCurIndicator->pos(), newPos));
 
 }
 
@@ -751,8 +756,7 @@ void CrochetScene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
     //if right click or ctrl-click remove the indicator.
     if(e->button() == Qt::RightButton || (e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {
         if(mCurIndicator) {
-            mIndicators.removeOne(mCurIndicator);
-            delete mCurIndicator;
+            undoStack()->push(new RemoveIndicator(this, mCurIndicator));
         }
         return;
     }
@@ -764,14 +768,13 @@ void CrochetScene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
     }
 
     if(!mCurIndicator) {
-        Indicator *i = new Indicator();
-        addItem(i);
-        i->setTextInteractionFlags(Qt::TextEditorInteraction);
-        mIndicators.append(i);
+
         QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
-    //FIXME: dont hard code the offset for the indicator.
+        //FIXME: dont hard code the offset for the indicator.
         pt = QPointF(pt.x() - 10, pt.y() - 10);
-        i->setPos(pt);
+
+        undoStack()->push(new AddIndicator(this, pt));
+
         //connect(i, SIGNAL(lostFocus(Indicator*)), this, SLOT(editorLostFocus(Indicator*)));
         //connect(i, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
     } else {

@@ -206,30 +206,82 @@ bool SetCellScale::mergeWith(const QUndoCommand *command)
     return true;
 }
 
-
 /*************************************************\
-| AddIndicator                                    |
+| AddStitch                                       |
 \*************************************************/
-AddIndicator::AddIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent)
+AddStitch::AddStitch(CrochetScene* s, QPointF pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
-    
     position = pos;
     scene = s;
-    
-    setText(QObject::tr("Add Indicator"));
 }
 
-void AddIndicator::redo()
+void AddStitch::redo()
 {
-    Indicator *i = new Indicator(0, scene);
-    scene->addIndicator(i);
-    i->setPos(position);
+
 }
 
-void AddIndicator::undo()
+void AddStitch::undo()
 {
-    scene->removeIndicator(position);
+
 }
 
+/*************************************************\
+| RemoveStitch                                    |
+\*************************************************/
+RemoveStitch::RemoveStitch(CrochetScene* s, QPointF pos, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    position = pos;
+    scene = s;
+}
 
+void RemoveStitch::redo()
+{
+ 
+}
+
+void RemoveStitch::undo()
+{
+ 
+}
+
+/*************************************************\
+| AddRow                                          |
+\*************************************************/
+AddRow::AddRow(CrochetScene* s, QPointF pos, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    position = pos;
+    scene = s;
+}
+
+void AddRow::redo()
+{
+
+}
+
+void AddRow::undo()
+{
+
+}
+
+/*************************************************\
+| RemoveRow                                       |
+\*************************************************/
+RemoveRow::RemoveRow(CrochetScene* s, QPointF pos, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    position = pos;
+    scene = s;
+}
+
+void RemoveRow::redo()
+{
+
+}
+
+void RemoveRow::undo()
+{
+
+}

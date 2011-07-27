@@ -13,10 +13,14 @@
 class SetCellStitch : public QUndoCommand
 {
 public:
-     explicit SetCellStitch(CrochetScene *s, QPoint pos, QString newSt, QUndoCommand* parent = 0);
+    enum { Id = 1100 };
+    
+    SetCellStitch(CrochetScene *s, QPoint pos, QString newSt, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
+
+    int id() const { return Id; }
     
 private:
     QString oldStitch;
@@ -25,14 +29,17 @@ private:
     CrochetScene *scene;
 };
 
-
 class SetCellColor : public QUndoCommand
 {
 public:
-    explicit SetCellColor(CrochetScene *s, QPoint pos, QColor newCl, QUndoCommand* parent = 0);
+    enum { Id = 1110 };
+    
+    SetCellColor(CrochetScene *s, QPoint pos, QColor newCl, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
+
+    int id() const { return Id; }
     
 private:
     QColor oldColor;
@@ -44,7 +51,7 @@ private:
 class SetCellRotation : public QUndoCommand
 {
 public:
-    enum { Id = 1234 };
+    enum { Id = 1120 };
     
     SetCellRotation(CrochetScene *s, QPoint pos, qreal baseRot, qreal diff, QUndoCommand* parent = 0);
     
@@ -66,7 +73,7 @@ private:
 class SetCellCoordinates : public QUndoCommand
 {
 public:
-    enum { Id = 1235 };
+    enum { Id = 1130 };
 
     SetCellCoordinates(CrochetScene *s, QPoint pos, QPointF oldPos, QPointF newPos, QUndoCommand* parent = 0);
 
@@ -88,7 +95,7 @@ private:
 class SetCellScale : public QUndoCommand
 {
 public:
-    enum { Id = 1236 };
+    enum { Id = 1140 };
 
     SetCellScale(CrochetScene *s, QPoint pos, qreal scl, QUndoCommand* parent = 0);
     
@@ -109,51 +116,75 @@ private:
     
 };
 
-class AddIndicator : public QUndoCommand
-{
-public:
-    enum { Id = 1237 };
-
-    AddIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    int id() const { return Id; }
-
-private:
-    
-    QPointF position;
-    
-    CrochetScene *scene;
-};
-
-class RemoveIndicator : public QUndoCommand
-{
-public:
-    enum { Id = 1238 };
-
-    RemoveIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
-
-    void redo();
-    void undo();
-
-    int id() const { return Id; }
-
-private:
-    QPointF position;
-
-    CrochetScene *scene;
-};
-
 class AddStitch : public QUndoCommand
 {
+public:
+    enum { Id = 1150 };
 
+    AddStitch(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
+
+    void redo();
+    void undo();
+
+    int id() const { return Id; }
+
+private:
+    QPointF position;
+
+    CrochetScene *scene;
 };
 
 class RemoveStitch : public QUndoCommand
 {
+public:
+    enum { Id = 1160 };
 
+    RemoveStitch(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
+
+    void redo();
+    void undo();
+
+    int id() const { return Id; }
+
+private:
+    QPointF position;
+
+    CrochetScene *scene;
 };
 
+class AddRow : public QUndoCommand
+{
+public:
+    enum { Id = 1170 };
+
+    AddRow(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
+
+    void redo();
+    void undo();
+
+    int id() const { return Id; }
+
+private:
+    QPointF position;
+
+    CrochetScene *scene;
+};
+
+class RemoveRow : public QUndoCommand
+{
+public:
+    enum { Id = 1180 };
+
+    RemoveRow(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
+
+    void redo();
+    void undo();
+
+    int id() const { return Id; }
+
+private:
+    QPointF position;
+
+    CrochetScene *scene;
+};
 #endif //CROCHETCHARTCOMMANDS_H
