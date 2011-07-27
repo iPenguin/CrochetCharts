@@ -91,6 +91,21 @@ void CrochetScene::addIndicator(Indicator* i)
     mIndicators.append(i);
 }
 
+void CrochetScene::removeIndicator(QPointF pos)
+{
+    QGraphicsItem *item = itemAt(pos);
+    if(!item)
+        return;
+    Indicator *i = qgraphicsitem_cast<Indicator*>(item);
+    if(!i)
+        return;
+
+    mIndicators.removeOne(i);
+    removeItem(i);
+    delete i;
+    i = 0;
+}
+
 CrochetCell* CrochetScene::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);

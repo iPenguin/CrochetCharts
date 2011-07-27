@@ -75,6 +75,7 @@ public:
     void setFreeForm(bool value) { mFreeForm = value; }
 
     void addIndicator(Indicator *i);
+    void removeIndicator(QPointF pos);
 
 public slots:
     void updateRubberBand(int dx, int dy);

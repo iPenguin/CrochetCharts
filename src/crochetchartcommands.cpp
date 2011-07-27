@@ -208,9 +208,9 @@ bool SetCellScale::mergeWith(const QUndoCommand *command)
 
 
 /*************************************************\
-| SetCellScale                                    |
+| AddIndicator                                    |
 \*************************************************/
-AddIndicator::AddIndicator(CrochetScene *s, QPoint pos, QUndoCommand* parent)
+AddIndicator::AddIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     
@@ -220,12 +220,16 @@ AddIndicator::AddIndicator(CrochetScene *s, QPoint pos, QUndoCommand* parent)
     setText(QObject::tr("Add Indicator"));
 }
 
-void AddIndicator::undo()
-{
-    
-}
-
 void AddIndicator::redo()
 {
-    
+    Indicator *i = new Indicator(0, scene);
+    scene->addIndicator(i);
+    i->setPos(position);
 }
+
+void AddIndicator::undo()
+{
+    scene->removeIndicator(position);
+}
+
+

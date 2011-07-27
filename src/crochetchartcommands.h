@@ -114,7 +114,7 @@ class AddIndicator : public QUndoCommand
 public:
     enum { Id = 1237 };
 
-    AddIndicator(CrochetScene *s, QPoint pos, QUndoCommand* parent = 0);
+    AddIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -123,9 +123,37 @@ public:
 
 private:
     
-    QPoint position;
+    QPointF position;
     
     CrochetScene *scene;
+};
+
+class RemoveIndicator : public QUndoCommand
+{
+public:
+    enum { Id = 1238 };
+
+    RemoveIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
+
+    void redo();
+    void undo();
+
+    int id() const { return Id; }
+
+private:
+    QPointF position;
+
+    CrochetScene *scene;
+};
+
+class AddStitch : public QUndoCommand
+{
+
+};
+
+class RemoveStitch : public QUndoCommand
+{
+
 };
 
 #endif //CROCHETCHARTCOMMANDS_H
