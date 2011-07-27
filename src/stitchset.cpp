@@ -8,10 +8,7 @@
 #include <QDir>
 
 #include <QXmlStreamWriter> //write the xml file
-
-#include <QDomDocument> //read the xml file
-#include <QDomElement>
-#include <QDomNode>
+#include <QXmlStreamReader>
 
 #include <QDataStream> //read/write the set file w/icon data.
 

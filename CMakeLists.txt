@@ -35,7 +35,7 @@ find_package(Qt4 REQUIRED)
 option(UNIT_TESTING  "Build the test libraries for this software" OFF)
 option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
 option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
-option(SWS_DOCS "Create docbook documentation" ON)
+option(SWS_DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
 
 message("-------------------------------------------------------")
