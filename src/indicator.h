@@ -25,6 +25,7 @@ public:
     Indicator(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
     ~Indicator();
 
+    QRectF boundingRect();
     int type() const { return Type; }
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
