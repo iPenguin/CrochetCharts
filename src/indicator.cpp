@@ -6,9 +6,12 @@
 
 #include <QPainter>
 #include "settings.h"
+#include <QStyleOption>
 
-Indicator::Indicator()
+Indicator::Indicator(QGraphicsItem *parent, QGraphicsScene *scene)
+    : QGraphicsTextItem(parent, scene)
 {
+    setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
@@ -16,21 +19,31 @@ Indicator::~Indicator()
 {
 }
 
-QRectF Indicator::boundingRect() const
+QRectF Indicator::boundingRect()
 {
-    return QRectF(0,0,20,20);
+    QRectF rect = QGraphicsTextItem::boundingRect();
+    rect.setTopLeft(QPointF(-5, -5));
+    return rect;
 }
 
 void Indicator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
+    QString style = Settings::inst()->value("chartRowIndicator").toString();
     QString color = Settings::inst()->value("chartIndicatorColor").toString();
-    painter->setPen(QColor(color));
-    painter->setBackgroundMode(Qt::OpaqueMode);
-    painter->setBrush(QBrush(QColor(color)));
-    painter->drawEllipse(1,1, 20,20);
-
-    //QGraphicsTextItem::paint(painter, option, widget);
+    if(style == "Dots" || style == "Dots and Text") {
+        painter->setPen(QColor(color));
+        painter->setBackgroundMode(Qt::OpaqueMode);
+        painter->setBrush(QBrush(QColor(color)));
+        painter->drawEllipse(-5,-5, 5,5);
+    }
     
+    if(style == "Text" || style == "Dots and Text")
+        QGraphicsTextItem::paint(painter, option, widget);
+}
+
+void Indicator::focusOutEvent(QFocusEvent *event)
+{
+    setTextInteractionFlags(Qt::NoTextInteraction);
+    //emit lostFocus(this);
+    QGraphicsTextItem::focusOutEvent(event);
 }

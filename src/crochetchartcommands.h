@@ -109,4 +109,23 @@ private:
     
 };
 
+class AddIndicator : public QUndoCommand
+{
+public:
+    enum { Id = 1237 };
+
+    AddIndicator(CrochetScene *s, QPoint pos, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    int id() const { return Id; }
+
+private:
+    
+    QPoint position;
+    
+    CrochetScene *scene;
+};
+
 #endif //CROCHETCHARTCOMMANDS_H

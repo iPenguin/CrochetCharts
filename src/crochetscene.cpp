@@ -85,6 +85,12 @@ void CrochetScene::updateFreeForm(bool state)
     mFreeForm = state;
 }
 
+void CrochetScene::addIndicator(Indicator* i)
+{
+    addItem(i);
+    mIndicators.append(i);
+}
+
 CrochetCell* CrochetScene::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
@@ -667,7 +673,7 @@ void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
     qreal angle1 = scenePosToAngle(rel1);
     qreal angle2 = scenePosToAngle(rel2);
-    ;
+
     mUndoStack.push(new SetCellRotation(this, findGridPosition(mCurCell), mCurCellRotation, (angle1 - angle2)));
 
 }
@@ -703,7 +709,7 @@ void CrochetScene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     
 void CrochetScene::indicatorModeMousePress(QGraphicsSceneMouseEvent *e)
 {
-
+    Q_UNUSED(e);
 }
 
 void CrochetScene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -742,13 +748,19 @@ void CrochetScene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
         return;
     }
 
-    Indicator *i = new Indicator();
-    addItem(i);
-    mIndicators.append(i);
-    QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
-//FIXME: dont hard code the offset for the indicator.
-    pt = QPointF(pt.x() - 10, pt.y() - 10);
-    i->setPos(pt);
-    //connect(i, SIGNAL(lostFocus(Indicator*)), this, SLOT(editorLostFocus(Indicator*)));
-    //connect(i, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
+    if(!mCurIndicator) {
+        Indicator *i = new Indicator();
+        addItem(i);
+        i->setTextInteractionFlags(Qt::TextEditorInteraction);
+        mIndicators.append(i);
+        QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
+    //FIXME: dont hard code the offset for the indicator.
+        pt = QPointF(pt.x() - 10, pt.y() - 10);
+        i->setPos(pt);
+        //connect(i, SIGNAL(lostFocus(Indicator*)), this, SLOT(editorLostFocus(Indicator*)));
+        //connect(i, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
+    } else {
+        mCurIndicator->setTextInteractionFlags(Qt::TextEditorInteraction);
+    }
+    
 }

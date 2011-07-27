@@ -5,29 +5,32 @@
 #ifndef INDICATOR_H
 #define INDICATOR_H
 
-#include <QGraphicsItem>
+#include <QGraphicsTextItem>
+
+#include <QLineEdit>
 
 class QFocusEvent;
 class QGraphicsItem;
 class QGraphicsScene;
 class QGraphicsSceneMouseEvent;
+class QFocusEvent;
 
-class Indicator : public QGraphicsItem
+class Indicator : public QGraphicsTextItem
 {
 
     friend class SaveFile;
 public:
     enum {Type = UserType + 15 };
 
-    Indicator();
+    Indicator(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
     ~Indicator();
 
+    QRectF boundingRect();
     int type() const { return Type; }
-    QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    QString text() { return mText; }
-    void setText(QString t) { mText = t; }
+    QString text() { return toPlainText(); }
+    void setText(QString t) { setPlainText(t); }
 
     QColor bgColor() { return mBgColor; }
     void setBgColor(QColor c) { mBgColor = c; }
@@ -35,8 +38,10 @@ public:
     QColor textColor() { return mTextColor; }
     void setTextColor(QColor c) { mTextColor = c; }
 
+protected:
+    void focusOutEvent(QFocusEvent *event);
+    
 private:
-    QString mText;
 
     QColor mBgColor;
     QColor mTextColor;

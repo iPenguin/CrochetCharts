@@ -74,6 +74,8 @@ public:
     bool isFreeForm() { return mFreeForm; }
     void setFreeForm(bool value) { mFreeForm = value; }
 
+    void addIndicator(Indicator *i);
+
 public slots:
     void updateRubberBand(int dx, int dy);
     void updateFreeForm(bool state);
@@ -97,8 +99,8 @@ protected:
     virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
     virtual void    keyPressEvent ( QKeyEvent * keyEvent )
     virtual void    keyReleaseEvent ( QKeyEvent * keyEvent )
-    virtual void    mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * e )
     virtual void    wheelEvent ( QGraphicsSceneWheelEvent * wheelEvent )
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
 */
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mousePressEvent(QGraphicsSceneMouseEvent *e);

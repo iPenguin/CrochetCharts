@@ -205,3 +205,27 @@ bool SetCellScale::mergeWith(const QUndoCommand *command)
     setText(QObject::tr("Change cell position"));
     return true;
 }
+
+
+/*************************************************\
+| SetCellScale                                    |
+\*************************************************/
+AddIndicator::AddIndicator(CrochetScene *s, QPoint pos, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    
+    position = pos;
+    scene = s;
+    
+    setText(QObject::tr("Add Indicator"));
+}
+
+void AddIndicator::undo()
+{
+    
+}
+
+void AddIndicator::redo()
+{
+    
+}
