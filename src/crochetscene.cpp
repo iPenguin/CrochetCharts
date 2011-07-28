@@ -163,11 +163,7 @@ void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
         }
     }
     
-    addItem(c);
-    mGrid[row].append(c);
-    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
-    connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
+    insertCell(QPoint(mGrid[row].count(), row), c);
 
     int col = mGrid[row].count() -1;
     setCellPosition(row, col, c, mGrid[row].count());
@@ -186,6 +182,9 @@ void CrochetScene::insertCell(QPoint p, CrochetCell* c)
     //TODO: simplify the connect() statements...
     addItem(c);
     mGrid[p.y()].insert(p.x(), c);
+    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
+    connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
+    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
 }
 
 void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)

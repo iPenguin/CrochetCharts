@@ -129,6 +129,7 @@ public:
     int id() const { return Id; }
 
 private:
+    CrochetCell *c;
     QPointF position;
 
     CrochetScene *scene;
