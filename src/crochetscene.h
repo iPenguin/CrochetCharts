@@ -47,7 +47,9 @@ public:
 
     void appendCell(int row, CrochetCell *c, bool fromSave = false);
 
-    //p(x = column, y = row)
+    /**
+     * p(x = column, y = row)
+     */
     void insertCell(QPoint p, CrochetCell *c);
     
     int rowCount();
@@ -59,6 +61,8 @@ public:
     CrochetCell* cell(QPoint position);
 
     void removeCell(int row, int column);
+    void removeCell(CrochetCell *c);
+
     void createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch);
 
     void setEditMode(EditMode mode) { mMode = mode; }

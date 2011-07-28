@@ -209,21 +209,22 @@ bool SetCellScale::mergeWith(const QUndoCommand *command)
 /*************************************************\
 | AddStitch                                       |
 \*************************************************/
-AddStitch::AddStitch(CrochetScene* s, QPointF pos, QUndoCommand* parent)
+AddStitch::AddStitch(CrochetScene* s, QPoint pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
+    position = pos;
     c = new CrochetCell();
     scene = s;
 }
 
 void AddStitch::redo()
 {
-    //scene->addCell(c);
+    scene->insertCell(position, c);
 }
 
 void AddStitch::undo()
 {
-    //scene->removeCell(c);
+    scene->removeCell(c);
 }
 
 /*************************************************\

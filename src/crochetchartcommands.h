@@ -121,7 +121,7 @@ class AddStitch : public QUndoCommand
 public:
     enum { Id = 1150 };
 
-    AddStitch(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
+    AddStitch(CrochetScene *s, QPoint pos, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -130,7 +130,7 @@ public:
 
 private:
     CrochetCell *c;
-    QPointF position;
+    QPoint position;
 
     CrochetScene *scene;
 };

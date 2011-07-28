@@ -138,8 +138,20 @@ void CrochetScene::removeCell(int row, int column)
     if(mGrid[row].count() <= column)
         return;
 
-    delete mGrid[row][column];
+    CrochetCell *c = mGrid[row][column];
+    removeItem(c);
     mGrid[row].removeAt(column);
+    delete c;
+    c = 0;
+}
+
+void CrochetScene::removeCell(CrochetCell *c)
+{
+    removeItem(c);
+    foreach(QList<CrochetCell*> row, mGrid) {
+        if (row.contains(c))
+                row.removeOne(c);
+    }
 }
 
 int CrochetScene::rowCount()
