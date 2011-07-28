@@ -16,8 +16,8 @@
 AddIndicator::AddIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
-
     position = pos;
+    item = new Indicator();
     scene = s;
 
     setText(QObject::tr("Add indicator"));
@@ -25,15 +25,14 @@ AddIndicator::AddIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent)
 
 void AddIndicator::redo()
 {
-    Indicator *i = new Indicator(0, scene);
-    scene->addIndicator(i);
-    i->setPos(position);
-    i->setTextInteractionFlags(Qt::TextEditorInteraction);
+    scene->addIndicator(item);
+    item->setPos(position);
+    item->setTextInteractionFlags(Qt::TextEditorInteraction);
 }
 
 void AddIndicator::undo()
 {
-    scene->removeIndicator(position);
+    scene->removeIndicator(item);
 }
 
 /*************************************************\
@@ -42,38 +41,32 @@ void AddIndicator::undo()
 RemoveIndicator::RemoveIndicator(CrochetScene *s, Indicator *i, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
-    position = i->pos();
-    text = i->text();
-    bgColor = i->bgColor();
-    textColor = i->textColor();
+    item = i;
     scene = s;
-
+    position = i->pos();
     setText(QObject::tr("Remove indicator"));
 }
 
 void RemoveIndicator::redo()
 {
-    scene->removeIndicator(position);
+    scene->removeIndicator(item);
 }
 
 void RemoveIndicator::undo()
 {
-    Indicator *i = new Indicator(0, scene);
-    scene->addIndicator(i);
-    i->setPos(position);
-    i->setText(text);
-    i->setBgColor(bgColor);
-    i->setTextColor(textColor);
-    i->setTextInteractionFlags(Qt::TextEditorInteraction);
+    scene->addIndicator(item);
+    item->setPos(position);
+    item->setTextInteractionFlags(Qt::TextEditorInteraction);
 }
 
 /*************************************************\
 | MoveIndicator                                   |
 \*************************************************/
-MoveIndicator::MoveIndicator(CrochetScene* s, QPointF origPos, QPointF newPos, QUndoCommand* parent)
+MoveIndicator::MoveIndicator(CrochetScene* s, Indicator *item, QPointF newPos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
-    origPosition = origPos;
+    i = item;
+    origPosition = i->pos();
     newPosition = newPos;
 
     scene = s;
@@ -83,21 +76,11 @@ MoveIndicator::MoveIndicator(CrochetScene* s, QPointF origPos, QPointF newPos, Q
 
 void MoveIndicator::redo()
 {
-    Indicator *i = qgraphicsitem_cast<Indicator*>(scene->itemAt(origPosition));
-    if(!i) {
-        qWarning() << "MoveIndicator::redo: Cannot find Indicator at " << origPosition;
-        return;
-    }
     i->setPos(newPosition);
 }
 
 void MoveIndicator::undo()
 {
-    Indicator *i = qgraphicsitem_cast<Indicator*>(scene->itemAt(newPosition));
-    if(!i) {
-        qWarning() << "MoveIndicator::undo: Cannot find Indicator at " << newPosition;
-        return;
-    }
     i->setPos(origPosition);
 }
 
@@ -122,17 +105,12 @@ bool MoveIndicator::mergeWith(const QUndoCommand *command)
 /*************************************************\
 | ChangeTextIndicator                             |
 \*************************************************/
-ChangeTextIndicator::ChangeTextIndicator(CrochetScene* s, QPointF pos, QString text, QUndoCommand* parent)
+ChangeTextIndicator::ChangeTextIndicator(CrochetScene* s, Indicator *item, QString text, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
-    position = pos;
-    
-    Indicator *i = qgraphicsitem_cast<Indicator*>(scene->itemAt(position));
-    if(!i) {
-        qWarning() << "ChangeTextIndicator::ChangeTextIndicator: Cannot find Indicator at " << position;
-        return;
-    }
+    i = item;
+
     origText = i->text();
     newText = text;
 
@@ -141,20 +119,10 @@ ChangeTextIndicator::ChangeTextIndicator(CrochetScene* s, QPointF pos, QString t
 
 void ChangeTextIndicator::redo()
 {
-    Indicator *i = qgraphicsitem_cast<Indicator*>(scene->itemAt(position));
-    if(!i) {
-        qWarning() << "ChangeTextIndicator::redo: Cannot find Indicator at " << position;
-        return;
-    }
     i->setText(newText);
 }
 
 void ChangeTextIndicator::undo()
 {
-    Indicator *i = qgraphicsitem_cast<Indicator*>(scene->itemAt(position));
-    if(!i) {
-        qWarning() << "ChangeTextIndicator::undo: Cannot find Indicator at " << position;
-        return;
-    }
     i->setText(origText);
 }

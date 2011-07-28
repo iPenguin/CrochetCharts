@@ -32,18 +32,18 @@ void Indicator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QString style = Settings::inst()->value("chartRowIndicator").toString();
     QString color = Settings::inst()->value("chartIndicatorColor").toString();
     
-    if(style == "Text" || style == "Dots and Text") {
-        QStyleOptionGraphicsItem opt = *option;
-        opt.rect.setLeft(opt.rect.left() + 20);
-        QGraphicsTextItem::paint(painter, &opt, widget);
-    }
-    
     if(style == "Dots" || style == "Dots and Text") {
         painter->setPen(QColor(color));
         painter->setBackgroundMode(Qt::OpaqueMode);
         painter->setBrush(QBrush(QColor(color)));
         painter->drawEllipse(0,0, 15,15);
         painter->setBackgroundMode(Qt::TransparentMode);
+    }
+
+    if(style == "Text" || style == "Dots and Text") {
+        QStyleOptionGraphicsItem opt = *option;
+        opt.rect.setLeft(opt.rect.left() + 20);
+        QGraphicsTextItem::paint(painter, &opt, widget);
     }
 }
 

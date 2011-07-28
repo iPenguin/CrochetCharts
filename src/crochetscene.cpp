@@ -92,6 +92,13 @@ void CrochetScene::addIndicator(Indicator* i)
     mIndicators.append(i);
 }
 
+void CrochetScene::removeIndicator(Indicator *i)
+{
+    removeItem(i);
+    mIndicators.removeOne(i);
+    update();
+}
+
 void CrochetScene::removeIndicator(QPointF pos)
 {
     QGraphicsItem *item = itemAt(pos);
@@ -747,7 +754,7 @@ void CrochetScene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
     QPointF delta =  QPointF(e->scenePos().x() - start.x(), e->scenePos().y() - start.y());
     QPointF newPos = QPointF(mStartPos.x() + delta.x(), mStartPos.y() + delta.y());
     
-    undoStack()->push(new MoveIndicator(this, mCurIndicator->pos(), newPos));
+    undoStack()->push(new MoveIndicator(this, mCurIndicator, newPos));
 
 }
 

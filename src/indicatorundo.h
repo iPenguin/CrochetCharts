@@ -27,9 +27,9 @@ public:
     int id() const { return Id; }
 
 private:
-
     QPointF position;
 
+    Indicator *item;
     CrochetScene *scene;
 };
 
@@ -47,10 +47,7 @@ public:
 
 private:
     QPointF position;
-    QString text;
-
-    QColor bgColor;
-    QColor textColor;
+    Indicator *item;
 
     CrochetScene *scene;
 };
@@ -60,7 +57,7 @@ class MoveIndicator : public QUndoCommand
 public:
     enum { Id = 2220 };
 
-    MoveIndicator(CrochetScene *s, QPointF origPos, QPointF newPos, QUndoCommand* parent = 0);
+    MoveIndicator(CrochetScene *s, Indicator *item, QPointF newPos, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -70,6 +67,7 @@ public:
     int id() const { return Id; }
 
 private:
+    Indicator *i;
     QPointF origPosition;
     QPointF newPosition;
 
@@ -81,7 +79,7 @@ class ChangeTextIndicator : public QUndoCommand
 public:
     enum { Id = 2230 };
 
-    ChangeTextIndicator(CrochetScene *s, QPointF pos, QString text, QUndoCommand *parent = 0);
+    ChangeTextIndicator(CrochetScene *s, Indicator *item, QString text, QUndoCommand *parent = 0);
 
     void redo();
     void undo();
@@ -89,13 +87,11 @@ public:
     int id() const { return Id; }
 
 private:
+    Indicator *i;
     QString newText;
     QString origText;
 
-    QPointF position;
-
     CrochetScene *scene;
-    
 };
 
 #endif //INDICATORUNDO_H
