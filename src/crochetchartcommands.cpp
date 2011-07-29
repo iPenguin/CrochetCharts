@@ -221,14 +221,15 @@ AddCell::AddCell(CrochetScene* s, QPoint pos, QUndoCommand* parent)
 void AddCell::redo()
 {
     scene->addCell(position, c);
-    qDebug() <<c << scene->grid();
     scene->setCellPosition(position.y(), position.x(), c, scene->grid()[position.y()].count(), true);
+    scene->redistributeCells(position.y());
 }
 
 void AddCell::undo()
 {
     scene->removeCell(c);
-    scene->setCellPosition(position.y(), position.x(), c, scene->grid()[position.y()].count(), true);
+    //scene->setCellPosition(position.y(), position.x(), c, scene->grid()[position.y()].count(), true);
+    scene->redistributeCells(position.y());
 }
 
 /*************************************************\
@@ -238,18 +239,23 @@ RemoveCell::RemoveCell(CrochetScene* s, CrochetCell *cell, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     c = cell;
-    position = scene->findGridPosition(cell);
     scene = s;
+    position = scene->findGridPosition(cell);
+
 }
 
 void RemoveCell::redo()
 {
     scene->removeCell(c);
+    //scene->setCellPosition(position.y(), position.x(), c, scene->grid()[position.y()].count(), true);
+    scene->redistributeCells(position.y());
 }
 
 void RemoveCell::undo()
 {
     scene->addCell(position, c);
+    scene->setCellPosition(position.y(), position.x(), c, scene->grid()[position.y()].count(), true);
+    scene->redistributeCells(position.y());
 }
 
 /*************************************************\

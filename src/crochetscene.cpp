@@ -148,9 +148,9 @@ void CrochetScene::removeCell(int row, int column)
 void CrochetScene::removeCell(CrochetCell *c)
 {
     removeItem(c);
-    foreach(QList<CrochetCell*> row, mGrid) {
-        if (row.contains(c))
-                row.removeOne(c);
+    for(int i = 0; i < mGrid.count(); ++i) {
+        if (mGrid[i].contains(c))
+            mGrid[i].removeOne(c);
     }
 }
 
@@ -589,16 +589,12 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
     } else {
         if(!mCurCell)
             return;
-
-        CrochetCell *c = mGrid[y].takeAt(x);
-        removeItem(c);
-        delete c;
-        c = 0;
+        qDebug() << "remove the cell";
+        undoStack()->push(new RemoveCell(this, mCurCell));
         mCurCell = 0;
         mHighlightCell = 0;
+        qDebug() << "remove the cell end";
     }
-
-    redistributeCells(y);
 }
 
 void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
