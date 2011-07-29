@@ -22,9 +22,9 @@ class QXmlStreamWriter;
 #endif //Q_WS_MAC
 
 class QDataStream;
-
 class CrochetTab;
 
+//TODO: break data into pieces that can be threaded.
 class SaveFile
 {
 

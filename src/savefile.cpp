@@ -322,7 +322,12 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             isFreeForm = (bool)stream->readElementText().toInt();
         } else if(tag == "cell") {
             SaveThread *sth = new SaveThread(tab, stream);
+            QThread bgThread;
+            sth->moveToThread(&bgThread);
+            bgThread.start();
             sth->run();
+            bgThread.quit();
+            bgThread.wait();
         } else if(tag == "indicator") {
             loadIndicator(tab, stream);
         }
