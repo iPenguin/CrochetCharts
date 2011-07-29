@@ -9,6 +9,14 @@
 #pages: Mac specific html help pages
 #htmlhelp: MS Windows specific html help pages
 
+MACRO(MAKE_WINDOWS_PATH pathname)
+  # An extra \\ escape is necessary to get a \ through CMake's processing.
+  STRING(REPLACE "/" "\\" ${pathname} "${${pathname}}")
+  # Enclose with UNESCAPED quotes.  This means we need to escape our
+  # quotes once here, i.e. with \"
+  SET(${pathname} ${${pathname}})
+ENDMACRO(MAKE_WINDOWS_PATH)
+
 function(DOCBOOK_GENERATE format input version)
 
     set(working "${CMAKE_CURRENT_BINARY_DIR}/${format}")
@@ -24,11 +32,10 @@ function(DOCBOOK_GENERATE format input version)
     elseif(WIN32)
         set(xsltproc "xsltproc")
         set(fop "fop.cmd")
-        set(docbookBasePath "C:\\cygwin\\usr\\share\\xml\\docbook\\stylesheet\\docbook-xsl-ns")
-        set(hhc "C:\\Documents and Settings\\Brian Milco\\My Documents\\crochet.git\\bin\\hhc.exe")
+        set(docbookBasePath "/usr/share/xml/docbook/stylesheet/docbook-xsl-ns")
+        set(hhc "hhc")
     else()
         set(fop "/usr/bin/fop")
-        set(hhc "${CMAKE_SOURCE_DIR}/bin/hhc.exe")
     endif()
 
     if(format STREQUAL "html")
@@ -72,8 +79,10 @@ function(DOCBOOK_GENERATE format input version)
                 WORKING_DIRECTORY "${working}"
                 OUTPUT_VARIABLE _output)
            
+            #hhc requires a Windows path.
+            MAKE_WINDOWS_PATH(working)
             execute_process(
-                COMMAND "${hhc}" ${working}/htmlhelp.hhp
+                COMMAND "${hhc}" "${working}\\htmlhelp.hhp"
                 WORKING_DIRECTORY "${working}"
                 OUTPUT_VARIABLE _output)
     else()
