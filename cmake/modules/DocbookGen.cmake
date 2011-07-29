@@ -25,8 +25,10 @@ function(DOCBOOK_GENERATE format input version)
         set(xsltproc "xsltproc")
         set(fop "fop.cmd")
         set(docbookBasePath "C:\\cygwin\\usr\\share\\xml\\docbook\\stylesheet\\docbook-xsl-ns")
+        set(hhc "C:\\Documents and Settings\\Brian Milco\\My Documents\\crochet.git\\bin\\hhc.exe")
     else()
         set(fop "/usr/bin/fop")
+        set(hhc "${CMAKE_SOURCE_DIR}/bin/hhc.exe")
     endif()
 
     if(format STREQUAL "html")
@@ -66,10 +68,14 @@ function(DOCBOOK_GENERATE format input version)
             set(xslFile "${docbookBasePath}/htmlhelp/htmlhelp.xsl")
             
             execute_process(
-                COMMAND "/usr/bin/xsltproc" ${xslFile} "${input}"
+                COMMAND "${xsltproc}" "${xslFile}" "${input}"
                 WORKING_DIRECTORY "${working}"
                 OUTPUT_VARIABLE _output)
-        
+           
+            execute_process(
+                COMMAND "${hhc}" ${working}/htmlhelp.hhp
+                WORKING_DIRECTORY "${working}"
+                OUTPUT_VARIABLE _output)
     else()
         message ( FATAL_ERROR "${format} is not supported by this cmake module. Please choose from html, pdf, pages, or htmlhelp" )
 
