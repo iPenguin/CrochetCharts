@@ -538,23 +538,21 @@ void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
     
-    QGraphicsItem *gi = itemAt(e->scenePos());
-    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(!c)
+    if(!mCurCell)
         return;
-    if(c->color() != mEditBgColor) {
-        mUndoStack.push(new SetCellColor(this, findGridPosition(c), mEditBgColor));
-    }
+    
+    if(mCurCell->color() != mEditBgColor)
+        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
 }
 
 void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(mCurCell) {
-        if(mCurCell->color() != mEditBgColor)
-            mUndoStack.push(new SetCellColor(this, findGridPosition(mCurCell), mEditBgColor));
-    }
-    
+    if(!mCurCell)
+        return;
+
+    if(mCurCell->color() != mEditBgColor)
+        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
 }
 
 void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
@@ -628,7 +626,7 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
         mRubberBand->setGeometry(rect.normalized());
     } else if (mCurCell) {
         QPointF curPos =  QPointF(e->scenePos().x() - mDiff.width(), e->scenePos().y() - mDiff.height());
-        mUndoStack.push(new SetCellCoordinates(this, findGridPosition(mCurCell), mStartPos, curPos));
+        mUndoStack.push(new SetCellCoordinates(this, mCurCell, mStartPos, curPos));
     }
 }
 
@@ -659,38 +657,38 @@ void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
     
-    QGraphicsItem *gi = itemAt(e->scenePos());
-    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(!c)
+    if(!mCurCell)
         return;
     
-    if(c->name() != mEditStitch)
-        mUndoStack.push(new SetCellStitch(this, findGridPosition(c), mEditStitch));
+    if(mCurCell->name() != mEditStitch)
+        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
 }
 
 void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
     //FIXME: foreach(stitch in selection()) create an undo group event.
-    if(mCurCell) {
-        if(mCurCell->name() != mEditStitch)
-            mUndoStack.push(new SetCellStitch(this, findGridPosition(mCurCell), mEditStitch));
-    }
+    if(!mCurCell)
+        return;
+        
+    if(mCurCell->name() != mEditStitch)
+        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
     
     mCurCell = 0;
 }
 
 void CrochetScene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
 {
-    if(mCurCell) {
-        qreal value = acos(mCurCell->transform().m11()) / M_PI * 180;
-        if(e->scenePos().x() < 0 && e->scenePos().y() >= 0)
-            mCurCellRotation = 180 - value;
-        else if(e->scenePos().x() < 0 && e->scenePos().y() < 0)
-            mCurCellRotation = 180 - value;
-        else
-            mCurCellRotation = value;
-    }
+    if(!mCurCell)
+        return;
+    
+    qreal value = acos(mCurCell->transform().m11()) / M_PI * 180;
+    if(e->scenePos().x() < 0 && e->scenePos().y() >= 0)
+        mCurCellRotation = 180 - value;
+    else if(e->scenePos().x() < 0 && e->scenePos().y() < 0)
+        mCurCellRotation = 180 - value;
+    else
+        mCurCellRotation = value;
    
 }
 
@@ -707,7 +705,7 @@ void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     qreal angle1 = scenePosToAngle(rel1);
     qreal angle2 = scenePosToAngle(rel2);
 
-    mUndoStack.push(new SetCellRotation(this, findGridPosition(mCurCell), mCurCellRotation, (angle1 - angle2)));
+    mUndoStack.push(new SetCellRotation(this, mCurCell, mCurCellRotation, (angle1 - angle2)));
 
 }
 
@@ -731,7 +729,7 @@ void CrochetScene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
     
     qreal scale = (mStartPos.manhattanLength() - cur.manhattanLength()) / 64;
 
-    mUndoStack.push(new SetCellScale(this, findGridPosition(mCurCell), scale));
+    mUndoStack.push(new SetCellScale(this, mCurCell, scale));
     mStartPos = e->scenePos();
 }
 

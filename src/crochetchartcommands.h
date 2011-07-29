@@ -15,7 +15,7 @@ class SetCellStitch : public QUndoCommand
 public:
     enum { Id = 1100 };
     
-    SetCellStitch(CrochetScene *s, QPoint pos, QString newSt, QUndoCommand* parent = 0);
+    SetCellStitch(CrochetScene *s, CrochetCell *cell, QString newSt, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -25,7 +25,7 @@ public:
 private:
     QString oldStitch;
     QString newStitch;
-    QPoint position;
+    CrochetCell *c;
     CrochetScene *scene;
 };
 
@@ -34,7 +34,7 @@ class SetCellColor : public QUndoCommand
 public:
     enum { Id = 1110 };
     
-    SetCellColor(CrochetScene *s, QPoint pos, QColor newCl, QUndoCommand* parent = 0);
+    SetCellColor(CrochetScene *s, CrochetCell *cell, QColor newCl, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -44,7 +44,7 @@ public:
 private:
     QColor oldColor;
     QColor newColor;
-    QPoint position;
+    CrochetCell *c;
     CrochetScene *scene;
 };
 
@@ -53,7 +53,7 @@ class SetCellRotation : public QUndoCommand
 public:
     enum { Id = 1120 };
     
-    SetCellRotation(CrochetScene *s, QPoint pos, qreal baseRot, qreal diff, QUndoCommand* parent = 0);
+    SetCellRotation(CrochetScene *s, CrochetCell *cell, qreal baseRot, qreal diff, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -64,7 +64,7 @@ public:
     
 private:
     qreal baseRotation;
-    QPoint position;
+    CrochetCell *c;
     qreal delta;
     
     CrochetScene *scene;
@@ -75,7 +75,7 @@ class SetCellCoordinates : public QUndoCommand
 public:
     enum { Id = 1130 };
 
-    SetCellCoordinates(CrochetScene *s, QPoint pos, QPointF oldPos, QPointF newPos, QUndoCommand* parent = 0);
+    SetCellCoordinates(CrochetScene *s, CrochetCell *cell, QPointF oldPos, QPointF newPos, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -87,7 +87,7 @@ public:
 private:
     QPointF oldCoord;
     QPointF newCoord;
-    QPoint position;
+    CrochetCell *c;
 
     CrochetScene *scene;
 };
@@ -97,7 +97,7 @@ class SetCellScale : public QUndoCommand
 public:
     enum { Id = 1140 };
 
-    SetCellScale(CrochetScene *s, QPoint pos, qreal scl, QUndoCommand* parent = 0);
+    SetCellScale(CrochetScene *s, CrochetCell *cell, qreal scl, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -108,10 +108,11 @@ public:
     
 private:
     qreal delta;
-    QPoint position;
+    
     QList<qreal> deltas;
     QList<qreal> baseSize;
     
+    CrochetCell *c;
     CrochetScene *scene;
     
 };
