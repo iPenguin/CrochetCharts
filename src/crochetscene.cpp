@@ -175,7 +175,7 @@ void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
         }
     }
     
-    insertCell(QPoint(mGrid[row].count(), row), c);
+    addCell(QPoint(mGrid[row].count(), row), c);
 
     int col = mGrid[row].count() -1;
     setCellPosition(row, col, c, mGrid[row].count());
@@ -189,7 +189,7 @@ void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
     }
 }
 
-void CrochetScene::insertCell(QPoint p, CrochetCell* c)
+void CrochetScene::addCell(QPoint p, CrochetCell* c)
 {
     //TODO: simplify the connect() statements...
     addItem(c);
@@ -581,11 +581,10 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
     if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
-        CrochetCell *c = new CrochetCell();
+        AddCell *addCell = new AddCell(this, QPoint(x, y));
+        undoStack()->push(addCell);
+        CrochetCell *c = addCell->cell();
         c->setStitch(mEditStitch, (y % 2));
-        c->setColor();
-        insertCell(QPoint(x, y), c);
-        setCellPosition(y, x, c, mGrid[y].count(), true);
 
     } else {
         if(!mCurCell)

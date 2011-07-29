@@ -207,44 +207,49 @@ bool SetCellScale::mergeWith(const QUndoCommand *command)
 }
 
 /*************************************************\
-| AddStitch                                       |
+| AddCell                                         |
 \*************************************************/
-AddStitch::AddStitch(CrochetScene* s, QPoint pos, QUndoCommand* parent)
+AddCell::AddCell(CrochetScene* s, QPoint pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     position = pos;
     c = new CrochetCell();
+    c->setColor();
     scene = s;
 }
 
-void AddStitch::redo()
+void AddCell::redo()
 {
-    scene->insertCell(position, c);
+    scene->addCell(position, c);
+    qDebug() <<c << scene->grid();
+    scene->setCellPosition(position.y(), position.x(), c, scene->grid()[position.y()].count(), true);
 }
 
-void AddStitch::undo()
+void AddCell::undo()
+{
+    scene->removeCell(c);
+    scene->setCellPosition(position.y(), position.x(), c, scene->grid()[position.y()].count(), true);
+}
+
+/*************************************************\
+| RemoveCell                                      |
+\*************************************************/
+RemoveCell::RemoveCell(CrochetScene* s, CrochetCell *cell, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    c = cell;
+    position = scene->findGridPosition(cell);
+    scene = s;
+}
+
+void RemoveCell::redo()
 {
     scene->removeCell(c);
 }
 
-/*************************************************\
-| RemoveStitch                                    |
-\*************************************************/
-RemoveStitch::RemoveStitch(CrochetScene* s, QPointF pos, QUndoCommand* parent)
-    : QUndoCommand(parent)
+void RemoveCell::undo()
 {
-    position = pos;
-    scene = s;
-}
-
-void RemoveStitch::redo()
-{
- 
-}
-
-void RemoveStitch::undo()
-{
- 
+    scene->addCell(position, c);
 }
 
 /*************************************************\

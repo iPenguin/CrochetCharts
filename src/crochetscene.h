@@ -20,6 +20,8 @@ class CrochetScene : public QGraphicsScene
     friend class SaveFile;
     friend class SaveThread;
     friend class SetCellRotation;
+    friend class AddCell;
+    friend class RemoveCell;
 public:
 
     enum EditMode {
@@ -50,7 +52,7 @@ public:
     /**
      * p(x = column, y = row)
      */
-    void insertCell(QPoint p, CrochetCell *c);
+    void addCell(QPoint p, CrochetCell *c);
     
     int rowCount();
     int columnCount(int row);
@@ -82,6 +84,8 @@ public:
     void removeIndicator(Indicator *i);
     void removeIndicator(QPointF pos);
 
+    QList<QList<CrochetCell *> > grid() { return mGrid; }
+    
 public slots:
     void updateRubberBand(int dx, int dy);
     void updateFreeForm(bool state);
