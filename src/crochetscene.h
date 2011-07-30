@@ -177,13 +177,18 @@ private:
 
     int mStitchWidth;
 
-    //Used in the mouse*Event()s to keep the mouse movements on the same cell.
+    /**
+     * Used in the mouse*Event()s to keep the mouse movements on the same cell.
+     */
     CrochetCell *mCurCell;
-    QPointF mStartPos;
-
+    QPointF mCellStartPos;
+    QPointF mLeftButtonDownPos;
+    
     Indicator *mCurIndicator;
     
-    //The difference between where the user clicked on the object and the (x,y) of the object.
+    /**
+     * The difference between where the user clicked on the object and the (x,y) of the object.
+     */
     QSizeF mDiff;
     CrochetCell *mHighlightCell;
     qreal mCurCellRotation;

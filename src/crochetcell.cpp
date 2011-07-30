@@ -62,6 +62,10 @@ QVariant CrochetCell::itemChange(GraphicsItemChange change, const QVariant &valu
 
 void CrochetCell::setScale(qreal newScale)
 {
+    qDebug() << "cell setScale" << newScale;
+    if(newScale < 0.1)
+        newScale = 0.1;
+    
     if(newScale != mScale) {
         mScale = newScale;
         QTransform trans =  transform().scale(1, newScale);

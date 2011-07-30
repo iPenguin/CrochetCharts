@@ -26,7 +26,10 @@
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent),
     flatWidth(64), flatHeight(64),
-    mCurCell(0), mStartPos(QPointF(0,0)), mCurIndicator(0),
+    mCurCell(0),
+    mCellStartPos(QPointF(0,0)),
+    mLeftButtonDownPos(QPointF(0,0)),
+    mCurIndicator(0),
     mDiff(QSizeF(0,0)), mHighlightCell(0),
     mRubberBand(0), mRubberBandStart(QPointF(0,0)), mMoving(false),
     mRowSpacing(8), mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode),
@@ -394,15 +397,20 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
     QGraphicsItem *gi = itemAt(e->scenePos());
     CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-    Indicator *i = qgraphicsitem_cast<Indicator*>(gi);
+
+    mLeftButtonDownPos = e->buttonDownPos(Qt::LeftButton);
     
     if(c) {
         mCurCell = c;
-        mStartPos = mCurCell->pos();
-        mDiff = QSizeF(e->scenePos().x() - mStartPos.x(), e->scenePos().y() - mStartPos.y());
-    } else if(i) {
-        mCurIndicator = i;
-        mStartPos = i->pos();
+        mCellStartPos = mCurCell->pos();
+        mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
+    } else {
+        Indicator *i = qgraphicsitem_cast<Indicator*>(gi);
+        
+        if(i) {
+            mCurIndicator = i;
+            mCellStartPos = i->pos();
+        }
     }
     
     switch(mMode) {
@@ -496,15 +504,16 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     if(mCurCell) {
         mDiff = QSizeF(0,0);
-        mStartPos = QPointF(0,0);
+        mCellStartPos = QPointF(0,0);
         mCurCell = 0;
     }
 
     if(mCurIndicator) {
-        mStartPos = QPoint(0,0);
+        mCellStartPos = QPoint(0,0);
         mCurIndicator = 0;
     }
-
+    mLeftButtonDownPos = QPointF(0,0);
+    
     QGraphicsScene::mouseReleaseEvent(e);
 }
 
@@ -626,7 +635,7 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
         mRubberBand->setGeometry(rect.normalized());
     } else if (mCurCell) {
         QPointF curPos =  QPointF(e->scenePos().x() - mDiff.width(), e->scenePos().y() - mDiff.height());
-        mUndoStack.push(new SetCellCoordinates(this, mCurCell, mStartPos, curPos));
+        mUndoStack.push(new SetCellCoordinates(this, mCurCell, mCellStartPos, curPos));
     }
 }
 
@@ -727,10 +736,10 @@ void CrochetScene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
     
     QPointF cur = e->scenePos();
     
-    qreal scale = (mStartPos.manhattanLength() - cur.manhattanLength()) / 64;
-
+    qreal scale = abs(mLeftButtonDownPos.manhattanLength() - cur.manhattanLength()) / 128;
+    qDebug() << mLeftButtonDownPos << cur << scale;
+    
     mUndoStack.push(new SetCellScale(this, mCurCell, scale));
-    mStartPos = e->scenePos();
 }
 
 void CrochetScene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
@@ -756,7 +765,7 @@ void CrochetScene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
     QPointF start = e->buttonDownScenePos(Qt::LeftButton);
     
     QPointF delta =  QPointF(e->scenePos().x() - start.x(), e->scenePos().y() - start.y());
-    QPointF newPos = QPointF(mStartPos.x() + delta.x(), mStartPos.y() + delta.y());
+    QPointF newPos = QPointF(mCellStartPos.x() + delta.x(), mCellStartPos.y() + delta.y());
     
     undoStack()->push(new MoveIndicator(this, mCurIndicator, newPos));
 

@@ -149,15 +149,6 @@ SetCellScale::SetCellScale(CrochetScene *s, CrochetCell *cell, qreal scl, QUndoC
 {
     scene = s;
     c = cell;
-
-    if(scl > 0)
-        delta = 0.075;
-    else if(scl < 0)
-        delta = -0.075;
-    else
-        delta = 0;
-    deltas.append(delta);
-    baseSize.append(1.0);
     
     setText(QObject::tr("Change cell position"));
 }
