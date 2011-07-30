@@ -107,10 +107,8 @@ public:
     int id() const { return Id; }
     
 private:
-    qreal delta;
-    
-    QList<qreal> deltas;
-    QList<qreal> baseSize;
+    qreal oldScale;
+    qreal newScale;
     
     CrochetCell *c;
     CrochetScene *scene;

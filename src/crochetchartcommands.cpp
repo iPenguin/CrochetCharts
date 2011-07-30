@@ -149,7 +149,9 @@ SetCellScale::SetCellScale(CrochetScene *s, CrochetCell *cell, qreal scl, QUndoC
 {
     scene = s;
     c = cell;
-    
+    newScale = scl;
+    oldScale = c->scale();
+
     setText(QObject::tr("Change cell position"));
 }
 
@@ -167,9 +169,7 @@ void SetCellScale::undo()
 
 void SetCellScale::redo()
 {
-    foreach(qreal change, deltas) {
-        c->setScale(c->scale() + change);
-    }
+        c->setScale(oldScale);
 }
 
 bool SetCellScale::mergeWith(const QUndoCommand *command)
