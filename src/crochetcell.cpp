@@ -65,15 +65,15 @@ void CrochetCell::setScale(qreal newScale)
     qreal newSize = mOrigHeight * newScale;
 
     qreal scale = newSize/boundingRect().height();
-    qDebug() << "setScale:" << newScale << scale;
     QTransform trans =  transform().scale(1, scale);
     setTransform(trans);
 }
 
 void CrochetCell::unsetScale(qreal newScale)
 {
-    qDebug() << "unsetScale" << newScale;
-    qreal scale = 1/newScale;
+    qreal origScale = boundingRect().height()/mOrigHeight * newScale;
+
+    qreal scale = 1/origScale;
     QTransform trans = transform().scale(1, scale);
     setTransform(trans);
 }

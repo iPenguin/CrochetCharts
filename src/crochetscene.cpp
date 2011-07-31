@@ -739,21 +739,8 @@ void CrochetScene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
     qreal scale;
     qreal diff = (mLeftButtonDownPos.y() - cur.y());
 
-    if(abs(diff) < 32)
-        scale = 1.0;
-    else if(abs(diff) < 64)
-        scale = 1.5;
-    else if(abs(diff) < 96)
-        scale = 2.0;
-    else if(abs(diff) < 128)
-        scale = 2.5;
-    else if(abs(diff) < 160)
-        scale = 3.0;
-    else if (abs(diff) < 192)
-        scale = 3.5;
+    scale = -diff/mCurCell->boundingRect().height();
 
-    if(diff > 0)
-        scale *= -1;
     qDebug() << mLeftButtonDownPos << cur << diff << scale;
     mUndoStack.push(new SetCellScale(this, mCurCell, scale));
 }

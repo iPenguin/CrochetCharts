@@ -177,7 +177,7 @@ bool SetCellScale::mergeWith(const QUndoCommand *command)
     if(otherC != c)
         return false;
     
-    newScale = other->newScale;
+    newScale += other->newScale;
 
     setText(QObject::tr("Change cell scale"));
     return true;
