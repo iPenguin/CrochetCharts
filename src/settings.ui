@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>586</width>
+    <width>620</width>
     <height>362</height>
    </rect>
   </property>
@@ -258,7 +258,7 @@
        <item row="4" column="4">
         <widget class="QSpinBox" name="stitchCount">
          <property name="minimum">
-          <number>1</number>
+          <number>3</number>
          </property>
          <property name="maximum">
           <number>1000000000</number>
