@@ -26,12 +26,12 @@ void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
         painter->fillRect(option->rect, color());
     if(mHighlight)
         painter->fillRect(option->rect, option->palette.highlight());
-    
+
     if(stitch()->isSvg())
         Cell::paint(painter, option, widget);
     else
         painter->drawPixmap(option->rect.x(), option->rect.y(), *(stitch()->renderPixmap()));
-    
+
     QRect rect =QRect(option->rect.x() + (option->rect.width()/2), option->rect.y() + (option->rect.height()/2),
                       (option->rect.width()/2), (option->rect.height()/2));
 }
@@ -44,7 +44,7 @@ QVariant CrochetCell::itemChange(GraphicsItemChange change, const QVariant &valu
 
         //FIXME: I really don't like having to do cast to CrochetScene in the CrochetCell!
         CrochetScene *s = static_cast<CrochetScene*>(scene());
-        
+
         bool freeForm = s->isFreeForm();
         if(!freeForm && !mAnchor.isNull()) {
             x = qMin(mAnchor.x() + 64, qMax(newPos.x(), mAnchor.x() - 64));
@@ -55,20 +55,40 @@ QVariant CrochetCell::itemChange(GraphicsItemChange change, const QVariant &valu
         }
         return QVariant(QPointF(x, y));
     }
-    
+
     return QGraphicsItem::itemChange(change, value);
 
 }
 
 void CrochetCell::setScale(qreal newScale)
 {
-    qDebug() << "cell setScale" << newScale;
-    if(newScale < 0.1)
-        newScale = 0.1;
-    
-    if(newScale != mScale) {
-        mScale = newScale;
-        QTransform trans =  transform().scale(1, newScale);
-        setTransform(trans);
-    }
+    qreal newSize = mOrigHeight * newScale;
+
+    qreal scale = newSize/boundingRect().height();
+    qDebug() << "setScale:" << newScale << scale;
+    QTransform trans =  transform().scale(1, scale);
+    setTransform(trans);
+}
+
+void CrochetCell::unsetScale(qreal newScale)
+{
+    qDebug() << "unsetScale" << newScale;
+    qreal scale = 1/newScale;
+    QTransform trans = transform().scale(1, scale);
+    setTransform(trans);
+}
+
+void CrochetCell::setStitch(QString s, bool useAltRenderer)
+{
+    Cell::setStitch(s, useAltRenderer);
+    mOrigWidth = boundingRect().width();
+    mOrigHeight = boundingRect().height();
+}
+
+void CrochetCell::setStitch(Stitch *s, bool useAltRenderer)
+{
+   Cell::setStitch(s, useAltRenderer);
+
+   mOrigWidth = boundingRect().width();
+   mOrigHeight = boundingRect().height();
 }

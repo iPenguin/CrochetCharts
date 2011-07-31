@@ -596,11 +596,11 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
     } else {
         if(!mCurCell)
             return;
-        qDebug() << "remove the cell";
+
         undoStack()->push(new RemoveCell(this, mCurCell));
         mCurCell = 0;
         mHighlightCell = 0;
-        qDebug() << "remove the cell end";
+
     }
 }
 
@@ -736,9 +736,25 @@ void CrochetScene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
     
     QPointF cur = e->scenePos();
     
-    qreal scale = abs(mLeftButtonDownPos.manhattanLength() - cur.manhattanLength()) / 128;
-    qDebug() << mLeftButtonDownPos << cur << scale;
-    
+    qreal scale;
+    qreal diff = (mLeftButtonDownPos.y() - cur.y());
+
+    if(abs(diff) < 32)
+        scale = 1.0;
+    else if(abs(diff) < 64)
+        scale = 1.5;
+    else if(abs(diff) < 96)
+        scale = 2.0;
+    else if(abs(diff) < 128)
+        scale = 2.5;
+    else if(abs(diff) < 160)
+        scale = 3.0;
+    else if (abs(diff) < 192)
+        scale = 3.5;
+
+    if(diff > 0)
+        scale *= -1;
+    qDebug() << mLeftButtonDownPos << cur << diff << scale;
     mUndoStack.push(new SetCellScale(this, mCurCell, scale));
 }
 

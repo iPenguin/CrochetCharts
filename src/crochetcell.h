@@ -27,7 +27,8 @@ public:
 
     qreal scale() const { return mScale; }
     void setScale(qreal newScale);
-    
+    void unsetScale(qreal newScale);
+
 signals:
 
 public slots:
@@ -41,12 +42,18 @@ public slots:
      */
     void setAnchor(qreal x, qreal y) { mAnchor = QPointF(x, y); }
 
+    void setStitch(QString s, bool useAltRenderer);
+    void setStitch(Stitch *s, bool useAltRenderer);
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     
 private:
     qreal mScale;
-    
+
+    qreal mOrigWidth;
+    qreal mOrigHeight;
+
     bool mHighlight;
 
     QPointF mAnchor;
