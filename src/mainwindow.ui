@@ -188,7 +188,7 @@
      <x>0</x>
      <y>0</y>
      <width>894</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -298,6 +298,7 @@
    <addaction name="actionNew"/>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
+   <addaction name="actionExport"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="patternStitchesDock">
@@ -548,6 +549,10 @@
    </property>
   </action>
   <action name="actionExport">
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/export.svg</normaloff>:/images/export.svg</iconset>
+   </property>
    <property name="text">
     <string>E&amp;xport...</string>
    </property>
