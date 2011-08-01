@@ -12,7 +12,7 @@ docbook_generate(pdf "${docbookFile}" "${SWS_VERSION_SHORT}")
 
 if(APPLE)
     message(STATUS "Createing documentation: pages")
-    docbook_generate(pages "${CMAKE_CURRENT_SOURCE_DIR}/index.docbook" "${SWS_VERSION_SHORT}")
+    docbook_generate(pages "${docbookFile}" "${SWS_VERSION_SHORT}")
 elseif(WIN32)
     message(STATUS "Createing documentation: htmlhelp")
     docbook_generate(htmlhelp "${docbookFile}" "${SWS_VERSION_SHORT}")
