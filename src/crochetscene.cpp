@@ -592,7 +592,7 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
         undoStack()->push(addCell);
         CrochetCell *c = addCell->cell();
         c->setStitch(mEditStitch, (y % 2));
-
+        emit rowChanged(y);
     } else {
         if(!mCurCell)
             return;
@@ -600,7 +600,7 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
         undoStack()->push(new RemoveCell(this, mCurCell));
         mCurCell = 0;
         mHighlightCell = 0;
-
+        emit rowChanged(y);
     }
 }
 
