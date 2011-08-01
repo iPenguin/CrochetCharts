@@ -231,7 +231,7 @@ void ExportUi::exportData()
 {
     exportType = ui->fileType->currentText();
     selection = ui->chartSelection->currentText();
-    resolution = ui->resolution->text().toInt();
+    resolution = ui->resolution->text().remove(" dpi").toInt();
     width = ui->width->text().toInt();
     height = ui->height->text().toInt();
     pageToChartSize = ui->pageToChartSize->isChecked();
@@ -435,7 +435,7 @@ void ExportUi::exportSvg()
     int tabCount = mTabWidget->count();
     
     QRectF rect = ui->view->scene()->sceneRect();
-    
+
     QSvgGenerator gen;
     gen.setFileName(fileName);
     gen.setSize(rect.size().toSize());
