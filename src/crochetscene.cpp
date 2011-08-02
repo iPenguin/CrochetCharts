@@ -304,12 +304,18 @@ int CrochetScene::getClosestRow(QPointF mousePosition)
     int row = round(temp2 / mRowSpacing);
     if(row < 0)
         row = 0;
+    if(row >= mGrid.count()) {
+        row = mGrid.count();
+
+        QList<CrochetCell*> r;
+        mGrid.append(r);
+    }
+
     return row;
 }
 
-int CrochetScene::getClosestColumn(QPointF mousePosition)
+int CrochetScene::getClosestColumn(QPointF mousePosition, int row)
 {
-    int row = getClosestRow(mousePosition);
     /*
               |
           -,- | +,-
@@ -595,7 +601,8 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
     int x,y;
     if(mStyle == CrochetScene::Round) {
         y = getClosestRow(e->scenePos());
-        x = getClosestColumn(e->scenePos());
+        //FIXME: the row has to be passed in because getClosestRow modifies the row
+        x = getClosestColumn(e->scenePos(), y);
     } else if (mStyle == CrochetScene::Flat) {
         x = ceil(e->scenePos().x() / flatWidth) - 1;
         y = ceil(e->scenePos().y() / flatHeight) - 1;
@@ -644,7 +651,7 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(mRubberBand) {
         ChartView *view = qobject_cast<ChartView*>(parent());
-        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));    
+        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
     
         mRubberBand->setGeometry(rect.normalized());
     } else if (mCurCell) {
