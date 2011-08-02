@@ -198,7 +198,6 @@ AddCell::AddCell(CrochetScene* s, QPoint pos, QUndoCommand* parent)
 void AddCell::redo()
 {
     scene->addCell(position, c);
-    scene->setCellPosition(position.y(), position.x(), c, scene->grid()[position.y()].count(), true);
     scene->redistributeCells(position.y());
 }
 
@@ -229,7 +228,6 @@ void RemoveCell::redo()
 void RemoveCell::undo()
 {
     scene->addCell(position, c);
-    scene->setCellPosition(position.y(), position.x(), c, scene->grid()[position.y()].count(), true);
     scene->redistributeCells(position.y());
 }
 

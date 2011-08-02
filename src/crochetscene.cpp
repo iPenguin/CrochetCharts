@@ -167,7 +167,8 @@ int CrochetScene::rowCount()
 
 int CrochetScene::columnCount(int row)
 {
-    Q_ASSERT(mGrid.count() > row);
+    if(mGrid.count() <= row)
+        return 0;
     return mGrid[row].count();
 }
 
@@ -210,6 +211,7 @@ void CrochetScene::addCell(QPoint p, CrochetCell* c)
             x = mGrid[p.y()].count();
 
     mGrid[p.y()].insert(x, c);
+    setCellPosition(p.y(), x, c, mGrid[p.y()].count());
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
@@ -228,10 +230,11 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
         double radius = diameter / 2;
         
         double degrees = widthInDegrees*column;
-        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));        
-        c->setPos(finish.x() - 32, finish.y());
+        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+
         if(updateAnchor || c->anchor().isNull())
             c->setAnchor(finish.x() - 32, finish.y());
+        c->setPos(finish.x() - 32, finish.y());
         c->setTransform(QTransform().translate(32,0).rotate(degrees + 90).translate(-32, 0));
         c->setToolTip(QString::number(column+1));
         

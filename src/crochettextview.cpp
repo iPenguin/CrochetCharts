@@ -95,7 +95,7 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput, bool useRepe
 {
     
     QString placeholder = Settings::inst()->value("placeholder").toString();
-    QString rowText;
+    QString rowText = "";
     QString curStitch;
 
     QStringList rowList;
