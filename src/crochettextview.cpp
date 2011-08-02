@@ -50,9 +50,11 @@ void CrochetTextView::updateRow(int row)
     QTextCursor curs = cursorAtRowStart(row);
     
     rowText = generateTextRow(row);
-    curs.movePosition(QTextCursor::StartOfBlock);
-    curs.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-    curs.insertText(rowText);
+    if(!rowText.isEmpty()) {
+        curs.movePosition(QTextCursor::StartOfBlock);
+        curs.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
+        curs.insertText(rowText);
+    }
     
 }
 

@@ -152,9 +152,12 @@ void CrochetScene::removeCell(CrochetCell *c)
 {
     removeItem(c);
     for(int i = 0; i < mGrid.count(); ++i) {
-        if (mGrid[i].contains(c))
+        if (mGrid[i].contains(c)) {
             mGrid[i].removeOne(c);
+            emit rowChanged(i);
+        }
     }
+
 }
 
 int CrochetScene::rowCount()
@@ -196,10 +199,22 @@ void CrochetScene::addCell(QPoint p, CrochetCell* c)
 {
     //TODO: simplify the connect() statements...
     addItem(c);
-    mGrid[p.y()].insert(p.x(), c);
+    int x = p.x();
+
+    if(mGrid.count() <= p.y()) {
+        QList<CrochetCell*> row;
+        mGrid.append(row);
+    }
+
+    if(mGrid[p.y()].count() <= p.x())
+            x = mGrid[p.y()].count();
+
+    mGrid[p.y()].insert(x, c);
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
+
+    emit rowChanged(p.y());
 }
 
 void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
@@ -589,10 +604,10 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
     if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
         AddCell *addCell = new AddCell(this, QPoint(x, y));
-        undoStack()->push(addCell);
         CrochetCell *c = addCell->cell();
         c->setStitch(mEditStitch, (y % 2));
-        emit rowChanged(y);
+        undoStack()->push(addCell);
+
     } else {
         if(!mCurCell)
             return;
@@ -600,7 +615,6 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
         undoStack()->push(new RemoveCell(this, mCurCell));
         mCurCell = 0;
         mHighlightCell = 0;
-        emit rowChanged(y);
     }
 }
 
