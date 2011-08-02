@@ -897,6 +897,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/indicator.svg</normaloff>:/images/indicator.svg</iconset>
+   </property>
    <property name="text">
     <string>Indicator Mode</string>
    </property>

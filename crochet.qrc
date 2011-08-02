@@ -46,5 +46,6 @@
         <file>images/stretch_mode.svg</file>
         <file>images/fill_color.svg</file>
         <file>images/export.svg</file>
+        <file>images/indicator.svg</file>
     </qresource>
 </RCC>
