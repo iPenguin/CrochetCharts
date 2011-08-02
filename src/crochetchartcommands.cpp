@@ -23,7 +23,6 @@ SetCellStitch::SetCellStitch(CrochetScene *s, CrochetCell *cell, QString newSt, 
 void SetCellStitch::redo()
 {
     QPoint pos = scene->findGridPosition(c);
-    qDebug() << pos << newStitch;
     c->setStitch(newStitch, (pos.y() % 2));
 }
 
