@@ -609,7 +609,7 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
     } else if (mStyle == CrochetScene::Flat) {
         x = ceil(e->scenePos().x() / flatWidth) - 1;
         y = ceil(e->scenePos().y() / flatHeight) - 1;
-    }   
+    }
 
     if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 

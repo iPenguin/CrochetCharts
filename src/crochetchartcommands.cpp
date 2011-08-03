@@ -192,6 +192,7 @@ AddCell::AddCell(CrochetScene* s, QPoint pos, QUndoCommand* parent)
     c = new CrochetCell();
     c->setColor();
     scene = s;
+    setText(QObject::tr("Add cell"));
 }
 
 void AddCell::redo()
@@ -215,7 +216,7 @@ RemoveCell::RemoveCell(CrochetScene* s, CrochetCell *cell, QUndoCommand* parent)
     c = cell;
     scene = s;
     position = scene->findGridPosition(cell);
-
+    setText(QObject::tr("Remove cell"));
 }
 
 void RemoveCell::redo()
@@ -238,6 +239,7 @@ AddRow::AddRow(CrochetScene* s, QPointF pos, QUndoCommand* parent)
 {
     position = pos;
     scene = s;
+    setText(QObject::tr("Add row"));
 }
 
 void AddRow::redo()
@@ -258,6 +260,7 @@ RemoveRow::RemoveRow(CrochetScene* s, QPointF pos, QUndoCommand* parent)
 {
     position = pos;
     scene = s;
+    setText(QObject::tr("Remove row"));
 }
 
 void RemoveRow::redo()
