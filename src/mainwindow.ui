@@ -600,7 +600,7 @@
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>&amp;About Crochet</string>
+    <string>&amp;About Crochet Charts</string>
    </property>
   </action>
   <action name="actionOptions">
