@@ -50,10 +50,13 @@ void CrochetTextView::updateRow(int row)
     QTextCursor curs = cursorAtRowStart(row);
     
     rowText = generateTextRow(row);
+
+    curs.movePosition(QTextCursor::StartOfBlock);
+    curs.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
     if(!rowText.isEmpty()) {
-        curs.movePosition(QTextCursor::StartOfBlock);
-        curs.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
         curs.insertText(rowText);
+    } else {
+        curs.deletePreviousChar();
     }
     
 }
@@ -111,6 +114,7 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput, bool useRepe
                 continue;
         }
         rowList.append(curStitch);
+        curStitch = "";
     }
     rowText = generateText(rowList, useRepeats);
 
