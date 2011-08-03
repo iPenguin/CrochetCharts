@@ -202,8 +202,8 @@ void MainWindow::setupMenus()
 
     ui->actionPrint->setIcon(QIcon::fromTheme("document-print", QIcon(":/images/fileprint.png")));
     ui->actionPrintPreview->setIcon(QIcon::fromTheme("document-print-preview", QIcon(":/images/document-print-preview.png")));
-    ui->actionExport->setIcon(QIcon::fromTheme("document-export", QIcon(":/images/export.svg")));
-    
+    ui->actionExport->setIcon(QIcon::fromTheme("export", QIcon(":/images/export.svg")));
+    /*document-export*/
     ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
 
     setupRecentFiles();

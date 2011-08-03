@@ -140,9 +140,11 @@
     <chapter id="creating-charts"><title>Creating Charts</title>
         <para>When you first open @SWS_PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
             This dialog gives you quick access to create a new document and chart.
-            From it you can set the basic information about the new chart.
-            If you select a Round chart the number of stitches is the number that is used on the inner most row.
-            Subsequent rows will have increasing numbers of stitches.
+        </para>
+        <para>
+            Form the dialog you can set the basic information about the new chart.
+            If you select a <emphasis>Round chart</emphasis> the number of stitches is the number that is used on the inner most row and each additional row will have an increasing count of stitches.
+            If you select a <emphasis>Flat chart</emphasis> then all the rows will have the selected number of stitches in a grid-like layout.
         </para>
         <screenshot>
             <mediaobject>
@@ -152,9 +154,11 @@
                 <caption>The main window showing the New Chart Options dialog</caption>
             </mediaobject>
         </screenshot>
-        <para>While editing the chart you can change the stitch, color, position, rotation, and height of the stitches, you can also add new stitches and new rows.
+        <para>While editing the chart you can change the stitch, color, position, rotation, and height of the stitches, you can add new stitches and rows.
+            You can also add an unlimited number of movable indicators to the chart.
+            You can used the indicators as row number indicators, or to draw attention to part of the chart.
         </para>
-        <section><title>Flat Charts</title>
+        
         <screenshot>
             <mediaobject>
                 <imageobject>
@@ -164,46 +168,212 @@
             </mediaobject>
         </screenshot>
         
-        </section>
-        <section><title>Round Charts</title>
+
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/document-new-round.png" format="PNG" />
+                </imageobject>
+                <caption>The main window showing a basic round chart</caption>
+            </mediaobject>
+        </screenshot>
+
+        <section>
+            <title>Tools</title>
             <screenshot>
                 <mediaobject>
                     <imageobject>
-                        <imagedata width="400" fileref="images/document-new-round.png" format="PNG" />
+                        <imagedata width="400" fileref="images/toolbar-win.png" format="PNG" />
                     </imageobject>
-                    <caption>The main window showing a basic round chart</caption>
+                    <caption>The tools on Windows</caption>
                 </mediaobject>
             </screenshot>
-
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/toolbar-mac.png" format="PNG" />
+                    </imageobject>
+                    <caption>The tools on Mac</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/toolbar.png" format="PNG" />
+                    </imageobject>
+                    <caption>The tools on Linux</caption>
+                </mediaobject>
+            </screenshot>
+            <para>The tools on the toolbar are listed below in order from left to right.
+            </para>
+            <variablelist>
+                <?dbfo list-presentation="blocks"?>
+                <varlistentry>
+                    <term>New Document</term>
+                    <listitem>Create a new document.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Open File</term>
+                    <listitem>Open an existing file.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Save</term>
+                    <listitem>Save the current file.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Export</term>
+                    <listitem>Export the document to different file formats: PDF, SVG, PNG, JPEG, TIFF, BMP.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Undo</term>
+                    <listitem>Undo the last action taken. (Unlimited level of undos)</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Redo</term>
+                    <listitem>Redo and actions that have been undone.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Stitch Mode</term>
+                    <listitem>Change the stitches of existing cells.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Color Mode</term>
+                    <listitem>Change the background color of the stitches.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Row Mode</term>
+                    <listitem>Edit the number of rows and stitches on the chart.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Position Mode</term>
+                    <listitem>Move the stitches around on the chart.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Angle Mode</term>
+                    <listitem>Rotate the stitch 360 degrees.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Stretch Mode</term>
+                    <listitem>Change the height of the stitches.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Indicator Mode</term>
+                    <listitem>Add dot and text indicators to the chart.</listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Color Selector</term>
+                    <listitem>Select the color that will be used in Color Mode.</listitem>
+                </varlistentry>
+            </variablelist>
         </section>
+        
     </chapter>
 
 
 
-    <chapter id="exporting-files"><title>Exporting Files</title>
+    <chapter id="exporting-files">
+        <title>Exporting Files</title>
         <para>All pieces of your work can be exported to formats that are commonly used on websites, in magazines, and in publication.</para>
-        <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP. The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image. For this reason they are commonly used in magazines and publication. JPEG and PNG are also sometimes accepted by magazines and publications, however if the publisher accepts them they usually want a resolution of 300 DPI. Before sending a file to a publisher you should ask them what file types they will accept.</para>
-        <para>To export any part of your document as images goto <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice>. From this dialog you may choose to export some or all of the charts, and the stitch and color legends.</para>
-
-        <section><title>Charts</title>
-        <para>To undo or redo edits you have made on the chart you can press <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Z</keycap></keycombo> or <keycombo action="simul"><keycap>Ctrl</keycap><keycap>Y</keycap></keycombo> respectively.</para>
-            <note><para>On some platforms the key combo is different</para></note>
-        </section>
-        <section><title>Instructions</title>
-        <para>On the main interface you can export the written instructions for the chart by pressing the <guibutton>Copy Instructions</guibutton> button on the left between the chart and the instructions. This button will add the row numbers, remove any placeholder stitches, and clean up the text to be generally publication ready. This clean version of the text will automatically be copied to the clipboard where you can then paste it directly into another application.</para>
+        <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP.
+            The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image.
+            For this reason they are commonly used in magazines and publication.
+            JPEG and PNG are also sometimes accepted by magazines and publications, however if the publisher accepts them they usually want a resolution of 300 DPI.
+            Before sending a file to a publisher you should ask them what file types they will accept.
+        </para>
+        <para>To export any part of your document as images click on the <guibutton>Export</guibutton> icon in the toolbar
+            or goto <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice>.
+            From this dialog you may choose to export some or all of the charts, the stitch legend and the color legend.
+        </para>
         <screenshot>
             <mediaobject>
                 <imageobject>
-                    <imagedata width="400" fileref="images/export-copy-instructions.png" format="PNG" />
+                    <imagedata width="400" fileref="images/export-chart-pdf.png" format="PNG" />
                 </imageobject>
-                <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+                <caption>Options window for export as a pdf</caption>
             </mediaobject>
         </screenshot>
 
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/export-chart-svg.png" format="PNG" />
+                </imageobject>
+                <caption>Options window for export as a svg</caption>
+            </mediaobject>
+        </screenshot>
+       
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/export-chart-png.png" format="PNG" />
+                </imageobject>
+                <caption>Options window for export as a jpeg, png, tiff, or bmp</caption>
+            </mediaobject>
+        </screenshot>
+        <para>The above screen shots show all the possible options for exporting images. Below is an explanation of these options.
+        </para>
+        <variablelist>
+            <?dbfo list-presentation="blocks"?>
+            <varlistentry>
+                <term>Resolution</term>
+                <listitem>The quality of the image output. 72 dpi is low quality,
+                    96 dpi is standard quality and 300 dpi is print or publication quality.
+                    You should be aware that higher quality means larger file size.</listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Page to Chart Size</term>
+                <listitem>By default the page size is set for a standard A4 letter page and the chart is fit onto the page.
+                    If this option is checked then the page size is set to the chart size.</listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Selection</term>
+                <listitem>This allows you to choose to export the chart, stitch legend, or color legend.
+                    Additionally if you export to PDF you can export all charts into one file.</listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>Height and Width</term>
+                <listitem>Set the dimensions of the image to be generated.
+                    You should be aware that larger image size means larger file size.</listitem>
+            </varlistentry>
+        </variablelist>
+        
+        <section>
+            <title>Charts</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/export-chart.png" format="PNG" />
+                    </imageobject>
+                    <caption>Options window for export a chart</caption>
+                </mediaobject>
+            </screenshot>
+            <para>When you export a chart you are presented with the standard options for all exports.
+            </para>
         </section>
-        <section><title>Legends</title>
-            <sect3><title>Stitch Legends</title>
-                <para>When you export a stitch legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <link linkend="options-legends-stitch">Options/Preferences</link>.</para>
+        <section>
+            <title>Instructions</title>
+            <para>On the main interface you can export the written instructions for the chart by pressing the <guibutton>Copy Instructions</guibutton> button on the left between the chart and the instructions.
+            This button will add the row numbers, remove any placeholder stitches, and clean up the text to be generally publication ready.
+            This clean version of the text will automatically be copied to the clipboard where you can then paste it directly into another application.
+            </para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/export-copy-instructions.png" format="PNG" />
+                    </imageobject>
+                    <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
+                </mediaobject>
+            </screenshot>
+
+        </section>
+        <section>
+            <title>Legends</title>
+            <sect3>
+                <title>Stitch Legends</title>
+                <para>When you export a stitch legend you can update how you want the legend to look right before you save it as a file.
+                    However if you have settings that you want on at all times you can make them default by setting them in the
+                    <link linkend="options-legends-stitch">Options/Preferences</link>.
+                </para>
                 <screenshot>
                     <mediaobject>
                         <imageobject>
@@ -213,8 +383,12 @@
                     </mediaobject>
                 </screenshot>
             </sect3>
-            <sect3><title>Color Legends</title>
-                <para>When you export a color legend you can update how you want the legend to look right before you save it as a file. However if you have settings that you want on at all times you can make them default by setting them in the <link linkend="options-legends-color">Options/Preferences</link>.</para>
+            <sect3>
+                <title>Color Legends</title>
+                <para>When you export a color legend you can update how you want the legend to look right before you save it as a file.
+                    However if you have settings that you want on at all times you can make them default by setting them in the
+                    <link linkend="options-legends-color">Options/Preferences</link>.
+                </para>
                 <screenshot>
                     <mediaobject>
                         <imageobject>
@@ -742,19 +916,38 @@
             </screenshot>
         </sect1>
         
-    </chapter>
-
-    <chapter id="help"><title>Help</title>
-        <para></para>
-        <section id="helpAbout"><title>About</title>
-            <para></para>
+        <section id="helpAbout">
+            <title>About @SWS_PROJECT_NAME@</title>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" scalefit="1" fileref="images/help-about.png" format="PNG" />
+                    </imageobject>
+                    <caption>The about this application dialog.</caption>
+                </mediaobject>
+            </screenshot>
+            <para>The About dialog can be accessed by going to the <menuchoice><guimenu>Help</guimenu><guimenuitem>About @SWS_PROJECT_NAME@</guimenuitem></menuchoice> option.
+            Or on the Mac by going to <menuchoice><guimenu>@SWS_PROJECT_NAME@</guimenu><guimenuitem>About @SWS_PROJECT_NAME@</guimenuitem></menuchoice>.
+            </para>
+            <para>This dialog contains the full version string and build date, copyright notice, description,
+                dedication and license information. The license information is required to use the software.
+                The license information was provided to you when you purchased the software, but is presented here for your convenience.
+            </para>
         </section>
     </chapter>
-
-
     
-    <chapter id="troubleshooting"><title>Troubleshooting</title>
-        <para>If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact me</ulink>. I can only fix issues or explain how features work if I know someone is having a problem with the software.</para>
+    <chapter id="troubleshooting">
+        <title>Troubleshooting</title>
+        <para>
+            If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact me</ulink> so I can look into the issue.
+            I take bugs and defects very seriously and the sooner I know about them the sooner I can fix them.
+        </para>
+        <para>
+            Is the software missing a feature, or do you have an idea for something that should be included in the software?
+            You should <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know.
+            I want this software to make creating charts easier for the users and the best way to do that is to have the users give me feedback about what is
+            and isn't working for them.
+        </para>
     </chapter>
 
 
