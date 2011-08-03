@@ -57,13 +57,16 @@
 
 
     <chapter id="installation"><title>Installation</title>
-        <para>Because this software is licensed per user you may install it on multiple computers including any combination of the supported platforms below.
-        To install on multiple platforms you may goto the the <ulink url="@ORG_DOWNLOAD@">downloads page</ulink> and download the installer for other platforms.
-        You will need your serial number to complete the installation. The serial number can be found in the
-        <link linkend="helpAbout">About dialog</link>.
+        <para>Because this software is licensed per user you may install it on multiple computers including any
+        combination of the supported platforms below.
+        To install on multiple platforms you may goto the the <ulink url="@ORG_DOWNLOAD@">downloads page</ulink>
+        and download the installer for other platforms.
+        You will need your serial number to complete the installation.
+        The serial number can be found in the <link linkend="helpAbout">About dialog</link>.
         If you need help installing on a second platform please <ulink url="@ORG_CONTACT@">contact me</ulink>.</para>
         <section><title>Windows</title>
-            <para>@SWS_PROJECT_NAME@ will run on Microsoft Windows XP, Windows Vista, and Windows 7. To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
+            <para>@SWS_PROJECT_NAME@ will run on Microsoft Windows XP, Windows Vista, and Windows 7.
+            To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
             <para>To install double click the installer and follow the instructions in the Installation Wizard.</para>
             <screenshot>
                 <mediaobject>
@@ -137,10 +140,9 @@
     <chapter id="creating-charts"><title>Creating Charts</title>
         <para>When you first open @SWS_PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
             This dialog gives you quick access to create a new document and chart.
-            Form it you can set the basic information about the new chart.
+            From it you can set the basic information about the new chart.
             If you select a Round chart the number of stitches is the number that is used on the inner most row.
             Subsequent rows will have increasing numbers of stitches.
-            All of these values can be changed later while you edit the chart.
         </para>
         <screenshot>
             <mediaobject>
