@@ -23,6 +23,8 @@
 #include "crochetchartcommands.h"
 #include "indicatorundo.h"
 
+#include <QKeyEvent>
+
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent),
     flatWidth(64), flatHeight(64),
@@ -413,6 +415,24 @@ qreal CrochetScene::scenePosToAngle(QPointF pt)
         angle = 360 + angleX;
     
     return angle;
+}
+
+void CrochetScene::keyReleaseEvent(QKeyEvent* keyEvent)
+{
+    if(keyEvent->key() == Qt::Key_Delete) {
+        QList<QGraphicsItem*> items = selectedItems();
+        foreach(QGraphicsItem *item, items) {
+            CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(item);
+            if(c) {
+                undoStack()->push(new RemoveCell(this, c));
+            } else {
+                Indicator *i = qgraphicsitem_cast<Indicator*>(item);
+                undoStack()->push(new RemoveIndicator(this, i));
+            }
+        }
+    }
+        
+    QGraphicsScene::keyReleaseEvent(keyEvent);
 }
 
 void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)

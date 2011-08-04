@@ -14,6 +14,8 @@
 
 #include "indicator.h"
 
+class QKeyEvent;
+
 class CrochetScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -110,10 +112,10 @@ protected:
     virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
     virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
     virtual void    keyPressEvent ( QKeyEvent * keyEvent )
-    virtual void    keyReleaseEvent ( QKeyEvent * keyEvent )
     virtual void    wheelEvent ( QGraphicsSceneWheelEvent * wheelEvent )
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
 */
+    void keyReleaseEvent(QKeyEvent *keyEvent);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
