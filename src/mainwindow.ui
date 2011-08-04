@@ -792,7 +792,7 @@
     <string>Row Mode</string>
    </property>
    <property name="toolTip">
-    <string>Edit the stitch count of a row</string>
+    <string>Add or remove stitches on the chart</string>
    </property>
    <property name="shortcut">
     <string>Alt+3</string>
@@ -810,7 +810,7 @@
     <string>Position Mode</string>
    </property>
    <property name="toolTip">
-    <string>Edit the positioning of the stitches on the chart</string>
+    <string>Move stitches around on the chart</string>
    </property>
    <property name="shortcut">
     <string>Alt+4</string>
@@ -868,7 +868,7 @@
     <string>Angle Mode</string>
    </property>
    <property name="toolTip">
-    <string>Turn the stitches on the chart</string>
+    <string>Change the angle of stitches on the chart</string>
    </property>
    <property name="shortcut">
     <string>Alt+5</string>
