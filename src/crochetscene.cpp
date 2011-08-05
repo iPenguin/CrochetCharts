@@ -35,11 +35,10 @@ CrochetScene::CrochetScene(QObject *parent)
     mDiff(QSizeF(0,0)), mHighlightCell(0),
     mRubberBand(0), mRubberBandStart(QPointF(0,0)), mMoving(false),
     mRowSpacing(8), mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode),
-    mFreeForm(false), mEditStitch("ch"),
+    mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
 {
     mStitchWidth = 64;
-    mFreeForm = Settings::inst()->value("chartFreeForm").toBool();
 }
 
 CrochetScene::~CrochetScene()
@@ -84,11 +83,6 @@ void CrochetScene::initDemoBackground()
         //restore original rect. letting the demo text overflow off the scene.
         setSceneRect(rect);
     }
-}
-
-void CrochetScene::updateFreeForm(bool state)
-{
-    mFreeForm = state;
 }
 
 void CrochetScene::addIndicator(Indicator* i)

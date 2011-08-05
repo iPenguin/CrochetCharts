@@ -127,7 +127,6 @@ void Settings::setupValueList() {
     mValueList["stitchPrimaryColor"] = QVariant("#000000");
     mValueList["stitchAlternateColor"] = QVariant("#3366AA");
 
-    mValueList["chartFreeForm"] = QVariant(false);
     mValueList["chartRowIndicator"] = QVariant(tr("Dots"));
     mValueList["chartIndicatorColor"] = QVariant("#C00000");
     

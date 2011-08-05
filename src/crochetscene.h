@@ -81,9 +81,6 @@ public:
 
     QUndoStack* undoStack() { return &mUndoStack; }
 
-    bool isFreeForm() { return mFreeForm; }
-    void setFreeForm(bool value) { mFreeForm = value; }
-
     void addIndicator(Indicator *i);
     void removeIndicator(Indicator *i);
     void removeIndicator(QPointF pos);
@@ -92,7 +89,6 @@ public:
     
 public slots:
     void updateRubberBand(int dx, int dy);
-    void updateFreeForm(bool state);
 
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
@@ -217,8 +213,6 @@ private:
     
     ChartStyle mStyle;
     EditMode mMode;
-
-    bool mFreeForm;
     
     QString mEditStitch;
     QColor mEditFgColor;

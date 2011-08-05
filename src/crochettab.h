@@ -70,8 +70,6 @@ protected:
     
 private slots:
     void showChartOptions();
-
-    void setFreeForm(bool value);
     
 private:
     CrochetScene* scene() { return mScene; }
