@@ -100,43 +100,43 @@ bool SetCellRotation::mergeWith(const QUndoCommand *command)
 
 
 /*************************************************\
-| SetCellCoordinates                              |
+| SetItemCoordinates                              |
 \*************************************************/
-SetCellCoordinates::SetCellCoordinates(CrochetScene *s, CrochetCell *cell, QPointF oldPos, QPointF newPos, QUndoCommand* parent)
+SetItemCoordinates::SetItemCoordinates(CrochetScene *s, QGraphicsItem *item, QPointF oldPos, QPointF newPos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
-    c = cell;
+    i = item;
     oldCoord = oldPos;
     newCoord = newPos;
-    setText(QObject::tr("Change cell position"));
+    setText(QObject::tr("Change item position"));
     
 }
 
-void SetCellCoordinates::undo()
+void SetItemCoordinates::undo()
 {
-    c->setPos(oldCoord);
+    i->setPos(oldCoord);
 }
 
-void SetCellCoordinates::redo()
+void SetItemCoordinates::redo()
 {
-    c->setPos(newCoord);
+    i->setPos(newCoord);
 }
 
-bool SetCellCoordinates::mergeWith(const QUndoCommand *command)
+bool SetItemCoordinates::mergeWith(const QUndoCommand *command)
 {
     if(command->id() != id())
         return false;
     
-    const SetCellCoordinates *other = static_cast<const SetCellCoordinates*>(command);
+    const SetItemCoordinates *other = static_cast<const SetItemCoordinates*>(command);
     
-    CrochetCell *otherC = other->c;
+    QGraphicsItem *otherI = other->i;
     
-    if(otherC != c)
+    if(otherI != i)
         return false;
 
     newCoord = other->newCoord;
-    setText(QObject::tr("Change cell position"));
+    setText(QObject::tr("Change item position"));
     return true;
 }
  
@@ -188,17 +188,21 @@ bool SetCellScale::mergeWith(const QUndoCommand *command)
 AddCell::AddCell(CrochetScene* s, QPoint pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
+
     position = pos;
     c = new CrochetCell();
     c->setColor();
     scene = s;
     setText(QObject::tr("Add cell"));
+
 }
 
 void AddCell::redo()
 {
+
     scene->addCell(position, c);
     scene->redistributeCells(position.y());
+    
 }
 
 void AddCell::undo()

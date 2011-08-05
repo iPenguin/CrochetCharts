@@ -151,18 +151,19 @@ private:
     void highlightCell(QGraphicsSceneMouseEvent *e);
     
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void gridModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void positionModeMouseMove(QGraphicsSceneMouseEvent *e);
-
     void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
-    void colorModeMousePress(QGraphicsSceneMouseEvent *e);
-    void gridModeMousePress(QGraphicsSceneMouseEvent *e);
-    void positionModeMousePress(QGraphicsSceneMouseEvent *e);
-
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    
+    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void colorModeMousePress(QGraphicsSceneMouseEvent *e);
     void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    
+    void gridModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void gridModeMousePress(QGraphicsSceneMouseEvent *e);
     void gridModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    
+    void positionModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void positionModeMousePress(QGraphicsSceneMouseEvent *e);
     void positionModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
     void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
@@ -200,6 +201,8 @@ private:
 
     QRubberBand *mRubberBand;
     QPointF mRubberBandStart;
+
+    QMap<QGraphicsItem *, QPointF> mOldPositions;
     
     //Is the user moving an indicator.
     bool mMoving;
