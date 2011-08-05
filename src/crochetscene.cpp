@@ -24,21 +24,27 @@
 #include "indicatorundo.h"
 
 #include <QKeyEvent>
+#include "stitchlibrary.h"
 
 CrochetScene::CrochetScene(QObject *parent)
     : QGraphicsScene(parent),
-    flatWidth(64), flatHeight(64),
     mCurCell(0),
     mCellStartPos(QPointF(0,0)),
     mLeftButtonDownPos(QPointF(0,0)),
     mCurIndicator(0),
-    mDiff(QSizeF(0,0)), mHighlightCell(0),
-    mRubberBand(0), mRubberBandStart(QPointF(0,0)), mMoving(false),
-    mRowSpacing(8), mStyle(CrochetScene::Flat), mMode(CrochetScene::StitchMode),
+    mDiff(QSizeF(0,0)),
+    mHighlightCell(0),
+    mRubberBand(0),
+    mRubberBandStart(QPointF(0,0)),
+    mMoving(false),
+    mRowSpacing(8),
+    mStyle(CrochetScene::Flat),
+    mMode(CrochetScene::StitchMode),
     mEditStitch("ch"),
-    mEditFgColor(QColor(Qt::black)), mEditBgColor(QColor(Qt::white))
+    mEditFgColor(QColor(Qt::black)),
+    mEditBgColor(QColor(Qt::white)),
+    mDefaultStitch(0)
 {
-    mStitchWidth = 64;
 }
 
 CrochetScene::~CrochetScene()
@@ -194,6 +200,7 @@ void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
 
 void CrochetScene::addCell(QPoint p, CrochetCell* c)
 {
+
     //TODO: simplify the connect() statements...
     addItem(c);
     int x = p.x();
@@ -207,12 +214,15 @@ void CrochetScene::addCell(QPoint p, CrochetCell* c)
             x = mGrid[p.y()].count();
 
     mGrid[p.y()].insert(x, c);
+
     setCellPosition(p.y(), x, c, mGrid[p.y()].count());
+
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
 
     emit rowChanged(p.y());
+
 }
 
 void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
@@ -220,8 +230,8 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
     if(mStyle == CrochetScene::Round) {
         double widthInDegrees = 360.0 / columns;
         int cols = (row == 0) ? columns : mGrid[0].count();
-        qreal rowOneCirc = ((mRowSpacing + mStitchWidth) * cols);
-        double circumference = (row*mRowSpacing) * mStitchWidth + rowOneCirc;
+        qreal rowOneCirc = ((mRowSpacing + mDefaultStitch->width()) * cols);
+        double circumference = (row*mRowSpacing) * mDefaultStitch->width() + rowOneCirc;
         double diameter = circumference / M_PI;
         double radius = diameter / 2;
         
@@ -235,9 +245,9 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
         c->setToolTip(QString::number(column+1));
         
     } else {
-        c->setPos(column*c->stitch()->width(), row*c->stitch()->height());
+        c->setPos(column*mDefaultStitch->width(), row*mDefaultStitch->height());
         if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(column*flatWidth, row*flatHeight);
+            c->setAnchor(column*mDefaultStitch->width(), row*mDefaultStitch->height());
         c->setToolTip(QString::number(column+1));
         c->setColor(QColor(Qt::white));
     }
@@ -259,6 +269,8 @@ void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int col
 {
     mStyle = style;
 
+    mDefaultStitch = StitchLibrary::inst()->findStitch(stitch);
+    
     for(int i = 0; i < rows; ++i) {
         int pad = 0;
         if(mStyle == CrochetScene::Round)
@@ -296,9 +308,9 @@ int CrochetScene::getClosestRow(QPointF mousePosition)
 {
     qreal circumference = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y()) * 2 * M_PI;
 
-    qreal rowOneCirc = ((mRowSpacing + mStitchWidth) * mGrid[0].count());
+    qreal rowOneCirc = ((mRowSpacing + mDefaultStitch->width()) * mGrid[0].count());
     qreal temp = circumference - rowOneCirc;
-    qreal temp2 = temp / mStitchWidth;
+    qreal temp2 = temp / mDefaultStitch->width();
     //TODO: see if there is a way to finess the numbers here...?   
     int row = round(temp2 / mRowSpacing);
     if(row < 0)
@@ -622,8 +634,8 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
         //FIXME: the row has to be passed in because getClosestRow modifies the row
         x = getClosestColumn(e->scenePos(), y);
     } else if (mStyle == CrochetScene::Flat) {
-        x = ceil(e->scenePos().x() / flatWidth) - 1;
-        y = ceil(e->scenePos().y() / flatHeight) - 1;
+        x = ceil(e->scenePos().x() / mDefaultStitch->width()) - 1;
+        y = ceil(e->scenePos().y() / mDefaultStitch->height()) - 1;
     }
 
     if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {

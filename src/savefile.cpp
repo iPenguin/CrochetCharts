@@ -122,6 +122,9 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
             continue;
         stream->writeTextElement("name", mTabWidget->tabText(i));
         stream->writeTextElement("style", QString::number(tab->scene()->mStyle));
+        Stitch *s = tab->scene()->mDefaultStitch;
+        if(s)
+            stream->writeTextElement("defaultStitch", s->name());
         
         int rows = tab->scene()->rowCount();
         
@@ -313,6 +316,13 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             tabName = stream->readElementText();
         } else if(tag == "style") {
             tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
+        } else if(tag == "defaultStitch") {
+            Stitch *s = StitchLibrary::inst()->findStitch(stream->readElementText());
+            if(s) {
+                tab->scene()->mDefaultStitch = s;
+            } else {
+                tab->scene()->mDefaultStitch = StitchLibrary::inst()->findStitch("ch");
+            }
         } else if(tag == "cell") {
             SaveThread *sth = new SaveThread(tab, stream);
             QThread bgThread;

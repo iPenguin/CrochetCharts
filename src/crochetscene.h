@@ -42,9 +42,6 @@ public:
         Flat = 100,
         Round
     };
-
-    const int flatWidth;
-    const int flatHeight;
     
     CrochetScene(QObject *parent = 0);
     ~CrochetScene();
@@ -185,8 +182,6 @@ private:
     
     void initDemoBackground();
 
-    int mStitchWidth;
-
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
@@ -219,6 +214,8 @@ private:
     QColor mEditBgColor;
 
     QUndoStack mUndoStack;
+
+    Stitch *mDefaultStitch;
     
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<CrochetCell *> > mGrid;
