@@ -28,6 +28,9 @@ public:
     QString category() const { return mCategory; }
     QString wrongSide() const { return mWrongSide; }
 
+    qreal width();
+    qreal height();
+
     bool isSvg();
 
     QPixmap* renderPixmap();

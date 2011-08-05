@@ -241,7 +241,7 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
         c->setToolTip(QString::number(column+1));
         
     } else {
-        c->setPos(column*flatWidth, row*flatHeight);
+        c->setPos(column*c->stitch()->width(), row*c->stitch()->height());
         if(updateAnchor || c->anchor().isNull())
             c->setAnchor(column*flatWidth, row*flatHeight);
         c->setToolTip(QString::number(column+1));

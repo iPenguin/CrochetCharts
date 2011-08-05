@@ -121,3 +121,14 @@ void Stitch::reload()
 {
     setupSvgFiles();
 }
+
+qreal Stitch::width()
+{
+    return mSvgRenderer->viewBoxF().width();
+}
+
+
+qreal Stitch::height()
+{
+    return mSvgRenderer->viewBoxF().height();
+}
