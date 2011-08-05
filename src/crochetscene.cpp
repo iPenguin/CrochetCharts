@@ -621,7 +621,8 @@ void CrochetScene::gridModeMouseMove(QGraphicsSceneMouseEvent* e)
 void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
-    int x,y;
+    int x = 0;
+    int y = 0;
     if(mStyle == CrochetScene::Round) {
         y = getClosestRow(e->scenePos());
         //FIXME: the row has to be passed in because getClosestRow modifies the row
