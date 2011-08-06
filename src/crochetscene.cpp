@@ -704,7 +704,6 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
         mOldPositions.insert(item, item->pos());
     }
 
-    qDebug() << "start move" << mOldPositions;
 }
 
 void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -714,18 +713,20 @@ void CrochetScene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    qDebug() << "begin end" << mOldPositions;
+    
     Q_UNUSED(e);
-    if(selectedItems().count() > 0) {
+    if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
         mUndoStack.beginMacro("move items");
         foreach(QGraphicsItem *item, selectedItems()) {
-            QPointF oldPos = mOldPositions.value(item);
-            mUndoStack.push(new SetItemCoordinates(this, item, oldPos, item->pos()));
+            if(mOldPositions.contains(item)) {
+                QPointF oldPos = mOldPositions.value(item);
+                mUndoStack.push(new SetItemCoordinates(this, item, oldPos, item->pos()));
+            }
         }
         mUndoStack.endMacro();
         mOldPositions.clear();
     }
-    qDebug() << "end of end" << mOldPositions;
+    
 }
 
 void CrochetScene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
