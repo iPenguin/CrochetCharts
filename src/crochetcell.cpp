@@ -16,7 +16,7 @@
 CrochetCell::CrochetCell()
      : mScale(1.0), mHighlight(false)
 {
-    //setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges); //enable itemChange to pick up move changes.
 }
 
@@ -34,30 +34,6 @@ void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     QRect rect =QRect(option->rect.x() + (option->rect.width()/2), option->rect.y() + (option->rect.height()/2),
                       (option->rect.width()/2), (option->rect.height()/2));
-}
-
-QVariant CrochetCell::itemChange(GraphicsItemChange change, const QVariant &value)
-{
-    if(change == ItemPositionChange && scene()) {
-        QPointF newPos = value.toPointF();
-        qreal x, y;
-
-        //FIXME: I really don't like having to do cast to CrochetScene in the CrochetCell!
-        CrochetScene *s = static_cast<CrochetScene*>(scene());
-
-        bool freeForm = s->isFreeForm();
-        if(!freeForm && !mAnchor.isNull()) {
-            x = qMin(mAnchor.x() + 64, qMax(newPos.x(), mAnchor.x() - 64));
-            y = qMin(mAnchor.y() + 64, qMax(newPos.y(), mAnchor.y() - 64));
-        } else {
-            x = newPos.x();
-            y = newPos.y();
-        }
-        return QVariant(QPointF(x, y));
-    }
-
-    return QGraphicsItem::itemChange(change, value);
-
 }
 
 void CrochetCell::setScale(qreal newScale)

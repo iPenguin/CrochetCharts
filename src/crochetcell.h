@@ -44,9 +44,6 @@ public slots:
 
     void setStitch(QString s, bool useAltRenderer);
     void setStitch(Stitch *s, bool useAltRenderer);
-
-protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     
 private:
     qreal mScale;

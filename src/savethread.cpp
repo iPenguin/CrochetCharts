@@ -28,11 +28,11 @@ void SaveThread::run()
 {
     CrochetCell *c = new CrochetCell();
     Stitch *s = 0;
-    int row, column;
+    int row = 0, column = 0;
     QString color;
-    qreal x, y, anchorX = 0, anchorY = 0;
+    qreal x = 0, y = 0, anchorX = 0, anchorY = 0;
     QTransform transform;
-    double angle;
+    double angle = 0;
     
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
@@ -80,9 +80,9 @@ QTransform SaveThread::loadTransform(QXmlStreamReader* stream)
 {
     QTransform transform;
     
-    qreal m11, m12, m13,
-    m21, m22, m23,
-    m31, m32, m33;
+    qreal m11 = transform.m11(), m12 = transform.m12(), m13 = transform.m13(),
+          m21 = transform.m21(), m22 = transform.m22(), m23 = transform.m23(),
+          m31 = transform.m31(), m32 = transform.m32(), m33 = transform.m33();
     
     while(!(stream->isEndElement() && stream->name() == "transformation")) {
         stream->readNext();

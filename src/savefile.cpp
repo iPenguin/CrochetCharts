@@ -122,7 +122,9 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
             continue;
         stream->writeTextElement("name", mTabWidget->tabText(i));
         stream->writeTextElement("style", QString::number(tab->scene()->mStyle));
-        stream->writeTextElement("freeform", tab->scene()->mFreeForm ? "1" : "0");
+        Stitch *s = tab->scene()->mDefaultStitch;
+        if(s)
+            stream->writeTextElement("defaultStitch", s->name());
         
         int rows = tab->scene()->rowCount();
         
@@ -303,10 +305,6 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
     QString tabName;
 
     mTabWidget->addTab(tab, "");
-
-    //when placing cells on the chart we don't want to break anything the user has created.
-    bool isFreeForm = true;
-    tab->scene()->setFreeForm(isFreeForm);
     
     mTabWidget->widget(mTabWidget->indexOf(tab))->hide();
 
@@ -318,8 +316,13 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             tabName = stream->readElementText();
         } else if(tag == "style") {
             tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
-        } else if(tag == "freeform") {
-            isFreeForm = (bool)stream->readElementText().toInt();
+        } else if(tag == "defaultStitch") {
+            Stitch *s = StitchLibrary::inst()->findStitch(stream->readElementText());
+            if(s) {
+                tab->scene()->mDefaultStitch = s;
+            } else {
+                tab->scene()->mDefaultStitch = StitchLibrary::inst()->findStitch("ch");
+            }
         } else if(tag == "cell") {
             SaveThread *sth = new SaveThread(tab, stream);
             QThread bgThread;
@@ -333,7 +336,6 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         }
     }
 
-    tab->setFreeForm(isFreeForm);
     int index = mTabWidget->indexOf(tab);
     mTabWidget->setTabText(index, tabName);
     mTabWidget->widget(mTabWidget->indexOf(tab))->show();
@@ -343,11 +345,11 @@ void SaveFile::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
 {
     CrochetCell *c = new CrochetCell();
     Stitch *s = 0;
-    int row, column;
-    QString color;
-    qreal x, y, anchorX = 0, anchorY = 0;
+    int row = 0, column = 0;
+    QString color = "";
+    qreal x = 0, y = 0, anchorX = 0, anchorY = 0;
     QTransform transform;
-    double angle;
+    double angle = 0.0;
     
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
@@ -395,7 +397,7 @@ void SaveFile::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 {
     Indicator *i = new Indicator();
 
-    qreal x, y;
+    qreal x = 0, y = 0;
     QString textColor, bgColor;
     QString text;
 
@@ -427,9 +429,9 @@ QTransform SaveFile::loadTransform(QXmlStreamReader* stream)
 {
     QTransform transform;
 
-    qreal m11, m12, m13,
-          m21, m22, m23,
-          m31, m32, m33;
+    qreal m11 = transform.m11(), m12 = transform.m12(), m13 = transform.m13(),
+          m21 = transform.m21(), m22 = transform.m22(), m23 = transform.m23(),
+          m31 = transform.m31(), m32 = transform.m32(), m33 = transform.m33();
 
     while(!(stream->isEndElement() && stream->name() == "transformation")) {
         stream->readNext();

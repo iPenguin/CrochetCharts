@@ -14,6 +14,8 @@
 
 #include "indicator.h"
 
+class QKeyEvent;
+
 class CrochetScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -40,9 +42,6 @@ public:
         Flat = 100,
         Round
     };
-
-    const int flatWidth;
-    const int flatHeight;
     
     CrochetScene(QObject *parent = 0);
     ~CrochetScene();
@@ -79,9 +78,6 @@ public:
 
     QUndoStack* undoStack() { return &mUndoStack; }
 
-    bool isFreeForm() { return mFreeForm; }
-    void setFreeForm(bool value) { mFreeForm = value; }
-
     void addIndicator(Indicator *i);
     void removeIndicator(Indicator *i);
     void removeIndicator(QPointF pos);
@@ -90,7 +86,6 @@ public:
     
 public slots:
     void updateRubberBand(int dx, int dy);
-    void updateFreeForm(bool state);
 
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
@@ -110,10 +105,10 @@ protected:
     virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
     virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
     virtual void    keyPressEvent ( QKeyEvent * keyEvent )
-    virtual void    keyReleaseEvent ( QKeyEvent * keyEvent )
     virtual void    wheelEvent ( QGraphicsSceneWheelEvent * wheelEvent )
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
 */
+    void keyReleaseEvent(QKeyEvent *keyEvent);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
@@ -156,18 +151,19 @@ private:
     void highlightCell(QGraphicsSceneMouseEvent *e);
     
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void gridModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void positionModeMouseMove(QGraphicsSceneMouseEvent *e);
-
     void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
-    void colorModeMousePress(QGraphicsSceneMouseEvent *e);
-    void gridModeMousePress(QGraphicsSceneMouseEvent *e);
-    void positionModeMousePress(QGraphicsSceneMouseEvent *e);
-
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    
+    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void colorModeMousePress(QGraphicsSceneMouseEvent *e);
     void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    
+    void gridModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void gridModeMousePress(QGraphicsSceneMouseEvent *e);
     void gridModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    
+    void positionModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void positionModeMousePress(QGraphicsSceneMouseEvent *e);
     void positionModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
     void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
@@ -187,8 +183,6 @@ private:
     
     void initDemoBackground();
 
-    int mStitchWidth;
-
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
@@ -207,6 +201,8 @@ private:
 
     QRubberBand *mRubberBand;
     QPointF mRubberBandStart;
+
+    QMap<QGraphicsItem *, QPointF> mOldPositions;
     
     //Is the user moving an indicator.
     bool mMoving;
@@ -215,14 +211,14 @@ private:
     
     ChartStyle mStyle;
     EditMode mMode;
-
-    bool mFreeForm;
     
     QString mEditStitch;
     QColor mEditFgColor;
     QColor mEditBgColor;
 
     QUndoStack mUndoStack;
+
+    Stitch *mDefaultStitch;
     
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<CrochetCell *> > mGrid;

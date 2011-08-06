@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>${CMAKE_PROJECT_NAME}</string>
+	<string>${PROJECT_NAME}</string>
 	<key>CFBundleGetInfoString</key>
 	<string>${PROJECT_DESCRIPTION}</string>
 	<key>CFBundleIconFile</key>

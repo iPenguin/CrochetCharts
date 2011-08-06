@@ -70,12 +70,12 @@ private:
     CrochetScene *scene;
 };
 
-class SetCellCoordinates : public QUndoCommand
+class SetItemCoordinates : public QUndoCommand
 {
 public:
     enum { Id = 1130 };
 
-    SetCellCoordinates(CrochetScene *s, CrochetCell *cell, QPointF oldPos, QPointF newPos, QUndoCommand* parent = 0);
+    SetItemCoordinates(CrochetScene *s, QGraphicsItem *item, QPointF oldPos, QPointF newPos, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -87,7 +87,7 @@ public:
 private:
     QPointF oldCoord;
     QPointF newCoord;
-    CrochetCell *c;
+    QGraphicsItem *i;
 
     CrochetScene *scene;
 };

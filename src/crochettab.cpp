@@ -79,8 +79,6 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     
     connect(ui->copyInstructions, SIGNAL(clicked()), SLOT(copyInstructions()));
 
-    ui->chartFreeForm->setChecked(mScene->isFreeForm());
-    connect(ui->chartFreeForm, SIGNAL(toggled(bool)), mScene, SLOT(updateFreeForm(bool)));
 }
 
 CrochetTab::~CrochetTab()
@@ -213,9 +211,4 @@ void CrochetTab::showChartOptions()
 void CrochetTab::sceneUpdate()
 {
     mScene->update();
-}
-
-void CrochetTab::setFreeForm(bool value)
-{
-    ui->chartFreeForm->setChecked(value);
 }
