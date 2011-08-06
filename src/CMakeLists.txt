@@ -68,8 +68,6 @@ target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES})
 
 if(WIN32)
 
-    
-
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION bin)
     install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
     

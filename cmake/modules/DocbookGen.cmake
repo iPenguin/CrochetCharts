@@ -85,6 +85,7 @@ function(DOCBOOK_GENERATE format input version)
                 COMMAND "${hhc}" "${working}\\htmlhelp.hhp"
                 WORKING_DIRECTORY "${working}"
                 OUTPUT_VARIABLE _output)
+            file(RENAME "${working}\\htmlhelp.chm" "${working}\\${PROJECT_NAME}.chm")
     else()
         message ( FATAL_ERROR "${format} is not supported by this cmake module. Please choose from html, pdf, pages, or htmlhelp" )
 

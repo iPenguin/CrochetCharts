@@ -555,9 +555,12 @@ void MainWindow::documentNewChart()
 void MainWindow::helpCrochetHelp()
 {
     QString path = QFileInfo(QApplication::applicationFilePath()).path();
+#ifdef Q_WS_WIN
+    QString file = QString("CrochetCharts.chm");
+#else
     QString file = QString("CrochetCharts_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
-
-    QString url = QString("%1/%2").arg(path).arg(file);
+#endif //Q_WS_WIN
+    QString url = QString("%1/../docs/%2").arg(path).arg(file);
     
     if(QFile(url).exists()) {
         QDesktopServices::openUrl(QUrl("file:///" + url, QUrl::TolerantMode));

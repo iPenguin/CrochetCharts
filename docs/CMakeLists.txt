@@ -22,6 +22,7 @@ message("-------------------------------------------------------")
 
 if(WIN32)
     install(FILES "${CMAKE_BINARY_DIR}/docs/pdf/${PROJECT_NAME}_User_Guide_${SWS_VERSION_SHORT}.pdf" DESTINATION .)
+    install(FILES "${CMAKE_BINARY_DIR}/docs/htmlhelp/${PROJECT_NAME}.chm" DESTINATION docs)
 elseif(APPLE)
     install(FILES "${CMAKE_BINARY_DIR}/docs/pdf/${PROJECT_NAME}_User_Guide_${SWS_VERSION_SHORT}.pdf" DESTINATION ../MacOS)
 else()
