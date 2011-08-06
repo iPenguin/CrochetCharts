@@ -39,7 +39,7 @@ set(crochet_resources
 
 qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
-qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers} ${testmodel_headers})
+qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers})
 
 if(WIN32)
     set(WIN32_BASE "C:/Qt/2010.05/qt")

@@ -202,7 +202,7 @@ void MainWindow::setupMenus()
 
     ui->actionPrint->setIcon(QIcon::fromTheme("document-print", QIcon(":/images/fileprint.png")));
     ui->actionPrintPreview->setIcon(QIcon::fromTheme("document-print-preview", QIcon(":/images/document-print-preview.png")));
-    ui->actionExport->setIcon(QIcon::fromTheme("export", QIcon(":/images/export.svg")));
+
     /*document-export*/
     ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
 
@@ -277,7 +277,6 @@ void MainWindow::setupMenus()
     connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
     connect(ui->actionRemoveTab, SIGNAL(triggered()), this, SLOT(removeCurrentTab()));
 
-    ui->actionAddChart->setIcon(QIcon::fromTheme("tab-new", QIcon(":/images/new_chart.svg"))); //insert-chart
     ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
     
     connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));

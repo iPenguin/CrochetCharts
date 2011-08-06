@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
         splash.hide();
         if(wizard.exec() != QWizard::Accepted)
                 return -1;
+        Settings::inst()->saveSettings();
         splash.show();
     }
 

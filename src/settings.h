@@ -37,6 +37,8 @@ public:
 
     //list of recent files. All strings added case sensitively (they'll be used to open the files).
     QStringList recentFiles;
+
+    void saveSettings() { mSettings.sync(); }
     
 private:
     void initDemoVersion();

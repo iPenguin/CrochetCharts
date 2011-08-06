@@ -104,6 +104,11 @@ elseif(APPLE)
         \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@/User Guide.pdf\")
         " COMPONENT Runtime)
 
+    #install(CODE "
+    #  include(\"@CMAKE_SOURCE_DIR@/Modules/BundleUtilities.cmake\")
+    #  fixup_bundle(\"@fixup_exe@\" \"\" \"@QT_LIBRARY_DIR@;@QT_BINARY_DIR@\")
+    #")
+
 
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")
