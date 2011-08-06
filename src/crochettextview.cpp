@@ -14,8 +14,6 @@
 #include "settings.h"
 #include <math.h>
 
-#include "crochetchartcommands.h"
-
 CrochetTextView::CrochetTextView(QWidget *parent, CrochetScene* scene)
     : QPlainTextEdit(parent), mScene(scene), mCompleter(0)
 {
@@ -60,6 +58,7 @@ void CrochetTextView::updateRow(int row)
     } else {
         curs.deletePreviousChar();
     }
+    
 }
 
 void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
@@ -83,20 +82,16 @@ void CrochetTextView::updateScene(int pos, int charsRemoved, int charsAdded)
             mScene->removeCell(row, i);
     }
 
-    mScene->undoStack()->beginMacro(tr("Update chart text"));
     for(int c = 0; c < stitchCount; ++c) {
         QString s = stitches.at(c);
         s = s.simplified().toLower();
         CrochetCell* cell = mScene->cell(row, c);
-        
         if(!cell) {
-            int x = mScene->grid()[row].count();
-            mScene->undoStack()->push(new AddCell(mScene, QPoint(x,row)));
-            cell = mScene->cell(row, c);
+            cell = new CrochetCell();
+            mScene->appendCell(row, cell);
         }
-        mScene->undoStack()->push(new SetCellStitch(mScene, cell, s));
+        mScene->cell(row, c)->setStitch(s, (row % 2));
     }
-    mScene->undoStack()->endMacro();
 }
 
 QString CrochetTextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
@@ -112,12 +107,7 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput, bool useRepe
 
     //create a list of stitches
     for(int c = 0; c < cols; ++c) {
-        CrochetCell *cell = mScene->cell(row, c);
-        if(cell)
-            curStitch = cell->name();
-        else
-            continue;
-        
+        curStitch = mScene->cell(row, c)->name();
         if(cleanOutput) {
             //parse out any placeholder stitches before continuing.
             if(curStitch == placeholder)
@@ -128,9 +118,6 @@ QString CrochetTextView::generateTextRow(int row, bool cleanOutput, bool useRepe
     }
     rowText = generateText(rowList, useRepeats);
 
-    if(rowText == "")
-        return rowText;
-    
     if(cleanOutput) {
         //capitalize the first letter.
         for(int i = 0; i < rowText.count(); ++i) {
@@ -398,10 +385,7 @@ QString CrochetTextView::copyInstructions()
     
     int rows = mScene->rowCount();
     for(int r = 0; r < rows; ++r) {
-        QString text = generateTextRow(r, true, true);
-        
-        if(text != "")
-            rowText << text;
+        rowText << generateTextRow(r, true, true);
     }
 
     for(int i = 0; i < rowText.count(); ++i) {
