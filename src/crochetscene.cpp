@@ -242,15 +242,14 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
             c->setAnchor(finish.x() - 32, finish.y());
         c->setPos(finish.x() - 32, finish.y());
         c->setTransform(QTransform().translate(32,0).rotate(degrees + 90).translate(-32, 0));
-        c->setToolTip(QString::number(column+1));
         
     } else {
         c->setPos(column*mDefaultStitch->width(), row*mDefaultStitch->height());
         if(updateAnchor || c->anchor().isNull())
             c->setAnchor(column*mDefaultStitch->width(), row*mDefaultStitch->height());
-        c->setToolTip(QString::number(column+1));
         c->setColor(QColor(Qt::white));
     }
+    c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
 }
 
 void CrochetScene::redistributeCells(int row)
