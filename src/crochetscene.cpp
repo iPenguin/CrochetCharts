@@ -389,8 +389,8 @@ void CrochetScene::updateRubberBand(int dx, int dy)
     if(mRubberBandStart.isNull())
         return;
 
-    mRubberBandStart.setX(mRubberBandStart.x() + dx);
-    mRubberBandStart.setY(mRubberBandStart.y() + dy);
+    mRubberBandStart.setX(mRubberBandStart.x() - dx);
+    mRubberBandStart.setY(mRubberBandStart.y() - dy);
 }
 
 QPoint CrochetScene::findGridPosition(CrochetCell* c)
