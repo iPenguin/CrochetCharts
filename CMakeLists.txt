@@ -29,12 +29,12 @@ set(SWS_VERSION_SHORT "${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}.${SWS_VERSION_P
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
+set(crochet_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
 
 find_package(Qt4 REQUIRED)
 
 option(UNIT_TESTING  "Build the test libraries for this software" OFF)
 option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
-option(SHADOW_FLAG "Use -Wshadow when compiling" OFF)
 option(SWS_DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
 
@@ -44,7 +44,6 @@ message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
 message(STATUS "Unit Testing: " ${UNIT_TESTING})
 message(STATUS "Force 32bit: " ${FORCE_32BIT})
 message(STATUS "Create Documentation: " ${SWS_DOCS})
-message(STATUS "Use -Wshadow: " ${SHADOW_FLAG})
 message(STATUS "Found Hunspell: " ${HUNSPELL_FOUND})
 message(STATUS "Doxygen Docs: " ${DOXYGEN})
 message("-------------------------------------------------------")
@@ -52,10 +51,6 @@ message("-------------------------------------------------------")
 if(FORCE_32BIT)
     set(extra_build_flags "-m32")
     set(extra_link_flags "-m elf_i386")
-endif()
-
-if(SHADOW_FLAG)
-    list(APPEND extra_build_flags " -Wshadow")
 endif()
 
 set(CMAKE_C_FLAGS "${extra_build_flags} -g -ggdb -W -Wall") #-ansi -pedantic
@@ -87,7 +82,10 @@ include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
 
-set(crochet_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
+###################################################################################
+#CPack includes to create installers
+###################################################################################
+include("${CMAKE_CURRENT_SOURCE_DIR}/resources/installers.cmake")
 
 add_subdirectory(src)
 
@@ -98,8 +96,3 @@ endif()
 if(UNIT_TESTING)
     add_subdirectory(tests)
 endif()
-
-###################################################################################
-#CPack includes to create installers
-###################################################################################
-include("${CMAKE_CURRENT_SOURCE_DIR}/resources/installers.cmake")

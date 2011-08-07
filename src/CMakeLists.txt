@@ -48,7 +48,7 @@ if(WIN32)
     set(CMAKE_RC_COMPILER_INIT windres)
     enable_language(RC)
     set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
-    set(crochet_win ${CMAKE_SOURCE_DIR}/crochet.rc)
+    set(crochet_win "${CMAKE_SOURCE_DIR}/crochet.rc")
     
     set(WIN32_LIBS "${WIN32_BASE}/bin")
     set(WIN32_PLUGINS "${WIN32_BASE}/plugins")
@@ -63,13 +63,12 @@ if(WIN32)
 
 elseif(APPLE)
 
-    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" "[Paths]\nPlugins = plugins\n")
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" DESTINATION .)
+    file(WRITE "${CMAKE_BINARY_DIR}/qt.conf" "[Paths]\nPlugins = plugins\n")
+    install(FILES "${CMAKE_BINARY_DIR}/qt.conf" DESTINATION .)
 
     set(CMAKE_OSX_ARCHITECTURES "i386;x86_64") #";x86_64;ppc64;")
 
     set(DARWIN_LIBS "/Developer/SDKs/MacOSX10.4u.sdk/Library/Frameworks/")
-    set(DARWIN_PLUGINS "/Developer/Applications/Qt/plugins")
 
     set(crochet_mac)
 
