@@ -60,6 +60,23 @@ if(WIN32)
                     #"C:/OpenSSL-Win32/libeay32.dll" "C:/OpenSSL-Win32/ssleay32.dll")
 
     set(QT_PLUGINS_WINDOWS "${WIN32_PLUGINS}/imageformats" "${WIN32_PLUGINS}/accessible" "${WIN32_PLUGINS}/iconengines")
+
+elseif(APPLE)
+
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" "[Paths]\nPlugins = plugins\n")
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" DESTINATION .)
+
+    set(CMAKE_OSX_ARCHITECTURES "i386;x86_64") #";x86_64;ppc64;")
+
+    set(DARWIN_LIBS "/Developer/SDKs/MacOSX10.4u.sdk/Library/Frameworks/")
+    set(DARWIN_PLUGINS "/Developer/Applications/Qt/plugins")
+
+    set(crochet_mac)
+
+else()
+
+    set(crochet_nix)
+
 endif()
 
 add_executable(${PROJECT_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
@@ -72,16 +89,6 @@ if(WIN32)
     install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
     
 elseif(APPLE)
-
-    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" "[Paths]\nPlugins = plugins\n")
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/qt.conf" DESTINATION .)
-
-    set(CMAKE_OSX_ARCHITECTURES "i386;x86_64") #";x86_64;ppc64;")
-
-    set(DARWIN_LIBS "/Developer/SDKs/MacOSX10.4u.sdk/Library/Frameworks/")
-    set(DARWIN_PLUGINS "/Developer/Applications/Qt/plugins")
-
-    set(crochet_mac)
 
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
 
@@ -107,8 +114,6 @@ elseif(APPLE)
                 PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
 else()
-
-    set(crochet_nix)
 
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION bin)
 
