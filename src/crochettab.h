@@ -13,7 +13,7 @@
 
 class QGraphicsView;
 class CrochetScene;
-class CrochetTextView;
+class TextView;
 class QUndoStack;
 
 namespace Ui {
@@ -79,7 +79,7 @@ private:
 private:   
     QPointer<ChartView> mView;
     CrochetScene *mScene;
-    QPointer<CrochetTextView> mTextView;
+    TextView *mTextView;
 
     QMap<QString, int> *mPatternStitches;
     QMap<QString, QMap<QString, qint64> > *mPatternColors;

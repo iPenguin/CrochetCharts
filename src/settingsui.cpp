@@ -195,9 +195,6 @@ void SettingsUi::setColor()
         } else if(b->objectName() == "dotColorBttn") {
             ui->dotColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
             mDotColor = color;
-        } else if(b->objectName() == "keywordColorBttn") {
-            ui->keywordColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
-            mKeywordColor = color;
         }
     }
 }
@@ -228,14 +225,7 @@ void SettingsUi::setupDialogWidgets()
     mDotColor = dotColor;
     
     ui->placeholder->addItems(StitchLibrary::inst()->stitchList());
-    
-    //Instructions
-    connect(ui->keywordColorBttn, SIGNAL(clicked()), SLOT(setColor()));
-
-    QString keywordColor = Settings::inst()->value("syntaxColor").toString();
-    ui->keywordColorBttn->setIcon(QIcon(drawColorBox(QColor(keywordColor), QSize(32, 32))));
-    mKeywordColor = keywordColor;
-    
+        
     //Legends
     QStringList list;
     list << tr("Age") << tr("Color") << tr("Quantity");
@@ -276,11 +266,6 @@ void SettingsUi::resetDialogWidgets()
     color = Settings::inst()->defaultValue("chartIndicatorColor").toString();
     ui->dotColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
     mDotColor = color;
-    
-    //Instructions
-    color = Settings::inst()->defaultValue("syntaxColor").toString();
-    ui->keywordColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
-    mKeywordColor = color;
-    
+        
     //Legends
 }

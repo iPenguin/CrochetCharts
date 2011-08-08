@@ -23,8 +23,7 @@ set(crochet_qobject_headers
     stitchlibrarydelegate.h
     stitchpalettedelegate.h
     chartview.h
-    crochettextview.h
-    crochethighlighter.h
+    textview.h
     updater.h
     stitchiconui.h
     undogroup.h

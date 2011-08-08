@@ -188,7 +188,7 @@
      <x>0</x>
      <y>0</y>
      <width>894</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -300,7 +300,6 @@
    <addaction name="actionSave"/>
    <addaction name="actionExport"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="patternStitchesDock">
    <property name="windowTitle">
     <string>Pattern Stitches</string>

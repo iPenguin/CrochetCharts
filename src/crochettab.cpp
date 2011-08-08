@@ -15,7 +15,8 @@
 #include <QDebug>
 
 #include "crochetscene.h"
-#include "crochettextview.h"
+#include "textview.h"
+
 #include "settings.h"
 #include <QDate>
 #include <QLayout>
@@ -25,17 +26,16 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
         QWidget(parent), ui(new Ui::OptionsBar)
 {    
     QVBoxLayout *l = new QVBoxLayout(this);
-    QSplitter *splitter = new QSplitter(Qt::Vertical, this);
-    splitter->setObjectName("chartSplitter");
-    l->addWidget(splitter);
-
     QWidget *top = new QWidget(this);
+    l->addWidget(top);
+    
     QVBoxLayout *tl = new QVBoxLayout(top);
     top->setLayout(tl);
     top->setContentsMargins(0, 0, 0, 0);
     
     mView = new ChartView(top);
     mScene = new CrochetScene(mView);
+    mTextView = new TextView(this, mScene);
 
     connect(mView, SIGNAL(scrollBarChanged(int,int)), mScene, SLOT(updateRubberBand(int,int)));
     
@@ -43,7 +43,6 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     connect(mScene, SIGNAL(colorChanged(QString,QString)), SLOT(colorChanged(QString,QString)));
 
     mView->setScene(mScene);
-    mTextView = new CrochetTextView(this, mScene);
 
     mScene->setEditMode((CrochetScene::EditMode)defEditMode);
     mScene->setEditStitch(defStitch);
@@ -56,27 +55,20 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     tl->addWidget(w);
 
     ui->horizontalLayout->setMargin(0);
-    
-    splitter->addWidget(top);
-    splitter->addWidget(mTextView);
+       
     l->setMargin(0);
     tl->setMargin(0);
     w->setContentsMargins(0, 0, 0, 0);
-    splitter->setContentsMargins(0, 0, 0, 0);
     
     setContentsMargins(0, 0, 0, 0);
 
     mView->setMinimumSize(width(), height()*2/3);
-    splitter->setStretchFactor(0, 8);
-
+    
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
     ui->chartOptionsBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked()), SLOT(showChartOptions()));
-
-    //FIXME: Add more chart options and re-enable this part of the ui later.
-    ui->moreBttn->hide();
-    
+   
     connect(ui->copyInstructions, SIGNAL(clicked()), SLOT(copyInstructions()));
 
     connect(ui->zoom, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
