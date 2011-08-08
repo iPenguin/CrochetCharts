@@ -40,6 +40,7 @@ CrochetScene::CrochetScene(QObject *parent)
     mRowSpacing(9),
     mStyle(CrochetScene::Rows),
     mMode(CrochetScene::StitchMode),
+    mCenterSymbol(0),
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
@@ -88,6 +89,26 @@ void CrochetScene::initDemoBackground()
 
         //restore original rect. letting the demo text overflow off the scene.
         setSceneRect(rect);
+    }
+}
+
+void CrochetScene::setShowChartCenter(bool state)
+{
+    mShowChartCenter = state;
+
+    if(mStyle == CrochetScene::Rounds) {
+        if(mShowChartCenter) {
+            if(!mCenterSymbol) {
+                QPen pen;
+                pen.setWidth(5);
+                mCenterSymbol = addEllipse(-10,-10, 10, 10, pen);
+                mCenterSymbol->setToolTip(tr("Chart Center"));
+            } else {
+                addItem(mCenterSymbol);
+            }
+        } else {
+            removeItem(mCenterSymbol);
+        }
     }
 }
 
@@ -261,7 +282,9 @@ void CrochetScene::redistributeCells(int row)
 void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch)
 {
     mStyle = style;
-
+    
+    setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
+        
     mDefaultStitch = StitchLibrary::inst()->findStitch(stitch);
     
     for(int i = 0; i < rows; ++i) {

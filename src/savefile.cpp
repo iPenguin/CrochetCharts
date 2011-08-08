@@ -319,7 +319,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         } else if(tag == "style") {
             tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
         } else if(tag == "showChartCenter") {
-            tab->scene()->setShowChartCenter(stream->readElementText().toInt());
+            tab->setShowChartCenter(stream->readElementText().toInt());
         } else if(tag == "defaultStitch") {
             Stitch *s = StitchLibrary::inst()->findStitch(stream->readElementText());
             if(s) {

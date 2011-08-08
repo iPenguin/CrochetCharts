@@ -85,9 +85,12 @@ public:
     QList<QList<CrochetCell *> > grid() { return mGrid; }
 
     bool showChartCenter() { return mShowChartCenter; }
-    void setShowChartCenter(bool state) { mShowChartCenter = state; }
+    
+    CrochetScene::ChartStyle chartStyle() const { return mStyle; }
     
 public slots:
+    void setShowChartCenter(bool state);
+    
     void updateRubberBand(int dx, int dy);
 
 private slots:
@@ -210,6 +213,8 @@ private:
     
     ChartStyle mStyle;
     EditMode mMode;
+
+    QGraphicsItem *mCenterSymbol;
     
     QString mEditStitch;
     QColor mEditFgColor;

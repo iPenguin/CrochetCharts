@@ -74,6 +74,7 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     connect(ui->zoom, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
     connect(mView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
 
+    connect(ui->showChartCenter, SIGNAL(clicked(bool)), mScene, SLOT(setShowChartCenter(bool)));
 }
 
 CrochetTab::~CrochetTab()
@@ -221,6 +222,17 @@ void CrochetTab::showChartOptions()
         ui->moreBttn->setText(tr("&More >>"));
         ui->chartOptionsBox->setVisible(false);
     }
+
+    if(mScene->chartStyle() == CrochetScene::Rounds)
+        ui->showChartCenter->setEnabled(true);
+    else
+        ui->showChartCenter->setEnabled(false);
+}
+
+void CrochetTab::setShowChartCenter(bool state)
+{
+    ui->showChartCenter->setChecked(state);
+    mScene->setShowChartCenter(state);
 }
 
 void CrochetTab::sceneUpdate()

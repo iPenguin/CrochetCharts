@@ -38,9 +38,9 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="showChartSymbol">
+       <widget class="QCheckBox" name="showChartCenter">
         <property name="text">
-         <string>Show chart center</string>
+         <string>Show Chart Center</string>
         </property>
        </widget>
       </item>

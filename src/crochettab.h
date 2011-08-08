@@ -67,6 +67,8 @@ public slots:
 
 protected:
     QMap<QString, int>* patternStitches() { return mPatternStitches; }
+
+    void setShowChartCenter(bool state);
     
 private slots:
     void showChartOptions();
