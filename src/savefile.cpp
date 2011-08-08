@@ -125,6 +125,8 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
         Stitch *s = tab->scene()->mDefaultStitch;
         if(s)
             stream->writeTextElement("defaultStitch", s->name());
+
+        stream->writeTextElement("showChartCenter", QString::number(tab->scene()->showChartCenter()));
         
         int rows = tab->scene()->rowCount();
         
@@ -316,6 +318,8 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             tabName = stream->readElementText();
         } else if(tag == "style") {
             tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
+        } else if(tag == "showChartCenter") {
+            tab->scene()->setShowChartCenter(stream->readElementText().toInt());
         } else if(tag == "defaultStitch") {
             Stitch *s = StitchLibrary::inst()->findStitch(stream->readElementText());
             if(s) {

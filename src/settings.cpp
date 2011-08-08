@@ -111,10 +111,9 @@ void Settings::setupValueList() {
     
     mValueList["geometry"] = QVariant("");
     mValueList["windowState"] = QVariant("");
-
-    //instructions
-    mValueList["syntaxColor"] = QVariant("#000080");
+    
     mValueList["generateTextRepeats"] = QVariant(true);
+    mValueList["showChartCenter"] = QVariant(false);
     
     //charts options
     mValueList["defaultStitch"] = QVariant("ch");

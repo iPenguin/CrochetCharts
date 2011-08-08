@@ -83,6 +83,9 @@ public:
     void removeIndicator(QPointF pos);
 
     QList<QList<CrochetCell *> > grid() { return mGrid; }
+
+    bool showChartCenter() { return mShowChartCenter; }
+    void setShowChartCenter(bool state) { mShowChartCenter = state; }
     
 public slots:
     void updateRubberBand(int dx, int dy);
@@ -216,6 +219,8 @@ private:
     QColor mEditFgColor;
     QColor mEditBgColor;
 
+    bool mShowChartCenter;
+    
     QUndoStack mUndoStack;
 
     Stitch *mDefaultStitch;

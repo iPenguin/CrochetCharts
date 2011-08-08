@@ -380,20 +380,20 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_3">
+       <item row="5" column="1">
+        <widget class="QCheckBox" name="showChartCenter">
          <property name="text">
-          <string>Color for Key words:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <string/>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="keywordColorBttn">
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_11">
          <property name="text">
-          <string>Color</string>
+          <string>Show Chart Center:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>

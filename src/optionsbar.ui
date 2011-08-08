@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>658</width>
-    <height>86</height>
+    <height>79</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,6 +37,13 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="showChartSymbol">
+        <property name="text">
+         <string>Show chart center</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -61,13 +68,6 @@ p, li { white-space: pre-wrap; }
         </size>
        </property>
       </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="moreBttn">
-       <property name="text">
-        <string>&amp;More &gt;&gt;</string>
-       </property>
-      </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_2">
@@ -107,13 +107,19 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="moreBttn">
+       <property name="text">
+        <string>&amp;More &gt;&gt;</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>copyInstructions</tabstop>
-  <tabstop>moreBttn</tabstop>
  </tabstops>
  <resources/>
  <connections/>
