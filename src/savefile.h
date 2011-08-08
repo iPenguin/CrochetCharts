@@ -53,8 +53,6 @@ private:
 
     void loadColors(QXmlStreamReader *stream);
     void loadChart(QXmlStreamReader *stream);
-    void loadCell(CrochetTab *tab, QXmlStreamReader *stream);
-    QTransform loadTransform(QXmlStreamReader *stream);
 
     void loadIndicator(CrochetTab *tab, QXmlStreamReader *stream);
 
