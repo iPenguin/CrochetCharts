@@ -31,7 +31,7 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
     int deltaY = 0;
 
     if(event->buttons() == Qt::LeftButton) {
-        
+
         if(event->pos().x() < 5) {
             int diff = horizontalScrollBar()->value() - horizontalScrollBar()->minimum();
             if(diff < deltaX)
@@ -63,10 +63,18 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
             else
                 deltaY = 5;
         }
-        
+
         verticalScrollBar()->setValue(verticalScrollBar()->value() + deltaY);
         
-        if(deltaX > 0 && deltaY > 0)
+        bool isHorizLimit = false;
+        isHorizLimit = (horizontalScrollBar()->value() == horizontalScrollBar()->minimum()) ? true : isHorizLimit;
+        isHorizLimit = (horizontalScrollBar()->value() == horizontalScrollBar()->maximum()) ? true : isHorizLimit;
+
+        bool isVertLimit = false;
+        isVertLimit = (verticalScrollBar()->value() == verticalScrollBar()->minimum()) ? true : isVertLimit;
+        isVertLimit = (verticalScrollBar()->value() == verticalScrollBar()->maximum()) ? true : isVertLimit;
+
+        if((deltaX != 0 && !isHorizLimit) || (deltaY != 0 && !isVertLimit))
             emit scrollBarChanged(deltaX, deltaY);
     }
     

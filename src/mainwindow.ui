@@ -918,6 +918,14 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>tabWidget</tabstop>
+  <tabstop>rows</tabstop>
+  <tabstop>stitches</tabstop>
+  <tabstop>defaultStitch</tabstop>
+  <tabstop>chartTitle</tabstop>
+  <tabstop>chartStyle</tabstop>
+  <tabstop>newDocBttnBox</tabstop>
+  <tabstop>patternStitches</tabstop>
+  <tabstop>patternColors</tabstop>
   <tabstop>allStitches</tabstop>
  </tabstops>
  <resources>
