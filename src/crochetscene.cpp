@@ -156,7 +156,6 @@ void CrochetScene::removeCell(CrochetCell *c)
     for(int i = 0; i < mGrid.count(); ++i) {
         if (mGrid[i].contains(c)) {
             mGrid[i].removeOne(c);
-            emit rowChanged(i);
         }
     }
 
@@ -190,9 +189,7 @@ void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
     setCellPosition(row, col, c, mGrid[row].count());
     c->setColor(QColor(Qt::white));
    
-    if(fromSave)
-        emit rowChanged(row);
-    else {
+    if(!fromSave) {
         if(mStyle == CrochetScene::Rounds)
             redistributeCells(row);
     }
@@ -220,8 +217,6 @@ void CrochetScene::addCell(QPoint p, CrochetCell* c)
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
-
-    emit rowChanged(p.y());
 
 }
 
@@ -276,8 +271,8 @@ void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int col
         
         createRow(i, cols + pad, stitch);
     }
+    
     initDemoBackground();
-    emit chartCreated(rows, cols);
 }
 
 void CrochetScene::createRow(int row, int columns, QString stitch)
@@ -298,8 +293,7 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
         setCellPosition(row, i, c, columns);
     }
     mGrid.append(modelRow);
-    //emit rowChanged(row);
-    emit rowAdded(row);
+
 }
 
 int CrochetScene::getClosestRow(QPointF mousePosition)
@@ -370,8 +364,6 @@ void CrochetScene::stitchUpdated(QString oldSt, QString newSt)
         return;
 
     QPoint pos = findGridPosition(c);
-    //TODO: this used to crash... does it still?
-    emit rowChanged(pos.y());
     
 }
 

@@ -96,10 +96,6 @@ private slots:
     void updateSelection(QPolygonF selection);
     
 signals:
-    void rowChanged(int row);
-    void rowsChanged(int startRow);
-    void rowAdded(int newRow);
-    void chartCreated(int rows, int cols);
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
     
