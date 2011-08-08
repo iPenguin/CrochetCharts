@@ -11,9 +11,7 @@
 ChartView::ChartView(QWidget *parent)
     : QGraphicsView(parent)
 {
-    //DONT USE THESE IF the mousePress & move & release code is in use.
-    //setDragMode(QGraphicsView::RubberBandDrag);
-    //setRubberBandSelectionMode(Qt::IntersectsItemBoundingRect);
+
 }
 
 ChartView::~ChartView()
@@ -94,10 +92,31 @@ void ChartView::wheelEvent(QWheelEvent *event)
         QGraphicsView::wheelEvent(event);
 }
 
+void ChartView::zoomIn()
+{
+    zoomLevel((transform().m11()*100) + 5);
+    emit zoomLevelChanged(transform().m11()*100);
+}
+
+void ChartView::zoomOut()
+{
+    zoomLevel((transform().m11()*100) - 5);
+    emit zoomLevelChanged(transform().m11()*100);
+}
+
 void ChartView::zoom(int mouseDelta)
 {
     double scroll = mouseDelta / 120;
-    scroll /= 10;
-    scroll += 1;
-    scale(scroll, scroll);
+    int delta = 5 * scroll;
+    zoomLevel((transform().m11()*100) + delta);
+    emit zoomLevelChanged(transform().m11()*100);
+}
+
+void ChartView::zoomLevel(int percent)
+{
+    qreal pcent = percent / 100.0;
+    if(pcent <= 0)
+        pcent = 0.01;
+    qreal diff = pcent / transform().m11();
+    scale(diff, diff);
 }

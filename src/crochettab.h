@@ -70,6 +70,8 @@ protected:
     
 private slots:
     void showChartOptions();
+    void zoomChanged(int value);
+    void updateZoomLevel(int percent);
     
 private:
     CrochetScene* scene() { return mScene; }

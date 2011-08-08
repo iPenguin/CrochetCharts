@@ -17,14 +17,16 @@ public:
     ChartView(QWidget *parent = 0);
     ~ChartView();
 
-    void zoomIn() { zoom(120); }
-    void zoomOut() { zoom(-120); }
+    void zoomIn();
+    void zoomOut();
     //zoom takes the mouseDelta which is usually +/- 120;
     void zoom(int mouseDelta);
+    void zoomLevel(int percent);
 
 signals:
     void scrollBarChanged(int dx, int dy);
-    
+    void zoomLevelChanged(int percent);
+
 protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -33,4 +35,5 @@ protected:
     
 private:
 };
+
 #endif //CHARTVIEW_H

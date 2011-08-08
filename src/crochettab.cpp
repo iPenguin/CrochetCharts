@@ -79,6 +79,9 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     
     connect(ui->copyInstructions, SIGNAL(clicked()), SLOT(copyInstructions()));
 
+    connect(ui->zoom, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
+    connect(mView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
+
 }
 
 CrochetTab::~CrochetTab()
@@ -154,6 +157,26 @@ void CrochetTab::zoomIn()
 void CrochetTab::zoomOut()
 {
     mView->zoomOut();
+}
+
+void CrochetTab::zoomChanged(int value)
+{
+    mView->zoomLevel(value);
+}
+
+void CrochetTab::updateZoomLevel(int percent)
+{
+    int value = 100;
+    if(percent <= ui->zoom->maximum() && percent >= ui->zoom->minimum())
+        value = percent;
+    else if(percent > ui->zoom->maximum())
+        value = ui->zoom->maximum();
+    else if (percent < ui->zoom->minimum())
+        value = ui->zoom->minimum();
+
+    ui->zoom->blockSignals(true);
+    ui->zoom->setValue(value);
+    ui->zoom->blockSignals(false);
 }
 
 QUndoStack* CrochetTab::undoStack()
