@@ -37,7 +37,7 @@ CrochetScene::CrochetScene(QObject *parent)
     mRubberBand(0),
     mRubberBandStart(QPointF(0,0)),
     mMoving(false),
-    mRowSpacing(8),
+    mRowSpacing(9),
     mStyle(CrochetScene::Flat),
     mMode(CrochetScene::StitchMode),
     mEditStitch("ch"),
@@ -229,9 +229,8 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
 {
     if(mStyle == CrochetScene::Round) {
         double widthInDegrees = 360.0 / columns;
-        int cols = (row == 0) ? columns : mGrid[0].count();
-        qreal rowOneCirc = ((mRowSpacing + mDefaultStitch->width()) * cols);
-        double circumference = (row*mRowSpacing) * mDefaultStitch->width() + rowOneCirc;
+
+        double circumference = (mDefaultStitch->width() * columns) + ((row +1) * mDefaultStitch->height());
         double diameter = circumference / M_PI;
         double radius = diameter / 2;
         
