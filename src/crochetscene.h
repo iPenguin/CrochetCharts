@@ -39,8 +39,8 @@ public:
     };
 
     enum ChartStyle {
-        Flat = 100,
-        Round
+        Rows = 100,
+        Rounds
     };
     
     CrochetScene(QObject *parent = 0);
@@ -123,17 +123,17 @@ protected:
 
     /**
      * Takes a @param row and spread the cells out evenly along it's entire length.
-     * This function can handle round or flat rows transparently.
+     * This function can handle rounds or rows transparently.
      */
     void redistributeCells(int row);
     /**
      * Takes a @param mousePosition and returns the closest y co-ordinate.
-     * function assumes a round row.
+     * function assumes rounds not rows.
      */
     int getClosestRow(QPointF mousePosition);
     /**
      * Takes a @param mousePosition and @param row and returns the closest x co-ordinate.
-     * function assumes a round row.
+     * function assumes rounds not rows.
      */
     int getClosestColumn(QPointF mousePosition, int row);
 

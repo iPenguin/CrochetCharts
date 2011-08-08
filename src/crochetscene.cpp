@@ -38,7 +38,7 @@ CrochetScene::CrochetScene(QObject *parent)
     mRubberBandStart(QPointF(0,0)),
     mMoving(false),
     mRowSpacing(9),
-    mStyle(CrochetScene::Flat),
+    mStyle(CrochetScene::Rows),
     mMode(CrochetScene::StitchMode),
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
@@ -193,7 +193,7 @@ void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
     if(fromSave)
         emit rowChanged(row);
     else {
-        if(mStyle == CrochetScene::Round)
+        if(mStyle == CrochetScene::Rounds)
             redistributeCells(row);
     }
 }
@@ -227,7 +227,7 @@ void CrochetScene::addCell(QPoint p, CrochetCell* c)
 
 void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
 {
-    if(mStyle == CrochetScene::Round) {
+    if(mStyle == CrochetScene::Rounds) {
         double widthInDegrees = 360.0 / columns;
 
         double circumference = (mDefaultStitch->width() * columns) + ((row +1) * mDefaultStitch->height());
@@ -271,7 +271,7 @@ void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int col
     
     for(int i = 0; i < rows; ++i) {
         int pad = 0;
-        if(mStyle == CrochetScene::Round)
+        if(mStyle == CrochetScene::Rounds)
             pad = i*8;
         
         createRow(i, cols + pad, stitch);
@@ -665,11 +665,11 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
     //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
     int x = 0;
     int y = 0;
-    if(mStyle == CrochetScene::Round) {
+    if(mStyle == CrochetScene::Rounds) {
         y = getClosestRow(e->scenePos());
         //FIXME: the row has to be passed in because getClosestRow modifies the row
         x = getClosestColumn(e->scenePos(), y);
-    } else if (mStyle == CrochetScene::Flat) {
+    } else if (mStyle == CrochetScene::Rows) {
         x = ceil(e->scenePos().x() / mDefaultStitch->width()) - 1;
         y = ceil(e->scenePos().y() / mDefaultStitch->height()) - 1;
     }

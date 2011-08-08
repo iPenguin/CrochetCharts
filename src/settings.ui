@@ -314,12 +314,12 @@
         <widget class="QComboBox" name="chartStyle">
          <item>
           <property name="text">
-           <string>Flat</string>
+           <string>Rows</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Round</string>
+           <string>Rounds</string>
           </property>
          </item>
         </widget>

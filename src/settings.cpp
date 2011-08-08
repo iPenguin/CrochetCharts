@@ -121,7 +121,7 @@ void Settings::setupValueList() {
     mValueList["placeholder"] = QVariant("x");
     mValueList["rowCount"] = QVariant(15);
     mValueList["stitchCount"] = QVariant(15);
-    mValueList["chartStyle"] = QVariant(tr("Flat"));
+    mValueList["chartStyle"] = QVariant(tr("Rows"));
     
     mValueList["useAltColors"] = QVariant(true);
     mValueList["stitchPrimaryColor"] = QVariant("#000000");

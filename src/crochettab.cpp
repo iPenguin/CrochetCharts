@@ -163,12 +163,12 @@ QUndoStack* CrochetTab::undoStack()
 
 void CrochetTab::createChart(QString style, int rows, int cols, QString defStitch)
 {
-    CrochetScene::ChartStyle st = CrochetScene::Flat;
+    CrochetScene::ChartStyle st = CrochetScene::Rows;
     
-    if(style == tr("Flat"))
-        st  = CrochetScene::Flat;
-    else if(style == tr("Round"))
-        st = CrochetScene::Round;
+    if(style == tr("Rows"))
+        st  = CrochetScene::Rows;
+    else if(style == tr("Rounds"))
+        st = CrochetScene::Rounds;
     
     mScene->createChart(st, rows, cols, defStitch);
 }
