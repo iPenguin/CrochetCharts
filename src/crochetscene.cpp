@@ -101,7 +101,12 @@ void CrochetScene::setShowChartCenter(bool state)
             if(!mCenterSymbol) {
                 QPen pen;
                 pen.setWidth(5);
-                mCenterSymbol = addEllipse(-10,-10, 10, 10, pen);
+
+                double circumference = (mDefaultStitch->width() * (.5*mGrid[0].count())) + ((1) * mDefaultStitch->height());
+                double diameter = circumference / M_PI;
+                double radius = diameter / 2;
+                
+                mCenterSymbol = addEllipse(-radius, -radius, diameter, diameter, pen);
                 mCenterSymbol->setToolTip(tr("Chart Center"));
             } else {
                 addItem(mCenterSymbol);
@@ -246,7 +251,7 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
     if(mStyle == CrochetScene::Rounds) {
         double widthInDegrees = 360.0 / columns;
 
-        double circumference = (mDefaultStitch->width() * columns) + ((row +1) * mDefaultStitch->height());
+        double circumference = (mDefaultStitch->width() * columns) + ((row + 1) * mDefaultStitch->height() * M_PI);
         double diameter = circumference / M_PI;
         double radius = diameter / 2;
         
@@ -282,9 +287,7 @@ void CrochetScene::redistributeCells(int row)
 void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch)
 {
     mStyle = style;
-    
-    setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
-        
+            
     mDefaultStitch = StitchLibrary::inst()->findStitch(stitch);
     
     for(int i = 0; i < rows; ++i) {
@@ -294,6 +297,8 @@ void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int col
         
         createRow(i, cols + pad, stitch);
     }
+
+    setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
     
     initDemoBackground();
 }
