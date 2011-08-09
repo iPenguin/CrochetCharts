@@ -9,11 +9,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64"
-   height="64"
+   width="32"
+   height="32"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
+   inkscape:version="0.48.1 r9760"
    sodipodi:docname="ch3_picot.svg">
   <defs
      id="defs4" />
@@ -25,8 +25,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="8"
-     inkscape:cx="31.634913"
-     inkscape:cy="32.910597"
+     inkscape:cx="36.945478"
+     inkscape:cy="13.183914"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -51,7 +51,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-988.36218)">
+     transform="translate(0,-1020.3622)">
     <path
        sodipodi:type="arc"
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
@@ -61,7 +61,7 @@
        sodipodi:rx="14.8125"
        sodipodi:ry="21.375"
        d="m 35.625,27.875 a 14.8125,21.375 0 1 1 -0.0028,-0.418372"
-       transform="matrix(0.57821592,0,0,1,-0.9692955,998.6122)"
+       transform="matrix(0.28747671,0,0,0.49717881,-0.48932835,1025.7164)"
        sodipodi:start="0"
        sodipodi:end="6.2636111"
        sodipodi:open="true" />
@@ -74,7 +74,7 @@
        sodipodi:rx="14.8125"
        sodipodi:ry="21.375"
        d="m 35.625,27.875 a 14.8125,21.375 0 1 1 -0.0028,-0.418372"
-       transform="matrix(0.57821592,0,0,1,41.340881,998.6122)"
+       transform="matrix(0.28747671,0,0,0.49717881,20.546395,1025.7164)"
        sodipodi:start="0"
        sodipodi:end="6.2636111"
        sodipodi:open="true" />
@@ -87,7 +87,7 @@
        sodipodi:rx="14.8125"
        sodipodi:ry="21.375"
        d="m 35.625,27.875 a 14.8125,21.375 0 1 1 -0.0028,-0.418372"
-       transform="matrix(0,0.57821592,-1,0,60.094912,988.95306)"
+       transform="matrix(0,0.28747671,-0.49717881,0,29.870502,1020.9141)"
        sodipodi:start="0"
        sodipodi:end="6.2636111"
        sodipodi:open="true" />
@@ -100,7 +100,7 @@
        sodipodi:rx="6.875"
        sodipodi:ry="6.875"
        d="m 38.875,45.25 a 6.875,6.875 0 1 1 -0.0013,-0.134564"
-       transform="translate(0.21991158,991.98718)"
+       transform="matrix(0.49717881,0,0,0.49717881,0.10192022,1022.4225)"
        sodipodi:start="0"
        sodipodi:end="6.2636111"
        sodipodi:open="true" />

@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64"
-   height="64"
+   width="32"
+   height="32"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
-   sodipodi:docname="New document 1">
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="unknown.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -43,7 +43,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -51,7 +51,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-988.36218)">
+     transform="translate(0,-1020.3622)">
     <path
        sodipodi:type="arc"
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
@@ -61,13 +61,13 @@
        sodipodi:rx="12.9375"
        sodipodi:ry="12.9375"
        d="M 43.935695,22.767593 A 12.9375,12.9375 0 1 1 31.253569,7.6251687"
-       transform="matrix(-1,0,0,-1,62.183581,1028.8643)"
+       transform="matrix(-0.52000499,0,0,-0.52000499,32.634677,1039.9883)"
        sodipodi:start="0.1712782"
        sodipodi:end="4.7174958"
        sodipodi:open="true" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 31.09179,1021.4872 0,18.25"
+       style="fill:none;stroke:#000000;stroke-width:2.08001995;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 16.46679,1036.1522 0,9.49"
        id="path3755"
        inkscape:connector-curvature="0" />
     <path
@@ -79,7 +79,7 @@
        sodipodi:rx="1.4375"
        sodipodi:ry="1.4375"
        d="m 31.353966,59.05751 a 1.4375,1.4375 0 1 1 0.01004,-0.422437 L 29.9375,58.8125 z"
-       transform="translate(1.1599037,988.48718)"
+       transform="matrix(0.52000499,0,0,0.52000499,0.9020601,1018.992)"
        sodipodi:start="0.1712782"
        sodipodi:end="6.159442" />
   </g>
