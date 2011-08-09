@@ -73,12 +73,12 @@ void SetCellRotation::redo()
 {
     qreal final = baseRotation - delta;
     
-    c->setTransform(QTransform().translate(32, 0).rotate(final).translate(-32, 0));
+    c->setTransform(QTransform().translate(16, 0).rotate(final).translate(-16, 0));
 }
 
 void SetCellRotation::undo()
 {
-    c->setTransform(QTransform().translate(32, 0).rotate(baseRotation).translate(-32, 0));
+    c->setTransform(QTransform().translate(16, 0).rotate(baseRotation).translate(-16, 0));
 }
 
 bool SetCellRotation::mergeWith(const QUndoCommand *command)

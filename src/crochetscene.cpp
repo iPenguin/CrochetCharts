@@ -258,10 +258,11 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
         double degrees = widthInDegrees*column;
         QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
 
+        qreal delta = mDefaultStitch->width() * 0.5;
         if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(finish.x() - 32, finish.y());
-        c->setPos(finish.x() - 32, finish.y());
-        c->setTransform(QTransform().translate(32,0).rotate(degrees + 90).translate(-32, 0));
+            c->setAnchor(finish.x() - delta, finish.y());
+        c->setPos(finish.x() - delta, finish.y());
+        c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
         
     } else {
         c->setPos(column*mDefaultStitch->width(), row*mDefaultStitch->height());
@@ -299,7 +300,7 @@ void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int col
     }
 
     setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
-    
+
     initDemoBackground();
 }
 
@@ -797,7 +798,7 @@ void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     if(!mCurCell)
         return;
 
-    QPointF origin = mCurCell->mapToScene(32, 0);
+    QPointF origin = mCurCell->mapToScene(16, 0);
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
     QPointF second = e->scenePos();
     QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
