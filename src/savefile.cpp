@@ -320,7 +320,9 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
             
         } else if(tag == "showChartCenter") {
+            tab->blockSignals(true);
             tab->setShowChartCenter(stream->readElementText().toInt());
+            tab->blockSignals(false);
             
         } else if(tag == "defaultStitch") {
             qreal height = stream->readElementText().toDouble();

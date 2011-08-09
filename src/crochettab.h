@@ -68,13 +68,13 @@ public slots:
 
 protected:
     QMap<QString, int>* patternStitches() { return mPatternStitches; }
-
-    void setShowChartCenter(bool state);
     
 private slots:
     void showChartOptions();
     void zoomChanged(int value);
     void updateZoomLevel(int percent);
+
+    void setShowChartCenter(bool state);
     
 private:
     CrochetScene* scene() { return mScene; }

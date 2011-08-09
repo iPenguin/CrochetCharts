@@ -894,7 +894,6 @@ void MainWindow::newChart()
     
     tab->createChart(style, rows, cols, defStitch, QSizeF(32, rowHeight));
 
-    connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
     updateMenuItems();
     documentIsModified(true);
 }
@@ -907,8 +906,9 @@ CrochetTab* MainWindow::createTab()
     CrochetTab* tab = new CrochetTab(mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
     tab->setPatternColors(&mPatternColors);
-    connect(tab, SIGNAL(chartStitchChanged()), this, SLOT(updatePatternStitches()));
-    connect(tab, SIGNAL(chartColorChanged()), this, SLOT(updatePatternColors()));
+    connect(tab, SIGNAL(chartStitchChanged()), SLOT(updatePatternStitches()));
+    connect(tab, SIGNAL(chartColorChanged()), SLOT(updatePatternColors()));
+    connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
 
     mUndoGroup.addStack(tab->undoStack());
     

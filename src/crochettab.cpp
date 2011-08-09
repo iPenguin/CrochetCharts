@@ -74,7 +74,7 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     connect(ui->zoom, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
     connect(mView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
 
-    connect(ui->showChartCenter, SIGNAL(clicked(bool)), mScene, SLOT(setShowChartCenter(bool)));
+    connect(ui->showChartCenter, SIGNAL(clicked(bool)), SLOT(setShowChartCenter(bool)));
 }
 
 CrochetTab::~CrochetTab()
@@ -235,7 +235,7 @@ void CrochetTab::setShowChartCenter(bool state)
 {
     ui->showChartCenter->setChecked(state);
     mScene->setShowChartCenter(state);
-    qDebug() << "tab modified";
+
     emit tabModified(true);
 }
 
