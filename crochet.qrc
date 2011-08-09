@@ -47,5 +47,6 @@
         <file>images/fill_color.svg</file>
         <file>images/export.svg</file>
         <file>images/indicator.svg</file>
+        <file>stitches/sc2tog.svg</file>
     </qresource>
 </RCC>

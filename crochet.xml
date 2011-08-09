@@ -117,5 +117,13 @@
        <category>Advanced</category>
        <ws>ch3picot</ws>
    </stitch>
+
+    <stitch>
+       <name>sc2tog</name>
+       <icon>:/stitches/sc2tog.svg</icon>
+       <description>single crochet 2 together</description>
+       <category>Advanced</category>
+       <ws>sc2tog</ws>
+   </stitch>
    
 </stitch_set>
