@@ -48,5 +48,6 @@
         <file>images/export.svg</file>
         <file>images/indicator.svg</file>
         <file>stitches/sc2tog.svg</file>
+        <file>stitches/dc5shell.svg</file>
     </qresource>
 </RCC>

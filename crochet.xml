@@ -125,5 +125,12 @@
        <category>Advanced</category>
        <ws>sc2tog</ws>
    </stitch>
-   
+
+   <stitch>
+       <name>dc5shell</name>
+       <icon>:/stitches/dc5shell.svg</icon>
+       <description>5 double crochet shell</description>
+       <category>Advanced</category>
+       <ws>dc5shell</ws>
+   </stitch>
 </stitch_set>
