@@ -874,9 +874,27 @@ void MainWindow::newChart()
     ui->tabWidget->setCurrentWidget(tab);
 
     QString style = ui->chartStyle->currentText();
-    
-    tab->createChart(style, rows, cols, defStitch);
 
+
+    QString ddValue = ui->rowSpacing->currentText();
+    qreal rowHeight = 96;
+
+    if(ddValue == tr("1 Chain"))
+        rowHeight = 32;
+    else if (ddValue == tr("2 Chains"))
+        rowHeight = 64;
+    else if (ddValue == tr("3 Chains"))
+        rowHeight = 96;
+    else if (ddValue == tr("4 Chains"))
+        rowHeight = 128;
+    else if (ddValue == tr("5 Chains"))
+        rowHeight = 160;
+    else if (ddValue == tr("6 Chains"))
+        rowHeight = 182;
+    
+    tab->createChart(style, rows, cols, defStitch, QSizeF(32, rowHeight));
+
+    connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
     updateMenuItems();
     documentIsModified(true);
 }
@@ -1226,6 +1244,6 @@ void MainWindow::updatePatternColors()
 
 void MainWindow::documentIsModified(bool isModified)
 {
-    //TODO: check all possible modificaiton locations.
+    //TODO: check all possible modification locations.
     setWindowModified(isModified);
 }

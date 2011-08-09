@@ -66,7 +66,7 @@ public:
     void removeCell(int row, int column);
     void removeCell(CrochetCell *c);
 
-    void createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch);
+    void createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
 
     void setEditMode(EditMode mode) { mMode = mode; }
     EditMode editMode() { return mMode; }
@@ -224,7 +224,7 @@ private:
     
     QUndoStack mUndoStack;
 
-    Stitch *mDefaultStitch;
+    QSizeF mDefaultSize;
     
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<CrochetCell *> > mGrid;

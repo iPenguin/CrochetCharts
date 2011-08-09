@@ -177,7 +177,7 @@ QUndoStack* CrochetTab::undoStack()
     return mScene->undoStack();
 }
 
-void CrochetTab::createChart(QString style, int rows, int cols, QString defStitch)
+void CrochetTab::createChart(QString style, int rows, int cols, QString defStitch, QSizeF rowSize)
 {
     CrochetScene::ChartStyle st = CrochetScene::Rows;
     
@@ -186,7 +186,9 @@ void CrochetTab::createChart(QString style, int rows, int cols, QString defStitc
     else if(style == tr("Rounds"))
         st = CrochetScene::Rounds;
     
-    mScene->createChart(st, rows, cols, defStitch);
+    mScene->createChart(st, rows, cols, defStitch, rowSize);
+
+    ui->showChartCenter->setChecked(mScene->showChartCenter());
 }
 
 void CrochetTab::setEditBgColor(QColor color)
@@ -233,6 +235,8 @@ void CrochetTab::setShowChartCenter(bool state)
 {
     ui->showChartCenter->setChecked(state);
     mScene->setShowChartCenter(state);
+    qDebug() << "tab modified";
+    emit tabModified(true);
 }
 
 void CrochetTab::sceneUpdate()

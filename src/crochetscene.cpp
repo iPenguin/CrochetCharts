@@ -44,7 +44,7 @@ CrochetScene::CrochetScene(QObject *parent)
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
-    mDefaultStitch(0)
+    mDefaultSize(QSizeF(32.0, 96.0))
 {
 }
 
@@ -102,11 +102,9 @@ void CrochetScene::setShowChartCenter(bool state)
                 QPen pen;
                 pen.setWidth(5);
 
-                double circumference = (mDefaultStitch->width() * (.5*mGrid[0].count())) + ((1) * mDefaultStitch->height());
-                double diameter = circumference / M_PI;
-                double radius = diameter / 2;
+                double radius = (mDefaultSize.height() *0.45);
                 
-                mCenterSymbol = addEllipse(-radius, -radius, diameter, diameter, pen);
+                mCenterSymbol = addEllipse(-radius, -radius, radius * 2, radius * 2, pen);
                 mCenterSymbol->setToolTip(tr("Chart Center"));
             } else {
                 addItem(mCenterSymbol);
@@ -251,23 +249,21 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
     if(mStyle == CrochetScene::Rounds) {
         double widthInDegrees = 360.0 / columns;
 
-        double circumference = (mDefaultStitch->width() * columns) + ((row + 1) * mDefaultStitch->height() * M_PI);
-        double diameter = circumference / M_PI;
-        double radius = diameter / 2;
+        double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
         
         double degrees = widthInDegrees*column;
         QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
 
-        qreal delta = mDefaultStitch->width() * 0.5;
+        qreal delta = mDefaultSize.width() * 0.5;
         if(updateAnchor || c->anchor().isNull())
             c->setAnchor(finish.x() - delta, finish.y());
         c->setPos(finish.x() - delta, finish.y());
         c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
         
     } else {
-        c->setPos(column*mDefaultStitch->width(), row*mDefaultStitch->height());
+        c->setPos(column*mDefaultSize.width(), row*mDefaultSize.height());
         if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(column*mDefaultStitch->width(), row*mDefaultStitch->height());
+            c->setAnchor(column*mDefaultSize.width(), row*mDefaultSize.height());
         c->setColor(QColor(Qt::white));
     }
     c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
@@ -285,11 +281,11 @@ void CrochetScene::redistributeCells(int row)
     }
 }
 
-void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch)
+void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize)
 {
     mStyle = style;
             
-    mDefaultStitch = StitchLibrary::inst()->findStitch(stitch);
+    mDefaultSize = rowSize;
     
     for(int i = 0; i < rows; ++i) {
         int pad = 0;
@@ -327,13 +323,13 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
 
 int CrochetScene::getClosestRow(QPointF mousePosition)
 {
-    qreal circumference = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y()) * 2 * M_PI;
+    //double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
+    qreal radius = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y());
 
-    qreal rowOneCirc = ((mRowSpacing + mDefaultStitch->width()) * mGrid[0].count());
-    qreal temp = circumference - rowOneCirc;
-    qreal temp2 = temp / mDefaultStitch->width();
-    //TODO: see if there is a way to finess the numbers here...?   
-    int row = round(temp2 / mRowSpacing);
+    qreal temp = radius - (mDefaultSize.height() *0.5);
+    qreal temp2 = temp / mDefaultSize.height();
+    
+    int row = round(temp2 - 1);
     if(row < 0)
         row = 0;
     if(row >= mGrid.count()) {
@@ -691,8 +687,8 @@ void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
         //FIXME: the row has to be passed in because getClosestRow modifies the row
         x = getClosestColumn(e->scenePos(), y);
     } else if (mStyle == CrochetScene::Rows) {
-        x = ceil(e->scenePos().x() / mDefaultStitch->width()) - 1;
-        y = ceil(e->scenePos().y() / mDefaultStitch->height()) - 1;
+        x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
+        y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
     }
 
     if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {

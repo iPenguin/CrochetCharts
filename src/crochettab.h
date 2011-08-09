@@ -51,6 +51,7 @@ public:
 signals:
     void chartStitchChanged();
     void chartColorChanged();
+    void tabModified(bool state);
     
 public slots:
     void zoomIn();
@@ -61,7 +62,7 @@ public slots:
 
     QUndoStack* undoStack();
 
-    void createChart(QString style, int rows, int cols, QString defStitch);
+    void createChart(QString style, int rows, int cols, QString defStitch, QSizeF rowSize);
 
     void copyInstructions();
 

@@ -122,9 +122,8 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
             continue;
         stream->writeTextElement("name", mTabWidget->tabText(i));
         stream->writeTextElement("style", QString::number(tab->scene()->mStyle));
-        Stitch *s = tab->scene()->mDefaultStitch;
-        if(s)
-            stream->writeTextElement("defaultStitch", s->name());
+        QSizeF size = tab->scene()->mDefaultSize;
+        stream->writeTextElement("defaultRowSpacing", QString::number(tab->scene()->mDefaultSize.height()));
 
         stream->writeTextElement("showChartCenter", QString::number(tab->scene()->showChartCenter()));
         
@@ -316,17 +315,17 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
 
         if(tag == "name") {
             tabName = stream->readElementText();
+            
         } else if(tag == "style") {
             tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
+            
         } else if(tag == "showChartCenter") {
             tab->setShowChartCenter(stream->readElementText().toInt());
+            
         } else if(tag == "defaultStitch") {
-            Stitch *s = StitchLibrary::inst()->findStitch(stream->readElementText());
-            if(s) {
-                tab->scene()->mDefaultStitch = s;
-            } else {
-                tab->scene()->mDefaultStitch = StitchLibrary::inst()->findStitch("ch");
-            }
+            qreal height = stream->readElementText().toDouble();
+            tab->scene()->mDefaultSize.setHeight(height);
+            
         } else if(tag == "cell") {
             SaveThread *sth = new SaveThread(tab, stream);
             QThread bgThread;
@@ -335,8 +334,10 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             sth->run();
             bgThread.quit();
             bgThread.wait();
+            
         } else if(tag == "indicator") {
             loadIndicator(tab, stream);
+            
         }
     }
 

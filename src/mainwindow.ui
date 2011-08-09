@@ -79,7 +79,7 @@
        <item row="0" column="3">
         <widget class="QComboBox" name="defaultStitch"/>
        </item>
-       <item row="0" column="4">
+       <item row="0" column="5">
         <widget class="QComboBox" name="chartStyle">
          <item>
           <property name="text">
@@ -151,13 +151,79 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="5">
+       <item row="2" column="0" colspan="6">
         <widget class="QDialogButtonBox" name="newDocBttnBox">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="standardButtons">
           <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
+        <widget class="QComboBox" name="rowSpacing">
+         <property name="editable">
+          <bool>false</bool>
+         </property>
+         <property name="currentIndex">
+          <number>2</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>1 Chain</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2 Chains</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3 Chains</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>4 Chains</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>5 Chains</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>6 Chains</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Row Spacing:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>rowSpacing</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Chart Style:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>chartStyle</cstring>
          </property>
         </widget>
        </item>
@@ -925,6 +991,7 @@
   <tabstop>defaultStitch</tabstop>
   <tabstop>chartTitle</tabstop>
   <tabstop>chartStyle</tabstop>
+  <tabstop>rowSpacing</tabstop>
   <tabstop>newDocBttnBox</tabstop>
   <tabstop>patternStitches</tabstop>
   <tabstop>patternColors</tabstop>
