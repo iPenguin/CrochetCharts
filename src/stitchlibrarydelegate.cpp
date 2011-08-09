@@ -51,34 +51,35 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         return;
 
     QStyleOption opt = option;
-    QString buttonText;
 
-    if(index.column() == 5) //FIXME: don't hard code the text here.
-        buttonText = tr("Add Stitch");
-    else
-        buttonText = index.data(Qt::DisplayRole).toString();
-
+    //Icon column:
     if (index.column() == 1) {
         if(option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
         else if(option.state & QStyle::State_MouseOver)
             painter->fillRect(option.rect, option.palette.highlight().color().light(190));
-        
+
         QRectF rect = QRectF((qreal)option.rect.x(), (qreal)option.rect.y(),
                              (qreal)option.rect.width(), (qreal)option.rect.height());
+        qDebug() << "start";
+        Stitch *s = static_cast<Stitch*>(index.internalPointer());
+        if(!s)
+            return;
+qDebug() << "stitch" << s;     
+        if(s->width() < rect.width())
+            rect.setWidth(s->width());
+        if(s->height() < rect.height())
+            rect.setHeight(s->height());
 
-        QString fileName = index.data(Qt::EditRole).toString();
-        QString sufix = QFileInfo(fileName).completeSuffix();
-        if(sufix == "svg" || sufix == "svgz") {
-            QSvgRenderer renderer;
-            renderer.load(fileName);
-            renderer.render(painter, rect);
+qDebug() << "mid";
+        if(s->isSvg()) {
+            s->renderSvg(false)->render(painter, rect);
         } else {
-            QPixmap pix = QPixmap(fileName);
-            painter->drawPixmap(option.rect, pix);
+            QPixmap *pix = s->renderPixmap();
+            painter->drawPixmap(rect.toRect(), *pix);
         }
-        
-
+        qDebug() << "end";
+    //Checkbox column:
     } else if(index.column() == 5) {
         if(option.state & QStyle::State_MouseOver)
             painter->fillRect(option.rect, option.palette.highlight().color().light(190));
@@ -95,7 +96,8 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         styleOptions.rect = CheckBoxRect(option);
         
         qApp->style()->drawControl(QStyle::CE_CheckBox, &styleOptions, painter);
-        
+
+    //Everything else:
     } else {
         //fall back to the basic painter.
         QStyledItemDelegate::paint(painter, option, index);
