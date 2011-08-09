@@ -124,11 +124,23 @@ void Stitch::reload()
 
 qreal Stitch::width()
 {
-    return mSvgRenderer->viewBoxF().width();
+    qreal w = 32.0;
+    if(isSvg())
+        w = mSvgRenderer->viewBoxF().width();
+    else
+        w = mPixmap->width();
+    
+    return w;
 }
 
 
 qreal Stitch::height()
 {
-    return mSvgRenderer->viewBoxF().height();
+    qreal h = 32.0;
+    if(isSvg())
+        h = mSvgRenderer->viewBoxF().height();
+    else
+        h = mPixmap->height();
+    
+    return h;
 }
