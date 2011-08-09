@@ -261,8 +261,8 @@ void StitchSet::saveXmlFile(QString fileName)
     file.write(data->toLatin1());
     file.close();
 
-    if(!QFileInfo(fileName + ".orig").exists()) {
-        if(!isBuiltInSet)
+    if(!isBuiltInSet) {
+        if(!QFileInfo(fileName + ".orig").exists())
             QFile::copy(fileName, fileName + ".orig");
     }
     
