@@ -262,7 +262,8 @@ void StitchSet::saveXmlFile(QString fileName)
     file.close();
 
     if(!QFileInfo(fileName + ".orig").exists()) {
-        QFile::copy(fileName, fileName + ".orig");
+        if(!isBuiltInSet)
+            QFile::copy(fileName, fileName + ".orig");
     }
     
     delete data;
@@ -563,11 +564,14 @@ void StitchSet::reset()
 {
     if(!isMasterSet) {
         QFile::remove(stitchSetFileName);
-        QFile::copy(stitchSetFileName + ".orig", stitchSetFileName);
+        if(isBuiltInSet) {
+            QFile::copy(":/crochet.xml", stitchSetFileName);
+        } else {
+            QFile::copy(stitchSetFileName + ".orig", stitchSetFileName);
+        }
 
         clearStitches();
-    
-        loadXmlFile(stitchSetFileName);
+        loadXmlFile(stitchSetFileName);   
     }
 }
 
