@@ -84,11 +84,17 @@ public:
     QList<Stitch *> stitches() const { return mStitches; }
     void clearStitches();
 
-    //The stitch set that the user is works with.
+    /**
+     * The stitch set that the user is works with.
+     */
     bool isMasterSet;
-    //The set of stitches that comes with the software.
+    /**
+     * The set of stitches that comes with the software.
+     */
     bool isBuiltInSet;
-    //The set is temporary and wont be saved.
+    /**
+     * The set is temporary and wont be saved.
+     */
     bool isTemporary;
 
     QString stitchSetFileName;
