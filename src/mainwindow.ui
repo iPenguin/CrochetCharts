@@ -275,6 +275,7 @@
     <addaction name="actionGridMode"/>
     <addaction name="actionPositionMode"/>
     <addaction name="actionAngleMode"/>
+    <addaction name="actionStretchMode"/>
     <addaction name="actionIndicatorMode"/>
    </widget>
    <addaction name="menuFile"/>
@@ -487,6 +488,7 @@
    <addaction name="actionGridMode"/>
    <addaction name="actionPositionMode"/>
    <addaction name="actionAngleMode"/>
+   <addaction name="actionStretchMode"/>
    <addaction name="actionIndicatorMode"/>
    <addaction name="separator"/>
    <addaction name="actionColorSelectorBg"/>
