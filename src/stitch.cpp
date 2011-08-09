@@ -13,11 +13,11 @@
 
 #include "settings.h"
 
-Stitch::Stitch()
+Stitch::Stitch() :
+    mSvgRenderer(new QSvgRenderer()),
+    mSvgRendererAlt(new QSvgRenderer()),
+    mPixmap(0)
 {
-    mSvgRenderer = new QSvgRenderer();
-    mSvgRendererAlt = new QSvgRenderer();
-    mPixmap = 0;
 }
 
 Stitch::~Stitch()
@@ -125,11 +125,14 @@ void Stitch::reload()
 qreal Stitch::width()
 {
     qreal w = 32.0;
-    if(isSvg())
-        w = mSvgRenderer->viewBoxF().width();
-    else
-        w = mPixmap->width();
-    
+    if(isSvg()) {
+        if(mSvgRenderer)
+            w = mSvgRenderer->viewBoxF().width();
+    } else {
+        if(mPixmap)
+            w = mPixmap->width();
+    }
+    qDebug() << "width return";
     return w;
 }
 
@@ -137,10 +140,12 @@ qreal Stitch::width()
 qreal Stitch::height()
 {
     qreal h = 32.0;
-    if(isSvg())
-        h = mSvgRenderer->viewBoxF().height();
-    else
-        h = mPixmap->height();
-    
+    if(isSvg()) {
+        if(mSvgRenderer)
+            h = mSvgRenderer->viewBoxF().height();
+    } else {
+        if(mPixmap)
+            h = mPixmap->height();
+    }
     return h;
 }
