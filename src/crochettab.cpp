@@ -243,3 +243,11 @@ void CrochetTab::sceneUpdate()
 {
     mScene->update();
 }
+
+void CrochetTab::clearSelection()
+{
+
+    mScene->clearSelection();
+    mScene->update();
+
+}

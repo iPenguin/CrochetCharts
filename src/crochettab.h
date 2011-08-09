@@ -66,6 +66,11 @@ public slots:
 
     void copyInstructions();
 
+    /**
+     *Clear any selections of objects on the chart.
+     */
+    void clearSelection();
+
 protected:
     QMap<QString, int>* patternStitches() { return mPatternStitches; }
     

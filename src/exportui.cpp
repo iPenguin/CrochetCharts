@@ -266,6 +266,13 @@ void ExportUi::exportData()
         return;
     
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    //we don't want the dotted lines in the image.
+    for(int i = 0; i < mTabWidget->count(); ++i) {
+        CrochetTab *t = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+        if(t) t->clearSelection();
+    }
+
     if(selection == tr("Stitch Legend") || selection == tr("Color Legend")) {
         if(exportType == "pdf")
             exportLegendPdf();
