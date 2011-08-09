@@ -299,6 +299,7 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
    <addaction name="actionExport"/>
+   <addaction name="actionAddChart"/>
   </widget>
   <widget class="QDockWidget" name="patternStitchesDock">
    <property name="windowTitle">

@@ -1146,15 +1146,26 @@ void MainWindow::removeTab(int tabIndex)
     if(tabIndex < 0)
         return;
 
-    //if we're on the last tab close the window.
-    if(ui->tabWidget->count() == 1) {
-        close();
-        return;
-    }
+    QMessageBox msgbox;
+    msgbox.setWindowTitle(tr("Remove Chart"));
+    msgbox.setText(tr("Are you sure you want to remove this chart from the document?"));
+    msgbox.setIcon(QMessageBox::Question);
+    /*QPushButton *removeChart =*/ msgbox.addButton(tr("Remove the chart"), QMessageBox::AcceptRole);
+    QPushButton *keepChart = msgbox.addButton(tr("Keep the chart"), QMessageBox::RejectRole);
 
-    //FIXME: either include a warning that this is NOT undo-able or make it undo-able.
+    msgbox.exec();
+    
+    if(msgbox.clickedButton() == keepChart)
+        return;
+    
+    //FIXME: Make removing a tab undo-able, using a *tab and chart name.
     ui->tabWidget->removeTab(tabIndex);
+
     documentIsModified(true);
+    
+    //update the title and menus
+    setApplicationTitle();
+    updateMenuItems();
 }
 
 void MainWindow::updatePatternStitches()
