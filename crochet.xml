@@ -134,4 +134,11 @@
         <ws>dc5shell</ws>
     </stitch>
 
+    <stitch>
+       <name>sc3tog</name>
+       <icon>:/stitches/sc3tog.svg</icon>
+       <description>single crochet 3 together</description>
+       <category>Advanced</category>
+       <ws>sc3tog</ws>
+   </stitch>
 </stitch_set>
