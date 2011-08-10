@@ -75,7 +75,7 @@ void Updater::httpFinished()
         
     if (reply->error()) {
         //TODO: add a warning.
-        qWarning() << "add a nice dialog box here to explain what happened.";
+        qWarning() << "Failed to connect to server.";
     } else {
 
         QStringList urls = data.split("::", QString::SkipEmptyParts);
