@@ -422,20 +422,11 @@ QPoint CrochetScene::findGridPosition(CrochetCell* c)
 
 qreal CrochetScene::scenePosToAngle(QPointF pt)
 {
-    qreal tanx = pt.y() / pt.x();
-    qreal rads = atan(tanx);
+
+    qreal rads = atan2(pt.x(), pt.y());
     qreal angleX = rads * 180 / M_PI;
-    qreal angle = 0.0;
-    if (pt.x() >= 0 && pt.y() >= 0)
-        angle = angleX;
-    else if(pt.x() <= 0 && pt.y() >= 0)
-        angle = 180 + angleX;
-    else if(pt.x() <= 0 && pt.y() <= 0)
-        angle = 180 + angleX;
-    else if(pt.x() >= 0 && pt.y() <= 0)
-        angle = 360 + angleX;
     
-    return angle;
+    return -angleX;
 }
 
 void CrochetScene::keyReleaseEvent(QKeyEvent* keyEvent)
