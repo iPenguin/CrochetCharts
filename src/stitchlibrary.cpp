@@ -87,7 +87,7 @@ void StitchLibrary::loadStitchSets()
             SLOT(changeStitchName(QString,QString,QString)));
 
     //Load additional stitch sets:
-    QDir dir = QDir(confFolder + "sets/");
+    QDir dir = QDir(confFolder);
     QStringList fileTypes;
     fileTypes << "*.xml";
   
@@ -312,16 +312,18 @@ void StitchLibrary::removeSet(QString setName)
 
 void StitchLibrary::removeSet(StitchSet *set)
 {
+
     if(mStitchSets.contains(set)) {
         mStitchSets.removeOne(set);
 
-        QDir setsDir(Settings::inst()->userSettingsFolder() + "sets/");
-        setsDir.rmdir(set->stitchSetFolder());
+        set->removeDir(set->stitchSetFolder());
+        QDir setsDir(Settings::inst()->userSettingsFolder());
         setsDir.remove(set->stitchSetFileName);
 
         delete set;
         set = 0;
     }
+
 }
 
 //FIXME: return a value that can be checked and move the gui dialogs into the libraryui.
