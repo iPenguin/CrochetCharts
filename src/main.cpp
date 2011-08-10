@@ -15,6 +15,7 @@
 #include "stitchlibrary.h"
 
 #include "splashscreen.h"
+#include "updatefunctions.h"
 
 int main(int argc, char *argv[])
 {
@@ -45,6 +46,10 @@ int main(int argc, char *argv[])
         Settings::inst()->saveSettings();
         splash.show();
     }
+    QString curVersion = AppInfo::inst()->appVersion;
+    QString lastUsed = Settings::inst()->value("lastUsed").toString();
+    updateFunction(lastUsed);
+    Settings::inst()->setValue("version", curVersion);
 
     splash.showMessage(QObject::tr("Loading Stitches..."));
     StitchLibrary *library = StitchLibrary::inst();
