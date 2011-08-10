@@ -6,13 +6,13 @@
     <org>Stitch Works Software</org>
     <url>http://www.StitchWorksSoftware.com/</url>
 
-   <stitch>
-       <name>x</name>
-       <icon>:/stitches/no_stitch.svg</icon>
-       <description>this is a place holder stitch</description>
-       <category>Basic</category>
-       <ws>x</ws>
-   </stitch>
+    <stitch>
+        <name>x</name>
+        <icon>:/stitches/no_stitch.svg</icon>
+        <description>this is a place holder stitch</description>
+        <category>Basic</category>
+        <ws>x</ws>
+    </stitch>
 
     <stitch>
         <name>ss</name>
@@ -78,45 +78,45 @@
         <ws>ttc</ws>
     </stitch>
 
-   <stitch>
-       <name>lsdc</name>
-       <icon>:/stitches/double_crochet.svg</icon> <!--left_slant_-->
-       <description>left slant decrease</description>
-       <category>Advanced</category>
-       <ws>lsdc</ws>
-   </stitch>
+    <stitch>
+        <name>lsdc</name>
+        <icon>:/stitches/double_crochet.svg</icon> <!--left_slant_-->
+        <description>left slant decrease</description>
+        <category>Advanced</category>
+        <ws>lsdc</ws>
+    </stitch>
 
-   <stitch>
-       <name>rsdc</name>
-       <icon>:/stitches/double_crochet.svg</icon> <!--right_slant_-->
-       <description>right slant double crochet</description>
-       <category>Advanced</category>
-       <ws>rsdc</ws>
-   </stitch>
+    <stitch>
+        <name>rsdc</name>
+        <icon>:/stitches/double_crochet.svg</icon> <!--right_slant_-->
+        <description>right slant double crochet</description>
+        <category>Advanced</category>
+        <ws>rsdc</ws>
+    </stitch>
 
-   <stitch>
-       <name>fpdc</name>
-       <icon>:/stitches/front_post_dc.svg</icon>
-       <description>front post decrease</description>
-       <category>Advanced</category>
-       <ws>fpdc</ws>
-   </stitch>
+    <stitch>
+        <name>fpdc</name>
+        <icon>:/stitches/front_post_dc.svg</icon>
+        <description>front post decrease</description>
+        <category>Advanced</category>
+        <ws>fpdc</ws>
+    </stitch>
 
-   <stitch>
-       <name>bpdc</name>
-       <icon>:/stitches/back_post_dc.svg</icon>
-       <description>back post decrease</description>
-       <category>Advanced</category>
-       <ws>bpdc</ws>
-   </stitch>
+    <stitch>
+        <name>bpdc</name>
+        <icon>:/stitches/back_post_dc.svg</icon>
+        <description>back post decrease</description>
+        <category>Advanced</category>
+        <ws>bpdc</ws>
+    </stitch>
 
-   <stitch>
-       <name>ch3picot</name>
-       <icon>:/stitches/ch3_picot.svg</icon>
-       <description>chain 3 picot</description>
-       <category>Advanced</category>
-       <ws>ch3picot</ws>
-   </stitch>
+    <stitch>
+        <name>ch3picot</name>
+        <icon>:/stitches/ch3_picot.svg</icon>
+        <description>chain 3 picot</description>
+        <category>Advanced</category>
+        <ws>ch3picot</ws>
+    </stitch>
 
     <stitch>
        <name>sc2tog</name>
@@ -124,13 +124,14 @@
        <description>single crochet 2 together</description>
        <category>Advanced</category>
        <ws>sc2tog</ws>
-   </stitch>
+    </stitch>
 
-   <stitch>
-       <name>dc5shell</name>
-       <icon>:/stitches/dc5shell.svg</icon>
-       <description>5 double crochet shell</description>
-       <category>Advanced</category>
-       <ws>dc5shell</ws>
-   </stitch>
+    <stitch>
+        <name>dc5shell</name>
+        <icon>:/stitches/dc5shell.svg</icon>
+        <description>5 double crochet shell</description>
+        <category>Advanced</category>
+        <ws>dc5shell</ws>
+    </stitch>
+
 </stitch_set>
