@@ -92,6 +92,7 @@ void Settings::setupValueList() {
     //look up values for setting server/webpage for license and update testing.
     mValueList["licensePage"] = QVariant(AppInfo::inst()->liveLicensePage + AppInfo::inst()->liveLicensePageVals);
     mValueList["updatePage"] = QVariant(AppInfo::inst()->liveUpdatePage + AppInfo::inst()->liveUpdatePageVals);
+    mValueList["lastUsed"] = QVariant("");
     
     //license information
     mValueList["firstName"] = QVariant("");
