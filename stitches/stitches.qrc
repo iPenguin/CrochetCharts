@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/stitches">
+        <file>back_post_dc.svg</file>
+        <file>ch3_picot.svg</file>
+        <file>chain.svg</file>
+        <file>dc5shell.svg</file>
+        <file>double_crochet.svg</file>
+        <file>double_treble_crochet.svg</file>
+        <file>front_post_dc.svg</file>
+        <file>half_double_crochet.svg</file>
+        <file>no_stitch.svg</file>
+        <file>sc2tog.svg</file>
+        <file>sc3tog.svg</file>
+        <file>single_crochet.svg</file>
+        <file>single_crochet2.svg</file>
+        <file>slip.svg</file>
+        <file>treble_crochet.svg</file>
+        <file>triple_treble_crochet.svg</file>
+        <file>unknown.svg</file>
+    </qresource>
+</RCC>

@@ -34,6 +34,7 @@ set(crochet_qobject_headers
 
 set(crochet_resources
     ../crochet.qrc
+    ../stitches/stitches.qrc
     )
 
 qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
