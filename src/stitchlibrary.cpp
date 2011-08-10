@@ -33,11 +33,14 @@ StitchLibrary::StitchLibrary()
 { 
     mMasterSet = new StitchSet(this, true);
     mMasterSet->setName(tr("Master Stitch List"));
+    connect(mMasterSet, SIGNAL(movedToOverlay(QString)), SLOT(moveStitchToOverlay(QString)));
 }
 
 StitchLibrary::~StitchLibrary()
 {
     saveMasterList();
+
+    mOverlay->saveXmlFile();
     
     foreach(StitchSet *set, mStitchSets) {
         mStitchSets.removeOne(set);
@@ -50,6 +53,8 @@ StitchLibrary::~StitchLibrary()
 void StitchLibrary::saveAllSets()
 {
     saveMasterList();
+
+    mOverlay->saveXmlFile();
     
     foreach(StitchSet *set, mStitchSets) {
         if(!set->isTemporary) {
@@ -61,21 +66,26 @@ void StitchLibrary::saveAllSets()
 void StitchLibrary::loadStitchSets()
 {
     QString confFolder = Settings::inst()->userSettingsFolder();
-    
-    mBuiltIn = new StitchSet(this, false, true);
 
-    QString masterSet = confFolder + "master.set";
-    if(QFileInfo(masterSet).exists())
-        mBuiltIn->loadXmlFile(masterSet);
-    else {
-        mBuiltIn->loadXmlFile(":/crochet.xml");
-        mBuiltIn->stitchSetFileName = masterSet;
-        mBuiltIn->saveXmlFile();
-    }
-    connect(mBuiltIn, SIGNAL(stitchNameChanged(QString,QString,QString)),
-            this, SLOT(changeStitchName(QString,QString,QString)));
+    mMasterSet->loadXmlFile(":/crochet.xml");
+    foreach(Stitch *s, mMasterSet->stitches())
+        s->isBuiltIn = true;
     
-    mStitchSets.append(mBuiltIn);
+    mOverlay = new StitchSet(this, false);
+
+    QString overlay = confFolder + "overlay.set";
+    if(QFileInfo(overlay).exists()) {
+        mOverlay->loadXmlFile(overlay);
+    } else {
+        mOverlay->stitchSetFileName = overlay;
+        mOverlay->setName(tr("SWS Overlay"));
+    }
+
+    connect(mMasterSet, SIGNAL(stitchNameChanged(QString,QString,QString)),
+            SLOT(changeStitchName(QString,QString,QString)));
+    connect(mOverlay, SIGNAL(stitchNameChanged(QString,QString,QString)),
+            SLOT(changeStitchName(QString,QString,QString)));
+
     //Load additional stitch sets:
     QDir dir = QDir(confFolder + "sets/");
     QStringList fileTypes;
@@ -83,27 +93,22 @@ void StitchLibrary::loadStitchSets()
   
     QFileInfoList list = dir.entryInfoList(fileTypes, QDir::Files | QDir::NoSymLinks);
     foreach(QFileInfo file, list) {
-        StitchSet *set = new StitchSet(this, false, false);
+        StitchSet *set = new StitchSet(this, false);
         set->loadXmlFile(file.absoluteFilePath());
         mStitchSets.append(set);
-        connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)), this, SLOT(changeStitchName(QString,QString,QString)));
+        connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)),
+                SLOT(changeStitchName(QString,QString,QString)));
     }
-}
 
-void StitchLibrary::setupMasterSet()
-{
     bool loaded = loadMasterList();
 
     //if there isn't a master stitchset create it from the built in stitches.
     if(!loaded)
         resetMasterStitchSet();
-
-    connect(mMasterSet, SIGNAL(stitchNameChanged(QString,QString,QString)),
-            this, SLOT(changeStitchName(QString,QString,QString)));
 }
 
 bool StitchLibrary::loadMasterList()
-{
+{   
     QString confFolder = Settings::inst()->userSettingsFolder();
     QString fileName = confFolder + "stitches.list";
 
@@ -121,10 +126,14 @@ bool StitchLibrary::loadMasterList()
 
     foreach(QString key, mStitchList.keys()) {
         StitchSet *set = findStitchSet(mStitchList.value(key));
-        if(set){
+        if(set) {
             Stitch *s = set->findStitch(key);
-            if(s)
+            if(s) {
+                if(mMasterSet->hasStitch(s->name())) {
+                    mMasterSet->removeStitch(s->name());
+                }
                 mMasterSet->addStitch(s);
+            }
         }
     }
     
@@ -148,14 +157,13 @@ void StitchLibrary::saveMasterList()
 
 void StitchLibrary::resetMasterStitchSet()
 {
+    mMasterSet->beginResetModel();
     mMasterSet->clearStitches();
+    mOverlay->clearStitches();
     mStitchList.clear();
-
-    foreach(Stitch *s, mBuiltIn->stitches()) {
-        mMasterSet->addStitch(s);
-        mStitchList.insert(s->name(), mBuiltIn->name());
-    }
-    mMasterSet->refreshSet();
+    
+    mMasterSet->reset();
+    mMasterSet->endResetModel();
 }
 
 void StitchLibrary::addStitchToMasterSet(StitchSet *set, Stitch *s)
@@ -180,6 +188,12 @@ void StitchLibrary::removeStitchFormMasterSet(Stitch* s)
     mMasterSet->removeStitch(s->name());
 }
 
+void StitchLibrary::moveStitchToOverlay(QString stitchName)
+{
+    mStitchList[stitchName] = mOverlay->name();
+    mOverlay->addStitch(mMasterSet->findStitch(stitchName));
+}
+
 bool StitchLibrary::masterHasStitch(Stitch* s)
 {
     return mMasterSet->stitches().contains(s);
@@ -199,8 +213,8 @@ StitchSet* StitchLibrary::findStitchSet(QString setName)
 
     if(mMasterSet->name() == setName)
         return mMasterSet;
-    if(mBuiltIn->name() == setName)
-        return mBuiltIn;
+    if(mOverlay->name() == setName)
+        return mOverlay;
     
     return 0;
 }
@@ -282,7 +296,7 @@ StitchSet* StitchLibrary::createStitchSet(QString setName)
     if(setName.isEmpty())
         return 0;
 
-    StitchSet *set = new StitchSet(this, false, false);
+    StitchSet *set = new StitchSet(this, false);
     set->setName(setName);
     mStitchSets.append(set);
 

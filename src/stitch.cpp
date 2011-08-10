@@ -14,6 +14,7 @@
 #include "settings.h"
 
 Stitch::Stitch() :
+    isBuiltIn(false),
     mSvgRenderer(new QSvgRenderer()),
     mSvgRendererAlt(new QSvgRenderer()),
     mPixmap(0)

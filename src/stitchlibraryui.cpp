@@ -149,10 +149,10 @@ void StitchLibraryUi::resetLibrary()
         set->reset();
     }
 
-    updateSourceDropDown(StitchLibrary::inst()->builtIn()->name());
+    updateSourceDropDown(StitchLibrary::inst()->overlay()->name());
     StitchLibrary::inst()->resetMasterStitchSet();
 
-    if(curSet != StitchLibrary::inst()->builtIn()->name())
+    if(curSet != StitchLibrary::inst()->overlay()->name())
         updateSourceDropDown(curSet);
     
     ui->listView->resizeColumnsToContents();
@@ -227,10 +227,8 @@ void StitchLibraryUi::removeStitch()
             }
             
             StitchLibrary::inst()->removeStitchFormMasterSet(s);
-            if(!set->isMasterSet) {
-                set->removeStitch(st);
-                delete s;
-            }
+            set->removeStitch(st);
+            delete s;
         }
     }
 }

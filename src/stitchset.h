@@ -28,7 +28,7 @@ public:
 
     enum SaveVersion { Version_1_0_0 = 100 };
     
-    StitchSet(QObject *parent = 0, bool isMasterSet = false, bool isBuiltIn = false);
+    StitchSet(QObject *parent = 0, bool isMasterSet = false);
     ~StitchSet();
 
     /**
@@ -88,10 +88,7 @@ public:
      * The stitch set that the user is works with.
      */
     bool isMasterSet;
-    /**
-     * The set of stitches that comes with the software.
-     */
-    bool isBuiltInSet;
+
     /**
      * The set is temporary and wont be saved.
      */
@@ -99,20 +96,26 @@ public:
 
     QString stitchSetFileName;
 
-    //returns the abs path to the stitch set. w/trailing slash.
+    /**
+     * returns the absolute path to the stitch set. w/trailing slash.
+     */
     QString stitchSetFolder();
 
-    //reset the model in all views.
-    void refreshSet() { reset(); }
     void clearSelection() { mSelected.clear(); }
 
-    //remove the stitches from the set and load them from the .orig file.
+    /**
+     * reset the master stitch set to the original state as defined by the software.
+     */
     void reset();
-    //reload the svgs from file -- update the colors used.
+    
+    /**
+     * reload the svgs from file -- update the colors used.
+     */
     void reloadStitchIcons();
     
 signals:
     void stitchNameChanged(QString setName, QString oldName, QString newName);
+    void movedToOverlay(QString stitchName);
     
 protected:
     void loadXmlStitchSet(QXmlStreamReader *stream, bool loadIcons = false);
@@ -120,7 +123,7 @@ protected:
 
     void saveIcons(QDataStream *out);
     void loadIcons(QDataStream *in);
-    
+   
 private:
     /**
      * load the individual stitch. \param loadIcon tells the function to generate the complete
@@ -132,7 +135,10 @@ private:
     bool removeDir(const QString &dirName);
 
     QList<Stitch*> mStitches;
-    //list of checked items
+    
+    /**
+     * list of checked items
+     */
     QList<Stitch*> mSelected;
     
     QString mName,
@@ -140,7 +146,7 @@ private:
             mEmail,
             mOrg,
             mUrl;
-
+    
 /***************************************************************\
 |QAbstractItemModel
 \***************************************************************/

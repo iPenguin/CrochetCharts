@@ -40,13 +40,13 @@ public:
     QList<StitchSet *> stitchSets() { return mStitchSets; }
     //return the master stitch set.
     StitchSet* masterStitchSet() { return mMasterSet; }
-    StitchSet* builtIn() { return mBuiltIn; }
+    StitchSet* overlay() { return mOverlay; }
     
-    //load all known stitch sets.
+    /**
+     * Load all known stitch sets.
+     */
     void loadStitchSets();
-    //create links to the stitches being used from each set/overlay
-    void setupMasterSet();
-
+    
     Stitch* findStitch(QString name);
     StitchSet* findStitchSet(QString setName);
 
@@ -97,6 +97,7 @@ signals:
     
 private slots:
     void changeStitchName(QString setName, QString oldName, QString newName);
+    void moveStitchToOverlay(QString stitchName);
     
 private:
     StitchLibrary();
@@ -109,7 +110,7 @@ private:
 
     QList<StitchSet*> mStitchSets;
     StitchSet* mMasterSet;
-    StitchSet* mBuiltIn;
+    StitchSet* mOverlay;
 
     QMap<QString, QString> mStitchList;
 };

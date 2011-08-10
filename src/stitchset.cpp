@@ -20,9 +20,11 @@
 #include <QMap>
 #include "appinfo.h"
 
-StitchSet::StitchSet(QObject *parent, bool isMasterSet, bool isBuiltIn)
-    : QAbstractItemModel(parent), isMasterSet(isMasterSet),
-    isBuiltInSet(isBuiltIn), isTemporary(false), mSaveFileVersion(StitchSet::Version_1_0_0)
+StitchSet::StitchSet(QObject *parent, bool isMasterSet)
+    : QAbstractItemModel(parent),
+    isMasterSet(isMasterSet),
+    isTemporary(false),
+    mSaveFileVersion(StitchSet::Version_1_0_0)
 {
 }
 
@@ -239,6 +241,11 @@ void StitchSet::saveXmlFile(QString fileName)
         fileName = stitchSetFileName;
     if(fileName.isEmpty())
        return;
+
+    
+    if(!QFile(fileName).exists()) {
+        QDir(Settings::inst()->userSettingsFolder()).mkpath(QFileInfo(fileName).absolutePath());
+    }
     
     QString *data = new QString();
     
@@ -260,11 +267,6 @@ void StitchSet::saveXmlFile(QString fileName)
     
     file.write(data->toLatin1());
     file.close();
-
-    if(!isBuiltInSet) {
-        if(!QFileInfo(fileName + ".orig").exists())
-            QFile::copy(fileName, fileName + ".orig");
-    }
     
     delete data;
     data = 0;
@@ -467,7 +469,7 @@ bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int rol
 {
     if(!index.isValid())
         return false;
-
+    
     if(role == Qt::EditRole || role == Qt::DisplayRole) {
         Stitch *s = static_cast<Stitch*>(index.internalPointer());
         
@@ -476,27 +478,42 @@ bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int rol
         switch(index.column()) {
             case Stitch::Name: {
                 QString oldName = s->name();
-                s->setName(value.toString());
-                emit stitchNameChanged(name(), oldName, value.toString());
-                retVal = true;
+
+                if(oldName != value.toString()) {
+                    s->setName(value.toString());
+                    retVal = true;
+                    emit stitchNameChanged(name(), oldName, value.toString());
+                }
                 break;
             }
-            case Stitch::Icon:
-                s->setFile(value.toString());
-                retVal = true;
+            case Stitch::Icon: {
+                if(s->file() != value.toString()) {
+                    s->setFile(value.toString());
+                    retVal = true;
+                }
                 break;
-            case Stitch::Description:
-                s->setDescription(value.toString());
-                retVal = true;
+            }
+            case Stitch::Description: {
+                if(s->description() != value.toString()) {
+                    s->setDescription(value.toString());
+                    retVal = true;
+                }
                 break;
-            case Stitch::Category:
-                s->setCategory(value.toString());
-                retVal = true;
+            }
+            case Stitch::Category: {
+                if(s->category() != value.toString()) {
+                    s->setCategory(value.toString());
+                    retVal = true;
+                }
                 break;
-            case Stitch::WrongSide:
-                s->setWrongSide(value.toString());
-                retVal = true;
+            }
+            case Stitch::WrongSide: {
+                if(s->wrongSide() != value.toString()) {
+                    s->setWrongSide(value.toString());
+                    retVal = true;
+                }
                 break;
+            }
             case 5: {
                 if(value.toBool()) {
                     if(!mSelected.contains(s))
@@ -512,8 +529,12 @@ bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int rol
                 retVal = false;
         }
 
-        if(retVal)
+        if(retVal) {
+            //If we've edited the data and this is the master set we need to track the changes in the overlay.
+            if(isMasterSet && s->isBuiltIn)
+                emit movedToOverlay(s->name());
             emit dataChanged(index, index);
+        }
         return retVal;
 
     }
@@ -562,17 +583,18 @@ void StitchSet::clearStitches()
 
 void StitchSet::reset()
 {
-    if(!isMasterSet) {
-        QFile::remove(stitchSetFileName);
-        if(isBuiltInSet) {
-            QFile::copy(":/crochet.xml", stitchSetFileName);
-        } else {
-            QFile::copy(stitchSetFileName + ".orig", stitchSetFileName);
-        }
+    if(!isMasterSet)
+        return;
+    
+    QFile::remove(stitchSetFileName);
 
-        clearStitches();
-        loadXmlFile(stitchSetFileName);   
-    }
+    clearStitches();
+    loadXmlFile(":/crochet.xml");
+    
+    foreach(Stitch *s, mStitches)
+        s->isBuiltIn = true;
+
+    //QAbstractItemModel::reset();
 }
 
 void StitchSet::reloadStitchIcons()

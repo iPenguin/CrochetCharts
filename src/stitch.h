@@ -41,6 +41,8 @@ public:
 
     //reload the svg with new colors.
     void reloadIcon();
+
+    bool isBuiltIn;
     
 protected:
     void setName(QString n) { mName = n; }

@@ -46,13 +46,11 @@ int main(int argc, char *argv[])
         splash.show();
     }
 
-    splash.showMessage(QObject::tr("Loading All Stitch Sets..."));
-    StitchLibrary *collection = StitchLibrary::inst();
-    collection->loadStitchSets();
-    splash.showMessage(QObject::tr("Populating Master Stitch Set..."));
-    collection->setupMasterSet();
+    splash.showMessage(QObject::tr("Loading Stitches..."));
+    StitchLibrary *library = StitchLibrary::inst();
+    library->loadStitchSets();
 
-    splash.showMessage(QObject::tr("Loading Main Window..."));
+    splash.showMessage(QObject::tr("Loading Ui..."));
 
     QStringList arguments = QCoreApplication::arguments();
     arguments.removeFirst(); // remove the application name from the list.

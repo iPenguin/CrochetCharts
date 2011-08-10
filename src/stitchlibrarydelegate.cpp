@@ -252,10 +252,6 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
 void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     StitchSet *set = static_cast<StitchSet*>(model);
-    if(set == StitchLibrary::inst()->masterStitchSet()) {
-        //TODO:use an overlay or proxy set for changes to the master set...
-        qDebug() << "TODO: use an overlay or proxy set for changes to the master set...";
-    }
     
     switch(index.column()) {
         case Stitch::Icon: {
