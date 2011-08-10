@@ -141,4 +141,12 @@
        <category>Advanced</category>
        <ws>sc3tog</ws>
    </stitch>
+
+   <stitch>
+       <name>dc2tog</name>
+       <icon>:/stitches/dc2tog.svg</icon>
+       <description>double crochet 2 together</description>
+       <category>Advanced</category>
+       <ws>dc2tog</ws>
+   </stitch>
 </stitch_set>
