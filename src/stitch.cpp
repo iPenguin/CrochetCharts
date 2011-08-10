@@ -132,7 +132,7 @@ qreal Stitch::width()
         if(mPixmap)
             w = mPixmap->width();
     }
-    qDebug() << "width return";
+
     return w;
 }
 

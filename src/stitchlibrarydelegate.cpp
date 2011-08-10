@@ -61,24 +61,23 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
         QRectF rect = QRectF((qreal)option.rect.x(), (qreal)option.rect.y(),
                              (qreal)option.rect.width(), (qreal)option.rect.height());
-        qDebug() << "start";
+
         Stitch *s = static_cast<Stitch*>(index.internalPointer());
         if(!s)
             return;
-qDebug() << "stitch" << s;     
+
         if(s->width() < rect.width())
             rect.setWidth(s->width());
         if(s->height() < rect.height())
             rect.setHeight(s->height());
 
-qDebug() << "mid";
         if(s->isSvg()) {
             s->renderSvg(false)->render(painter, rect);
         } else {
             QPixmap *pix = s->renderPixmap();
             painter->drawPixmap(rect.toRect(), *pix);
         }
-        qDebug() << "end";
+
     //Checkbox column:
     } else if(index.column() == 5) {
         if(option.state & QStyle::State_MouseOver)
