@@ -72,13 +72,14 @@ SetCellRotation::SetCellRotation(CrochetScene *s, CrochetCell *cell, qreal baseR
 void SetCellRotation::redo()
 {
     qreal final = baseRotation - delta;
-    
-    c->setTransform(QTransform().translate(16, 0).rotate(final).translate(-16, 0));
+    qreal pvtPt = c->stitch()->width()/2;
+    c->setTransform(QTransform().translate(pvtPt, 0).rotate(final).translate(-pvtPt, 0));
 }
 
 void SetCellRotation::undo()
 {
-    c->setTransform(QTransform().translate(16, 0).rotate(baseRotation).translate(-16, 0));
+    qreal pvtPt = c->stitch()->width()/2;
+    c->setTransform(QTransform().translate(pvtPt, 0).rotate(baseRotation).translate(-pvtPt, 0));
 }
 
 bool SetCellRotation::mergeWith(const QUndoCommand *command)

@@ -794,7 +794,9 @@ void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     if(!mCurCell)
         return;
 
-    QPointF origin = mCurCell->mapToScene(16, 0);
+    qreal pvtPt = mCurCell->stitch()->width()/2;
+    qDebug() << pvtPt;
+    QPointF origin = mCurCell->mapToScene(pvtPt, 0);
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
     QPointF second = e->scenePos();
     QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
