@@ -156,14 +156,22 @@ void StitchSet::loadDataFile(QString fileName, QString dest)
     in >> docData;
     file.close();
     
-    QXmlStreamReader stream(docData);
+    QXmlStreamReader stream(docData); 
+
+    while(!stream.atEnd() && !stream.hasError()) {
+
+        stream.readNext();
+        if(stream.isStartElement()) {
+            QString name = stream.name().toString();
+            if(name == "stitch_set")
+                loadXmlStitchSet(&stream, true);
+        }
+    }
 
     if(stream.hasError()) {
-        qWarning() << "Error parsing xml data.";
+        qWarning() << "Error loading stitch set data file: " << stream.errorString();
         return;
     }
-    
-    loadXmlStitchSet(&stream, true);
 
 }
 
