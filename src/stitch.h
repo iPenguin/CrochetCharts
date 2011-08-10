@@ -40,7 +40,7 @@ public:
     Stitch* copy();
 
     //reload the svg with new colors.
-    void reload();
+    void reloadIcon();
     
 protected:
     void setName(QString n) { mName = n; }

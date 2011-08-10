@@ -575,9 +575,9 @@ void StitchSet::reset()
     }
 }
 
-void StitchSet::reloadStitches()
+void StitchSet::reloadStitchIcons()
 {
     foreach(Stitch *s, mStitches) {
-        s->reload();
+        s->reloadIcon();
     }
 }

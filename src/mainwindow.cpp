@@ -1103,7 +1103,7 @@ void MainWindow::toolsStitchLibrary()
     StitchLibrary::inst()->saveAllSets();
     QApplication::restoreOverrideCursor();
 
-    StitchLibrary::inst()->reloadAllStitches();
+    StitchLibrary::inst()->reloadAllStitchIcons();
 }
 
 void MainWindow::viewZoomIn()

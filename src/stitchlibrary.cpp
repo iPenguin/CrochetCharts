@@ -391,10 +391,10 @@ void StitchLibrary::changeStitchName(QString setName, QString oldName, QString n
     emit stitchListChanged();
 }
 
-void StitchLibrary::reloadAllStitches()
+void StitchLibrary::reloadAllStitchIcons()
 {
     foreach(StitchSet *set, mStitchSets)
-        set->reloadStitches();
+        set->reloadStitchIcons();
 }
 
 QString StitchLibrary::findStitchSetName(QString folderName)

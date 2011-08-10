@@ -242,7 +242,7 @@ void SettingsUi::saveDialogWidgets()
     Settings::inst()->setValue("stitchAlternateColor", QVariant(mAlternateColor.name()));
     Settings::inst()->setValue("chartIndicatorColor", QVariant(mDotColor.name()));
 
-    StitchLibrary::inst()->reloadAllStitches();
+    StitchLibrary::inst()->reloadAllStitchIcons();
     
     //Instructions
     Settings::inst()->setValue("syntaxColor", QVariant(mKeywordColor.name()));

@@ -117,7 +117,7 @@ Stitch* Stitch::copy()
     return s;
 }
 
-void Stitch::reload()
+void Stitch::reloadIcon()
 {
     setupSvgFiles();
 }

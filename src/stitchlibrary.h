@@ -83,7 +83,7 @@ public:
     //save all changes in the sets out to the xml files.
     void saveAllSets();
 
-    void reloadAllStitches();
+    void reloadAllStitchIcons();
 
     //find the name of a stitch set based on the storage location of the set.
     QString findStitchSetName(QString folderName);

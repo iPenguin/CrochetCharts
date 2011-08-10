@@ -109,7 +109,7 @@ public:
     //remove the stitches from the set and load them from the .orig file.
     void reset();
     //reload the svgs from file -- update the colors used.
-    void reloadStitches();
+    void reloadStitchIcons();
     
 signals:
     void stitchNameChanged(QString setName, QString oldName, QString newName);
