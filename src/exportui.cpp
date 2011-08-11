@@ -8,6 +8,7 @@
 #include <QDebug>
 
 #include "settings.h"
+#include "math.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -20,8 +21,13 @@
 
 ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
                    QMap<QString, QMap<QString, qint64> > *colors, QWidget *parent)
-    : QDialog(parent), exportType(""), scene(new QGraphicsScene(this)), ui(new Ui::ExportDialog), mTabWidget(tab),
-    mStitches(stitches), mColors(colors)
+    : QDialog(parent),
+      exportType(""),
+      scene(new QGraphicsScene(this)),
+      ui(new Ui::ExportDialog),
+      mTabWidget(tab),
+      mStitches(stitches),
+      mColors(colors)
 {
     ui->setupUi(this);
     
@@ -48,6 +54,9 @@ ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
     
     connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(exportData()));
+
+    connect(ui->width, SIGNAL(valueChanged(int)), SLOT(updateHightFromWidth(int)));
+    connect(ui->height, SIGNAL(valueChanged(int)), SLOT(updateWidthFromHeight(int)));
 
 }
 
@@ -342,9 +351,11 @@ void ExportUi::setSelection(QString selection)
         
         ui->stitchLegendOptions->hide();
         ui->colorLegendOptions->hide();
-//FIXME: Chart Options.
+//FIXME: Add Chart Options.
         ui->chartOptions->hide();
     }
+
+    updateChartSizeRatio();
 }
 
 void ExportUi::exportLegendPdf()
@@ -486,5 +497,34 @@ void ExportUi::exportImg()
     }
     p->end();
     
-    img.save(fileName);  
+    img.save(fileName);
+}
+
+void ExportUi::updateChartSizeRatio()
+{
+    ui->width->setValue(ui->view->sceneRect().width());
+    ui->height->setValue(ui->view->sceneRect().height());
+}
+
+qreal ExportUi::sceneRatio()
+{
+    qreal ratio = 1.0;
+    ratio = ui->view->sceneRect().height() / ui->view->sceneRect().width();
+    return ratio;
+}
+
+void ExportUi::updateWidthFromHeight(int height)
+{
+    int width = ceil(height / sceneRatio());
+    ui->width->blockSignals(true);
+    ui->width->setValue(width);
+    ui->width->blockSignals(false);
+}
+
+void ExportUi::updateHightFromWidth(int width)
+{
+    int height = ceil(width * sceneRatio());
+    ui->height->blockSignals(true);
+    ui->height->setValue(height);
+    ui->height->blockSignals(false);
 }

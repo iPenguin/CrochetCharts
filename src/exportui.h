@@ -43,6 +43,9 @@ private slots:
     void updateColorLegend();
     void updateStitchLegend();
 
+    void updateHightFromWidth(int width);
+    void updateWidthFromHeight(int height);
+
 private:
     void generateSelectionList(bool showAll);
 
@@ -58,6 +61,9 @@ private:
     void exportSvg();
     void exportImg();
     
+    void updateChartSizeRatio();
+    qreal sceneRatio();
+
     Ui::ExportDialog *ui;
     QTabWidget *mTabWidget;
 
@@ -66,6 +72,7 @@ private:
     
     QMap<QString, int> *mStitches;
     QMap<QString, QMap<QString, qint64> > *mColors;
+
 };
 
 #endif //EXPORTUI_H
