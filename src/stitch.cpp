@@ -23,10 +23,8 @@ Stitch::Stitch() :
 
 Stitch::~Stitch()
 {
-    delete mSvgRenderer;
-    mSvgRenderer = 0;
-    delete mSvgRendererAlt;
-    mSvgRenderer = 0;
+    mSvgRenderer->deleteLater();
+    mSvgRendererAlt->deleteLater();
     delete mPixmap;
     mPixmap = 0;
 }

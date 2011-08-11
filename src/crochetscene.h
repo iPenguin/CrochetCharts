@@ -63,7 +63,6 @@ public:
     //convert x,y to rows, columns.
     CrochetCell* cell(QPoint position);
 
-    void removeCell(int row, int column);
     void removeCell(CrochetCell *c);
 
     void createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
@@ -80,7 +79,6 @@ public:
 
     void addIndicator(Indicator *i);
     void removeIndicator(Indicator *i);
-    void removeIndicator(QPointF pos);
 
     QList<QList<CrochetCell *> > grid() { return mGrid; }
 

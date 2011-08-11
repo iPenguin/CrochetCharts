@@ -128,25 +128,6 @@ void CrochetScene::removeIndicator(Indicator *i)
     update();
 }
 
-void CrochetScene::removeIndicator(QPointF pos)
-{
-    QGraphicsItem *item = itemAt(pos);
-    if(!item) {
-        qWarning() << "removeIndicator: Could not find item at: " << pos;
-        return;
-    }
-    Indicator *i = qgraphicsitem_cast<Indicator*>(item);
-    if(!i) {
-        qWarning() << "removeIndicator: Could not find indicator at: " << pos;
-        return;
-    }
-
-    mIndicators.removeOne(i);
-    removeItem(i);
-    delete i;
-    i = 0;
-}
-
 CrochetCell* CrochetScene::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
@@ -159,19 +140,6 @@ CrochetCell* CrochetScene::cell(int row, int column)
 CrochetCell* CrochetScene::cell(QPoint position)
 {
     return cell(position.y(), position.x());
-}
-
-void CrochetScene::removeCell(int row, int column)
-{
-    Q_ASSERT(mGrid.count() > row);
-    if(mGrid[row].count() <= column)
-        return;
-
-    CrochetCell *c = mGrid[row][column];
-    removeItem(c);
-    mGrid[row].removeAt(column);
-    delete c;
-    c = 0;
 }
 
 void CrochetScene::removeCell(CrochetCell *c)
