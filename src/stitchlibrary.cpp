@@ -46,7 +46,7 @@ StitchLibrary::~StitchLibrary()
         mStitchSets.removeOne(set);
         if(!set->isTemporary)
             set->saveXmlFile();
-        delete set;
+        set->deleteLater();
     }
 }
 
@@ -157,13 +157,13 @@ void StitchLibrary::saveMasterList()
 
 void StitchLibrary::resetMasterStitchSet()
 {
-    mMasterSet->beginResetModel();
+    //mMasterSet->beginResetModel();
     mMasterSet->clearStitches();
     mOverlay->clearStitches();
     mStitchList.clear();
     
     mMasterSet->reset();
-    mMasterSet->endResetModel();
+    //mMasterSet->endResetModel();
 }
 
 void StitchLibrary::addStitchToMasterSet(StitchSet *set, Stitch *s)
@@ -320,8 +320,7 @@ void StitchLibrary::removeSet(StitchSet *set)
         QDir setsDir(Settings::inst()->userSettingsFolder());
         setsDir.remove(set->stitchSetFileName);
 
-        delete set;
-        set = 0;
+        set->deleteLater();
     }
 
 }
@@ -361,9 +360,9 @@ StitchSet* StitchLibrary::addStitchSet(QString fileName)
         msgbox.exec();
         
         if(msgbox.clickedButton() == overwrite) {
-            delete test;
-            test = 0;
             mStitchSets.removeOne(test);
+            test->deleteLater();
+
             //FIXME: this is going to cause crashes when removing sets with sts in the master list!
         } else if(msgbox.clickedButton() == rename) {
             bool ok;

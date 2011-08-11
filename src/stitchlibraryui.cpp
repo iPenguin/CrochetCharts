@@ -367,6 +367,7 @@ void StitchLibraryUi::createSet()
 
 void StitchLibraryUi::removeSet()
 {
+    
     QMessageBox msgbox(this);
     msgbox.setText(tr("This will remove the set and it's associated files."));
     msgbox.setInformativeText(tr("Are you sure you want to remove the set?"));
@@ -379,11 +380,12 @@ void StitchLibraryUi::removeSet()
         return;
     
     QString setName = ui->stitchSource->currentText();
-    
+
     StitchLibrary::inst()->removeSet(setName);
 
     //switch to the master set.
     updateSourceDropDown(StitchLibrary::inst()->masterStitchSet()->name());
+
 }
 
 void StitchLibraryUi::exportSet()

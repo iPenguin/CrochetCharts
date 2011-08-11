@@ -602,7 +602,7 @@ void StitchSet::reset()
     foreach(Stitch *s, mStitches)
         s->isBuiltIn = true;
 
-    //QAbstractItemModel::reset();
+    QAbstractItemModel::reset();
 }
 
 void StitchSet::reloadStitchIcons()
