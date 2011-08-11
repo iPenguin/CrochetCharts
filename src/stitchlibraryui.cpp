@@ -143,11 +143,6 @@ void StitchLibraryUi::resetLibrary()
 //FIXME: resetting a user set returns it to it's first save. keep user set's in a different folder?
     ui->listView->clearSelection();
     QString curSet = ui->stitchSource->currentText();
-    
-    updateSourceDropDown(StitchLibrary::inst()->masterStitchSet()->name());
-    foreach(StitchSet *set, StitchLibrary::inst()->stitchSets()) {
-        set->reset();
-    }
 
     updateSourceDropDown(StitchLibrary::inst()->overlay()->name());
     StitchLibrary::inst()->resetMasterStitchSet();
