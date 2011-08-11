@@ -98,14 +98,12 @@ void ExportUi::setupStitchLegendOptions()
     ui->stitchTitle->setChecked(Settings::inst()->value("showStitchTitle").toBool());
     ui->showStitchDescription->setChecked(Settings::inst()->value("showStitchDescription").toBool());
     ui->showStitchWrongSide->setChecked(Settings::inst()->value("showStitchWrongSide").toBool());
-    ui->showStitchBlocks->setChecked(Settings::inst()->value("showStitchBlock").toBool());
 
     connect(ui->stitchBorder, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
     connect(ui->stitchColumns, SIGNAL(valueChanged(int)), SLOT(updateStitchLegend()));
     connect(ui->stitchTitle, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
     connect(ui->showStitchDescription, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
     connect(ui->showStitchWrongSide, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
-    connect(ui->showStitchBlocks, SIGNAL(toggled(bool)), SLOT(updateStitchLegend()));
 }
 
 void ExportUi::updateColorLegend()
@@ -127,7 +125,6 @@ void ExportUi::updateStitchLegend()
     sl->showTitle = ui->stitchTitle->isChecked();
     sl->showDescription = ui->showStitchDescription->isChecked();
     sl->showWrongSide = ui->showStitchWrongSide->isChecked();
-    sl->showBlocks = ui->showStitchBlocks->isChecked();
     
     scene->update();
 }

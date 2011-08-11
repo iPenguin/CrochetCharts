@@ -53,7 +53,6 @@ public:
     bool showBorder;
     bool showDescription;
     bool showWrongSide;
-    bool showBlocks;
     int columnCount;
     
 protected:

@@ -308,16 +308,6 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         }
         curColHeight += iconHeight;
         
-        if(showBlocks) {
-            int y1 = y;
-            int counter = iconHeight;
-            while(counter > 0) {
-                painter->drawRect(x, y1, 64, 32);
-                counter -=32;
-                y1 += 32;
-            }
-        }
-        
         x += iconWidth + Legend::margin;
         y += textHeight;
         

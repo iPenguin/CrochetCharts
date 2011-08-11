@@ -136,7 +136,6 @@ void Settings::setupValueList() {
     mValueList["showStitchWrongSide"] = QVariant(false);
     mValueList["showStitchTitle"] = QVariant(true);
     mValueList["showStitchBorder"] = QVariant(true);
-    mValueList["showStitchBlock"] = QVariant(true);
 
     //color legend options
     mValueList["colorPrefix"] = QVariant("C");
