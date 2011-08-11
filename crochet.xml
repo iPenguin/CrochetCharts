@@ -149,4 +149,37 @@
        <category>Advanced</category>
        <ws>dc2tog</ws>
    </stitch>
+
+   <stitch>
+       <name>dc3tog</name>
+       <icon>:/stitches/dc3tog.svg</icon>
+       <description>double crochet 3 together</description>
+       <category>Advanced</category>
+       <ws>dc3tog</ws>
+   </stitch>
+
+   <stitch>
+       <name>dc3cluster</name>
+       <icon>:/stitches/dc3cluster.svg</icon>
+       <description>double crochet 3 cluster</description>
+       <category>Advanced</category>
+       <ws>dc3cluster</ws>
+   </stitch>
+
+   <stitch>
+       <name>hdc3cluster</name>
+       <icon>:/stitches/hdc3cluster.svg</icon>
+       <description>bobble</description>
+       <category>Advanced</category>
+       <ws>hdc3cluster</ws>
+   </stitch>
+
+   <stitch>
+       <name>dc5popcorn</name>
+       <icon>:/stitches/dc5popcorn.svg</icon>
+       <description>double crochet 5 popcorn</description>
+       <category>Advanced</category>
+       <ws>dc5popcorn</ws>
+   </stitch>
+
 </stitch_set>

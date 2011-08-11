@@ -18,5 +18,9 @@
         <file>triple_treble_crochet.svg</file>
         <file>unknown.svg</file>
         <file>dc2tog.svg</file>
+        <file>dc3tog.svg</file>
+        <file>dc3cluster.svg</file>
+        <file>dc5popcorn.svg</file>
+        <file>hdc3cluster.svg</file>
     </qresource>
 </RCC>
