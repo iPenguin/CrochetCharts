@@ -320,9 +320,23 @@ void StitchLibrary::removeSet(StitchSet *set)
         QDir setsDir(Settings::inst()->userSettingsFolder());
         setsDir.remove(set->stitchSetFileName);
 
-        set->deleteLater();
+        removeMasterStitches(set);
+        delete set;
+        set = 0;
     }
 
+}
+
+void StitchLibrary::removeMasterStitches(StitchSet *set)
+{
+    foreach(Stitch *s, set->stitches()) {
+        if(mStitchList.contains(s->name())) {
+            if(mStitchList.value(s->name()) == set->name()) {
+                mMasterSet->removeStitch(s->name());
+                mStitchList.remove(s->name());
+            }
+        }
+    }
 }
 
 //FIXME: return a value that can be checked and move the gui dialogs into the libraryui.

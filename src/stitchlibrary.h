@@ -64,6 +64,8 @@ public:
     //remove a set like a save file set.
     void removeSet(StitchSet *set);
 
+    void removeMasterStitches(StitchSet *set);
+
     //add a stitch set from a file, and return a pointer to it.
     StitchSet* addStitchSet(QString fileName);
     void addStitchSet(StitchSet *set);
