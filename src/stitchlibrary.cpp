@@ -279,7 +279,7 @@ QString StitchLibrary::nextSetSaveFile()
 
     baseName = Settings::inst()->userSettingsFolder();
 
-    baseName += "sets/set";
+    baseName += "set";
 
     fileName = baseName + ext;
     int i = 1;
