@@ -75,7 +75,7 @@ elseif(APPLE)
 
     set(CPACK_BINARY_DRAGNDROP ON)
 
-    set(CPACK_OSX_PACKAGE_VERSION "10.4") #min package version
+    #set(CPACK_OSX_PACKAGE_VERSION "10.4") #min package version
     
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${SWS_PROJECT_NAME} version ${SWS_VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
