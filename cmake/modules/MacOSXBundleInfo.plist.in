@@ -9,7 +9,7 @@
 	<key>CFBundleGetInfoString</key>
 	<string>${PROJECT_DESCRIPTION}</string>
 	<key>CFBundleIconFile</key>
-	<string>${PROJECT_MACOSX_ICON}</string>
+        <string>${PROJECT_MACOSX_ICON}</string>
 	<key>CFBundleIdentifier</key>
 	<string>${MACOSX_BUNGLE_GUI_IDENTIFIER}</string>
 	<key>CFBundleInfoDictionaryVersion</key>

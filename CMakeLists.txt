@@ -86,6 +86,7 @@ include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
 
+set(PRJ_NAME "CrochetCharts")
 ###################################################################################
 #CPack includes to create installers
 ###################################################################################
