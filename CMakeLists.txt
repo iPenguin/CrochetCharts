@@ -37,6 +37,7 @@ option(UNIT_TESTING  "Build the test libraries for this software" OFF)
 option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
 option(SWS_DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
+set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
 
 message("-------------------------------------------------------")
 message(STATUS ${SWS_PROJECT_NAME} " Version: " ${SWS_VERSION})
@@ -72,7 +73,10 @@ set(CMAKE_EXE_LINKER_FLAGS_PROFILE "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 #More info see: http://cmake.org/cmake/help/cmake2.6docs.html#module:FindQt4
-set(QT_USE_QTMAIN true)
+if(WIN32)
+    set(QT_USE_QTMAIN true)
+endif()
+
 set(QT_USE_QTSVG true)
 set(QT_USE_QTNETWORK true)
 include(${QT_USE_FILE})

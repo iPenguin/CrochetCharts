@@ -42,35 +42,18 @@ qt4_wrap_ui(crochet_ui_h ${crochet_uis})
 qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers})
 
 if(WIN32)
-    set(WIN32_BASE "C:/Qt/2010.05/qt")
-
     #generate the embeded icon for the exe file.
     set(CMAKE_RC_COMPILER_INIT windres)
     enable_language(RC)
     set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
     set(crochet_win "${CMAKE_SOURCE_DIR}/crochet.rc")
-    
-    set(WIN32_LIBS "${WIN32_BASE}/bin")
-    set(WIN32_PLUGINS "${WIN32_BASE}/plugins")
 
-    set(QT_LIBS_WINDOWS "${WIN32_LIBS}/QtSvg4.dll" "${WIN32_LIBS}/QtCore4.dll" "${WIN32_LIBS}/QtGui4.dll"
-                        "${WIN32_LIBS}/QtNetwork4.dll" "${WIN32_LIBS}/QtXml4.dll")
-    set(QT_DEPS_WINDOWS "${WIN32_LIBS}/libgcc_s_dw2-1.dll" "${WIN32_LIBS}/mingwm10.dll"
+    set(QT_LIBS_WINDOWS "${QT_LIBRARY_DIRS}/QtSvg4.dll" "${QT_LIBRARY_DIRS}/QtCore4.dll" "${QT_LIBRARY_DIRS}/QtGui4.dll"
+                        "${QT_LIBRARY_DIRS}/QtNetwork4.dll" "${QT_LIBRARY_DIRS}/QtXml4.dll")
+    set(QT_DEPS_WINDOWS "${QT_LIBRARY_DIRS}/libgcc_s_dw2-1.dll" "${QT_LIBRARY_DIRS}/mingwm10.dll"
                         "${CMAKE_SOURCE_DIR}/resources/qt.conf")
-                    #"C:/OpenSSL-Win32/libeay32.dll" "C:/OpenSSL-Win32/ssleay32.dll")
 
-    set(QT_PLUGINS_WINDOWS "${WIN32_PLUGINS}/imageformats" "${WIN32_PLUGINS}/accessible" "${WIN32_PLUGINS}/iconengines")
-
-elseif(APPLE)
-
-    file(WRITE "${CMAKE_BINARY_DIR}/qt.conf" "[Paths]\nPlugins = plugins\n")
-    install(FILES "${CMAKE_BINARY_DIR}/qt.conf" DESTINATION .)
-
-    set(CMAKE_OSX_ARCHITECTURES "i386;x86_64") #";x86_64;ppc64;")
-
-    set(DARWIN_LIBS "/Developer/SDKs/MacOSX10.4u.sdk/Library/Frameworks/")
-
-    set(crochet_mac)
+    set(QT_PLUGINS_WINDOWS "${QT_PLUGINS_DIR}/imageformats" "${QT_PLUGINS_DIR}/accessible" "${QT_PLUGINS_DIR}/iconengines")
 
 else()
 
@@ -82,19 +65,22 @@ add_executable(${PROJECT_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_m
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES})
 
-if(WIN32)
-
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.exe ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION bin)
-    install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
-    
-elseif(APPLE)
-
-    #install( TARGETS ${PROJECT_NAME} BUNDLE DESTINATION . )
+if(APPLE)
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
 
+    install(CODE "
+        execute_process(
+            COMMAND \"/usr/bin/macdeployqt\"
+            \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@SWS_VERSION_SHORT@/@PROJECT_NAME@.app/\"
+            WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
+            OUTPUT_VARIABLE _output)
+    " COMPONENT Runtime)
 
 else()
+    install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
+endif()
 
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION bin)
-
+if(WIN32)
+    install(PROGRAMS ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION bin)
+    install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
 endif()
