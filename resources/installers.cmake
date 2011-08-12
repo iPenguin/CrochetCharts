@@ -95,7 +95,14 @@ elseif(APPLE)
 
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
                 ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
-    
+
+    install(CODE
+       "execute_process(
+                COMMAND \"/usr/bin/macdeployqt\" \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/CrochetCharts-0.9.91/Crochet Charts.app/\"
+              WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
+               OUTPUT_VARIABLE _output)
+    " COMPONENT Runtime)
+
     install(CODE "
         set(VERSION_STR \"@SWS_VERSION_MAJOR@.@SWS_VERSION_MINOR@.@SWS_VERSION_PATCH@\")
         file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_STR@.pdf\" 
@@ -105,10 +112,10 @@ elseif(APPLE)
         " COMPONENT Runtime)
 
     #install(CODE "
-    #  include(\"@CMAKE_SOURCE_DIR@/Modules/BundleUtilities.cmake\")
-    #  fixup_bundle(\"@fixup_exe@\" \"\" \"@QT_LIBRARY_DIR@;@QT_BINARY_DIR@\")
-    #")
-
+    #    include(BundleUtilities)
+    #    message(\"Bundle Path:\" \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@/Crochet Charts.app\")
+    #    fixup_bundle(\"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_STR@/Crochet\ Charts.app/Contents/MacOS/CrochetCharts\" \"\" \"${QT_LIBRARY_DIRS}\")
+    #    " COMPONENT Runtime)
 
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")

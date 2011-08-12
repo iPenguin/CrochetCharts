@@ -89,28 +89,9 @@ if(WIN32)
     
 elseif(APPLE)
 
+    #install( TARGETS ${PROJECT_NAME} BUNDLE DESTINATION . )
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
 
-    set(LIBS QtCore QtGui QtNetwork QtSvg QtXml)
-    foreach(support_lib ${LIBS})
-        set(support_path ${support_lib}.framework/Versions/4)
-        install(FILES "${DARWIN_LIBS}/${support_path}/${support_lib}" DESTINATION ../Frameworks/${support_path} COMPONENT Runtime)
-    endforeach()
-
-    install(DIRECTORY "${DARWIN_LIBS}/QtGui.framework/Resources/qt_menu.nib" DESTINATION ../Frameworks/QtGui.framework/Resources COMPONENT Runtime)
-
-    install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ../PlugIns COMPONENT Runtime)
-    install(DIRECTORY "${QT_PLUGINS_DIR}/accessible" DESTINATION ../PlugIns COMPONENT Runtime)
-    install(DIRECTORY "${QT_PLUGINS_DIR}/iconengines" DESTINATION ../PlugIns COMPONENT Runtime)
-
-    find_program(APPLE_RESOURCE Rez /Developer/Tools)
-    if(APPLE_RESOURCE)
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${APPLE_RESOURCE}
-            ARGS Carbon.r -o ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} COMMENT "Resource Fork")
-    endif()
-
-    set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/${MACOSX_BUNDLE_ICON_FILE}"
-                PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
 else()
 
