@@ -5,3 +5,5 @@ install fop and xsl to meet the cmake scripts.
 download cmake
 download qt
 
+export SDKROOT=/Developer/SDKs/MacOSX10.5.sdk
+export MACOSX_DEPLOYMENT_TARGET=10.5
