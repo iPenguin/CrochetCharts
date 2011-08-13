@@ -48,9 +48,11 @@ if(WIN32)
     set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
     set(crochet_win "${CMAKE_SOURCE_DIR}/crochet.rc")
 
-    set(QT_LIBS_WINDOWS "${QT_LIBRARY_DIRS}/QtSvg4.dll" "${QT_LIBRARY_DIRS}/QtCore4.dll" "${QT_LIBRARY_DIRS}/QtGui4.dll"
-                        "${QT_LIBRARY_DIRS}/QtNetwork4.dll" "${QT_LIBRARY_DIRS}/QtXml4.dll")
-    set(QT_DEPS_WINDOWS "${QT_LIBRARY_DIRS}/libgcc_s_dw2-1.dll" "${QT_LIBRARY_DIRS}/mingwm10.dll"
+    set(QT_WIN_LIBS "C://Qt//4.7.3//bin")
+    
+    set(QT_LIBS_WINDOWS "${QT_WIN_LIBS}//QtSvg4.dll" "${QT_WIN_LIBS}//QtCore4.dll" "${QT_WIN_LIBS}//QtGui4.dll"
+                        "${QT_WIN_LIBS}//QtNetwork4.dll" "${QT_WIN_LIBS}//QtXml4.dll")
+    set(QT_DEPS_WINDOWS "${QT_WIN_LIBS}//libgcc_s_dw2-1.dll" "${QT_WIN_LIBS}//mingwm10.dll"
                         "${CMAKE_SOURCE_DIR}/resources/qt.conf")
 
     set(QT_PLUGINS_WINDOWS "${QT_PLUGINS_DIR}/imageformats" "${QT_PLUGINS_DIR}/accessible" "${QT_PLUGINS_DIR}/iconengines")
