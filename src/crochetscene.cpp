@@ -444,9 +444,6 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         case CrochetScene::ColorMode:
             colorModeMousePress(e);
             break;
-        case CrochetScene::GridMode:
-            gridModeMousePress(e);
-            break;
         case CrochetScene::PositionMode:
             positionModeMousePress(e);
             break;
@@ -489,9 +486,6 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             break;
         case CrochetScene::ColorMode:
             colorModeMouseMove(e);
-            break;
-        case CrochetScene::GridMode:
-            gridModeMouseMove(e);
             break;
         case CrochetScene::PositionMode:
             QGraphicsScene::mouseMoveEvent(e);
@@ -543,9 +537,6 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
         case CrochetScene::ColorMode:
             colorModeMouseRelease(e);
-            break;
-        case CrochetScene::GridMode:
-            gridModeMouseRelease(e);
             break;
         case CrochetScene::PositionMode:
             positionModeMouseRelease(e);
@@ -625,49 +616,6 @@ void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
         mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
 }
 
-void CrochetScene::gridModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-}
-
-void CrochetScene::gridModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-}
-
-void CrochetScene::gridModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-
-    //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
-    int x = 0;
-    int y = 0;
-    if(mStyle == CrochetScene::Rounds) {
-        y = getClosestRow(e->scenePos());
-        //FIXME: the row has to be passed in because getClosestRow modifies the row
-        x = getClosestColumn(e->scenePos(), y);
-    } else if (mStyle == CrochetScene::Rows) {
-        x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
-        y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
-    }
-
-    if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
-
-        AddCell *addCell = new AddCell(this, QPoint(x, y));
-        CrochetCell *c = addCell->cell();
-        c->setStitch(mEditStitch, (y % 2));
-        undoStack()->push(addCell);
-
-    } else {
-        if(!mCurCell)
-            return;
-
-        undoStack()->push(new RemoveCell(this, mCurCell));
-        mCurCell = 0;
-        mHighlightCell = 0;
-    }
-
-}
-
 void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
@@ -722,15 +670,42 @@ void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    Q_UNUSED(e);
     //FIXME: foreach(stitch in selection()) create an undo group event.
-    if(!mCurCell)
-        return;
+    if(mCurCell) {
         
     if(mCurCell->name() != mEditStitch)
         mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
     
-    mCurCell = 0;
+        mCurCell = 0;
+    } else {
+        //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
+        int x = 0;
+        int y = 0;
+        if(mStyle == CrochetScene::Rounds) {
+            y = getClosestRow(e->scenePos());
+            //FIXME: the row has to be passed in because getClosestRow modifies the row
+            x = getClosestColumn(e->scenePos(), y);
+        } else if (mStyle == CrochetScene::Rows) {
+            x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
+            y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
+        }
+
+        if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
+
+            AddCell *addCell = new AddCell(this, QPoint(x, y));
+            CrochetCell *c = addCell->cell();
+            c->setStitch(mEditStitch, (y % 2));
+            undoStack()->push(addCell);
+
+        } else {
+            if(!mCurCell)
+                return;
+
+            undoStack()->push(new RemoveCell(this, mCurCell));
+            mCurCell = 0;
+            mHighlightCell = 0;
+        }
+    }
 }
 
 void CrochetScene::angleModeMousePress(QGraphicsSceneMouseEvent *e)

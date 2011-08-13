@@ -158,10 +158,6 @@ private:
     void colorModeMousePress(QGraphicsSceneMouseEvent *e);
     void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
     
-    void gridModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void gridModeMousePress(QGraphicsSceneMouseEvent *e);
-    void gridModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    
     void positionModeMouseMove(QGraphicsSceneMouseEvent *e);
     void positionModeMousePress(QGraphicsSceneMouseEvent *e);
     void positionModeMouseRelease(QGraphicsSceneMouseEvent *e);
