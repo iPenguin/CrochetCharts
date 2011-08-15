@@ -10,7 +10,7 @@
 /*************************************************\
 | SetCellStitch                                   |
 \*************************************************/
-SetCellStitch::SetCellStitch(CrochetScene *s, CrochetCell *cell, QString newSt, QUndoCommand *parent)
+SetCellStitch::SetCellStitch(Scene *s, CrochetCell *cell, QString newSt, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -35,7 +35,7 @@ void SetCellStitch::undo()
 /*************************************************\
 | SetCellColor                                    |
 \*************************************************/
-SetCellColor::SetCellColor(CrochetScene *s, CrochetCell *cell, QColor newCl, QUndoCommand* parent)
+SetCellColor::SetCellColor(Scene *s, CrochetCell *cell, QColor newCl, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -58,7 +58,7 @@ void SetCellColor::undo()
 /*************************************************\
 | SetCellRotation                                 |
 \*************************************************/
-SetCellRotation::SetCellRotation(CrochetScene *s, CrochetCell *cell, qreal baseRot, qreal diff, QUndoCommand* parent)
+SetCellRotation::SetCellRotation(Scene *s, CrochetCell *cell, qreal baseRot, qreal diff, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -103,7 +103,7 @@ bool SetCellRotation::mergeWith(const QUndoCommand *command)
 /*************************************************\
 | SetItemCoordinates                              |
 \*************************************************/
-SetItemCoordinates::SetItemCoordinates(CrochetScene *s, QGraphicsItem *item, QPointF oldPos, QPointF newPos, QUndoCommand* parent)
+SetItemCoordinates::SetItemCoordinates(Scene *s, QGraphicsItem *item, QPointF oldPos, QPointF newPos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -144,7 +144,7 @@ bool SetItemCoordinates::mergeWith(const QUndoCommand *command)
 /*************************************************\
  | SetCellScale                                   |
 \*************************************************/
-SetCellScale::SetCellScale(CrochetScene *s, CrochetCell *cell, qreal scl, QUndoCommand* parent)
+SetCellScale::SetCellScale(Scene *s, CrochetCell *cell, qreal scl, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -186,7 +186,7 @@ bool SetCellScale::mergeWith(const QUndoCommand *command)
 /*************************************************\
 | AddCell                                         |
 \*************************************************/
-AddCell::AddCell(CrochetScene* s, QPoint pos, QUndoCommand* parent)
+AddCell::AddCell(Scene* s, QPoint pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
 
@@ -215,7 +215,7 @@ void AddCell::undo()
 /*************************************************\
 | RemoveCell                                      |
 \*************************************************/
-RemoveCell::RemoveCell(CrochetScene* s, CrochetCell *cell, QUndoCommand* parent)
+RemoveCell::RemoveCell(Scene* s, CrochetCell *cell, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     c = cell;
@@ -239,7 +239,7 @@ void RemoveCell::undo()
 /*************************************************\
 | AddRow                                          |
 \*************************************************/
-AddRow::AddRow(CrochetScene* s, QPointF pos, QUndoCommand* parent)
+AddRow::AddRow(Scene* s, QPointF pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     position = pos;
@@ -260,7 +260,7 @@ void AddRow::undo()
 /*************************************************\
 | RemoveRow                                       |
 \*************************************************/
-RemoveRow::RemoveRow(CrochetScene* s, QPointF pos, QUndoCommand* parent)
+RemoveRow::RemoveRow(Scene* s, QPointF pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     position = pos;

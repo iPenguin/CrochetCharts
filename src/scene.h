@@ -2,10 +2,10 @@
 | Copyright (c) 2010 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#ifndef CROCHETSCENE_H
-#define CROCHETSCENE_H
+#ifndef SCENE_H
+#define SCENE_H
 
-#include "scene.h"
+#include <QGraphicsScene>
 
 #include "crochetcell.h"
 
@@ -16,7 +16,7 @@
 
 class QKeyEvent;
 
-class CrochetScene : public Scene
+class Scene : public QGraphicsScene
 {
     Q_OBJECT
     friend class SaveFile;
@@ -37,9 +37,15 @@ public:
         StretchMode,       //stretch the stitches.
         IndicatorMode
     };
+
+    enum ChartStyle {
+        Rows = 100, // flat chart rows calc'ed based on grid.
+        Rounds,     // round chart rows clac'ed with trig.
+        Blank       // start w/no sts and allow anything.
+    };
     
-    CrochetScene(QObject *parent = 0);
-    ~CrochetScene();
+    Scene(QObject *parent = 0);
+    ~Scene();
 
     void createRow(int row, int columns, QString stitch);
 
@@ -60,12 +66,28 @@ public:
 
     void removeCell(CrochetCell *c);
 
-    void createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
+    void createChart(Scene::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
+
+    void setEditMode(EditMode mode) { mMode = mode; }
+    EditMode editMode() { return mMode; }
+
+    void setEditStitch(QString stitch) { mEditStitch = stitch; }
+
+    void setEditFgColor(QColor color) { mEditFgColor = color; }
+    void setEditBgColor(QColor color) { mEditBgColor = color; }
+
+    QUndoStack* undoStack() { return &mUndoStack; }
 
     void addIndicator(Indicator *i);
     void removeIndicator(Indicator *i);
 
+    QList<QList<CrochetCell *> > grid() { return mGrid; }
+
     bool showChartCenter() { return mShowChartCenter; }
+    
+    Scene::ChartStyle chartStyle() const { return mStyle; }
+
+    QStringList modes();
     
 public slots:
     void setShowChartCenter(bool state);
@@ -82,12 +104,23 @@ signals:
     void colorChanged(QString oldColor, QString newColor);
     
 protected:
-
+/*
+    virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
+    virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
+    virtual void    keyPressEvent ( QKeyEvent * keyEvent )
+    virtual void    wheelEvent ( QGraphicsSceneWheelEvent * wheelEvent )
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
+*/
     void keyReleaseEvent(QKeyEvent *keyEvent);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
-
+/*
+    void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
+    void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
+    void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
+    void dropEvent(QGraphicsSceneDragDropEvent *event);
+*/
     //find the x,y positions on the grid for a given cell;
     QPoint findGridPosition(CrochetCell *c);
 
@@ -107,6 +140,8 @@ protected:
      */
     int getClosestColumn(QPointF mousePosition, int row);
 
+    QList<Indicator*> indicators() { return mIndicators; }
+
     qreal scenePosToAngle(QPointF pt);
     
     /**
@@ -115,13 +150,16 @@ protected:
      */
     void setCellPosition(int row, int column, CrochetCell *c, int columns = 1, bool updateAnchor = false);
     
-private:
+    void initDemoBackground();
+
+protected:
     
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
     
     void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void colorModeMousePress(QGraphicsSceneMouseEvent *e);
     void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
     
     void positionModeMouseMove(QGraphicsSceneMouseEvent *e);
@@ -137,15 +175,56 @@ private:
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
     void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void indicatorModeMousePress(QGraphicsSceneMouseEvent *e);
     void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
-private:
+protected:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
+    /**
+     * Used in the mouse*Event()s to keep the mouse movements on the same cell.
+     */
+    CrochetCell *mCurCell;
+    QPointF mCellStartPos;
+    QPointF mLeftButtonDownPos;
+    
+    Indicator *mCurIndicator;
+    
+    /**
+     * The difference between where the user clicked on the object and the (x,y) of the object.
+     */
+    QSizeF mDiff;
+    qreal mCurCellRotation;
+
+    QRubberBand *mRubberBand;
+    QPointF mRubberBandStart;
+
+    QMap<QGraphicsItem *, QPointF> mOldPositions;
+    
+    //Is the user moving an indicator.
+    bool mMoving;
+
+    int mRowSpacing;
+    
+    ChartStyle mStyle;
+    EditMode mMode;
+
     QGraphicsItem *mCenterSymbol;
+    
+    QString mEditStitch;
+    QColor mEditFgColor;
+    QColor mEditBgColor;
 
     bool mShowChartCenter;
+    
+    QUndoStack mUndoStack;
 
+    QSizeF mDefaultSize;
+    
+    //The grid just keeps track of the sts in each row so they can be converted to instructions.
+    QList<QList<CrochetCell *> > mGrid;
+
+    QList<Indicator*> mIndicators;
 };
 
-#endif //CROCHETSCENE_H
+#endif //SCENE_H

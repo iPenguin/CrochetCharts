@@ -8,7 +8,7 @@
 #include <QUndoCommand>
 
 class Indicator;
-class CrochetScene;
+class Scene;
 
 #include <QPointF>
 #include <QString>
@@ -19,7 +19,7 @@ class AddIndicator : public QUndoCommand
 public:
     enum { Id = 2200 };
 
-    AddIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
+    AddIndicator(Scene *s, QPointF pos, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -30,7 +30,7 @@ private:
     QPointF position;
 
     Indicator *item;
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class RemoveIndicator : public QUndoCommand
@@ -38,7 +38,7 @@ class RemoveIndicator : public QUndoCommand
 public:
     enum { Id = 2210 };
 
-    RemoveIndicator(CrochetScene *s, Indicator *i, QUndoCommand* parent = 0);
+    RemoveIndicator(Scene *s, Indicator *i, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -49,7 +49,7 @@ private:
     QPointF position;
     Indicator *item;
 
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class MoveIndicator : public QUndoCommand
@@ -57,7 +57,7 @@ class MoveIndicator : public QUndoCommand
 public:
     enum { Id = 2220 };
 
-    MoveIndicator(CrochetScene *s, Indicator *item, QPointF newPos, QUndoCommand* parent = 0);
+    MoveIndicator(Scene *s, Indicator *item, QPointF newPos, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -71,7 +71,7 @@ private:
     QPointF origPosition;
     QPointF newPosition;
 
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class ChangeTextIndicator : public QUndoCommand
@@ -79,7 +79,7 @@ class ChangeTextIndicator : public QUndoCommand
 public:
     enum { Id = 2230 };
 
-    ChangeTextIndicator(CrochetScene *s, Indicator *item, QString text, QUndoCommand *parent = 0);
+    ChangeTextIndicator(Scene *s, Indicator *item, QString text, QUndoCommand *parent = 0);
 
     void redo();
     void undo();
@@ -91,7 +91,7 @@ private:
     QString newText;
     QString origText;
 
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 #endif //INDICATORUNDO_H

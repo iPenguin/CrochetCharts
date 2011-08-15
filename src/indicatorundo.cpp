@@ -8,12 +8,12 @@
 #include <QObject>
 
 #include "indicator.h"
-#include "crochetscene.h"
+#include "Scene.h"
 
 /*************************************************\
 | AddIndicator                                    |
 \*************************************************/
-AddIndicator::AddIndicator(CrochetScene *s, QPointF pos, QUndoCommand* parent)
+AddIndicator::AddIndicator(Scene *s, QPointF pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     position = pos;
@@ -38,7 +38,7 @@ void AddIndicator::undo()
 /*************************************************\
 | RemoveIndicator                                 |
 \*************************************************/
-RemoveIndicator::RemoveIndicator(CrochetScene *s, Indicator *i, QUndoCommand* parent)
+RemoveIndicator::RemoveIndicator(Scene *s, Indicator *i, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     item = i;
@@ -62,7 +62,7 @@ void RemoveIndicator::undo()
 /*************************************************\
 | MoveIndicator                                   |
 \*************************************************/
-MoveIndicator::MoveIndicator(CrochetScene* s, Indicator *item, QPointF newPos, QUndoCommand* parent)
+MoveIndicator::MoveIndicator(Scene* s, Indicator *item, QPointF newPos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     i = item;
@@ -105,7 +105,7 @@ bool MoveIndicator::mergeWith(const QUndoCommand *command)
 /*************************************************\
 | ChangeTextIndicator                             |
 \*************************************************/
-ChangeTextIndicator::ChangeTextIndicator(CrochetScene* s, Indicator *item, QString text, QUndoCommand* parent)
+ChangeTextIndicator::ChangeTextIndicator(Scene* s, Indicator *item, QString text, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;

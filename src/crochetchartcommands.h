@@ -8,14 +8,14 @@
 #include <QUndoCommand>
 
 #include "cell.h"
-#include "crochetscene.h"
+#include "Scene.h"
 
 class SetCellStitch : public QUndoCommand
 {
 public:
     enum { Id = 1100 };
     
-    SetCellStitch(CrochetScene *s, CrochetCell *cell, QString newSt, QUndoCommand* parent = 0);
+    SetCellStitch(Scene *s, CrochetCell *cell, QString newSt, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -26,7 +26,7 @@ private:
     QString oldStitch;
     QString newStitch;
     CrochetCell *c;
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class SetCellColor : public QUndoCommand
@@ -34,7 +34,7 @@ class SetCellColor : public QUndoCommand
 public:
     enum { Id = 1110 };
     
-    SetCellColor(CrochetScene *s, CrochetCell *cell, QColor newCl, QUndoCommand* parent = 0);
+    SetCellColor(Scene *s, CrochetCell *cell, QColor newCl, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -45,7 +45,7 @@ private:
     QColor oldColor;
     QColor newColor;
     CrochetCell *c;
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class SetCellRotation : public QUndoCommand
@@ -53,7 +53,7 @@ class SetCellRotation : public QUndoCommand
 public:
     enum { Id = 1120 };
     
-    SetCellRotation(CrochetScene *s, CrochetCell *cell, qreal baseRot, qreal diff, QUndoCommand* parent = 0);
+    SetCellRotation(Scene *s, CrochetCell *cell, qreal baseRot, qreal diff, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -67,7 +67,7 @@ private:
     CrochetCell *c;
     qreal delta;
     
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class SetItemCoordinates : public QUndoCommand
@@ -75,7 +75,7 @@ class SetItemCoordinates : public QUndoCommand
 public:
     enum { Id = 1130 };
 
-    SetItemCoordinates(CrochetScene *s, QGraphicsItem *item, QPointF oldPos, QPointF newPos, QUndoCommand* parent = 0);
+    SetItemCoordinates(Scene *s, QGraphicsItem *item, QPointF oldPos, QPointF newPos, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -89,7 +89,7 @@ private:
     QPointF newCoord;
     QGraphicsItem *i;
 
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class SetCellScale : public QUndoCommand
@@ -97,7 +97,7 @@ class SetCellScale : public QUndoCommand
 public:
     enum { Id = 1140 };
 
-    SetCellScale(CrochetScene *s, CrochetCell *cell, qreal scl, QUndoCommand* parent = 0);
+    SetCellScale(Scene *s, CrochetCell *cell, qreal scl, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -111,7 +111,7 @@ private:
     qreal newScale;
     
     CrochetCell *c;
-    CrochetScene *scene;
+    Scene *scene;
     
 };
 
@@ -120,7 +120,7 @@ class AddCell : public QUndoCommand
 public:
     enum { Id = 1150 };
 
-    AddCell(CrochetScene *s, QPoint pos, QUndoCommand* parent = 0);
+    AddCell(Scene *s, QPoint pos, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -133,7 +133,7 @@ private:
     CrochetCell *c;
     QPoint position;
 
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class RemoveCell : public QUndoCommand
@@ -141,7 +141,7 @@ class RemoveCell : public QUndoCommand
 public:
     enum { Id = 1160 };
 
-    RemoveCell(CrochetScene *s, CrochetCell *c, QUndoCommand* parent = 0);
+    RemoveCell(Scene *s, CrochetCell *c, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -152,7 +152,7 @@ private:
     CrochetCell *c;
     QPoint position;
 
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class AddRow : public QUndoCommand
@@ -160,7 +160,7 @@ class AddRow : public QUndoCommand
 public:
     enum { Id = 1170 };
 
-    AddRow(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
+    AddRow(Scene *s, QPointF pos, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -170,7 +170,7 @@ public:
 private:
     QPointF position;
 
-    CrochetScene *scene;
+    Scene *scene;
 };
 
 class RemoveRow : public QUndoCommand
@@ -178,7 +178,7 @@ class RemoveRow : public QUndoCommand
 public:
     enum { Id = 1180 };
 
-    RemoveRow(CrochetScene *s, QPointF pos, QUndoCommand* parent = 0);
+    RemoveRow(Scene *s, QPointF pos, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -188,6 +188,6 @@ public:
 private:
     QPointF position;
 
-    CrochetScene *scene;
+    Scene *scene;
 };
 #endif //CROCHETCHARTCOMMANDS_H

@@ -29,7 +29,7 @@ set(crochet_qobject_headers
     undogroup.h
     tabinterface.h
     legends.h
-    #indicator.h
+    scene.h
     )
 
 set(crochet_resources

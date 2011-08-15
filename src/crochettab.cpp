@@ -44,7 +44,7 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
 
     mView->setScene(mScene);
 
-    mScene->setEditMode((CrochetScene::EditMode)defEditMode);
+    mScene->setEditMode((Scene::EditMode)defEditMode);
     mScene->setEditStitch(defStitch);
     mScene->setEditFgColor(defFgColor);
     mScene->setEditBgColor(defBgColor);
@@ -83,10 +83,7 @@ CrochetTab::~CrochetTab()
 
 QStringList CrochetTab::editModes()
 {
-    QStringList modes;
-    modes << tr("Stitch Mode") << tr("Color Mode") << tr("Position Mode")
-            << tr("Angle Mode") << tr("Stretch Mode") << tr("Indicator Mode");
-    return modes;
+    return mScene->modes();
 }
 
 int CrochetTab::editMode() const
@@ -96,7 +93,7 @@ int CrochetTab::editMode() const
 
 void CrochetTab::setEditMode(int mode)
 {
-    mScene->setEditMode((CrochetScene::EditMode)mode);
+    mScene->setEditMode((Scene::EditMode)mode);
 }
 
 void CrochetTab::renderChart(QPainter *painter, QRectF rect)
@@ -185,7 +182,9 @@ void CrochetTab::createChart(QString style, int rows, int cols, QString defStitc
         st  = CrochetScene::Rows;
     else if(style == tr("Rounds"))
         st = CrochetScene::Rounds;
-    
+    else if(style == tr("Blank"))
+        st = CrochetScene::Blank;
+
     mScene->createChart(st, rows, cols, defStitch, rowSize);
 
     ui->showChartCenter->setChecked(mScene->showChartCenter());

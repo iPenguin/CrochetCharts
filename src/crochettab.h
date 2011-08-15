@@ -27,6 +27,13 @@ class CrochetTab : public QWidget
     friend class SaveThread;
     friend class ExportUi;
 public:
+
+    enum ChartStyle {
+        Rows = 100, // flat chart rows calc'ed based on grid.
+        Rounds,     // round chart rows clac'ed with trig.
+        Blank       // start w/no sts and allow anything.
+    };
+
     explicit CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent = 0);
     ~CrochetTab();
 
