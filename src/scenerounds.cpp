@@ -41,23 +41,22 @@ void SceneRounds::setShowChartCenter(bool state)
 {
     mShowChartCenter = state;
 
-    if(mStyle == SceneRounds::Rounds) {
-        if(mShowChartCenter) {
-            if(!mCenterSymbol) {
-                QPen pen;
-                pen.setWidth(5);
+    if(mShowChartCenter) {
+        if(!mCenterSymbol) {
+            QPen pen;
+            pen.setWidth(5);
 
-                double radius = (mDefaultSize.height() *0.45);
-                
-                mCenterSymbol = addEllipse(-radius, -radius, radius * 2, radius * 2, pen);
-                mCenterSymbol->setToolTip(tr("Chart Center"));
-            } else {
-                addItem(mCenterSymbol);
-            }
+            double radius = (mDefaultSize.height() *0.45);
+
+            mCenterSymbol = addEllipse(-radius, -radius, radius * 2, radius * 2, pen);
+            mCenterSymbol->setToolTip(tr("Chart Center"));
         } else {
-            removeItem(mCenterSymbol);
+            addItem(mCenterSymbol);
         }
+    } else {
+        removeItem(mCenterSymbol);
     }
+
 }
 
 void SceneRounds::addIndicator(Indicator* i)
@@ -127,8 +126,7 @@ void SceneRounds::appendCell(int row, CrochetCell *c, bool fromSave)
     c->setColor(QColor(Qt::white));
    
     if(!fromSave) {
-        if(mStyle == SceneRounds::Rounds)
-            redistributeCells(row);
+        redistributeCells(row);
     }
 }
 
@@ -159,26 +157,19 @@ void SceneRounds::addCell(QPoint p, CrochetCell* c)
 
 void SceneRounds::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
 {
-    if(mStyle == SceneRounds::Rounds) {
-        double widthInDegrees = 360.0 / columns;
+    double widthInDegrees = 360.0 / columns;
 
-        double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
-        
-        double degrees = widthInDegrees*column;
-        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+    double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
 
-        qreal delta = mDefaultSize.width() * 0.5;
-        if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(finish.x() - delta, finish.y());
-        c->setPos(finish.x() - delta, finish.y());
-        c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
-        
-    } else {
-        c->setPos(column*mDefaultSize.width(), row*mDefaultSize.height());
-        if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(column*mDefaultSize.width(), row*mDefaultSize.height());
-        c->setColor(QColor(Qt::white));
-    }
+    double degrees = widthInDegrees*column;
+    QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+
+    qreal delta = mDefaultSize.width() * 0.5;
+    if(updateAnchor || c->anchor().isNull())
+        c->setAnchor(finish.x() - delta, finish.y());
+    c->setPos(finish.x() - delta, finish.y());
+    c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
+   
     c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
 }
 
@@ -194,26 +185,20 @@ void SceneRounds::redistributeCells(int row)
     }
 }
 
-void SceneRounds::createChart(SceneRounds::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize)
+void SceneRounds::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 {
-    mStyle = style;
-    if(mStyle == SceneRounds::Blank) {
+ 
+    mDefaultSize = rowSize;
 
+    for(int i = 0; i < rows; ++i) {
+        //FIXME: this padding should be dependant on the height of the sts.
+        int pad = i * 12;
 
-    } else {
-        mDefaultSize = rowSize;
-
-        for(int i = 0; i < rows; ++i) {
-            int pad = 0;
-            if(mStyle == SceneRounds::Rounds)
-                pad = i*8;
-
-            createRow(i, cols + pad, stitch);
-        }
-
-        setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
+        createRow(i, cols + pad, stitch);
     }
 
+    setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
+    
     initDemoBackground();
 }
 
@@ -540,7 +525,7 @@ void SceneRounds::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 
 void SceneRounds::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    
+    Q_UNUSED(e);
     //qreal diff = e->buttonDownPos(Qt::LeftButton).manhattanLength() - e->scenePos().manhattanLength();
     //if(diff >= QApplication::startDragDistance()) {
     if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
@@ -579,16 +564,9 @@ void SceneRounds::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
         mCurCell = 0;
     } else if(!mRubberBand){
         //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
-        int x = 0;
-        int y = 0;
-        if(mStyle == SceneRounds::Rounds) {
-            y = getClosestRow(e->scenePos());
-            //FIXME: the row has to be passed in because getClosestRow modifies the row
-            x = getClosestColumn(e->scenePos(), y);
-        } else if (mStyle == SceneRounds::Rows) {
-            x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
-            y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
-        }
+        int y = getClosestRow(e->scenePos());
+        //FIXME: the row has to be passed in because getClosestRow modifies the row
+        int x = getClosestColumn(e->scenePos(), y);
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 

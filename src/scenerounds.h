@@ -50,7 +50,7 @@ public:
 
     void removeCell(CrochetCell *c);
 
-    void createChart(SceneRounds::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
+    void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
 
     void addIndicator(Indicator *i);
     void removeIndicator(Indicator *i);
