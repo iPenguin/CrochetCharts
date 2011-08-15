@@ -27,16 +27,6 @@ class SceneBlank : public Scene
     friend class AddCell;
     friend class RemoveCell;
 public:
-
-    enum EditMode {
-        StitchMode = 10, //place stitches on the chart.
-        ColorMode,       //place colors behind stitches.
-        GridMode,        //draw lines on the grid.
-        PositionMode,    //move the stitches around on the chart.
-        AngleMode,       //adjust the angle of the
-        StretchMode,       //stretch the stitches.
-        IndicatorMode
-    };
     
     SceneBlank(QObject *parent = 0);
     ~SceneBlank();
