@@ -8,7 +8,7 @@
 #include <QObject>
 
 #include "indicator.h"
-#include "Scene.h"
+#include "scene.h"
 
 /*************************************************\
 | AddIndicator                                    |

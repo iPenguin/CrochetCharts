@@ -8,7 +8,7 @@
 #include <QUndoCommand>
 
 #include "cell.h"
-#include "Scene.h"
+#include "scene.h"
 
 class SetCellStitch : public QUndoCommand
 {
