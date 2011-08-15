@@ -11,8 +11,9 @@
 #include "chartview.h"
 #include <QPointer>
 
+#include "scene.h"
+
 class QGraphicsView;
-class CrochetScene;
 class TextView;
 class QUndoStack;
 
@@ -28,13 +29,7 @@ class CrochetTab : public QWidget
     friend class ExportUi;
 public:
 
-    enum ChartStyle {
-        Rows = 100, // flat chart rows calc'ed based on grid.
-        Rounds,     // round chart rows clac'ed with trig.
-        Blank       // start w/no sts and allow anything.
-    };
-
-    explicit CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent = 0);
+    explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent = 0);
     ~CrochetTab();
 
     void renderChart(QPainter *painter, QRectF rect = QRectF());
@@ -89,11 +84,11 @@ private slots:
     void setShowChartCenter(bool state);
     
 private:
-    CrochetScene* scene() { return mScene; }
+    Scene* scene() { return mScene; }
     
 private:   
     QPointer<ChartView> mView;
-    CrochetScene *mScene;
+    Scene *mScene;
     TextView *mTextView;
 
     QMap<QString, int> *mPatternStitches;

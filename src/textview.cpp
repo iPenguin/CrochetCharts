@@ -6,11 +6,11 @@
 
 #include <QDebug>
 #include "settings.h"
-#include "crochetscene.h"
+#include "scene.h"
 
 #include <math.h>
 
-TextView::TextView(QWidget *parent, CrochetScene* scene)
+TextView::TextView(QWidget *parent, Scene* scene)
     : QObject(parent), mScene(scene)
 {
 }

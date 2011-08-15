@@ -2,8 +2,8 @@
 | Copyright (c) 2010 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#ifndef CROCHETSCENE_H
-#define CROCHETSCENE_H
+#ifndef SCENEROUNDS_H
+#define SCENEROUNDS_H
 
 #include "scene.h"
 
@@ -16,7 +16,7 @@
 
 class QKeyEvent;
 
-class CrochetScene : public Scene
+class SceneRounds : public Scene
 {
     Q_OBJECT
     friend class SaveFile;
@@ -38,8 +38,8 @@ public:
         IndicatorMode
     };
     
-    CrochetScene(QObject *parent = 0);
-    ~CrochetScene();
+    SceneRounds(QObject *parent = 0);
+    ~SceneRounds();
 
     void createRow(int row, int columns, QString stitch);
 
@@ -60,7 +60,7 @@ public:
 
     void removeCell(CrochetCell *c);
 
-    void createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
+    void createChart(SceneRounds::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
 
     void addIndicator(Indicator *i);
     void removeIndicator(Indicator *i);
@@ -148,4 +148,4 @@ private:
 
 };
 
-#endif //CROCHETSCENE_H
+#endif //SCENEROUNDS_H

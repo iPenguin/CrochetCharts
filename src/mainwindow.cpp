@@ -861,19 +861,27 @@ void MainWindow::newChart()
     QString defStitch = ui->defaultStitch->currentText();
     QString name = ui->chartTitle->text();
     
+    QString style = ui->chartStyle->currentText();
+
+    Scene::ChartStyle st = Scene::Rows;
+
+    if(style == tr("Blank"))
+        st = Scene::Blank;
+    else if(style == tr("Rounds"))
+        st = Scene::Rounds;
+    else
+        st = Scene::Rows;
+
     if(docHasChartName(name))
         name = nextChartName(name);
 
-    CrochetTab *tab = createTab();
+    CrochetTab *tab = createTab(st);
     
     if(name.isEmpty())
         name = nextChartName();
     
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
-
-    QString style = ui->chartStyle->currentText();
-
 
     QString ddValue = ui->rowSpacing->currentText();
     qreal rowHeight = 96;
@@ -897,12 +905,12 @@ void MainWindow::newChart()
     documentIsModified(true);
 }
 
-CrochetTab* MainWindow::createTab()
+CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
 {
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    
-    CrochetTab* tab = new CrochetTab(mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
+
+    CrochetTab* tab = new CrochetTab(style, mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
     tab->setPatternColors(&mPatternColors);
     connect(tab, SIGNAL(chartStitchChanged()), SLOT(updatePatternStitches()));

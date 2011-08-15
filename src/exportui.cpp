@@ -17,7 +17,7 @@
 #include <QSvgGenerator> //for svg
 
 #include "crochettab.h"
-#include "crochetscene.h" // for to connect the crochetscene to the view.
+#include "scene.h" // for to connect the scene to the view.
 
 ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
                    QMap<QString, QMap<QString, qint64> > *colors, QWidget *parent)

@@ -2,7 +2,7 @@
 | Copyright (c) 2010 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#include "crochetscene.h"
+#include "scenerounds.h"
 
 #include "crochetcell.h"
 
@@ -26,22 +26,22 @@
 #include <QKeyEvent>
 #include "stitchlibrary.h"
 
-CrochetScene::CrochetScene(QObject *parent)
+SceneRounds::SceneRounds(QObject *parent)
     : Scene(parent),
     mCenterSymbol(0)
 {
 }
 
-CrochetScene::~CrochetScene()
+SceneRounds::~SceneRounds()
 {
 
 }
 
-void CrochetScene::setShowChartCenter(bool state)
+void SceneRounds::setShowChartCenter(bool state)
 {
     mShowChartCenter = state;
 
-    if(mStyle == CrochetScene::Rounds) {
+    if(mStyle == SceneRounds::Rounds) {
         if(mShowChartCenter) {
             if(!mCenterSymbol) {
                 QPen pen;
@@ -60,20 +60,20 @@ void CrochetScene::setShowChartCenter(bool state)
     }
 }
 
-void CrochetScene::addIndicator(Indicator* i)
+void SceneRounds::addIndicator(Indicator* i)
 {
     addItem(i);
     mIndicators.append(i);
 }
 
-void CrochetScene::removeIndicator(Indicator *i)
+void SceneRounds::removeIndicator(Indicator *i)
 {
     removeItem(i);
     mIndicators.removeOne(i);
     update();
 }
 
-CrochetCell* CrochetScene::cell(int row, int column)
+CrochetCell* SceneRounds::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
     if(mGrid[row].count() <= column)
@@ -82,12 +82,12 @@ CrochetCell* CrochetScene::cell(int row, int column)
     return mGrid[row][column];
 }
 
-CrochetCell* CrochetScene::cell(QPoint position)
+CrochetCell* SceneRounds::cell(QPoint position)
 {
     return cell(position.y(), position.x());
 }
 
-void CrochetScene::removeCell(CrochetCell *c)
+void SceneRounds::removeCell(CrochetCell *c)
 {
     removeItem(c);
     for(int i = 0; i < mGrid.count(); ++i) {
@@ -98,19 +98,19 @@ void CrochetScene::removeCell(CrochetCell *c)
 
 }
 
-int CrochetScene::rowCount()
+int SceneRounds::rowCount()
 {
     return mGrid.count();
 }
 
-int CrochetScene::columnCount(int row)
+int SceneRounds::columnCount(int row)
 {
     if(mGrid.count() <= row)
         return 0;
     return mGrid[row].count();
 }
 
-void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
+void SceneRounds::appendCell(int row, CrochetCell *c, bool fromSave)
 {
     //append any missing rows.
     if(mGrid.count() <= row) {
@@ -127,12 +127,12 @@ void CrochetScene::appendCell(int row, CrochetCell *c, bool fromSave)
     c->setColor(QColor(Qt::white));
    
     if(!fromSave) {
-        if(mStyle == CrochetScene::Rounds)
+        if(mStyle == SceneRounds::Rounds)
             redistributeCells(row);
     }
 }
 
-void CrochetScene::addCell(QPoint p, CrochetCell* c)
+void SceneRounds::addCell(QPoint p, CrochetCell* c)
 {
 
     //TODO: simplify the connect() statements...
@@ -157,9 +157,9 @@ void CrochetScene::addCell(QPoint p, CrochetCell* c)
 
 }
 
-void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
+void SceneRounds::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
 {
-    if(mStyle == CrochetScene::Rounds) {
+    if(mStyle == SceneRounds::Rounds) {
         double widthInDegrees = 360.0 / columns;
 
         double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
@@ -182,7 +182,7 @@ void CrochetScene::setCellPosition(int row, int column, CrochetCell *c, int colu
     c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
 }
 
-void CrochetScene::redistributeCells(int row)
+void SceneRounds::redistributeCells(int row)
 {
     if(row >= mGrid.count())
         return;
@@ -194,10 +194,10 @@ void CrochetScene::redistributeCells(int row)
     }
 }
 
-void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize)
+void SceneRounds::createChart(SceneRounds::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize)
 {
     mStyle = style;
-    if(mStyle == CrochetScene::Blank) {
+    if(mStyle == SceneRounds::Blank) {
 
 
     } else {
@@ -205,7 +205,7 @@ void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int col
 
         for(int i = 0; i < rows; ++i) {
             int pad = 0;
-            if(mStyle == CrochetScene::Rounds)
+            if(mStyle == SceneRounds::Rounds)
                 pad = i*8;
 
             createRow(i, cols + pad, stitch);
@@ -217,7 +217,7 @@ void CrochetScene::createChart(CrochetScene::ChartStyle style, int rows, int col
     initDemoBackground();
 }
 
-void CrochetScene::createRow(int row, int columns, QString stitch)
+void SceneRounds::createRow(int row, int columns, QString stitch)
 {
     CrochetCell *c = 0;
     
@@ -238,7 +238,7 @@ void CrochetScene::createRow(int row, int columns, QString stitch)
 
 }
 
-int CrochetScene::getClosestRow(QPointF mousePosition)
+int SceneRounds::getClosestRow(QPointF mousePosition)
 {
     //double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
     qreal radius = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y());
@@ -259,7 +259,7 @@ int CrochetScene::getClosestRow(QPointF mousePosition)
     return row;
 }
 
-int CrochetScene::getClosestColumn(QPointF mousePosition, int row)
+int SceneRounds::getClosestColumn(QPointF mousePosition, int row)
 {
     /*
               |
@@ -286,7 +286,7 @@ int CrochetScene::getClosestColumn(QPointF mousePosition, int row)
     return ceil(angle / degreesPerPos);
 }
 
-QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF origin)
+QPointF SceneRounds::calcPoint(double radius, double angleInDegrees, QPointF origin)
 {
     // Convert from degrees to radians via multiplication by PI/180
     qreal x = (radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
@@ -294,7 +294,7 @@ QPointF CrochetScene::calcPoint(double radius, double angleInDegrees, QPointF or
     return QPointF(x, y);
 }
 
-void CrochetScene::stitchUpdated(QString oldSt, QString newSt)
+void SceneRounds::stitchUpdated(QString oldSt, QString newSt)
 {
     Q_UNUSED(newSt);
     
@@ -309,14 +309,14 @@ void CrochetScene::stitchUpdated(QString oldSt, QString newSt)
     
 }
 
-void CrochetScene::updateSelection(QPolygonF selection)
+void SceneRounds::updateSelection(QPolygonF selection)
 {
     QPainterPath path;
     path.addPolygon(selection);
     setSelectionArea(path);
 }
 
-void CrochetScene::updateRubberBand(int dx, int dy) 
+void SceneRounds::updateRubberBand(int dx, int dy)
 {
 
     if(mRubberBandStart.isNull())
@@ -326,7 +326,7 @@ void CrochetScene::updateRubberBand(int dx, int dy)
     mRubberBandStart.setY(mRubberBandStart.y() - dy);
 }
 
-QPoint CrochetScene::findGridPosition(CrochetCell* c)
+QPoint SceneRounds::findGridPosition(CrochetCell* c)
 {
     for(int y = 0; y < mGrid.count(); ++y) {
         if(mGrid[y].contains(c)) {
@@ -337,7 +337,7 @@ QPoint CrochetScene::findGridPosition(CrochetCell* c)
     return QPoint();
 }
 
-qreal CrochetScene::scenePosToAngle(QPointF pt)
+qreal SceneRounds::scenePosToAngle(QPointF pt)
 {
 
     qreal rads = atan2(pt.x(), pt.y());
@@ -346,7 +346,7 @@ qreal CrochetScene::scenePosToAngle(QPointF pt)
     return -angleX;
 }
 
-void CrochetScene::keyReleaseEvent(QKeyEvent* keyEvent)
+void SceneRounds::keyReleaseEvent(QKeyEvent* keyEvent)
 {
     if(keyEvent->key() == Qt::Key_Delete) {
         QList<QGraphicsItem*> items = selectedItems();
@@ -364,7 +364,7 @@ void CrochetScene::keyReleaseEvent(QKeyEvent* keyEvent)
     Scene::keyReleaseEvent(keyEvent);
 }
 
-void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
+void SceneRounds::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     Scene::mousePressEvent(e);
 
@@ -387,10 +387,10 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     }
     
     switch(mMode) {
-        case CrochetScene::PositionMode:
+        case SceneRounds::PositionMode:
             positionModeMousePress(e);
             break;
-        case CrochetScene::AngleMode:
+        case SceneRounds::AngleMode:
             angleModeMousePress(e);
             break;
         default:
@@ -413,26 +413,26 @@ void CrochetScene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     }
 }
 
-void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
+void SceneRounds::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
 
     switch(mMode) {
-        case CrochetScene::StitchMode:
+        case SceneRounds::StitchMode:
             stitchModeMouseMove(e);
             break;
-        case CrochetScene::ColorMode:
+        case SceneRounds::ColorMode:
             colorModeMouseMove(e);
             break;
-        case CrochetScene::PositionMode:
+        case SceneRounds::PositionMode:
             Scene::mouseMoveEvent(e);
             break;
-        case CrochetScene::AngleMode:
+        case SceneRounds::AngleMode:
             angleModeMouseMove(e);
             break;
-        case CrochetScene::StretchMode:
+        case SceneRounds::StretchMode:
             stretchModeMouseMove(e);
             break;
-        case CrochetScene::IndicatorMode:
+        case SceneRounds::IndicatorMode:
             indicatorModeMouseMove(e);
             Scene::mouseMoveEvent(e);
             break;
@@ -449,7 +449,7 @@ void CrochetScene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
     
 }
 
-void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
+void SceneRounds::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
 
     if(mRubberBand) {
@@ -467,19 +467,19 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     
     switch(mMode) {
-        case CrochetScene::StitchMode:
+        case SceneRounds::StitchMode:
             stitchModeMouseRelease(e);
             break;
-        case CrochetScene::ColorMode:
+        case SceneRounds::ColorMode:
             colorModeMouseRelease(e);
             break;
-        case CrochetScene::PositionMode:
+        case SceneRounds::PositionMode:
             positionModeMouseRelease(e);
             break;
-        case CrochetScene::AngleMode:
+        case SceneRounds::AngleMode:
             angleModeMouseRelease(e);
             break;
-        case CrochetScene::IndicatorMode:
+        case SceneRounds::IndicatorMode:
             indicatorModeMouseRelease(e);
             break;
         default:
@@ -504,7 +504,7 @@ void CrochetScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     Scene::mouseReleaseEvent(e);
 }
 
-void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
+void SceneRounds::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(e->buttons() != Qt::LeftButton)
         return;
@@ -516,7 +516,7 @@ void CrochetScene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
         mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
 }
 
-void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void SceneRounds::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
     if(!mCurCell)
@@ -526,7 +526,7 @@ void CrochetScene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
         mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
 }
 
-void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
+void SceneRounds::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
     if(selectedItems().count() <= 0)
@@ -538,7 +538,7 @@ void CrochetScene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 
 }
 
-void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void SceneRounds::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     
     //qreal diff = e->buttonDownPos(Qt::LeftButton).manhattanLength() - e->scenePos().manhattanLength();
@@ -556,7 +556,7 @@ void CrochetScene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
     }
 }
 
-void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
+void SceneRounds::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(e->buttons() != Qt::LeftButton)
         return;
@@ -568,7 +568,7 @@ void CrochetScene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
         mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
 }
 
-void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void SceneRounds::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     //FIXME: foreach(stitch in selection()) create an undo group event.
     if(mCurCell) {
@@ -581,11 +581,11 @@ void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
         //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
         int x = 0;
         int y = 0;
-        if(mStyle == CrochetScene::Rounds) {
+        if(mStyle == SceneRounds::Rounds) {
             y = getClosestRow(e->scenePos());
             //FIXME: the row has to be passed in because getClosestRow modifies the row
             x = getClosestColumn(e->scenePos(), y);
-        } else if (mStyle == CrochetScene::Rows) {
+        } else if (mStyle == SceneRounds::Rows) {
             x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
             y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
         }
@@ -607,7 +607,7 @@ void CrochetScene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     }
 }
 
-void CrochetScene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
+void SceneRounds::angleModeMousePress(QGraphicsSceneMouseEvent *e)
 {
     if(!mCurCell)
         return;
@@ -622,7 +622,7 @@ void CrochetScene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
    
 }
 
-void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
+void SceneRounds::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
 {
     if(!mCurCell)
         return;
@@ -641,13 +641,13 @@ void CrochetScene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
 
 }
 
-void CrochetScene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
+void SceneRounds::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
     Q_UNUSED(e);
     mCurCellRotation = 0;
 }
 
-void CrochetScene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
+void SceneRounds::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(!mCurCell)
         return;
@@ -663,7 +663,7 @@ void CrochetScene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
     mUndoStack.push(new SetCellScale(this, mCurCell, scale));
 }
 
-void CrochetScene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
+void SceneRounds::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
 {
     if(e->buttons() != Qt::LeftButton)
         return;
@@ -682,7 +682,7 @@ void CrochetScene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
 
 }
 
-void CrochetScene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
+void SceneRounds::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
     //if right click or ctrl-click remove the indicator.
     if(e->button() == Qt::RightButton || (e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {

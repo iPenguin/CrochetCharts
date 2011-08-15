@@ -11,7 +11,6 @@
 #include <QPainter>
 #include <QStyleOption>
 #include "settings.h"
-#include "crochetscene.h"
 
 CrochetCell::CrochetCell()
      : mScale(1.0), mHighlight(false)

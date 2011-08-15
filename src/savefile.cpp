@@ -17,7 +17,7 @@
 #include <QStringList>
 
 #include <QDataStream>
-#include "crochetscene.h"
+#include "scene.h"
 #include "stitchlibrary.h"
 #include "stitchset.h"
 
@@ -302,12 +302,8 @@ void SaveFile::loadColors(QXmlStreamReader *stream)
 void SaveFile::loadChart(QXmlStreamReader* stream)
 {
     MainWindow *mw = qobject_cast<MainWindow*>(mParent);
-    CrochetTab* tab = mw->createTab();
+    CrochetTab* tab;
     QString tabName;
-
-    mTabWidget->addTab(tab, "");
-    
-    mTabWidget->widget(mTabWidget->indexOf(tab))->hide();
 
     while(!(stream->isEndElement() && stream->name() == "chart")) {
         stream->readNext();
@@ -317,7 +313,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             tabName = stream->readElementText();
             
         } else if(tag == "style") {
-            tab->scene()->mStyle = (CrochetScene::ChartStyle)stream->readElementText().toInt();
+            tab = mw->createTab((Scene::ChartStyle)stream->readElementText().toInt());
             
         } else if(tag == "showChartCenter") {
             tab->blockSignals(true);
@@ -342,6 +338,10 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             
         }
     }
+
+    mTabWidget->addTab(tab, "");
+
+    mTabWidget->widget(mTabWidget->indexOf(tab))->hide();
 
     int index = mTabWidget->indexOf(tab);
     mTabWidget->setTabText(index, tabName);

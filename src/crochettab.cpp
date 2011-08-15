@@ -14,7 +14,10 @@
 
 #include <QDebug>
 
-#include "crochetscene.h"
+#include "scenerows.h"
+#include "scenerounds.h"
+#include "sceneblank.h"
+
 #include "textview.h"
 
 #include "settings.h"
@@ -22,7 +25,7 @@
 #include <QLayout>
 #include <QClipboard>
 
-CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent) :
+CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent) :
         QWidget(parent), ui(new Ui::OptionsBar)
 {    
     QVBoxLayout *l = new QVBoxLayout(this);
@@ -34,7 +37,13 @@ CrochetTab::CrochetTab(int defEditMode, QString defStitch, QColor defFgColor, QC
     top->setContentsMargins(0, 0, 0, 0);
     
     mView = new ChartView(top);
-    mScene = new CrochetScene(mView);
+    if(style == Scene::Blank)
+        mScene = new SceneBlank(mView);
+    else if(style == Scene::Rounds)
+        mScene = new SceneRounds(mView);
+    else
+        mScene = new SceneRows(mView);
+
     mTextView = new TextView(this, mScene);
 
     connect(mView, SIGNAL(scrollBarChanged(int,int)), mScene, SLOT(updateRubberBand(int,int)));
@@ -176,14 +185,14 @@ QUndoStack* CrochetTab::undoStack()
 
 void CrochetTab::createChart(QString style, int rows, int cols, QString defStitch, QSizeF rowSize)
 {
-    CrochetScene::ChartStyle st = CrochetScene::Rows;
+    Scene::ChartStyle st = Scene::Rows;
     
     if(style == tr("Rows"))
-        st  = CrochetScene::Rows;
+        st  = Scene::Rows;
     else if(style == tr("Rounds"))
-        st = CrochetScene::Rounds;
+        st = Scene::Rounds;
     else if(style == tr("Blank"))
-        st = CrochetScene::Blank;
+        st = Scene::Blank;
 
     mScene->createChart(st, rows, cols, defStitch, rowSize);
 
@@ -224,7 +233,7 @@ void CrochetTab::showChartOptions()
         ui->chartOptionsBox->setVisible(false);
     }
 
-    if(mScene->chartStyle() == CrochetScene::Rounds)
+    if(mScene->chartStyle() == Scene::Rounds)
         ui->showChartCenter->setEnabled(true);
     else
         ui->showChartCenter->setEnabled(false);

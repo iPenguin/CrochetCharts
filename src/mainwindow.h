@@ -13,7 +13,8 @@
 
 #include <QModelIndex>
 
-class QGraphicsScene;
+#include "scene.h"
+
 class CrochetTab;
 class QPrinter;
 class QPainter;
@@ -42,7 +43,7 @@ protected:
     QString nextChartName(QString baseName = tr("Chart"));
     bool docHasChartName(QString name);
 
-    CrochetTab* createTab();
+    CrochetTab* createTab(Scene::ChartStyle style);
     
 protected slots:
     void updatePatternStitches();

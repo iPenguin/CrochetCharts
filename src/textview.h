@@ -8,17 +8,17 @@
 #include <QObject>
 #include <QMap>
 
-class CrochetScene;
+class Scene;
 
 class TextView : public QObject
 {
     Q_OBJECT
 
 public:
-    TextView(QWidget *parent = 0, CrochetScene* scene = 0);
+    TextView(QWidget *parent = 0, Scene* scene = 0);
     ~TextView();
 
-    void setScene(CrochetScene* scene) { mScene = scene; }
+    void setScene(Scene* scene) { mScene = scene; }
 
     QString copyInstructions();
 
@@ -45,7 +45,7 @@ private:
     int matchCount(QStringList stitches, int startPos, int length);
 
 private:
-    CrochetScene* mScene;
+    Scene* mScene;
 
 };
 

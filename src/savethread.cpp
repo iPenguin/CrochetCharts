@@ -12,7 +12,7 @@
 #include <QString>
 #include <QTransform>
 
-#include "crochetscene.h"
+#include "scene.h"
 
 SaveThread::SaveThread(CrochetTab* t, QXmlStreamReader* s)
 {

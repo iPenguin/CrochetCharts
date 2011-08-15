@@ -11,7 +11,6 @@ set(crochet_qobject_headers
     crochetcell.h
     mainwindow.h
     stitchset.h
-    crochetscene.h
     licensewizard.h
     licensevalidator.h
     settingsui.h
@@ -30,6 +29,9 @@ set(crochet_qobject_headers
     tabinterface.h
     legends.h
     scene.h
+    scenerows.h
+    scenerounds.h
+    sceneblank.h
     )
 
 set(crochet_resources
