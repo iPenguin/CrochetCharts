@@ -27,37 +27,13 @@
 #include "stitchlibrary.h"
 
 SceneRows::SceneRows(QObject *parent)
-    : Scene(parent),
-    mCenterSymbol(0)
+    : Scene(parent)
 {
 }
 
 SceneRows::~SceneRows()
 {
 
-}
-
-void SceneRows::setShowChartCenter(bool state)
-{
-    mShowChartCenter = state;
-
-    if(mStyle == SceneRows::Rounds) {
-        if(mShowChartCenter) {
-            if(!mCenterSymbol) {
-                QPen pen;
-                pen.setWidth(5);
-
-                double radius = (mDefaultSize.height() *0.45);
-                
-                mCenterSymbol = addEllipse(-radius, -radius, radius * 2, radius * 2, pen);
-                mCenterSymbol->setToolTip(tr("Chart Center"));
-            } else {
-                addItem(mCenterSymbol);
-            }
-        } else {
-            removeItem(mCenterSymbol);
-        }
-    }
 }
 
 void SceneRows::addIndicator(Indicator* i)
@@ -72,7 +48,7 @@ void SceneRows::removeIndicator(Indicator *i)
     mIndicators.removeOne(i);
     update();
 }
-
+::
 CrochetCell* SceneRows::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
@@ -112,6 +88,7 @@ int SceneRows::columnCount(int row)
 
 void SceneRows::appendCell(int row, CrochetCell *c, bool fromSave)
 {
+    Q_UNUSED(fromSave);
     //append any missing rows.
     if(mGrid.count() <= row) {
         for(int i = mGrid.count(); i < row + 1; ++i) {
@@ -125,11 +102,7 @@ void SceneRows::appendCell(int row, CrochetCell *c, bool fromSave)
     int col = mGrid[row].count() -1;
     setCellPosition(row, col, c, mGrid[row].count());
     c->setColor(QColor(Qt::white));
-   
-    if(!fromSave) {
-        if(mStyle == SceneRows::Rounds)
-            redistributeCells(row);
-    }
+
 }
 
 void SceneRows::addCell(QPoint p, CrochetCell* c)
@@ -159,26 +132,14 @@ void SceneRows::addCell(QPoint p, CrochetCell* c)
 
 void SceneRows::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
 {
-    if(mStyle == SceneRows::Rounds) {
-        double widthInDegrees = 360.0 / columns;
+    Q_UNUSED(columns);
+    
+    c->setPos(column*mDefaultSize.width(), row*mDefaultSize.height());
+    if(updateAnchor || c->anchor().isNull())
+        c->setAnchor(column*mDefaultSize.width(), row*mDefaultSize.height());
+    c->setColor(QColor(Qt::white));
 
-        double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
-        
-        double degrees = widthInDegrees*column;
-        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
-
-        qreal delta = mDefaultSize.width() * 0.5;
-        if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(finish.x() - delta, finish.y());
-        c->setPos(finish.x() - delta, finish.y());
-        c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
-        
-    } else {
-        c->setPos(column*mDefaultSize.width(), row*mDefaultSize.height());
-        if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(column*mDefaultSize.width(), row*mDefaultSize.height());
-        c->setColor(QColor(Qt::white));
-    }
+    //FIXME: set tooltips from bottom right to top left.
     c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
 }
 
@@ -194,25 +155,14 @@ void SceneRows::redistributeCells(int row)
     }
 }
 
-void SceneRows::createChart(SceneRows::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize)
+void SceneRows::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 {
-    mStyle = style;
-    if(mStyle == SceneRows::Blank) {
+    mDefaultSize = rowSize;
 
+    for(int i = 0; i < rows; ++i)
+        createRow(i, cols, stitch);
 
-    } else {
-        mDefaultSize = rowSize;
-
-        for(int i = 0; i < rows; ++i) {
-            int pad = 0;
-            if(mStyle == SceneRows::Rounds)
-                pad = i*8;
-
-            createRow(i, cols + pad, stitch);
-        }
-
-        setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
-    }
+    setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
 
     initDemoBackground();
 }
@@ -236,62 +186,6 @@ void SceneRows::createRow(int row, int columns, QString stitch)
     }
     mGrid.append(modelRow);
 
-}
-
-int SceneRows::getClosestRow(QPointF mousePosition)
-{
-    //double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
-    qreal radius = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y());
-
-    qreal temp = radius - (mDefaultSize.height() *0.5);
-    qreal temp2 = temp / mDefaultSize.height();
-    
-    int row = round(temp2 - 1);
-    if(row < 0)
-        row = 0;
-    if(row >= mGrid.count()) {
-        row = mGrid.count();
-
-        QList<CrochetCell*> r;
-        mGrid.append(r);
-    }
-
-    return row;
-}
-
-int SceneRows::getClosestColumn(QPointF mousePosition, int row)
-{
-    /*
-              |
-          -,- | +,-
-        ------+------
-          -,+ | +,+
-              |
-    */
-    qreal tanx = mousePosition.y() / mousePosition.x();
-    qreal rads = atan(tanx);
-    qreal angleX = rads * 180 / M_PI;
-    qreal angle = 0.0;
-    if (mousePosition.x() >= 0 && mousePosition.y() >= 0)
-        angle = angleX;
-    else if(mousePosition.x() <= 0 && mousePosition.y() >= 0)
-        angle = 180 + angleX;
-    else if(mousePosition.x() <= 0 && mousePosition.y() <= 0)
-        angle = 180 + angleX;
-    else if(mousePosition.x() >= 0 && mousePosition.y() <= 0)
-        angle = 360 + angleX;
-
-    qreal degreesPerPos = 360.0 / mGrid[row].count();
-
-    return ceil(angle / degreesPerPos);
-}
-
-QPointF SceneRows::calcPoint(double radius, double angleInDegrees, QPointF origin)
-{
-    // Convert from degrees to radians via multiplication by PI/180
-    qreal x = (radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
-    qreal y = (radius * sin(angleInDegrees * M_PI / 180)) + origin.y();
-    return QPointF(x, y);
 }
 
 void SceneRows::stitchUpdated(QString oldSt, QString newSt)
@@ -540,9 +434,7 @@ void SceneRows::positionModeMousePress(QGraphicsSceneMouseEvent* e)
 
 void SceneRows::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    
-    //qreal diff = e->buttonDownPos(Qt::LeftButton).manhattanLength() - e->scenePos().manhattanLength();
-    //if(diff >= QApplication::startDragDistance()) {
+    Q_UNUSED(e);
     if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
         mUndoStack.beginMacro("move items");
         foreach(QGraphicsItem *item, selectedItems()) {
@@ -578,17 +470,8 @@ void SceneRows::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     
         mCurCell = 0;
     } else if(!mRubberBand){
-        //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
-        int x = 0;
-        int y = 0;
-        if(mStyle == SceneRows::Rounds) {
-            y = getClosestRow(e->scenePos());
-            //FIXME: the row has to be passed in because getClosestRow modifies the row
-            x = getClosestColumn(e->scenePos(), y);
-        } else if (mStyle == SceneRows::Rows) {
-            x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
-            y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
-        }
+        int x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
+        int y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 

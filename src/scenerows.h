@@ -50,15 +50,13 @@ public:
 
     void removeCell(CrochetCell *c);
 
-    void createChart(SceneRows::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
+    void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
 
     void addIndicator(Indicator *i);
     void removeIndicator(Indicator *i);
 
-    bool showChartCenter() { return mShowChartCenter; }
     
 public slots:
-    void setShowChartCenter(bool state);
     
     void updateRubberBand(int dx, int dy);
 
@@ -131,10 +129,6 @@ private:
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
-
-    QGraphicsItem *mCenterSymbol;
-
-    bool mShowChartCenter;
 
 };
 
