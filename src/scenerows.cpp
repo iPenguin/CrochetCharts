@@ -36,19 +36,6 @@ SceneRows::~SceneRows()
 
 }
 
-void SceneRows::addIndicator(Indicator* i)
-{
-    addItem(i);
-    mIndicators.append(i);
-}
-
-void SceneRows::removeIndicator(Indicator *i)
-{
-    removeItem(i);
-    mIndicators.removeOne(i);
-    update();
-}
-::
 CrochetCell* SceneRows::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
@@ -208,16 +195,6 @@ void SceneRows::updateSelection(QPolygonF selection)
     setSelectionArea(path);
 }
 
-void SceneRows::updateRubberBand(int dx, int dy)
-{
-
-    if(mRubberBandStart.isNull())
-        return;
-
-    mRubberBandStart.setX(mRubberBandStart.x() - dx);
-    mRubberBandStart.setY(mRubberBandStart.y() - dy);
-}
-
 QPoint SceneRows::findGridPosition(CrochetCell* c)
 {
     for(int y = 0; y < mGrid.count(); ++y) {
@@ -240,43 +217,12 @@ qreal SceneRows::scenePosToAngle(QPointF pt)
 
 void SceneRows::keyReleaseEvent(QKeyEvent* keyEvent)
 {
-    if(keyEvent->key() == Qt::Key_Delete) {
-        QList<QGraphicsItem*> items = selectedItems();
-        foreach(QGraphicsItem *item, items) {
-            CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(item);
-            if(c) {
-                undoStack()->push(new RemoveCell(this, c));
-            } else {
-                Indicator *i = qgraphicsitem_cast<Indicator*>(item);
-                undoStack()->push(new RemoveIndicator(this, i));
-            }
-        }
-    }
-        
     Scene::keyReleaseEvent(keyEvent);
 }
 
 void SceneRows::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     Scene::mousePressEvent(e);
-
-    QGraphicsItem *gi = itemAt(e->scenePos());
-    CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
-
-    mLeftButtonDownPos = e->buttonDownPos(Qt::LeftButton);
-    
-    if(c) {
-        mCurCell = c;
-        mCellStartPos = mCurCell->pos();
-        mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
-    } else {
-        Indicator *i = qgraphicsitem_cast<Indicator*>(gi);
-        
-        if(i) {
-            mCurIndicator = i;
-            mCellStartPos = i->pos();
-        }
-    }
     
     switch(mMode) {
         case SceneRows::AngleMode:
@@ -286,20 +232,6 @@ void SceneRows::mousePressEvent(QGraphicsSceneMouseEvent *e)
             break;
     }
 
-    if(e->buttons() != Qt::LeftButton)
-        return;
-
-    if(selectedItems().count() <= 0) {
-        ChartView *view = qobject_cast<ChartView*>(parent());
-
-        if(!mRubberBand)
-            mRubberBand = new QRubberBand(QRubberBand::Rectangle, view);
-
-        mRubberBandStart = view->mapFromScene(e->scenePos());
-
-        mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
-        mRubberBand->show();
-    }
 }
 
 void SceneRows::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -314,43 +246,23 @@ void SceneRows::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             break;
         case SceneRows::AngleMode:
             angleModeMouseMove(e);
-            break;
+            return;
         case SceneRows::StretchMode:
             stretchModeMouseMove(e);
             break;
         case SceneRows::IndicatorMode:
             indicatorModeMouseMove(e);
-            Scene::mouseMoveEvent(e);
             break;
         default:
             break;
     }
 
-    if(mRubberBand) {
-        ChartView *view = qobject_cast<ChartView*>(parent());
-        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
-
-        mRubberBand->setGeometry(rect.normalized());
-    } 
+    Scene::mouseMoveEvent(e);
     
 }
 
 void SceneRows::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-
-    if(mRubberBand) {
-        ChartView *view = qobject_cast<ChartView*>(parent());
-        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
-
-        QPolygonF p = view->mapToScene(rect.normalized());
-        QPainterPath path;
-        path.addPolygon(p);
-        setSelectionArea(path);
-
-        mRubberBand->hide();
-
-    }
-
     
     switch(mMode) {
         case SceneRows::StitchMode:
@@ -368,21 +280,6 @@ void SceneRows::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         default:
             break;
     }
-
-    if(mCurCell) {
-        mDiff = QSizeF(0,0);
-        mCellStartPos = QPointF(0,0);
-        mCurCell = 0;
-    }
-
-    if(mCurIndicator) {
-        mCellStartPos = QPoint(0,0);
-        mCurIndicator = 0;
-    }
-    mLeftButtonDownPos = QPointF(0,0);
-    
-    delete mRubberBand;
-    mRubberBand = 0;
 
     Scene::mouseReleaseEvent(e);
 }
@@ -417,8 +314,7 @@ void SceneRows::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurCell)
         return;
     
-    if(mCurCell->name() != mEditStitch)
-        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
+    //FIXME: if not dragging objects around allow stitch painting.
 }
 
 void SceneRows::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
@@ -426,11 +322,11 @@ void SceneRows::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     //FIXME: foreach(stitch in selection()) create an undo group event.
     if(mCurCell) {
         
-    if(mCurCell->name() != mEditStitch)
+    if(mCurCell->name() != mEditStitch && !mMoving)
         mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
     
         mCurCell = 0;
-    } else if(!mRubberBand){
+    } else if(!mRubberBand && !mMoving){
         int x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
         int y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
 

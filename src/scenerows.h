@@ -51,15 +51,7 @@ public:
     void removeCell(CrochetCell *c);
 
     void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
-
-    void addIndicator(Indicator *i);
-    void removeIndicator(Indicator *i);
-
     
-public slots:
-    
-    void updateRubberBand(int dx, int dy);
-
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
 
