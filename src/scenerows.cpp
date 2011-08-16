@@ -162,8 +162,6 @@ void SceneRows::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
     for(int i = 0; i < rows; ++i)
         createRow(i, cols, stitch);
 
-    setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
-
     initDemoBackground();
 }
 

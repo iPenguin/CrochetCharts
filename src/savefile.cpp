@@ -10,24 +10,24 @@
 #include <QDebug>
 
 #include <QFile>
-
+#include <QFileInfo>
+#include <QDir>
+#include <QDataStream>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
 #include <QStringList>
 
-#include <QDataStream>
 #include "scene.h"
+#include "scenerounds.h"
+#include "scenerows.h"
+
 #include "stitchlibrary.h"
 #include "stitchset.h"
 
 #include "indicator.h"
-
 #include "savethread.h"
-
 #include "mainwindow.h"
-#include <QFileInfo>
-#include <QDir>
 
 SaveFile::SaveFile(QWidget* parent) :
     isSaved(false),
@@ -121,11 +121,24 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
         if(!tab)
             continue;
         stream->writeTextElement("name", mTabWidget->tabText(i));
-        stream->writeTextElement("style", QString::number(tab->scene()->mStyle));
-        QSizeF size = tab->scene()->mDefaultSize;
-        stream->writeTextElement("defaultRowSpacing", QString::number(tab->scene()->mDefaultSize.height()));
 
-        stream->writeTextElement("showChartCenter", QString::number(tab->scene()->showChartCenter()));
+        Scene::ChartStyle st = Scene::Blank;
+        bool showCenter = false;
+        
+        SceneRounds *r = static_cast<SceneRounds*>(tab->scene());
+        if(r) {
+            st = Scene::Rounds;
+            showCenter = r->showChartCenter();
+        } else {
+            SceneRows *rows = static_cast<SceneRows*>(tab->scene());
+            if(rows)
+                st = Scene::Rows;
+        }
+
+        stream->writeTextElement("style", QString::number(st));
+        stream->writeTextElement("showChartCenter", QString::number(showCenter));
+
+        stream->writeTextElement("defaultRowSpacing", QString::number(tab->scene()->mDefaultSize.height()));
         
         int rows = tab->scene()->rowCount();
         

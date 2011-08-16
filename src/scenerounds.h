@@ -52,15 +52,10 @@ public:
 
     void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
 
-    void addIndicator(Indicator *i);
-    void removeIndicator(Indicator *i);
-
     bool showChartCenter() { return mShowChartCenter; }
     
 public slots:
     void setShowChartCenter(bool state);
-    
-    void updateRubberBand(int dx, int dy);
 
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);

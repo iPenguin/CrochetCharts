@@ -50,16 +50,12 @@ public:
 
     void removeCell(CrochetCell *c);
 
-    void createChart(SceneBlank::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
+    void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
 
     void addIndicator(Indicator *i);
     void removeIndicator(Indicator *i);
-
-    bool showChartCenter() { return mShowChartCenter; }
     
-public slots:
-    void setShowChartCenter(bool state);
-    
+public slots:  
     void updateRubberBand(int dx, int dy);
 
 private slots:
@@ -80,12 +76,7 @@ protected:
 
     //find the x,y positions on the grid for a given cell;
     QPoint findGridPosition(CrochetCell *c);
-
-    /**
-     * Takes a @param row and spread the cells out evenly along it's entire length.
-     * This function can handle rounds or rows transparently.
-     */
-    void redistributeCells(int row);
+    
     /**
      * Takes a @param mousePosition and returns the closest y co-ordinate.
      * function assumes rounds not rows.
@@ -98,13 +89,9 @@ protected:
     int getClosestColumn(QPointF mousePosition, int row);
 
     qreal scenePosToAngle(QPointF pt);
-    
-    /**
-     * WARING: This funciton should be called after the cell has been added
-     * to the grid so that it calcs based on the new count of stitches.
-     */
+
     void setCellPosition(int row, int column, CrochetCell *c, int columns = 1, bool updateAnchor = false);
-    
+        
 private:
     
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
@@ -131,10 +118,6 @@ private:
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
-
-    QGraphicsItem *mCenterSymbol;
-
-    bool mShowChartCenter;
 
 };
 

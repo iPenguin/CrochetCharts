@@ -49,7 +49,7 @@ public:
 
     void createRow(int row, int columns, QString stitch);
 
-    void appendCell(int row, CrochetCell *c, bool fromSave = false);
+    virtual void appendCell(int row, CrochetCell *c, bool fromSave = false) = 0;
 
     /**
      * p(x = column, y = row)
@@ -66,7 +66,7 @@ public:
 
     void removeCell(CrochetCell *c);
 
-    void createChart(Scene::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize);
+    virtual void createChart(int rows, int cols, QString stitch, QSizeF rowSize) = 0;
 
     void setEditMode(EditMode mode) { mMode = mode; }
     EditMode editMode() { return mMode; }
@@ -82,15 +82,10 @@ public:
     void removeIndicator(Indicator *i);
 
     QList<QList<CrochetCell *> > grid() { return mGrid; }
-
-    bool showChartCenter() { return mShowChartCenter; }
     
-    Scene::ChartStyle chartStyle() const { return mStyle; }
-
     QStringList modes();
     
 public slots:
-    void setShowChartCenter(bool state);
     
     void updateRubberBand(int dx, int dy);
 
@@ -148,35 +143,9 @@ protected:
      * WARING: This funciton should be called after the cell has been added
      * to the grid so that it calcs based on the new count of stitches.
      */
-    void setCellPosition(int row, int column, CrochetCell *c, int columns = 1, bool updateAnchor = false);
+    virtual void setCellPosition(int row, int column, CrochetCell *c, int columns = 1, bool updateAnchor = false) = 0;
     
     void initDemoBackground();
-
-protected:
-    
-    void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
-    void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    
-    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void colorModeMousePress(QGraphicsSceneMouseEvent *e);
-    void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    
-    void positionModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void positionModeMousePress(QGraphicsSceneMouseEvent *e);
-    void positionModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-    void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void angleModeMousePress(QGraphicsSceneMouseEvent *e);
-    void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-    void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
-    void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-    void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void indicatorModeMousePress(QGraphicsSceneMouseEvent *e);
-    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 protected:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
@@ -206,16 +175,11 @@ protected:
 
     int mRowSpacing;
     
-    ChartStyle mStyle;
     EditMode mMode;
-
-    QGraphicsItem *mCenterSymbol;
     
     QString mEditStitch;
     QColor mEditFgColor;
     QColor mEditBgColor;
-
-    bool mShowChartCenter;
     
     QUndoStack mUndoStack;
 

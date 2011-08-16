@@ -183,20 +183,14 @@ QUndoStack* CrochetTab::undoStack()
     return mScene->undoStack();
 }
 
-void CrochetTab::createChart(QString style, int rows, int cols, QString defStitch, QSizeF rowSize)
+void CrochetTab::createChart(int rows, int cols, QString defStitch, QSizeF rowSize)
 {
-    Scene::ChartStyle st = Scene::Rows;
-    
-    if(style == tr("Rows"))
-        st  = Scene::Rows;
-    else if(style == tr("Rounds"))
-        st = Scene::Rounds;
-    else if(style == tr("Blank"))
-        st = Scene::Blank;
+    mScene->createChart(rows, cols, defStitch, rowSize);
 
-    mScene->createChart(st, rows, cols, defStitch, rowSize);
-
-    ui->showChartCenter->setChecked(mScene->showChartCenter());
+    SceneRounds *rounds = static_cast<SceneRounds*>(mScene);
+    if(rounds) {
+        ui->showChartCenter->setChecked(rounds->showChartCenter());
+    }
 }
 
 void CrochetTab::setEditBgColor(QColor color)
@@ -233,7 +227,8 @@ void CrochetTab::showChartOptions()
         ui->chartOptionsBox->setVisible(false);
     }
 
-    if(mScene->chartStyle() == Scene::Rounds)
+    SceneRounds *r = static_cast<SceneRounds*>(mScene);
+    if(r)
         ui->showChartCenter->setEnabled(true);
     else
         ui->showChartCenter->setEnabled(false);
@@ -242,7 +237,10 @@ void CrochetTab::showChartOptions()
 void CrochetTab::setShowChartCenter(bool state)
 {
     ui->showChartCenter->setChecked(state);
-    mScene->setShowChartCenter(state);
+
+    SceneRounds *r = static_cast<SceneRounds*>(mScene);
+    if(r)
+        r->setShowChartCenter(state);
 
     emit tabModified(true);
 }

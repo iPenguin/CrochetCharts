@@ -37,9 +37,7 @@ Scene::Scene(QObject *parent)
     mRubberBandStart(QPointF(0,0)),
     mMoving(false),
     mRowSpacing(9),
-    mStyle(Scene::Rows),
     mMode(Scene::StitchMode),
-    mCenterSymbol(0),
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
@@ -99,29 +97,6 @@ void Scene::initDemoBackground()
     }
 }
 
-void Scene::setShowChartCenter(bool state)
-{
-    mShowChartCenter = state;
-
-    if(mStyle == Scene::Rounds) {
-        if(mShowChartCenter) {
-            if(!mCenterSymbol) {
-                QPen pen;
-                pen.setWidth(5);
-
-                double radius = (mDefaultSize.height() *0.45);
-                
-                mCenterSymbol = addEllipse(-radius, -radius, radius * 2, radius * 2, pen);
-                mCenterSymbol->setToolTip(tr("Chart Center"));
-            } else {
-                addItem(mCenterSymbol);
-            }
-        } else {
-            removeItem(mCenterSymbol);
-        }
-    }
-}
-
 void Scene::addIndicator(Indicator* i)
 {
     addItem(i);
@@ -172,28 +147,6 @@ int Scene::columnCount(int row)
     return mGrid[row].count();
 }
 
-void Scene::appendCell(int row, CrochetCell *c, bool fromSave)
-{
-    //append any missing rows.
-    if(mGrid.count() <= row) {
-        for(int i = mGrid.count(); i < row + 1; ++i) {
-            QList<CrochetCell*> row;
-            mGrid.append(row);
-        }
-    }
-    
-    addCell(QPoint(mGrid[row].count(), row), c);
-
-    int col = mGrid[row].count() -1;
-    setCellPosition(row, col, c, mGrid[row].count());
-    c->setColor(QColor(Qt::white));
-   
-    if(!fromSave) {
-        if(mStyle == Scene::Rounds)
-            redistributeCells(row);
-    }
-}
-
 void Scene::addCell(QPoint p, CrochetCell* c)
 {
 
@@ -219,31 +172,6 @@ void Scene::addCell(QPoint p, CrochetCell* c)
 
 }
 
-void Scene::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
-{
-    if(mStyle == Scene::Rounds) {
-        double widthInDegrees = 360.0 / columns;
-
-        double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
-        
-        double degrees = widthInDegrees*column;
-        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
-
-        qreal delta = mDefaultSize.width() * 0.5;
-        if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(finish.x() - delta, finish.y());
-        c->setPos(finish.x() - delta, finish.y());
-        c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
-        
-    } else {
-        c->setPos(column*mDefaultSize.width(), row*mDefaultSize.height());
-        if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(column*mDefaultSize.width(), row*mDefaultSize.height());
-        c->setColor(QColor(Qt::white));
-    }
-    c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
-}
-
 void Scene::redistributeCells(int row)
 {
     if(row >= mGrid.count())
@@ -254,29 +182,6 @@ void Scene::redistributeCells(int row)
         CrochetCell *c = mGrid[row].at(i);
         setCellPosition(row, i, c, columns, true);
     }
-}
-
-void Scene::createChart(Scene::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize)
-{
-    mStyle = style;
-    if(mStyle == Scene::Blank) {
-
-
-    } else {
-        mDefaultSize = rowSize;
-
-        for(int i = 0; i < rows; ++i) {
-            int pad = 0;
-            if(mStyle == Scene::Rounds)
-                pad = i*8;
-
-            createRow(i, cols + pad, stitch);
-        }
-
-        setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
-    }
-
-    initDemoBackground();
 }
 
 void Scene::createRow(int row, int columns, QString stitch)
@@ -447,29 +352,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
             mCellStartPos = i->pos();
         }
     }
-    
-    switch(mMode) {
-        case Scene::StitchMode:
-            stitchModeMousePress(e);
-            break;
-        case Scene::ColorMode:
-            colorModeMousePress(e);
-            break;
-        case Scene::PositionMode:
-            positionModeMousePress(e);
-            break;
-        case Scene::AngleMode:
-            angleModeMousePress(e);
-            break;
-        case Scene::StretchMode:
-            stretchModeMousePress(e);
-            break;
-        case Scene::IndicatorMode:
-            indicatorModeMousePress(e);
-            break;
-        default:
-            break;
-    }
 
     if(e->buttons() != Qt::LeftButton)
         return;
@@ -489,30 +371,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
-
-    switch(mMode) {
-        case Scene::StitchMode:
-            stitchModeMouseMove(e);
-            break;
-        case Scene::ColorMode:
-            colorModeMouseMove(e);
-            break;
-        case Scene::PositionMode:
-            QGraphicsScene::mouseMoveEvent(e);
-            break;
-        case Scene::AngleMode:
-            angleModeMouseMove(e);
-            break;
-        case Scene::StretchMode:
-            stretchModeMouseMove(e);
-            break;
-        case Scene::IndicatorMode:
-            indicatorModeMouseMove(e);
-            QGraphicsScene::mouseMoveEvent(e);
-            break;
-        default:
-            break;
-    }
 
     if(mRubberBand) {
         ChartView *view = qobject_cast<ChartView*>(parent());
@@ -539,30 +397,6 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     }
 
-    
-    switch(mMode) {
-        case Scene::StitchMode:
-            stitchModeMouseRelease(e);
-            break;
-        case Scene::ColorMode:
-            colorModeMouseRelease(e);
-            break;
-        case Scene::PositionMode:
-            positionModeMouseRelease(e);
-            break;
-        case Scene::AngleMode:
-            angleModeMouseRelease(e);
-            break;
-        case Scene::StretchMode:
-            stretchModeMouseRelease(e);
-            break;
-        case Scene::IndicatorMode:
-            indicatorModeMouseRelease(e);
-            break;
-        default:
-            break;
-    }
-
     if(mCurCell) {
         mDiff = QSizeF(0,0);
         mCellStartPos = QPointF(0,0);
@@ -579,244 +413,4 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     mRubberBand = 0;
 
     QGraphicsScene::mouseReleaseEvent(e);
-}
-
-void Scene::colorModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-}
-
-void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    if(e->buttons() != Qt::LeftButton)
-        return;
-    
-    if(!mCurCell)
-        return;
-    
-    if(mCurCell->color() != mEditBgColor)
-        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
-}
-
-void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-    if(!mCurCell)
-        return;
-
-    if(mCurCell->color() != mEditBgColor)
-        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
-}
-
-void Scene::positionModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-    if(selectedItems().count() <= 0)
-        return;
-
-    foreach(QGraphicsItem *item, selectedItems()) {
-        mOldPositions.insert(item, item->pos());
-    }
-
-}
-
-void Scene::positionModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-}
-
-void Scene::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    
-    //qreal diff = e->buttonDownPos(Qt::LeftButton).manhattanLength() - e->scenePos().manhattanLength();
-    //if(diff >= QApplication::startDragDistance()) {
-    if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
-        mUndoStack.beginMacro("move items");
-        foreach(QGraphicsItem *item, selectedItems()) {
-            if(mOldPositions.contains(item)) {
-                QPointF oldPos = mOldPositions.value(item);
-                mUndoStack.push(new SetItemCoordinates(this, item, oldPos, item->pos()));
-            }
-        }
-        mUndoStack.endMacro();
-        mOldPositions.clear();
-    }
-}
-
-void Scene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-}
-
-void Scene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    if(e->buttons() != Qt::LeftButton)
-        return;
-    
-    if(!mCurCell)
-        return;
-    
-    if(mCurCell->name() != mEditStitch)
-        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
-}
-
-void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    //FIXME: foreach(stitch in selection()) create an undo group event.
-    if(mCurCell) {
-        
-    if(mCurCell->name() != mEditStitch)
-        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
-    
-        mCurCell = 0;
-    } else if(!mRubberBand){
-        //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
-        int x = 0;
-        int y = 0;
-        if(mStyle == Scene::Rounds) {
-            y = getClosestRow(e->scenePos());
-            //FIXME: the row has to be passed in because getClosestRow modifies the row
-            x = getClosestColumn(e->scenePos(), y);
-        } else if (mStyle == Scene::Rows) {
-            x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
-            y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
-        }
-
-        if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
-
-            AddCell *addCell = new AddCell(this, QPoint(x, y));
-            CrochetCell *c = addCell->cell();
-            c->setStitch(mEditStitch, (y % 2));
-            undoStack()->push(addCell);
-
-        } else {
-            if(!mCurCell)
-                return;
-
-            undoStack()->push(new RemoveCell(this, mCurCell));
-            mCurCell = 0;
-        }
-    }
-}
-
-void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
-{
-    if(!mCurCell)
-        return;
-    
-    qreal value = acos(mCurCell->transform().m11()) / M_PI * 180;
-    if(e->scenePos().x() < 0 && e->scenePos().y() >= 0)
-        mCurCellRotation = 180 - value;
-    else if(e->scenePos().x() < 0 && e->scenePos().y() < 0)
-        mCurCellRotation = 180 - value;
-    else
-        mCurCellRotation = value;
-   
-}
-
-void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
-{
-    if(!mCurCell)
-        return;
-
-    qreal pvtPt = mCurCell->stitch()->width()/2;
-    qDebug() << pvtPt;
-    QPointF origin = mCurCell->mapToScene(pvtPt, 0);
-    QPointF first = e->buttonDownScenePos(Qt::LeftButton);
-    QPointF second = e->scenePos();
-    QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
-    QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
-    qreal angle1 = scenePosToAngle(rel1);
-    qreal angle2 = scenePosToAngle(rel2);
-
-    mUndoStack.push(new SetCellRotation(this, mCurCell, mCurCellRotation, (angle1 - angle2)));
-
-}
-
-void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
-{
-    Q_UNUSED(e);
-    mCurCellRotation = 0;
-}
-
-void Scene::stretchModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-}
-
-void Scene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    if(!mCurCell)
-        return;
-    
-    QPointF cur = e->scenePos();
-    
-    qreal scale;
-    qreal diff = (mLeftButtonDownPos.y() - cur.y());
-
-    scale = -diff/mCurCell->boundingRect().height();
-
-    qDebug() << mLeftButtonDownPos << cur << diff << scale;
-    mUndoStack.push(new SetCellScale(this, mCurCell, scale));
-}
-
-void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-}
-
-void Scene::indicatorModeMousePress(QGraphicsSceneMouseEvent *e)
-{
-    Q_UNUSED(e);
-}
-
-void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
-{
-    if(e->buttons() != Qt::LeftButton)
-        return;
-
-    mMoving = true;
-
-    if(!mCurIndicator)
-        return;
-
-    QPointF start = e->buttonDownScenePos(Qt::LeftButton);
-    
-    QPointF delta =  QPointF(e->scenePos().x() - start.x(), e->scenePos().y() - start.y());
-    QPointF newPos = QPointF(mCellStartPos.x() + delta.x(), mCellStartPos.y() + delta.y());
-    
-    undoStack()->push(new MoveIndicator(this, mCurIndicator, newPos));
-
-}
-
-void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
-{
-    //if right click or ctrl-click remove the indicator.
-    if(e->button() == Qt::RightButton || (e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {
-        if(mCurIndicator) {
-            undoStack()->push(new RemoveIndicator(this, mCurIndicator));
-        }
-        return;
-    }
-
-    //if we're moving another indicator we shouldn't be creating a new one.
-    if(mMoving) {
-        mMoving = false;
-        return;
-    }
-
-    if(!mCurIndicator) {
-
-        QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
-        //FIXME: dont hard code the offset for the indicator.
-        pt = QPointF(pt.x() - 10, pt.y() - 10);
-
-        undoStack()->push(new AddIndicator(this, pt));
-
-        //connect(i, SIGNAL(lostFocus(Indicator*)), this, SLOT(editorLostFocus(Indicator*)));
-        //connect(i, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
-    } else {
-        mCurIndicator->setTextInteractionFlags(Qt::TextEditorInteraction);
-    }
-    
 }

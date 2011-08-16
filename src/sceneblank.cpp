@@ -27,37 +27,13 @@
 #include "stitchlibrary.h"
 
 SceneBlank::SceneBlank(QObject *parent)
-    : Scene(parent),
-    mCenterSymbol(0)
+    : Scene(parent)
 {
 }
 
 SceneBlank::~SceneBlank()
 {
 
-}
-
-void SceneBlank::setShowChartCenter(bool state)
-{
-    mShowChartCenter = state;
-
-    if(mStyle == SceneBlank::Rounds) {
-        if(mShowChartCenter) {
-            if(!mCenterSymbol) {
-                QPen pen;
-                pen.setWidth(5);
-
-                double radius = (mDefaultSize.height() *0.45);
-                
-                mCenterSymbol = addEllipse(-radius, -radius, radius * 2, radius * 2, pen);
-                mCenterSymbol->setToolTip(tr("Chart Center"));
-            } else {
-                addItem(mCenterSymbol);
-            }
-        } else {
-            removeItem(mCenterSymbol);
-        }
-    }
 }
 
 void SceneBlank::addIndicator(Indicator* i)
@@ -112,6 +88,7 @@ int SceneBlank::columnCount(int row)
 
 void SceneBlank::appendCell(int row, CrochetCell *c, bool fromSave)
 {
+    Q_UNUSED(fromSave);
     //append any missing rows.
     if(mGrid.count() <= row) {
         for(int i = mGrid.count(); i < row + 1; ++i) {
@@ -126,10 +103,6 @@ void SceneBlank::appendCell(int row, CrochetCell *c, bool fromSave)
     setCellPosition(row, col, c, mGrid[row].count());
     c->setColor(QColor(Qt::white));
    
-    if(!fromSave) {
-        if(mStyle == SceneBlank::Rounds)
-            redistributeCells(row);
-    }
 }
 
 void SceneBlank::addCell(QPoint p, CrochetCell* c)
@@ -157,62 +130,8 @@ void SceneBlank::addCell(QPoint p, CrochetCell* c)
 
 }
 
-void SceneBlank::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
+void SceneBlank::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 {
-    if(mStyle == SceneBlank::Rounds) {
-        double widthInDegrees = 360.0 / columns;
-
-        double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
-        
-        double degrees = widthInDegrees*column;
-        QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
-
-        qreal delta = mDefaultSize.width() * 0.5;
-        if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(finish.x() - delta, finish.y());
-        c->setPos(finish.x() - delta, finish.y());
-        c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
-        
-    } else {
-        c->setPos(column*mDefaultSize.width(), row*mDefaultSize.height());
-        if(updateAnchor || c->anchor().isNull())
-            c->setAnchor(column*mDefaultSize.width(), row*mDefaultSize.height());
-        c->setColor(QColor(Qt::white));
-    }
-    c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
-}
-
-void SceneBlank::redistributeCells(int row)
-{
-    if(row >= mGrid.count())
-        return;
-    int columns = mGrid[row].count();
-
-    for(int i = 0; i < columns; ++i) {
-        CrochetCell *c = mGrid[row].at(i);
-        setCellPosition(row, i, c, columns, true);
-    }
-}
-
-void SceneBlank::createChart(SceneBlank::ChartStyle style, int rows, int cols, QString stitch, QSizeF rowSize)
-{
-    mStyle = style;
-    if(mStyle == SceneBlank::Blank) {
-
-
-    } else {
-        mDefaultSize = rowSize;
-
-        for(int i = 0; i < rows; ++i) {
-            int pad = 0;
-            if(mStyle == SceneBlank::Rounds)
-                pad = i*8;
-
-            createRow(i, cols + pad, stitch);
-        }
-
-        setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
-    }
 
     initDemoBackground();
 }
@@ -344,6 +263,11 @@ qreal SceneBlank::scenePosToAngle(QPointF pt)
     qreal angleX = rads * 180 / M_PI;
     
     return -angleX;
+}
+
+void SceneBlank::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
+{
+
 }
 
 void SceneBlank::keyReleaseEvent(QKeyEvent* keyEvent)
@@ -578,32 +502,8 @@ void SceneBlank::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     
         mCurCell = 0;
     } else if(!mRubberBand){
-        //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
-        int x = 0;
-        int y = 0;
-        if(mStyle == SceneBlank::Rounds) {
-            y = getClosestRow(e->scenePos());
-            //FIXME: the row has to be passed in because getClosestRow modifies the row
-            x = getClosestColumn(e->scenePos(), y);
-        } else if (mStyle == SceneBlank::Rows) {
-            x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
-            y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
-        }
 
-        if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
-            AddCell *addCell = new AddCell(this, QPoint(x, y));
-            CrochetCell *c = addCell->cell();
-            c->setStitch(mEditStitch, (y % 2));
-            undoStack()->push(addCell);
-
-        } else {
-            if(!mCurCell)
-                return;
-
-            undoStack()->push(new RemoveCell(this, mCurCell));
-            mCurCell = 0;
-        }
     }
 }
 
