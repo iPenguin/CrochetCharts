@@ -34,7 +34,6 @@ SceneRounds::SceneRounds(QObject *parent)
 
 SceneRounds::~SceneRounds()
 {
-
 }
 
 void SceneRounds::setShowChartCenter(bool state)
@@ -318,7 +317,7 @@ void SceneRounds::mousePressEvent(QGraphicsSceneMouseEvent *e)
     Scene::mousePressEvent(e);
     
     switch(mMode) {
-        case SceneRounds::AngleMode:
+        case Scene::AngleMode:
             angleModeMousePress(e);
             break;
         default:
@@ -329,21 +328,20 @@ void SceneRounds::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
 void SceneRounds::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
-
     switch(mMode) {
-        case SceneRounds::StitchMode:
+        case Scene::StitchMode:
             stitchModeMouseMove(e);
             break;
-        case SceneRounds::ColorMode:
+        case Scene::ColorMode:
             colorModeMouseMove(e);
             break;
-        case SceneRounds::AngleMode:
+        case Scene::AngleMode:
             angleModeMouseMove(e);
-            break;
-        case SceneRounds::StretchMode:
+            return;
+        case Scene::StretchMode:
             stretchModeMouseMove(e);
             break;
-        case SceneRounds::IndicatorMode:
+        case Scene::IndicatorMode:
             indicatorModeMouseMove(e);
             break;
         default:
@@ -358,16 +356,16 @@ void SceneRounds::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
     
     switch(mMode) {
-        case SceneRounds::StitchMode:
+        case Scene::StitchMode:
             stitchModeMouseRelease(e);
             break;
-        case SceneRounds::ColorMode:
+        case Scene::ColorMode:
             colorModeMouseRelease(e);
             break;
-        case SceneRounds::AngleMode:
+        case Scene::AngleMode:
             angleModeMouseRelease(e);
             break;
-        case SceneRounds::IndicatorMode:
+        case Scene::IndicatorMode:
             indicatorModeMouseRelease(e);
             break;
         default:
@@ -461,6 +459,7 @@ void SceneRounds::angleModeMousePress(QGraphicsSceneMouseEvent *e)
 
 void SceneRounds::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
 {
+
     if(!mCurCell)
         return;
 

@@ -30,10 +30,10 @@ public:
 
     enum EditMode {
         StitchMode = 10, //place stitches on the chart.
-        ColorMode,       //place colors behind stitches.
-        AngleMode,       //adjust the angle of the
-        StretchMode,       //stretch the stitches.
-        IndicatorMode
+        ColorMode = 11,       //place colors behind stitches.
+        AngleMode = 14,       //adjust the angle of the
+        StretchMode = 15,       //stretch the stitches.
+        IndicatorMode = 16
     };
 
     enum ChartStyle {
