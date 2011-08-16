@@ -6,13 +6,7 @@
 #define SCENEROUNDS_H
 
 #include "scene.h"
-
 #include "crochetcell.h"
-
-#include <QUndoStack>
-#include <QRubberBand>
-
-#include "indicator.h"
 
 class QKeyEvent;
 
@@ -59,8 +53,6 @@ public slots:
 
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
-
-    void updateSelection(QPolygonF selection);
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);
@@ -73,7 +65,9 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
-    //find the x,y positions on the grid for a given cell;
+    /**
+     * find the x,y positions on the grid for a given cell;
+     */
     QPoint findGridPosition(CrochetCell *c);
 
     /**
@@ -105,9 +99,6 @@ private:
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    
-    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
     void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
     void angleModeMousePress(QGraphicsSceneMouseEvent *e);
@@ -116,9 +107,6 @@ private:
     void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-    void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);

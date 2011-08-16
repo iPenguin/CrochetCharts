@@ -191,13 +191,6 @@ void SceneRows::stitchUpdated(QString oldSt, QString newSt)
     
 }
 
-void SceneRows::updateSelection(QPolygonF selection)
-{
-    QPainterPath path;
-    path.addPolygon(selection);
-    setSelectionArea(path);
-}
-
 QPoint SceneRows::findGridPosition(CrochetCell* c)
 {
     for(int y = 0; y < mGrid.count(); ++y) {

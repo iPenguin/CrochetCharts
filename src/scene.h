@@ -89,8 +89,6 @@ public slots:
 
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
-
-    void updateSelection(QPolygonF selection);
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);
@@ -128,6 +126,11 @@ protected:
     void initDemoBackground();
 
 protected:
+    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    
+    void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.

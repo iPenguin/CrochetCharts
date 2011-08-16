@@ -151,13 +151,6 @@ void Scene::stitchUpdated(QString oldSt, QString newSt)
     
 }
 
-void Scene::updateSelection(QPolygonF selection)
-{
-    QPainterPath path;
-    path.addPolygon(selection);
-    setSelectionArea(path);
-}
-
 void Scene::updateRubberBand(int dx, int dy)
 {
 
@@ -252,6 +245,17 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         mRubberBand->setGeometry(rect.normalized());
     } 
 
+    switch(mMode) {
+        case Scene::ColorMode:
+            colorModeMouseMove(e);
+            break;
+        case Scene::IndicatorMode:
+            indicatorModeMouseMove(e);
+            break;
+        default:
+            break;
+    }
+    
     qreal diff = (e->buttonDownPos(Qt::LeftButton)- e->scenePos()).manhattanLength();
     if(diff >= QApplication::startDragDistance()) {
         mMoving = true;
@@ -272,7 +276,6 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         setSelectionArea(path);
 
         mRubberBand->hide();
-
     }
     
     if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
@@ -285,8 +288,17 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         }
         mUndoStack.endMacro();
         mOldPositions.clear();
+    }
 
-
+    switch(mMode) {
+        case Scene::ColorMode:
+            colorModeMouseRelease(e);
+            break;
+        case Scene::IndicatorMode:
+            indicatorModeMouseRelease(e);
+            break;
+        default:
+            break;
     }
 
     if(mCurCell) {
@@ -306,4 +318,77 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     QGraphicsScene::mouseReleaseEvent(e);
     mMoving = false;
+}
+
+void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    if(e->buttons() != Qt::LeftButton)
+        return;
+
+    if(!mCurCell)
+        return;
+
+    if(mCurCell->color() != mEditBgColor)
+        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
+}
+
+void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
+{
+    Q_UNUSED(e);
+    if(!mCurCell)
+        return;
+
+    if(mCurCell->color() != mEditBgColor)
+        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
+}
+
+void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
+{
+    if(e->buttons() != Qt::LeftButton)
+        return;
+
+    mMoving = true;
+
+    if(!mCurIndicator)
+        return;
+
+    QPointF start = e->buttonDownScenePos(Qt::LeftButton);
+
+    QPointF delta =  QPointF(e->scenePos().x() - start.x(), e->scenePos().y() - start.y());
+    QPointF newPos = QPointF(mCellStartPos.x() + delta.x(), mCellStartPos.y() + delta.y());
+
+    undoStack()->push(new MoveIndicator(this, mCurIndicator, newPos));
+
+}
+
+void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
+{
+    //if right click or ctrl-click remove the indicator.
+    if(e->button() == Qt::RightButton || (e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {
+        if(mCurIndicator) {
+            undoStack()->push(new RemoveIndicator(this, mCurIndicator));
+        }
+        return;
+    }
+
+    //if we're moving another indicator we shouldn't be creating a new one.
+    if(mMoving) {
+        mMoving = false;
+        return;
+    }
+
+    if(!mCurIndicator) {
+
+        QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
+        //FIXME: dont hard code the offset for the indicator.
+        pt = QPointF(pt.x() - 10, pt.y() - 10);
+
+        undoStack()->push(new AddIndicator(this, pt));
+
+        //connect(i, SIGNAL(lostFocus(Indicator*)), this, SLOT(editorLostFocus(Indicator*)));
+        //connect(i, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
+    } else {
+        mCurIndicator->setTextInteractionFlags(Qt::TextEditorInteraction);
+    }
+
 }

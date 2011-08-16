@@ -54,8 +54,6 @@ public:
     
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
-
-    void updateSelection(QPolygonF selection);
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);
@@ -71,8 +69,6 @@ protected:
     //find the x,y positions on the grid for a given cell;
     QPoint findGridPosition(CrochetCell *c);
 
-    qreal scenePosToAngle(QPointF pt);
-
     void setCellPosition(int row, int column, CrochetCell *c, int columns = 1, bool updateAnchor = false);
         
 private:
@@ -81,9 +77,6 @@ private:
     void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
     
-    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    
     void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
     void angleModeMousePress(QGraphicsSceneMouseEvent *e);
     void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
@@ -91,9 +84,6 @@ private:
     void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-    void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 };
 
