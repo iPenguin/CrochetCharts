@@ -117,15 +117,16 @@ void SceneRows::addCell(QPoint p, CrochetCell* c)
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
 
+    redistributeCells(p.y());
 }
 
 void SceneRows::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
 {
     Q_UNUSED(columns);
     
-    c->setPos(column*mDefaultSize.width(), row*mDefaultSize.height());
+    c->setPos(column*mDefaultSize.width() + column*5, row*mDefaultSize.height());
     if(updateAnchor || c->anchor().isNull())
-        c->setAnchor(column*mDefaultSize.width(), row*mDefaultSize.height());
+        c->setAnchor(column*mDefaultSize.width() + column*5, row*mDefaultSize.height());
     c->setColor(QColor(Qt::white));
 
     //FIXME: set tooltips from bottom right to top left.
