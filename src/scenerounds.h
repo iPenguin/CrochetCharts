@@ -50,9 +50,6 @@ public:
     
 public slots:
     void setShowChartCenter(bool state);
-
-private slots:
-    void stitchUpdated(QString oldSt, QString newSt);
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);

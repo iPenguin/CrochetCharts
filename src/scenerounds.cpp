@@ -139,7 +139,6 @@ void SceneRounds::addCell(QPoint p, CrochetCell* c)
 
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
 
     redistributeCells(p.y());
 
@@ -201,7 +200,6 @@ void SceneRounds::createRow(int row, int columns, QString stitch)
         c = new CrochetCell();
         connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
         connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-        connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
         
         c->setStitch(stitch, (row % 2));
         addItem(c);
@@ -267,21 +265,6 @@ QPointF SceneRounds::calcPoint(double radius, double angleInDegrees, QPointF ori
     qreal x = (radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
     qreal y = (radius * sin(angleInDegrees * M_PI / 180)) + origin.y();
     return QPointF(x, y);
-}
-
-void SceneRounds::stitchUpdated(QString oldSt, QString newSt)
-{
-    Q_UNUSED(newSt);
-    
-    if(oldSt.isEmpty() || oldSt.isNull())
-        return;
-    
-    CrochetCell *c = qobject_cast<CrochetCell*>(sender());
-    if(!c)
-        return;
-
-    QPoint pos = findGridPosition(c);
-    
 }
 
 QPoint SceneRounds::findGridPosition(CrochetCell* c)

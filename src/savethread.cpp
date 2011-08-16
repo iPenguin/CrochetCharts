@@ -36,7 +36,6 @@ void SaveThread::run()
     
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
-    QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SLOT(stitchUpdated(QString,QString)));
     
     while(!(stream->isEndElement() && stream->name() == "cell")) {
         stream->readNext();

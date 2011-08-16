@@ -136,21 +136,6 @@ int Scene::columnCount(int row)
     return mGrid[row].count();
 }
 
-void Scene::stitchUpdated(QString oldSt, QString newSt)
-{
-    Q_UNUSED(newSt);
-    
-    if(oldSt.isEmpty() || oldSt.isNull())
-        return;
-    
-    CrochetCell *c = qobject_cast<CrochetCell*>(sender());
-    if(!c)
-        return;
-
-    QPoint pos = findGridPosition(c);
-    
-}
-
 void Scene::updateRubberBand(int dx, int dy)
 {
 
@@ -327,9 +312,11 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 
     if(!mCurCell)
         return;
-
+/*
+ *FIXME: if the user isn't dragging a stitch we should be painting with color.
     if(mCurCell->color() != mEditBgColor)
         mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
+*/
 }
 
 void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)

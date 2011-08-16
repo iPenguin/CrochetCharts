@@ -89,7 +89,6 @@ void SceneBlank::addCell(QPoint p, CrochetCell* c)
 
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
 
 }
 
@@ -106,29 +105,8 @@ void SceneBlank::createRow(int row, int columns, QString stitch)
     Q_UNUSED(stitch);
 }
 
-void SceneBlank::stitchUpdated(QString oldSt, QString newSt)
-{
-    Q_UNUSED(newSt);
-    
-    if(oldSt.isEmpty() || oldSt.isNull())
-        return;
-    
-    CrochetCell *c = qobject_cast<CrochetCell*>(sender());
-    if(!c)
-        return;
-
-    QPoint pos = findGridPosition(c);
-    
-}
-
 QPoint SceneBlank::findGridPosition(CrochetCell* c)
 {
-    for(int y = 0; y < mGrid.count(); ++y) {
-        if(mGrid[y].contains(c)) {
-            return QPoint(mGrid[y].indexOf(c), y);
-        }
-    }
-    
     return QPoint();
 }
 

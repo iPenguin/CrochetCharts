@@ -86,9 +86,6 @@ public:
 public slots:
     
     void updateRubberBand(int dx, int dy);
-
-private slots:
-    void stitchUpdated(QString oldSt, QString newSt);
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);

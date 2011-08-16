@@ -115,7 +115,6 @@ void SceneRows::addCell(QPoint p, CrochetCell* c)
 
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
 
     redistributeCells(p.y());
 }
@@ -164,7 +163,6 @@ void SceneRows::createRow(int row, int columns, QString stitch)
         c = new CrochetCell();
         connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
         connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-        connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
         
         c->setStitch(stitch, (row % 2));
         addItem(c);
@@ -174,21 +172,6 @@ void SceneRows::createRow(int row, int columns, QString stitch)
     }
     mGrid.append(modelRow);
 
-}
-
-void SceneRows::stitchUpdated(QString oldSt, QString newSt)
-{
-    Q_UNUSED(newSt);
-    
-    if(oldSt.isEmpty() || oldSt.isNull())
-        return;
-    
-    CrochetCell *c = qobject_cast<CrochetCell*>(sender());
-    if(!c)
-        return;
-
-    QPoint pos = findGridPosition(c);
-    
 }
 
 QPoint SceneRows::findGridPosition(CrochetCell* c)
@@ -237,17 +220,11 @@ void SceneRows::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         case SceneRows::StitchMode:
             stitchModeMouseMove(e);
             break;
-        case SceneRows::ColorMode:
-            colorModeMouseMove(e);
-            break;
         case SceneRows::AngleMode:
             angleModeMouseMove(e);
             return;
         case SceneRows::StretchMode:
             stretchModeMouseMove(e);
-            break;
-        case SceneRows::IndicatorMode:
-            indicatorModeMouseMove(e);
             break;
         default:
             break;
@@ -264,14 +241,8 @@ void SceneRows::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         case SceneRows::StitchMode:
             stitchModeMouseRelease(e);
             break;
-        case SceneRows::ColorMode:
-            colorModeMouseRelease(e);
-            break;
         case SceneRows::AngleMode:
             angleModeMouseRelease(e);
-            break;
-        case SceneRows::IndicatorMode:
-            indicatorModeMouseRelease(e);
             break;
         default:
             break;
