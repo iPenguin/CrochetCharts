@@ -124,18 +124,6 @@ CrochetCell* Scene::cell(QPoint position)
     return cell(position.y(), position.x());
 }
 
-int Scene::rowCount()
-{
-    return mGrid.count();
-}
-
-int Scene::columnCount(int row)
-{
-    if(mGrid.count() <= row)
-        return 0;
-    return mGrid[row].count();
-}
-
 void Scene::updateRubberBand(int dx, int dy)
 {
 

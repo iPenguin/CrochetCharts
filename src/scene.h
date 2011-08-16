@@ -54,8 +54,8 @@ public:
      */
     virtual void addCell(QPoint p, CrochetCell *c) = 0;
     
-    int rowCount();
-    int columnCount(int row);
+    virtual int rowCount() = 0;
+    virtual int columnCount(int row) = 0;
 
     //if you have the position in x, y use the overload function
     CrochetCell* cell(int row, int column);
