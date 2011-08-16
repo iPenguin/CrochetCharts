@@ -233,9 +233,9 @@ void MainWindow::setupMenus()
 
 
     connect(ui->actionColorSelectorBg, SIGNAL(triggered()), this, SLOT(selectColor()));
-    connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
+    //connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
     
-    ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
+    //ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
     ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(mBgColor, QSize(32, 32))));
     
     //View Menu
@@ -265,7 +265,6 @@ void MainWindow::setupMenus()
     mModeGroup = new QActionGroup(this);
     mModeGroup->addAction(ui->actionStitchMode);
     mModeGroup->addAction(ui->actionColorMode);
-    mModeGroup->addAction(ui->actionPositionMode);
     mModeGroup->addAction(ui->actionAngleMode);
     mModeGroup->addAction(ui->actionStretchMode);
     mModeGroup->addAction(ui->actionIndicatorMode);
@@ -467,7 +466,7 @@ void MainWindow::selectColor()
         QColor color = QColorDialog::getColor(mFgColor, this, tr("Foreground Color"));
         
         if (color.isValid()) {
-            ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            //ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
             mFgColor = color;
             updateFgColor();
         }
@@ -792,7 +791,7 @@ void MainWindow::menuFileAboutToShow()
     
     ui->actionExport->setEnabled(state);
 
-    ui->actionColorSelectorFg->setEnabled(state);
+    //ui->actionColorSelectorFg->setEnabled(state);
     ui->actionColorSelectorBg->setEnabled(state);
 }
 
@@ -1020,8 +1019,6 @@ void MainWindow::changeTabMode(QAction* a)
         mode = 10;
     else if(a == ui->actionColorMode)
         mode = 11;
-    else if(a == ui->actionPositionMode)
-        mode = 13;
     else if(a == ui->actionAngleMode)
         mode = 14;
     else if(a == ui->actionStretchMode)
@@ -1040,8 +1037,6 @@ void MainWindow::setEditMode(int mode)
         ui->actionStitchMode->setChecked(true);
     else if(mode == 11)
         ui->actionColorMode->setChecked(true);
-    else if(mode == 13)
-        ui->actionPositionMode->setChecked(true);
     else if(mode == 14)
         ui->actionAngleMode->setChecked(true);
     else if(mode == 15)

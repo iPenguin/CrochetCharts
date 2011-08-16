@@ -279,9 +279,6 @@ void SceneRows::mousePressEvent(QGraphicsSceneMouseEvent *e)
     }
     
     switch(mMode) {
-        case SceneRows::PositionMode:
-            positionModeMousePress(e);
-            break;
         case SceneRows::AngleMode:
             angleModeMousePress(e);
             break;
@@ -314,9 +311,6 @@ void SceneRows::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             break;
         case SceneRows::ColorMode:
             colorModeMouseMove(e);
-            break;
-        case SceneRows::PositionMode:
-            Scene::mouseMoveEvent(e);
             break;
         case SceneRows::AngleMode:
             angleModeMouseMove(e);
@@ -364,9 +358,6 @@ void SceneRows::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
         case SceneRows::ColorMode:
             colorModeMouseRelease(e);
-            break;
-        case SceneRows::PositionMode:
-            positionModeMouseRelease(e);
             break;
         case SceneRows::AngleMode:
             angleModeMouseRelease(e);
@@ -416,34 +407,6 @@ void SceneRows::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
     if(mCurCell->color() != mEditBgColor)
         mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
-}
-
-void SceneRows::positionModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-    if(selectedItems().count() <= 0)
-        return;
-
-    foreach(QGraphicsItem *item, selectedItems()) {
-        mOldPositions.insert(item, item->pos());
-    }
-
-}
-
-void SceneRows::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-    if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
-        mUndoStack.beginMacro("move items");
-        foreach(QGraphicsItem *item, selectedItems()) {
-            if(mOldPositions.contains(item)) {
-                QPointF oldPos = mOldPositions.value(item);
-                mUndoStack.push(new SetItemCoordinates(this, item, oldPos, item->pos()));
-            }
-        }
-        mUndoStack.endMacro();
-        mOldPositions.clear();
-    }
 }
 
 void SceneRows::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)

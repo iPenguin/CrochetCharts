@@ -366,7 +366,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
         mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
         mRubberBand->show();
+    } else {
+    //Track object movement on scene.
+        foreach(QGraphicsItem *item, selectedItems()) {
+            mOldPositions.insert(item, item->pos());
+        }
     }
+
+    mMoving = false;
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -378,7 +385,12 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 
         mRubberBand->setGeometry(rect.normalized());
     } 
-    
+
+    qreal diff = (e->buttonDownPos(Qt::LeftButton)- e->scenePos()).manhattanLength();
+    if(diff >= QApplication::startDragDistance()) {
+        mMoving = true;
+        QGraphicsScene::mouseMoveEvent(e);
+    }
 }
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
@@ -394,6 +406,20 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         setSelectionArea(path);
 
         mRubberBand->hide();
+
+    }
+    
+    if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
+        mUndoStack.beginMacro("move items");
+        foreach(QGraphicsItem *item, selectedItems()) {
+            if(mOldPositions.contains(item)) {
+                QPointF oldPos = mOldPositions.value(item);
+                mUndoStack.push(new SetItemCoordinates(this, item, oldPos, item->pos()));
+            }
+        }
+        mUndoStack.endMacro();
+        mOldPositions.clear();
+
 
     }
 
@@ -413,4 +439,5 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     mRubberBand = 0;
 
     QGraphicsScene::mouseReleaseEvent(e);
+    mMoving = false;
 }

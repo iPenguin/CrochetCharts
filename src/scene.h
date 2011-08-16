@@ -31,8 +31,6 @@ public:
     enum EditMode {
         StitchMode = 10, //place stitches on the chart.
         ColorMode,       //place colors behind stitches.
-        GridMode,        //draw lines on the grid.
-        PositionMode,    //move the stitches around on the chart.
         AngleMode,       //adjust the angle of the
         StretchMode,       //stretch the stitches.
         IndicatorMode
@@ -170,7 +168,7 @@ protected:
 
     QMap<QGraphicsItem *, QPointF> mOldPositions;
     
-    //Is the user moving an indicator.
+    //Is the user moving an object.
     bool mMoving;
 
     int mRowSpacing;

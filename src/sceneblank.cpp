@@ -311,9 +311,6 @@ void SceneBlank::mousePressEvent(QGraphicsSceneMouseEvent *e)
     }
     
     switch(mMode) {
-        case SceneBlank::PositionMode:
-            positionModeMousePress(e);
-            break;
         case SceneBlank::AngleMode:
             angleModeMousePress(e);
             break;
@@ -346,9 +343,6 @@ void SceneBlank::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             break;
         case SceneBlank::ColorMode:
             colorModeMouseMove(e);
-            break;
-        case SceneBlank::PositionMode:
-            Scene::mouseMoveEvent(e);
             break;
         case SceneBlank::AngleMode:
             angleModeMouseMove(e);
@@ -396,9 +390,6 @@ void SceneBlank::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
         case SceneBlank::ColorMode:
             colorModeMouseRelease(e);
-            break;
-        case SceneBlank::PositionMode:
-            positionModeMouseRelease(e);
             break;
         case SceneBlank::AngleMode:
             angleModeMouseRelease(e);
@@ -448,36 +439,6 @@ void SceneBlank::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
     if(mCurCell->color() != mEditBgColor)
         mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
-}
-
-void SceneBlank::positionModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-    if(selectedItems().count() <= 0)
-        return;
-
-    foreach(QGraphicsItem *item, selectedItems()) {
-        mOldPositions.insert(item, item->pos());
-    }
-
-}
-
-void SceneBlank::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    
-    //qreal diff = e->buttonDownPos(Qt::LeftButton).manhattanLength() - e->scenePos().manhattanLength();
-    //if(diff >= QApplication::startDragDistance()) {
-    if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
-        mUndoStack.beginMacro("move items");
-        foreach(QGraphicsItem *item, selectedItems()) {
-            if(mOldPositions.contains(item)) {
-                QPointF oldPos = mOldPositions.value(item);
-                mUndoStack.push(new SetItemCoordinates(this, item, oldPos, item->pos()));
-            }
-        }
-        mUndoStack.endMacro();
-        mOldPositions.clear();
-    }
 }
 
 void SceneBlank::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)

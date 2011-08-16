@@ -318,9 +318,6 @@ void SceneRounds::mousePressEvent(QGraphicsSceneMouseEvent *e)
     Scene::mousePressEvent(e);
     
     switch(mMode) {
-        case SceneRounds::PositionMode:
-            positionModeMousePress(e);
-            break;
         case SceneRounds::AngleMode:
             angleModeMousePress(e);
             break;
@@ -339,9 +336,6 @@ void SceneRounds::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             break;
         case SceneRounds::ColorMode:
             colorModeMouseMove(e);
-            break;
-        case SceneRounds::PositionMode:
-            Scene::mouseMoveEvent(e);
             break;
         case SceneRounds::AngleMode:
             angleModeMouseMove(e);
@@ -369,9 +363,6 @@ void SceneRounds::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
         case SceneRounds::ColorMode:
             colorModeMouseRelease(e);
-            break;
-        case SceneRounds::PositionMode:
-            positionModeMouseRelease(e);
             break;
         case SceneRounds::AngleMode:
             angleModeMouseRelease(e);
@@ -408,36 +399,6 @@ void SceneRounds::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
         mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
 }
 
-void SceneRounds::positionModeMousePress(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-    if(selectedItems().count() <= 0)
-        return;
-
-    foreach(QGraphicsItem *item, selectedItems()) {
-        mOldPositions.insert(item, item->pos());
-    }
-
-}
-
-void SceneRounds::positionModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-    //qreal diff = e->buttonDownPos(Qt::LeftButton).manhattanLength() - e->scenePos().manhattanLength();
-    //if(diff >= QApplication::startDragDistance()) {
-    if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
-        mUndoStack.beginMacro("move items");
-        foreach(QGraphicsItem *item, selectedItems()) {
-            if(mOldPositions.contains(item)) {
-                QPointF oldPos = mOldPositions.value(item);
-                mUndoStack.push(new SetItemCoordinates(this, item, oldPos, item->pos()));
-            }
-        }
-        mUndoStack.endMacro();
-        mOldPositions.clear();
-    }
-}
-
 void SceneRounds::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(e->buttons() != Qt::LeftButton)
@@ -445,21 +406,21 @@ void SceneRounds::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
     
     if(!mCurCell)
         return;
-    
-    if(mCurCell->name() != mEditStitch)
-        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
+
+    //FIXME: if you're not draging a stitch you should be able to drag and paint.
 }
 
 void SceneRounds::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
+    
     //FIXME: foreach(stitch in selection()) create an undo group event.
     if(mCurCell) {
         
-    if(mCurCell->name() != mEditStitch)
-        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
+        if(mCurCell->name() != mEditStitch && !mMoving)
+            mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
     
         mCurCell = 0;
-    } else if(!mRubberBand){
+    } else if(!mRubberBand && !mMoving){
         //FIXME: combine getClosestRow & getClosestColumn into 1 function returning a QPoint.
         int y = getClosestRow(e->scenePos());
         //FIXME: the row has to be passed in because getClosestRow modifies the row
@@ -480,6 +441,7 @@ void SceneRounds::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
             mCurCell = 0;
         }
     }
+    
 }
 
 void SceneRounds::angleModeMousePress(QGraphicsSceneMouseEvent *e)

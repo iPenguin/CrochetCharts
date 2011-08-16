@@ -259,7 +259,7 @@
      <x>0</x>
      <y>0</y>
      <width>894</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -343,7 +343,6 @@
     </property>
     <addaction name="actionStitchMode"/>
     <addaction name="actionColorMode"/>
-    <addaction name="actionPositionMode"/>
     <addaction name="actionAngleMode"/>
     <addaction name="actionStretchMode"/>
     <addaction name="actionIndicatorMode"/>
@@ -555,7 +554,6 @@
    </attribute>
    <addaction name="actionStitchMode"/>
    <addaction name="actionColorMode"/>
-   <addaction name="actionPositionMode"/>
    <addaction name="actionAngleMode"/>
    <addaction name="actionStretchMode"/>
    <addaction name="actionIndicatorMode"/>
@@ -694,11 +692,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
-   </property>
-  </action>
-  <action name="actionAddNotes">
-   <property name="text">
-    <string>Add Notes</string>
    </property>
   </action>
   <action name="actionZoomIn">
@@ -855,24 +848,6 @@
     <string>Alt+2</string>
    </property>
   </action>
-  <action name="actionPositionMode">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../crochet.qrc">
-     <normaloff>:/images/position_stitch.svg</normaloff>:/images/position_stitch.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Position Mode</string>
-   </property>
-   <property name="toolTip">
-    <string>Move stitches around on the chart</string>
-   </property>
-   <property name="shortcut">
-    <string>Alt+4</string>
-   </property>
-  </action>
   <action name="actionShowMainToolbar">
    <property name="checkable">
     <bool>true</bool>
@@ -887,14 +862,6 @@
    </property>
    <property name="text">
     <string>Show Edit Mode Toolbar</string>
-   </property>
-  </action>
-  <action name="actionColorSelectorFg">
-   <property name="text">
-    <string>Foreground Color</string>
-   </property>
-   <property name="toolTip">
-    <string>Select a color for text and line elements</string>
    </property>
   </action>
   <action name="actionColorSelectorBg">
