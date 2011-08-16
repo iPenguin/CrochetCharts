@@ -280,28 +280,6 @@ void SceneRows::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     Scene::mouseReleaseEvent(e);
 }
 
-void SceneRows::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    if(e->buttons() != Qt::LeftButton)
-        return;
-    
-    if(!mCurCell)
-        return;
-    
-    if(mCurCell->color() != mEditBgColor)
-        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
-}
-
-void SceneRows::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-    if(!mCurCell)
-        return;
-
-    if(mCurCell->color() != mEditBgColor)
-        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
-}
-
 void SceneRows::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(e->buttons() != Qt::LeftButton)
@@ -397,55 +375,4 @@ void SceneRows::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
     qDebug() << mLeftButtonDownPos << cur << diff << scale;
     mUndoStack.push(new SetCellScale(this, mCurCell, scale));
-}
-
-void SceneRows::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
-{
-    if(e->buttons() != Qt::LeftButton)
-        return;
-
-    mMoving = true;
-
-    if(!mCurIndicator)
-        return;
-
-    QPointF start = e->buttonDownScenePos(Qt::LeftButton);
-    
-    QPointF delta =  QPointF(e->scenePos().x() - start.x(), e->scenePos().y() - start.y());
-    QPointF newPos = QPointF(mCellStartPos.x() + delta.x(), mCellStartPos.y() + delta.y());
-    
-    undoStack()->push(new MoveIndicator(this, mCurIndicator, newPos));
-
-}
-
-void SceneRows::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
-{
-    //if right click or ctrl-click remove the indicator.
-    if(e->button() == Qt::RightButton || (e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {
-        if(mCurIndicator) {
-            undoStack()->push(new RemoveIndicator(this, mCurIndicator));
-        }
-        return;
-    }
-
-    //if we're moving another indicator we shouldn't be creating a new one.
-    if(mMoving) {
-        mMoving = false;
-        return;
-    }
-
-    if(!mCurIndicator) {
-
-        QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
-        //FIXME: dont hard code the offset for the indicator.
-        pt = QPointF(pt.x() - 10, pt.y() - 10);
-
-        undoStack()->push(new AddIndicator(this, pt));
-
-        //connect(i, SIGNAL(lostFocus(Indicator*)), this, SLOT(editorLostFocus(Indicator*)));
-        //connect(i, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
-    } else {
-        mCurIndicator->setTextInteractionFlags(Qt::TextEditorInteraction);
-    }
-    
 }

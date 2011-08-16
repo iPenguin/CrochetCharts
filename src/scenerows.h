@@ -99,9 +99,6 @@ private:
     void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
     
-    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    
     void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
     void angleModeMousePress(QGraphicsSceneMouseEvent *e);
     void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
@@ -109,9 +106,6 @@ private:
     void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-    void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
