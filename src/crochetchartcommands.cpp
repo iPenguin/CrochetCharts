@@ -202,14 +202,12 @@ void AddCell::redo()
 {
 
     scene->addCell(position, c);
-    scene->redistributeCells(position.y());
     
 }
 
 void AddCell::undo()
 {
     scene->removeCell(c);
-    scene->redistributeCells(position.y());
 }
 
 /*************************************************\
@@ -227,13 +225,11 @@ RemoveCell::RemoveCell(Scene* s, CrochetCell *cell, QUndoCommand* parent)
 void RemoveCell::redo()
 {
     scene->removeCell(c);
-    scene->redistributeCells(position.y());
 }
 
 void RemoveCell::undo()
 {
     scene->addCell(position, c);
-    scene->redistributeCells(position.y());
 }
 
 /*************************************************\

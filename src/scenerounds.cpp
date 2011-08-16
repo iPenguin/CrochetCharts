@@ -74,6 +74,7 @@ CrochetCell* SceneRounds::cell(QPoint position)
 
 void SceneRounds::removeCell(CrochetCell *c)
 {
+    int y = findGridPosition(c).y();
     removeItem(c);
     for(int i = 0; i < mGrid.count(); ++i) {
         if (mGrid[i].contains(c)) {
@@ -81,6 +82,7 @@ void SceneRounds::removeCell(CrochetCell *c)
         }
     }
 
+    redistributeCells(y);
 }
 
 int SceneRounds::rowCount()
@@ -138,6 +140,8 @@ void SceneRounds::addCell(QPoint p, CrochetCell* c)
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
+
+    redistributeCells(p.y());
 
 }
 

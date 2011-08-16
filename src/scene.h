@@ -45,14 +45,14 @@ public:
     Scene(QObject *parent = 0);
     ~Scene();
 
-    void createRow(int row, int columns, QString stitch);
+    virtual void createRow(int row, int columns, QString stitch) = 0;
 
     virtual void appendCell(int row, CrochetCell *c, bool fromSave = false) = 0;
 
     /**
      * p(x = column, y = row)
      */
-    void addCell(QPoint p, CrochetCell *c);
+    virtual void addCell(QPoint p, CrochetCell *c) = 0;
     
     int rowCount();
     int columnCount(int row);
@@ -62,7 +62,7 @@ public:
     //convert x,y to rows, columns.
     CrochetCell* cell(QPoint position);
 
-    void removeCell(CrochetCell *c);
+    virtual void removeCell(CrochetCell *c) = 0;
 
     virtual void createChart(int rows, int cols, QString stitch, QSizeF rowSize) = 0;
 
@@ -117,25 +117,7 @@ protected:
     //find the x,y positions on the grid for a given cell;
     QPoint findGridPosition(CrochetCell *c);
 
-    /**
-     * Takes a @param row and spread the cells out evenly along it's entire length.
-     * This function can handle rounds or rows transparently.
-     */
-    void redistributeCells(int row);
-    /**
-     * Takes a @param mousePosition and returns the closest y co-ordinate.
-     * function assumes rounds not rows.
-     */
-    int getClosestRow(QPointF mousePosition);
-    /**
-     * Takes a @param mousePosition and @param row and returns the closest x co-ordinate.
-     * function assumes rounds not rows.
-     */
-    int getClosestColumn(QPointF mousePosition, int row);
-
     QList<Indicator*> indicators() { return mIndicators; }
-
-    qreal scenePosToAngle(QPointF pt);
     
     /**
      * WARING: This funciton should be called after the cell has been added
@@ -146,7 +128,6 @@ protected:
     void initDemoBackground();
 
 protected:
-    QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.

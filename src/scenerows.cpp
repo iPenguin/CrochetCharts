@@ -52,6 +52,7 @@ CrochetCell* SceneRows::cell(QPoint position)
 
 void SceneRows::removeCell(CrochetCell *c)
 {
+    int y = findGridPosition(c).y();
     removeItem(c);
     for(int i = 0; i < mGrid.count(); ++i) {
         if (mGrid[i].contains(c)) {
@@ -59,6 +60,7 @@ void SceneRows::removeCell(CrochetCell *c)
         }
     }
 
+    redistributeCells(y);
 }
 
 int SceneRows::rowCount()

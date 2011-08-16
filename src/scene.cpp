@@ -124,17 +124,6 @@ CrochetCell* Scene::cell(QPoint position)
     return cell(position.y(), position.x());
 }
 
-void Scene::removeCell(CrochetCell *c)
-{
-    removeItem(c);
-    for(int i = 0; i < mGrid.count(); ++i) {
-        if (mGrid[i].contains(c)) {
-            mGrid[i].removeOne(c);
-        }
-    }
-
-}
-
 int Scene::rowCount()
 {
     return mGrid.count();
@@ -145,120 +134,6 @@ int Scene::columnCount(int row)
     if(mGrid.count() <= row)
         return 0;
     return mGrid[row].count();
-}
-
-void Scene::addCell(QPoint p, CrochetCell* c)
-{
-
-    //TODO: simplify the connect() statements...
-    addItem(c);
-    int x = p.x();
-
-    if(mGrid.count() <= p.y()) {
-        QList<CrochetCell*> row;
-        mGrid.append(row);
-    }
-
-    if(mGrid[p.y()].count() <= p.x())
-            x = mGrid[p.y()].count();
-
-    mGrid[p.y()].insert(x, c);
-
-    setCellPosition(p.y(), x, c, mGrid[p.y()].count());
-
-    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
-    connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
-
-}
-
-void Scene::redistributeCells(int row)
-{
-    if(row >= mGrid.count())
-        return;
-    int columns = mGrid[row].count();
-
-    for(int i = 0; i < columns; ++i) {
-        CrochetCell *c = mGrid[row].at(i);
-        setCellPosition(row, i, c, columns, true);
-    }
-}
-
-void Scene::createRow(int row, int columns, QString stitch)
-{
-    CrochetCell *c = 0;
-    
-    QList<CrochetCell*> modelRow;
-    for(int i = 0; i < columns; ++i) {
-        c = new CrochetCell();
-        connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
-        connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-        connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
-        
-        c->setStitch(stitch, (row % 2));
-        addItem(c);
-        modelRow.append(c);
-        c->setColor(QColor(Qt::white));
-        setCellPosition(row, i, c, columns);
-    }
-    mGrid.append(modelRow);
-
-}
-
-int Scene::getClosestRow(QPointF mousePosition)
-{
-    //double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
-    qreal radius = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y());
-
-    qreal temp = radius - (mDefaultSize.height() *0.5);
-    qreal temp2 = temp / mDefaultSize.height();
-    
-    int row = round(temp2 - 1);
-    if(row < 0)
-        row = 0;
-    if(row >= mGrid.count()) {
-        row = mGrid.count();
-
-        QList<CrochetCell*> r;
-        mGrid.append(r);
-    }
-
-    return row;
-}
-
-int Scene::getClosestColumn(QPointF mousePosition, int row)
-{
-    /*
-              |
-          -,- | +,-
-        ------+------
-          -,+ | +,+
-              |
-    */
-    qreal tanx = mousePosition.y() / mousePosition.x();
-    qreal rads = atan(tanx);
-    qreal angleX = rads * 180 / M_PI;
-    qreal angle = 0.0;
-    if (mousePosition.x() >= 0 && mousePosition.y() >= 0)
-        angle = angleX;
-    else if(mousePosition.x() <= 0 && mousePosition.y() >= 0)
-        angle = 180 + angleX;
-    else if(mousePosition.x() <= 0 && mousePosition.y() <= 0)
-        angle = 180 + angleX;
-    else if(mousePosition.x() >= 0 && mousePosition.y() <= 0)
-        angle = 360 + angleX;
-
-    qreal degreesPerPos = 360.0 / mGrid[row].count();
-
-    return ceil(angle / degreesPerPos);
-}
-
-QPointF Scene::calcPoint(double radius, double angleInDegrees, QPointF origin)
-{
-    // Convert from degrees to radians via multiplication by PI/180
-    qreal x = (radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
-    qreal y = (radius * sin(angleInDegrees * M_PI / 180)) + origin.y();
-    return QPointF(x, y);
 }
 
 void Scene::stitchUpdated(QString oldSt, QString newSt)
@@ -302,15 +177,6 @@ QPoint Scene::findGridPosition(CrochetCell* c)
     }
     
     return QPoint();
-}
-
-qreal Scene::scenePosToAngle(QPointF pt)
-{
-
-    qreal rads = atan2(pt.x(), pt.y());
-    qreal angleX = rads * 180 / M_PI;
-    
-    return -angleX;
 }
 
 void Scene::keyReleaseEvent(QKeyEvent* keyEvent)

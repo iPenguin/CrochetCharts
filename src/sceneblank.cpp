@@ -36,19 +36,6 @@ SceneBlank::~SceneBlank()
 
 }
 
-void SceneBlank::addIndicator(Indicator* i)
-{
-    addItem(i);
-    mIndicators.append(i);
-}
-
-void SceneBlank::removeIndicator(Indicator *i)
-{
-    removeItem(i);
-    mIndicators.removeOne(i);
-    update();
-}
-
 CrochetCell* SceneBlank::cell(int row, int column)
 {
     Q_ASSERT(mGrid.count() > row);
@@ -66,38 +53,25 @@ CrochetCell* SceneBlank::cell(QPoint position)
 void SceneBlank::removeCell(CrochetCell *c)
 {
     removeItem(c);
-    for(int i = 0; i < mGrid.count(); ++i) {
-        if (mGrid[i].contains(c)) {
-            mGrid[i].removeOne(c);
-        }
-    }
-
 }
 
 int SceneBlank::rowCount()
 {
-    return mGrid.count();
+    return 1;
 }
 
 int SceneBlank::columnCount(int row)
 {
-    if(mGrid.count() <= row)
-        return 0;
-    return mGrid[row].count();
+    return items().count();
 }
 
 void SceneBlank::appendCell(int row, CrochetCell *c, bool fromSave)
 {
     Q_UNUSED(fromSave);
     //append any missing rows.
-    if(mGrid.count() <= row) {
-        for(int i = mGrid.count(); i < row + 1; ++i) {
-            QList<CrochetCell*> row;
-            mGrid.append(row);
-        }
-    }
-    
-    addCell(QPoint(mGrid[row].count(), row), c);
+
+            
+            addCell(QPoint(mGrid[row].count(), row), c);
 
     int col = mGrid[row].count() -1;
     setCellPosition(row, col, c, mGrid[row].count());
@@ -110,19 +84,8 @@ void SceneBlank::addCell(QPoint p, CrochetCell* c)
 
     //TODO: simplify the connect() statements...
     addItem(c);
-    int x = p.x();
 
-    if(mGrid.count() <= p.y()) {
-        QList<CrochetCell*> row;
-        mGrid.append(row);
-    }
-
-    if(mGrid[p.y()].count() <= p.x())
-            x = mGrid[p.y()].count();
-
-    mGrid[p.y()].insert(x, c);
-
-    setCellPosition(p.y(), x, c, mGrid[p.y()].count());
+    c->setPos(p.x(), p.y());
 
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
@@ -138,79 +101,9 @@ void SceneBlank::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 
 void SceneBlank::createRow(int row, int columns, QString stitch)
 {
-    CrochetCell *c = 0;
-    
-    QList<CrochetCell*> modelRow;
-    for(int i = 0; i < columns; ++i) {
-        c = new CrochetCell();
-        connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
-        connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-        connect(c, SIGNAL(stitchChanged(QString,QString)), this, SLOT(stitchUpdated(QString,QString)));
-        
-        c->setStitch(stitch, (row % 2));
-        addItem(c);
-        modelRow.append(c);
-        c->setColor(QColor(Qt::white));
-        setCellPosition(row, i, c, columns);
-    }
-    mGrid.append(modelRow);
-
-}
-
-int SceneBlank::getClosestRow(QPointF mousePosition)
-{
-    //double radius = mDefaultSize.height() * (row + 1) + (mDefaultSize.height() *0.5);
-    qreal radius = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y());
-
-    qreal temp = radius - (mDefaultSize.height() *0.5);
-    qreal temp2 = temp / mDefaultSize.height();
-    
-    int row = round(temp2 - 1);
-    if(row < 0)
-        row = 0;
-    if(row >= mGrid.count()) {
-        row = mGrid.count();
-
-        QList<CrochetCell*> r;
-        mGrid.append(r);
-    }
-
-    return row;
-}
-
-int SceneBlank::getClosestColumn(QPointF mousePosition, int row)
-{
-    /*
-              |
-          -,- | +,-
-        ------+------
-          -,+ | +,+
-              |
-    */
-    qreal tanx = mousePosition.y() / mousePosition.x();
-    qreal rads = atan(tanx);
-    qreal angleX = rads * 180 / M_PI;
-    qreal angle = 0.0;
-    if (mousePosition.x() >= 0 && mousePosition.y() >= 0)
-        angle = angleX;
-    else if(mousePosition.x() <= 0 && mousePosition.y() >= 0)
-        angle = 180 + angleX;
-    else if(mousePosition.x() <= 0 && mousePosition.y() <= 0)
-        angle = 180 + angleX;
-    else if(mousePosition.x() >= 0 && mousePosition.y() <= 0)
-        angle = 360 + angleX;
-
-    qreal degreesPerPos = 360.0 / mGrid[row].count();
-
-    return ceil(angle / degreesPerPos);
-}
-
-QPointF SceneBlank::calcPoint(double radius, double angleInDegrees, QPointF origin)
-{
-    // Convert from degrees to radians via multiplication by PI/180
-    qreal x = (radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
-    qreal y = (radius * sin(angleInDegrees * M_PI / 180)) + origin.y();
-    return QPointF(x, y);
+    Q_UNUSED(row);
+    Q_UNUSED(columns);
+    Q_UNUSED(stitch);
 }
 
 void SceneBlank::stitchUpdated(QString oldSt, QString newSt)
@@ -235,16 +128,6 @@ void SceneBlank::updateSelection(QPolygonF selection)
     setSelectionArea(path);
 }
 
-void SceneBlank::updateRubberBand(int dx, int dy)
-{
-
-    if(mRubberBandStart.isNull())
-        return;
-
-    mRubberBandStart.setX(mRubberBandStart.x() - dx);
-    mRubberBandStart.setY(mRubberBandStart.y() - dy);
-}
-
 QPoint SceneBlank::findGridPosition(CrochetCell* c)
 {
     for(int y = 0; y < mGrid.count(); ++y) {
@@ -267,7 +150,7 @@ qreal SceneBlank::scenePosToAngle(QPointF pt)
 
 void SceneBlank::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
 {
-
+    c->setPos(row, column);
 }
 
 void SceneBlank::keyReleaseEvent(QKeyEvent* keyEvent)

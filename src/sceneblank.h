@@ -51,13 +51,7 @@ public:
     void removeCell(CrochetCell *c);
 
     void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
-
-    void addIndicator(Indicator *i);
-    void removeIndicator(Indicator *i);
     
-public slots:  
-    void updateRubberBand(int dx, int dy);
-
 private slots:
     void stitchUpdated(QString oldSt, QString newSt);
 
@@ -76,17 +70,6 @@ protected:
 
     //find the x,y positions on the grid for a given cell;
     QPoint findGridPosition(CrochetCell *c);
-    
-    /**
-     * Takes a @param mousePosition and returns the closest y co-ordinate.
-     * function assumes rounds not rows.
-     */
-    int getClosestRow(QPointF mousePosition);
-    /**
-     * Takes a @param mousePosition and @param row and returns the closest x co-ordinate.
-     * function assumes rounds not rows.
-     */
-    int getClosestColumn(QPointF mousePosition, int row);
 
     qreal scenePosToAngle(QPointF pt);
 
@@ -111,9 +94,6 @@ private:
 
     void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
     void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-private:
-    QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
 };
 
