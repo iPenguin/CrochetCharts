@@ -251,7 +251,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         mRubberBand->hide();
     }
     
-    if(selectedItems().count() > 0 && mOldPositions.count() > 0) {
+    if((selectedItems().count() > 0 && mOldPositions.count() > 0) && mMoving) {
         mUndoStack.beginMacro("move items");
         foreach(QGraphicsItem *item, selectedItems()) {
             if(mOldPositions.contains(item)) {

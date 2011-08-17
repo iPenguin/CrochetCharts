@@ -27,10 +27,13 @@ public:
 
     qreal scale() const { return mScale; }
     void setScale(qreal newScale);
-    void unsetScale(qreal newScale);
 
-signals:
+    void setRotation(qreal angle, qreal pivotPoint);
 
+
+    qreal origHeight() { return mOrigHeight; }
+    qreal origWidth() { return mOrigWidth; }
+    
 public slots:
 
     /**

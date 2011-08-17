@@ -27,7 +27,9 @@
 #include "stitchlibrary.h"
 
 SceneRows::SceneRows(QObject *parent)
-    : Scene(parent)
+    : Scene(parent),
+    mScale(1.0),
+    mOldScale(1.0)
 {
 }
 
@@ -225,7 +227,7 @@ void SceneRows::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
             return;
         case SceneRows::StretchMode:
             stretchModeMouseMove(e);
-            break;
+            return;
         default:
             break;
     }
@@ -236,13 +238,15 @@ void SceneRows::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 
 void SceneRows::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
-    
     switch(mMode) {
         case SceneRows::StitchMode:
             stitchModeMouseRelease(e);
             break;
         case SceneRows::AngleMode:
             angleModeMouseRelease(e);
+            break;
+        case Scene::StretchMode:
+            stretchModeMouseRelease(e);
             break;
         default:
             break;
@@ -313,7 +317,6 @@ void SceneRows::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
         return;
 
     qreal pvtPt = mCurCell->stitch()->width()/2;
-    qDebug() << pvtPt;
     QPointF origin = mCurCell->mapToScene(pvtPt, 0);
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
     QPointF second = e->scenePos();
@@ -336,14 +339,30 @@ void SceneRows::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(!mCurCell)
         return;
-    
+
     QPointF cur = e->scenePos();
     
-    qreal scale;
-    qreal diff = (mLeftButtonDownPos.y() - cur.y());
+    qreal diff = (e->buttonDownScenePos(Qt::LeftButton) - e->scenePos()).manhattanLength();
+    qreal dragDistance = QApplication::startDragDistance();
+    if(diff < dragDistance)
+        return;
 
-    scale = -diff/mCurCell->boundingRect().height();
+    QPointF delta = e->buttonDownScenePos(Qt::LeftButton) - e->scenePos();
+    
+    mOldScale = mCurCell->transform().m22();
+    mCurCell->setScale(1/mOldScale);
+    mScale = 1.0 - (delta.y()/mCurCell->origHeight());
+    qDebug() << "scene rows" << delta << e->buttonDownScenePos(Qt::LeftButton) << e->scenePos() << mCurCell->origHeight();
+    mCurCell->setScale(mScale);
+}
 
-    qDebug() << mLeftButtonDownPos << cur << diff << scale;
-    mUndoStack.push(new SetCellScale(this, mCurCell, scale));
+void SceneRows::stretchModeMouseRelease(QGraphicsSceneMouseEvent *e)
+{
+    if(!mCurCell)
+        return;
+    
+    mCurCell->setScale(1/mOldScale);
+    mUndoStack.push(new SetCellScale(this, mCurCell, mScale));
+    mScale = 1.0;
+    mOldScale = 1.0;
 }

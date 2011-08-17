@@ -73,13 +73,13 @@ void SetCellRotation::redo()
 {
     qreal final = baseRotation - delta;
     qreal pvtPt = c->stitch()->width()/2;
-    c->setTransform(QTransform().translate(pvtPt, 0).rotate(final).translate(-pvtPt, 0));
+    c->setRotation(final, pvtPt);
 }
 
 void SetCellRotation::undo()
 {
     qreal pvtPt = c->stitch()->width()/2;
-    c->setTransform(QTransform().translate(pvtPt, 0).rotate(baseRotation).translate(-pvtPt, 0));
+    c->setRotation(baseRotation, pvtPt);
 }
 
 bool SetCellRotation::mergeWith(const QUndoCommand *command)
@@ -156,7 +156,7 @@ SetCellScale::SetCellScale(Scene *s, CrochetCell *cell, qreal scl, QUndoCommand*
 
 void SetCellScale::undo()
 {
-    c->unsetScale(newScale);
+    c->setScale(1.0/newScale);
 }
 
 void SetCellScale::redo()
@@ -166,7 +166,6 @@ void SetCellScale::redo()
 
 bool SetCellScale::mergeWith(const QUndoCommand *command)
 {
-    return false;
     if(command->id() != id())
         return false;
 
@@ -200,9 +199,7 @@ AddCell::AddCell(Scene* s, QPoint pos, QUndoCommand* parent)
 
 void AddCell::redo()
 {
-
     scene->addCell(position, c);
-    
 }
 
 void AddCell::undo()

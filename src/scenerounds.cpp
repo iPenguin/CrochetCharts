@@ -410,7 +410,6 @@ void SceneRounds::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
         return;
 
     qreal pvtPt = mCurCell->stitch()->width()/2;
-    qDebug() << pvtPt;
     QPointF origin = mCurCell->mapToScene(pvtPt, 0);
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
     QPointF second = e->scenePos();
@@ -437,10 +436,9 @@ void SceneRounds::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
     QPointF cur = e->scenePos();
     
     qreal scale;
-    qreal diff = (mLeftButtonDownPos.y() - cur.y());
+    qreal diff = (e->buttonDownScenePos(Qt::LeftButton).y() - cur.y());
 
     scale = -diff/mCurCell->boundingRect().height();
 
-    qDebug() << mLeftButtonDownPos << cur << diff << scale;
     mUndoStack.push(new SetCellScale(this, mCurCell, scale));
 }

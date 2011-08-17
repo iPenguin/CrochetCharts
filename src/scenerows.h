@@ -93,7 +93,6 @@ protected:
 private:
     
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
     
     void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
@@ -101,12 +100,13 @@ private:
     void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
     void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
+    qreal mScale;
+    qreal mOldScale;
 };
 
 #endif //SCENEROWS_H

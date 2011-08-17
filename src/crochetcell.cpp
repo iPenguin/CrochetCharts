@@ -39,17 +39,8 @@ void CrochetCell::setScale(qreal newScale)
 {
     qreal newSize = mOrigHeight * newScale;
 
-    qreal scale = newSize/boundingRect().height();
-    QTransform trans =  transform().scale(1, scale);
-    setTransform(trans);
-}
-
-void CrochetCell::unsetScale(qreal newScale)
-{
-    qreal origScale = boundingRect().height()/mOrigHeight * newScale;
-
-    qreal scale = 1/origScale;
-    QTransform trans = transform().scale(1, scale);
+    mScale = newSize/boundingRect().height();
+    QTransform trans =  transform().scale(1, mScale);
     setTransform(trans);
 }
 
@@ -66,4 +57,11 @@ void CrochetCell::setStitch(Stitch *s, bool useAltRenderer)
 
    mOrigWidth = boundingRect().width();
    mOrigHeight = boundingRect().height();
+}
+
+void CrochetCell::setRotation(qreal angle, qreal pivotPoint)
+{
+    setTransform(QTransform().translate(pivotPoint, 0).rotate(angle).translate(-pivotPoint, 0));
+    setScale(mScale);
+    setAngle(angle);
 }

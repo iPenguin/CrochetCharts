@@ -23,8 +23,8 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     int type () const { return Cell::Type; }
 
-    void setAngle(double angle) { mAngle = angle; }
-    double angle() const { return mAngle; }
+    void setAngle(qreal angle) { mAngle = angle; }
+    qreal angle() const { return mAngle; }
 
     void setColor(QColor c = QColor(Qt::white));
     QColor color() const { return mColor; }
@@ -42,8 +42,8 @@ signals:
 public slots:
 
 private:
-    double mAngle;
-
+    qreal mAngle;
+    
     QColor mColor;
     Stitch* mStitch;
 };
