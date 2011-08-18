@@ -65,8 +65,8 @@ SetCellRotation::SetCellRotation(Scene *s, CrochetCell *cell, qreal baseRot, qre
     c = cell;
     delta = diff;
     baseRotation = baseRot;
+    scale = c->scale();
     setText(QObject::tr("Change cell rotation"));
-    
 }
 
 void SetCellRotation::redo()
@@ -79,7 +79,8 @@ void SetCellRotation::redo()
 void SetCellRotation::undo()
 {
     qreal pvtPt = c->stitch()->width()/2;
-    c->setRotation(baseRotation, pvtPt);
+    c->setRotation(baseRotation, pvtPt, true);
+    c->setScale(scale);
 }
 
 bool SetCellRotation::mergeWith(const QUndoCommand *command)
@@ -156,7 +157,7 @@ SetCellScale::SetCellScale(Scene *s, CrochetCell *cell, qreal scl, QUndoCommand*
 
 void SetCellScale::undo()
 {
-    c->setScale(1.0/newScale);
+    c->setScale(oldScale);
 }
 
 void SetCellScale::redo()

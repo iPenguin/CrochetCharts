@@ -107,6 +107,8 @@ private:
 
     qreal mScale;
     qreal mOldScale;
+
+    qreal mAngleDelta;
 };
 
 #endif //SCENEROWS_H

@@ -28,7 +28,7 @@ public:
     qreal scale() const { return mScale; }
     void setScale(qreal newScale);
 
-    void setRotation(qreal angle, qreal pivotPoint);
+    void setRotation(qreal angle, qreal pivotPoint, bool undo = false);
 
 
     qreal origHeight() { return mOrigHeight; }

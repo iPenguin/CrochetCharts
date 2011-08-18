@@ -29,7 +29,8 @@
 SceneRows::SceneRows(QObject *parent)
     : Scene(parent),
     mScale(1.0),
-    mOldScale(1.0)
+    mOldScale(1.0),
+    mAngleDelta(0.0)
 {
 }
 
@@ -320,18 +321,23 @@ void SceneRows::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     QPointF origin = mCurCell->mapToScene(pvtPt, 0);
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
     QPointF second = e->scenePos();
+
+    //FIXME: should I be using "origin" here when the pos() might be better?
     QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
     QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
     qreal angle1 = scenePosToAngle(rel1);
     qreal angle2 = scenePosToAngle(rel2);
 
-    mUndoStack.push(new SetCellRotation(this, mCurCell, mCurCellRotation, (angle1 - angle2)));
+    mAngleDelta = angle1 - angle2;
+    mCurCell->setRotation(mCurCellRotation - mAngleDelta, pvtPt);
 
 }
 
 void SceneRows::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
     Q_UNUSED(e);
+    
+    mUndoStack.push(new SetCellRotation(this, mCurCell, mCurCellRotation, mAngleDelta));
     mCurCellRotation = 0;
 }
 
@@ -349,10 +355,9 @@ void SceneRows::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
     QPointF delta = e->buttonDownScenePos(Qt::LeftButton) - e->scenePos();
     
-    mOldScale = mCurCell->transform().m22();
+    mOldScale = mCurCell->scale();
     mCurCell->setScale(1/mOldScale);
     mScale = 1.0 - (delta.y()/mCurCell->origHeight());
-    qDebug() << "scene rows" << delta << e->buttonDownScenePos(Qt::LeftButton) << e->scenePos() << mCurCell->origHeight();
     mCurCell->setScale(mScale);
 }
 

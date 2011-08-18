@@ -66,6 +66,7 @@ private:
     qreal baseRotation;
     CrochetCell *c;
     qreal delta;
+    qreal scale;
     
     Scene *scene;
 };
