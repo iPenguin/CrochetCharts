@@ -278,15 +278,6 @@ QPoint SceneRounds::findGridPosition(CrochetCell* c)
     return QPoint();
 }
 
-qreal SceneRounds::scenePosToAngle(QPointF pt)
-{
-
-    qreal rads = atan2(pt.x(), pt.y());
-    qreal angleX = rads * 180 / M_PI;
-    
-    return -angleX;
-}
-
 void SceneRounds::keyReleaseEvent(QKeyEvent* keyEvent)
 {
     Scene::keyReleaseEvent(keyEvent);
@@ -295,15 +286,6 @@ void SceneRounds::keyReleaseEvent(QKeyEvent* keyEvent)
 void SceneRounds::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     Scene::mousePressEvent(e);
-    
-    switch(mMode) {
-        case Scene::AngleMode:
-            angleModeMousePress(e);
-            break;
-        default:
-            break;
-    }
-
 }
 
 void SceneRounds::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -311,12 +293,6 @@ void SceneRounds::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
     switch(mMode) {
         case Scene::StitchMode:
             stitchModeMouseMove(e);
-            break;
-        case Scene::AngleMode:
-            angleModeMouseMove(e);
-            return;
-        case Scene::StretchMode:
-            stretchModeMouseMove(e);
             break;
         default:
             break;
@@ -332,9 +308,6 @@ void SceneRounds::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     switch(mMode) {
         case Scene::StitchMode:
             stitchModeMouseRelease(e);
-            break;
-        case Scene::AngleMode:
-            angleModeMouseRelease(e);
             break;
         default:
             break;
@@ -386,59 +359,4 @@ void SceneRounds::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
         }
     }
     
-}
-
-void SceneRounds::angleModeMousePress(QGraphicsSceneMouseEvent *e)
-{
-    if(!mCurCell)
-        return;
-    
-    qreal value = acos(mCurCell->transform().m11()) / M_PI * 180;
-    if(e->scenePos().x() < 0 && e->scenePos().y() >= 0)
-        mCurCellRotation = 180 - value;
-    else if(e->scenePos().x() < 0 && e->scenePos().y() < 0)
-        mCurCellRotation = 180 - value;
-    else
-        mCurCellRotation = value;
-   
-}
-
-void SceneRounds::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
-{
-
-    if(!mCurCell)
-        return;
-
-    qreal pvtPt = mCurCell->stitch()->width()/2;
-    QPointF origin = mCurCell->mapToScene(pvtPt, 0);
-    QPointF first = e->buttonDownScenePos(Qt::LeftButton);
-    QPointF second = e->scenePos();
-    QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
-    QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
-    qreal angle1 = scenePosToAngle(rel1);
-    qreal angle2 = scenePosToAngle(rel2);
-
-    mUndoStack.push(new SetCellRotation(this, mCurCell, mCurCellRotation, (angle1 - angle2)));
-
-}
-
-void SceneRounds::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
-{
-    Q_UNUSED(e);
-    mCurCellRotation = 0;
-}
-
-void SceneRounds::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    if(!mCurCell)
-        return;
-    
-    QPointF cur = e->scenePos();
-    
-    qreal scale;
-    qreal diff = (e->buttonDownScenePos(Qt::LeftButton).y() - cur.y());
-
-    scale = -diff/mCurCell->boundingRect().height();
-
-    mUndoStack.push(new SetCellScale(this, mCurCell, scale));
 }

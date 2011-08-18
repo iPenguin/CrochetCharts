@@ -81,8 +81,6 @@ protected:
      * function assumes rounds not rows.
      */
     int getClosestColumn(QPointF mousePosition, int row);
-
-    qreal scenePosToAngle(QPointF pt);
     
     /**
      * WARING: This funciton should be called after the cell has been added
@@ -94,21 +92,10 @@ private:
     
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    
-    void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void angleModeMousePress(QGraphicsSceneMouseEvent *e);
-    void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-    void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
-    qreal mScale;
-    qreal mOldScale;
-
-    qreal mAngleDelta;
 };
 
 #endif //SCENEROWS_H

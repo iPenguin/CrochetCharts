@@ -41,6 +41,9 @@ Scene::Scene(QObject *parent)
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
+    mScale(1.0),
+    mOldScale(1.0),
+    mAngleDelta(0.0),
     mDefaultSize(QSizeF(32.0, 96.0))
 {
 }
@@ -145,6 +148,15 @@ QPoint Scene::findGridPosition(CrochetCell* c)
     return QPoint();
 }
 
+qreal Scene::scenePosToAngle(QPointF pt)
+{
+
+    qreal rads = atan2(pt.x(), pt.y());
+    qreal angleX = rads * 180 / M_PI;
+
+    return -angleX;
+}
+
 void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
 {
     if(keyEvent->key() == Qt::Key_Delete) {
@@ -206,6 +218,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     }
 
     mMoving = false;
+
+    switch(mMode) {
+        case Scene::AngleMode:
+            angleModeMousePress(e);
+            break;
+        default:
+            break;
+    }
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -225,6 +245,12 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         case Scene::IndicatorMode:
             indicatorModeMouseMove(e);
             break;
+        case Scene::AngleMode:
+            angleModeMouseMove(e);
+            return;
+        case Scene::StretchMode:
+            stretchModeMouseMove(e);
+            return;
         default:
             break;
     }
@@ -269,6 +295,12 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
         case Scene::IndicatorMode:
             indicatorModeMouseRelease(e);
+            break;
+        case Scene::AngleMode:
+            angleModeMouseRelease(e);
+            break;
+        case Scene::StretchMode:
+            stretchModeMouseRelease(e);
             break;
         default:
             break;
@@ -366,4 +398,80 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
         mCurIndicator->setTextInteractionFlags(Qt::TextEditorInteraction);
     }
 
+}
+
+
+void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
+{
+    if(!mCurCell)
+        return;
+
+    qreal value = acos(mCurCell->transform().m11()) / M_PI * 180;
+    if(e->scenePos().x() < 0 && e->scenePos().y() >= 0)
+        mCurCellRotation = 180 - value;
+    else if(e->scenePos().x() < 0 && e->scenePos().y() < 0)
+        mCurCellRotation = 180 - value;
+    else
+        mCurCellRotation = value;
+
+}
+
+void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
+{
+    if(!mCurCell)
+        return;
+
+    qreal pvtPt = mCurCell->stitch()->width()/2;
+    QPointF origin = mCurCell->mapToScene(pvtPt, 0);
+    QPointF first = e->buttonDownScenePos(Qt::LeftButton);
+    QPointF second = e->scenePos();
+
+    //FIXME: should I be using "origin" here when the pos() might be better?
+    QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
+    QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
+    qreal angle1 = scenePosToAngle(rel1);
+    qreal angle2 = scenePosToAngle(rel2);
+
+    mAngleDelta = angle1 - angle2;
+    mCurCell->setRotation(mCurCellRotation - mAngleDelta, pvtPt);
+
+}
+
+void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
+{
+    Q_UNUSED(e);
+
+    mUndoStack.push(new SetCellRotation(this, mCurCell, mCurCellRotation, mAngleDelta));
+    mCurCellRotation = 0;
+}
+
+void Scene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    if(!mCurCell)
+        return;
+
+    QPointF cur = e->scenePos();
+
+    qreal diff = (e->buttonDownScenePos(Qt::LeftButton) - e->scenePos()).manhattanLength();
+    qreal dragDistance = QApplication::startDragDistance();
+    if(diff < dragDistance)
+        return;
+
+    QPointF delta = e->buttonDownScenePos(Qt::LeftButton) - e->scenePos();
+
+    mOldScale = mCurCell->scale();
+    mCurCell->setScale(1/mOldScale);
+    mScale = 1.0 - (delta.y()/mCurCell->origHeight());
+    mCurCell->setScale(mScale);
+}
+
+void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent *e)
+{
+    if(!mCurCell)
+        return;
+
+    mCurCell->setScale(1/mOldScale);
+    mUndoStack.push(new SetCellScale(this, mCurCell, mScale));
+    mScale = 1.0;
+    mOldScale = 1.0;
 }

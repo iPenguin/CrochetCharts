@@ -129,6 +129,16 @@ protected:
     void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
     void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
+    void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void angleModeMousePress(QGraphicsSceneMouseEvent *e);
+    void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
+
+    void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
+
+
+    qreal scenePosToAngle(QPointF pt);
+    
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
@@ -159,6 +169,11 @@ protected:
     QString mEditStitch;
     QColor mEditFgColor;
     QColor mEditBgColor;
+
+    qreal mScale;
+    qreal mOldScale;
+
+    qreal mAngleDelta;
     
     QUndoStack mUndoStack;
 

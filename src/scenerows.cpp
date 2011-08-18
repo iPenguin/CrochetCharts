@@ -27,10 +27,7 @@
 #include "stitchlibrary.h"
 
 SceneRows::SceneRows(QObject *parent)
-    : Scene(parent),
-    mScale(1.0),
-    mOldScale(1.0),
-    mAngleDelta(0.0)
+    : Scene(parent)
 {
 }
 
@@ -188,15 +185,6 @@ QPoint SceneRows::findGridPosition(CrochetCell* c)
     return QPoint();
 }
 
-qreal SceneRows::scenePosToAngle(QPointF pt)
-{
-
-    qreal rads = atan2(pt.x(), pt.y());
-    qreal angleX = rads * 180 / M_PI;
-    
-    return -angleX;
-}
-
 void SceneRows::keyReleaseEvent(QKeyEvent* keyEvent)
 {
     Scene::keyReleaseEvent(keyEvent);
@@ -205,30 +193,15 @@ void SceneRows::keyReleaseEvent(QKeyEvent* keyEvent)
 void SceneRows::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
     Scene::mousePressEvent(e);
-    
-    switch(mMode) {
-        case SceneRows::AngleMode:
-            angleModeMousePress(e);
-            break;
-        default:
-            break;
-    }
-
 }
 
 void SceneRows::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
 
     switch(mMode) {
-        case SceneRows::StitchMode:
+        case Scene::StitchMode:
             stitchModeMouseMove(e);
             break;
-        case SceneRows::AngleMode:
-            angleModeMouseMove(e);
-            return;
-        case SceneRows::StretchMode:
-            stretchModeMouseMove(e);
-            return;
         default:
             break;
     }
@@ -240,14 +213,8 @@ void SceneRows::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 void SceneRows::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
     switch(mMode) {
-        case SceneRows::StitchMode:
+        case Scene::StitchMode:
             stitchModeMouseRelease(e);
-            break;
-        case SceneRows::AngleMode:
-            angleModeMouseRelease(e);
-            break;
-        case Scene::StretchMode:
-            stretchModeMouseRelease(e);
             break;
         default:
             break;
@@ -295,79 +262,4 @@ void SceneRows::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
             mCurCell = 0;
         }
     }
-}
-
-void SceneRows::angleModeMousePress(QGraphicsSceneMouseEvent *e)
-{
-    if(!mCurCell)
-        return;
-    
-    qreal value = acos(mCurCell->transform().m11()) / M_PI * 180;
-    if(e->scenePos().x() < 0 && e->scenePos().y() >= 0)
-        mCurCellRotation = 180 - value;
-    else if(e->scenePos().x() < 0 && e->scenePos().y() < 0)
-        mCurCellRotation = 180 - value;
-    else
-        mCurCellRotation = value;
-   
-}
-
-void SceneRows::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
-{
-    if(!mCurCell)
-        return;
-
-    qreal pvtPt = mCurCell->stitch()->width()/2;
-    QPointF origin = mCurCell->mapToScene(pvtPt, 0);
-    QPointF first = e->buttonDownScenePos(Qt::LeftButton);
-    QPointF second = e->scenePos();
-
-    //FIXME: should I be using "origin" here when the pos() might be better?
-    QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
-    QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
-    qreal angle1 = scenePosToAngle(rel1);
-    qreal angle2 = scenePosToAngle(rel2);
-
-    mAngleDelta = angle1 - angle2;
-    mCurCell->setRotation(mCurCellRotation - mAngleDelta, pvtPt);
-
-}
-
-void SceneRows::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
-{
-    Q_UNUSED(e);
-    
-    mUndoStack.push(new SetCellRotation(this, mCurCell, mCurCellRotation, mAngleDelta));
-    mCurCellRotation = 0;
-}
-
-void SceneRows::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    if(!mCurCell)
-        return;
-
-    QPointF cur = e->scenePos();
-    
-    qreal diff = (e->buttonDownScenePos(Qt::LeftButton) - e->scenePos()).manhattanLength();
-    qreal dragDistance = QApplication::startDragDistance();
-    if(diff < dragDistance)
-        return;
-
-    QPointF delta = e->buttonDownScenePos(Qt::LeftButton) - e->scenePos();
-    
-    mOldScale = mCurCell->scale();
-    mCurCell->setScale(1/mOldScale);
-    mScale = 1.0 - (delta.y()/mCurCell->origHeight());
-    mCurCell->setScale(mScale);
-}
-
-void SceneRows::stretchModeMouseRelease(QGraphicsSceneMouseEvent *e)
-{
-    if(!mCurCell)
-        return;
-    
-    mCurCell->setScale(1/mOldScale);
-    mUndoStack.push(new SetCellScale(this, mCurCell, mScale));
-    mScale = 1.0;
-    mOldScale = 1.0;
 }
