@@ -192,7 +192,6 @@ AddCell::AddCell(Scene* s, QPoint pos, QUndoCommand* parent)
 
     position = pos;
     c = new CrochetCell();
-    c->setColor();
     scene = s;
     setText(QObject::tr("Add cell"));
 
@@ -231,43 +230,23 @@ void RemoveCell::undo()
 }
 
 /*************************************************\
-| AddRow                                          |
+| AddItem                                         |
 \*************************************************/
-AddRow::AddRow(Scene* s, QPointF pos, QUndoCommand* parent)
+AddItem::AddItem(Scene *s, QPointF pos, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
     position = pos;
     scene = s;
-    setText(QObject::tr("Add row"));
+    i->setPos(pos);
+    setText(QObject::tr("Add cell"));
 }
 
-void AddRow::redo()
+void AddItem::undo()
 {
-
+    scene->removeItem(i);
 }
 
-void AddRow::undo()
+void AddItem::redo()
 {
-
-}
-
-/*************************************************\
-| RemoveRow                                       |
-\*************************************************/
-RemoveRow::RemoveRow(Scene* s, QPointF pos, QUndoCommand* parent)
-    : QUndoCommand(parent)
-{
-    position = pos;
-    scene = s;
-    setText(QObject::tr("Remove row"));
-}
-
-void RemoveRow::redo()
-{
-
-}
-
-void RemoveRow::undo()
-{
-
+    scene->addItem(i);
 }

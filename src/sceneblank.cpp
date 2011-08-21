@@ -38,11 +38,7 @@ SceneBlank::~SceneBlank()
 
 CrochetCell* SceneBlank::cell(int row, int column)
 {
-    Q_ASSERT(mGrid.count() > row);
-    if(mGrid[row].count() <= column)
-        return 0;
-
-    return mGrid[row][column];
+    return new CrochetCell();
 }
 
 CrochetCell* SceneBlank::cell(QPoint position)
@@ -69,12 +65,8 @@ void SceneBlank::appendCell(int row, CrochetCell *c, bool fromSave)
 {
     Q_UNUSED(fromSave);
     //append any missing rows.
-
-            
-            addCell(QPoint(mGrid[row].count(), row), c);
-
-    int col = mGrid[row].count() -1;
-    setCellPosition(row, col, c, mGrid[row].count());
+    addItem(c);
+    
     c->setColor(QColor(Qt::white));
    
 }
@@ -84,9 +76,7 @@ void SceneBlank::addCell(QPoint p, CrochetCell* c)
 
     //TODO: simplify the connect() statements...
     addItem(c);
-
-    c->setPos(p.x(), p.y());
-
+qDebug() << "wrong add item";
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
 
@@ -112,7 +102,12 @@ QPoint SceneBlank::findGridPosition(CrochetCell* c)
 
 void SceneBlank::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
 {
-    c->setPos(row, column);
+    Q_UNUSED(row);
+    Q_UNUSED(column);
+    Q_UNUSED(c);
+    Q_UNUSED(columns);
+    Q_UNUSED(updateAnchor);
+    //c->setPos(row, column);
 }
 
 void SceneBlank::keyReleaseEvent(QKeyEvent* keyEvent)
@@ -125,13 +120,11 @@ void SceneBlank::mousePressEvent(QGraphicsSceneMouseEvent *e)
     Scene::mousePressEvent(e);
     
     switch(mMode) {
-        case SceneBlank::AngleMode:
-            angleModeMousePress(e);
-            break;
         default:
             break;
     }
 
+    Scene::mousePressEvent(e);
 }
 
 void SceneBlank::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
@@ -141,16 +134,11 @@ void SceneBlank::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         case SceneBlank::StitchMode:
             stitchModeMouseMove(e);
             break;
-        case SceneBlank::AngleMode:
-            angleModeMouseMove(e);
-            break;
-        case SceneBlank::StretchMode:
-            stretchModeMouseMove(e);
-            break;
         default:
             break;
     }
-    
+
+    Scene::mouseMoveEvent(e);
 }
 
 void SceneBlank::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
@@ -159,9 +147,6 @@ void SceneBlank::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     switch(mMode) {
         case SceneBlank::StitchMode:
             stitchModeMouseRelease(e);
-            break;
-        case SceneBlank::AngleMode:
-            angleModeMouseRelease(e);
             break;
         default:
             break;
@@ -177,25 +162,28 @@ void SceneBlank::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void SceneBlank::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    Q_UNUSED(e);
-}
+    //FIXME: foreach(stitch in selection()) create an undo group event.
+    if(mCurCell) {
 
-void SceneBlank::angleModeMousePress(QGraphicsSceneMouseEvent *e)
-{
-   Q_UNUSED(e);
-}
+    if(mCurCell->name() != mEditStitch && !mMoving)
+        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
 
-void SceneBlank::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
-{
-    Q_UNUSED(e);
-}
+        mCurCell = 0;
+    } else if(!mRubberBand && !mMoving){
 
-void SceneBlank::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
-{
-    Q_UNUSED(e);
-}
+        if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
-void SceneBlank::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
+            CrochetCell *c = new CrochetCell();
+            addItem(c);
+            c->setStitch(mEditStitch, false);
+            c->setPos(e->scenePos());
+            qDebug() << "set pos" << e->scenePos();
+        } else {
+            if(!mCurCell)
+                return;
+
+            undoStack()->push(new RemoveCell(this, mCurCell));
+            mCurCell = 0;
+        }
+    }
 }

@@ -73,14 +73,6 @@ private:
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    
-    void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void angleModeMousePress(QGraphicsSceneMouseEvent *e);
-    void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-    void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
-    void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 };
 

@@ -18,6 +18,7 @@ Cell::Cell(QGraphicsItem *parent) :
     setCachingEnabled(false);
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsSelectable);
+    setColor();
 }
 
 Cell::~Cell()

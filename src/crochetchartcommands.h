@@ -156,39 +156,23 @@ private:
     Scene *scene;
 };
 
-class AddRow : public QUndoCommand
+class AddItem : public QUndoCommand
 {
 public:
-    enum { Id = 1170 };
+    enum { Id = 1190 };
 
-    AddRow(Scene *s, QPointF pos, QUndoCommand* parent = 0);
+    AddItem(Scene *s, QPointF pos, QUndoCommand *parent = 0);
 
-    void redo();
     void undo();
+    void redo();
 
     int id() const { return Id; }
 
 private:
     QPointF position;
+    QGraphicsItem *i;
 
     Scene *scene;
 };
 
-class RemoveRow : public QUndoCommand
-{
-public:
-    enum { Id = 1180 };
-
-    RemoveRow(Scene *s, QPointF pos, QUndoCommand* parent = 0);
-
-    void redo();
-    void undo();
-
-    int id() const { return Id; }
-
-private:
-    QPointF position;
-
-    Scene *scene;
-};
 #endif //CROCHETCHARTCOMMANDS_H
