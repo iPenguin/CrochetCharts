@@ -26,13 +26,21 @@ void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     if(mHighlight)
         painter->fillRect(option->rect, option->palette.highlight());
 
-    if(stitch()->isSvg())
+    if(stitch()->isSvg()) {
         Cell::paint(painter, option, widget);
-    else
+    } else {
         painter->drawPixmap(option->rect.x(), option->rect.y(), *(stitch()->renderPixmap()));
 
+         if(option->state & QStyle::State_Selected) {
+            painter->setPen(Qt::DashLine);
+            painter->drawRect(option->rect);
+            painter->setPen(Qt::SolidLine);
+        }
+    }
+/*
     QRect rect =QRect(option->rect.x() + (option->rect.width()/2), option->rect.y() + (option->rect.height()/2),
                       (option->rect.width()/2), (option->rect.height()/2));
+*/
 }
 
 void CrochetCell::setScale(qreal newScale)
