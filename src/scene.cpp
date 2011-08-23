@@ -322,7 +322,22 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     mRubberBand = 0;
 
     QGraphicsScene::mouseReleaseEvent(e);
-    mMoving = false;
+    if(mMoving) {
+        //update the size of the scene rect based on where the items are on the scene.
+        QRectF ibr = itemsBoundingRect();
+        QRectF sbr = sceneRect();
+        QRectF final;
+
+        final.setBottom((ibr.bottom() >= sbr.bottom()) ? ibr.bottom() : sbr.bottom());
+        final.setTop((ibr.top() <= sbr.top()) ? ibr.top() : sbr.top());
+        final.setLeft((ibr.left() <= sbr.left()) ? ibr.left() : sbr.left());
+        final.setRight((ibr.right() >= sbr.right()) ? ibr.right() : sbr.right());
+
+        setSceneRect(final);
+
+        mMoving = false;
+    }
+
 }
 
 void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)

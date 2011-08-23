@@ -35,14 +35,21 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     QVBoxLayout *tl = new QVBoxLayout(top);
     top->setLayout(tl);
     top->setContentsMargins(0, 0, 0, 0);
+
+    QPoint centerOn = QPoint(0,0);
     
     mView = new ChartView(top);
-    if(style == Scene::Blank)
+    if(style == Scene::Blank) {
         mScene = new SceneBlank(mView);
-    else if(style == Scene::Rounds)
+        mScene->setSceneRect(0,0, 5000,5000);
+        centerOn = QPoint(2500, 2500);
+    } else if(style == Scene::Rounds) {
         mScene = new SceneRounds(mView);
-    else
+        mScene->setSceneRect(-2500, -2500, 5000, 5000);
+    } else {
         mScene = new SceneRows(mView);
+        mScene->setSceneRect(-100, -100, 5000, 5000);
+    }
 
     mTextView = new TextView(this, mScene);
 
@@ -52,6 +59,8 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     connect(mScene, SIGNAL(colorChanged(QString,QString)), SLOT(colorChanged(QString,QString)));
 
     mView->setScene(mScene);
+    QPoint pt = mView->mapFromScene(centerOn);
+    mView->centerOn(pt.x(), pt.y());
 
     mScene->setEditMode((Scene::EditMode)defEditMode);
     mScene->setEditStitch(defStitch);
