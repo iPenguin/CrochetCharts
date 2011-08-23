@@ -32,7 +32,7 @@ void SaveThread::run()
     QString color;
     qreal x = 0, y = 0, anchorX = 0, anchorY = 0;
     QTransform transform;
-    double angle = 0;
+    qreal angle = 0.0, scale = 0.0;
     
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
@@ -62,6 +62,8 @@ void SaveThread::run()
             transform = loadTransform(stream);
         } else if(tag == "angle") {
             angle = stream->readElementText().toDouble();
+        } else if(tag == "scale") {
+            scale = stream->readElementText().toDouble();
         }
     }
     
@@ -72,7 +74,8 @@ void SaveThread::run()
     c->setAnchor(anchorX, anchorY);
     c->setPos(x, y);
     c->setTransform(transform);
-    c->setAngle(angle);
+    c->mAngle = angle;
+    c->mScale = scale;
 }
 
 QTransform SaveThread::loadTransform(QXmlStreamReader* stream)

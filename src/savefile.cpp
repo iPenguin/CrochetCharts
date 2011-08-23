@@ -173,6 +173,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
                 stream->writeEndElement(); //transformation
                 
                 stream->writeTextElement("angle", QString::number(c->angle()));
+                stream->writeTextElement("scale", QString::number(c->scale()));
                 stream->writeEndElement(); //end cell
             }
         }

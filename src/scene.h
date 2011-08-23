@@ -78,8 +78,6 @@ public:
 
     void addIndicator(Indicator *i);
     void removeIndicator(Indicator *i);
-
-    QList<QList<CrochetCell *> > grid() { return mGrid; }
     
     QStringList modes();
     

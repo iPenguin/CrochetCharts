@@ -11,6 +11,7 @@ class CrochetCell : public Cell
 {
     Q_OBJECT
     friend class SaveFile;
+    friend class SaveThread;
 public:
     enum {Type = UserType + 10 };
     
