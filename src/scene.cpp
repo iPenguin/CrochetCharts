@@ -36,18 +36,18 @@ Scene::Scene(QObject *parent)
     mRubberBand(0),
     mRubberBandStart(QPointF(0,0)),
     mMoving(false),
-    mRowSpacing(9),
     mMode(Scene::StitchMode),
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
     mScale(1.0),
     mOldScale(1.0),
-    mDefaultSize(QSizeF(32.0, 96.0)),
     mAngle(0.0),
-    mPivotPt(mDefaultSize.width()/2, 0),
-    mOrigin(0,0)
+    mOrigin(0,0),
+    mRowSpacing(9),
+    mDefaultSize(QSizeF(32.0, 96.0))
 {
+    mPivotPt = QPointF(mDefaultSize.width()/2, 0);
 }
 
 Scene::~Scene()

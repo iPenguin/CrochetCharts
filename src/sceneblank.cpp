@@ -165,7 +165,7 @@ void SceneBlank::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     if(mCurCell) {
 
     if(mCurCell->name() != mEditStitch && !mMoving)
-        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
+        undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
 
         mCurCell = 0;
     } else if(!mRubberBand && !mMoving){

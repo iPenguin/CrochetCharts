@@ -127,8 +127,12 @@ protected:
     void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
-    qreal scenePosToAngle(QPointF pt);
-    
+
+    QList<QList<CrochetCell *> > grid() { return mGrid; }
+
+    QSizeF defaultSize() const { return mDefaultSize; }
+
+protected:
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
@@ -151,8 +155,6 @@ protected:
     
     //Is the user moving an object.
     bool mMoving;
-
-    int mRowSpacing;
     
     EditMode mMode;
     
@@ -164,11 +166,16 @@ protected:
     qreal mOldScale;
     qreal mCurScale;
 
-    QSizeF mDefaultSize;
-        
     qreal mAngle;
     QPointF mPivotPt;
     QPointF mOrigin;
+
+private:
+    qreal scenePosToAngle(QPointF pt);
+
+    int mRowSpacing;
+    QSizeF mDefaultSize;
+        
     
     QUndoStack mUndoStack;
     

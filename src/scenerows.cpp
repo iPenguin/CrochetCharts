@@ -36,27 +36,13 @@ SceneRows::~SceneRows()
 
 }
 
-CrochetCell* SceneRows::cell(int row, int column)
-{
-    Q_ASSERT(mGrid.count() > row);
-    if(mGrid[row].count() <= column)
-        return 0;
-
-    return mGrid[row][column];
-}
-
-CrochetCell* SceneRows::cell(QPoint position)
-{
-    return cell(position.y(), position.x());
-}
-
 void SceneRows::removeCell(CrochetCell *c)
 {
     int y = findGridPosition(c).y();
     removeItem(c);
-    for(int i = 0; i < mGrid.count(); ++i) {
-        if (mGrid[i].contains(c)) {
-            mGrid[i].removeOne(c);
+    for(int i = 0; i < grid().count(); ++i) {
+        if (grid()[i].contains(c)) {
+            grid()[i].removeOne(c);
         }
     }
 
@@ -65,31 +51,31 @@ void SceneRows::removeCell(CrochetCell *c)
 
 int SceneRows::rowCount()
 {
-    return mGrid.count();
+    return grid().count();
 }
 
 int SceneRows::columnCount(int row)
 {
-    if(mGrid.count() <= row)
+    if(grid().count() <= row)
         return 0;
-    return mGrid[row].count();
+    return grid()[row].count();
 }
 
 void SceneRows::appendCell(int row, CrochetCell *c, bool fromSave)
 {
     Q_UNUSED(fromSave);
     //append any missing rows.
-    if(mGrid.count() <= row) {
-        for(int i = mGrid.count(); i < row + 1; ++i) {
+    if(grid().count() <= row) {
+        for(int i = grid().count(); i < row + 1; ++i) {
             QList<CrochetCell*> row;
-            mGrid.append(row);
+            grid().append(row);
         }
     }
-    /* QPoint(mGrid[row].count(), row)*/
+    /* QPoint(grid()[row].count(), row)*/
     addCell(c, QPointF());
 
-    int col = mGrid[row].count() -1;
-    setCellPosition(row, col, c, mGrid[row].count());
+    int col = grid()[row].count() -1;
+    setCellPosition(row, col, c, grid()[row].count());
     c->setColor(QColor(Qt::white));
 
 }
@@ -101,17 +87,17 @@ void SceneRows::addCell(CrochetCell* c, QPointF p)
     addItem(c);
     int x = p.x();
 
-    if(mGrid.count() <= p.y()) {
+    if(grid().count() <= p.y()) {
         QList<CrochetCell*> row;
-        mGrid.append(row);
+        grid().append(row);
     }
 
-    if(mGrid[p.y()].count() <= p.x())
-            x = mGrid[p.y()].count();
+    if(grid()[p.y()].count() <= p.x())
+            x = grid()[p.y()].count();
 
-    mGrid[p.y()].insert(x, c);
+    grid()[p.y()].insert(x, c);
 
-    setCellPosition(p.y(), x, c, mGrid[p.y()].count());
+    setCellPosition(p.y(), x, c, grid()[p.y()].count());
 
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
@@ -123,9 +109,9 @@ void SceneRows::setCellPosition(int row, int column, CrochetCell *c, int columns
 {
     Q_UNUSED(columns);
     
-    c->setPos(column*mDefaultSize.width() + column*5, row*mDefaultSize.height());
+    c->setPos(column*defaultSize().width() + column*5, row*defaultSize().height());
     if(updateAnchor || c->anchor().isNull())
-        c->setAnchor(column*mDefaultSize.width() + column*5, row*mDefaultSize.height());
+        c->setAnchor(column*defaultSize().width() + column*5, row*defaultSize().height());
     c->setColor(QColor(Qt::white));
 
     //FIXME: set tooltips from bottom right to top left.
@@ -134,19 +120,19 @@ void SceneRows::setCellPosition(int row, int column, CrochetCell *c, int columns
 
 void SceneRows::redistributeCells(int row)
 {
-    if(row >= mGrid.count())
+    if(row >= grid().count())
         return;
-    int columns = mGrid[row].count();
+    int columns = grid()[row].count();
 
     for(int i = 0; i < columns; ++i) {
-        CrochetCell *c = mGrid[row].at(i);
+        CrochetCell *c = grid()[row].at(i);
         setCellPosition(row, i, c, columns, true);
     }
 }
 
 void SceneRows::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 {
-    mDefaultSize = rowSize;
+    defaultSize() = rowSize;
 
     for(int i = 0; i < rows; ++i)
         createRow(i, cols, stitch);
@@ -170,15 +156,15 @@ void SceneRows::createRow(int row, int columns, QString stitch)
         c->setColor(QColor(Qt::white));
         setCellPosition(row, i, c, columns);
     }
-    mGrid.append(modelRow);
+    grid().append(modelRow);
 
 }
 
 QPoint SceneRows::findGridPosition(CrochetCell* c)
 {
-    for(int y = 0; y < mGrid.count(); ++y) {
-        if(mGrid[y].contains(c)) {
-            return QPoint(mGrid[y].indexOf(c), y);
+    for(int y = 0; y < grid().count(); ++y) {
+        if(grid()[y].contains(c)) {
+            return QPoint(grid()[y].indexOf(c), y);
         }
     }
     
@@ -240,12 +226,12 @@ void SceneRows::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     if(mCurCell) {
         
     if(mCurCell->name() != mEditStitch && !mMoving)
-        mUndoStack.push(new SetCellStitch(this, mCurCell, mEditStitch));
+        undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
     
         mCurCell = 0;
     } else if(!mRubberBand && !mMoving){
-        int x = ceil(e->scenePos().x() / mDefaultSize.width()) - 1;
-        int y = ceil(e->scenePos().y() / mDefaultSize.height()) - 1;
+        int x = ceil(e->scenePos().x() / defaultSize().width()) - 1;
+        int y = ceil(e->scenePos().y() / defaultSize().height()) - 1;
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
