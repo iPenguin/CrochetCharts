@@ -122,60 +122,63 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
             continue;
         stream->writeTextElement("name", mTabWidget->tabText(i));
 
-        Scene::ChartStyle st = Scene::Blank;
-        bool showCenter = false;
-        
-        SceneRounds *r = static_cast<SceneRounds*>(tab->scene());
-        if(r) {
-            st = Scene::Rounds;
-            showCenter = r->showChartCenter();
-        } else {
-            SceneRows *rows = static_cast<SceneRows*>(tab->scene());
-            if(rows)
-                st = Scene::Rows;
-        }
-
+        Scene::ChartStyle st = tab->mChartStyle;
         stream->writeTextElement("style", QString::number(st));
-        stream->writeTextElement("showChartCenter", QString::number(showCenter));
+        
+        if(st == Scene::Rounds) {
+            SceneRounds *r = static_cast<SceneRounds*>(tab->scene());
+            bool showCenter = r->showChartCenter();
+            stream->writeTextElement("showChartCenter", QString::number(showCenter));
+        }
 
         stream->writeTextElement("defaultRowSpacing", QString::number(tab->scene()->mDefaultSize.height()));
         
-        int rows = tab->scene()->rowCount();
-        
-        for(int row = 0; row < rows; ++row) {
-            int cols = tab->scene()->columnCount(row);
-            
-            for(int col = 0; col < cols; ++col) {
-                CrochetCell* c = tab->scene()->cell(row, col);
-                if(!c)
-                    continue;
-                stream->writeStartElement("cell"); //start cell
-                stream->writeTextElement("stitch", c->stitch()->name());
-                stream->writeTextElement("row", QString::number(row));
-                stream->writeTextElement("column", QString::number(col));
-                stream->writeTextElement("color", c->color().name());
-                stream->writeTextElement("x", QString::number(c->pos().x()));
-                stream->writeTextElement("y", QString::number(c->pos().y()));
-                stream->writeTextElement("anchor_x", QString::number(c->mAnchor.x()));
-                stream->writeTextElement("anchor_y", QString::number(c->mAnchor.y()));
-                
-                stream->writeStartElement("transformation");
-                    QTransform trans = c->transform();
-                    stream->writeTextElement("m11", QString::number(trans.m11()));
-                    stream->writeTextElement("m12", QString::number(trans.m12()));
-                    stream->writeTextElement("m13", QString::number(trans.m13()));
-                    stream->writeTextElement("m21", QString::number(trans.m21()));
-                    stream->writeTextElement("m22", QString::number(trans.m22()));
-                    stream->writeTextElement("m23", QString::number(trans.m23()));
-                    stream->writeTextElement("m31", QString::number(trans.m31()));
-                    stream->writeTextElement("m32", QString::number(trans.m32()));
-                    stream->writeTextElement("m33", QString::number(trans.m33()));
-                stream->writeEndElement(); //transformation
-                
-                stream->writeTextElement("angle", QString::number(c->angle()));
-                stream->writeTextElement("scale", QString::number(c->scale()));
-                stream->writeEndElement(); //end cell
+        if(st == Scene::Rounds || st == Scene::Rows) {
+qDebug() << "FIXME: Scene::rows and columns";
+            int rowCount = tab->scene()->rowCount();
+            for(int i = 0; i < rowCount; ++i) {
+                int colCount = tab->scene()->columnCount(i);
             }
+        }
+        
+        foreach(QGraphicsItem *item, tab->scene()->items()) {
+            
+            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            if(!c)
+                continue;
+            
+            stream->writeStartElement("cell"); //start cell
+            stream->writeTextElement("stitch", c->stitch()->name());
+
+            if(tab->mChartStyle != Scene::Blank) {
+
+                QPoint pt = tab->scene()->findGridPosition(c);
+                stream->writeTextElement("row", QString::number(pt.x()));
+                stream->writeTextElement("column", QString::number(pt.y()));
+            }
+
+            stream->writeTextElement("color", c->color().name());
+            stream->writeTextElement("x", QString::number(c->pos().x()));
+            stream->writeTextElement("y", QString::number(c->pos().y()));
+            stream->writeTextElement("anchor_x", QString::number(c->mAnchor.x()));
+            stream->writeTextElement("anchor_y", QString::number(c->mAnchor.y()));
+
+            stream->writeStartElement("transformation");
+                QTransform trans = c->transform();
+                stream->writeTextElement("m11", QString::number(trans.m11()));
+                stream->writeTextElement("m12", QString::number(trans.m12()));
+                stream->writeTextElement("m13", QString::number(trans.m13()));
+                stream->writeTextElement("m21", QString::number(trans.m21()));
+                stream->writeTextElement("m22", QString::number(trans.m22()));
+                stream->writeTextElement("m23", QString::number(trans.m23()));
+                stream->writeTextElement("m31", QString::number(trans.m31()));
+                stream->writeTextElement("m32", QString::number(trans.m32()));
+                stream->writeTextElement("m33", QString::number(trans.m33()));
+            stream->writeEndElement(); //transformation
+
+            stream->writeTextElement("angle", QString::number(c->angle()));
+            stream->writeTextElement("scale", QString::number(c->scale()));
+            stream->writeEndElement(); //end cell
         }
 
         foreach(Indicator *i, tab->scene()->indicators()) {
@@ -327,9 +330,13 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             tabName = stream->readElementText();
             
         } else if(tag == "style") {
-            tab = mw->createTab((Scene::ChartStyle)stream->readElementText().toInt());
+            int style = stream->readElementText().toInt();
+            tab = mw->createTab((Scene::ChartStyle)style);
             
         } else if(tag == "showChartCenter") {
+
+            if(tab->mChartStyle != Scene::Rounds)
+                continue;
             tab->blockSignals(true);
             tab->setShowChartCenter(stream->readElementText().toInt());
             tab->blockSignals(false);

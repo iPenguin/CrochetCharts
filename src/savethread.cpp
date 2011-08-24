@@ -26,9 +26,10 @@ SaveThread::~SaveThread()
 
 void SaveThread::run()
 {
+
     CrochetCell *c = new CrochetCell();
     Stitch *s = 0;
-    int row = 0, column = 0;
+    int row = -1, column = -1;
     QString color;
     qreal x = 0, y = 0, anchorX = 0, anchorY = 0;
     QTransform transform;
@@ -36,7 +37,7 @@ void SaveThread::run()
     
     QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
     QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
-    
+
     while(!(stream->isEndElement() && stream->name() == "cell")) {
         stream->readNext();
         QString tag = stream->name().toString();
@@ -66,14 +67,20 @@ void SaveThread::run()
             scale = stream->readElementText().toDouble();
         }
     }
+qDebug() << row << column;
+    if(row > -1 && column > -1) {
+        c->setStitch(s, (row % 2));
+        tab->scene()->appendCell(row, c, true);
+        c->setObjectName(QString::number(row) + "," + QString::number(column));
+    } else {
+        c->setStitch(s);
+        tab->scene()->addCell(c, QPoint());
+    }
     
-    c->setStitch(s, (row % 2));
-    tab->scene()->appendCell(row, c, true);
-    c->setObjectName(QString::number(row) + "," + QString::number(column));
-    c->setColor(QColor(color));
     c->setAnchor(anchorX, anchorY);
     c->setPos(x, y);
     c->setTransform(transform);
+    c->setColor(QColor(color));
     c->mAngle = angle;
     c->mScale = scale;
 }

@@ -25,8 +25,11 @@
 #include <QLayout>
 #include <QClipboard>
 
-CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent) :
-        QWidget(parent), ui(new Ui::OptionsBar)
+CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch,
+                       QColor defFgColor, QColor defBgColor, QWidget *parent)
+        : QWidget(parent),
+        ui(new Ui::OptionsBar),
+        mChartStyle(style)
 {
     QVBoxLayout *l = new QVBoxLayout(this);
     QWidget *top = new QWidget(this);

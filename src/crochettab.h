@@ -97,6 +97,8 @@ private:
     QString mName;
 
     Ui::OptionsBar *ui;
+
+    Scene::ChartStyle mChartStyle;
 };
 
 #endif // CROCHETTAB_H
