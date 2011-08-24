@@ -106,8 +106,8 @@ void SceneRounds::appendCell(int row, CrochetCell *c, bool fromSave)
             mGrid.append(row);
         }
     }
-    
-    addCell(QPoint(mGrid[row].count(), row), c);
+    /*QPoint(mGrid[row].count(), row)*/
+    addCell(c, QPointF());
 
     int col = mGrid[row].count() -1;
     setCellPosition(row, col, c, mGrid[row].count());
@@ -118,7 +118,7 @@ void SceneRounds::appendCell(int row, CrochetCell *c, bool fromSave)
     }
 }
 
-void SceneRounds::addCell(QPoint p, CrochetCell* c)
+void SceneRounds::addCell(CrochetCell* c, QPointF p)
 {
 
     //TODO: simplify the connect() statements...
@@ -158,7 +158,7 @@ void SceneRounds::setCellPosition(int row, int column, CrochetCell *c, int colum
         c->setAnchor(finish.x() - delta, finish.y());
     c->setPos(finish.x() - delta, finish.y());
     c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
-   
+    c->setAngle(degrees + 90);
     c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
 }
 

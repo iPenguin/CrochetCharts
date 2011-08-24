@@ -12,8 +12,10 @@
 #include "settings.h"
 #include <QStyleOption>
 
-Cell::Cell(QGraphicsItem *parent) :
-        QGraphicsSvgItem(parent), mStitch(0)
+Cell::Cell(QGraphicsItem *parent)
+    : QGraphicsSvgItem(parent),
+    mAngle(0),
+    mStitch(0)
 {
     setCachingEnabled(false);
     setAcceptHoverEvents(true);
@@ -89,4 +91,9 @@ QString Cell::name()
         return mStitch->name();
     else
         return QString();
+}
+
+void Cell::setAngle(qreal angle)
+{
+    mAngle = angle;
 }

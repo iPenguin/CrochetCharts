@@ -58,48 +58,29 @@ void SetCellColor::undo()
 /*************************************************\
 | SetCellRotation                                 |
 \*************************************************/
-SetCellRotation::SetCellRotation(Scene *s, CrochetCell *cell, qreal baseRot, qreal diff, QUndoCommand* parent)
+SetCellRotation::SetCellRotation(Scene *s, CrochetCell *cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
     c = cell;
-    delta = diff;
-    baseRotation = baseRot;
+    oldAngle = oldAngl;
+    newAngle = cell->angle();
+    pvtPt = pivotPt;
     scale = c->scale();
     setText(QObject::tr("Change cell rotation"));
 }
 
 void SetCellRotation::redo()
 {
-    qreal final = baseRotation - delta;
-    qreal pvtPt = c->stitch()->width()/2;
-    c->setRotation(final, pvtPt);
+    
+    c->setRotation(newAngle, pvtPt);
 }
 
 void SetCellRotation::undo()
 {
-    qreal pvtPt = c->stitch()->width()/2;
-    c->setRotation(baseRotation, pvtPt, true);
-    c->setScale(scale);
+    c->setRotation(oldAngle, pvtPt);
+    c->setScale(scale, pvtPt);
 }
-
-bool SetCellRotation::mergeWith(const QUndoCommand *command)
-{
-    if(command->id() != id())
-        return false;
-    //return false;
-    const SetCellRotation *other = static_cast<const SetCellRotation*>(command);
-
-    CrochetCell *otherC = other->c;
-    
-    if(otherC != c)
-        return false;
-
-    delta = other->delta;
-    setText(QObject::tr("Change cell rotation"));
-    return true;
-}
-
 
 /*************************************************\
 | SetItemCoordinates                              |
@@ -145,42 +126,25 @@ bool SetItemCoordinates::mergeWith(const QUndoCommand *command)
 /*************************************************\
  | SetCellScale                                   |
 \*************************************************/
-SetCellScale::SetCellScale(Scene *s, CrochetCell *cell, qreal scl, QUndoCommand* parent)
+SetCellScale::SetCellScale(Scene *s, CrochetCell *cell, qreal oldScle, QPointF pvtPt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
     c = cell;
-    newScale = scl;
-    oldScale = c->scale();
+    pivotPt = pvtPt;
+    newScale = cell->scale();
+    oldScale = oldScle;
     setText(QObject::tr("Change cell scale"));
 }
 
 void SetCellScale::undo()
 {
-    c->setScale(oldScale);
+    c->setScale(oldScale, pivotPt);
 }
 
 void SetCellScale::redo()
 {
-    c->setScale(newScale);
-}
-
-bool SetCellScale::mergeWith(const QUndoCommand *command)
-{
-    if(command->id() != id())
-        return false;
-
-    const SetCellScale *other = static_cast<const SetCellScale*>(command);
-    
-    CrochetCell *otherC = other->c;
-    
-    if(otherC != c)
-        return false;
-    
-    newScale += other->newScale;
-
-    setText(QObject::tr("Change cell scale"));
-    return true;
+    c->setScale(newScale, pivotPt);
 }
 
 /*************************************************\
@@ -199,7 +163,7 @@ AddCell::AddCell(Scene* s, QPoint pos, QUndoCommand* parent)
 
 void AddCell::redo()
 {
-    scene->addCell(position, c);
+    scene->addCell(c, position);
 }
 
 void AddCell::undo()
@@ -226,7 +190,7 @@ void RemoveCell::redo()
 
 void RemoveCell::undo()
 {
-    scene->addCell(position, c);
+    scene->addCell(c, position);
 }
 
 /*************************************************\

@@ -71,12 +71,11 @@ void SceneBlank::appendCell(int row, CrochetCell *c, bool fromSave)
    
 }
 
-void SceneBlank::addCell(QPoint p, CrochetCell* c)
+void SceneBlank::addCell(CrochetCell* c, QPointF p)
 {
-
-    //TODO: simplify the connect() statements...
+    Q_UNUSED(p);
     addItem(c);
-qDebug() << "wrong add item";
+
     connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
     connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
 
@@ -175,9 +174,9 @@ void SceneBlank::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
             CrochetCell *c = new CrochetCell();
             addItem(c);
-            c->setStitch(mEditStitch, false);
+            c->setStitch(mEditStitch);
             c->setPos(e->scenePos());
-            qDebug() << "set pos" << e->scenePos();
+
         } else {
             if(!mCurCell)
                 return;

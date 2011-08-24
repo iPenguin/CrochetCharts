@@ -85,8 +85,8 @@ void SceneRows::appendCell(int row, CrochetCell *c, bool fromSave)
             mGrid.append(row);
         }
     }
-    
-    addCell(QPoint(mGrid[row].count(), row), c);
+    /* QPoint(mGrid[row].count(), row)*/
+    addCell(c, QPointF());
 
     int col = mGrid[row].count() -1;
     setCellPosition(row, col, c, mGrid[row].count());
@@ -94,7 +94,7 @@ void SceneRows::appendCell(int row, CrochetCell *c, bool fromSave)
 
 }
 
-void SceneRows::addCell(QPoint p, CrochetCell* c)
+void SceneRows::addCell(CrochetCell* c, QPointF p)
 {
 
     //TODO: simplify the connect() statements...

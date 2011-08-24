@@ -38,7 +38,7 @@ public:
     /**
      * p(x = column, y = row)
      */
-    void addCell(QPoint p, CrochetCell *c);
+    void addCell(CrochetCell *c, QPointF p);
     
     int rowCount();
     int columnCount(int row);

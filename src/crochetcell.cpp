@@ -13,7 +13,8 @@
 #include "settings.h"
 
 CrochetCell::CrochetCell()
-     : mScale(1.0), mHighlight(false)
+     : mScale(1.0),
+     mHighlight(false)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges); //enable itemChange to pick up move changes.
@@ -37,21 +38,16 @@ void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
             painter->setPen(Qt::SolidLine);
         }
     }
-/*
-    QRect rect =QRect(option->rect.x() + (option->rect.width()/2), option->rect.y() + (option->rect.height()/2),
-                      (option->rect.width()/2), (option->rect.height()/2));
-*/
 }
 
-void CrochetCell::setScale(qreal newScale)
+void CrochetCell::setScale(qreal newScale, QPointF pivotPoint)
 {
     qreal newSize = mOrigHeight * newScale;
-
     qreal scale = newSize/mOrigHeight;
-    QTransform trans =  transform().scale(1, scale);
-    setTransform(trans);
-
     mScale = newScale;
+
+    setTransformOriginPoint(pivotPoint);
+    Cell::setScale(scale);
 }
 
 void CrochetCell::setStitch(QString s, bool useAltRenderer)
@@ -64,17 +60,14 @@ void CrochetCell::setStitch(QString s, bool useAltRenderer)
 void CrochetCell::setStitch(Stitch *s, bool useAltRenderer)
 {
    Cell::setStitch(s, useAltRenderer);
-
    mOrigWidth = boundingRect().width();
    mOrigHeight = boundingRect().height();
 }
 
-void CrochetCell::setRotation(qreal angle, qreal pivotPoint, bool undo)
+void CrochetCell::setRotation(qreal angle, QPointF pivotPoint)
 {
     
-    setTransform(QTransform().translate(pivotPoint, 0).rotate(angle).translate(-pivotPoint, 0));
-    if(!undo)
-        setScale(mScale);
+    setTransform(QTransform().translate(pivotPoint.x(), pivotPoint.y()).rotate(angle).translate(-pivotPoint.x(), -pivotPoint.y()));
     setAngle(angle);
     
 }

@@ -43,8 +43,10 @@ Scene::Scene(QObject *parent)
     mEditBgColor(QColor(Qt::white)),
     mScale(1.0),
     mOldScale(1.0),
-    mAngleDelta(0.0),
-    mDefaultSize(QSizeF(32.0, 96.0))
+    mDefaultSize(QSizeF(32.0, 96.0)),
+    mAngle(0.0),
+    mPivotPt(mDefaultSize.width()/2, 0),
+    mOrigin(0,0)
 {
 }
 
@@ -110,7 +112,6 @@ void Scene::removeIndicator(Indicator *i)
 {
     removeItem(i);
     mIndicators.removeOne(i);
-    update();
 }
 
 CrochetCell* Scene::cell(int row, int column)
@@ -223,6 +224,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         case Scene::AngleMode:
             angleModeMousePress(e);
             break;
+        case Scene::StretchMode:
+            stretchModeMousePress(e);
+            break;
         default:
             break;
     }
@@ -236,7 +240,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
         QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
 
         mRubberBand->setGeometry(rect.normalized());
-    } 
+    }
 
     switch(mMode) {
         case Scene::ColorMode:
@@ -407,8 +411,6 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
 
         undoStack()->push(new AddIndicator(this, pt));
 
-        //connect(i, SIGNAL(lostFocus(Indicator*)), this, SLOT(editorLostFocus(Indicator*)));
-        //connect(i, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
     } else {
         mCurIndicator->setTextInteractionFlags(Qt::TextEditorInteraction);
     }
@@ -418,17 +420,13 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
 
 void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
 {
+    Q_UNUSED(e);
     if(!mCurCell)
         return;
 
-    qreal value = acos(mCurCell->transform().m11()) / M_PI * 180;
-    if(e->scenePos().x() < 0 && e->scenePos().y() >= 0)
-        mCurCellRotation = 180 - value;
-    else if(e->scenePos().x() < 0 && e->scenePos().y() < 0)
-        mCurCellRotation = 180 - value;
-    else
-        mCurCellRotation = value;
-
+    mOldAngle = mCurCell->angle();
+    mPivotPt = QPointF(mCurCell->stitch()->width()/2, 0);
+    mOrigin = mCurCell->mapToScene(mPivotPt);
 }
 
 void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -436,57 +434,61 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     if(!mCurCell)
         return;
 
-    qreal pvtPt = mCurCell->stitch()->width()/2;
-    QPointF origin = mCurCell->mapToScene(pvtPt, 0);
+    
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
     QPointF second = e->scenePos();
 
-    //FIXME: should I be using "origin" here when the pos() might be better?
-    QPointF rel1 = QPointF(first.x() - origin.x(), first.y() - origin.y());
-    QPointF rel2 = QPointF(second.x() - origin.x(), second.y() - origin.y());
+    QPointF rel1 = first - mOrigin;
+    QPointF rel2 = second - mOrigin;
     qreal angle1 = scenePosToAngle(rel1);
     qreal angle2 = scenePosToAngle(rel2);
 
-    mAngleDelta = angle1 - angle2;
-    mCurCell->setRotation(mCurCellRotation - mAngleDelta, pvtPt);
+    mAngle = mOldAngle - (angle1 - angle2);
+    mCurCell->setRotation(mAngle, mPivotPt);
 
 }
 
 void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
     Q_UNUSED(e);
+    if(!mCurCell)
+        return;
+    
+//FIXME: use a constant pviot point.
+    mUndoStack.push(new SetCellRotation(this, mCurCell, mOldAngle, mPivotPt));
+    mOldAngle = 0;
+}
 
-    mUndoStack.push(new SetCellRotation(this, mCurCell, mCurCellRotation, mAngleDelta));
-    mCurCellRotation = 0;
+void Scene::stretchModeMousePress(QGraphicsSceneMouseEvent* e)
+{
+    Q_UNUSED(e);
+    if(!mCurCell)
+        return;
+
+    mOldScale = mCurCell->scale();
+    mPivotPt = QPointF(mCurCell->stitch()->width()/2, 0);
+    mCurScale = mCurCell->scale();
 }
 
 void Scene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
+    Q_UNUSED(e);
     if(!mCurCell)
-        return;
-
-    QPointF cur = e->scenePos();
-
-    qreal diff = (e->buttonDownScenePos(Qt::LeftButton) - e->scenePos()).manhattanLength();
-    qreal dragDistance = QApplication::startDragDistance();
-    if(diff < dragDistance)
         return;
 
     QPointF delta = e->buttonDownScenePos(Qt::LeftButton) - e->scenePos();
 
-    mOldScale = mCurCell->scale();
-    mCurCell->setScale(1/mOldScale);
-    mScale = 1.0 - (delta.y()/mCurCell->origHeight());
-    mCurCell->setScale(mScale);
+    mScale = mCurScale - (delta.y()/mCurCell->origHeight());
+    mCurCell->setScale(mScale, mPivotPt);
 }
 
 void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
+    Q_UNUSED(e);
     if(!mCurCell)
         return;
 
-    mCurCell->setScale(1/mOldScale);
-    mUndoStack.push(new SetCellScale(this, mCurCell, mScale));
+    mUndoStack.push(new SetCellScale(this, mCurCell, mOldScale, mPivotPt));
     mScale = 1.0;
     mOldScale = 1.0;
 }

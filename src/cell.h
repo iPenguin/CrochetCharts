@@ -24,7 +24,7 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     int type () const { return Cell::Type; }
 
-    void setAngle(qreal angle) { mAngle = angle; }
+    void setAngle(qreal angle);
     qreal angle() const { return mAngle; }
 
     void setColor(QColor c = QColor(Qt::white));

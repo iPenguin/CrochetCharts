@@ -52,7 +52,7 @@ public:
     /**
      * p(x = column, y = row)
      */
-    virtual void addCell(QPoint p, CrochetCell *c) = 0;
+    virtual void addCell(CrochetCell *c, QPointF p) = 0;
     
     virtual int rowCount() = 0;
     virtual int columnCount(int row) = 0;
@@ -93,20 +93,12 @@ protected:
 /*
     virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
     virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
-    virtual void    keyPressEvent ( QKeyEvent * keyEvent )
-    virtual void    wheelEvent ( QGraphicsSceneWheelEvent * wheelEvent )
-    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
 */
     void keyReleaseEvent(QKeyEvent *keyEvent);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
-/*
-    void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
-    void dragLeaveEvent(QGraphicsSceneDragDropEvent *event);
-    void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
-    void dropEvent(QGraphicsSceneDragDropEvent *event);
-*/
+
     //find the x,y positions on the grid for a given cell;
     QPoint findGridPosition(CrochetCell *c);
 
@@ -127,13 +119,13 @@ protected:
     void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
     void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
-    void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
     void angleModeMousePress(QGraphicsSceneMouseEvent *e);
+    void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
     void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
+    void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
 
     qreal scenePosToAngle(QPointF pt);
     
@@ -150,7 +142,7 @@ protected:
      * The difference between where the user clicked on the object and the (x,y) of the object.
      */
     QSizeF mDiff;
-    qreal mCurCellRotation;
+    qreal mOldAngle;
 
     QRubberBand *mRubberBand;
     QPointF mRubberBandStart;
@@ -170,12 +162,15 @@ protected:
 
     qreal mScale;
     qreal mOldScale;
-
-    qreal mAngleDelta;
-    
-    QUndoStack mUndoStack;
+    qreal mCurScale;
 
     QSizeF mDefaultSize;
+        
+    qreal mAngle;
+    QPointF mPivotPt;
+    QPointF mOrigin;
+    
+    QUndoStack mUndoStack;
     
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
     QList<QList<CrochetCell *> > mGrid;

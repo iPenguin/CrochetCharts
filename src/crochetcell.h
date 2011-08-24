@@ -27,9 +27,9 @@ public:
     QPointF anchor() { return mAnchor; }
 
     qreal scale() const { return mScale; }
-    void setScale(qreal newScale);
+    void setScale(qreal newScale, QPointF pivotPoint);
 
-    void setRotation(qreal angle, qreal pivotPoint, bool undo = false);
+    void setRotation(qreal angle, QPointF pivotPoint);
 
 
     qreal origHeight() { return mOrigHeight; }
@@ -46,8 +46,8 @@ public slots:
      */
     void setAnchor(qreal x, qreal y) { mAnchor = QPointF(x, y); }
 
-    void setStitch(QString s, bool useAltRenderer);
-    void setStitch(Stitch *s, bool useAltRenderer);
+    void setStitch(QString s, bool useAltRenderer = false);
+    void setStitch(Stitch *s, bool useAltRenderer = false);
     
 private:
     qreal mScale;

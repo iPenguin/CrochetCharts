@@ -53,19 +53,19 @@ class SetCellRotation : public QUndoCommand
 public:
     enum { Id = 1120 };
     
-    SetCellRotation(Scene *s, CrochetCell *cell, qreal baseRot, qreal diff, QUndoCommand* parent = 0);
+    SetCellRotation(Scene *s, CrochetCell *cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
-
-    bool mergeWith(const QUndoCommand *command);
     
     int id() const { return Id; }
     
 private:
-    qreal baseRotation;
     CrochetCell *c;
-    qreal delta;
+    qreal oldAngle;
+    qreal newAngle;
+    QPointF pvtPt;
+    
     qreal scale;
     
     Scene *scene;
@@ -98,18 +98,18 @@ class SetCellScale : public QUndoCommand
 public:
     enum { Id = 1140 };
 
-    SetCellScale(Scene *s, CrochetCell *cell, qreal scl, QUndoCommand* parent = 0);
+    SetCellScale(Scene *s, CrochetCell *cell, qreal oldScle, QPointF pvtPt, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
-    
-    bool mergeWith(const QUndoCommand *command);
     
     int id() const { return Id; }
     
 private:
     qreal oldScale;
     qreal newScale;
+
+    QPointF pivotPt;
     
     CrochetCell *c;
     Scene *scene;
