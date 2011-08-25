@@ -121,7 +121,7 @@ class AddCell : public QUndoCommand
 public:
     enum { Id = 1150 };
 
-    AddCell(Scene *s, QPoint pos, QUndoCommand* parent = 0);
+    AddCell(Scene *s, QPointF pos, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -132,7 +132,7 @@ public:
     
 private:
     CrochetCell *c;
-    QPoint position;
+    QPointF position;
 
     Scene *scene;
 };
@@ -151,7 +151,7 @@ public:
 
 private:
     CrochetCell *c;
-    QPoint position;
+    QPointF position;
 
     Scene *scene;
 };

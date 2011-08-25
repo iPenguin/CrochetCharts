@@ -32,7 +32,7 @@ QString TextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
 
     //create a list of stitches
     for(int c = 0; c < cols; ++c) {
-        curStitch = mScene->cell(row, c)->name();
+        //curStitch = mScene->cell(row, c)->name();
         if(cleanOutput) {
             //parse out any placeholder stitches before continuing.
             if(curStitch == placeholder)

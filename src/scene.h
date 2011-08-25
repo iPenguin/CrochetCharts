@@ -47,21 +47,14 @@ public:
 
     virtual void createRow(int row, int columns, QString stitch) = 0;
 
-    virtual void appendCell(int row, CrochetCell *c, bool fromSave = false) = 0;
+    virtual void appendCell(int row, CrochetCell *c) = 0;
 
-    /**
-     * p(x = column, y = row)
-     */
-    virtual void addCell(CrochetCell *c, QPointF p) = 0;
+    virtual void addCell(CrochetCell *c);
     
-    virtual int rowCount() = 0;
-    virtual int columnCount(int row) = 0;
-
-    //if you have the position in x, y use the overload function
-    CrochetCell* cell(int row, int column);
-    //convert x,y to rows, columns.
-    CrochetCell* cell(QPoint position);
-
+    int rowCount();
+    int columnCount(int row);
+    int maxColumnCount();
+    
     virtual void removeCell(CrochetCell *c) = 0;
 
     virtual void createChart(int rows, int cols, QString stitch, QSizeF rowSize) = 0;
@@ -99,17 +92,14 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
-    //find the x,y positions on the grid for a given cell;
+    /**
+     * find the x,y positions on the grid for a given cell;
+     * return QPoint(column, row);
+     */
     QPoint findGridPosition(CrochetCell *c);
 
     QList<Indicator*> indicators() { return mIndicators; }
-    
-    /**
-     * WARING: This funciton should be called after the cell has been added
-     * to the grid so that it calcs based on the new count of stitches.
-     */
-    virtual void setCellPosition(int row, int column, CrochetCell *c, int columns = 1, bool updateAnchor = false) = 0;
-    
+        
     void initDemoBackground();
 
 protected:
@@ -126,9 +116,6 @@ protected:
     void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
-
-
-    QList<QList<CrochetCell *> > grid() { return mGrid; }
 
     QSizeF defaultSize() const { return mDefaultSize; }
 
@@ -170,6 +157,9 @@ protected:
     QPointF mPivotPt;
     QPointF mOrigin;
 
+    //The grid just keeps track of the sts in each row so they can be converted to instructions.
+    QList<QList<CrochetCell *> > grid;
+    
 private:
     qreal scenePosToAngle(QPointF pt);
 
@@ -179,10 +169,9 @@ private:
     
     QUndoStack mUndoStack;
     
-    //The grid just keeps track of the sts in each row so they can be converted to instructions.
-    QList<QList<CrochetCell *> > mGrid;
-
     QList<Indicator*> mIndicators;
+
+    QList<QGraphicsItem*> mDemoItems;
 };
 
 #endif //SCENE_H

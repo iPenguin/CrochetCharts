@@ -27,16 +27,8 @@ public:
 
     void createRow(int row, int columns, QString stitch);
 
-    void appendCell(int row, CrochetCell *c, bool fromSave = false);
-
-    /**
-     * p(x = column, y = row)
-     */
-    void addCell(CrochetCell *c, QPointF p);
+    void appendCell(int row, CrochetCell *c);
     
-    int rowCount();
-    int columnCount(int row);
-
     //if you have the position in x, y use the overload function
     CrochetCell* cell(int row, int column);
     //convert x,y to rows, columns.
@@ -56,8 +48,6 @@ signals:
     void colorChanged(QString oldColor, QString newColor);
     
 protected:
-
-    void keyReleaseEvent(QKeyEvent *keyEvent);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
     void mousePressEvent(QGraphicsSceneMouseEvent *e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);

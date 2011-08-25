@@ -150,7 +150,7 @@ void SetCellScale::redo()
 /*************************************************\
 | AddCell                                         |
 \*************************************************/
-AddCell::AddCell(Scene* s, QPoint pos, QUndoCommand* parent)
+AddCell::AddCell(Scene* s, QPointF pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
 
@@ -163,7 +163,8 @@ AddCell::AddCell(Scene* s, QPoint pos, QUndoCommand* parent)
 
 void AddCell::redo()
 {
-    scene->addCell(c, position);
+    scene->addCell(c);
+    c->setPos(position);
 }
 
 void AddCell::undo()
@@ -179,7 +180,7 @@ RemoveCell::RemoveCell(Scene* s, CrochetCell *cell, QUndoCommand* parent)
 {
     c = cell;
     scene = s;
-    position = scene->findGridPosition(cell);
+    position = c->pos();
     setText(QObject::tr("Remove cell"));
 }
 
@@ -190,7 +191,8 @@ void RemoveCell::redo()
 
 void RemoveCell::undo()
 {
-    scene->addCell(c, position);
+    scene->addCell(c);
+    c->setPos(position);
 }
 
 /*************************************************\

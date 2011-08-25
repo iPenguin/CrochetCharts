@@ -123,23 +123,25 @@ bool SaveFile::saveCharts(QXmlStreamWriter *stream)
             continue;
         stream->writeTextElement("name", mTabWidget->tabText(i));
 
-        Scene::ChartStyle st = tab->mChartStyle;
-        stream->writeTextElement("style", QString::number(st));
+        Scene::ChartStyle stlye = tab->mChartStyle;
+        stream->writeTextElement("style", QString::number(stlye));
         
-        if(st == Scene::Rounds) {
+        if(stlye == Scene::Rounds) {
             SceneRounds *r = static_cast<SceneRounds*>(tab->scene());
             bool showCenter = r->showChartCenter();
             stream->writeTextElement("showChartCenter", QString::number(showCenter));
         }
 
         stream->writeTextElement("defaultRowSpacing", QString::number(tab->scene()->mDefaultSize.height()));
-        
-        if(st == Scene::Rounds || st == Scene::Rows) {
-qDebug() << "FIXME: Scene::rows and columns";
+
+        if(tab->scene()->rowCount() >= 1 && tab->scene()->maxColumnCount() >= 1) {
+            stream->writeStartElement("grid");
             int rowCount = tab->scene()->rowCount();
             for(int i = 0; i < rowCount; ++i) {
                 int colCount = tab->scene()->columnCount(i);
+                stream->writeTextElement("row", QString::number(colCount)); //row, columns.
             }
+            stream->writeEndElement(); //end grid.
         }
         
         foreach(QGraphicsItem *item, tab->scene()->items()) {
@@ -154,8 +156,8 @@ qDebug() << "FIXME: Scene::rows and columns";
             if(tab->mChartStyle != Scene::Blank) {
 
                 QPoint pt = tab->scene()->findGridPosition(c);
-                stream->writeTextElement("row", QString::number(pt.x()));
-                stream->writeTextElement("column", QString::number(pt.y()));
+                stream->writeTextElement("row", QString::number(pt.y()));
+                stream->writeTextElement("column", QString::number(pt.x()));
             }
 
             stream->writeTextElement("color", c->color().name());
@@ -341,8 +343,11 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             tab->blockSignals(true);
             tab->setShowChartCenter(stream->readElementText().toInt());
             tab->blockSignals(false);
+
+        } else if(tag == "grid") {
+            loadGrid(stream, tab->scene());
             
-        } else if(tag == "defaultStitch") {
+        } else if(tag == "defaultRowSpacing") {
             qreal height = stream->readElementText().toDouble();
             tab->scene()->mDefaultSize.setHeight(height);
             
@@ -368,6 +373,24 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
     int index = mTabWidget->indexOf(tab);
     mTabWidget->setTabText(index, tabName);
     mTabWidget->widget(mTabWidget->indexOf(tab))->show();
+}
+
+void SaveFile::loadGrid(QXmlStreamReader* stream, Scene* scene)
+{
+
+    while(!(stream->isEndElement() && stream->name() == "grid")) {
+        stream->readNext();
+        QString tag = stream->name().toString();
+
+        if(tag == "row") {
+            int cols = stream->readElementText().toInt();
+            QList<CrochetCell*> row;
+            for(int i = 0; i < cols; ++i) {
+                row.append(0);
+            }
+            scene->grid.append(row);
+        }
+    }
 }
 
 void SaveFile::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)

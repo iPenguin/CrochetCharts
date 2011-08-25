@@ -21,7 +21,6 @@
 #include "stitchset.h"
 #include "appinfo.h"
 #include "crochetchartcommands.h"
-#include "indicatorundo.h"
 
 #include <QKeyEvent>
 #include "stitchlibrary.h"
@@ -40,69 +39,17 @@ void SceneRows::removeCell(CrochetCell *c)
 {
     int y = findGridPosition(c).y();
     removeItem(c);
-    for(int i = 0; i < grid().count(); ++i) {
-        if (grid()[i].contains(c)) {
-            grid()[i].removeOne(c);
+    for(int i = 0; i < grid.count(); ++i) {
+        if (grid[i].contains(c)) {
+            grid[i].removeOne(c);
         }
     }
 
     redistributeCells(y);
 }
 
-int SceneRows::rowCount()
+void SceneRows::appendCell(int row, CrochetCell* c)
 {
-    return grid().count();
-}
-
-int SceneRows::columnCount(int row)
-{
-    if(grid().count() <= row)
-        return 0;
-    return grid()[row].count();
-}
-
-void SceneRows::appendCell(int row, CrochetCell *c, bool fromSave)
-{
-    Q_UNUSED(fromSave);
-    //append any missing rows.
-    if(grid().count() <= row) {
-        for(int i = grid().count(); i < row + 1; ++i) {
-            QList<CrochetCell*> row;
-            grid().append(row);
-        }
-    }
-    /* QPoint(grid()[row].count(), row)*/
-    addCell(c, QPointF());
-
-    int col = grid()[row].count() -1;
-    setCellPosition(row, col, c, grid()[row].count());
-    c->setColor(QColor(Qt::white));
-
-}
-
-void SceneRows::addCell(CrochetCell* c, QPointF p)
-{
-
-    //TODO: simplify the connect() statements...
-    addItem(c);
-    int x = p.x();
-
-    if(grid().count() <= p.y()) {
-        QList<CrochetCell*> row;
-        grid().append(row);
-    }
-
-    if(grid()[p.y()].count() <= p.x())
-            x = grid()[p.y()].count();
-
-    grid()[p.y()].insert(x, c);
-
-    setCellPosition(p.y(), x, c, grid()[p.y()].count());
-
-    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
-    connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-
-    redistributeCells(p.y());
 }
 
 void SceneRows::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
@@ -112,7 +59,6 @@ void SceneRows::setCellPosition(int row, int column, CrochetCell *c, int columns
     c->setPos(column*defaultSize().width() + column*5, row*defaultSize().height());
     if(updateAnchor || c->anchor().isNull())
         c->setAnchor(column*defaultSize().width() + column*5, row*defaultSize().height());
-    c->setColor(QColor(Qt::white));
 
     //FIXME: set tooltips from bottom right to top left.
     c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
@@ -120,12 +66,12 @@ void SceneRows::setCellPosition(int row, int column, CrochetCell *c, int columns
 
 void SceneRows::redistributeCells(int row)
 {
-    if(row >= grid().count())
+    if(row >= grid.count())
         return;
-    int columns = grid()[row].count();
+    int columns = grid[row].count();
 
     for(int i = 0; i < columns; ++i) {
-        CrochetCell *c = grid()[row].at(i);
+        CrochetCell *c = grid[row].at(i);
         setCellPosition(row, i, c, columns, true);
     }
 }
@@ -153,27 +99,22 @@ void SceneRows::createRow(int row, int columns, QString stitch)
         c->setStitch(stitch, (row % 2));
         addItem(c);
         modelRow.append(c);
-        c->setColor(QColor(Qt::white));
+
         setCellPosition(row, i, c, columns);
     }
-    grid().append(modelRow);
+    grid.append(modelRow);
 
 }
 
 QPoint SceneRows::findGridPosition(CrochetCell* c)
 {
-    for(int y = 0; y < grid().count(); ++y) {
-        if(grid()[y].contains(c)) {
-            return QPoint(grid()[y].indexOf(c), y);
+    for(int y = 0; y < grid.count(); ++y) {
+        if(grid[y].contains(c)) {
+            return QPoint(grid[y].indexOf(c), y);
         }
     }
     
     return QPoint();
-}
-
-void SceneRows::keyReleaseEvent(QKeyEvent* keyEvent)
-{
-    Scene::keyReleaseEvent(keyEvent);
 }
 
 void SceneRows::mousePressEvent(QGraphicsSceneMouseEvent *e)
@@ -225,17 +166,17 @@ void SceneRows::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     //FIXME: foreach(stitch in selection()) create an undo group event.
     if(mCurCell) {
         
-    if(mCurCell->name() != mEditStitch && !mMoving)
-        undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
+        if(mCurCell->name() != mEditStitch && !mMoving)
+            undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
     
         mCurCell = 0;
-    } else if(!mRubberBand && !mMoving){
+    } else if(!mRubberBand && !mMoving) {
         int x = ceil(e->scenePos().x() / defaultSize().width()) - 1;
         int y = ceil(e->scenePos().y() / defaultSize().height()) - 1;
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
-
-            AddCell *addCell = new AddCell(this, QPoint(x, y));
+//FIXME: the xy should be pos not grid.
+            AddCell *addCell = new AddCell(this, QPointF(x, y));
             CrochetCell *c = addCell->cell();
             c->setStitch(mEditStitch, (y % 2));
             undoStack()->push(addCell);

@@ -23,6 +23,7 @@ class QXmlStreamWriter;
 
 class QDataStream;
 class CrochetTab;
+class Scene;
 
 //TODO: break data into pieces that can be threaded.
 class SaveFile
@@ -46,15 +47,15 @@ public:
     QString fileName;
     
 private:
-    void saveCustomIcons(QDataStream *dataStream);
     void saveCustomStitches(QXmlStreamWriter *stream);
     void saveColors(QXmlStreamWriter *stream);
     bool saveCharts(QXmlStreamWriter *stream);
 
     void loadColors(QXmlStreamReader *stream);
-    void loadChart(QXmlStreamReader *stream);
+    void loadChart(QXmlStreamReader* stream);
 
-    void loadIndicator(CrochetTab *tab, QXmlStreamReader *stream);
+    void loadGrid(QXmlStreamReader* stream, Scene* scene);
+    void loadIndicator(CrochetTab* tab, QXmlStreamReader* stream);
 
     //fileVersion of the file we're working with.
     qint32 mCurrentFileVersion;

@@ -21,7 +21,6 @@
 #include "stitchset.h"
 #include "appinfo.h"
 #include "crochetchartcommands.h"
-#include "indicatorundo.h"
 
 #include <QKeyEvent>
 #include "stitchlibrary.h"
@@ -33,7 +32,6 @@ SceneBlank::SceneBlank(QObject *parent)
 
 SceneBlank::~SceneBlank()
 {
-
 }
 
 CrochetCell* SceneBlank::cell(int row, int column)
@@ -51,39 +49,21 @@ void SceneBlank::removeCell(CrochetCell *c)
     removeItem(c);
 }
 
-int SceneBlank::rowCount()
+void SceneBlank::appendCell(int row, CrochetCell *c)
 {
-    return 1;
-}
-
-int SceneBlank::columnCount(int row)
-{
-    return items().count();
-}
-
-void SceneBlank::appendCell(int row, CrochetCell *c, bool fromSave)
-{
-    Q_UNUSED(fromSave);
+    Q_UNUSED(row);
     //append any missing rows.
     addItem(c);
-    
-    c->setColor(QColor(Qt::white));
    
-}
-
-void SceneBlank::addCell(CrochetCell* c, QPointF p)
-{
-    Q_UNUSED(p);
-    addItem(c);
-
-    connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
-    connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-
 }
 
 void SceneBlank::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 {
-
+    Q_UNUSED(rows);
+    Q_UNUSED(cols);
+    Q_UNUSED(stitch);
+    Q_UNUSED(rowSize);
+    
     initDemoBackground();
 }
 
@@ -99,26 +79,13 @@ QPoint SceneBlank::findGridPosition(CrochetCell* c)
     return QPoint();
 }
 
-void SceneBlank::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
-{
-    Q_UNUSED(row);
-    Q_UNUSED(column);
-    Q_UNUSED(c);
-    Q_UNUSED(columns);
-    Q_UNUSED(updateAnchor);
-    //c->setPos(row, column);
-}
-
-void SceneBlank::keyReleaseEvent(QKeyEvent* keyEvent)
-{
-    Scene::keyReleaseEvent(keyEvent);
-}
-
 void SceneBlank::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
-    Scene::mousePressEvent(e);
     
     switch(mMode) {
+        case Scene::StitchMode:
+            
+            break;
         default:
             break;
     }
@@ -130,7 +97,7 @@ void SceneBlank::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
 
     switch(mMode) {
-        case SceneBlank::StitchMode:
+        case Scene::StitchMode:
             stitchModeMouseMove(e);
             break;
         default:
@@ -144,7 +111,7 @@ void SceneBlank::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
  
     switch(mMode) {
-        case SceneBlank::StitchMode:
+        case Scene::StitchMode:
             stitchModeMouseRelease(e);
             break;
         default:
@@ -172,10 +139,9 @@ void SceneBlank::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
-            CrochetCell *c = new CrochetCell();
-            addItem(c);
-            c->setStitch(mEditStitch);
-            c->setPos(e->scenePos());
+            AddCell *addCell = new AddCell(this, e->scenePos());
+            undoStack()->push(addCell);
+            addCell->cell()->setStitch(mEditStitch);
 
         } else {
             if(!mCurCell)

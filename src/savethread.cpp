@@ -67,15 +67,16 @@ void SaveThread::run()
             scale = stream->readElementText().toDouble();
         }
     }
-qDebug() << row << column;
+    
     if(row > -1 && column > -1) {
         c->setStitch(s, (row % 2));
-        tab->scene()->appendCell(row, c, true);
-        c->setObjectName(QString::number(row) + "," + QString::number(column));
+        tab->scene()->grid[row].replace(column, c);
+        c->setObjectName(QString::number(row) + ", " + QString::number(column));
     } else {
         c->setStitch(s);
-        tab->scene()->addCell(c, QPoint());
     }
+    
+    tab->scene()->addCell(c);
     
     c->setAnchor(anchorX, anchorY);
     c->setPos(x, y);
