@@ -22,9 +22,10 @@ Indicator::~Indicator()
 
 QRectF Indicator::boundingRect()
 {
-    return /*QRectF rect =*/ QGraphicsTextItem::boundingRect();
-    //rect.setTopLeft(QPointF(-10, -10));
-    //return rect;
+    QRectF rect = QGraphicsTextItem::boundingRect();
+    rect.setWidth(rect.width() <= 30 ? 30 : rect.width());
+    rect.setHeight(rect.height() <= 30 ? 30 : rect.height());
+    return rect;
 }
 
 void Indicator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
