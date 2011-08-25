@@ -36,9 +36,6 @@ public:
     QPixmap* renderPixmap();
     QSvgRenderer* renderSvg(bool useAltRenderer = false);
 
-    //return a copy of this stitch.
-    Stitch* copy();
-
     //reload the svg with new colors.
     void reloadIcon();
 

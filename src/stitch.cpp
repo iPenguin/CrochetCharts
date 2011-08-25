@@ -103,19 +103,6 @@ QSvgRenderer* Stitch::renderSvg(bool useAltRenderer)
         return mSvgRenderer;
 }
 
-Stitch* Stitch::copy()
-{
-    Stitch *s = new Stitch();
-
-    s->setCategory(category());
-    s->setDescription(description());
-    s->setName(name());
-    s->setWrongSide(wrongSide());
-    s->setFile(file());
-
-    return s;
-}
-
 void Stitch::reloadIcon()
 {
     setupSvgFiles();

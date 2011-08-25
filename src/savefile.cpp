@@ -105,7 +105,8 @@ void SaveFile::saveCustomStitches(QXmlStreamWriter* stream)
 
     foreach(QString st, stitches) {
         Stitch *s = StitchLibrary::inst()->findStitch(st);
-        mInternalStitchSet->addStitch(s->copy());
+        if(s)
+            mInternalStitchSet->addStitch(s);
     }
 
     mInternalStitchSet->saveXmlStitchSet(stream, true);
