@@ -127,6 +127,7 @@ void CrochetTab::renderChart(QPainter* painter, QRectF rect)
 
 void CrochetTab::stitchChanged(QString oldSt, QString newSt)
 {
+
     if (!oldSt.isEmpty()) {
         mPatternStitches->operator[](oldSt)--;
         if (mPatternStitches->operator[](oldSt) == 0)
@@ -143,6 +144,7 @@ void CrochetTab::stitchChanged(QString oldSt, QString newSt)
 
 void CrochetTab::colorChanged(QString oldColor, QString newColor)
 {
+
     if (!oldColor.isEmpty()) {
         mPatternColors->operator[](oldColor)["count"]--;
         if (mPatternColors->operator[](oldColor)["count"] == 0)

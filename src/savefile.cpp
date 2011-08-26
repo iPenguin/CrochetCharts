@@ -314,9 +314,10 @@ void SaveFile::loadColors(QXmlStreamReader* stream)
             QMap<QString, qint64> properties;
             properties.insert("count", 0); //count = 0 because we haven't added any cells yet.
             properties.insert("added", (qint64) stream->attributes().value("added").toString().toLongLong());
-            mw->patternColors().insert(stream->readElementText(),properties);
+            mw->mPatternColors.insert(stream->readElementText(),properties);
         }
     }
+
 }
 
 void SaveFile::loadChart(QXmlStreamReader* stream)
@@ -335,6 +336,9 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         } else if(tag == "style") {
             int style = stream->readElementText().toInt();
             tab = mw->createTab((Scene::ChartStyle)style);
+
+            mTabWidget->addTab(tab, "");
+            mTabWidget->widget(mTabWidget->indexOf(tab))->hide();
             
         } else if(tag == "showChartCenter") {
 
@@ -365,10 +369,6 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             
         }
     }
-
-    mTabWidget->addTab(tab, "");
-
-    mTabWidget->widget(mTabWidget->indexOf(tab))->hide();
 
     int index = mTabWidget->indexOf(tab);
     mTabWidget->setTabText(index, tabName);

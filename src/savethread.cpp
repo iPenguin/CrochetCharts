@@ -34,9 +34,6 @@ void SaveThread::run()
     qreal x = 0, y = 0, anchorX = 0, anchorY = 0;
     QTransform transform;
     qreal angle = 0.0, scale = 0.0;
-    
-    QObject::connect(c, SIGNAL(stitchChanged(QString,QString)), tab->scene(), SIGNAL(stitchChanged(QString,QString)));
-    QObject::connect(c, SIGNAL(colorChanged(QString,QString)), tab->scene(), SIGNAL(colorChanged(QString,QString)));
 
     while(!(stream->isEndElement() && stream->name() == "cell")) {
         stream->readNext();
@@ -69,6 +66,7 @@ void SaveThread::run()
     }
 
     tab->scene()->addCell(c);
+    
     if(row > -1 && column > -1) {
         c->setStitch(s, (row % 2));
         tab->scene()->grid[row].replace(column, c);

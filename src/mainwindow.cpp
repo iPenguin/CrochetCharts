@@ -912,6 +912,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
     CrochetTab* tab = new CrochetTab(style, mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
     tab->setPatternColors(&mPatternColors);
+
     connect(tab, SIGNAL(chartStitchChanged()), SLOT(updatePatternStitches()));
     connect(tab, SIGNAL(chartColorChanged()), SLOT(updatePatternColors()));
     connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));

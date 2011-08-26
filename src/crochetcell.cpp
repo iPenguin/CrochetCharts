@@ -22,8 +22,12 @@ CrochetCell::CrochetCell()
 
 void CrochetCell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    if(color() != Qt::white)
-        painter->fillRect(option->rect, color());
+    QColor clr = color();
+    if(!clr.isValid())
+        clr = QColor(Qt::white);
+    
+    if(clr != Qt::white)
+        painter->fillRect(option->rect, clr);
     if(mHighlight)
         painter->fillRect(option->rect, option->palette.highlight());
 
@@ -55,6 +59,7 @@ void CrochetCell::setStitch(QString s, bool useAltRenderer)
     Cell::setStitch(s, useAltRenderer);
     mOrigWidth = boundingRect().width();
     mOrigHeight = boundingRect().height();
+    setColor(Qt::white);
 }
 
 void CrochetCell::setStitch(Stitch* s, bool useAltRenderer)
@@ -62,6 +67,7 @@ void CrochetCell::setStitch(Stitch* s, bool useAltRenderer)
    Cell::setStitch(s, useAltRenderer);
    mOrigWidth = boundingRect().width();
    mOrigHeight = boundingRect().height();
+   setColor(Qt::white);
 }
 
 void CrochetCell::setRotation(qreal angle, QPointF pivotPoint)
