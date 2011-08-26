@@ -49,10 +49,6 @@ signals:
     void colorChanged(QString oldColor, QString newColor);
     
 protected:
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
-    void mousePressEvent(QGraphicsSceneMouseEvent *e);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
-
     //find the x,y positions on the grid for a given cell;
     QPoint findGridPosition(CrochetCell *c);
 

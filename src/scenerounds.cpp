@@ -213,39 +213,6 @@ QPoint SceneRounds::findGridPosition(CrochetCell* c)
     return QPoint();
 }
 
-void SceneRounds::mousePressEvent(QGraphicsSceneMouseEvent *e)
-{
-    Scene::mousePressEvent(e);
-}
-
-void SceneRounds::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
-{
-    switch(mMode) {
-        case Scene::StitchMode:
-            stitchModeMouseMove(e);
-            break;
-        default:
-            break;
-    }
-
-    Scene::mouseMoveEvent(e);
-    
-}
-
-void SceneRounds::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
-{
-    
-    switch(mMode) {
-        case Scene::StitchMode:
-            stitchModeMouseRelease(e);
-            break;
-        default:
-            break;
-    }
-
-    Scene::mouseReleaseEvent(e);
-}
-
 void SceneRounds::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(e->buttons() != Qt::LeftButton)
@@ -288,5 +255,4 @@ void SceneRounds::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
             mCurCell = 0;
         }
     }
-    
 }

@@ -235,6 +235,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     mMoving = false;
     
     switch(mMode) {
+        case Scene::StitchMode:
+            stitchModeMousePress(e);
+            break;
         case Scene::AngleMode:
             angleModeMousePress(e);
             break;
@@ -273,6 +276,9 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
 
     switch(mMode) {
+        case Scene::StitchMode:
+            stitchModeMouseMove(e);
+            break;
         case Scene::ColorMode:
             colorModeMouseMove(e);
             break;
@@ -331,6 +337,9 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     }
 
     switch(mMode) {
+        case Scene::StitchMode:
+            stitchModeMouseRelease(e);
+            break;
         case Scene::ColorMode:
             colorModeMouseRelease(e);
             break;

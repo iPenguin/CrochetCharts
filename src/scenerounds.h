@@ -48,9 +48,6 @@ signals:
     void colorChanged(QString oldColor, QString newColor);
     
 protected:
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
-    void mousePressEvent(QGraphicsSceneMouseEvent *e);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
     /**
      * find the x,y positions on the grid for a given cell;
@@ -79,10 +76,8 @@ protected:
      */
     void setCellPosition(int row, int column, CrochetCell *c, int columns = 1, bool updateAnchor = false);
     
-private:
-    
+protected:
     void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
 private:

@@ -117,6 +117,10 @@ protected:
     void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
+    virtual void stitchModeMouseMove(QGraphicsSceneMouseEvent *e) { Q_UNUSED(e); }
+    virtual void stitchModeMousePress(QGraphicsSceneMouseEvent *e) { Q_UNUSED(e); }
+    virtual void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e) { Q_UNUSED(e); }
+    
     QSizeF defaultSize() const { return mDefaultSize; }
 
 protected:
