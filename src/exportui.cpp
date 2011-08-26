@@ -19,8 +19,8 @@
 #include "crochettab.h"
 #include "scene.h" // for to connect the scene to the view.
 
-ExportUi::ExportUi(QTabWidget *tab, QMap<QString, int> *stitches,
-                   QMap<QString, QMap<QString, qint64> > *colors, QWidget *parent)
+ExportUi::ExportUi(QTabWidget* tab, QMap<QString, int>* stitches,
+                   QMap<QString, QMap<QString, qint64> >* colors, QWidget* parent)
     : QDialog(parent),
       exportType(""),
       scene(new QGraphicsScene(this)),
@@ -219,7 +219,7 @@ void ExportUi::generateSelectionList(bool showAll)
     if(curSelection == tr("Stitch Legend") || curSelection == tr("Color Legend")) {
         ui->view->setScene(scene);
     } else {
-        CrochetTab *tab = 0;
+        CrochetTab* tab = 0;
         for(int i = 0; i < count; ++i) {
             if(curSelection == mTabWidget->tabText(i)) {
                 tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
@@ -275,7 +275,7 @@ void ExportUi::exportData()
 
     //we don't want the dotted lines in the image.
     for(int i = 0; i < mTabWidget->count(); ++i) {
-        CrochetTab *t = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+        CrochetTab* t = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
         if(t) t->clearSelection();
     }
 
@@ -333,7 +333,7 @@ void ExportUi::setSelection(QString selection)
         if(!scene->items().contains(cl))
             scene->addItem(cl);
     } else {
-        CrochetTab *tab = 0;
+        CrochetTab* tab = 0;
         for(int i = 0; i < mTabWidget->count(); ++i) {
             if(selection == mTabWidget->tabText(i)) {
                 tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
@@ -357,9 +357,9 @@ void ExportUi::setSelection(QString selection)
 
 void ExportUi::exportLegendPdf()
 {
-    QPainter *p = new QPainter();
+    QPainter* p = new QPainter();
     
-    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
+    QPrinter* printer = new QPrinter(QPrinter::HighResolution);
     printer->setOutputFormat(QPrinter::PdfFormat);
     printer->setOutputFileName(fileName);
     printer->setResolution(resolution);
@@ -375,7 +375,7 @@ void ExportUi::exportLegendPdf()
 
 void ExportUi::exportLegendSvg()
 {
-    QPainter *p = new QPainter();
+    QPainter* p = new QPainter();
     
     QSvgGenerator gen;
 
@@ -404,7 +404,7 @@ void ExportUi::exportLegendImg()
         return;
     }
     
-    QPainter *p = new QPainter(this);
+    QPainter* p = new QPainter(this);
     QPixmap pix = QPixmap(scene->sceneRect().size().toSize());
 
     p->begin(&pix);
@@ -416,9 +416,9 @@ void ExportUi::exportLegendImg()
 void ExportUi::exportPdf()
 {
     int tabCount = mTabWidget->count();
-    QPainter *p = new QPainter();
+    QPainter* p = new QPainter();
     
-    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
+    QPrinter* printer = new QPrinter(QPrinter::HighResolution);
     printer->setOutputFormat(QPrinter::PdfFormat);
     printer->setOutputFileName(fileName);
     printer->setResolution(resolution);
@@ -435,7 +435,7 @@ void ExportUi::exportPdf()
             printer->newPage();
         
         if(selection == tr("All Charts") || selection == mTabWidget->tabText(i)) {
-            CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+            CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
             tab->renderChart(p);
             firstPass = false;
             if(selection != tr("All Charts"))
@@ -465,7 +465,7 @@ void ExportUi::exportSvg()
     
     for(int i = 0; i < tabCount; ++i) {
         if(selection == mTabWidget->tabText(i)) {
-            CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+            CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
             tab->renderChart(&p, QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height)));
         }
     }
@@ -476,7 +476,7 @@ void ExportUi::exportSvg()
 void ExportUi::exportImg()
 {
     int tabCount = mTabWidget->count();
-    QPainter *p = new QPainter();
+    QPainter* p = new QPainter();
     
     double dpm = resolution * (39.3700787);
     QImage img = QImage(QSize(width, height), QImage::Format_ARGB32);
@@ -488,7 +488,7 @@ void ExportUi::exportImg()
     
     for(int i = 0; i < tabCount; ++i) {
         if(selection == mTabWidget->tabText(i)) {
-            CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+            CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
             tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height)));
         }
     }

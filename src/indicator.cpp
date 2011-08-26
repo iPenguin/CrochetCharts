@@ -8,7 +8,7 @@
 #include "settings.h"
 #include <QStyleOption>
 
-Indicator::Indicator(QGraphicsItem *parent, QGraphicsScene *scene)
+Indicator::Indicator(QGraphicsItem* parent, QGraphicsScene* scene)
     : QGraphicsTextItem(parent, scene)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -28,7 +28,7 @@ QRectF Indicator::boundingRect()
     return rect;
 }
 
-void Indicator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     QString style = Settings::inst()->value("chartRowIndicator").toString();
     QString color = Settings::inst()->value("chartIndicatorColor").toString();
@@ -48,7 +48,7 @@ void Indicator::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     }
 }
 
-void Indicator::focusOutEvent(QFocusEvent *event)
+void Indicator::focusOutEvent(QFocusEvent* event)
 {
     setTextInteractionFlags(Qt::NoTextInteraction);
     //emit lostFocus(this);

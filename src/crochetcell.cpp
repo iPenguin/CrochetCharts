@@ -20,7 +20,7 @@ CrochetCell::CrochetCell()
     setFlag(QGraphicsItem::ItemSendsGeometryChanges); //enable itemChange to pick up move changes.
 }
 
-void CrochetCell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void CrochetCell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     if(color() != Qt::white)
         painter->fillRect(option->rect, color());
@@ -57,7 +57,7 @@ void CrochetCell::setStitch(QString s, bool useAltRenderer)
     mOrigHeight = boundingRect().height();
 }
 
-void CrochetCell::setStitch(Stitch *s, bool useAltRenderer)
+void CrochetCell::setStitch(Stitch* s, bool useAltRenderer)
 {
    Cell::setStitch(s, useAltRenderer);
    mOrigWidth = boundingRect().width();

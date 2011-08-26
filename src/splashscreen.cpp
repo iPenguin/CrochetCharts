@@ -17,7 +17,7 @@ SplashScreen::SplashScreen()
     this->setMask(p.mask());
 }
 
-void SplashScreen::drawContents (QPainter *painter)
+void SplashScreen::drawContents (QPainter* painter)
 {
     QRect rect = QRect(QPoint(0,0), this->pixmap().size());
     painter->drawPixmap(rect, this->pixmap());

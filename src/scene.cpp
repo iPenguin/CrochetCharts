@@ -26,7 +26,7 @@
 #include <QKeyEvent>
 #include "stitchlibrary.h"
 
-Scene::Scene(QObject *parent)
+Scene::Scene(QObject* parent)
     : QGraphicsScene(parent),
     mCurCell(0),
     mCellStartPos(QPointF(0,0)),
@@ -52,7 +52,7 @@ Scene::Scene(QObject *parent)
 
 Scene::~Scene()
 {
-    foreach(QGraphicsItem *i, items()) {
+    foreach(QGraphicsItem* i, items()) {
         delete i;
     }
     items().clear();
@@ -73,7 +73,7 @@ void Scene::initDemoBackground()
     if(Settings::inst()->isDemoVersion()) {
 
         if(mDemoItems.count() > 0) {
-            foreach(QGraphicsItem *i, mDemoItems) {
+            foreach(QGraphicsItem* i, mDemoItems) {
                 delete i;
             }
             mDemoItems.clear();
@@ -87,7 +87,7 @@ void Scene::initDemoBackground()
         QFontMetrics fm = QFontMetrics(demoFont);
         double stringWidth = fm.width(demoString);
 
-        QGraphicsSimpleTextItem *demoText;
+        QGraphicsSimpleTextItem* demoText;
         QRectF rect = sceneRect();
         double demoRows = rect.height() / fontSize;
         demoRows = demoRows /2.0;
@@ -98,7 +98,7 @@ void Scene::initDemoBackground()
             for(int i = 0; i < ceil(demoRows); ++i) {
                 demoText = addSimpleText(demoString, demoFont);
                 demoText->setBrush(QBrush(QColor("#ECECEC")));
-                QPointF point = QPointF(rect.left() + c*stringWidth , rect.top() + i*(2*fontSize));
+                QPointF point = QPointF(rect.left() + c * stringWidth, rect.top() + i * (2 * fontSize));
                 demoText->setPos(point);
                 demoText->setZValue(-1);
                 mDemoItems.append(demoText);
@@ -139,7 +139,7 @@ void Scene::addIndicator(Indicator* i)
     mIndicators.append(i);
 }
 
-void Scene::removeIndicator(Indicator *i)
+void Scene::removeIndicator(Indicator* i)
 {
     removeItem(i);
     mIndicators.removeOne(i);
@@ -188,12 +188,12 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
     if(keyEvent->key() == Qt::Key_Delete) {
         QList<QGraphicsItem*> items = selectedItems();
         undoStack()->beginMacro("Remove items");
-        foreach(QGraphicsItem *item, items) {
-            CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(item);
+        foreach(QGraphicsItem* item, items) {
+            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
             if(c) {
                 undoStack()->push(new RemoveCell(this, c));
             } else {
-                Indicator *i = qgraphicsitem_cast<Indicator*>(item);
+                Indicator* i = qgraphicsitem_cast<Indicator*>(item);
                 undoStack()->push(new RemoveIndicator(this, i));
             }
         }
@@ -203,17 +203,17 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
     QGraphicsScene::keyReleaseEvent(keyEvent);
 }
 
-void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
+void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 {
     
     QGraphicsScene::mousePressEvent(e);
     
     mLeftButtonDownPos = e->buttonDownPos(Qt::LeftButton);
 
-    QGraphicsItem *gi = itemAt(e->scenePos());
+    QGraphicsItem* gi = itemAt(e->scenePos());
     if(gi) {
         
-        CrochetCell *c = qgraphicsitem_cast<CrochetCell*>(gi);
+        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(gi);
 
         if(c) {
             
@@ -222,7 +222,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
             mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
         } else {
             
-            Indicator *i = qgraphicsitem_cast<Indicator*>(gi);
+            Indicator* i = qgraphicsitem_cast<Indicator*>(gi);
 
             if(i) {
                 
@@ -253,7 +253,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     
     if(selectedItems().count() <= 0) {
         
-        ChartView *view = qobject_cast<ChartView*>(parent());
+        ChartView* view = qobject_cast<ChartView*>(parent());
 
         if(!mRubberBand)
             mRubberBand = new QRubberBand(QRubberBand::Rectangle, view);
@@ -265,14 +265,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     } else if (mRubberBand) {
         
     //Track object movement on scene.
-        foreach(QGraphicsItem *item, selectedItems()) {
+        foreach(QGraphicsItem* item, selectedItems()) {
             mOldPositions.insert(item, item->pos());
         }
     }
     
 }
 
-void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
+void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 {
 
     switch(mMode) {
@@ -296,7 +296,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
     }
 
     if(mRubberBand) {
-        ChartView *view = qobject_cast<ChartView*>(parent());
+        ChartView* view = qobject_cast<ChartView*>(parent());
         QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
 
         mRubberBand->setGeometry(rect.normalized());
@@ -309,11 +309,11 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
     }
 }
 
-void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
+void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
 {
 
     if(mRubberBand) {
-        ChartView *view = qobject_cast<ChartView*>(parent());
+        ChartView* view = qobject_cast<ChartView*>(parent());
         QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
 
         QPolygonF p = view->mapToScene(rect.normalized());
@@ -326,7 +326,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     
     if((selectedItems().count() > 0 && mOldPositions.count() > 0) && mMoving) {
         undoStack()->beginMacro("move items");
-        foreach(QGraphicsItem *item, selectedItems()) {
+        foreach(QGraphicsItem* item, selectedItems()) {
             if(mOldPositions.contains(item)) {
                 QPointF oldPos = mOldPositions.value(item);
                 undoStack()->push(new SetItemCoordinates(this, item, oldPos, item->pos()));
@@ -415,7 +415,7 @@ void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
         undoStack()->push(new SetCellColor(this, mCurCell, mEditBgColor));
 }
 
-void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
+void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(e->buttons() != Qt::LeftButton)
         return;
@@ -433,7 +433,7 @@ void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
     mCurIndicator->setPos(newPos);
 }
 
-void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
+void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     //if right click or ctrl-click remove the indicator.
     if(e->button() == Qt::RightButton || (e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {
@@ -464,7 +464,7 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
 }
 
 
-void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
+void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
     if(!mCurCell)
@@ -475,7 +475,7 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
     mOrigin = mCurCell->mapToScene(mPivotPt);
 }
 
-void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
+void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     if(!mCurCell)
         return;
@@ -494,7 +494,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
 
 }
 
-void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
+void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
     if(!mCurCell)
@@ -528,7 +528,7 @@ void Scene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
     mCurCell->setScale(mScale, mPivotPt);
 }
 
-void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent *e)
+void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
     if(!mCurCell)

@@ -18,7 +18,7 @@ public slots:
 
 
 protected:
-    void drawContents (QPainter *painter);
+    void drawContents (QPainter* painter);
 
 private:
     QString mMessage;

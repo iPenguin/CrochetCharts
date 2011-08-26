@@ -29,13 +29,13 @@ class CrochetTab : public QWidget
     friend class ExportUi;
 public:
 
-    explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget *parent = 0);
+    explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget* parent = 0);
     ~CrochetTab();
 
-    void renderChart(QPainter *painter, QRectF rect = QRectF());
+    void renderChart(QPainter* painter, QRectF rect = QRectF());
 
-    void setPatternStitches(QMap<QString, int> *stitches) { mPatternStitches = stitches; }
-    void setPatternColors(QMap<QString, QMap<QString, qint64> > *colors) { mPatternColors = colors; }
+    void setPatternStitches(QMap<QString, int>* stitches) { mPatternStitches = stitches; }
+    void setPatternColors(QMap<QString, QMap<QString, qint64> >* colors) { mPatternColors = colors; }
 
     //list of modes available from this tab.
     QStringList editModes();
@@ -88,15 +88,15 @@ private:
     
 private:   
     QPointer<ChartView> mView;
-    Scene *mScene;
-    TextView *mTextView;
+    Scene* mScene;
+    TextView* mTextView;
 
-    QMap<QString, int> *mPatternStitches;
-    QMap<QString, QMap<QString, qint64> > *mPatternColors;
+    QMap<QString, int>* mPatternStitches;
+    QMap<QString, QMap<QString, qint64> >* mPatternColors;
     
     QString mName;
 
-    Ui::OptionsBar *ui;
+    Ui::OptionsBar* ui;
 
     Scene::ChartStyle mChartStyle;
 };

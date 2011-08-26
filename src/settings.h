@@ -24,7 +24,7 @@ public:
     bool isDemoVersion() { return mIsDemoVersion; }
     void setDemoVersion(bool isDemo) { mIsDemoVersion = isDemo; }
 
-    void trialVersionMessage(QWidget *parent);
+    void trialVersionMessage(QWidget* parent);
     
     //The folder where the user's settings are stored. W/trailing slash.
     QString userSettingsFolder();
@@ -42,7 +42,7 @@ public:
     
 private:
     void initDemoVersion();
-    static Settings *mInstance;
+    static Settings* mInstance;
     
     Settings();
 

@@ -13,7 +13,7 @@
 /*************************************************\
 | AddIndicator                                    |
 \*************************************************/
-AddIndicator::AddIndicator(Scene *s, QPointF pos, QUndoCommand* parent)
+AddIndicator::AddIndicator(Scene* s, QPointF pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     position = pos;
@@ -38,7 +38,7 @@ void AddIndicator::undo()
 /*************************************************\
 | RemoveIndicator                                 |
 \*************************************************/
-RemoveIndicator::RemoveIndicator(Scene *s, Indicator *i, QUndoCommand* parent)
+RemoveIndicator::RemoveIndicator(Scene* s, Indicator* i, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     item = i;
@@ -62,7 +62,7 @@ void RemoveIndicator::undo()
 /*************************************************\
 | MoveIndicator                                   |
 \*************************************************/
-MoveIndicator::MoveIndicator(Scene* s, Indicator *item, QPointF newPos, QUndoCommand* parent)
+MoveIndicator::MoveIndicator(Scene* s, Indicator* item, QPointF newPos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     i = item;
@@ -84,15 +84,15 @@ void MoveIndicator::undo()
     i->setPos(origPosition);
 }
 
-bool MoveIndicator::mergeWith(const QUndoCommand *command)
+bool MoveIndicator::mergeWith(const QUndoCommand* command)
 {
     if(command->id() != id())
         return false;
 
-    const MoveIndicator *other = static_cast<const MoveIndicator*>(command);
+    const MoveIndicator* other = static_cast<const MoveIndicator*>(command);
 
-    Indicator *i = qgraphicsitem_cast<Indicator*>(scene->itemAt(origPosition));
-    Indicator *otherI = qgraphicsitem_cast<Indicator*>(scene->itemAt(other->origPosition));
+    Indicator* i = qgraphicsitem_cast<Indicator*>(scene->itemAt(origPosition));
+    Indicator* otherI = qgraphicsitem_cast<Indicator*>(scene->itemAt(other->origPosition));
 
     if(otherI != i)
         return false;
@@ -105,7 +105,7 @@ bool MoveIndicator::mergeWith(const QUndoCommand *command)
 /*************************************************\
 | ChangeTextIndicator                             |
 \*************************************************/
-ChangeTextIndicator::ChangeTextIndicator(Scene* s, Indicator *item, QString text, QUndoCommand* parent)
+ChangeTextIndicator::ChangeTextIndicator(Scene* s, Indicator* item, QString text, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;

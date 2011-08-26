@@ -25,7 +25,7 @@
 #include <QKeyEvent>
 #include "stitchlibrary.h"
 
-SceneRounds::SceneRounds(QObject *parent)
+SceneRounds::SceneRounds(QObject* parent)
     : Scene(parent),
     mCenterSymbol(0)
 {
@@ -44,7 +44,7 @@ void SceneRounds::setShowChartCenter(bool state)
             QPen pen;
             pen.setWidth(5);
 
-            double radius = (defaultSize().height() *0.45);
+            double radius = (defaultSize().height() * 0.45);
 
             mCenterSymbol = addEllipse(-radius, -radius, radius * 2, radius * 2, pen);
             mCenterSymbol->setToolTip(tr("Chart Center"));
@@ -57,7 +57,7 @@ void SceneRounds::setShowChartCenter(bool state)
 
 }
 
-void SceneRounds::removeCell(CrochetCell *c)
+void SceneRounds::removeCell(CrochetCell* c)
 {
     int y = findGridPosition(c).y();
     removeItem(c);
@@ -70,7 +70,7 @@ void SceneRounds::removeCell(CrochetCell *c)
     redistributeCells(y);
 }
 
-void SceneRounds::appendCell(int row, CrochetCell *c)
+void SceneRounds::appendCell(int row, CrochetCell* c)
 {
     int col = grid[row].count() -1;
 
@@ -80,13 +80,13 @@ void SceneRounds::appendCell(int row, CrochetCell *c)
    
 }
 
-void SceneRounds::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
+void SceneRounds::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
 {
     double widthInDegrees = 360.0 / columns;
 
-    double radius = defaultSize().height() * (row + 1) + (defaultSize().height() *0.5);
+    double radius = defaultSize().height() * (row + 1) + (defaultSize().height() * 0.5);
 
-    double degrees = widthInDegrees*column;
+    double degrees = widthInDegrees * column;
     QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
 
     qreal delta = defaultSize().width() * 0.5;
@@ -105,7 +105,7 @@ void SceneRounds::redistributeCells(int row)
     int columns = grid[row].count();
 
     for(int i = 0; i < columns; ++i) {
-        CrochetCell *c = grid[row].at(i);
+        CrochetCell* c = grid[row].at(i);
         setCellPosition(row, i, c, columns, true);
     }
 }
@@ -129,7 +129,7 @@ void SceneRounds::createChart(int rows, int cols, QString stitch, QSizeF rowSize
 
 void SceneRounds::createRow(int row, int columns, QString stitch)
 {
-    CrochetCell *c = 0;
+    CrochetCell* c = 0;
     
     QList<CrochetCell*> modelRow;
     for(int i = 0; i < columns; ++i) {
@@ -148,10 +148,10 @@ void SceneRounds::createRow(int row, int columns, QString stitch)
 
 int SceneRounds::getClosestRow(QPointF mousePosition)
 {
-    //double radius = defaultSize().height() * (row + 1) + (defaultSize().height() *0.5);
-    qreal radius = sqrt(mousePosition.x()*mousePosition.x() + mousePosition.y()*mousePosition.y());
+    //double radius = defaultSize().height() * (row + 1) + (defaultSize().height() * 0.5);
+    qreal radius = sqrt(mousePosition.x() * mousePosition.x() + mousePosition.y() * mousePosition.y());
 
-    qreal temp = radius - (defaultSize().height() *0.5);
+    qreal temp = radius - (defaultSize().height() * 0.5);
     qreal temp2 = temp / defaultSize().height();
     
     int row = round(temp2 - 1);
@@ -242,8 +242,8 @@ void SceneRounds::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 //FIXME: the xy should be pos not grid.
-            AddCell *addCell = new AddCell(this, QPointF(x, y));
-            CrochetCell *c = addCell->cell();
+            AddCell* addCell = new AddCell(this, QPointF(x, y));
+            CrochetCell* c = addCell->cell();
             c->setStitch(mEditStitch, (y % 2));
             undoStack()->push(addCell);
 

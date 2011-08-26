@@ -27,7 +27,7 @@ void TestStitchSet::findStitch()
     QFETCH(QString, cat);
     QFETCH(QString, ws);
 
-    Stitch *s = mSet->findStitch(name);
+    Stitch* s = mSet->findStitch(name);
     QVERIFY(s->name() == name);
     QVERIFY(s->file() == file);
     QVERIFY(s->description() == desc);

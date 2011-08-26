@@ -7,7 +7,7 @@
 #include "license.h"
 #include <QDebug>
 
-LicenseValidator::LicenseValidator(QObject *parent)
+LicenseValidator::LicenseValidator(QObject* parent)
     : QRegExpValidator(License::licenseRegEx(), parent)
 {
 }

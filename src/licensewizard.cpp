@@ -33,7 +33,7 @@
 /*****************************************************\
  * License Wizard
  *****************************************************/
-LicenseWizard::LicenseWizard(bool regOnly, QWidget *parent)
+LicenseWizard::LicenseWizard(bool regOnly, QWidget* parent)
     : QWizard(parent)
 {
 
@@ -91,7 +91,7 @@ void LicenseWizard::showHelp()
 /*****************************************************\
  * Intro Page
  *****************************************************/
-IntroPage::IntroPage(bool regOnly, QWidget *parent)
+IntroPage::IntroPage(bool regOnly, QWidget* parent)
     : QWizardPage(parent)
 {
     setTitle(tr("Introduction"));
@@ -112,7 +112,7 @@ IntroPage::IntroPage(bool regOnly, QWidget *parent)
     evaluateRadioButton->setVisible(!regOnly);
 
     
-    QVBoxLayout *layout = new QVBoxLayout;
+    QVBoxLayout* layout = new QVBoxLayout;
     layout->addWidget(topLabel);
     layout->addWidget(registerRadioButton);
     layout->addWidget(evaluateRadioButton);
@@ -127,7 +127,7 @@ int IntroPage::nextId() const
 /*****************************************************\
  * License Page
  *****************************************************/
-LicensePage::LicensePage(QWidget *parent)
+LicensePage::LicensePage(QWidget* parent)
     : QWizardPage(parent)
 {
     licenseView = new QTextEdit;
@@ -136,7 +136,7 @@ LicensePage::LicensePage(QWidget *parent)
 
     registerField("license.agree*", agreeCheckbox);
 
-    QVBoxLayout *layout = new QVBoxLayout;
+    QVBoxLayout* layout = new QVBoxLayout;
     layout->addWidget(new QLabel(tr("You must agree to the End User License Agreement before you can use this software.")));
     layout->addWidget(licenseView);
     layout->addWidget(agreeCheckbox);
@@ -197,7 +197,7 @@ void LicensePage::printButtonClicked()
 /*****************************************************\
  * Evaluate Page
  *****************************************************/
-EvaluatePage::EvaluatePage(QWidget *parent)
+EvaluatePage::EvaluatePage(QWidget* parent)
     : QWizardPage(parent), mLicHttp(0), mDownloadFile(false)
 {
     if(!mLicHttp) {
@@ -232,7 +232,7 @@ EvaluatePage::EvaluatePage(QWidget *parent)
     registerField("evaluate.email*", emailLineEdit);
     registerField("evaluate.license", licenseNumberLineEdit);
 
-    QGridLayout *layout = new QGridLayout;
+    QGridLayout* layout = new QGridLayout;
     layout->addWidget(firstNameLabel, 0, 0);
     layout->addWidget(firstNameLineEdit, 0, 1);
     layout->addWidget(lastNameLabel, 1, 0);
@@ -292,7 +292,7 @@ void EvaluatePage::getLicense(QString license, bool errors)
 /*****************************************************\
  * Register Page
  *****************************************************/
-RegisterPage::RegisterPage(QWidget *parent)
+RegisterPage::RegisterPage(QWidget* parent)
     : QWizardPage(parent), mLicHttp(0), mDownloadFile(false)
 {
     if(!mLicHttp) {
@@ -333,7 +333,7 @@ RegisterPage::RegisterPage(QWidget *parent)
     registerField("register.serialNumber*", serialNumberLineEdit);
     registerField("register.license", licenseNumberLineEdit);
 
-    QGridLayout *layout = new QGridLayout;
+    QGridLayout* layout = new QGridLayout;
     layout->addWidget(firstNameLabel, 0, 0);
     layout->addWidget(firstNameLineEdit, 0, 1);
     layout->addWidget(lastNameLabel, 1, 0);
@@ -407,20 +407,20 @@ int RegisterPage::nextId() const
 /*****************************************************\
  *Conclusion Page
  *****************************************************/
-ConclusionPage::ConclusionPage(QWidget *parent)
+ConclusionPage::ConclusionPage(QWidget* parent)
     : QWizardPage(parent)
 {
     setTitle(tr("Complete Your Registration"));
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark.svg"));
     setFinalPage(true);
 
-    QLabel *lbl = new QLabel(tr("An internet connection is no longer required to run this software. "
+    QLabel* lbl = new QLabel(tr("An internet connection is no longer required to run this software. "
         "However if you are connected when you start the program it will check for updates."));
     lbl->setWordWrap(true);
     
     finalComments = new QLabel(this);
     finalComments->setWordWrap(true);
-    QVBoxLayout *layout = new QVBoxLayout;
+    QVBoxLayout* layout = new QVBoxLayout;
     layout->addWidget(lbl);
     layout->addWidget(finalComments);
 

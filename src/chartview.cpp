@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QScrollBar>
 
-ChartView::ChartView(QWidget *parent)
+ChartView::ChartView(QWidget* parent)
     : QGraphicsView(parent)
 {
 
@@ -18,12 +18,12 @@ ChartView::~ChartView()
 {
 }
 
-void ChartView::mousePressEvent(QMouseEvent *event)
+void ChartView::mousePressEvent(QMouseEvent* event)
 {    
     QGraphicsView::mousePressEvent(event);
 }
 
-void ChartView::mouseMoveEvent(QMouseEvent *event)
+void ChartView::mouseMoveEvent(QMouseEvent* event)
 {
     int deltaX = 0;
     int deltaY = 0;
@@ -79,12 +79,12 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
     QGraphicsView::mouseMoveEvent(event);
 }
 
-void ChartView::mouseReleaseEvent(QMouseEvent *event)
+void ChartView::mouseReleaseEvent(QMouseEvent* event)
 {
     QGraphicsView::mouseReleaseEvent(event);
 }
 
-void ChartView::wheelEvent(QWheelEvent *event)
+void ChartView::wheelEvent(QWheelEvent* event)
 {
     if (event->modifiers() && Qt::CTRL)
         zoom(event->delta());

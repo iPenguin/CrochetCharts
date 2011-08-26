@@ -12,7 +12,7 @@
 #include "settings.h"
 #include <QStyleOption>
 
-Cell::Cell(QGraphicsItem *parent)
+Cell::Cell(QGraphicsItem* parent)
     : QGraphicsSvgItem(parent),
     mAngle(0),
     mStitch(0)
@@ -35,7 +35,7 @@ QRectF Cell::boundingRect() const
         return stitch()->renderPixmap()->rect();
 }
 
-void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     QGraphicsSvgItem::paint(painter, option, widget);
 }

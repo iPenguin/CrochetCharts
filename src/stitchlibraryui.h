@@ -44,11 +44,11 @@ private slots:
     void iconDialog();
     
 private:
-    Ui::StitchLibraryDialog *ui;
+    Ui::StitchLibraryDialog* ui;
 
     void setDialogSize();
     void setupPropertiesBox();
-    void setButtonStates(StitchSet *set);
+    void setButtonStates(StitchSet* set);
 
     //update the source dropdown list and switch to setName
     void updateSourceDropDown(QString setName = "");

@@ -18,7 +18,7 @@ class SettingsUi : public QDialog
 {
     Q_OBJECT
 public:
-    SettingsUi(QWidget *parent);
+    SettingsUi(QWidget* parent);
     ~SettingsUi();
 
     int exec();
@@ -28,7 +28,7 @@ public slots:
 private slots:
     void setColor();
 
-    void buttonClicked(QAbstractButton *button);
+    void buttonClicked(QAbstractButton* button);
 private:
 
     //TODO: Using the same code in MainWindow
@@ -38,13 +38,13 @@ private:
     void resetDialogWidgets();
     void saveDialogWidgets();
     
-    void load(QObject *w);
-    void loadDefualt(QObject *w);
-    void save(QObject *w);
+    void load(QObject* w);
+    void loadDefualt(QObject* w);
+    void save(QObject* w);
 
     bool isSettingsWidget(QObject* obj);
     
-    Ui::SettingsDialog *ui;
+    Ui::SettingsDialog* ui;
 
     QColor mPrimaryColor;
     QColor mAlternateColor;

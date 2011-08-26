@@ -28,7 +28,7 @@ public:
 
     enum SaveVersion { Version_1_0_0 = 100 };
     
-    StitchSet(QObject *parent = 0, bool isMasterSet = false);
+    StitchSet(QObject* parent = 0, bool isMasterSet = false);
     ~StitchSet();
 
     /**
@@ -70,7 +70,7 @@ public:
     Stitch* findStitch(QString name);
 
     bool hasStitch(QString name);
-    void addStitch(Stitch *s);
+    void addStitch(Stitch* s);
     void createStitch(QString name);
 
     /**
@@ -81,7 +81,7 @@ public:
     
     int stitchCount() const;
 
-    QList<Stitch *> stitches() const { return mStitches; }
+    QList<Stitch*> stitches() const { return mStitches; }
     void clearStitches();
 
     /**
@@ -118,11 +118,11 @@ signals:
     void movedToOverlay(QString stitchName);
     
 protected:
-    void loadXmlStitchSet(QXmlStreamReader *stream, bool loadIcons = false);
-    void saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons = false);
+    void loadXmlStitchSet(QXmlStreamReader* stream, bool loadIcons = false);
+    void saveXmlStitchSet(QXmlStreamWriter* stream, bool saveIcons = false);
 
-    void saveIcons(QDataStream *out);
-    void loadIcons(QDataStream *in);
+    void saveIcons(QDataStream* out);
+    void loadIcons(QDataStream* in);
    
 private:
     /**
@@ -130,7 +130,7 @@ private:
      * path name for the icon.
      * FIXME: remove the loadIcon parameter?
      */
-    void loadXmlStitch(QXmlStreamReader *stream, bool loadIcon = false);
+    void loadXmlStitch(QXmlStreamReader* stream, bool loadIcon = false);
 
     bool removeDir(const QString &dirName);
 

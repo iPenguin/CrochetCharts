@@ -42,20 +42,20 @@ public:
         Blank       // start w/no sts and allow anything.
     };
     
-    Scene(QObject *parent = 0);
+    Scene(QObject* parent = 0);
     ~Scene();
 
     virtual void createRow(int row, int columns, QString stitch) = 0;
 
-    virtual void appendCell(int row, CrochetCell *c) = 0;
+    virtual void appendCell(int row, CrochetCell* c) = 0;
 
-    virtual void addCell(CrochetCell *c);
+    virtual void addCell(CrochetCell* c);
     
     int rowCount();
     int columnCount(int row);
     int maxColumnCount();
     
-    virtual void removeCell(CrochetCell *c) = 0;
+    virtual void removeCell(CrochetCell* c) = 0;
 
     virtual void createChart(int rows, int cols, QString stitch, QSizeF rowSize) = 0;
 
@@ -69,8 +69,8 @@ public:
 
     QUndoStack* undoStack() { return &mUndoStack; }
 
-    void addIndicator(Indicator *i);
-    void removeIndicator(Indicator *i);
+    void addIndicator(Indicator* i);
+    void removeIndicator(Indicator* i);
     
     QStringList modes();
     
@@ -87,39 +87,39 @@ protected:
     virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
     virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
 */
-    void keyReleaseEvent(QKeyEvent *keyEvent);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
-    void mousePressEvent(QGraphicsSceneMouseEvent *e);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
+    void keyReleaseEvent(QKeyEvent* keyEvent);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* e);
+    void mousePressEvent(QGraphicsSceneMouseEvent* e);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* e);
 
     /**
      * find the x,y positions on the grid for a given cell;
      * return QPoint(column, row);
      */
-    QPoint findGridPosition(CrochetCell *c);
+    QPoint findGridPosition(CrochetCell* c);
 
     QList<Indicator*> indicators() { return mIndicators; }
         
     void initDemoBackground();
 
 protected:
-    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    void colorModeMouseMove(QGraphicsSceneMouseEvent* e);
+    void colorModeMouseRelease(QGraphicsSceneMouseEvent* e);
     
-    void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    void indicatorModeMouseMove(QGraphicsSceneMouseEvent* e);
+    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
-    void angleModeMousePress(QGraphicsSceneMouseEvent *e);
-    void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    void angleModeMousePress(QGraphicsSceneMouseEvent* e);
+    void angleModeMouseMove(QGraphicsSceneMouseEvent* e);
+    void angleModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
-    void stretchModeMousePress(QGraphicsSceneMouseEvent *e);
-    void stretchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void stretchModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    void stretchModeMousePress(QGraphicsSceneMouseEvent* e);
+    void stretchModeMouseMove(QGraphicsSceneMouseEvent* e);
+    void stretchModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
-    virtual void stitchModeMouseMove(QGraphicsSceneMouseEvent *e) { Q_UNUSED(e); }
-    virtual void stitchModeMousePress(QGraphicsSceneMouseEvent *e) { Q_UNUSED(e); }
-    virtual void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e) { Q_UNUSED(e); }
+    virtual void stitchModeMouseMove(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
+    virtual void stitchModeMousePress(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
+    virtual void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
     
     QSizeF defaultSize() const { return mDefaultSize; }
 
@@ -127,11 +127,11 @@ protected:
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
-    CrochetCell *mCurCell;
+    CrochetCell* mCurCell;
     QPointF mCellStartPos;
     QPointF mLeftButtonDownPos;
     
-    Indicator *mCurIndicator;
+    Indicator* mCurIndicator;
     
     /**
      * The difference between where the user clicked on the object and the (x,y) of the object.
@@ -139,10 +139,10 @@ protected:
     QSizeF mDiff;
     qreal mOldAngle;
 
-    QRubberBand *mRubberBand;
+    QRubberBand* mRubberBand;
     QPointF mRubberBandStart;
 
-    QMap<QGraphicsItem *, QPointF> mOldPositions;
+    QMap<QGraphicsItem*, QPointF> mOldPositions;
     
     //Is the user moving an object.
     bool mMoving;
@@ -162,7 +162,7 @@ protected:
     QPointF mOrigin;
 
     //The grid just keeps track of the sts in each row so they can be converted to instructions.
-    QList<QList<CrochetCell *> > grid;
+    QList<QList<CrochetCell*> > grid;
     
 private:
     qreal scenePosToAngle(QPointF pt);

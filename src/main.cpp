@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     Settings::inst()->setValue("version", curVersion);
 
     splash.showMessage(QObject::tr("Loading Stitches..."));
-    StitchLibrary *library = StitchLibrary::inst();
+    StitchLibrary* library = StitchLibrary::inst();
     library->loadStitchSets();
 
     splash.showMessage(QObject::tr("Loading Ui..."));

@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     QApplication app(argc, argv);
     int retval(0);
 
-    QObject *test;
+    QObject* test;
 
     test = new TestLicense();
     retval +=QTest::qExec(test, argc, argv);

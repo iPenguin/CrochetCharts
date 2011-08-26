@@ -7,14 +7,14 @@
 
 #include <QDebug>
 
-UndoGroup::UndoGroup(QObject *parent)
+UndoGroup::UndoGroup(QObject* parent)
     : QUndoGroup(parent)
 {
     connect(this, SIGNAL(cleanChanged(bool)), this, SLOT(checkAllCleanStates()));
     
 }
 
-void UndoGroup::addStack(QUndoStack *stack)
+void UndoGroup::addStack(QUndoStack* stack)
 {
 
     connect(stack, SIGNAL(canUndoChanged(bool)), SLOT(checkAllCleanStates()));
@@ -25,7 +25,7 @@ void UndoGroup::checkAllCleanStates()
 {
     bool clean = true;
     
-    foreach(QUndoStack *stack, stacks()) {
+    foreach(QUndoStack* stack, stacks()) {
         if(!stack->isClean()) {
             clean = false;
             break;

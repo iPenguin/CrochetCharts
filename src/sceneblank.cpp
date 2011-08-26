@@ -25,7 +25,7 @@
 #include <QKeyEvent>
 #include "stitchlibrary.h"
 
-SceneBlank::SceneBlank(QObject *parent)
+SceneBlank::SceneBlank(QObject* parent)
     : Scene(parent)
 {
 }
@@ -44,12 +44,12 @@ CrochetCell* SceneBlank::cell(QPoint position)
     return cell(position.y(), position.x());
 }
 
-void SceneBlank::removeCell(CrochetCell *c)
+void SceneBlank::removeCell(CrochetCell* c)
 {
     removeItem(c);
 }
 
-void SceneBlank::appendCell(int row, CrochetCell *c)
+void SceneBlank::appendCell(int row, CrochetCell* c)
 {
     Q_UNUSED(row);
     //append any missing rows.
@@ -97,7 +97,7 @@ void SceneBlank::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
-            AddCell *addCell = new AddCell(this, e->scenePos());
+            AddCell* addCell = new AddCell(this, e->scenePos());
             undoStack()->push(addCell);
             addCell->cell()->setStitch(mEditStitch);
 

@@ -15,7 +15,7 @@ class LicenseHttp : public QWidget
     Q_OBJECT
 
 public:
-    LicenseHttp(QWidget *parent = 0);
+    LicenseHttp(QWidget* parent = 0);
     void downloadFile(QUrl url);
 
 signals:
@@ -23,12 +23,12 @@ signals:
 
 private slots:
     void startRequest();
-    void httpFinished(QNetworkReply *reply);
+    void httpFinished(QNetworkReply* reply);
 
 private:
     QUrl mUrl;
     QNetworkAccessManager qnam;
-    QNetworkReply *reply;
+    QNetworkReply* reply;
     int httpGetId;
     bool httpRequestAborted;
 };

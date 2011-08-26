@@ -37,7 +37,7 @@ public:
     ~StitchLibrary();
 
     //return the list of stitch sets.
-    QList<StitchSet *> stitchSets() { return mStitchSets; }
+    QList<StitchSet*> stitchSets() { return mStitchSets; }
     //return the master stitch set.
     StitchSet* masterStitchSet() { return mMasterSet; }
     StitchSet* overlay() { return mOverlay; }
@@ -62,23 +62,23 @@ public:
     //Remove and delete setName.
     void removeSet(QString setName);
     //remove a set like a save file set.
-    void removeSet(StitchSet *set);
+    void removeSet(StitchSet* set);
 
-    void removeMasterStitches(StitchSet *set);
+    void removeMasterStitches(StitchSet* set);
 
     //add a stitch set from a file, and return a pointer to it.
     StitchSet* addStitchSet(QString fileName);
-    void addStitchSet(StitchSet *set);
+    void addStitchSet(StitchSet* set);
 
-    bool masterHasStitch(Stitch *s);
+    bool masterHasStitch(Stitch* s);
     
-    void addStitchToMasterSet(StitchSet *set, Stitch *s);
+    void addStitchToMasterSet(StitchSet* set, Stitch* s);
     /**
      * This function removes a stitch from the master set.
      * It can be called on stitches that aren't in the master set
      * as it checks them before it removes them.
      */
-    void removeStitchFormMasterSet(Stitch *s);
+    void removeStitchFormMasterSet(Stitch* s);
 
     void resetMasterStitchSet();
 

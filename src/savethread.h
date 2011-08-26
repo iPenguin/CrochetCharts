@@ -1,7 +1,7 @@
 /*************************************************\
- | Copyright (c) 2011 Stitch *Works Software        |
- | Brian C. Milco <brian@stitchworkssoftware.com>  |
- \*************************************************/
+| Copyright (c) 2011 Stitch Works Software        |
+| Brian C. Milco <brian@stitchworkssoftware.com>  |
+\*************************************************/
 #ifndef SAVETHREAD_H
 #define SAVETHREAD_H
 
@@ -24,8 +24,8 @@ public:
 private:
     QTransform loadTransform(QXmlStreamReader* stream);
 
-    CrochetTab *tab;
-    QXmlStreamReader *stream;
+    CrochetTab* tab;
+    QXmlStreamReader* stream;
     
 };
 #endif //SAVETHREAD_H

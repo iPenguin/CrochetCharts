@@ -29,7 +29,7 @@ QPixmap Legend::drawColorBox(QColor color, QSize size)
 }
 
 
-ColorLegend::ColorLegend(QMap<QString, QMap<QString, qint64> > *colors, QGraphicsItem *parent)
+ColorLegend::ColorLegend(QMap<QString, QMap<QString, qint64> >* colors, QGraphicsItem* parent)
     : QGraphicsWidget(parent)
 {
     mPatternColors = colors;
@@ -54,7 +54,7 @@ ColorLegend::~ColorLegend()
 {
 }
 
-void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void ColorLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
@@ -121,7 +121,7 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     for(int i = 0; i < sortedKeys.count(); ++i) {
         QString hex = sortedColors.value(sortedKeys.at(i));
 
-        int x = Legend::margin + ceil(i/itemsPerCol + 0.0) *colWidth;
+        int x = Legend::margin + ceil(i/itemsPerCol + 0.0) * colWidth;
         int y = Legend::margin + ((Legend::margin + Legend::iconHeight) * (i%itemsPerCol)) + titleHeight;
         
         painter->drawPixmap(x, y, Legend::drawColorBox(QColor(hex), QSize(Legend::iconWidth, Legend::iconHeight)));
@@ -145,7 +145,7 @@ void ColorLegend::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 /**********************************************************************************\
 | Stitch Legend                                                                    |
 \**********************************************************************************/
-StitchLegend::StitchLegend(QMap<QString, int> *stitches, QGraphicsItem* parent)
+StitchLegend::StitchLegend(QMap<QString, int>* stitches, QGraphicsItem* parent)
     : QGraphicsWidget(parent)
 {
     mPatternStitches = stitches;
@@ -162,7 +162,7 @@ StitchLegend::~StitchLegend()
 {
 }
 
-void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget *widget)
+void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
@@ -192,7 +192,7 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
 
     int widestCol = 0;
     foreach(QString key, keys) {
-        Stitch *s = StitchLibrary::inst()->findStitch(key);
+        Stitch* s = StitchLibrary::inst()->findStitch(key);
         if(!s)
             continue;
         
@@ -278,7 +278,7 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
     int itemsPerCol = columns.value(0).value("count");
     
     foreach(QString key, keys) {
-        Stitch *s = StitchLibrary::inst()->findStitch(key);
+        Stitch* s = StitchLibrary::inst()->findStitch(key);
         if(!s) {
             qWarning() << "Couldn't find stitch while generating legend: " << key;
             continue;
@@ -322,7 +322,7 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         
         if(showWrongSide) {
             if(s->wrongSide() != s->name()) {
-                Stitch *ws = StitchLibrary::inst()->findStitch(s->wrongSide());
+                Stitch* ws = StitchLibrary::inst()->findStitch(s->wrongSide());
                 if(ws) {
                     painter->drawText(x,y, ws->name());
                     if(showDescription) {

@@ -15,7 +15,7 @@ class TextView : public QObject
     Q_OBJECT
 
 public:
-    TextView(QWidget *parent = 0, Scene* scene = 0);
+    TextView(QWidget* parent = 0, Scene* scene = 0);
     ~TextView();
 
     void setScene(Scene* scene) { mScene = scene; }

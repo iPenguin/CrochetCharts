@@ -19,8 +19,8 @@ class ExportUi : public QDialog
 {
     Q_OBJECT
 public:
-    ExportUi(QTabWidget *tabWidget, QMap<QString, int> *stitches,
-             QMap<QString, QMap<QString, qint64> > *colors, QWidget *parent = 0);
+    ExportUi(QTabWidget* tabWidget, QMap<QString, int>* stitches,
+             QMap<QString, QMap<QString, qint64> >* colors, QWidget* parent = 0);
 
     QString exportType,
             selection,
@@ -29,7 +29,7 @@ public:
         width,
         height;
     bool pageToChartSize;
-    QGraphicsScene *scene;
+    QGraphicsScene* scene;
     
 public slots:
     int exec();
@@ -64,14 +64,14 @@ private:
     void updateChartSizeRatio();
     qreal sceneRatio();
 
-    Ui::ExportDialog *ui;
-    QTabWidget *mTabWidget;
+    Ui::ExportDialog* ui;
+    QTabWidget* mTabWidget;
 
-    StitchLegend *sl;
-    ColorLegend  *cl;
+    StitchLegend* sl;
+    ColorLegend* cl;
     
-    QMap<QString, int> *mStitches;
-    QMap<QString, QMap<QString, qint64> > *mColors;
+    QMap<QString, int>* mStitches;
+    QMap<QString, QMap<QString, qint64> >* mColors;
 
 };
 

@@ -10,7 +10,7 @@
 
 #include <math.h>
 
-TextView::TextView(QWidget *parent, Scene* scene)
+TextView::TextView(QWidget* parent, Scene* scene)
     : QObject(parent), mScene(scene)
 {
 }

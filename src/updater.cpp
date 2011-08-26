@@ -84,9 +84,9 @@ void Updater::httpFinished()
             msgbox.setIcon(QMessageBox::Information);
             msgbox.setText(tr("There is a new version of %1.").arg(AppInfo::inst()->appName));
             msgbox.setInformativeText(tr("Would you like to download the new version?"));
-            /*QPushButton *downloadNow =*/ msgbox.addButton(tr("Download the new version"), QMessageBox::ActionRole);
-            QPushButton *seeNotes    = msgbox.addButton(tr("See what has changed"), QMessageBox::HelpRole);
-            QPushButton *remindLater = msgbox.addButton(tr("Remind me later"), QMessageBox::RejectRole);
+            /*QPushButton* downloadNow =*/ msgbox.addButton(tr("Download the new version"), QMessageBox::ActionRole);
+            QPushButton* seeNotes    = msgbox.addButton(tr("See what has changed"), QMessageBox::HelpRole);
+            QPushButton* remindLater = msgbox.addButton(tr("Remind me later"), QMessageBox::RejectRole);
 
             msgbox.exec();
 
@@ -197,7 +197,7 @@ void Updater::httpReadyReadInstaller()
 void Updater::launchInstaller()
 {
 
-    QProcess *installProc = new QProcess(this);
+    QProcess* installProc = new QProcess(this);
 
     QString program;
 #if defined(Q_OS_WIN32)

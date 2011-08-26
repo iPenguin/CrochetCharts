@@ -20,7 +20,7 @@
 #include <QMap>
 #include "appinfo.h"
 
-StitchSet::StitchSet(QObject *parent, bool isMasterSet)
+StitchSet::StitchSet(QObject* parent, bool isMasterSet)
     : QAbstractItemModel(parent),
     isMasterSet(isMasterSet),
     isTemporary(false),
@@ -30,7 +30,7 @@ StitchSet::StitchSet(QObject *parent, bool isMasterSet)
 
 StitchSet::~StitchSet()
 {
-    foreach(Stitch *s, mStitches) {
+    foreach(Stitch* s, mStitches) {
         mStitches.removeOne(s);
         delete s;
     }
@@ -175,7 +175,7 @@ void StitchSet::loadDataFile(QString fileName, QString dest)
 
 }
 
-void StitchSet::loadIcons(QDataStream *in)
+void StitchSet::loadIcons(QDataStream* in)
 {
     QMap<QString, QByteArray> icons;
     *in >> icons;
@@ -188,7 +188,7 @@ void StitchSet::loadIcons(QDataStream *in)
     }
 }
 
-void StitchSet::loadXmlStitchSet(QXmlStreamReader *stream, bool loadIcons)
+void StitchSet::loadXmlStitchSet(QXmlStreamReader* stream, bool loadIcons)
 {
     while (!(stream->isEndElement() && stream->name() == "stitch_set"))
     {
@@ -213,9 +213,9 @@ void StitchSet::loadXmlStitchSet(QXmlStreamReader *stream, bool loadIcons)
     }
 }
 
-void StitchSet::loadXmlStitch(QXmlStreamReader *stream, bool loadIcon)
+void StitchSet::loadXmlStitch(QXmlStreamReader* stream, bool loadIcon)
 {
-    Stitch *s = new Stitch();
+    Stitch* s = new Stitch();
 
     while (!(stream->isEndElement() && stream->name() == "stitch"))
     {
@@ -255,7 +255,7 @@ void StitchSet::saveXmlFile(QString fileName)
         QDir(Settings::inst()->userSettingsFolder()).mkpath(QFileInfo(fileName).absolutePath());
     }
     
-    QString *data = new QString();
+    QString* data = new QString();
     
     QXmlStreamWriter stream(data);
     stream.setAutoFormatting(true);
@@ -296,7 +296,7 @@ void StitchSet::saveDataFile(QString fileName)
 
     saveIcons(&out);
 
-    QString *data = new QString();
+    QString* data = new QString();
     
     QXmlStreamWriter stream(data);
     stream.setAutoFormatting(true);
@@ -314,10 +314,10 @@ void StitchSet::saveDataFile(QString fileName)
     
 }
 
-void StitchSet::saveIcons(QDataStream *out)
+void StitchSet::saveIcons(QDataStream* out)
 {
     QMap<QString, QByteArray> icons;
-    foreach(Stitch *s, mStitches) {
+    foreach(Stitch* s, mStitches) {
         if(!s->file().startsWith(":/")) {
 
             QFile f(s->file());
@@ -329,7 +329,7 @@ void StitchSet::saveIcons(QDataStream *out)
     *out << icons;
 }
 
-void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons)
+void StitchSet::saveXmlStitchSet(QXmlStreamWriter* stream, bool saveIcons)
 {
     stream->writeStartElement("stitch_set");
     stream->writeTextElement("name", name());
@@ -338,7 +338,7 @@ void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons)
     stream->writeTextElement("org", org());
     stream->writeTextElement("url", url());
         
-    foreach(Stitch *s, mStitches) {
+    foreach(Stitch* s, mStitches) {
         QString file;
         if(saveIcons && !s->file().startsWith(":/"))
             file = QFileInfo(s->file()).fileName();
@@ -362,7 +362,7 @@ void StitchSet::saveXmlStitchSet(QXmlStreamWriter *stream, bool saveIcons)
 
 Stitch* StitchSet::findStitch(QString name)
 {
-    foreach(Stitch *s, mStitches) {
+    foreach(Stitch* s, mStitches) {
         if(s->name() == name)
             return s;
     }
@@ -372,14 +372,14 @@ Stitch* StitchSet::findStitch(QString name)
 
 bool StitchSet::hasStitch(QString name)
 {
-    Stitch *s = this->findStitch(name);
+    Stitch* s = this->findStitch(name);
     if(s)
         return true;
     else
         return false;
 }
 
-void StitchSet::addStitch(Stitch *s)
+void StitchSet::addStitch(Stitch* s)
 {
     beginInsertRows(parent(QModelIndex()), stitchCount(), stitchCount());
     mStitches.append(s);
@@ -388,7 +388,7 @@ void StitchSet::addStitch(Stitch *s)
 
 void StitchSet::createStitch(QString name)
 {
-    Stitch *newS = new Stitch();
+    Stitch* newS = new Stitch();
     newS->setName(name);
     newS->setFile(":/stitches/unknown.svg");
     addStitch(newS);
@@ -396,7 +396,7 @@ void StitchSet::createStitch(QString name)
 
 void StitchSet::removeStitch(QString name)
 {
-    Stitch *s = findStitch(name);
+    Stitch* s = findStitch(name);
     int index = mStitches.indexOf(s);
     if(s) {
         beginRemoveRows(parent(QModelIndex()), index, index);
@@ -449,7 +449,7 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
     if(!index.isValid())
         return QVariant();
 
-    Stitch *s = static_cast<Stitch*>(index.internalPointer());
+    Stitch* s = static_cast<Stitch*>(index.internalPointer());
 
     if(role == Qt::DisplayRole || role == Qt::EditRole) {
         switch(index.column()) {
@@ -479,7 +479,7 @@ bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int rol
         return false;
     
     if(role == Qt::EditRole || role == Qt::DisplayRole) {
-        Stitch *s = static_cast<Stitch*>(index.internalPointer());
+        Stitch* s = static_cast<Stitch*>(index.internalPointer());
         
         bool retVal = false;
 
@@ -584,7 +584,7 @@ int StitchSet::columnCount(const QModelIndex &parent) const
 
 void StitchSet::clearStitches()
 {
-    foreach(Stitch *s, mStitches)
+    foreach(Stitch* s, mStitches)
         removeStitch(s->name());
     mStitches.clear();
 }
@@ -599,7 +599,7 @@ void StitchSet::reset()
     clearStitches();
     loadXmlFile(":/crochet.xml");
     
-    foreach(Stitch *s, mStitches)
+    foreach(Stitch* s, mStitches)
         s->isBuiltIn = true;
 
     QAbstractItemModel::reset();
@@ -607,7 +607,7 @@ void StitchSet::reset()
 
 void StitchSet::reloadStitchIcons()
 {
-    foreach(Stitch *s, mStitches) {
+    foreach(Stitch* s, mStitches) {
         s->reloadIcon();
     }
 }

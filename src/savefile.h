@@ -47,11 +47,11 @@ public:
     QString fileName;
     
 private:
-    void saveCustomStitches(QXmlStreamWriter *stream);
-    void saveColors(QXmlStreamWriter *stream);
-    bool saveCharts(QXmlStreamWriter *stream);
+    void saveCustomStitches(QXmlStreamWriter* stream);
+    void saveColors(QXmlStreamWriter* stream);
+    bool saveCharts(QXmlStreamWriter* stream);
 
-    void loadColors(QXmlStreamReader *stream);
+    void loadColors(QXmlStreamReader* stream);
     void loadChart(QXmlStreamReader* stream);
 
     void loadGrid(QXmlStreamReader* stream, Scene* scene);
@@ -66,6 +66,6 @@ private:
 
     QWidget* mParent;
 
-    StitchSet *mInternalStitchSet;
+    StitchSet* mInternalStitchSet;
 };
 #endif //SAVEFILE_H

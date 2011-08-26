@@ -10,7 +10,7 @@
 /*************************************************\
 | SetCellStitch                                   |
 \*************************************************/
-SetCellStitch::SetCellStitch(Scene *s, CrochetCell *cell, QString newSt, QUndoCommand *parent)
+SetCellStitch::SetCellStitch(Scene* s, CrochetCell* cell, QString newSt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -35,7 +35,7 @@ void SetCellStitch::undo()
 /*************************************************\
 | SetCellColor                                    |
 \*************************************************/
-SetCellColor::SetCellColor(Scene *s, CrochetCell *cell, QColor newCl, QUndoCommand* parent)
+SetCellColor::SetCellColor(Scene* s, CrochetCell* cell, QColor newCl, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -58,7 +58,7 @@ void SetCellColor::undo()
 /*************************************************\
 | SetCellRotation                                 |
 \*************************************************/
-SetCellRotation::SetCellRotation(Scene *s, CrochetCell *cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent)
+SetCellRotation::SetCellRotation(Scene* s, CrochetCell* cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -85,7 +85,7 @@ void SetCellRotation::undo()
 /*************************************************\
 | SetItemCoordinates                              |
 \*************************************************/
-SetItemCoordinates::SetItemCoordinates(Scene *s, QGraphicsItem *item, QPointF oldPos, QPointF newPos, QUndoCommand* parent)
+SetItemCoordinates::SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF oldPos, QPointF newPos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -106,14 +106,14 @@ void SetItemCoordinates::redo()
     i->setPos(newCoord);
 }
 
-bool SetItemCoordinates::mergeWith(const QUndoCommand *command)
+bool SetItemCoordinates::mergeWith(const QUndoCommand* command)
 {
     if(command->id() != id())
         return false;
     
-    const SetItemCoordinates *other = static_cast<const SetItemCoordinates*>(command);
+    const SetItemCoordinates* other = static_cast<const SetItemCoordinates*>(command);
     
-    QGraphicsItem *otherI = other->i;
+    QGraphicsItem* otherI = other->i;
     
     if(otherI != i)
         return false;
@@ -126,7 +126,7 @@ bool SetItemCoordinates::mergeWith(const QUndoCommand *command)
 /*************************************************\
  | SetCellScale                                   |
 \*************************************************/
-SetCellScale::SetCellScale(Scene *s, CrochetCell *cell, qreal oldScle, QPointF pvtPt, QUndoCommand* parent)
+SetCellScale::SetCellScale(Scene* s, CrochetCell* cell, qreal oldScle, QPointF pvtPt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -175,7 +175,7 @@ void AddCell::undo()
 /*************************************************\
 | RemoveCell                                      |
 \*************************************************/
-RemoveCell::RemoveCell(Scene* s, CrochetCell *cell, QUndoCommand* parent)
+RemoveCell::RemoveCell(Scene* s, CrochetCell* cell, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     c = cell;
@@ -198,7 +198,7 @@ void RemoveCell::undo()
 /*************************************************\
 | AddItem                                         |
 \*************************************************/
-AddItem::AddItem(Scene *s, QPointF pos, QUndoCommand *parent)
+AddItem::AddItem(Scene* s, QPointF pos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     position = pos;

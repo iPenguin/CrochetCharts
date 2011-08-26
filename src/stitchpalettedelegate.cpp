@@ -13,19 +13,19 @@
 
 #include <QSortFilterProxyModel>
 
-StitchPaletteDelegate::StitchPaletteDelegate(QWidget *parent)
+StitchPaletteDelegate::StitchPaletteDelegate(QWidget* parent)
     : QStyledItemDelegate(parent)
 {
 }
 
-void StitchPaletteDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void StitchPaletteDelegate::paint(QPainter* painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     int pad = 5;
 
-    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+    const QSortFilterProxyModel* model =  static_cast<const QSortFilterProxyModel*>(index.model());
     QModelIndex idx = model->mapToSource(index);
     
-    Stitch *s = static_cast<Stitch*>(idx.internalPointer());
+    Stitch* s = static_cast<Stitch*>(idx.internalPointer());
     QRect rect = option.rect;
 
     if(option.state & QStyle::State_Selected)
@@ -48,9 +48,9 @@ QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     if(!index.isValid())
         return QSize();
 
-    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+    const QSortFilterProxyModel* model =  static_cast<const QSortFilterProxyModel*>(index.model());
     QModelIndex idx = model->mapToSource(index);
-    Stitch *s = static_cast<Stitch*>(idx.internalPointer());
+    Stitch* s = static_cast<Stitch*>(idx.internalPointer());
                 
     if(!s)  
         return QSize();

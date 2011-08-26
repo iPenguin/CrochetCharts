@@ -22,7 +22,7 @@ class LicenseWizard : public QWizard
 public:
     enum { Page_Intro, Page_License, Page_Evaluate, Page_Register, Page_Conclusion };
 
-    LicenseWizard(bool regOnly = false, QWidget *parent = 0);
+    LicenseWizard(bool regOnly = false, QWidget* parent = 0);
 
 private slots:
     void showHelp();
@@ -34,21 +34,21 @@ class IntroPage : public QWizardPage
     Q_OBJECT
 
 public:
-    IntroPage(bool regOnly = false, QWidget *parent = 0);
+    IntroPage(bool regOnly = false, QWidget* parent = 0);
 
     int nextId() const;
 
 private:
-    QLabel *topLabel;
-    QRadioButton *registerRadioButton;
-    QRadioButton *evaluateRadioButton;
+    QLabel* topLabel;
+    QRadioButton* registerRadioButton;
+    QRadioButton* evaluateRadioButton;
 };
 
 class LicensePage : public QWizardPage
 {
     Q_OBJECT
 public:
-    LicensePage(QWidget *parent = 0);
+    LicensePage(QWidget* parent = 0);
     
     bool validatePage();
     int nextId() const;
@@ -61,8 +61,8 @@ private slots:
     void printButtonClicked();
 
 private:
-    QTextEdit *licenseView;
-    QCheckBox *agreeCheckbox;    
+    QTextEdit* licenseView;
+    QCheckBox* agreeCheckbox;
 };
 
 class EvaluatePage : public QWizardPage
@@ -70,7 +70,7 @@ class EvaluatePage : public QWizardPage
     Q_OBJECT
 
 public:
-    EvaluatePage(QWidget *parent = 0);
+    EvaluatePage(QWidget* parent = 0);
 
     bool validatePage();
     int nextId() const;
@@ -79,15 +79,15 @@ public slots:
     void getLicense(QString license, bool errors);
 
 private:
-    QLabel *firstNameLabel;
-    QLabel *lastNameLabel;
-    QLabel *emailLabel;
-    QLineEdit *firstNameLineEdit;
-    QLineEdit *lastNameLineEdit;
-    QLineEdit *emailLineEdit;
-    QLineEdit *licenseNumberLineEdit;
+    QLabel* firstNameLabel;
+    QLabel* lastNameLabel;
+    QLabel* emailLabel;
+    QLineEdit* firstNameLineEdit;
+    QLineEdit* lastNameLineEdit;
+    QLineEdit* emailLineEdit;
+    QLineEdit* licenseNumberLineEdit;
 
-    LicenseHttp *mLicHttp;
+    LicenseHttp* mLicHttp;
     bool mAllowNextPage;
     bool mDownloadFile;
 };
@@ -97,7 +97,7 @@ class RegisterPage : public QWizardPage
     Q_OBJECT
 
 public:
-    RegisterPage(QWidget *parent = 0);
+    RegisterPage(QWidget* parent = 0);
 
     bool validatePage();
     int nextId() const;
@@ -107,17 +107,17 @@ public:
 public slots:
     void getLicense(QString license, bool errors);
 private:
-    QLabel *firstNameLabel;
-    QLabel *lastNameLabel;
-    QLabel *serialNumberLabel;
-    QLabel *emailLabel;
-    QLineEdit *firstNameLineEdit;
-    QLineEdit *lastNameLineEdit;
-    QLineEdit *serialNumberLineEdit;
-    QLineEdit *emailLineEdit;
-    QLineEdit *licenseNumberLineEdit;
+    QLabel* firstNameLabel;
+    QLabel* lastNameLabel;
+    QLabel* serialNumberLabel;
+    QLabel* emailLabel;
+    QLineEdit* firstNameLineEdit;
+    QLineEdit* lastNameLineEdit;
+    QLineEdit* serialNumberLineEdit;
+    QLineEdit* emailLineEdit;
+    QLineEdit* licenseNumberLineEdit;
 
-    LicenseHttp *mLicHttp;
+    LicenseHttp* mLicHttp;
     bool mAllowNextPage;
     bool mDownloadFile;
 };
@@ -127,7 +127,7 @@ class ConclusionPage : public QWizardPage
     Q_OBJECT
 
 public:
-    ConclusionPage(QWidget *parent = 0);
+    ConclusionPage(QWidget* parent = 0);
 
     void initializePage();
     int nextId() const;
@@ -135,7 +135,7 @@ public:
     bool validatePage();
 
 private:
-    QLabel *finalComments;
+    QLabel* finalComments;
     QString sn,
             license,
             email,

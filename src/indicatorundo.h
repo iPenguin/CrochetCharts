@@ -19,7 +19,7 @@ class AddIndicator : public QUndoCommand
 public:
     enum { Id = 2200 };
 
-    AddIndicator(Scene *s, QPointF pos, QUndoCommand* parent = 0);
+    AddIndicator(Scene* s, QPointF pos, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -29,8 +29,8 @@ public:
 private:
     QPointF position;
 
-    Indicator *item;
-    Scene *scene;
+    Indicator* item;
+    Scene* scene;
 };
 
 class RemoveIndicator : public QUndoCommand
@@ -38,7 +38,7 @@ class RemoveIndicator : public QUndoCommand
 public:
     enum { Id = 2210 };
 
-    RemoveIndicator(Scene *s, Indicator *i, QUndoCommand* parent = 0);
+    RemoveIndicator(Scene* s, Indicator* i, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -47,9 +47,9 @@ public:
 
 private:
     QPointF position;
-    Indicator *item;
+    Indicator* item;
 
-    Scene *scene;
+    Scene* scene;
 };
 
 class MoveIndicator : public QUndoCommand
@@ -57,21 +57,21 @@ class MoveIndicator : public QUndoCommand
 public:
     enum { Id = 2220 };
 
-    MoveIndicator(Scene *s, Indicator *item, QPointF newPos, QUndoCommand* parent = 0);
+    MoveIndicator(Scene* s, Indicator* item, QPointF newPos, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
 
-    bool mergeWith(const QUndoCommand *command);
+    bool mergeWith(const QUndoCommand* command);
     
     int id() const { return Id; }
 
 private:
-    Indicator *i;
+    Indicator* i;
     QPointF origPosition;
     QPointF newPosition;
 
-    Scene *scene;
+    Scene* scene;
 };
 
 class ChangeTextIndicator : public QUndoCommand
@@ -79,7 +79,7 @@ class ChangeTextIndicator : public QUndoCommand
 public:
     enum { Id = 2230 };
 
-    ChangeTextIndicator(Scene *s, Indicator *item, QString text, QUndoCommand *parent = 0);
+    ChangeTextIndicator(Scene* s, Indicator* item, QString text, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -87,11 +87,11 @@ public:
     int id() const { return Id; }
 
 private:
-    Indicator *i;
+    Indicator* i;
     QString newText;
     QString origText;
 
-    Scene *scene;
+    Scene* scene;
 };
 
 #endif //INDICATORUNDO_H

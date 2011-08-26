@@ -14,7 +14,7 @@ class ChartView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    ChartView(QWidget *parent = 0);
+    ChartView(QWidget* parent = 0);
     ~ChartView();
 
     void zoomIn();
@@ -28,10 +28,10 @@ signals:
     void zoomLevelChanged(int percent);
 
 protected:
-    void mouseMoveEvent(QMouseEvent *event);
-    void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void wheelEvent(QWheelEvent *event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void wheelEvent(QWheelEvent* event);
     
 private:
 };

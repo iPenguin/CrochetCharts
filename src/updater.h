@@ -43,13 +43,13 @@ private slots:
 private:
     QUrl mUrl;
     QNetworkAccessManager qnam;
-    QNetworkReply *reply,
-                  *instReply;
+    QNetworkReply* reply,
+                 * instReply;
 
-    QProgressDialog *mProgDialog;
+    QProgressDialog* mProgDialog;
     
     QByteArray mData;
-    QFile *installer;
+    QFile* installer;
     
     int httpGetId;
     bool httpRequestAborted;

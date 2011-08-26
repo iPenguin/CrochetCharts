@@ -18,7 +18,7 @@ class StitchIconUi : public QDialog
 {
     Q_OBJECT
 public:
-    StitchIconUi(QWidget *parent = 0);
+    StitchIconUi(QWidget* parent = 0);
     ~StitchIconUi();
 
 private slots:
@@ -35,7 +35,7 @@ signals:
 private:
     void loadIcons();
     
-    Ui::StitchIconDialog *ui;
+    Ui::StitchIconDialog* ui;
     
 };
 #endif //STITCHICONUI_H

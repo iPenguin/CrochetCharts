@@ -30,14 +30,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     friend class SaveFile;
 public:
-    explicit MainWindow(QStringList fileNames = QStringList(), QWidget *parent = 0);
+    explicit MainWindow(QStringList fileNames = QStringList(), QWidget* parent = 0);
     ~MainWindow();
 
     bool hasTab();
     void setupNewTabDialog();
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent* event);
 
     //generate the next "new chart" name ie: chart, chart1, chart2...
     QString nextChartName(QString baseName = tr("Chart"));
@@ -96,9 +96,9 @@ private slots:
     void helpAbout();
 
 private slots:
-    void print(QPrinter *printer);
+    void print(QPrinter* printer);
 
-    void changeTabMode(QAction *a);
+    void changeTabMode(QAction* a);
 
     void documentIsModified(bool isModified);
 
@@ -134,11 +134,11 @@ private:
     
     CrochetTab* curCrochetTab();
    
-    Ui::MainWindow *ui;
-    Ui::StitchLibraryDialog *sld;
+    Ui::MainWindow* ui;
+    Ui::StitchLibraryDialog* sld;
 
-    SaveFile *mFile;
-    Updater *mUpdater;
+    SaveFile* mFile;
+    Updater* mUpdater;
 
 //for the savefile class:
 protected:
@@ -156,15 +156,15 @@ private:
     QMap<QString, int> mPatternStitches;
     QMap<QString, QMap<QString, qint64> > mPatternColors;
 
-    QActionGroup *mModeGroup;
+    QActionGroup* mModeGroup;
     
-    QAction *mActionUndo,
-            *mActionRedo;
+    QAction* mActionUndo,
+           * mActionRedo;
 
     void addToRecentFiles(QString fileName);
     QList<QAction*> mRecentFilesActs;
     
-    QDockWidget *mUndoDock;
+    QDockWidget* mUndoDock;
     UndoGroup mUndoGroup;
 
     int mEditMode;

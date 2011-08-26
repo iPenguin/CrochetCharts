@@ -53,7 +53,7 @@ public:
     const quint32 magicNumberSet;
 
 private:
-    static AppInfo *mInstance;
+    static AppInfo* mInstance;
     
     AppInfo();
     

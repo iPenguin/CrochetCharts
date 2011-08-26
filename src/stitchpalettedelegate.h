@@ -11,9 +11,9 @@ class StitchPaletteDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 public:
-    StitchPaletteDelegate(QWidget *parent = 0);
+    StitchPaletteDelegate(QWidget* parent = 0);
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paint(QPainter* painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 

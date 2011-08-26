@@ -27,8 +27,8 @@ SaveThread::~SaveThread()
 void SaveThread::run()
 {
 
-    CrochetCell *c = new CrochetCell();
-    Stitch *s = 0;
+    CrochetCell* c = new CrochetCell();
+    Stitch* s = 0;
     int row = -1, column = -1;
     QString color;
     qreal x = 0, y = 0, anchorX = 0, anchorY = 0;

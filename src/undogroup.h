@@ -11,9 +11,9 @@ class UndoGroup : public QUndoGroup
 {
     Q_OBJECT
 public:
-    UndoGroup(QObject *parent = 0);
+    UndoGroup(QObject* parent = 0);
 
-    void addStack(QUndoStack *stack);
+    void addStack(QUndoStack* stack);
     
 signals:
     void isModified(bool clean);

@@ -21,10 +21,10 @@ public:
     
     virtual ~TabInterface() = 0;
 
-    virtual void renderChart(QPainter *painter, QRectF rect = QRectF()) = 0;
+    virtual void renderChart(QPainter* painter, QRectF rect = QRectF()) = 0;
 
-    void setPatternStitches(QMap<QString, int> *stitches) { mPatternStitches = stitches; }
-    void setPatternColors(QMap<QString, QMap<QString, qint64> > *colors) { mPatternColors = colors; }
+    void setPatternStitches(QMap<QString, int>* stitches) { mPatternStitches = stitches; }
+    void setPatternColors(QMap<QString, QMap<QString, qint64> >* colors) { mPatternColors = colors; }
     
     virtual QStringList editModes() = 0;
 
@@ -55,8 +55,8 @@ public slots:
 private:
     virtual QGraphicsScene* scene() = 0;
 
-    QMap<QString, int> *mPatternStitches;
-    QMap<QString, QMap<QString, qint64> > *mPatternColors;
+    QMap<QString, int>* mPatternStitches;
+    QMap<QString, QMap<QString, qint64> >* mPatternColors;
 
 };
 

@@ -22,19 +22,19 @@ class SceneRounds : public Scene
     friend class RemoveCell;
 public:
     
-    SceneRounds(QObject *parent = 0);
+    SceneRounds(QObject* parent = 0);
     ~SceneRounds();
 
     void createRow(int row, int columns, QString stitch);
 
-    void appendCell(int row, CrochetCell *c);
+    void appendCell(int row, CrochetCell* c);
     
     //if you have the position in x, y use the overload function
     CrochetCell* cell(int row, int column);
     //convert x,y to rows, columns.
     CrochetCell* cell(QPoint position);
 
-    void removeCell(CrochetCell *c);
+    void removeCell(CrochetCell* c);
 
     void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
 
@@ -52,7 +52,7 @@ protected:
     /**
      * find the x,y positions on the grid for a given cell;
      */
-    QPoint findGridPosition(CrochetCell *c);
+    QPoint findGridPosition(CrochetCell* c);
 
     /**
      * Takes a @param row and spread the cells out evenly along it's entire length.
@@ -74,16 +74,16 @@ protected:
      * WARING: This funciton should be called after the cell has been added
      * to the grid so that it calcs based on the new count of stitches.
      */
-    void setCellPosition(int row, int column, CrochetCell *c, int columns = 1, bool updateAnchor = false);
+    void setCellPosition(int row, int column, CrochetCell* c, int columns = 1, bool updateAnchor = false);
     
 protected:
-    void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
-    void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
+    void stitchModeMouseMove(QGraphicsSceneMouseEvent* e);
+    void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
-    QGraphicsItem *mCenterSymbol;
+    QGraphicsItem* mCenterSymbol;
 
     bool mShowChartCenter;
 

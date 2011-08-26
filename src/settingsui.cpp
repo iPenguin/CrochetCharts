@@ -14,7 +14,7 @@
 #include "stitchlibrary.h"
 
 
-SettingsUi::SettingsUi(QWidget *parent)
+SettingsUi::SettingsUi(QWidget* parent)
     : QDialog(parent), ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
@@ -40,7 +40,7 @@ SettingsUi::SettingsUi(QWidget *parent)
     setupDialogWidgets();
 
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        foreach(QObject *obj, ui->tabWidget->widget(i)->children()) {
+        foreach(QObject* obj, ui->tabWidget->widget(i)->children()) {
             if(isSettingsWidget(obj))
                 load(obj);
         }
@@ -57,7 +57,7 @@ void SettingsUi::buttonClicked(QAbstractButton* button)
 {
     if(ui->buttonBox->buttonRole(button) ==  QDialogButtonBox::ResetRole) {
         for(int i = 0; i < ui->tabWidget->count(); ++i) {
-            foreach(QObject *obj, ui->tabWidget->widget(i)->children()) {
+            foreach(QObject* obj, ui->tabWidget->widget(i)->children()) {
                 if(isSettingsWidget(obj))
                     loadDefualt(obj);
             }
@@ -74,7 +74,7 @@ int SettingsUi::exec()
         return retValue;
 
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        foreach(QObject *obj, ui->tabWidget->widget(i)->children()) {
+        foreach(QObject* obj, ui->tabWidget->widget(i)->children()) {
             if(isSettingsWidget(obj))
                 save(obj);
         }
@@ -95,7 +95,7 @@ void SettingsUi::load(QObject* w)
     } else if (w->inherits("QSpinBox")) {
         qobject_cast<QSpinBox*>(w)->setValue(value.toInt());
     } else if (w->inherits("QComboBox")) {
-        QComboBox *cb = qobject_cast<QComboBox*>(w);
+        QComboBox* cb = qobject_cast<QComboBox*>(w);
         int index = cb->findText(value.toString());
         cb->setCurrentIndex(index);
     } else {
@@ -115,7 +115,7 @@ void SettingsUi::loadDefualt(QObject* w)
     } else if (w->inherits("QSpinBox")) {
         qobject_cast<QSpinBox*>(w)->setValue(value.toInt());
     } else if (w->inherits("QComboBox")) {
-        QComboBox *cb = qobject_cast<QComboBox*>(w);
+        QComboBox* cb = qobject_cast<QComboBox*>(w);
         int index = cb->findText(value.toString());
         cb->setCurrentIndex(index);
     } else {
@@ -142,7 +142,7 @@ void SettingsUi::save(QObject* w)
         Settings::inst()->setValue(w->objectName(), value);
 }
 
-bool SettingsUi::isSettingsWidget(QObject *obj)
+bool SettingsUi::isSettingsWidget(QObject* obj)
 {
     if(obj->inherits("QLineEdit"))
         return true;
@@ -182,7 +182,7 @@ QPixmap SettingsUi::drawColorBox(QColor color, QSize size)
 
 void SettingsUi::setColor()
 {
-    QPushButton *b = static_cast<QPushButton*>(sender());
+    QPushButton* b = static_cast<QPushButton*>(sender());
     QColor color = QColorDialog::getColor(mPrimaryColor, this, tr("Select Color"));
 
     if (color.isValid()) {

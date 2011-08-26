@@ -32,10 +32,10 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
 
     ui->stitchSource->addItems(StitchLibrary::inst()->stitchSetList());
     
-    StitchSet *master = StitchLibrary::inst()->masterStitchSet();
+    StitchSet* master = StitchLibrary::inst()->masterStitchSet();
     ui->listView->setModel(master);
 
-    StitchLibraryDelegate *delegate = new StitchLibraryDelegate(ui->listView);
+    StitchLibraryDelegate* delegate = new StitchLibraryDelegate(ui->listView);
     ui->listView->setItemDelegate(delegate);
 
     setDialogSize();
@@ -94,11 +94,11 @@ void StitchLibraryUi::setDialogSize()
 
 void StitchLibraryUi::changeStitchSet(QString setName)
 {
-    StitchSet *set = StitchLibrary::inst()->findStitchSet(setName);
+    StitchSet* set = StitchLibrary::inst()->findStitchSet(setName);
     if(!set)
         return;
 
-    StitchSet *curSet = qobject_cast<StitchSet*>(ui->listView->model());
+    StitchSet* curSet = qobject_cast<StitchSet*>(ui->listView->model());
     if(curSet)
         curSet->clearSelection();
 
@@ -113,7 +113,7 @@ void StitchLibraryUi::changeStitchSet(QString setName)
 
 }
 
-void StitchLibraryUi::setButtonStates(StitchSet *set)
+void StitchLibraryUi::setButtonStates(StitchSet* set)
 {
     bool state = (set != StitchLibrary::inst()->masterStitchSet());
     
@@ -130,8 +130,8 @@ void StitchLibraryUi::resetLibrary()
     msgbox.setText(tr("If you reset the stitch library you will lose any changes you have made."));
     msgbox.setInformativeText(tr("Are you sure you want to continue?"));
     msgbox.setIcon(QMessageBox::Question);
-    QPushButton *reset = msgbox.addButton(tr("Yes, reset the library"), QMessageBox::AcceptRole);
-    /*QPushButton *cancel =*/ msgbox.addButton(tr("No, keep the library as is"), QMessageBox::RejectRole);
+    QPushButton* reset = msgbox.addButton(tr("Yes, reset the library"), QMessageBox::AcceptRole);
+    /*QPushButton* cancel =*/ msgbox.addButton(tr("No, keep the library as is"), QMessageBox::RejectRole);
 
     msgbox.exec();
     
@@ -162,9 +162,9 @@ void StitchLibraryUi::addStitch()
     QString text = QInputDialog::getText(this, tr("New Stitch"), tr("Stitch name:"),
                                          QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty()) {
-        StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
+        StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
 
-        Stitch *s = set->findStitch(text.toLower());
+        Stitch* s = set->findStitch(text.toLower());
         if(s) {
             QMessageBox::warning(this, tr("Stitch Exists"),
                 tr("The stitch %1 is already in this stitch set").arg(text), QMessageBox::Ok);
@@ -178,7 +178,7 @@ void StitchLibraryUi::addStitch()
 
 void StitchLibraryUi::removeStitch()
 {
-    StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
+    StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
 
     for(int i = 0; i < set->stitchCount(); ++i) {
         bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
@@ -189,8 +189,8 @@ void StitchLibraryUi::removeStitch()
                 msgbox.setText(tr("A set must have at least one stitch."));
                 msgbox.setInformativeText(tr("If you wish to remove this stich you must remove the set."));
                 msgbox.setIcon(QMessageBox::Information);
-                QPushButton *removeSet = msgbox.addButton(tr("Remove the stitch set"), QMessageBox::AcceptRole);
-                /*QPushButton *keepStitch =*/ msgbox.addButton(tr("Keep the last stitch"), QMessageBox::RejectRole);
+                QPushButton* removeSet = msgbox.addButton(tr("Remove the stitch set"), QMessageBox::AcceptRole);
+                /*QPushButton* keepStitch =*/ msgbox.addButton(tr("Keep the last stitch"), QMessageBox::RejectRole);
                 
                 msgbox.exec();
 
@@ -204,7 +204,7 @@ void StitchLibraryUi::removeStitch()
                 return;
             }
             QString st = set->data(set->index(i, 0), Qt::EditRole).toString();
-            Stitch *s = set->findStitch(st);
+            Stitch* s = set->findStitch(st);
 
             if(!set->isMasterSet && StitchLibrary::inst()->masterHasStitch(s)) {
                 QMessageBox msgbox(this);
@@ -212,8 +212,8 @@ void StitchLibraryUi::removeStitch()
                                 "If you remove this stitch it will be removed from the master list too."));
                 msgbox.setInformativeText(tr("Are you sure you want to remove the stitch?"));
                 msgbox.setIcon(QMessageBox::Question);
-                QPushButton *confirm = msgbox.addButton(tr("Remove stitch from both lists"), QMessageBox::AcceptRole);
-                /*QPushButton *cancel =*/ msgbox.addButton(tr("Don't remove the stitch"), QMessageBox::RejectRole);
+                QPushButton* confirm = msgbox.addButton(tr("Remove stitch from both lists"), QMessageBox::AcceptRole);
+                /*QPushButton* cancel =*/ msgbox.addButton(tr("Don't remove the stitch"), QMessageBox::RejectRole);
 
                 msgbox.exec();
 
@@ -230,22 +230,22 @@ void StitchLibraryUi::removeStitch()
 
 void StitchLibraryUi::addSelected()
 {
-    StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
+    StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
     for(int i = 0; i < set->stitchCount(); ++i) {
         bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
         if(selected) {
-            Stitch *s = 0;
+            Stitch* s = 0;
             s = static_cast<Stitch*>(set->index(i, 0).internalPointer());
-            StitchSet *master = StitchLibrary::inst()->masterStitchSet();
+            StitchSet* master = StitchLibrary::inst()->masterStitchSet();
             
             if(master->hasStitch(s->name()) && s != master->findStitch(s->name())) {
                 QMessageBox msgbox;
                 msgbox.setText(tr("A stitch with the name '%1' already exists in the master set.").arg(s->name()));
                 msgbox.setInformativeText(tr("Would you like to replace it with this one?"));
                 msgbox.setIcon(QMessageBox::Question);
-                QPushButton *confirm = msgbox.addButton(tr("Replace the existing stitch"), QMessageBox::AcceptRole);
-                QPushButton *no      = msgbox.addButton(tr("Keep this stitch as is"), QMessageBox::ApplyRole);
-                QPushButton *cancel  = msgbox.addButton(tr("Stop adding stitches"), QMessageBox::DestructiveRole);
+                QPushButton* confirm = msgbox.addButton(tr("Replace the existing stitch"), QMessageBox::AcceptRole);
+                QPushButton* no      = msgbox.addButton(tr("Keep this stitch as is"), QMessageBox::ApplyRole);
+                QPushButton* cancel  = msgbox.addButton(tr("Stop adding stitches"), QMessageBox::DestructiveRole);
 
                 msgbox.exec();
                 
@@ -268,7 +268,7 @@ void StitchLibraryUi::addSelected()
 
 void StitchLibraryUi::updateStitchSetProperties()
 {
-    StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
+    StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
     set->setName(ui->setName->text());
     set->setAuthor(ui->author->text());
     set->setEmail(ui->email->text());
@@ -278,7 +278,7 @@ void StitchLibraryUi::updateStitchSetProperties()
 
 void StitchLibraryUi::setupPropertiesBox()
 {
-    StitchSet *set = static_cast<StitchSet*>(ui->listView->model());
+    StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
     ui->setName->setText(set->name());
     ui->author->setText(set->author());
     ui->email->setText(set->email());
@@ -326,15 +326,15 @@ void StitchLibraryUi::createSet()
                                          QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty()) {
 
-        StitchSet *found = StitchLibrary::inst()->findStitchSet(text);
+        StitchSet* found = StitchLibrary::inst()->findStitchSet(text);
         if(found) {
             QMessageBox msgbox;
             msgbox.setText(tr("A stitch set with the name '%1' already exists in your library.").arg(text));
             msgbox.setInformativeText(tr("What would you like to do?"));
             msgbox.setIcon(QMessageBox::Question);
-            QPushButton *overwrite = msgbox.addButton(tr("Replace the existing set"), QMessageBox::AcceptRole);
-            QPushButton *rename = msgbox.addButton(tr("Change the name of the new set"), QMessageBox::ApplyRole);
-            QPushButton *cancel = msgbox.addButton(tr("Don't add the new set"), QMessageBox::RejectRole);
+            QPushButton* overwrite = msgbox.addButton(tr("Replace the existing set"), QMessageBox::AcceptRole);
+            QPushButton* rename = msgbox.addButton(tr("Change the name of the new set"), QMessageBox::ApplyRole);
+            QPushButton* cancel = msgbox.addButton(tr("Don't add the new set"), QMessageBox::RejectRole);
 
              msgbox.exec();
              if(msgbox.clickedButton() == overwrite) {
@@ -352,7 +352,7 @@ void StitchLibraryUi::createSet()
             }
         }
         
-        StitchSet *set = StitchLibrary::inst()->createStitchSet(text);
+        StitchSet* set = StitchLibrary::inst()->createStitchSet(text);
         //WIN32: crashes if there isn't at least one stitch in the set when you add the model to the view.
         set->createStitch("");
         //switch to the new set.
@@ -367,8 +367,8 @@ void StitchLibraryUi::removeSet()
     msgbox.setText(tr("This will remove the set and it's associated files."));
     msgbox.setInformativeText(tr("Are you sure you want to remove the set?"));
     msgbox.setIcon(QMessageBox::Question);
-    QPushButton *remove = msgbox.addButton(tr("Yes, remove the set and it's files"),QMessageBox::AcceptRole);
-    /*QPushButton *keep =*/ msgbox.addButton(tr("No, keep the set as is"), QMessageBox::RejectRole);
+    QPushButton* remove = msgbox.addButton(tr("Yes, remove the set and it's files"),QMessageBox::AcceptRole);
+    /*QPushButton* keep =*/ msgbox.addButton(tr("No, keep the set as is"), QMessageBox::RejectRole);
 
     msgbox.exec();
     if(msgbox.clickedButton() != remove)
@@ -385,7 +385,7 @@ void StitchLibraryUi::removeSet()
 
 void StitchLibraryUi::exportSet()
 {   
-    StitchSet *set = StitchLibrary::inst()->findStitchSet(ui->stitchSource->currentText());
+    StitchSet* set = StitchLibrary::inst()->findStitchSet(ui->stitchSource->currentText());
 
     if(Settings::inst()->isDemoVersion()) {
         Settings::inst()->trialVersionMessage(this);
@@ -414,7 +414,7 @@ void StitchLibraryUi::importSet()
         return;
     
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    StitchSet *set = 0;
+    StitchSet* set = 0;
     set = StitchLibrary::inst()->addStitchSet(fileName);
 
     if(set) {

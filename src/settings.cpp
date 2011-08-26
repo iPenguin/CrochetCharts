@@ -56,7 +56,7 @@ void Settings::initDemoVersion()
     mIsDemoVersion = false;
 }
 
-void Settings::trialVersionMessage(QWidget *parent)
+void Settings::trialVersionMessage(QWidget* parent)
 {
     QMessageBox msgbox(parent);
     msgbox.setWindowTitle(AppInfo::inst()->appName);

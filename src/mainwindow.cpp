@@ -37,7 +37,7 @@
 #include <QSortFilterProxyModel>
 #include <QDesktopServices>
 
-MainWindow::MainWindow(QStringList fileNames, QWidget *parent)
+MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mUpdater(0), mEditMode(10), mStitch("ch"),
     mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
 {
@@ -92,7 +92,7 @@ void MainWindow::loadFiles(QStringList fileNames)
     foreach(QString fileName, fileNames) {
         QStringList files;
         files.append(fileName);
-        MainWindow *newWin = new MainWindow(files);
+        MainWindow* newWin = new MainWindow(files);
         newWin->move(x() + 40, y() + 40);
         newWin->show();
         Settings::inst()->files.insert(mFile->fileName.toLower(), newWin);
@@ -149,14 +149,14 @@ void MainWindow::setupNewTabDialog()
 void MainWindow::setupStitchPalette()
 {
 
-    StitchSet *set = StitchLibrary::inst()->masterStitchSet();
-    QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel(this);
+    StitchSet* set = StitchLibrary::inst()->masterStitchSet();
+    QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
 
     proxyModel->setSourceModel(set);
     ui->allStitches->setModel(proxyModel);
 
     //TODO: setup a proxywidget that can hold header sections?
-    StitchPaletteDelegate *delegate = new StitchPaletteDelegate(ui->allStitches);
+    StitchPaletteDelegate* delegate = new StitchPaletteDelegate(ui->allStitches);
     ui->allStitches->setItemDelegate(delegate);
     ui->allStitches->hideColumn(2);
     ui->allStitches->hideColumn(3);
@@ -172,7 +172,7 @@ void MainWindow::setupUndoView()
 {
     mUndoDock = new QDockWidget(this);
     mUndoDock->setObjectName("undoHistory");
-    QUndoView *view = new QUndoView(&mUndoGroup, mUndoDock);
+    QUndoView* view = new QUndoView(&mUndoGroup, mUndoDock);
     mUndoDock->setWidget(view);
     mUndoDock->setWindowTitle(tr("Undo History"));
     mUndoDock->setFloating(true);
@@ -302,7 +302,7 @@ void MainWindow::setupMenus()
 void MainWindow::openRecentFile()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-    QAction *action = qobject_cast<QAction *>(sender());
+    QAction* action = qobject_cast<QAction*>(sender());
     if (action && QFileInfo(action->data().toString()).exists()) {
         QStringList files;
         files.append(action->data().toString());
@@ -348,7 +348,7 @@ void MainWindow::setupRecentFiles()
     for(int i = 0; i < files.count(); ++i) {
 
         QString text = tr("&%1 %2").arg(i + 1).arg(QFileInfo(files[i]).fileName());
-        QAction *a = new QAction(this);
+        QAction* a = new QAction(this);
         connect(a, SIGNAL(triggered()), SLOT(openRecentFile()));
         
         a->setText(text);
@@ -384,8 +384,8 @@ void MainWindow::filePrint()
     }
     
     //TODO: page count isn't working...
-    QPrinter *printer = new QPrinter();
-    QPrintDialog *dialog = new QPrintDialog(printer, this);
+    QPrinter* printer = new QPrinter();
+    QPrintDialog* dialog = new QPrintDialog(printer, this);
 
     if(dialog->exec() != QDialog::Accepted)
         return;
@@ -393,12 +393,12 @@ void MainWindow::filePrint()
     print(printer);
 }
 
-void MainWindow::print(QPrinter *printer)
+void MainWindow::print(QPrinter* printer)
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     
     int tabCount = ui->tabWidget->count();
-    QPainter *p = new QPainter();
+    QPainter* p = new QPainter();
     
     p->begin(printer);
     
@@ -407,7 +407,7 @@ void MainWindow::print(QPrinter *printer)
         if(!firstPass)
             printer->newPage();
         
-        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         tab->renderChart(p);
         firstPass = false;
     }
@@ -424,9 +424,9 @@ void MainWindow::filePrintPreview()
     }
     
     //FIXME: this isn't working
-    QPrinter *printer = new QPrinter(QPrinter::HighResolution);
-    QPrintPreviewDialog *dialog = new QPrintPreviewDialog(printer, this);
-    connect(dialog, SIGNAL(paintRequested(QPrinter *)), this, SLOT(print(QPrinter*)));
+    QPrinter* printer = new QPrinter(QPrinter::HighResolution);
+    QPrintPreviewDialog* dialog = new QPrintPreviewDialog(printer, this);
+    connect(dialog, SIGNAL(paintRequested(QPrinter*)), this, SLOT(print(QPrinter*)));
     
     dialog->exec();
 }
@@ -476,7 +476,7 @@ void MainWindow::selectColor()
 void MainWindow::updateBgColor()
 {
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditBgColor(mBgColor);
     }
@@ -486,7 +486,7 @@ void MainWindow::updateBgColor()
 void MainWindow::updateFgColor()
 {
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditFgColor(mFgColor);
     }
@@ -498,7 +498,7 @@ void MainWindow::selectStitch(QModelIndex index)
     QModelIndex idx;
     
     if(sender() == ui->allStitches) {
-        const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+        const QSortFilterProxyModel* model =  static_cast<const QSortFilterProxyModel*>(index.model());
         idx = model->mapToSource(model->index(index.row(), 0));
         
     } else
@@ -510,7 +510,7 @@ void MainWindow::selectStitch(QModelIndex index)
         return;
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditStitch(stitch);
     }
@@ -522,7 +522,7 @@ void MainWindow::selectColor(QModelIndex index)
     QString color = index.data(Qt::ToolTipRole).toString();
 
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditBgColor(color);
     }
@@ -609,7 +609,7 @@ void MainWindow::helpAbout()
     QMessageBox::about(this, tr("About Crochet Charts"), aboutInfo);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::closeEvent(QCloseEvent* event)
 {
     if(safeToClose()) {
         Settings::inst()->setValue("geometry", saveGeometry());
@@ -699,7 +699,7 @@ void MainWindow::fileOpen()
         if(ui->tabWidget->count() > 0) {
             QStringList files;
             files.append(fileName);
-            MainWindow *newWin = new MainWindow(files);
+            MainWindow* newWin = new MainWindow(files);
             newWin->move(x() + 40, y() + 40);
             newWin->show();
             Settings::inst()->files.insert(fileName.toLower(), newWin);
@@ -716,7 +716,7 @@ void MainWindow::fileOpen()
         updateMenuItems();
     } else {
         //show the window if it's already open.
-        MainWindow *win = Settings::inst()->files.find(fileName.toLower()).value();
+        MainWindow* win = Settings::inst()->files.find(fileName.toLower()).value();
         win->raise();
     }
     QApplication::restoreOverrideCursor();
@@ -827,7 +827,7 @@ void MainWindow::fileNew()
 {
 
     if(ui->tabWidget->count() > 0) {
-        MainWindow *newWin = new MainWindow;
+        MainWindow* newWin = new MainWindow;
         newWin->move(x() + 40, y() + 40);
         newWin->show();
         newWin->ui->newDocument->show();
@@ -874,7 +874,7 @@ void MainWindow::newChart()
     if(docHasChartName(name))
         name = nextChartName(name);
 
-    CrochetTab *tab = createTab(st);
+    CrochetTab* tab = createTab(st);
     
     if(name.isEmpty())
         name = nextChartName();
@@ -987,11 +987,11 @@ void MainWindow::menuModesAboutToShow()
     
     QStringList modes;
     if(hasTab()) {
-        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->currentWidget());
+        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->currentWidget());
         modes = tab->editModes();
     }
 
-    foreach(QAction *a, mModeGroup->actions()) {
+    foreach(QAction* a, mModeGroup->actions()) {
         if(modes.contains(a->text()))
             enabled = true;
         else
@@ -1045,7 +1045,7 @@ void MainWindow::setEditMode(int mode)
         ui->actionIndicatorMode->setChecked(true);
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditMode(mEditMode);
     }
@@ -1128,7 +1128,7 @@ CrochetTab* MainWindow::curCrochetTab()
 
 bool MainWindow::hasTab()
 {
-    CrochetTab *cTab = qobject_cast<CrochetTab*>(ui->tabWidget->currentWidget());
+    CrochetTab* cTab = qobject_cast<CrochetTab*>(ui->tabWidget->currentWidget());
     if(!cTab)
         return false;
 
@@ -1145,7 +1145,7 @@ void MainWindow::tabChanged(int newTab)
     if(newTab == -1)
         return;
 
-    CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(newTab));
+    CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(newTab));
     if(!tab)
         return;
     
@@ -1166,8 +1166,8 @@ void MainWindow::removeTab(int tabIndex)
     msgbox.setWindowTitle(tr("Remove Chart"));
     msgbox.setText(tr("Are you sure you want to remove this chart from the document?"));
     msgbox.setIcon(QMessageBox::Question);
-    /*QPushButton *removeChart =*/ msgbox.addButton(tr("Remove the chart"), QMessageBox::AcceptRole);
-    QPushButton *keepChart = msgbox.addButton(tr("Keep the chart"), QMessageBox::RejectRole);
+    /*QPushButton* removeChart =*/ msgbox.addButton(tr("Remove the chart"), QMessageBox::AcceptRole);
+    QPushButton* keepChart = msgbox.addButton(tr("Keep the chart"), QMessageBox::RejectRole);
 
     msgbox.exec();
     
@@ -1200,7 +1200,7 @@ void MainWindow::updatePatternStitches()
             QPixmap pix = QPixmap(QSize(32, 32));
             pix.load(s->file());
             QIcon icon = QIcon(pix);
-            QListWidgetItem *item = new QListWidgetItem(icon, i.key(), ui->patternStitches);
+            QListWidgetItem* item = new QListWidgetItem(icon, i.key(), ui->patternStitches);
             ui->patternStitches->addItem(item);
         }
     }
@@ -1232,7 +1232,7 @@ void MainWindow::updatePatternColors()
             QPixmap pix = drawColorBox(color, QSize(32, 32));
             QIcon icon = QIcon(pix);
             
-            QListWidgetItem *item = new QListWidgetItem(icon, prefix + QString::number(i), ui->patternColors);
+            QListWidgetItem* item = new QListWidgetItem(icon, prefix + QString::number(i), ui->patternColors);
             item->setToolTip(color);
             ui->patternColors->addItem(item);
             ++i;

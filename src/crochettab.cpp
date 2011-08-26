@@ -26,16 +26,16 @@
 #include <QClipboard>
 
 CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch,
-                       QColor defFgColor, QColor defBgColor, QWidget *parent)
+                       QColor defFgColor, QColor defBgColor, QWidget* parent)
         : QWidget(parent),
         ui(new Ui::OptionsBar),
         mChartStyle(style)
 {
-    QVBoxLayout *l = new QVBoxLayout(this);
-    QWidget *top = new QWidget(this);
+    QVBoxLayout* l = new QVBoxLayout(this);
+    QWidget* top = new QWidget(this);
     l->addWidget(top);
     
-    QVBoxLayout *tl = new QVBoxLayout(top);
+    QVBoxLayout* tl = new QVBoxLayout(top);
     top->setLayout(tl);
     top->setContentsMargins(0, 0, 0, 0);
 
@@ -70,7 +70,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     mScene->setEditFgColor(defFgColor);
     mScene->setEditBgColor(defBgColor);
     
-    QWidget *w = new QWidget(top);
+    QWidget* w = new QWidget(top);
     ui->setupUi(w);
     tl->addWidget(mView);
     tl->addWidget(w);
@@ -117,7 +117,7 @@ void CrochetTab::setEditMode(int mode)
     mScene->setEditMode((Scene::EditMode)mode);
 }
 
-void CrochetTab::renderChart(QPainter *painter, QRectF rect)
+void CrochetTab::renderChart(QPainter* painter, QRectF rect)
 {
     if(!rect.isValid())
         mScene->render(painter);
@@ -199,7 +199,7 @@ void CrochetTab::createChart(int rows, int cols, QString defStitch, QSizeF rowSi
 {
     mScene->createChart(rows, cols, defStitch, rowSize);
 
-    SceneRounds *rounds = static_cast<SceneRounds*>(mScene);
+    SceneRounds* rounds = static_cast<SceneRounds*>(mScene);
     if(rounds) {
         ui->showChartCenter->setChecked(rounds->showChartCenter());
     }
@@ -222,7 +222,7 @@ void CrochetTab::setEditStitch(QString stitch)
 
 void CrochetTab::copyInstructions()
 {
-    QClipboard *clipboard = QApplication::clipboard();
+    QClipboard* clipboard = QApplication::clipboard();
 
     QString instructions = mTextView->copyInstructions();
     clipboard->setText(instructions);
@@ -239,7 +239,7 @@ void CrochetTab::showChartOptions()
         ui->chartOptionsBox->setVisible(false);
     }
 
-    SceneRounds *r = static_cast<SceneRounds*>(mScene);
+    SceneRounds* r = static_cast<SceneRounds*>(mScene);
     if(r)
         ui->showChartCenter->setEnabled(true);
     else
@@ -250,7 +250,7 @@ void CrochetTab::setShowChartCenter(bool state)
 {
     ui->showChartCenter->setChecked(state);
 
-    SceneRounds *r = static_cast<SceneRounds*>(mScene);
+    SceneRounds* r = static_cast<SceneRounds*>(mScene);
     if(r)
         r->setShowChartCenter(state);
 

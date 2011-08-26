@@ -22,7 +22,7 @@ private slots:
      void cleanupTestCase();
 
 private:
-    StitchSet *mSet;
+    StitchSet* mSet;
 };
 
 #endif // TESTSTITCHSET_H

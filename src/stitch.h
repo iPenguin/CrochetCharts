@@ -57,9 +57,9 @@ private:
     QString mCategory;
     QString mWrongSide;
 
-    QSvgRenderer *mSvgRenderer;
-    QSvgRenderer *mSvgRendererAlt;
-    QPixmap *mPixmap;
+    QSvgRenderer* mSvgRenderer;
+    QSvgRenderer* mSvgRendererAlt;
+    QPixmap* mPixmap;
 };
 
 #endif //STITCH_H

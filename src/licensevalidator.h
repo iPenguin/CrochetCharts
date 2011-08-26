@@ -11,7 +11,7 @@ class LicenseValidator : public QRegExpValidator
 {
     Q_OBJECT
 public:
-    LicenseValidator(QObject *parent);
+    LicenseValidator(QObject* parent);
 
     QValidator::State validate(QString &input, int &pos) const;
 };

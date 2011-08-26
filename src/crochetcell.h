@@ -18,7 +18,7 @@ public:
     CrochetCell();
 
     int type() const { return Type; }
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     void setHighlight(bool state) { mHighlight = state; update(); }
 
     /**
@@ -47,7 +47,7 @@ public slots:
     void setAnchor(qreal x, qreal y) { mAnchor = QPointF(x, y); }
 
     void setStitch(QString s, bool useAltRenderer = false);
-    void setStitch(Stitch *s, bool useAltRenderer = false);
+    void setStitch(Stitch* s, bool useAltRenderer = false);
     
 private:
     qreal mScale;

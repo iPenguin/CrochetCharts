@@ -25,7 +25,7 @@
 #include <QKeyEvent>
 #include "stitchlibrary.h"
 
-SceneRows::SceneRows(QObject *parent)
+SceneRows::SceneRows(QObject* parent)
     : Scene(parent)
 {
 }
@@ -35,7 +35,7 @@ SceneRows::~SceneRows()
 
 }
 
-void SceneRows::removeCell(CrochetCell *c)
+void SceneRows::removeCell(CrochetCell* c)
 {
     int y = findGridPosition(c).y();
     removeItem(c);
@@ -52,13 +52,13 @@ void SceneRows::appendCell(int row, CrochetCell* c)
 {
 }
 
-void SceneRows::setCellPosition(int row, int column, CrochetCell *c, int columns, bool updateAnchor)
+void SceneRows::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
 {
     Q_UNUSED(columns);
     
-    c->setPos(column*defaultSize().width() + column*5, row*defaultSize().height());
+    c->setPos(column * defaultSize().width() + column * 5, row * defaultSize().height());
     if(updateAnchor || c->anchor().isNull())
-        c->setAnchor(column*defaultSize().width() + column*5, row*defaultSize().height());
+        c->setAnchor(column * defaultSize().width() + column * 5, row * defaultSize().height());
 
     //FIXME: set tooltips from bottom right to top left.
     c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
@@ -71,7 +71,7 @@ void SceneRows::redistributeCells(int row)
     int columns = grid[row].count();
 
     for(int i = 0; i < columns; ++i) {
-        CrochetCell *c = grid[row].at(i);
+        CrochetCell* c = grid[row].at(i);
         setCellPosition(row, i, c, columns, true);
     }
 }
@@ -88,7 +88,7 @@ void SceneRows::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 
 void SceneRows::createRow(int row, int columns, QString stitch)
 {
-    CrochetCell *c = 0;
+    CrochetCell* c = 0;
     
     QList<CrochetCell*> modelRow;
     for(int i = 0; i < columns; ++i) {
@@ -143,8 +143,8 @@ void SceneRows::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 //FIXME: the xy should be pos not grid.
-            AddCell *addCell = new AddCell(this, QPointF(x, y));
-            CrochetCell *c = addCell->cell();
+            AddCell* addCell = new AddCell(this, QPointF(x, y));
+            CrochetCell* c = addCell->cell();
             c->setStitch(mEditStitch, (y % 2));
             undoStack()->push(addCell);
 

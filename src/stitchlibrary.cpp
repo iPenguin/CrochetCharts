@@ -42,7 +42,7 @@ StitchLibrary::~StitchLibrary()
 
     mOverlay->saveXmlFile();
     
-    foreach(StitchSet *set, mStitchSets) {
+    foreach(StitchSet* set, mStitchSets) {
         mStitchSets.removeOne(set);
         if(!set->isTemporary)
             set->saveXmlFile();
@@ -56,7 +56,7 @@ void StitchLibrary::saveAllSets()
 
     mOverlay->saveXmlFile();
     
-    foreach(StitchSet *set, mStitchSets) {
+    foreach(StitchSet* set, mStitchSets) {
         if(!set->isTemporary) {
             set->saveXmlFile();
         }
@@ -68,7 +68,7 @@ void StitchLibrary::loadStitchSets()
     QString confFolder = Settings::inst()->userSettingsFolder();
 
     mMasterSet->loadXmlFile(":/crochet.xml");
-    foreach(Stitch *s, mMasterSet->stitches())
+    foreach(Stitch* s, mMasterSet->stitches())
         s->isBuiltIn = true;
     
     mOverlay = new StitchSet(this, false);
@@ -93,7 +93,7 @@ void StitchLibrary::loadStitchSets()
   
     QFileInfoList list = dir.entryInfoList(fileTypes, QDir::Files | QDir::NoSymLinks);
     foreach(QFileInfo file, list) {
-        StitchSet *set = new StitchSet(this, false);
+        StitchSet* set = new StitchSet(this, false);
         set->loadXmlFile(file.absoluteFilePath());
         mStitchSets.append(set);
         connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)),
@@ -125,9 +125,9 @@ bool StitchLibrary::loadMasterList()
     file.close();
 
     foreach(QString key, mStitchList.keys()) {
-        StitchSet *set = findStitchSet(mStitchList.value(key));
+        StitchSet* set = findStitchSet(mStitchList.value(key));
         if(set) {
-            Stitch *s = set->findStitch(key);
+            Stitch* s = set->findStitch(key);
             if(s) {
                 if(mMasterSet->hasStitch(s->name())) {
                     mMasterSet->removeStitch(s->name());
@@ -166,7 +166,7 @@ void StitchLibrary::resetMasterStitchSet()
     //mMasterSet->endResetModel();
 }
 
-void StitchLibrary::addStitchToMasterSet(StitchSet *set, Stitch *s)
+void StitchLibrary::addStitchToMasterSet(StitchSet* set, Stitch* s)
 {
     if(mMasterSet->hasStitch(s->name())) {
         mMasterSet->removeStitch(s->name());
@@ -206,7 +206,7 @@ Stitch* StitchLibrary::findStitch(QString name)
 
 StitchSet* StitchLibrary::findStitchSet(QString setName)
 {
-    foreach(StitchSet *set, mStitchSets) {
+    foreach(StitchSet* set, mStitchSets) {
         if(set->name() == setName)
             return set;
     }
@@ -225,7 +225,7 @@ QStringList StitchLibrary::stitchSetList()
 
     list << mMasterSet->name();
 
-    foreach(StitchSet *set, mStitchSets)
+    foreach(StitchSet* set, mStitchSets)
         list << set->name();
 
     return list;
@@ -235,13 +235,13 @@ QStringList StitchLibrary::categoryList() const
 {
     QStringList list;
 
-    foreach(Stitch *s, mMasterSet->stitches()) {
+    foreach(Stitch* s, mMasterSet->stitches()) {
         if(!list.contains(s->category()))
             list.append(s->category());
     }
 
-    foreach(StitchSet *set, mStitchSets) {
-        foreach(Stitch *s, set->stitches()) {
+    foreach(StitchSet* set, mStitchSets) {
+        foreach(Stitch* s, set->stitches()) {
             if(!list.contains(s->category()))
                 list.append(s->category());
         }
@@ -254,14 +254,14 @@ QStringList StitchLibrary::stitchList(bool showAllSets) const
 {
     QStringList list;
 
-    foreach(Stitch *s, mMasterSet->stitches()) {
+    foreach(Stitch* s, mMasterSet->stitches()) {
         if(!list.contains(s->name()))
             list.append(s->name());
     }
 
     if(showAllSets) {
-        foreach(StitchSet *set, mStitchSets) {
-            foreach(Stitch *s, set->stitches()) {
+        foreach(StitchSet* set, mStitchSets) {
+            foreach(Stitch* s, set->stitches()) {
                 if(!list.contains(s->name()))
                     list.append(s->name());
             }
@@ -296,7 +296,7 @@ StitchSet* StitchLibrary::createStitchSet(QString setName)
     if(setName.isEmpty())
         return 0;
 
-    StitchSet *set = new StitchSet(this, false);
+    StitchSet* set = new StitchSet(this, false);
     set->setName(setName);
     mStitchSets.append(set);
 
@@ -306,11 +306,11 @@ StitchSet* StitchLibrary::createStitchSet(QString setName)
 
 void StitchLibrary::removeSet(QString setName)
 {
-   StitchSet *set = findStitchSet(setName);
+   StitchSet* set = findStitchSet(setName);
    removeSet(set);
 }
 
-void StitchLibrary::removeSet(StitchSet *set)
+void StitchLibrary::removeSet(StitchSet* set)
 {
 
     if(mStitchSets.contains(set)) {
@@ -327,9 +327,9 @@ void StitchLibrary::removeSet(StitchSet *set)
 
 }
 
-void StitchLibrary::removeMasterStitches(StitchSet *set)
+void StitchLibrary::removeMasterStitches(StitchSet* set)
 {
-    foreach(Stitch *s, set->stitches()) {
+    foreach(Stitch* s, set->stitches()) {
         if(mStitchList.contains(s->name())) {
             if(mStitchList.value(s->name()) == set->name()) {
                 mMasterSet->removeStitch(s->name());
@@ -355,21 +355,21 @@ StitchSet* StitchLibrary::addStitchSet(QString fileName)
 
     QDir(info.path()).mkpath(info.path() + "/" + info.baseName());
     
-    StitchSet *set = new StitchSet();
+    StitchSet* set = new StitchSet();
 
     set->loadDataFile(fileName, dest);
 
     //FIXME: The stitchset shouldnt contain any gui elements like a messagebox.
-    StitchSet *test = 0;
+    StitchSet* test = 0;
     test = findStitchSet(set->name());
     if(test) {
         QMessageBox msgbox;
         msgbox.setText(tr("A stitch set with the name '%1' already exists in your library.").arg(set->name()));
         msgbox.setInformativeText(tr("What would you like to do?"));
         msgbox.setIcon(QMessageBox::Question);
-        QPushButton *overwrite = msgbox.addButton(tr("Replace the existing set"), QMessageBox::AcceptRole);
-        QPushButton *rename = msgbox.addButton(tr("Rename the new set"), QMessageBox::ApplyRole);
-        /*QPushButton *cancel =*/ msgbox.addButton(tr("Don't add the new set"), QMessageBox::RejectRole);
+        QPushButton* overwrite = msgbox.addButton(tr("Replace the existing set"), QMessageBox::AcceptRole);
+        QPushButton* rename = msgbox.addButton(tr("Rename the new set"), QMessageBox::ApplyRole);
+        /*QPushButton* cancel =*/ msgbox.addButton(tr("Don't add the new set"), QMessageBox::RejectRole);
 
         msgbox.exec();
         
@@ -400,7 +400,7 @@ StitchSet* StitchLibrary::addStitchSet(QString fileName)
     return set;
 }
 
-void StitchLibrary::addStitchSet(StitchSet *set)
+void StitchLibrary::addStitchSet(StitchSet* set)
 {
     connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)), this, SLOT(changeStitchName(QString,QString,QString)));
     mStitchSets.append(set);
@@ -422,7 +422,7 @@ void StitchLibrary::changeStitchName(QString setName, QString oldName, QString n
 
 void StitchLibrary::reloadAllStitchIcons()
 {
-    foreach(StitchSet *set, mStitchSets)
+    foreach(StitchSet* set, mStitchSets)
         set->reloadStitchIcons();
 }
 
@@ -431,7 +431,7 @@ QString StitchLibrary::findStitchSetName(QString folderName)
     if(!folderName.endsWith("/"))
         folderName.append("/");
 
-    foreach(StitchSet *set, mStitchSets) {
+    foreach(StitchSet* set, mStitchSets) {
         if(set->stitchSetFolder() == folderName)
             return set->name();
     }

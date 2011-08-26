@@ -14,7 +14,7 @@
 #include <QDebug>
 #include <QApplication>
 
-LicenseHttp::LicenseHttp(QWidget *parent) :
+LicenseHttp::LicenseHttp(QWidget* parent) :
     QWidget(parent)
 {
 }
@@ -35,7 +35,7 @@ void LicenseHttp::startRequest()
     connect(&qnam, SIGNAL(finished(QNetworkReply*)), SLOT(httpFinished(QNetworkReply*)));
 }
 
-void LicenseHttp::httpFinished(QNetworkReply *reply)
+void LicenseHttp::httpFinished(QNetworkReply* reply)
 {   
     QString data = reply->readAll();
 

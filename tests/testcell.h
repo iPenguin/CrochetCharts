@@ -21,7 +21,7 @@ private slots:
      void cleanupTestCase();
 
 private:
-     Cell *mCell;
+     Cell* mCell;
 };
 
 #endif // TESTCELL_H

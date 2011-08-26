@@ -22,12 +22,12 @@ class Indicator : public QGraphicsTextItem
 public:
     enum {Type = UserType + 15 };
 
-    Indicator(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+    Indicator(QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
     ~Indicator();
 
     QRectF boundingRect();
     int type() const { return Type; }
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 
     QString text() { return toPlainText(); }
     void setText(QString t) { setPlainText(t); }
@@ -39,7 +39,7 @@ public:
     void setTextColor(QColor c) { mTextColor = c; }
 
 protected:
-    void focusOutEvent(QFocusEvent *event);
+    void focusOutEvent(QFocusEvent* event);
     
 private:
 
