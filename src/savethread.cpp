@@ -67,7 +67,8 @@ void SaveThread::run()
             scale = stream->readElementText().toDouble();
         }
     }
-    
+
+    tab->scene()->addCell(c);
     if(row > -1 && column > -1) {
         c->setStitch(s, (row % 2));
         tab->scene()->grid[row].replace(column, c);
@@ -75,8 +76,6 @@ void SaveThread::run()
     } else {
         c->setStitch(s);
     }
-    
-    tab->scene()->addCell(c);
     
     c->setAnchor(anchorX, anchorY);
     c->setPos(x, y);
