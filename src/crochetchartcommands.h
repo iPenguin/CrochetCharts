@@ -76,7 +76,7 @@ class SetItemCoordinates : public QUndoCommand
 public:
     enum { Id = 1130 };
 
-    SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF oldPos, QPointF newPos, QUndoCommand* parent = 0);
+    SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF oldPos, QUndoCommand* parent = 0);
 
     void undo();
     void redo();

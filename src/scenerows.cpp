@@ -45,7 +45,6 @@ void SceneRows::removeCell(CrochetCell* c)
         }
     }
 
-    redistributeCells(y);
 }
 
 void SceneRows::appendCell(int row, CrochetCell* c)

@@ -85,13 +85,13 @@ void SetCellRotation::undo()
 /*************************************************\
 | SetItemCoordinates                              |
 \*************************************************/
-SetItemCoordinates::SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF oldPos, QPointF newPos, QUndoCommand* parent)
+SetItemCoordinates::SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF oldPos, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
     i = item;
     oldCoord = oldPos;
-    newCoord = newPos;
+    newCoord = i->pos();
     setText(QObject::tr("Change item position"));
     
 }
@@ -118,7 +118,7 @@ bool SetItemCoordinates::mergeWith(const QUndoCommand* command)
     if(otherI != i)
         return false;
 
-    newCoord = other->newCoord;
+    oldCoord = other->oldCoord;
     setText(QObject::tr("Change item position"));
     return true;
 }

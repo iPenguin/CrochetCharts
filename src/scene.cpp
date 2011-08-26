@@ -262,7 +262,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 
         mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
         mRubberBand->show();
-    } else if (mRubberBand) {
+    } else {
         
     //Track object movement on scene.
         foreach(QGraphicsItem* item, selectedItems()) {
@@ -329,7 +329,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
         foreach(QGraphicsItem* item, selectedItems()) {
             if(mOldPositions.contains(item)) {
                 QPointF oldPos = mOldPositions.value(item);
-                undoStack()->push(new SetItemCoordinates(this, item, oldPos, item->pos()));
+                undoStack()->push(new SetItemCoordinates(this, item, oldPos));
             }
         }
         undoStack()->endMacro();
