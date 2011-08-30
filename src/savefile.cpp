@@ -153,13 +153,12 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeStartElement("cell"); //start cell
             stream->writeTextElement("stitch", c->stitch()->name());
 
-            if(tab->mChartStyle != Scene::Blank) {
-
-                QPoint pt = tab->scene()->findGridPosition(c);
+            QPoint pt = tab->scene()->indexOf(c);
+            if(pt != QPoint(-1, -1)) {
                 stream->writeTextElement("row", QString::number(pt.y()));
                 stream->writeTextElement("column", QString::number(pt.x()));
             }
-
+            
             stream->writeTextElement("color", c->color().name());
             stream->writeTextElement("x", QString::number(c->pos().x()));
             stream->writeTextElement("y", QString::number(c->pos().y()));
@@ -370,6 +369,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         }
     }
 
+    tab->updateRows();
     int index = mTabWidget->indexOf(tab);
     mTabWidget->setTabText(index, tabName);
     mTabWidget->widget(mTabWidget->indexOf(tab))->show();
@@ -377,7 +377,6 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
 
 void SaveFile::loadGrid(QXmlStreamReader* stream, Scene* scene)
 {
-
     while(!(stream->isEndElement() && stream->name() == "grid")) {
         stream->readNext();
         QString tag = stream->name().toString();
@@ -388,7 +387,7 @@ void SaveFile::loadGrid(QXmlStreamReader* stream, Scene* scene)
             for(int i = 0; i < cols; ++i) {
                 row.append(0);
             }
-            scene->grid.append(row);
+            scene->rows.append(row);
         }
     }
 }

@@ -56,14 +56,14 @@ Scene::~Scene()
         delete i;
     }
     items().clear();
-    grid.clear();
+
 }
 
 QStringList Scene::modes()
 {
     QStringList modes;
-    modes << tr("Stitch Mode") << tr("Color Mode") << tr("Position Mode")
-            << tr("Angle Mode") << tr("Stretch Mode") << tr("Indicator Mode");
+    modes << tr("Stitch Edit") << tr("Color Edit") << tr("Create Rows")
+            << tr("Angle Edit") << tr("Scale Edit") << tr("Indicator Edit");
     return modes;
 }
 
@@ -112,14 +112,15 @@ void Scene::initDemoBackground()
 
 int Scene::rowCount()
 {
-    return grid.count();
+    return rows.count();
 }
 
 int Scene::columnCount(int row)
 {
-    if(grid.count() <= row)
+    if(row >= rows.count())
         return 0;
-    return grid[row].count();
+
+    return rows[row].count();
 }
 
 int Scene::maxColumnCount()
@@ -131,6 +132,24 @@ int Scene::maxColumnCount()
             max = cols;
     }
     return max;
+}
+
+void Scene::removeCell(CrochetCell* c)
+{
+    removeItem(c);
+    removeFromRows(c);
+}
+
+void Scene::removeFromRows(CrochetCell* c)
+{
+    for(int y = 0; y < rows.count(); ++y) {
+        if(rows[y].contains(c)) {
+            rows[y].removeOne(c);
+            if(rows[y].count() == 0)
+                rows.removeAt(y);
+            break;
+        }
+    }
 }
 
 void Scene::addIndicator(Indicator* i)
@@ -161,17 +180,6 @@ void Scene::updateRubberBand(int dx, int dy)
 
     mRubberBandStart.setX(mRubberBandStart.x() - dx);
     mRubberBandStart.setY(mRubberBandStart.y() - dy);
-}
-
-QPoint Scene::findGridPosition(CrochetCell* c)
-{
-    for(int y = 0; y < grid.count(); ++y) {
-        if(grid[y].contains(c)) {
-            return QPoint(grid[y].indexOf(c), y);
-        }
-    }
-    
-    return QPoint();
 }
 
 qreal Scene::scenePosToAngle(QPointF pt)
@@ -530,6 +538,7 @@ void Scene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
+    
     Q_UNUSED(e);
     if(!mCurCell)
         return;
@@ -538,3 +547,83 @@ void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     mScale = 1.0;
     mOldScale = 1.0;
 }
+
+void Scene::createRow(int row)
+{
+    
+    if(selectedItems().count() <= 0)
+        return;
+    
+    QList<CrochetCell*> r;
+    QList<QGraphicsItem*> sItems = selectedItems();
+
+    foreach(QGraphicsItem* item, sItems) {
+        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+        removeFromRows(c);
+        c->useAlternateRenderer((rows.count() % 2));
+        r.append(c);
+    }
+    rows.append(r);
+
+}
+
+QPoint Scene::indexOf(CrochetCell* c)
+{
+    for(int y = 0; y < rows.count(); ++y) {
+        if(rows[y].contains(c)) {
+            return QPoint(rows[y].indexOf(c), y);
+        }
+    }
+
+    return QPoint(-1,-1);
+}
+
+void Scene::highlightRow(int row)
+{
+
+    if(row >= rows.count())
+        return;
+
+    clearSelection();
+
+    foreach(CrochetCell* c, rows[row]) {
+        if(c)
+            c->setSelected(true);
+    }
+
+    emit selectionChanged();
+}
+
+void Scene::moveRowDown(int row)
+{
+    QList<CrochetCell*> r = rows.takeAt(row);
+    rows.insert(row + 1, r);
+    updateStitchRenderer();
+}
+
+void Scene::moveRowUp(int row)
+{
+    QList<CrochetCell*> r = rows.takeAt(row);
+    rows.insert(row - 1, r);
+    updateStitchRenderer();
+    
+}
+
+void Scene::removeRow(int row)
+{
+    rows.takeAt(row);
+    updateStitchRenderer();
+
+}
+
+void Scene::updateStitchRenderer()
+{
+    for(int i = 0; i < rows.count(); ++i) {
+        foreach(CrochetCell* c, rows[i]) {
+            c->useAlternateRenderer((i % 2));
+        }
+    }
+}
+
+
+

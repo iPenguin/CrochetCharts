@@ -35,46 +35,6 @@ SceneRows::~SceneRows()
 
 }
 
-void SceneRows::removeCell(CrochetCell* c)
-{
-    int y = findGridPosition(c).y();
-    removeItem(c);
-    for(int i = 0; i < grid.count(); ++i) {
-        if (grid[i].contains(c)) {
-            grid[i].removeOne(c);
-        }
-    }
-
-}
-
-void SceneRows::appendCell(int row, CrochetCell* c)
-{
-}
-
-void SceneRows::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
-{
-    Q_UNUSED(columns);
-    
-    c->setPos(column * defaultSize().width() + column * 5, row * defaultSize().height());
-    if(updateAnchor || c->anchor().isNull())
-        c->setAnchor(column * defaultSize().width() + column * 5, row * defaultSize().height());
-
-    //FIXME: set tooltips from bottom right to top left.
-    c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
-}
-
-void SceneRows::redistributeCells(int row)
-{
-    if(row >= grid.count())
-        return;
-    int columns = grid[row].count();
-
-    for(int i = 0; i < columns; ++i) {
-        CrochetCell* c = grid[row].at(i);
-        setCellPosition(row, i, c, columns, true);
-    }
-}
-
 void SceneRows::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 {
     defaultSize() = rowSize;
@@ -92,28 +52,13 @@ void SceneRows::createRow(int row, int columns, QString stitch)
     QList<CrochetCell*> modelRow;
     for(int i = 0; i < columns; ++i) {
         c = new CrochetCell();
-        connect(c, SIGNAL(stitchChanged(QString,QString)), this, SIGNAL(stitchChanged(QString,QString)));
-        connect(c, SIGNAL(colorChanged(QString,QString)), this, SIGNAL(colorChanged(QString,QString)));
-        
+        addCell(c);
         c->setStitch(stitch, (row % 2));
-        addItem(c);
         modelRow.append(c);
 
-        setCellPosition(row, i, c, columns);
     }
-    grid.append(modelRow);
+    rows.insert(row, modelRow);
 
-}
-
-QPoint SceneRows::findGridPosition(CrochetCell* c)
-{
-    for(int y = 0; y < grid.count(); ++y) {
-        if(grid[y].contains(c)) {
-            return QPoint(grid[y].indexOf(c), y);
-        }
-    }
-    
-    return QPoint();
 }
 
 void SceneRows::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)

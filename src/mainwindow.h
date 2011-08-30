@@ -22,7 +22,6 @@ class QActionGroup;
 
 namespace Ui {
     class MainWindow;
-    class StitchLibraryDialog;
 }
 
 class MainWindow : public QMainWindow
@@ -85,6 +84,7 @@ private slots:
 
     void menuChartAboutToShow();
     void chartEditName();
+    void chartCreateRows(bool state);
 
     void menuToolsAboutToShow();
     void toolsOptions();
@@ -114,6 +114,8 @@ private:
     void setupMenus();
     void setupRecentFiles();
     void updateMenuItems();
+
+    void setupCreateRows();
     
     void setupStitchPalette();
     void setupUndoView();
@@ -135,7 +137,6 @@ private:
     CrochetTab* curCrochetTab();
    
     Ui::MainWindow* ui;
-    Ui::StitchLibraryDialog* sld;
 
     SaveFile* mFile;
     Updater* mUpdater;

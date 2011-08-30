@@ -44,19 +44,6 @@ CrochetCell* SceneBlank::cell(QPoint position)
     return cell(position.y(), position.x());
 }
 
-void SceneBlank::removeCell(CrochetCell* c)
-{
-    removeItem(c);
-}
-
-void SceneBlank::appendCell(int row, CrochetCell* c)
-{
-    Q_UNUSED(row);
-    //append any missing rows.
-    addItem(c);
-   
-}
-
 void SceneBlank::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 {
     Q_UNUSED(rows);
@@ -72,11 +59,6 @@ void SceneBlank::createRow(int row, int columns, QString stitch)
     Q_UNUSED(row);
     Q_UNUSED(columns);
     Q_UNUSED(stitch);
-}
-
-QPoint SceneBlank::findGridPosition(CrochetCell* c)
-{
-    return QPoint();
 }
 
 void SceneBlank::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)

@@ -35,6 +35,8 @@ public:
     Stitch* stitch() const { return mStitch; }
 
     QString name();
+
+    void useAlternateRenderer(bool useAlt);
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);

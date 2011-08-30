@@ -13,6 +13,8 @@
 
 #include "scene.h"
 
+#include "roweditdialog.h"
+
 class QGraphicsView;
 class TextView;
 class QUndoStack;
@@ -49,6 +51,8 @@ public:
     void setEditStitch(QString stitch);
 
     void sceneUpdate();
+
+    void updateRows();
     
 signals:
     void chartStitchChanged();
@@ -73,6 +77,8 @@ public slots:
      */
     void clearSelection();
 
+    void showRowEditor(bool state);
+    
 protected:
     QMap<QString, int>* patternStitches() { return mPatternStitches; }
     
@@ -83,10 +89,10 @@ private slots:
 
     void setShowChartCenter(bool state);
     
-private:
+protected:
     Scene* scene() { return mScene; }
     
-private:   
+private:    
     QPointer<ChartView> mView;
     Scene* mScene;
     TextView* mTextView;
@@ -97,6 +103,8 @@ private:
     QString mName;
 
     Ui::OptionsBar* ui;
+    RowEditDialog *mRowEditDialog;
+    
 
     Scene::ChartStyle mChartStyle;
 };

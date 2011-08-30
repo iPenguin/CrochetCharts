@@ -69,7 +69,7 @@ void SaveThread::run()
     
     if(row > -1 && column > -1) {
         c->setStitch(s, (row % 2));
-        tab->scene()->grid[row].replace(column, c);
+        tab->scene()->rows[row].replace(column, c);
         c->setObjectName(QString::number(row) + ", " + QString::number(column));
     } else {
         c->setStitch(s);

@@ -22,13 +22,13 @@ SetCellStitch::SetCellStitch(Scene* s, CrochetCell* cell, QString newSt, QUndoCo
 
 void SetCellStitch::redo()
 {
-    QPoint pos = scene->findGridPosition(c);
+    QPoint pos = scene->indexOf(c);
     c->setStitch(newStitch, (pos.y() % 2));
 }
 
 void SetCellStitch::undo()
 {
-    QPoint pos = scene->findGridPosition(c);
+    QPoint pos = scene->indexOf(c);
     c->setStitch(oldStitch, (pos.y() % 2));
 }
 

@@ -57,59 +57,6 @@ void SceneRounds::setShowChartCenter(bool state)
 
 }
 
-void SceneRounds::removeCell(CrochetCell* c)
-{
-    int y = findGridPosition(c).y();
-    removeItem(c);
-    for(int i = 0; i < grid.count(); ++i) {
-        if (grid[i].contains(c)) {
-            grid[i].removeOne(c);
-        }
-    }
-
-    redistributeCells(y);
-}
-
-void SceneRounds::appendCell(int row, CrochetCell* c)
-{
-    int col = grid[row].count() -1;
-
-    addCell(c);
-    
-    setCellPosition(row, col, c, grid[row].count());
-   
-}
-
-void SceneRounds::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
-{
-    double widthInDegrees = 360.0 / columns;
-
-    double radius = defaultSize().height() * (row + 1) + (defaultSize().height() * 0.5);
-
-    double degrees = widthInDegrees * column;
-    QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
-
-    qreal delta = defaultSize().width() * 0.5;
-    if(updateAnchor || c->anchor().isNull())
-        c->setAnchor(finish.x() - delta, finish.y());
-    c->setPos(finish.x() - delta, finish.y());
-    c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
-    c->setAngle(degrees + 90);
-    c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
-}
-
-void SceneRounds::redistributeCells(int row)
-{
-    if(row >= grid.count())
-        return;
-    int columns = grid[row].count();
-
-    for(int i = 0; i < columns; ++i) {
-        CrochetCell* c = grid[row].at(i);
-        setCellPosition(row, i, c, columns, true);
-    }
-}
-
 void SceneRounds::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
 {
  
@@ -140,10 +87,8 @@ void SceneRounds::createRow(int row, int columns, QString stitch)
         c->setStitch(stitch, (row % 2));
         addItem(c);
         modelRow.append(c);
-        setCellPosition(row, i, c, columns);
     }
-    grid.append(modelRow);
-
+    rows.insert(row, modelRow);
 }
 
 int SceneRounds::getClosestRow(QPointF mousePosition)
@@ -157,11 +102,11 @@ int SceneRounds::getClosestRow(QPointF mousePosition)
     int row = round(temp2 - 1);
     if(row < 0)
         row = 0;
-    if(row >= grid.count()) {
-        row = grid.count();
+    
+    if(row < rows.count()) {
 
         QList<CrochetCell*> r;
-        grid.append(r);
+        rows.append(r);
     }
 
     return row;
@@ -189,7 +134,7 @@ int SceneRounds::getClosestColumn(QPointF mousePosition, int row)
     else if(mousePosition.x() >= 0 && mousePosition.y() <= 0)
         angle = 360 + angleX;
 
-    qreal degreesPerPos = 360.0 / grid[row].count();
+    qreal degreesPerPos = 360.0 / rows[row].count();
 
     return ceil(angle / degreesPerPos);
 }
@@ -200,17 +145,6 @@ QPointF SceneRounds::calcPoint(double radius, double angleInDegrees, QPointF ori
     qreal x = (radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
     qreal y = (radius * sin(angleInDegrees * M_PI / 180)) + origin.y();
     return QPointF(x, y);
-}
-
-QPoint SceneRounds::findGridPosition(CrochetCell* c)
-{
-    for(int y = 0; y < grid.count(); ++y) {
-        if(grid[y].contains(c)) {
-            return QPoint(grid[y].indexOf(c), y);
-        }
-    }
-    
-    return QPoint();
 }
 
 void SceneRounds::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)

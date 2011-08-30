@@ -87,6 +87,10 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
+    mRowEditDialog = new RowEditDialog(scene(), this);
+    ui->dialogLayout->addWidget(mRowEditDialog);
+    mRowEditDialog->hide();
+    
     ui->chartOptionsBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked()), SLOT(showChartOptions()));
    
@@ -96,6 +100,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     connect(mView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
 
     connect(ui->showChartCenter, SIGNAL(clicked(bool)), SLOT(setShowChartCenter(bool)));
+
 }
 
 CrochetTab::~CrochetTab()
@@ -205,6 +210,8 @@ void CrochetTab::createChart(int rows, int cols, QString defStitch, QSizeF rowSi
     if(rounds) {
         ui->showChartCenter->setChecked(rounds->showChartCenter());
     }
+
+    mRowEditDialog->updateRowList();
 }
 
 void CrochetTab::setEditBgColor(QColor color)
@@ -270,4 +277,17 @@ void CrochetTab::clearSelection()
     mScene->clearSelection();
     mScene->update();
 
+}
+
+void CrochetTab::showRowEditor(bool state)
+{
+    if(state)
+        mRowEditDialog->show();
+    else
+        mRowEditDialog->hide();
+}
+
+void CrochetTab::updateRows()
+{
+    mRowEditDialog->updateRowList();
 }

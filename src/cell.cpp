@@ -96,3 +96,9 @@ void Cell::setAngle(qreal angle)
 {
     mAngle = angle;
 }
+
+void Cell::useAlternateRenderer(bool useAlt)
+{
+    if(mStitch->isSvg() && mStitch->renderSvg()->isValid())
+        setSharedRenderer(mStitch->renderSvg(useAlt));
+}

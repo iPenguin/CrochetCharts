@@ -26,6 +26,7 @@ class Scene : public QGraphicsScene
     friend class SetCellRotation;
     friend class AddCell;
     friend class RemoveCell;
+    friend class RowEditDialog;
 public:
 
     enum EditMode {
@@ -46,17 +47,22 @@ public:
     ~Scene();
 
     virtual void createRow(int row, int columns, QString stitch) = 0;
-
-    virtual void appendCell(int row, CrochetCell* c) = 0;
-
     virtual void addCell(CrochetCell* c);
+
+    /**
+     * find the x,y positions on the grid for a given cell;
+     * return QPoint(column, row);
+     * if return = -1,-1 isVoid.
+     */
+    QPoint indexOf(CrochetCell* c);
+    
+    void removeCell(CrochetCell* c);
+    void removeFromRows(CrochetCell* c);
     
     int rowCount();
     int columnCount(int row);
     int maxColumnCount();
     
-    virtual void removeCell(CrochetCell* c) = 0;
-
     virtual void createChart(int rows, int cols, QString stitch, QSizeF rowSize) = 0;
 
     void setEditMode(EditMode mode) { mMode = mode; }
@@ -73,8 +79,19 @@ public:
     void removeIndicator(Indicator* i);
     
     QStringList modes();
+
+    void moveRowUp(int row);
+    void moveRowDown(int row);
+
+    void removeRow(int row);
     
 public slots:
+    void createRow(int row);
+
+    /**
+     * highlight (select) all the stitches in row @param row.
+     */
+    void highlightRow(int row);
     
     void updateRubberBand(int dx, int dy);
     
@@ -91,12 +108,6 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* e);
     void mousePressEvent(QGraphicsSceneMouseEvent* e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* e);
-
-    /**
-     * find the x,y positions on the grid for a given cell;
-     * return QPoint(column, row);
-     */
-    QPoint findGridPosition(CrochetCell* c);
 
     QList<Indicator*> indicators() { return mIndicators; }
         
@@ -116,13 +127,15 @@ protected:
     void stretchModeMousePress(QGraphicsSceneMouseEvent* e);
     void stretchModeMouseMove(QGraphicsSceneMouseEvent* e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent* e);
-
+    
     virtual void stitchModeMouseMove(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
     virtual void stitchModeMousePress(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
     virtual void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
     
     QSizeF defaultSize() const { return mDefaultSize; }
 
+    void updateStitchRenderer();
+    
 protected:
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
@@ -161,8 +174,8 @@ protected:
     QPointF mPivotPt;
     QPointF mOrigin;
 
-    //The grid just keeps track of the sts in each row so they can be converted to instructions.
-    QList<QList<CrochetCell*> > grid;
+    //rows keeps track of the st order for individual rows;
+    QList< QList<CrochetCell*> > rows;
     
 private:
     qreal scenePosToAngle(QPointF pt);

@@ -32,6 +32,7 @@ set(crochet_qobject_headers
     scenerows.h
     scenerounds.h
     sceneblank.h
+    roweditdialog.h
     )
 
 set(crochet_resources

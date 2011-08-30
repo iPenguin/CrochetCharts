@@ -38,8 +38,13 @@
 #include <QDesktopServices>
 
 MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), mUpdater(0), mEditMode(10), mStitch("ch"),
-    mFgColor(QColor(Qt::black)), mBgColor(QColor(Qt::white))
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    mUpdater(0),
+    mEditMode(10),
+    mStitch("ch"),
+    mFgColor(QColor(Qt::black)),
+    mBgColor(QColor(Qt::white))
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     ui->setupUi(this);
@@ -58,7 +63,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     
     setupStitchPalette();
     setupUndoView();
-   
+    
     mFile = new SaveFile(this);
     loadFiles(fileNames);
 
@@ -260,7 +265,7 @@ void MainWindow::setupMenus()
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
 
     //Modes menu
-    connect(ui->menuModes, SIGNAL(aboutToShow()), this, SLOT(menuModesAboutToShow()));
+    connect(ui->menuModes, SIGNAL(aboutToShow()), SLOT(menuModesAboutToShow()));
 
     mModeGroup = new QActionGroup(this);
     mModeGroup->addAction(ui->actionStitchMode);
@@ -269,18 +274,20 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionStretchMode);
     mModeGroup->addAction(ui->actionIndicatorMode);
 
-    connect(mModeGroup, SIGNAL(triggered(QAction*)), this, SLOT(changeTabMode(QAction*)));
+    connect(mModeGroup, SIGNAL(triggered(QAction*)), SLOT(changeTabMode(QAction*)));
     
     //Charts Menu
-    connect(ui->actionAddChart, SIGNAL(triggered()), this, SLOT(documentNewChart()));
-    connect(ui->actionRemoveTab, SIGNAL(triggered()), this, SLOT(removeCurrentTab()));
+    connect(ui->actionAddChart, SIGNAL(triggered()), SLOT(documentNewChart()));
+    connect(ui->actionRemoveTab, SIGNAL(triggered()), SLOT(removeCurrentTab()));
 
     ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
     
-    connect(ui->menuChart, SIGNAL(aboutToShow()), this, SLOT(menuChartAboutToShow()));
-    connect(ui->actionEditName, SIGNAL(triggered()), this, SLOT(chartEditName()));
+    connect(ui->menuChart, SIGNAL(aboutToShow()), SLOT(menuChartAboutToShow()));
+    connect(ui->actionEditName, SIGNAL(triggered()), SLOT(chartEditName()));
     //TODO: get more icons from the theme for use with table editing.
     //http://doc.qt.nokia.com/4.7/qstyle.html#StandardPixmap-enum
+
+    connect(ui->actionCreateRows, SIGNAL(toggled(bool)), SLOT(chartCreateRows(bool)));
     
     //Tools Menu
     connect(ui->menuTools, SIGNAL(aboutToShow()), SLOT(menuToolsAboutToShow()));
@@ -1056,7 +1063,14 @@ void MainWindow::menuChartAboutToShow()
 {
     bool state = hasTab();
     ui->actionRemoveTab->setEnabled(state);
-    ui->actionEditName->setEnabled(state);       
+    ui->actionEditName->setEnabled(state);
+    ui->actionCreateRows->setEnabled(state);
+    if(!state) {
+        ui->actionCreateRows->setChecked(false);
+        CrochetTab* curTab = curCrochetTab();
+        if(curTab)
+            curTab->showRowEditor(false);
+    }
 }
 
 void MainWindow::chartEditName()
@@ -1245,4 +1259,10 @@ void MainWindow::documentIsModified(bool isModified)
 {
     //TODO: check all possible modification locations.
     setWindowModified(isModified);
+}
+
+void MainWindow::chartCreateRows(bool state)
+{
+    CrochetTab* tab = curCrochetTab();
+    tab->showRowEditor(state);
 }
