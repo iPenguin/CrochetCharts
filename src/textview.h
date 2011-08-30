@@ -22,14 +22,13 @@ public:
 
     QString copyInstructions();
 
-private:
-
     /**
      * Generates the text for a given row of the chart without trailing \n.
      * If cleanOutput = true remove the placeholder stitches 'x' by default.
      **/
     QString generateTextRow(int row, bool cleanOutput = false, bool useRepeats = false);
-
+    
+private:
     /**
      * This function strips off any incomplete repeat indicators or other
      * special text input from the user that might be incomplete.

@@ -11,9 +11,10 @@
 #include <QMessageBox>
 
 
-RowEditDialog::RowEditDialog(Scene* scene, QWidget* parent)
+RowEditDialog::RowEditDialog(Scene* scene, TextView* textView, QWidget* parent)
     : QWidget(parent),
     mScene(scene),
+    mTextView(textView),
     ui(new Ui::RowEditDialog)
 {
     ui->setupUi(this);
@@ -85,6 +86,10 @@ void RowEditDialog::listItemChanged(int listRow)
 {
     int r = ui->rowList->item(listRow)->text().toInt();
     mScene->highlightRow(r - 1);
+
+    QString rowText = mTextView->generateTextRow(listRow, true,true);
+    qDebug() << rowText;
+    ui->rowView->setText(rowText);
 }
 
 void RowEditDialog::updateRowList()

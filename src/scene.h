@@ -27,6 +27,7 @@ class Scene : public QGraphicsScene
     friend class AddCell;
     friend class RemoveCell;
     friend class RowEditDialog;
+    friend class TextView;
 public:
 
     enum EditMode {

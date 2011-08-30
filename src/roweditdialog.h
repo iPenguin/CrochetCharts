@@ -8,6 +8,7 @@
 #include <QWidget>
 
 #include "scene.h"
+#include "textview.h"
 
 namespace Ui {
     class RowEditDialog;
@@ -17,7 +18,7 @@ class RowEditDialog : public QWidget
 {
     Q_OBJECT
 public:
-    RowEditDialog(Scene* scene, QWidget* parent = 0);
+    RowEditDialog(Scene* scene, TextView* textView, QWidget* parent = 0);
     ~RowEditDialog();
 
     void updateRowList();
@@ -41,6 +42,7 @@ private slots:
 private:
 
     Scene* mScene;
+    TextView *mTextView;
     
     Ui::RowEditDialog* ui;
 };

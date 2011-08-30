@@ -87,7 +87,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
-    mRowEditDialog = new RowEditDialog(scene(), this);
+    mRowEditDialog = new RowEditDialog(scene(), mTextView, this);
     ui->dialogLayout->addWidget(mRowEditDialog);
     mRowEditDialog->hide();
     
