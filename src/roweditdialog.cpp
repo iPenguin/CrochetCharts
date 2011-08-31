@@ -52,11 +52,14 @@ void RowEditDialog::addRow()
 
 void RowEditDialog::removeRow()
 {
+    qDebug() << "remove row start";
     //TODO: remove actual row from the chart.
     int curRow = ui->rowList->currentRow();
     ui->rowList->takeItem(curRow);
     mScene->removeRow(curRow);
     updateRowList();
+
+    qDebug() << "remove row end";
 }
 
 void RowEditDialog::moveUp()
@@ -87,21 +90,24 @@ void RowEditDialog::listItemChanged(int listRow)
 {
     int r = ui->rowList->item(listRow)->text().toInt();
     mScene->highlightRow(r - 1);
-
+    qDebug() << "rowtext";
     QString rowText = mTextView->generateTextRow(listRow, true,true);
     ui->rowView->setText(rowText);
+    qDebug() << "display";
+    emit displayRow(r - 1);
+    qDebug() << "end";
 }
 
 void RowEditDialog::updateRowList()
 {
-
+    qDebug() << "updaterowlist";
     ui->rowList->reset();
     ui->rowList->clear();
 
     int rows = mScene->rows.count();
-qDebug() << "rows" << rows;
+
     for(int i = 0; i < rows; ++i) {
         ui->rowList->addItem(QString::number(i + 1));
     }
-
+    qDebug() << "updaterowlist end";
 }

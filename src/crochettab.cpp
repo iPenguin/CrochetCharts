@@ -90,6 +90,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     mRowEditDialog = new RowEditDialog(scene(), mTextView, this);
     ui->dialogLayout->addWidget(mRowEditDialog);
     mRowEditDialog->hide();
+    connect(mRowEditDialog, SIGNAL(displayRow(int)), mScene, SLOT(drawRowLines(int)));
     
     ui->chartOptionsBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked()), SLOT(showChartOptions()));

@@ -24,8 +24,10 @@ public:
     void updateRowList();
     
 signals:
-    void createRow(int row);
-    void selectRow(int row);
+    /**
+     *Row is the grid row.
+     */
+    void displayRow(int row);
     
 private slots:
     void addRow();

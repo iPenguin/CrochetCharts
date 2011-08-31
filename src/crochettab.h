@@ -103,7 +103,7 @@ private:
     QString mName;
 
     Ui::OptionsBar* ui;
-    RowEditDialog *mRowEditDialog;
+    RowEditDialog* mRowEditDialog;
     
 
     Scene::ChartStyle mChartStyle;

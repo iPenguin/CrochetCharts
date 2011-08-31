@@ -67,7 +67,7 @@ public:
     
     virtual void createChart(int rows, int cols, QString stitch, QSizeF rowSize) = 0;
 
-    void setEditMode(EditMode mode) { mMode = mode; }
+    void setEditMode(EditMode mode) { mMode = mode; if(mode != Scene::RowEdit) hideRowLines(); }
     EditMode editMode() { return mMode; }
 
     void setEditStitch(QString stitch) { mEditStitch = stitch; }
@@ -96,7 +96,9 @@ public slots:
     void highlightRow(int row);
     
     void updateRubberBand(int dx, int dy);
-    
+
+    void drawRowLines(int row);
+
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
@@ -144,7 +146,7 @@ protected:
 
     void updateStitchRenderer();
 
-    void drawRowLines(QPointF curMousePos = QPointF());
+    void hideRowLines();
     
 protected:
     /**
