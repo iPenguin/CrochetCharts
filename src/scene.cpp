@@ -691,28 +691,28 @@ void Scene::moveRowUp(int row)
 
 void Scene::removeRow(int row)
 {
-    qDebug() << "scene remove row start";
+
     rows.takeAt(row);
     updateStitchRenderer();
-    qDebug() << "scene remove row end";
+
 }
 
 void Scene::updateStitchRenderer()
 {
-    qDebug() << "update sts renderer";
+
     for(int i = 0; i < rows.count(); ++i) {
         foreach(CrochetCell* c, rows[i]) {
             c->useAlternateRenderer((i % 2));
         }
     }
-    qDebug() << "update sts renderer end";
+
 }
 
 void Scene::drawRowLines(int row)
 {
     if(rows.count() <= row)
         return;
-    qDebug() << "drawrowlines start";
+
     hideRowLines();
 
     QPointF start, end;
@@ -734,7 +734,7 @@ void Scene::drawRowLines(int row)
             prev = c;
         }
     }
-    qDebug() << "drawrowlines end";
+
 }
 
 void Scene::hideRowLines()

@@ -52,14 +52,29 @@ void RowEditDialog::addRow()
 
 void RowEditDialog::removeRow()
 {
-    qDebug() << "remove row start";
-    //TODO: remove actual row from the chart.
+
     int curRow = ui->rowList->currentRow();
+    if(curRow < 0)
+        return;
+    
+    ui->rowList->reset();
     ui->rowList->takeItem(curRow);
+    
     mScene->removeRow(curRow);
     updateRowList();
 
-    qDebug() << "remove row end";
+    //select the next item in the list.
+    QListWidgetItem* item;
+    if(ui->rowList->count() > curRow)
+        item = ui->rowList->item(curRow);
+    else {
+        curRow = ui->rowList->count() - 1;
+        if(curRow < 0)
+            return;
+        item = ui->rowList->item(curRow);
+    }
+    if(item)
+        ui->rowList->setCurrentItem(item);
 }
 
 void RowEditDialog::moveUp()
@@ -90,17 +105,17 @@ void RowEditDialog::listItemChanged(int listRow)
 {
     int r = ui->rowList->item(listRow)->text().toInt();
     mScene->highlightRow(r - 1);
-    qDebug() << "rowtext";
+
     QString rowText = mTextView->generateTextRow(listRow, true,true);
     ui->rowView->setText(rowText);
-    qDebug() << "display";
+
     emit displayRow(r - 1);
-    qDebug() << "end";
+
 }
 
 void RowEditDialog::updateRowList()
 {
-    qDebug() << "updaterowlist";
+
     ui->rowList->reset();
     ui->rowList->clear();
 
@@ -109,5 +124,5 @@ void RowEditDialog::updateRowList()
     for(int i = 0; i < rows; ++i) {
         ui->rowList->addItem(QString::number(i + 1));
     }
-    qDebug() << "updaterowlist end";
+
 }
