@@ -36,7 +36,7 @@ Scene::Scene(QObject* parent)
     mRubberBand(0),
     mRubberBandStart(QPointF(0,0)),
     mMoving(false),
-    mMode(Scene::StitchMode),
+    mMode(Scene::StitchEdit),
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
@@ -62,8 +62,8 @@ Scene::~Scene()
 QStringList Scene::modes()
 {
     QStringList modes;
-    modes << tr("Stitch Edit") << tr("Color Edit") << tr("Create Rows")
-            << tr("Angle Edit") << tr("Scale Edit") << tr("Indicator Edit");
+    modes << tr("Stitch Edit") << tr("Color Edit") << tr("Row Edit")
+            << tr("Rotation Edit") << tr("Scale Edit") << tr("Indicator Edit");
     return modes;
 }
 
@@ -243,13 +243,13 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     mMoving = false;
     
     switch(mMode) {
-        case Scene::StitchMode:
+        case Scene::StitchEdit:
             stitchModeMousePress(e);
             break;
-        case Scene::AngleMode:
+        case Scene::RotationEdit:
             angleModeMousePress(e);
             break;
-        case Scene::StretchMode:
+        case Scene::ScaleEdit:
             stretchModeMousePress(e);
             break;
         case Scene::RowEdit:
@@ -287,19 +287,19 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 {
 
     switch(mMode) {
-        case Scene::StitchMode:
+        case Scene::StitchEdit:
             stitchModeMouseMove(e);
             break;
-        case Scene::ColorMode:
+        case Scene::ColorEdit:
             colorModeMouseMove(e);
             break;
-        case Scene::IndicatorMode:
+        case Scene::IndicatorEdit:
             indicatorModeMouseMove(e);
             break;
-        case Scene::AngleMode:
+        case Scene::RotationEdit:
             angleModeMouseMove(e);
             return;
-        case Scene::StretchMode:
+        case Scene::ScaleEdit:
             stretchModeMouseMove(e);
             return;
         case Scene::RowEdit:
@@ -351,19 +351,19 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
     }
 
     switch(mMode) {
-        case Scene::StitchMode:
+        case Scene::StitchEdit:
             stitchModeMouseRelease(e);
             break;
-        case Scene::ColorMode:
+        case Scene::ColorEdit:
             colorModeMouseRelease(e);
             break;
-        case Scene::IndicatorMode:
+        case Scene::IndicatorEdit:
             indicatorModeMouseRelease(e);
             break;
-        case Scene::AngleMode:
+        case Scene::RotationEdit:
             angleModeMouseRelease(e);
             break;
-        case Scene::StretchMode:
+        case Scene::ScaleEdit:
             stretchModeMouseRelease(e);
             break;
         case Scene::RowEdit:
@@ -562,18 +562,27 @@ void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
 
     if(!e->buttons() == Qt::LeftButton)
         return;
-    
-    mRowSelection.clear();
-    
+
+
+    QGraphicsItem* gi = itemAt(e->scenePos());
+    mStartCell = qgraphicsitem_cast<CrochetCell*>(gi);
+    if(mStartCell) {
+
+        if(mRowSelection.contains(gi) && mRowSelection.last() == gi) {
+
+        } else {
+            mRowSelection.clear();
+
+        }
+        mRowSelection.append(mStartCell);
+    }
+    mPreviousCell = mStartCell;
+
     mRowLine = new QGraphicsLineItem(QLineF(e->scenePos(), e->scenePos()));
     mRowLine->setPen(QPen(QColor(Qt::black), 2));
     addItem(mRowLine);
 
-    QGraphicsItem* gi = itemAt(e->scenePos());
-    mStartCell = qgraphicsitem_cast<CrochetCell*>(gi);
-    if(mStartCell)
-        mRowSelection.append(mStartCell);
-    mPreviousCell = mStartCell;
+
 }
 
 void Scene::rowEditMouseMove(QGraphicsSceneMouseEvent* e)

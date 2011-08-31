@@ -31,12 +31,12 @@ class Scene : public QGraphicsScene
 public:
 
     enum EditMode {
-        StitchMode = 10, //place stitches on the chart.
-        ColorMode = 11,       //place colors behind stitches.
+        StitchEdit = 10, //place stitches on the chart.
+        ColorEdit = 11,       //place colors behind stitches.
         RowEdit = 12,
-        AngleMode = 14,       //adjust the angle of the
-        StretchMode = 15,       //stretch the stitches.
-        IndicatorMode = 16
+        RotationEdit = 14,       //adjust the angle of the
+        ScaleEdit = 15,       //stretch the stitches.
+        IndicatorEdit = 16
     };
 
     enum ChartStyle {

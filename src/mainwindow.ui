@@ -272,7 +272,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -332,7 +332,6 @@
     <addaction name="separator"/>
     <addaction name="actionEditName"/>
     <addaction name="separator"/>
-    <addaction name="actionCreateRows"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -360,6 +359,7 @@
     <addaction name="actionColorMode"/>
     <addaction name="actionAngleMode"/>
     <addaction name="actionStretchMode"/>
+    <addaction name="actionCreateRows"/>
     <addaction name="actionIndicatorMode"/>
    </widget>
    <addaction name="menuFile"/>
@@ -843,7 +843,7 @@
     <string>Add or edit the stitches used on the chart</string>
    </property>
    <property name="shortcut">
-    <string>Alt+1</string>
+    <string>D</string>
    </property>
   </action>
   <action name="actionColorMode">
@@ -861,7 +861,7 @@
     <string>Edit the colors used on the chart</string>
    </property>
    <property name="shortcut">
-    <string>Alt+2</string>
+    <string>C</string>
    </property>
   </action>
   <action name="actionShowMainToolbar">
@@ -887,6 +887,9 @@
    <property name="toolTip">
     <string>Select a color for the background</string>
    </property>
+   <property name="shortcut">
+    <string>,</string>
+   </property>
   </action>
   <action name="actionShowUndoHistory">
    <property name="checkable">
@@ -905,13 +908,13 @@
      <normaloff>:/images/rotate_stitch.svg</normaloff>:/images/rotate_stitch.svg</iconset>
    </property>
    <property name="text">
-    <string>Angle Edit</string>
+    <string>Rotation Edit</string>
    </property>
    <property name="toolTip">
     <string>Change the angle of stitches on the chart</string>
    </property>
    <property name="shortcut">
-    <string>Alt+5</string>
+    <string>R</string>
    </property>
   </action>
   <action name="actionStretchMode">
@@ -929,7 +932,7 @@
     <string>Edit the scale of the stitches on the chart</string>
    </property>
    <property name="shortcut">
-    <string>Alt+6</string>
+    <string>S</string>
    </property>
   </action>
   <action name="actionIndicatorMode">
@@ -947,7 +950,7 @@
     <string>Add indicators to the chart</string>
    </property>
    <property name="shortcut">
-    <string>Alt+7</string>
+    <string>I</string>
    </property>
   </action>
   <action name="actionCreateRows">
@@ -955,10 +958,13 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Create Rows</string>
+    <string>Row Edit</string>
    </property>
    <property name="toolTip">
-    <string>Select stitches and create rows</string>
+    <string>Add and edit rows</string>
+   </property>
+   <property name="shortcut">
+    <string>W</string>
    </property>
   </action>
  </widget>
