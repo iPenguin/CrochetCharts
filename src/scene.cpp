@@ -252,6 +252,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
         case Scene::StretchMode:
             stretchModeMousePress(e);
             break;
+        case Scene::RowEdit:
+            rowEditMousePress(e);
+            return;
         default:
             break;
     }
@@ -298,6 +301,9 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
             return;
         case Scene::StretchMode:
             stretchModeMouseMove(e);
+            return;
+        case Scene::RowEdit:
+            rowEditMouseMove(e);
             return;
         default:
             break;
@@ -359,6 +365,9 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
             break;
         case Scene::StretchMode:
             stretchModeMouseRelease(e);
+            break;
+        case Scene::RowEdit:
+            rowEditMouseRelease(e);
             break;
         default:
             break;
@@ -548,6 +557,84 @@ void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     mOldScale = 1.0;
 }
 
+void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
+{
+
+    if(!e->buttons() == Qt::LeftButton)
+        return;
+    
+    mRowSelection.clear();
+    
+    mRowLine = new QGraphicsLineItem(QLineF(e->scenePos(), e->scenePos()));
+    mRowLine->setPen(QPen(QColor(Qt::black), 2));
+    addItem(mRowLine);
+
+    QGraphicsItem* gi = itemAt(e->scenePos());
+    mStartCell = qgraphicsitem_cast<CrochetCell*>(gi);
+    if(mStartCell)
+        mRowSelection.append(mStartCell);
+    mPreviousCell = mStartCell;
+}
+
+void Scene::rowEditMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    
+    if(!e->buttons() == Qt::LeftButton)
+        return;
+
+    if(!mStartCell)
+        return;
+
+    QPointF startPt = mRowLine->line().p1();
+    
+    QGraphicsItem* gi = itemAt(e->scenePos());
+    if(gi) {
+        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(gi);
+        if(!c)
+            return;
+        if(!mRowSelection.contains(gi)) {
+            mRowSelection.append(gi);
+            gi->setSelected(true);
+
+            if(mPreviousCell != c) {
+                QGraphicsLineItem* line = addLine(QLineF(mPreviousCell->pos(), c->pos()));
+                line->setPen(QPen(QColor(Qt::black), 2));
+                mRowLines.append(line);
+
+                mPreviousCell = c;
+                startPt = c->pos();
+            }
+            
+        } //else remove from list
+
+    }
+    
+    if(mRowLine != 0) {
+        QLineF newLine(startPt, e->scenePos());
+        mRowLine->setLine(newLine);
+    }
+    
+}
+
+void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
+{
+    if(e->buttons() != Qt::LeftButton)
+        return;
+    
+    if(!mStartCell)
+        return;
+    
+    QGraphicsItem* gi = itemAt(e->scenePos());
+    if(!gi) {
+        mRowLine->setLine(QLineF(mRowLine->line().p1(), mRowLine->line().p1()));
+    }
+    mStartCell = qgraphicsitem_cast<CrochetCell*>(gi);
+    
+    delete mRowLine;
+    //drawRowLines();
+    
+}
+
 void Scene::createRow(int row)
 {
     
@@ -555,10 +642,9 @@ void Scene::createRow(int row)
         return;
     
     QList<CrochetCell*> r;
-    QList<QGraphicsItem*> sItems = selectedItems();
 
-    foreach(QGraphicsItem* item, sItems) {
-        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+    foreach(QGraphicsItem* i, mRowSelection) {
+        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(i);
         removeFromRows(c);
         c->useAlternateRenderer((rows.count() % 2));
         r.append(c);
@@ -625,5 +711,36 @@ void Scene::updateStitchRenderer()
     }
 }
 
+void Scene::drawRowLines(QPointF curMousePos)
+{
+qDebug() << "drawRowLines() start";    
+    QPointF start, end;
+    /*
+    if(mRowLines.count() <= 0) {
+        foreach(QGraphicsLineItem* line, mRowLines) {
+            delete line;
+        }
+        mRowLines.clear();
+    }
+    */
+    int count = mRowSelection.count();
+    qDebug() << "for" << count;
+    for(int i = 0; i < count; ++i) {
+        QGraphicsItem* c = mRowSelection[i];
+        if(c)
+            start = c->pos();
+        
+        if(i + 1 < count) {
+            QGraphicsItem* c = mRowSelection[i + 1];
+            if(c)
+                end = c->pos();
+        } else
+            continue;
+        qDebug() << "line end:" << end;
+        QGraphicsLineItem *line = addLine(QLineF(start, end));
+        line->setPen(QPen(QColor(Qt::black), 2));
+        mRowLines.append(line);
 
-
+    }
+qDebug() << "drawRowLines() end";
+}

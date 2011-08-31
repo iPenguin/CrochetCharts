@@ -571,9 +571,9 @@
    <addaction name="actionColorMode"/>
    <addaction name="actionAngleMode"/>
    <addaction name="actionStretchMode"/>
+   <addaction name="actionCreateRows"/>
    <addaction name="actionIndicatorMode"/>
    <addaction name="separator"/>
-   <addaction name="actionCreateRows"/>
    <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">

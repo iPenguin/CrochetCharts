@@ -33,6 +33,7 @@ public:
     enum EditMode {
         StitchMode = 10, //place stitches on the chart.
         ColorMode = 11,       //place colors behind stitches.
+        RowEdit = 12,
         AngleMode = 14,       //adjust the angle of the
         StretchMode = 15,       //stretch the stitches.
         IndicatorMode = 16
@@ -99,6 +100,8 @@ public slots:
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
+
+    void rowSelected();
     
 protected:
 /*
@@ -128,6 +131,10 @@ protected:
     void stretchModeMousePress(QGraphicsSceneMouseEvent* e);
     void stretchModeMouseMove(QGraphicsSceneMouseEvent* e);
     void stretchModeMouseRelease(QGraphicsSceneMouseEvent* e);
+
+    void rowEditMousePress(QGraphicsSceneMouseEvent* e);
+    void rowEditMouseMove(QGraphicsSceneMouseEvent* e);
+    void rowEditMouseRelease(QGraphicsSceneMouseEvent* e);
     
     virtual void stitchModeMouseMove(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
     virtual void stitchModeMousePress(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
@@ -136,6 +143,8 @@ protected:
     QSizeF defaultSize() const { return mDefaultSize; }
 
     void updateStitchRenderer();
+
+    void drawRowLines(QPointF curMousePos = QPointF());
     
 protected:
     /**
@@ -183,12 +192,19 @@ private:
 
     int mRowSpacing;
     QSizeF mDefaultSize;
-        
+
+    QList<QGraphicsItem*> mRowSelection;
     
     QUndoStack mUndoStack;
     
     QList<Indicator*> mIndicators;
 
+    CrochetCell* mStartCell;
+    CrochetCell* mEndCell;
+    CrochetCell* mPreviousCell;
+    QGraphicsLineItem* mRowLine;
+    QList<QGraphicsLineItem*> mRowLines;
+    
     QList<QGraphicsItem*> mDemoItems;
 };
 

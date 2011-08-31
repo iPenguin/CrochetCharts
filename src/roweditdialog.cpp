@@ -53,8 +53,9 @@ void RowEditDialog::addRow()
 void RowEditDialog::removeRow()
 {
     //TODO: remove actual row from the chart.
-    
-    ui->rowList->takeItem(ui->rowList->currentRow());
+    int curRow = ui->rowList->currentRow();
+    ui->rowList->takeItem(curRow);
+    mScene->removeRow(curRow);
     updateRowList();
 }
 
@@ -88,7 +89,6 @@ void RowEditDialog::listItemChanged(int listRow)
     mScene->highlightRow(r - 1);
 
     QString rowText = mTextView->generateTextRow(listRow, true,true);
-    qDebug() << rowText;
     ui->rowView->setText(rowText);
 }
 
@@ -99,7 +99,7 @@ void RowEditDialog::updateRowList()
     ui->rowList->clear();
 
     int rows = mScene->rows.count();
-
+qDebug() << "rows" << rows;
     for(int i = 0; i < rows; ++i) {
         ui->rowList->addItem(QString::number(i + 1));
     }

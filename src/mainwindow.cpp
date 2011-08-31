@@ -272,6 +272,7 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionColorMode);
     mModeGroup->addAction(ui->actionAngleMode);
     mModeGroup->addAction(ui->actionStretchMode);
+    mModeGroup->addAction(ui->actionCreateRows);
     mModeGroup->addAction(ui->actionIndicatorMode);
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), SLOT(changeTabMode(QAction*)));
@@ -1027,6 +1028,8 @@ void MainWindow::changeTabMode(QAction* a)
         mode = 10;
     else if(a == ui->actionColorMode)
         mode = 11;
+    else if(a == ui->actionCreateRows)
+        mode = 12;
     else if(a == ui->actionAngleMode)
         mode = 14;
     else if(a == ui->actionStretchMode)
@@ -1045,6 +1048,8 @@ void MainWindow::setEditMode(int mode)
         ui->actionStitchMode->setChecked(true);
     else if(mode == 11)
         ui->actionColorMode->setChecked(true);
+    else if(mode == 12)
+        ui->actionCreateRows->setChecked(true);
     else if(mode == 14)
         ui->actionAngleMode->setChecked(true);
     else if(mode == 15)
