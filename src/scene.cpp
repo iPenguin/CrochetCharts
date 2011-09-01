@@ -581,10 +581,8 @@ void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
     }
     mPreviousCell = mStartCell;
 
-    mRowLine = new QGraphicsLineItem(QLineF(e->scenePos(), e->scenePos()));
+    mRowLine = addLine(QLineF(e->scenePos(), e->scenePos()));
     mRowLine->setPen(QPen(QColor(Qt::black), 2));
-    addItem(mRowLine);
-
 
 }
 
@@ -630,14 +628,14 @@ void Scene::rowEditMouseMove(QGraphicsSceneMouseEvent* e)
 
 void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    if(e->buttons() != Qt::LeftButton)
-        return;
-    
+
     if(!mStartCell)
         return;
-    
+
     mStartCell = 0;
+    removeItem(mRowLine);
     delete mRowLine;
+    mRowLine = 0;
     
 }
 
