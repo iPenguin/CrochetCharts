@@ -661,19 +661,18 @@ void Scene::updateRow(int row)
     //FIXME: this overlaps the createRow code.
     if(selectedItems().count() <= 0)
         return;
-qDebug() << "update start";
+
     QList<CrochetCell*> r;
-    
+
     foreach(QGraphicsItem* i, mRowSelection) {
         CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(i);
         removeFromRows(c);
         c->useAlternateRenderer((row % 2));
         r.append(c);
     }
-qDebug() << "remove";    
-    rows.removeAt(row);
-qDebug() << "insert";
+
     rows.insert(row, r);
+    
 }
 
 QPoint Scene::indexOf(CrochetCell* c)
@@ -694,10 +693,14 @@ void Scene::highlightRow(int row)
         return;
 
     clearSelection();
+    mRowSelection.clear();
 
-    foreach(CrochetCell* c, rows[row]) {
-        if(c)
+    for(int i = 0; i < rows[row].count(); ++i) {
+        CrochetCell* c = rows[row][i];
+        if(c) {
             c->setSelected(true);
+            mRowSelection.append(c);
+        }
     }
 
     emit selectionChanged();

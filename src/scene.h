@@ -59,6 +59,9 @@ public:
     QPoint indexOf(CrochetCell* c);
     
     void removeCell(CrochetCell* c);
+    /**
+     * This function removes a cell from the 'grid'. if the row is empty it removes the row too.
+     */
     void removeFromRows(CrochetCell* c);
     
     int rowCount();
