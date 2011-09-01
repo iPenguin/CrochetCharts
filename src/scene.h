@@ -175,6 +175,8 @@ protected:
     
     //Is the user moving an object.
     bool mMoving;
+    bool mIsRubberband;
+    bool mHasSelection;
     
     EditMode mMode;
     

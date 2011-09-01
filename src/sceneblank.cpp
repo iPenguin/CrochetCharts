@@ -61,21 +61,17 @@ void SceneBlank::createRow(int row, int columns, QString stitch)
     Q_UNUSED(stitch);
 }
 
-void SceneBlank::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
-{
-    Q_UNUSED(e);
-}
-
 void SceneBlank::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     //FIXME: foreach(stitch in selection()) create an undo group event.
     if(mCurCell) {
 
-    if(mCurCell->name() != mEditStitch && !mMoving)
-        undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
+        if(mCurCell->name() != mEditStitch && !mMoving)
+            undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
 
         mCurCell = 0;
-    } else if(!mRubberBand && !mMoving){
+
+    } else if(!mIsRubberband && !mMoving && !mHasSelection){
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 

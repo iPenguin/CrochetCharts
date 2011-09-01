@@ -36,6 +36,8 @@ Scene::Scene(QObject* parent)
     mRubberBand(0),
     mRubberBandStart(QPointF(0,0)),
     mMoving(false),
+    mIsRubberband(false),
+    mHasSelection(false),
     mMode(Scene::StitchEdit),
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
@@ -214,6 +216,8 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 {
+    if(selectedItems().count() > 0)
+        mHasSelection = true;
     
     QGraphicsScene::mousePressEvent(e);
     
@@ -223,25 +227,23 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     if(gi) {
         
         CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(gi);
-
         if(c) {
-            
             mCurCell = c;
             mCellStartPos = mCurCell->pos();
             mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
-        } else {
             
+        } else {
             Indicator* i = qgraphicsitem_cast<Indicator*>(gi);
-
             if(i) {
-                
                 mCurIndicator = i;
                 mCellStartPos = i->pos();
+                
             }
         }
     }
 
     mMoving = false;
+    mIsRubberband = false;
     
     switch(mMode) {
         case Scene::StitchEdit:
@@ -309,47 +311,28 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
         default:
             break;
     }
-
-    if(mRubberBand) {
-        ChartView* view = qobject_cast<ChartView*>(parent());
-        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
-
-        mRubberBand->setGeometry(rect.normalized());
-    }
     
-    qreal diff = (e->buttonDownPos(Qt::LeftButton)- e->scenePos()).manhattanLength();
+    qreal diff = (e->buttonDownScenePos(Qt::LeftButton)- e->scenePos()).manhattanLength();
+
     if(diff >= QApplication::startDragDistance()) {
-        mMoving = true;
-        QGraphicsScene::mouseMoveEvent(e);
+
+        if(!mCurCell) {
+            if(mRubberBand) {
+                QGraphicsView* view = views().first();
+                QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
+
+                mRubberBand->setGeometry(rect.normalized());
+                mIsRubberband = true;
+            }
+        } else {
+            mMoving = true;
+            QGraphicsScene::mouseMoveEvent(e);
+        }
     }
 }
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
 {
-
-    if(mRubberBand) {
-        ChartView* view = qobject_cast<ChartView*>(parent());
-        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
-
-        QPolygonF p = view->mapToScene(rect.normalized());
-        QPainterPath path;
-        path.addPolygon(p);
-        setSelectionArea(path);
-
-        mRubberBand->hide();
-    }
-    
-    if((selectedItems().count() > 0 && mOldPositions.count() > 0) && mMoving) {
-        undoStack()->beginMacro("move items");
-        foreach(QGraphicsItem* item, selectedItems()) {
-            if(mOldPositions.contains(item)) {
-                QPointF oldPos = mOldPositions.value(item);
-                undoStack()->push(new SetItemCoordinates(this, item, oldPos));
-            }
-        }
-        undoStack()->endMacro();
-        mOldPositions.clear();
-    }
 
     switch(mMode) {
         case Scene::StitchEdit:
@@ -372,6 +355,30 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
             break;
         default:
             break;
+    }
+
+    if(mIsRubberband) {
+        ChartView* view = qobject_cast<ChartView*>(parent());
+        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
+
+        QPolygonF p = view->mapToScene(rect.normalized());
+        QPainterPath path;
+        path.addPolygon(p);
+        setSelectionArea(path);
+
+        mRubberBand->hide();
+    }
+
+    if((selectedItems().count() > 0 && mOldPositions.count() > 0) && mMoving) {
+        undoStack()->beginMacro("move items");
+        foreach(QGraphicsItem* item, selectedItems()) {
+            if(mOldPositions.contains(item)) {
+                QPointF oldPos = mOldPositions.value(item);
+                undoStack()->push(new SetItemCoordinates(this, item, oldPos));
+            }
+        }
+        undoStack()->endMacro();
+        mOldPositions.clear();
     }
 
     if(mCurCell) {
@@ -406,7 +413,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
         initDemoBackground();
         mMoving = false;
     }
-
+    
+    mHasSelection = false;
 }
 
 void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -578,11 +586,12 @@ void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
             
         }
         mRowSelection.append(mStartCell);
+
+        mRowLine = addLine(QLineF(e->scenePos(), e->scenePos()));
+        mRowLine->setPen(QPen(QColor(Qt::black), 2));
+        
     }
     mPreviousCell = mStartCell;
-
-    mRowLine = addLine(QLineF(e->scenePos(), e->scenePos()));
-    mRowLine->setPen(QPen(QColor(Qt::black), 2));
 
 }
 
@@ -628,14 +637,13 @@ void Scene::rowEditMouseMove(QGraphicsSceneMouseEvent* e)
 
 void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-
-    if(!mStartCell)
-        return;
-
     mStartCell = 0;
-    removeItem(mRowLine);
-    delete mRowLine;
-    mRowLine = 0;
+    
+    if(mRowLine) {
+        removeItem(mRowLine);
+        delete mRowLine;
+        mRowLine = 0;
+    }
     
 }
 

@@ -45,7 +45,6 @@ signals:
     void colorChanged(QString oldColor, QString newColor);
     
 protected:
-    void stitchModeMouseMove(QGraphicsSceneMouseEvent* e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
 };
