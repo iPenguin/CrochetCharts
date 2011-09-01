@@ -33,5 +33,6 @@
         <file>images/watermark.svg</file>
         <file>images/zoomin.png</file>
         <file>images/zoomout.png</file>
+        <file>images/row_edit.svg</file>
     </qresource>
 </RCC>
