@@ -41,6 +41,8 @@ private slots:
      */
     void listItemChanged(int listRow);
 
+    void updateRow();
+    
 private:
 
     Scene* mScene;

@@ -26,7 +26,7 @@ RowEditDialog::RowEditDialog(Scene* scene, TextView* textView, QWidget* parent)
     connect(ui->moveDown, SIGNAL(clicked(bool)), SLOT(moveDown()));
 
     connect(ui->rowList, SIGNAL(currentRowChanged(int)), SLOT(listItemChanged(int)));
-    
+    connect(ui->updateRow, SIGNAL(clicked(bool)), SLOT(updateRow()));
 }
 
 RowEditDialog::~RowEditDialog()
@@ -125,4 +125,15 @@ void RowEditDialog::updateRowList()
         ui->rowList->addItem(QString::number(i + 1));
     }
 
+}
+
+void RowEditDialog::updateRow()
+{
+
+    int r = ui->rowList->currentItem()->text().toInt();
+    if(r <= 0)
+        return;
+    r--;
+    mScene->updateRow(r);
+    
 }

@@ -45,7 +45,8 @@ Scene::Scene(QObject* parent)
     mAngle(0.0),
     mOrigin(0,0),
     mRowSpacing(9),
-    mDefaultSize(QSizeF(32.0, 96.0))
+    mDefaultSize(QSizeF(32.0, 96.0)),
+    mRowLine(0)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, 0);
 }
@@ -572,7 +573,9 @@ void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
 
         } else {
             mRowSelection.clear();
-
+            hideRowLines();
+            delete mRowLine;
+            
         }
         mRowSelection.append(mStartCell);
     }
@@ -654,6 +657,25 @@ void Scene::createRow(int row)
     }
     rows.append(r);
 
+}
+void Scene::updateRow(int row)
+{
+    //FIXME: this overlaps the createRow code.
+    if(selectedItems().count() <= 0)
+        return;
+qDebug() << "update start";
+    QList<CrochetCell*> r;
+    
+    foreach(QGraphicsItem* i, mRowSelection) {
+        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(i);
+        removeFromRows(c);
+        c->useAlternateRenderer((row % 2));
+        r.append(c);
+    }
+qDebug() << "remove";    
+    rows.removeAt(row);
+qDebug() << "insert";
+    rows.insert(row, r);
 }
 
 QPoint Scene::indexOf(CrochetCell* c)

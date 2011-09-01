@@ -89,7 +89,8 @@ public:
     
 public slots:
     void createRow(int row);
-
+    void updateRow(int row);
+    
     /**
      * highlight (select) all the stitches in row @param row.
      */

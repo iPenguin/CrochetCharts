@@ -20,7 +20,7 @@
    <item>
     <widget class="QGroupBox" name="createRows">
      <property name="title">
-      <string>Create Rows</string>
+      <string>Edit Rows</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="1" column="3">
@@ -73,7 +73,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="6" colspan="2">
+      <item row="0" column="6" colspan="3">
        <widget class="QTextEdit" name="rowView">
         <property name="enabled">
          <bool>false</bool>
@@ -108,7 +108,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="6">
+      <item row="1" column="7">
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -121,7 +121,7 @@
         </property>
        </spacer>
       </item>
-      <item row="1" column="7">
+      <item row="1" column="6">
        <widget class="QPushButton" name="updateRow">
         <property name="text">
          <string>Update Row</string>
