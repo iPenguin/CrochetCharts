@@ -282,10 +282,13 @@ void CrochetTab::clearSelection()
 
 void CrochetTab::showRowEditor(bool state)
 {
-    if(state)
+    if(state) {
         mRowEditDialog->show();
-    else
+    } else {
         mRowEditDialog->hide();
+    }
+    
+    mScene->clearSelection();
 }
 
 void CrochetTab::updateRows()
