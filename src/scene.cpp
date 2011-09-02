@@ -794,7 +794,7 @@ void Scene::alignSelection(int alignmentStyle)
 
     if(alignmentStyle == 1) {
         //left
-        int left = sceneRect().right();
+        qreal left = sceneRect().right();
         foreach(QGraphicsItem* i, selectedItems()) {
             if(i->scenePos().x() < left)
                 left = i->scenePos().x();
@@ -810,10 +810,28 @@ void Scene::alignSelection(int alignmentStyle)
         
     } else if(alignmentStyle == 2) {
         //center v
+        qreal left = sceneRect().right();
+        qreal right = sceneRect().left();
+        foreach(QGraphicsItem* i, selectedItems()) {
+            if(i->scenePos().x() < left)
+                left = i->scenePos().x();
+            if(i->scenePos().x() > right)
+                right = i->scenePos().x();
+        }
+        qreal diff = right - left;
+        qreal center = left + (diff / 2);
+        
+        undoStack()->beginMacro("align selection");
+        foreach(QGraphicsItem* i, selectedItems()) {
+            QPointF oldPos = i->pos();
+            i->setPos(center - (i->boundingRect().width()/2), i->pos().y());
+            undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        }
+        undoStack()->endMacro();
 
     } else if(alignmentStyle == 3) {
         //right
-        int right = sceneRect().left();
+        qreal right = sceneRect().left();
         foreach(QGraphicsItem* i, selectedItems()) {
             if(i->scenePos().x() > right)
                 right = i->scenePos().x();
@@ -829,7 +847,7 @@ void Scene::alignSelection(int alignmentStyle)
         
     } else if(alignmentStyle == 4) {
         //top
-        int top = sceneRect().bottom();
+        qreal top = sceneRect().bottom();
         foreach(QGraphicsItem* i, selectedItems()) {
             if(i->scenePos().y() < top)
                 top = i->scenePos().y();
@@ -845,9 +863,28 @@ void Scene::alignSelection(int alignmentStyle)
         
     } else if(alignmentStyle == 5) {
         //center h
+        qreal top = sceneRect().bottom();
+        qreal bottom = sceneRect().top();
+        foreach(QGraphicsItem* i, selectedItems()) {
+            if(i->scenePos().y() < top)
+                top = i->scenePos().y();
+            if(i->scenePos().y() > bottom)
+                bottom = i->scenePos().y();
+        }
+        qreal diff = bottom - top;
+        qreal center = bottom + (diff / 2);
+
+        undoStack()->beginMacro("align selection");
+        foreach(QGraphicsItem* i, selectedItems()) {
+            QPointF oldPos = i->pos();
+            i->setPos(i->pos().x(), center - (i->boundingRect().height()/2));
+            undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        }
+        undoStack()->endMacro();
+        
     } else if(alignmentStyle == 6) {
         //bottom
-        int bottom = sceneRect().top();
+        qreal bottom = sceneRect().top();
         foreach(QGraphicsItem* i, selectedItems()) {
             if(i->scenePos().y() > bottom)
                 bottom = i->scenePos().y();
