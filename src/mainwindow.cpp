@@ -8,6 +8,8 @@
 #include "licensewizard.h"
 #include "exportui.h"
 
+#include "aligndock.h"
+
 #include "appinfo.h"
 #include "settings.h"
 #include "settingsui.h"
