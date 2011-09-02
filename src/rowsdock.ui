@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Rows and Columns</string>
+   <string>Rows and Stitches</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
@@ -23,12 +23,22 @@
      </widget>
     </item>
     <item row="1" column="0" colspan="2">
-     <widget class="QSpinBox" name="spinBox"/>
+     <widget class="QSpinBox" name="rows">
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>2</number>
+      </property>
+     </widget>
     </item>
     <item row="0" column="3">
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Columns:</string>
+       <string>Stitches:</string>
       </property>
      </widget>
     </item>
@@ -46,7 +56,17 @@
      </widget>
     </item>
     <item row="1" column="3" colspan="2">
-     <widget class="QSpinBox" name="spinBox_2"/>
+     <widget class="QSpinBox" name="stitches">
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>2</number>
+      </property>
+     </widget>
     </item>
     <item row="2" column="0" rowspan="2">
      <widget class="QLabel" name="label_4">
@@ -69,21 +89,30 @@ p, li { white-space: pre-wrap; }
     <item row="2" column="1" rowspan="2">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QRadioButton" name="radioButton">
+       <widget class="QRadioButton" name="alignTop">
+        <property name="toolTip">
+         <string>Align Top</string>
+        </property>
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_2">
+       <widget class="QRadioButton" name="alignCenterV">
+        <property name="toolTip">
+         <string>Align Center Vertical</string>
+        </property>
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_3">
+       <widget class="QRadioButton" name="alignBottom">
+        <property name="toolTip">
+         <string>Align Bottom</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -101,21 +130,30 @@ p, li { white-space: pre-wrap; }
     <item row="3" column="3" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QRadioButton" name="radioButton_4">
+       <widget class="QRadioButton" name="alignLeft">
+        <property name="toolTip">
+         <string>Align Left</string>
+        </property>
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_5">
+       <widget class="QRadioButton" name="alignCenterH">
+        <property name="toolTip">
+         <string>Align Center Horizontal</string>
+        </property>
         <property name="text">
          <string/>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_6">
+       <widget class="QRadioButton" name="alignRight">
+        <property name="toolTip">
+         <string>Align Right</string>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -131,10 +169,24 @@ p, li { white-space: pre-wrap; }
      </widget>
     </item>
     <item row="6" column="0" colspan="2">
-     <widget class="QSpinBox" name="spinBox_3"/>
+     <widget class="QSpinBox" name="rowSpacing">
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>5</number>
+      </property>
+     </widget>
     </item>
     <item row="6" column="3" colspan="2">
-     <widget class="QSpinBox" name="spinBox_4"/>
+     <widget class="QSpinBox" name="stitchSpacing">
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>5</number>
+      </property>
+     </widget>
     </item>
     <item row="7" column="3" colspan="2">
      <widget class="QPushButton" name="arrange">
@@ -146,7 +198,7 @@ p, li { white-space: pre-wrap; }
     <item row="5" column="3">
      <widget class="QLabel" name="label_8">
       <property name="text">
-       <string>Columns:</string>
+       <string>Stitches:</string>
       </property>
      </widget>
     </item>

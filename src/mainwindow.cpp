@@ -8,8 +8,6 @@
 #include "licensewizard.h"
 #include "exportui.h"
 
-#include "aligndock.h"
-
 #include "appinfo.h"
 #include "settings.h"
 #include "settingsui.h"
@@ -43,6 +41,8 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     mUpdater(0),
+    mAlignDock(0),
+    mRowsDock(0),
     mEditMode(10),
     mStitch("ch"),
     mFgColor(QColor(Qt::black)),
@@ -64,7 +64,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
         checkUpdates();
     
     setupStitchPalette();
-    setupUndoView();
+    setupDocks();
     
     mFile = new SaveFile(this);
     loadFiles(fileNames);
@@ -175,8 +175,9 @@ void MainWindow::setupStitchPalette()
     connect(ui->patternColors, SIGNAL(clicked(QModelIndex)), this, SLOT(selectColor(QModelIndex)));
 }
 
-void MainWindow::setupUndoView()
+void MainWindow::setupDocks()
 {
+    //Undo Dock.
     mUndoDock = new QDockWidget(this);
     mUndoDock->setObjectName("undoHistory");
     QUndoView* view = new QUndoView(&mUndoGroup, mUndoDock);
@@ -184,6 +185,21 @@ void MainWindow::setupUndoView()
     mUndoDock->setWindowTitle(tr("Undo History"));
     mUndoDock->setFloating(true);
     mUndoDock->setVisible(false);
+
+    //Align & Distribute Dock
+    mAlignDock = new AlignDock(this);
+    mAlignDock->setFloating(true);
+    mAlignDock->setVisible(false);
+    mAlignDock->setObjectName("alignDock");
+    connect(mAlignDock, SIGNAL(align(int)), SLOT(alignSelection(int)));
+    connect(mAlignDock, SIGNAL(distribute(int)), SLOT(distributeSelection(int)));
+
+    //Rows & Stitches Dock.
+    mRowsDock = new RowsDock(this);      
+    mRowsDock->setFloating(true);
+    mRowsDock->setVisible(false);
+    mRowsDock->setObjectName("rowsDock");
+    
 }
 
 void MainWindow::setupMenus()
@@ -216,7 +232,7 @@ void MainWindow::setupMenus()
     setupRecentFiles();
     
     //Edit Menu
-    connect(ui->menuEdit, SIGNAL(aboutToShow()), this, SLOT(menuEditAboutToShow()));
+    connect(ui->menuEdit, SIGNAL(aboutToShow()), SLOT(menuEditAboutToShow()));
 
     mActionUndo = mUndoGroup.createUndoAction(this, tr("Undo"));
     mActionRedo = mUndoGroup.createRedoAction(this, tr("Redo"));
@@ -239,33 +255,36 @@ void MainWindow::setupMenus()
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/editpaste.png")));
 
 
-    connect(ui->actionColorSelectorBg, SIGNAL(triggered()), this, SLOT(selectColor()));
+    connect(ui->actionColorSelectorBg, SIGNAL(triggered()), SLOT(selectColor()));
     //connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
     
     //ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
     ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(mBgColor, QSize(32, 32))));
     
     //View Menu
-    connect(ui->menuView, SIGNAL(aboutToShow()), this, SLOT(menuViewAboutToShow()));
-    connect(ui->actionShowStitches, SIGNAL(triggered()), this, SLOT(viewShowStitches()));
-    connect(ui->actionShowPatternColors, SIGNAL(triggered()), this, SLOT(viewShowPatternColors()));
-    connect(ui->actionShowPatternStitches, SIGNAL(triggered()), this, SLOT(viewShowPatternStitches()));
+    connect(ui->menuView, SIGNAL(aboutToShow()), SLOT(menuViewAboutToShow()));
+    connect(ui->actionShowStitches, SIGNAL(triggered()), SLOT(viewShowStitches()));
+    connect(ui->actionShowPatternColors, SIGNAL(triggered()), SLOT(viewShowPatternColors()));
+    connect(ui->actionShowPatternStitches, SIGNAL(triggered()), SLOT(viewShowPatternStitches()));
 
-    connect(ui->actionShowUndoHistory, SIGNAL(triggered()), this, SLOT(viewShowUndoHistory()));
+    connect(ui->actionShowUndoHistory, SIGNAL(triggered()), SLOT(viewShowUndoHistory()));
     
-    connect(ui->actionShowMainToolbar, SIGNAL(triggered()), this, SLOT(viewShowMainToolbar()));
-    connect(ui->actionShowEditModeToolbar, SIGNAL(triggered()), this, SLOT(viewShowEditModeToolbar()));
+    connect(ui->actionShowMainToolbar, SIGNAL(triggered()), SLOT(viewShowMainToolbar()));
+    connect(ui->actionShowEditModeToolbar, SIGNAL(triggered()), SLOT(viewShowEditModeToolbar()));
     
-    connect(ui->actionViewFullScreen, SIGNAL(triggered(bool)), this, SLOT(viewFullScreen(bool)));
+    connect(ui->actionViewFullScreen, SIGNAL(triggered(bool)), SLOT(viewFullScreen(bool)));
 
-    connect(ui->actionZoomIn, SIGNAL(triggered()), this, SLOT(viewZoomIn()));
-    connect(ui->actionZoomOut, SIGNAL(triggered()), this, SLOT(viewZoomOut()));
+    connect(ui->actionZoomIn, SIGNAL(triggered()), SLOT(viewZoomIn()));
+    connect(ui->actionZoomOut, SIGNAL(triggered()), SLOT(viewZoomOut()));
     
     ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in", QIcon(":/images/zoomin.png")));
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out", QIcon(":/images/zoomout.png")));
     ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
 
+    connect(ui->actionShowAlignDock, SIGNAL(triggered()), SLOT(viewShowAlignDock()));
+    connect(ui->actionShowRowsDock, SIGNAL(triggered()), SLOT(viewShowRowsDock()));
+    
     //Modes menu
     connect(ui->menuModes, SIGNAL(aboutToShow()), SLOT(menuModesAboutToShow()));
 
@@ -304,7 +323,7 @@ void MainWindow::setupMenus()
     connect(ui->actionCrochetHelp, SIGNAL(triggered()), SLOT(helpCrochetHelp()));
     
     //misc items
-    connect(&mUndoGroup, SIGNAL(isModified(bool)), this, SLOT(documentIsModified(bool)));
+    connect(&mUndoGroup, SIGNAL(isModified(bool)), SLOT(documentIsModified(bool)));
     
     updateMenuItems();
 }
@@ -831,6 +850,9 @@ void MainWindow::menuViewAboutToShow()
     bool state = hasTab();
     ui->actionZoomIn->setEnabled(state);
     ui->actionZoomOut->setEnabled(state);
+
+    ui->actionShowAlignDock->setChecked(mAlignDock->isVisible());
+    ui->actionShowRowsDock->setChecked(mRowsDock->isVisible());
 }
 
 void MainWindow::fileNew()
@@ -987,6 +1009,16 @@ void MainWindow::viewShowEditModeToolbar()
 void MainWindow::viewShowMainToolbar()
 {
     ui->mainToolBar->setVisible(ui->actionShowMainToolbar->isChecked());
+}
+
+void MainWindow::viewShowAlignDock()
+{
+    mAlignDock->setVisible(ui->actionShowAlignDock->isChecked());
+}
+
+void MainWindow::viewShowRowsDock()
+{
+    mRowsDock->setVisible(ui->actionShowRowsDock->isChecked());
 }
 
 void MainWindow::menuModesAboutToShow()
@@ -1271,5 +1303,20 @@ void MainWindow::documentIsModified(bool isModified)
 void MainWindow::chartCreateRows(bool state)
 {
     CrochetTab* tab = curCrochetTab();
-    tab->showRowEditor(state);
+    if(tab)
+        tab->showRowEditor(state);
+}
+
+void MainWindow::alignSelection(int style)
+{
+    CrochetTab* tab = curCrochetTab();
+    if(tab)
+        tab->alignSelection(style);
+}
+
+void MainWindow::distributeSelection(int style)
+{
+    CrochetTab* tab = curCrochetTab();
+    if(tab)
+        tab->distributeSelection(style);
 }

@@ -295,3 +295,13 @@ void CrochetTab::updateRows()
 {
     mRowEditDialog->updateRowList();
 }
+
+void CrochetTab::alignSelection(int alignmentStyle)
+{
+    mScene->alignSelection(alignmentStyle);   
+}
+
+void CrochetTab::distributeSelection(int distributionStyle)
+{
+    mScene->distributeSelection(distributionStyle);
+}

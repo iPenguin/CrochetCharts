@@ -786,3 +786,100 @@ void Scene::hideRowLines()
         mRowLines.clear();
     }
 }
+
+void Scene::alignSelection(int alignmentStyle)
+{
+    if(selectedItems().count() <= 0)
+        return;
+
+    if(alignmentStyle == 1) {
+        //left
+        int left = sceneRect().right();
+        foreach(QGraphicsItem* i, selectedItems()) {
+            if(i->scenePos().x() < left)
+                left = i->scenePos().x();
+        }
+
+        undoStack()->beginMacro("align selection");
+        foreach(QGraphicsItem* i, selectedItems()) {
+                QPointF oldPos = i->pos();
+                i->setPos(left, i->pos().y());
+                undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        }
+        undoStack()->endMacro();
+        
+    } else if(alignmentStyle == 2) {
+        //center v
+
+    } else if(alignmentStyle == 3) {
+        //right
+        int right = sceneRect().left();
+        foreach(QGraphicsItem* i, selectedItems()) {
+            if(i->scenePos().x() > right)
+                right = i->scenePos().x();
+        }
+
+        undoStack()->beginMacro("align selection");
+        foreach(QGraphicsItem* i, selectedItems()) {
+                QPointF oldPos = i->pos();
+                i->setPos(right, i->pos().y());
+                undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        }
+        undoStack()->endMacro();
+        
+    } else if(alignmentStyle == 4) {
+        //top
+        int top = sceneRect().bottom();
+        foreach(QGraphicsItem* i, selectedItems()) {
+            if(i->scenePos().y() < top)
+                top = i->scenePos().y();
+        }
+
+        undoStack()->beginMacro("align selection");
+        foreach(QGraphicsItem* i, selectedItems()) {
+                QPointF oldPos = i->pos();
+                i->setPos(i->pos().x(), top);
+                undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        }
+        undoStack()->endMacro();
+        
+    } else if(alignmentStyle == 5) {
+        //center h
+    } else if(alignmentStyle == 6) {
+        //bottom
+        int bottom = sceneRect().top();
+        foreach(QGraphicsItem* i, selectedItems()) {
+            if(i->scenePos().y() > bottom)
+                bottom = i->scenePos().y();
+        }
+
+        undoStack()->beginMacro("align selection");
+        foreach(QGraphicsItem* i, selectedItems()) {
+                QPointF oldPos = i->pos();
+                i->setPos(i->pos().x(), bottom);
+                undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        }
+        undoStack()->endMacro();
+    }
+}
+
+void Scene::distributeSelection(int distributionStyle)
+{
+
+    if(selectedItems().count() <= 0)
+        return;
+
+    if(distributionStyle == 1) {
+        //left
+    } else if(distributionStyle == 2) {
+        //center v
+    } else if(distributionStyle == 3) {
+        //right
+    } else if(distributionStyle == 4) {
+        //top
+    } else if(distributionStyle == 5) {
+        //center h
+    } else if(distributionStyle == 6) {
+        //bottom
+    }
+}

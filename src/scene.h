@@ -102,6 +102,9 @@ public slots:
     void updateRubberBand(int dx, int dy);
 
     void drawRowLines(int row);
+    
+    void alignSelection(int alignmentStyle);
+    void distributeSelection(int distributionStyle);
 
 signals:
     void stitchChanged(QString oldSt, QString newSt);

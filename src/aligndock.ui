@@ -28,13 +28,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QToolButton" name="alignCenterV">
-         <property name="text">
-          <string>ACV</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="2">
         <widget class="QToolButton" name="alignRight">
          <property name="text">
@@ -49,6 +42,13 @@
          </property>
         </widget>
        </item>
+       <item row="1" column="2">
+        <widget class="QToolButton" name="alignBottom">
+         <property name="text">
+          <string>AB</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="1">
         <widget class="QToolButton" name="alignCenterH">
          <property name="text">
@@ -56,10 +56,10 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
-        <widget class="QToolButton" name="alignBottom">
+       <item row="0" column="1">
+        <widget class="QToolButton" name="alignCenterV">
          <property name="text">
-          <string>AB</string>
+          <string>ACV</string>
          </property>
         </widget>
        </item>

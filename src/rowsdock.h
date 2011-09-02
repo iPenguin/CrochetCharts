@@ -2,6 +2,7 @@
 #define ROWSDOCK_H
 
 #include <QDockWidget>
+#include <QButtonGroup>
 
 namespace Ui {
     class RowsDock;
@@ -15,8 +16,14 @@ public:
     explicit RowsDock(QWidget *parent = 0);
     ~RowsDock();
 
+signals:
+    
+    
 private:
     Ui::RowsDock *ui;
+
+    QButtonGroup horizonalGroup,
+                 verticalGroup;
 };
 
 #endif // ROWSDOCK_H

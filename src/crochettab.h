@@ -53,6 +53,9 @@ public:
     void sceneUpdate();
 
     void updateRows();
+
+    void alignSelection(int alignmentStyle);
+    void distributeSelection(int distributionStyle);
     
 signals:
     void chartStitchChanged();

@@ -11,6 +11,9 @@
 #include "updater.h"
 #include "undogroup.h"
 
+#include "aligndock.h"
+#include "rowsdock.h"
+
 #include <QModelIndex>
 
 #include "scene.h"
@@ -74,6 +77,8 @@ private slots:
     void viewFullScreen(bool state);
     void viewZoomIn();
     void viewZoomOut();
+    void viewShowRowsDock();
+    void viewShowAlignDock();
 
     void menuModesAboutToShow();
     
@@ -114,11 +119,9 @@ private:
     void setupMenus();
     void setupRecentFiles();
     void updateMenuItems();
-
-    void setupCreateRows();
     
     void setupStitchPalette();
-    void setupUndoView();
+    void setupDocks();
     void readSettings();
 
     void checkUpdates(bool silent = true);
@@ -150,6 +153,10 @@ protected:
 //Flash the new Document dialog when the user selects new doc or new chart.
 private slots:
     void flashNewDocDialog();
+
+    void alignSelection(int style);
+    void distributeSelection(int style);
+    
 private:
     QColor mNewDocWidgetColor;
     
@@ -168,6 +175,9 @@ private:
     QDockWidget* mUndoDock;
     UndoGroup mUndoGroup;
 
+    AlignDock *mAlignDock;
+    RowsDock *mRowsDock;
+    
     int mEditMode;
     QString mStitch;
     QColor mFgColor;

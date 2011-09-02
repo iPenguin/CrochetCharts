@@ -272,7 +272,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -320,6 +320,9 @@
     <addaction name="separator"/>
     <addaction name="actionShowMainToolbar"/>
     <addaction name="actionShowEditModeToolbar"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowAlignDock"/>
+    <addaction name="actionShowRowsDock"/>
     <addaction name="separator"/>
     <addaction name="actionViewFullScreen"/>
    </widget>
@@ -969,6 +972,28 @@
    </property>
    <property name="shortcut">
     <string>W</string>
+   </property>
+  </action>
+  <action name="actionShowAlignDock">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Align and Distribute</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Align and Distribute</string>
+   </property>
+  </action>
+  <action name="actionShowRowsDock">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Rows and Stitches</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Rows and Stitches</string>
    </property>
   </action>
  </widget>
