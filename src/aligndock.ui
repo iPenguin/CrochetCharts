@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>188</width>
-    <height>246</height>
+    <height>275</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,6 +23,9 @@
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
         <widget class="QToolButton" name="alignLeft">
+         <property name="toolTip">
+          <string>Align left sides</string>
+         </property>
          <property name="text">
           <string>AL</string>
          </property>
@@ -30,6 +33,9 @@
        </item>
        <item row="0" column="2">
         <widget class="QToolButton" name="alignRight">
+         <property name="toolTip">
+          <string>Align right sides</string>
+         </property>
          <property name="text">
           <string>AR</string>
          </property>
@@ -37,6 +43,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QToolButton" name="alignTop">
+         <property name="toolTip">
+          <string>Align tops</string>
+         </property>
          <property name="text">
           <string>AT</string>
          </property>
@@ -44,6 +53,9 @@
        </item>
        <item row="1" column="2">
         <widget class="QToolButton" name="alignBottom">
+         <property name="toolTip">
+          <string>Align bottoms</string>
+         </property>
          <property name="text">
           <string>AB</string>
          </property>
@@ -51,6 +63,9 @@
        </item>
        <item row="1" column="1">
         <widget class="QToolButton" name="alignCenterH">
+         <property name="toolTip">
+          <string>Align on a horizontal axis</string>
+         </property>
          <property name="text">
           <string>ACH</string>
          </property>
@@ -58,8 +73,21 @@
        </item>
        <item row="0" column="1">
         <widget class="QToolButton" name="alignCenterV">
+         <property name="toolTip">
+          <string>Align on a vertical axis</string>
+         </property>
          <property name="text">
           <string>ACV</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QToolButton" name="alignToPath">
+         <property name="toolTip">
+          <string>Align to selected path</string>
+         </property>
+         <property name="text">
+          <string>ATP</string>
          </property>
         </widget>
        </item>
@@ -74,20 +102,19 @@
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QToolButton" name="distributeLeft">
+         <property name="toolTip">
+          <string>Distribute left edges equidistantly</string>
+         </property>
          <property name="text">
           <string>DL</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QToolButton" name="distributeCenterV">
-         <property name="text">
-          <string>DCV</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="2">
         <widget class="QToolButton" name="distributeRight">
+         <property name="toolTip">
+          <string>Distribute right edges equidistantly</string>
+         </property>
          <property name="text">
           <string>DR</string>
          </property>
@@ -95,22 +122,51 @@
        </item>
        <item row="1" column="0">
         <widget class="QToolButton" name="distributeTop">
+         <property name="toolTip">
+          <string>Distribute top edges equidistantly</string>
+         </property>
          <property name="text">
           <string>DT</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="1" column="2">
+        <widget class="QToolButton" name="distributeBottom">
+         <property name="toolTip">
+          <string>Distribute bottom edges equidistantly</string>
+         </property>
+         <property name="text">
+          <string>DB</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QToolButton" name="distributeToPath">
+         <property name="toolTip">
+          <string>Distribute to selected path</string>
+         </property>
+         <property name="text">
+          <string>DTP</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
         <widget class="QToolButton" name="distributeCenterH">
+         <property name="toolTip">
+          <string>Distribute </string>
+         </property>
          <property name="text">
           <string>DCH</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
-        <widget class="QToolButton" name="distributeBottom">
+       <item row="1" column="1">
+        <widget class="QToolButton" name="distributeCenterV">
+         <property name="toolTip">
+          <string>Distribute </string>
+         </property>
          <property name="text">
-          <string>DB</string>
+          <string>DCV</string>
          </property>
         </widget>
        </item>
