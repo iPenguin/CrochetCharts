@@ -967,6 +967,42 @@ void Scene::distributeSelection(int distributionStyle)
     //top
     } else if(distributionStyle == 4) {
 
+        qreal top = sceneRect().bottom();
+        qreal bottom = sceneRect().top();
+
+        foreach(QGraphicsItem* i, unsorted) {
+            if(i->scenePos().y() < top)
+                top = i->scenePos().y();
+            if(i->scenePos().y() > bottom)
+                bottom = i->scenePos().y();
+
+            if(sorted.count() <= 0) {
+                sorted.append(i);
+            } else {
+                bool added = false;
+                for(int s = 0; s < sorted.count(); ++s) {
+                    if(i->scenePos().y() < sorted[s]->scenePos().y()) {
+                        sorted.insert(s, i);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if(!added)
+                    sorted.append(i);
+            }
+        }
+
+        qreal diff = bottom - top;
+        qreal space = diff / (sorted.count() - 1);
+
+        undoStack()->beginMacro("distribute selection");
+        for(int i = 0; i < sorted.count(); ++i) {
+            QPointF oldPos = sorted[i]->pos();
+            sorted[i]->setPos(sorted[i]->pos().x(), top + (i * space));
+            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
+        }
+        undoStack()->endMacro();
 
     //center h
     } else if(distributionStyle == 5) {
