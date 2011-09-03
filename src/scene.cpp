@@ -787,13 +787,15 @@ void Scene::hideRowLines()
     }
 }
 
+//FIXME: simplify the number of foreach loops?
 void Scene::alignSelection(int alignmentStyle)
 {
     if(selectedItems().count() <= 0)
         return;
 
+    //left
     if(alignmentStyle == 1) {
-        //left
+        
         qreal left = sceneRect().right();
         foreach(QGraphicsItem* i, selectedItems()) {
             if(i->scenePos().x() < left)
@@ -807,9 +809,10 @@ void Scene::alignSelection(int alignmentStyle)
                 undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
-        
+
+    //center v
     } else if(alignmentStyle == 2) {
-        //center v
+        
         qreal left = sceneRect().right();
         qreal right = sceneRect().left();
         foreach(QGraphicsItem* i, selectedItems()) {
@@ -829,8 +832,9 @@ void Scene::alignSelection(int alignmentStyle)
         }
         undoStack()->endMacro();
 
+    //right
     } else if(alignmentStyle == 3) {
-        //right
+        
         qreal right = sceneRect().left();
         foreach(QGraphicsItem* i, selectedItems()) {
             if(i->scenePos().x() > right)
@@ -844,9 +848,10 @@ void Scene::alignSelection(int alignmentStyle)
                 undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
-        
+
+    //top
     } else if(alignmentStyle == 4) {
-        //top
+        
         qreal top = sceneRect().bottom();
         foreach(QGraphicsItem* i, selectedItems()) {
             if(i->scenePos().y() < top)
@@ -860,9 +865,10 @@ void Scene::alignSelection(int alignmentStyle)
                 undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
-        
+
+    //center h
     } else if(alignmentStyle == 5) {
-        //center h
+        
         qreal top = sceneRect().bottom();
         qreal bottom = sceneRect().top();
         foreach(QGraphicsItem* i, selectedItems()) {
@@ -881,9 +887,10 @@ void Scene::alignSelection(int alignmentStyle)
             undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
-        
+
+    //bottom
     } else if(alignmentStyle == 6) {
-        //bottom
+        
         qreal bottom = sceneRect().top();
         foreach(QGraphicsItem* i, selectedItems()) {
             if(i->scenePos().y() > bottom)
@@ -906,17 +913,68 @@ void Scene::distributeSelection(int distributionStyle)
     if(selectedItems().count() <= 0)
         return;
 
+    QList<QGraphicsItem*> unsorted = selectedItems();
+    QList<QGraphicsItem*> sorted;
+    
+    //left
     if(distributionStyle == 1) {
-        //left
+        
+        qreal left = sceneRect().right();
+        qreal right = sceneRect().left();
+
+        foreach(QGraphicsItem* i, unsorted) {
+            if(i->scenePos().x() > right)
+                right = i->scenePos().x();
+            if(i->scenePos().x() < left)
+                left = i->scenePos().x();
+
+            if(sorted.count() <= 0) {
+                sorted.append(i);
+            } else {
+                bool added = false;
+                for(int s = 0; s < sorted.count(); ++s) {
+                    if(i->scenePos().x() < sorted[s]->scenePos().x()) {
+                        sorted.insert(s, i);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if(!added)
+                    sorted.append(i);
+            }
+        }
+        
+        qreal diff = right - left;
+        qreal space = diff / (sorted.count() - 1);
+
+        undoStack()->beginMacro("distribute selection");
+        for(int i = 0; i < sorted.count(); ++i) {
+            QPointF oldPos = sorted[i]->pos();
+            sorted[i]->setPos(left + (i * space), sorted[i]->pos().y());
+            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
+        }
+        undoStack()->endMacro();
+
+    //center v
     } else if(distributionStyle == 2) {
-        //center v
+
+
+    //right
     } else if(distributionStyle == 3) {
-        //right
+
+
+    //top
     } else if(distributionStyle == 4) {
-        //top
+
+
+    //center h
     } else if(distributionStyle == 5) {
-        //center h
+
+
+    //bottom
     } else if(distributionStyle == 6) {
-        //bottom
+
+
     }
 }
