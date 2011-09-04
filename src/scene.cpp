@@ -196,7 +196,7 @@ qreal Scene::scenePosToAngle(QPointF pt)
 
 void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
 {
-    if(keyEvent->key() == Qt::Key_Delete) {
+    if(keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
         QList<QGraphicsItem*> items = selectedItems();
         undoStack()->beginMacro("Remove items");
         foreach(QGraphicsItem* item, items) {
@@ -968,6 +968,46 @@ void Scene::distributeSelection(int distributionStyle)
     //right
     } else if(distributionStyle == 3) {
 
+        qreal left = sceneRect().right();
+        qreal right = sceneRect().left();
+
+        foreach(QGraphicsItem* i, unsorted) {
+            qreal width = i->boundingRect().width();
+            qreal px = i->scenePos().x() + width;
+            if(px > right)
+                right = px;
+            if(px < left)
+                left = px;
+
+            if(sorted.count() <= 0) {
+                sorted.append(i);
+            } else {
+                bool added = false;
+                for(int s = 0; s < sorted.count(); ++s) {
+                    qreal curS = sorted[s]->scenePos().x() + sorted[s]->boundingRect().width();
+                    if(px < curS) {
+                        sorted.insert(s, i);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if(!added)
+                    sorted.append(i);
+            }
+        }
+
+        qreal diff = right - left;
+        qreal space = diff / (sorted.count() - 1);
+
+        undoStack()->beginMacro("distribute selection");
+        for(int i = 0; i < sorted.count(); ++i) {
+            qreal width = sorted[i]->boundingRect().width();
+            QPointF oldPos = sorted[i]->pos();
+            sorted[i]->setPos((left + (i * space) - width), sorted[i]->pos().y());
+            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
+        }
+        undoStack()->endMacro();
 
     //top
     } else if(distributionStyle == 4) {
