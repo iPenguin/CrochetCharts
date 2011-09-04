@@ -984,8 +984,8 @@ void Scene::distributeSelection(int distributionStyle)
             } else {
                 bool added = false;
                 for(int s = 0; s < sorted.count(); ++s) {
-                    qreal curS = sorted[s]->scenePos().x() + sorted[s]->boundingRect().width();
-                    if(px < curS) {
+                    qreal curX = sorted[s]->scenePos().x() + sorted[s]->boundingRect().width();
+                    if(px < curX) {
                         sorted.insert(s, i);
                         added = true;
                         break;
@@ -1056,6 +1056,47 @@ void Scene::distributeSelection(int distributionStyle)
     //bottom
     } else if(distributionStyle == 6) {
 
+        qreal top = sceneRect().bottom();
+        qreal bottom = sceneRect().top();
+
+        foreach(QGraphicsItem* i, unsorted) {
+            qreal height = i->boundingRect().height();
+            qreal py = i->scenePos().y() + height;
+
+            if(py < top)
+                top = py;
+            if(py > bottom)
+                bottom = py;
+
+            if(sorted.count() <= 0) {
+                sorted.append(i);
+            } else {
+                bool added = false;
+                for(int s = 0; s < sorted.count(); ++s) {
+                    qreal curY = sorted[s]->scenePos().y() + sorted[s]->boundingRect().height();
+                    if(py < curY) {
+                        sorted.insert(s, i);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if(!added)
+                    sorted.append(i);
+            }
+        }
+
+        qreal diff = bottom - top;
+        qreal space = diff / (sorted.count() - 1);
+
+        undoStack()->beginMacro("distribute selection");
+        for(int i = 0; i < sorted.count(); ++i) {
+            qreal height = sorted[i]->boundingRect().height();
+            QPointF oldPos = sorted[i]->pos();
+            sorted[i]->setPos(sorted[i]->pos().x(), top - height + (i * space));
+            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
+        }
+        undoStack()->endMacro();
 
     //to path
     } else if(distributionStyle == 7) {
