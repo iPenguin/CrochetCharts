@@ -904,6 +904,11 @@ void Scene::alignSelection(int alignmentStyle)
                 undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
+
+    //to path
+    } else if(alignmentStyle == 7) {
+
+
     }
 }
 
@@ -1010,6 +1015,10 @@ void Scene::distributeSelection(int distributionStyle)
 
     //bottom
     } else if(distributionStyle == 6) {
+
+
+    //to path
+    } else if(distributionStyle == 7) {
 
 
     }

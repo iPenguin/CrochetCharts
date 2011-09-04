@@ -13,6 +13,7 @@ AlignDock::AlignDock(QWidget *parent) :
     connect(ui->alignLeft, SIGNAL(clicked(bool)), SLOT(generateAlignment()));
     connect(ui->alignRight, SIGNAL(clicked(bool)), SLOT(generateAlignment()));
     connect(ui->alignTop, SIGNAL(clicked(bool)), SLOT(generateAlignment()));
+    connect(ui->alignToPath, SIGNAL(clicked(bool)), SLOT(generateAlignment()));
 
     connect(ui->distributeBottom, SIGNAL(clicked(bool)), SLOT(generateDistribution()));
     connect(ui->distributeCenterH, SIGNAL(clicked(bool)), SLOT(generateDistribution()));
@@ -20,6 +21,7 @@ AlignDock::AlignDock(QWidget *parent) :
     connect(ui->distributeLeft, SIGNAL(clicked(bool)), SLOT(generateDistribution()));
     connect(ui->distributeRight, SIGNAL(clicked(bool)), SLOT(generateDistribution()));
     connect(ui->distributeTop, SIGNAL(clicked(bool)), SLOT(generateDistribution()));
+    connect(ui->distributeToPath, SIGNAL(clicked(bool)), SLOT(generateDistribution()));
 }
 
 AlignDock::~AlignDock()
@@ -39,13 +41,14 @@ void AlignDock::generateAlignment()
         style = 2;
     else if(button == ui->alignRight)
         style = 3;
-        
     else if(button == ui->alignTop)
         style = 4;
     else if(button == ui->alignCenterH)
         style = 5;
     else if(button == ui->alignBottom)
         style = 6;
+    else if(button == ui->alignToPath)
+        style = 7;
 
     emit align(style);
 }
@@ -62,13 +65,14 @@ void AlignDock::generateDistribution()
         style = 2;
     else if(button == ui->distributeRight)
         style = 3;
-
     else if(button == ui->distributeTop)
         style = 4;
     else if(button == ui->distributeCenterH)
         style = 5;
     else if(button == ui->distributeBottom)
         style = 6;
+    else if(button == ui->distributeToPath)
+        style = 7;
 
     emit distribute(style);
     
