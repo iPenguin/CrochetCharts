@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>188</width>
-    <height>275</height>
+    <width>198</width>
+    <height>375</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,6 +29,16 @@
          <property name="text">
           <string>AL</string>
          </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/align_left.svg</normaloff>:/images/align_left.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
         </widget>
        </item>
        <item row="0" column="2">
@@ -38,6 +48,16 @@
          </property>
          <property name="text">
           <string>AR</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/align_right.svg</normaloff>:/images/align_right.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -49,6 +69,16 @@
          <property name="text">
           <string>AT</string>
          </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/align_top.svg</normaloff>:/images/align_top.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
         </widget>
        </item>
        <item row="1" column="2">
@@ -58,6 +88,16 @@
          </property>
          <property name="text">
           <string>AB</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/align_bottom.svg</normaloff>:/images/align_bottom.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -69,6 +109,16 @@
          <property name="text">
           <string>ACH</string>
          </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/align_center_h.svg</normaloff>:/images/align_center_h.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
@@ -79,6 +129,16 @@
          <property name="text">
           <string>ACV</string>
          </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/align_center_v.svg</normaloff>:/images/align_center_v.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
         </widget>
        </item>
        <item row="2" column="1">
@@ -88,6 +148,16 @@
          </property>
          <property name="text">
           <string>ATP</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/align_path.svg</normaloff>:/images/align_path.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -108,6 +178,16 @@
          <property name="text">
           <string>DL</string>
          </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/distribute_left.svg</normaloff>:/images/distribute_left.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
         </widget>
        </item>
        <item row="0" column="2">
@@ -117,6 +197,16 @@
          </property>
          <property name="text">
           <string>DR</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/distribute_right.svg</normaloff>:/images/distribute_right.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -128,6 +218,16 @@
          <property name="text">
           <string>DT</string>
          </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/distribute_top.svg</normaloff>:/images/distribute_top.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
         </widget>
        </item>
        <item row="1" column="2">
@@ -137,6 +237,16 @@
          </property>
          <property name="text">
           <string>DB</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/distribute_bottom.svg</normaloff>:/images/distribute_bottom.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -148,25 +258,55 @@
          <property name="text">
           <string>DTP</string>
          </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/distribute_path.svg</normaloff>:/images/distribute_path.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
         <widget class="QToolButton" name="distributeCenterH">
          <property name="toolTip">
-          <string>Distribute </string>
+          <string>Distribute centers equidistantly horizontally</string>
          </property>
          <property name="text">
           <string>DCH</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/distribute_center_h.svg</normaloff>:/images/distribute_center_h.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
         <widget class="QToolButton" name="distributeCenterV">
          <property name="toolTip">
-          <string>Distribute </string>
+          <string>Distribute centers equidistantly vertically</string>
          </property>
          <property name="text">
           <string>DCV</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/distribute_center_v.svg</normaloff>:/images/distribute_center_v.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -176,6 +316,8 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../crochet.qrc"/>
+ </resources>
  <connections/>
 </ui>

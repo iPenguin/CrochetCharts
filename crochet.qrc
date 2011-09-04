@@ -34,5 +34,19 @@
         <file>images/zoomin.png</file>
         <file>images/zoomout.png</file>
         <file>images/row_edit.svg</file>
+        <file>images/align_bottom.svg</file>
+        <file>images/align_left.svg</file>
+        <file>images/align_right.svg</file>
+        <file>images/align_top.svg</file>
+        <file>images/align_center_h.svg</file>
+        <file>images/align_center_v.svg</file>
+        <file>images/distribute_bottom.svg</file>
+        <file>images/distribute_left.svg</file>
+        <file>images/distribute_right.svg</file>
+        <file>images/distribute_top.svg</file>
+        <file>images/distribute_center_h.svg</file>
+        <file>images/distribute_center_v.svg</file>
+        <file>images/align_path.svg</file>
+        <file>images/distribute_path.svg</file>
     </qresource>
 </RCC>
