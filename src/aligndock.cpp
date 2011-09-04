@@ -61,13 +61,13 @@ void AlignDock::generateDistribution()
 
     if(button == ui->distributeLeft)
         style = 1;
-    else if(button == ui->distributeCenterV)
+    else if(button == ui->distributeCenterH)
         style = 2;
     else if(button == ui->distributeRight)
         style = 3;
     else if(button == ui->distributeTop)
         style = 4;
-    else if(button == ui->distributeCenterH)
+    else if(button == ui->distributeCenterV)
         style = 5;
     else if(button == ui->distributeBottom)
         style = 6;

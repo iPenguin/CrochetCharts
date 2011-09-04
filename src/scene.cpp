@@ -804,8 +804,8 @@ void Scene::alignSelection(int alignmentStyle)
 
         undoStack()->beginMacro("align selection");
         foreach(QGraphicsItem* i, selectedItems()) {
-                QPointF oldPos = i->pos();
-                i->setPos(left, i->pos().y());
+                QPointF oldPos = i->scenePos();
+                i->setPos(left, i->scenePos().y());
                 undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
@@ -826,8 +826,8 @@ void Scene::alignSelection(int alignmentStyle)
         
         undoStack()->beginMacro("align selection");
         foreach(QGraphicsItem* i, selectedItems()) {
-            QPointF oldPos = i->pos();
-            i->setPos(center - (i->boundingRect().width()/2), i->pos().y());
+            QPointF oldPos = i->scenePos();
+            i->setPos(center - (i->boundingRect().width()/2), i->scenePos().y());
             undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
@@ -843,8 +843,8 @@ void Scene::alignSelection(int alignmentStyle)
 
         undoStack()->beginMacro("align selection");
         foreach(QGraphicsItem* i, selectedItems()) {
-                QPointF oldPos = i->pos();
-                i->setPos(right, i->pos().y());
+                QPointF oldPos = i->scenePos();
+                i->setPos(right, i->scenePos().y());
                 undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
@@ -860,8 +860,8 @@ void Scene::alignSelection(int alignmentStyle)
 
         undoStack()->beginMacro("align selection");
         foreach(QGraphicsItem* i, selectedItems()) {
-                QPointF oldPos = i->pos();
-                i->setPos(i->pos().x(), top);
+                QPointF oldPos = i->scenePos();
+                i->setPos(i->scenePos().x(), top);
                 undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
@@ -882,8 +882,8 @@ void Scene::alignSelection(int alignmentStyle)
 
         undoStack()->beginMacro("align selection");
         foreach(QGraphicsItem* i, selectedItems()) {
-            QPointF oldPos = i->pos();
-            i->setPos(i->pos().x(), center - (i->boundingRect().height()/2));
+            QPointF oldPos = i->scenePos();
+            i->setPos(i->scenePos().x(), center - (i->boundingRect().height()/2));
             undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
@@ -899,8 +899,8 @@ void Scene::alignSelection(int alignmentStyle)
 
         undoStack()->beginMacro("align selection");
         foreach(QGraphicsItem* i, selectedItems()) {
-                QPointF oldPos = i->pos();
-                i->setPos(i->pos().x(), bottom);
+                QPointF oldPos = i->scenePos();
+                i->setPos(i->scenePos().x(), bottom);
                 undoStack()->push(new SetItemCoordinates(this, i, oldPos));
         }
         undoStack()->endMacro();
@@ -955,8 +955,8 @@ void Scene::distributeSelection(int distributionStyle)
 
         undoStack()->beginMacro("distribute selection");
         for(int i = 0; i < sorted.count(); ++i) {
-            QPointF oldPos = sorted[i]->pos();
-            sorted[i]->setPos(left + (i * space), sorted[i]->pos().y());
+            QPointF oldPos = sorted[i]->scenePos();
+            sorted[i]->setPos(left + (i * space), sorted[i]->scenePos().y());
             undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
         }
         undoStack()->endMacro();
@@ -964,6 +964,47 @@ void Scene::distributeSelection(int distributionStyle)
     //center v
     } else if(distributionStyle == 2) {
 
+        qreal left = sceneRect().right();
+        qreal right = sceneRect().left();
+
+        foreach(QGraphicsItem* i, unsorted) {
+            if(i->scenePos().x() > right)
+                right = i->scenePos().x();
+            if(i->scenePos().x() < left)
+                left = i->scenePos().x();
+
+            if(sorted.count() <= 0) {
+                sorted.append(i);
+            } else {
+                bool added = false;
+                for(int s = 0; s < sorted.count(); ++s) {
+                    if(i->scenePos().x() < sorted[s]->scenePos().x()) {
+                        sorted.insert(s, i);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if(!added)
+                    sorted.append(i);
+            }
+        }
+
+        //get the centers of the cells.
+        left += (sorted.first()->boundingRect().width() / 2);
+        right += (sorted.last()->boundingRect().width() / 2);
+
+        qreal diff = right - left;
+        qreal space = diff / (sorted.count() - 1);
+
+        undoStack()->beginMacro("distribute selection");
+        for(int i = 0; i < sorted.count(); ++i) {
+            qreal center = sorted[i]->boundingRect().width() / 2;
+            QPointF oldPos = sorted[i]->scenePos();
+            sorted[i]->setPos(left + (i * space) - center, sorted[i]->scenePos().y());
+            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
+        }
+        undoStack()->endMacro();
 
     //right
     } else if(distributionStyle == 3) {
@@ -1003,8 +1044,8 @@ void Scene::distributeSelection(int distributionStyle)
         undoStack()->beginMacro("distribute selection");
         for(int i = 0; i < sorted.count(); ++i) {
             qreal width = sorted[i]->boundingRect().width();
-            QPointF oldPos = sorted[i]->pos();
-            sorted[i]->setPos((left + (i * space) - width), sorted[i]->pos().y());
+            QPointF oldPos = sorted[i]->scenePos();
+            sorted[i]->setPos((left + (i * space) - width), sorted[i]->scenePos().y());
             undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
         }
         undoStack()->endMacro();
@@ -1043,8 +1084,8 @@ void Scene::distributeSelection(int distributionStyle)
 
         undoStack()->beginMacro("distribute selection");
         for(int i = 0; i < sorted.count(); ++i) {
-            QPointF oldPos = sorted[i]->pos();
-            sorted[i]->setPos(sorted[i]->pos().x(), top + (i * space));
+            QPointF oldPos = sorted[i]->scenePos();
+            sorted[i]->setPos(sorted[i]->scenePos().x(), top + (i * space));
             undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
         }
         undoStack()->endMacro();
@@ -1052,6 +1093,47 @@ void Scene::distributeSelection(int distributionStyle)
     //center h
     } else if(distributionStyle == 5) {
 
+        qreal top = sceneRect().bottom();
+        qreal bottom = sceneRect().top();
+
+        foreach(QGraphicsItem* i, unsorted) {
+            if(i->scenePos().y() < top)
+                top = i->scenePos().y();
+            if(i->scenePos().y() > bottom)
+                bottom = i->scenePos().y();
+
+            if(sorted.count() <= 0) {
+                sorted.append(i);
+            } else {
+                bool added = false;
+                for(int s = 0; s < sorted.count(); ++s) {
+                    if(i->scenePos().y() < sorted[s]->scenePos().y()) {
+                        sorted.insert(s, i);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if(!added)
+                    sorted.append(i);
+            }
+        }
+
+        //get the centers of the cells.
+        top += (sorted.first()->boundingRect().height() / 2);
+        bottom += (sorted.last()->boundingRect().height() / 2);
+
+        qreal diff = bottom - top;
+        qreal space = diff / (sorted.count() - 1);
+
+        undoStack()->beginMacro("distribute selection");
+        for(int i = 0; i < sorted.count(); ++i) {
+            qreal center = sorted[i]->boundingRect().height() / 2;
+            QPointF oldPos = sorted[i]->scenePos();
+            sorted[i]->setPos(sorted[i]->scenePos().x(), top + (i * space) - center);
+            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
+        }
+        undoStack()->endMacro();
 
     //bottom
     } else if(distributionStyle == 6) {
@@ -1092,8 +1174,8 @@ void Scene::distributeSelection(int distributionStyle)
         undoStack()->beginMacro("distribute selection");
         for(int i = 0; i < sorted.count(); ++i) {
             qreal height = sorted[i]->boundingRect().height();
-            QPointF oldPos = sorted[i]->pos();
-            sorted[i]->setPos(sorted[i]->pos().x(), top - height + (i * space));
+            QPointF oldPos = sorted[i]->scenePos();
+            sorted[i]->setPos(sorted[i]->scenePos().x(), top - height + (i * space));
             undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
         }
         undoStack()->endMacro();
@@ -1101,6 +1183,6 @@ void Scene::distributeSelection(int distributionStyle)
     //to path
     } else if(distributionStyle == 7) {
 
-
+        qDebug() << "7";
     }
 }
