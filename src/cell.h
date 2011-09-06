@@ -34,6 +34,9 @@ public:
     void setStitch(QString s, bool useAltRenderer = false);
     Stitch* stitch() const { return mStitch; }
 
+    /**
+     * The stitch name.
+     */
     QString name();
 
     void useAlternateRenderer(bool useAlt);
