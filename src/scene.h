@@ -203,7 +203,7 @@ protected:
     QPointF mOrigin;
 
     //rows keeps track of the st order for individual rows;
-    QList< QList<CrochetCell*> > rows;
+    QList< QList<CrochetCell*> > grid;
     
 private:
     qreal scenePosToAngle(QPointF pt);

@@ -387,7 +387,7 @@ void SaveFile::loadGrid(QXmlStreamReader* stream, Scene* scene)
             for(int i = 0; i < cols; ++i) {
                 row.append(0);
             }
-            scene->rows.append(row);
+            scene->grid.append(row);
         }
     }
 }

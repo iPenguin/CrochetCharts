@@ -58,7 +58,7 @@ void SceneRows::createRow(int row, int columns, QString stitch)
 
         setCellPosition(row, i, c, columns, true);
     }
-    rows.insert(row, modelRow);
+    grid.insert(row, modelRow);
 
 }
 

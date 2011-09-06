@@ -116,15 +116,15 @@ void Scene::initDemoBackground()
 
 int Scene::rowCount()
 {
-    return rows.count();
+    return grid.count();
 }
 
 int Scene::columnCount(int row)
 {
-    if(row >= rows.count())
+    if(row >= grid.count())
         return 0;
 
-    return rows[row].count();
+    return grid[row].count();
 }
 
 int Scene::maxColumnCount()
@@ -146,11 +146,11 @@ void Scene::removeCell(CrochetCell* c)
 
 void Scene::removeFromRows(CrochetCell* c)
 {
-    for(int y = 0; y < rows.count(); ++y) {
-        if(rows[y].contains(c)) {
-            rows[y].removeOne(c);
-            if(rows[y].count() == 0)
-                rows.removeAt(y);
+    for(int y = 0; y < grid.count(); ++y) {
+        if(grid[y].contains(c)) {
+            grid[y].removeOne(c);
+            if(grid[y].count() == 0)
+                grid.removeAt(y);
             break;
         }
     }
@@ -664,10 +664,10 @@ void Scene::createRow()
     foreach(QGraphicsItem* i, mRowSelection) {
         CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(i);
         removeFromRows(c);
-        c->useAlternateRenderer((rows.count() % 2));
+        c->useAlternateRenderer((grid.count() % 2));
         r.append(c);
     }
-    rows.append(r);
+    grid.append(r);
 
 }
 
@@ -686,15 +686,15 @@ void Scene::updateRow(int row)
         r.append(c);
     }
 
-    rows.insert(row, r);
+    grid.insert(row, r);
     
 }
 
 QPoint Scene::indexOf(CrochetCell* c)
 {
-    for(int y = 0; y < rows.count(); ++y) {
-        if(rows[y].contains(c)) {
-            return QPoint(rows[y].indexOf(c), y);
+    for(int y = 0; y < grid.count(); ++y) {
+        if(grid[y].contains(c)) {
+            return QPoint(grid[y].indexOf(c), y);
         }
     }
 
@@ -704,14 +704,14 @@ QPoint Scene::indexOf(CrochetCell* c)
 void Scene::highlightRow(int row)
 {
 
-    if(row >= rows.count())
+    if(row >= grid.count())
         return;
 
     clearSelection();
     mRowSelection.clear();
 
-    for(int i = 0; i < rows[row].count(); ++i) {
-        CrochetCell* c = rows[row][i];
+    for(int i = 0; i < grid[row].count(); ++i) {
+        CrochetCell* c = grid[row][i];
         if(c) {
             c->setSelected(true);
             mRowSelection.append(c);
@@ -723,15 +723,15 @@ void Scene::highlightRow(int row)
 
 void Scene::moveRowDown(int row)
 {
-    QList<CrochetCell*> r = rows.takeAt(row);
-    rows.insert(row + 1, r);
+    QList<CrochetCell*> r = grid.takeAt(row);
+    grid.insert(row + 1, r);
     updateStitchRenderer();
 }
 
 void Scene::moveRowUp(int row)
 {
-    QList<CrochetCell*> r = rows.takeAt(row);
-    rows.insert(row - 1, r);
+    QList<CrochetCell*> r = grid.takeAt(row);
+    grid.insert(row - 1, r);
     updateStitchRenderer();
     
 }
@@ -739,7 +739,7 @@ void Scene::moveRowUp(int row)
 void Scene::removeRow(int row)
 {
 
-    rows.takeAt(row);
+    grid.takeAt(row);
     updateStitchRenderer();
 
 }
@@ -747,8 +747,8 @@ void Scene::removeRow(int row)
 void Scene::updateStitchRenderer()
 {
 
-    for(int i = 0; i < rows.count(); ++i) {
-        foreach(CrochetCell* c, rows[i]) {
+    for(int i = 0; i < grid.count(); ++i) {
+        foreach(CrochetCell* c, grid[i]) {
             c->useAlternateRenderer((i % 2));
         }
     }
@@ -757,19 +757,19 @@ void Scene::updateStitchRenderer()
 
 void Scene::drawRowLines(int row)
 {
-    if(rows.count() <= row)
+    if(grid.count() <= row)
         return;
 
     hideRowLines();
 
     QPointF start, end;
 
-    int count = rows[row].count();
+    int count = grid[row].count();
 
-    QGraphicsItem* prev = rows[row].first();
+    QGraphicsItem* prev = grid[row].first();
 
     for(int i = 0; i < count; ++i) {
-        QGraphicsItem* c = rows[row][i];
+        QGraphicsItem* c = grid[row][i];
         if(prev != c) {
             start = prev->pos();
             end = c->pos();

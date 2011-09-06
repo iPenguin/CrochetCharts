@@ -119,7 +119,7 @@ void RowEditDialog::updateRowList()
     ui->rowList->reset();
     ui->rowList->clear();
 
-    int rows = mScene->rows.count();
+    int rows = mScene->grid.count();
 
     for(int i = 0; i < rows; ++i) {
         ui->rowList->addItem(QString::number(i + 1));

@@ -89,7 +89,7 @@ void SceneRounds::createRow(int row, int columns, QString stitch)
         modelRow.append(c);
         setCellPosition(row, i, c, columns, true);
     }
-    rows.insert(row, modelRow);
+    grid.insert(row, modelRow);
 }
 
 void SceneRounds::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
@@ -122,10 +122,10 @@ int SceneRounds::getClosestRow(QPointF mousePosition)
     if(row < 0)
         row = 0;
     
-    if(row < rows.count()) {
+    if(row < grid.count()) {
 
         QList<CrochetCell*> r;
-        rows.append(r);
+        grid.append(r);
     }
 
     return row;
@@ -153,7 +153,7 @@ int SceneRounds::getClosestColumn(QPointF mousePosition, int row)
     else if(mousePosition.x() >= 0 && mousePosition.y() <= 0)
         angle = 360 + angleX;
 
-    qreal degreesPerPos = 360.0 / rows[row].count();
+    qreal degreesPerPos = 360.0 / grid[row].count();
 
     return ceil(angle / degreesPerPos);
 }
