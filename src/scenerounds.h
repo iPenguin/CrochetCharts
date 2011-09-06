@@ -44,6 +44,8 @@ protected:
      * function assumes rounds not rows.
      */
     int getClosestColumn(QPointF mousePosition, int row);
+
+    void setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor);
     
 protected:
     void stitchModeMouseMove(QGraphicsSceneMouseEvent* e);

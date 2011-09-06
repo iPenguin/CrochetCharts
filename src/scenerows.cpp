@@ -56,9 +56,20 @@ void SceneRows::createRow(int row, int columns, QString stitch)
         c->setStitch(stitch, (row % 2));
         modelRow.append(c);
 
+        setCellPosition(row, i, c, columns, true);
     }
     rows.insert(row, modelRow);
 
+}
+
+void SceneRows::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
+{
+    c->setPos(column * defaultSize().width() + column * 5, row * defaultSize().height());
+    if(updateAnchor || c->anchor().isNull())
+        c->setAnchor(column * defaultSize().width() + column * 5, row * defaultSize().height());
+
+    //FIXME: set tooltips from bottom right to top left.
+    c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
 }
 
 void SceneRows::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)

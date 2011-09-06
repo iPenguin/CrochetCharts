@@ -87,8 +87,27 @@ void SceneRounds::createRow(int row, int columns, QString stitch)
         c->setStitch(stitch, (row % 2));
         addItem(c);
         modelRow.append(c);
+        setCellPosition(row, i, c, columns, true);
     }
     rows.insert(row, modelRow);
+}
+
+void SceneRounds::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
+{
+    double widthInDegrees = 360.0 / columns;
+
+    double radius = defaultSize().height() * (row + 1) + (defaultSize().height() * 0.5);
+
+    double degrees = widthInDegrees * column;
+    QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+
+    qreal delta = defaultSize().width() * 0.5;
+    if(updateAnchor || c->anchor().isNull())
+        c->setAnchor(finish.x() - delta, finish.y());
+    c->setPos(finish.x() - delta, finish.y());
+    c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
+    c->setAngle(degrees + 90);
+    c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
 }
 
 int SceneRounds::getClosestRow(QPointF mousePosition)

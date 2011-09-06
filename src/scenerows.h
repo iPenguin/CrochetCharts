@@ -33,8 +33,9 @@ public:
 
     void createRow(int row, int columns, QString stitch);
     void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
-        
+
 private:
+    void setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor);
     
     void stitchModeMouseMove(QGraphicsSceneMouseEvent* e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e);
