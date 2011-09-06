@@ -641,6 +641,8 @@ void Scene::rowEditMouseMove(QGraphicsSceneMouseEvent* e)
 
 void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
 {
+    Q_UNUSED(e);
+
     mStartCell = 0;
     
     if(mRowLine) {
@@ -651,7 +653,7 @@ void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
     
 }
 
-void Scene::createRow(int row)
+void Scene::createRow()
 {
     
     if(selectedItems().count() <= 0)
@@ -668,6 +670,7 @@ void Scene::createRow(int row)
     rows.append(r);
 
 }
+
 void Scene::updateRow(int row)
 {
     //FIXME: this overlaps the createRow code.

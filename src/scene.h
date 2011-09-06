@@ -95,7 +95,7 @@ public:
     void paste();
     
 public slots:
-    void createRow(int row);
+    void createRow();
     void updateRow(int row);
     
     /**

@@ -64,6 +64,9 @@ void SceneRows::createRow(int row, int columns, QString stitch)
 
 void SceneRows::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
 {
+    //FIXME: use the columns and add rows.
+    Q_UNUSED(columns);
+
     c->setPos(column * defaultSize().width() + column * 5, row * defaultSize().height());
     if(updateAnchor || c->anchor().isNull())
         c->setAnchor(column * defaultSize().width() + column * 5, row * defaultSize().height());

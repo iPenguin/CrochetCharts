@@ -43,8 +43,8 @@ void RowEditDialog::addRow()
         msgbox.exec();
         return;
     }
-    int newRow = mScene->rows.count();
-    mScene->createRow(newRow);
+
+    mScene->createRow();
 
     updateRowList();
 

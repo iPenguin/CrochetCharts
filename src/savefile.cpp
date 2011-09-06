@@ -322,7 +322,7 @@ void SaveFile::loadColors(QXmlStreamReader* stream)
 void SaveFile::loadChart(QXmlStreamReader* stream)
 {
     MainWindow* mw = qobject_cast<MainWindow*>(mParent);
-    CrochetTab* tab;
+    CrochetTab* tab = 0;
     QString tabName;
 
     while(!(stream->isEndElement() && stream->name() == "chart")) {

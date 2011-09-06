@@ -36,7 +36,12 @@ SceneBlank::~SceneBlank()
 
 CrochetCell* SceneBlank::cell(int row, int column)
 {
-    return new CrochetCell();
+    if(row >= rows.count())
+        return 0;
+    if(column >= rows[row].count())
+        return 0;
+
+    return rows[row][column];
 }
 
 CrochetCell* SceneBlank::cell(QPoint position)
