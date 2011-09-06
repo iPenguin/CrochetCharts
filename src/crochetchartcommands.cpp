@@ -105,23 +105,6 @@ void SetItemCoordinates::redo()
 {
     i->setPos(newCoord);
 }
-
-bool SetItemCoordinates::mergeWith(const QUndoCommand* command)
-{
-    if(command->id() != id())
-        return false;
-    
-    const SetItemCoordinates* other = static_cast<const SetItemCoordinates*>(command);
-    
-    QGraphicsItem* otherI = other->i;
-    
-    if(otherI != i)
-        return false;
-
-    oldCoord = other->oldCoord;
-    setText(QObject::tr("Change item position"));
-    return true;
-}
  
 /*************************************************\
  | SetCellScale                                   |

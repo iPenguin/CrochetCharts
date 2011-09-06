@@ -81,8 +81,6 @@ public:
     void undo();
     void redo();
 
-    bool mergeWith(const QUndoCommand* command);
-
     int id() const { return Id; }
 
 private:
