@@ -48,5 +48,6 @@
         <file>images/distribute_center_v.svg</file>
         <file>images/align_path.svg</file>
         <file>images/distribute_path.svg</file>
+        <file>images/align_distribute.svg</file>
     </qresource>
 </RCC>

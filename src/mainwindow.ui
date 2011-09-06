@@ -272,7 +272,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -301,8 +301,8 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionCopy"/>
     <addaction name="actionCut"/>
+    <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -577,6 +577,7 @@
    <addaction name="actionCreateRows"/>
    <addaction name="actionIndicatorMode"/>
    <addaction name="separator"/>
+   <addaction name="actionShowAlignDock"/>
    <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">
@@ -661,7 +662,7 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="actionCopy">
+  <action name="actionCut">
    <property name="text">
     <string>Cu&amp;t</string>
    </property>
@@ -669,7 +670,7 @@
     <string>Ctrl+X</string>
    </property>
   </action>
-  <action name="actionCut">
+  <action name="actionCopy">
    <property name="text">
     <string>&amp;Copy</string>
    </property>
@@ -977,6 +978,10 @@
   <action name="actionShowAlignDock">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/align_distribute.svg</normaloff>:/images/align_distribute.svg</iconset>
    </property>
    <property name="text">
     <string>Show Align and Distribute</string>
