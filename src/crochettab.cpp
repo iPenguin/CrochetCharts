@@ -305,3 +305,18 @@ void CrochetTab::distributeSelection(int distributionStyle)
 {
     mScene->distributeSelection(distributionStyle);
 }
+
+void CrochetTab::copy()
+{
+    mScene->copy();
+}
+
+void CrochetTab::cut()
+{
+    mScene->cut();
+}
+
+void CrochetTab::paste()
+{
+    mScene->paste();
+}

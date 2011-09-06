@@ -9,7 +9,8 @@
 #include <QFontMetrics>
 #include <QGraphicsSimpleTextItem>
 #include <QGraphicsSceneEvent>
-#include <QApplication> //start drag min distance.
+#include <QApplication>
+#include <QClipboard>
 
 #include <math.h>
 
@@ -793,6 +794,8 @@ void Scene::alignSelection(int alignmentStyle)
     if(selectedItems().count() <= 0)
         return;
 
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
     //left
     if(alignmentStyle == 1) {
         
@@ -908,8 +911,11 @@ void Scene::alignSelection(int alignmentStyle)
     //to path
     } else if(alignmentStyle == 7) {
 
+        alignToPath();
 
     }
+
+    QApplication::restoreOverrideCursor();
 }
 
 void Scene::distributeSelection(int distributionStyle)
@@ -917,6 +923,8 @@ void Scene::distributeSelection(int distributionStyle)
 
     if(selectedItems().count() <= 0)
         return;
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
 
     QList<QGraphicsItem*> unsorted = selectedItems();
     QList<QGraphicsItem*> sorted;
@@ -1183,6 +1191,134 @@ void Scene::distributeSelection(int distributionStyle)
     //to path
     } else if(distributionStyle == 7) {
 
-        qDebug() << "7";
+        distributeToPath();
+
     }
+
+    QApplication::restoreOverrideCursor();
+}
+
+void Scene::alignToPath()
+{
+
+}
+
+void Scene::distributeToPath()
+{
+
+}
+
+void Scene::copy()
+{
+    if(selectedItems().count() <= 0)
+        return;
+
+    QByteArray copyData;
+    QDataStream stream(&copyData, QIODevice::WriteOnly);
+
+    QMimeData *mimeData = new QMimeData;
+    foreach(QGraphicsItem* item, selectedItems()) {
+        switch(item->type()) {
+            case CrochetCell::Type: {
+
+                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+                stream << c->type() << c->name() << c->color()
+                       << c->angle() << c->scale() << c->transformOriginPoint() << c->scenePos();
+
+                break;
+            }
+            case Indicator::Type: {
+                Indicator* i = qgraphicsitem_cast<Indicator*>(item);
+                stream << i->type() << i->scenePos() << i->text();
+                break;
+            }
+            default:
+                break;
+        }
+     }
+
+     mimeData->setData("application/crochet-cells", copyData);
+    QApplication::clipboard()->setMimeData(mimeData);
+
+}
+
+void Scene::paste()
+{
+    const QMimeData *mimeData = QApplication::clipboard()->mimeData();
+
+    QByteArray pasteData = mimeData->data("application/crochet-cells");
+    QDataStream stream(&pasteData, QIODevice::ReadOnly);
+
+    int type;
+
+    clearSelection();
+
+    while(!stream.atEnd()) {
+
+        stream >> type;
+        if(type == CrochetCell::Type) {
+            CrochetCell* c = new CrochetCell();
+            QString name;
+            QColor color;
+            qreal angle, scale;
+            QPointF pos, transPoint;
+
+            stream >> name >> color >> angle >> scale >> transPoint >> pos;
+            pos.rx() +=5;
+            pos.ry() +=5;
+
+            addCell(c);
+            c->setStitch(name);
+            c->setColor(color);
+            c->setAngle(angle);
+            c->setScale(scale, transPoint);
+            c->setPos(pos);
+            c->setSelected(true);
+
+        } else if(type == Indicator::Type) {
+            Indicator* i = new Indicator();
+
+            QPointF pos;
+            QString text;
+
+            stream >> pos >> text;
+            pos.rx() += 5;
+            pos.ry() += 5;
+
+            i->setText(text);
+            addItem(i);
+            i->setPos(pos);
+            i->setSelected(true);
+
+        }
+    }
+}
+
+void Scene::cut()
+{
+    if(selectedItems().count() <= 0)
+        return;
+
+    copy();
+
+    undoStack()->beginMacro(tr("cut items"));
+    foreach(QGraphicsItem* item, selectedItems()) {
+
+        switch(item->type()) {
+            case CrochetCell::Type: {
+                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+                undoStack()->push(new RemoveCell(this, c));
+                break;
+            }
+            case Indicator::Type: {
+            Indicator* i = qgraphicsitem_cast<Indicator*>(item);
+                undoStack()->push(new RemoveIndicator(this, i));
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    undoStack()->endMacro();
+
 }

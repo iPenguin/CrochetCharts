@@ -100,6 +100,10 @@ private slots:
     void helpCrochetHelp();
     void helpAbout();
 
+    void copy();
+    void cut();
+    void paste();
+
 private slots:
     void print(QPrinter* printer);
 

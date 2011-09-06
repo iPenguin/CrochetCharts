@@ -89,6 +89,10 @@ public:
     void moveRowDown(int row);
 
     void removeRow(int row);
+
+    void copy();
+    void cut();
+    void paste();
     
 public slots:
     void createRow(int row);
@@ -125,6 +129,9 @@ protected:
     QList<Indicator*> indicators() { return mIndicators; }
         
     void initDemoBackground();
+
+    void alignToPath();
+    void distributeToPath();
 
 protected:
     void colorModeMouseMove(QGraphicsSceneMouseEvent* e);

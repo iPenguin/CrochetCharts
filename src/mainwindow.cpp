@@ -74,6 +74,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
 
     setupMenus();
     readSettings();
+
     QApplication::restoreOverrideCursor();
 }
 
@@ -254,6 +255,10 @@ void MainWindow::setupMenus()
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/editcut.png")));
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/editpaste.png")));
 
+
+    connect(ui->actionCopy, SIGNAL(triggered()), SLOT(copy()));
+    connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
+    connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
 
     connect(ui->actionColorSelectorBg, SIGNAL(triggered()), SLOT(selectColor()));
     //connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
@@ -1319,4 +1324,25 @@ void MainWindow::distributeSelection(int style)
     CrochetTab* tab = curCrochetTab();
     if(tab)
         tab->distributeSelection(style);
+}
+
+void MainWindow::copy()
+{
+    CrochetTab* tab = curCrochetTab();
+    if(tab)
+        tab->copy();
+}
+
+void MainWindow::cut()
+{
+    CrochetTab* tab = curCrochetTab();
+    if(tab)
+        tab->cut();
+}
+
+void MainWindow::paste()
+{
+    CrochetTab* tab = curCrochetTab();
+    if(tab)
+        tab->paste();
 }

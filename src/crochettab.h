@@ -56,6 +56,10 @@ public:
 
     void alignSelection(int alignmentStyle);
     void distributeSelection(int distributionStyle);
+
+    void copy();
+    void cut();
+    void paste();
     
 signals:
     void chartStitchChanged();
