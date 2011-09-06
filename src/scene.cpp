@@ -227,18 +227,20 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     QGraphicsItem* gi = itemAt(e->scenePos());
     if(gi) {
         
-        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(gi);
-        if(c) {
-            mCurCell = c;
-            mCellStartPos = mCurCell->pos();
-            mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
+        switch(gi->type()) {
+            case CrochetCell::Type: {
+                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(gi);
+                mCurCell = c;
+                mCellStartPos = mCurCell->pos();
+                mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
+                break;
+            }
+            case Indicator::Type: {
+                Indicator* i = qgraphicsitem_cast<Indicator*>(gi);
             
-        } else {
-            Indicator* i = qgraphicsitem_cast<Indicator*>(gi);
-            if(i) {
                 mCurIndicator = i;
                 mCellStartPos = i->pos();
-                
+                break;
             }
         }
     }
