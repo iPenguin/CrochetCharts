@@ -476,7 +476,7 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
         return;
     }
 
-    if(!mCurIndicator) {
+    if(!mCurIndicator && !mHasSelection) {
 
         QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
         //FIXME: dont hard code the offset for the indicator.
@@ -485,7 +485,8 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
         undoStack()->push(new AddIndicator(this, pt));
 
     } else {
-        mCurIndicator->setTextInteractionFlags(Qt::TextEditorInteraction);
+        if(mCurIndicator)
+            mCurIndicator->setTextInteractionFlags(Qt::TextEditorInteraction);
     }
 
 }
