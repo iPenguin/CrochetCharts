@@ -36,9 +36,6 @@ public:
 
 private:
     void setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor);
-    
-    void stitchModeMouseMove(QGraphicsSceneMouseEvent* e);
-    void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
 };
 

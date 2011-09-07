@@ -114,6 +114,21 @@ void Scene::initDemoBackground()
     }
 }
 
+CrochetCell* Scene::cell(int row, int column)
+{
+    if(row >= grid.count())
+        return 0;
+    if(column >= grid[row].count())
+        return 0;
+
+    return grid[row][column];
+}
+
+CrochetCell* Scene::cell(QPoint position)
+{
+    return cell(position.y(), position.x());
+}
+
 int Scene::rowCount()
 {
     return grid.count();
@@ -136,6 +151,23 @@ int Scene::maxColumnCount()
             max = cols;
     }
     return max;
+}
+
+void Scene::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
+{
+    Q_UNUSED(rows);
+    Q_UNUSED(cols);
+    Q_UNUSED(stitch);
+    Q_UNUSED(rowSize);
+
+}
+
+void Scene::createRow(int row, int columns, QString stitch)
+{
+    Q_UNUSED(row);
+    Q_UNUSED(columns);
+    Q_UNUSED(stitch);
+
 }
 
 void Scene::removeCell(CrochetCell* c)
@@ -651,6 +683,34 @@ void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
         mRowLine = 0;
     }
     
+}
+
+void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
+{
+    //FIXME: foreach(stitch in selection()) create an undo group event.
+    if(mCurCell) {
+
+        if(mCurCell->name() != mEditStitch && !mMoving)
+            undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
+
+        mCurCell = 0;
+
+    } else if(!mIsRubberband && !mMoving && !mHasSelection){
+
+        if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
+
+            AddCell* addCell = new AddCell(this, e->scenePos());
+            undoStack()->push(addCell);
+            addCell->cell()->setStitch(mEditStitch);
+
+        } else {
+            if(!mCurCell)
+                return;
+
+            undoStack()->push(new RemoveCell(this, mCurCell));
+            mCurCell = 0;
+        }
+    }
 }
 
 void Scene::createRow()

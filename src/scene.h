@@ -48,7 +48,11 @@ public:
     Scene(QObject* parent = 0);
     ~Scene();
 
-    virtual void createRow(int row, int columns, QString stitch) = 0;
+    //if you have the position in x, y use the overload function
+    CrochetCell* cell(int row, int column);
+    //convert x,y to rows, columns.
+    CrochetCell* cell(QPoint position);
+
     virtual void addCell(CrochetCell* c);
 
     /**
@@ -68,7 +72,8 @@ public:
     int columnCount(int row);
     int maxColumnCount();
     
-    virtual void createChart(int rows, int cols, QString stitch, QSizeF rowSize) = 0;
+    virtual void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
+    virtual void createRow(int row, int columns, QString stitch);
 
     void setEditMode(EditMode mode) { mMode = mode; if(mode != Scene::RowEdit) hideRowLines(); }
     EditMode editMode() { return mMode; }
@@ -154,8 +159,8 @@ protected:
     
     virtual void stitchModeMouseMove(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
     virtual void stitchModeMousePress(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
-    virtual void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
-    
+    void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e);
+
     QSizeF defaultSize() const { return mDefaultSize; }
 
     void updateStitchRenderer();

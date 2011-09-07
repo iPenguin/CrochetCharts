@@ -46,10 +46,6 @@ protected:
     int getClosestColumn(QPointF mousePosition, int row);
 
     void setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor);
-    
-protected:
-    void stitchModeMouseMove(QGraphicsSceneMouseEvent* e);
-    void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);

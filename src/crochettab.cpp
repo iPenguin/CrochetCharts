@@ -14,9 +14,9 @@
 
 #include <QDebug>
 
+#include "scene.h"
 #include "scenerows.h"
 #include "scenerounds.h"
-#include "sceneblank.h"
 
 #include "textview.h"
 
@@ -43,7 +43,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     
     mView = new ChartView(top);
     if(style == Scene::Blank) {
-        mScene = new SceneBlank(mView);
+        mScene = new Scene(mView);
         mScene->setSceneRect(0,0, 5000,5000);
         centerOn = QPoint(2500, 2500);
     } else if(style == Scene::Rounds) {

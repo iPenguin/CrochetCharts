@@ -31,7 +31,6 @@ set(crochet_qobject_headers
     scene.h
     scenerows.h
     scenerounds.h
-    sceneblank.h
     roweditdialog.h
     rowsdock.h
     aligndock.h
