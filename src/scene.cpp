@@ -830,12 +830,15 @@ void Scene::drawRowLines(int row)
 
     for(int i = 0; i < count; ++i) {
         QGraphicsItem* c = grid[row][i];
+        if(!c)
+            continue;
+
         if(prev != c) {
             start = prev->pos();
             end = c->pos();
 
             QGraphicsLineItem *line = addLine(QLineF(start, end));
-            line->setPen(QPen(QColor(Qt::black), 2));
+            line->setPen(QPen(QColor(Qt::red), 2));
             mRowLines.append(line);
 
             prev = c;

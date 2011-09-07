@@ -107,10 +107,9 @@ public slots:
      * highlight (select) all the stitches in row @param row.
      */
     void highlightRow(int row);
-    
-    void updateRubberBand(int dx, int dy);
-
     void drawRowLines(int row);
+
+    void updateRubberBand(int dx, int dy);
     
     void alignSelection(int alignmentStyle);
     void distributeSelection(int distributionStyle);

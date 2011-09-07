@@ -109,7 +109,7 @@ void RowEditDialog::listItemChanged(int listRow)
     QString rowText = mTextView->generateTextRow(listRow, true,true);
     ui->rowView->setText(rowText);
 
-    emit displayRow(r - 1);
+    mScene->drawRowLines(r - 1);
 
 }
 
@@ -134,6 +134,10 @@ void RowEditDialog::updateRow()
     if(r <= 0)
         return;
     r--;
+
     mScene->updateRow(r);
+
+    QString rowText = mTextView->generateTextRow(r, true,true);
+    ui->rowView->setText(rowText);
     
 }
