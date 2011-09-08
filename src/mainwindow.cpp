@@ -200,6 +200,7 @@ void MainWindow::setupDocks()
     mRowsDock->setFloating(true);
     mRowsDock->setVisible(false);
     mRowsDock->setObjectName("rowsDock");
+    connect(mRowsDock, SIGNAL(arrangeGrid(QSize,QSize,QSize)), SLOT(arrangeGrid(QSize,QSize,QSize)));
     
 }
 
@@ -1324,6 +1325,13 @@ void MainWindow::distributeSelection(int style)
     CrochetTab* tab = curCrochetTab();
     if(tab)
         tab->distributeSelection(style);
+}
+
+void MainWindow::arrangeGrid(QSize grid, QSize alignment, QSize spacing)
+{
+    CrochetTab* tab = curCrochetTab();
+    if(tab)
+        tab->arrangeGrid(grid, alignment, spacing);
 }
 
 void MainWindow::copy()

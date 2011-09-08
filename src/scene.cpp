@@ -624,7 +624,7 @@ void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
         mRowSelection.append(mStartCell);
 
         mRowLine = addLine(QLineF(e->scenePos(), e->scenePos()));
-        mRowLine->setPen(QPen(QColor(Qt::black), 2));
+        mRowLine->setPen(QPen(QColor(Qt::red), 2));
         
     }
     mPreviousCell = mStartCell;
