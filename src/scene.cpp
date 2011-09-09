@@ -1078,57 +1078,58 @@ void Scene::distribute(int vertical, int horizontal)
             }
         }
     }
+    if(horizontal == 2) {
+        //get the centers of the cells.
+        left += (sortedH.first()->boundingRect().width() / 2);
+        right += (sortedH.last()->boundingRect().width() / 2);
+    }
+    if(vertical == 2) {
+        //get the centers of the cells.
+        top += (sortedV.first()->boundingRect().height() / 2);
+        bottom += (sortedV.last()->boundingRect().height() / 2);
+    }
+
+    qreal diff = right - left;
+    qreal spaceH = diff / (sortedH.count() - 1);
+    diff = bottom - top;
+    qreal spaceV = diff / (sortedV.count() - 1);
 
     undoStack()->beginMacro("distribute selection");
-    if(horizontal != 0) {
-        if(horizontal == 2) {
-            //get the centers of the cells.
-            left += (sortedH.first()->boundingRect().width() / 2);
-            right += (sortedH.last()->boundingRect().width() / 2);
-        }
 
-        qreal diff = right - left;
-        qreal spaceH = diff / (sortedH.count() - 1);
+    foreach(QGraphicsItem* i, unsorted) {
+        qreal adjustH = 0; //left
+        qreal adjustV = 0; //top
 
-        for(int i = 0; i < sortedH.count(); ++i) {
-            qreal adjustH = 0; //left
-
-            if(horizontal == 2)
-                adjustH = sortedH[i]->boundingRect().width() / 2; //center h
-            else if(horizontal == 3)
-                adjustH = sortedH[i]->boundingRect().width(); //right
-
-            QPointF oldPos = sortedH[i]->scenePos();
-            sortedH[i]->setPos(left + (i * spaceH) - adjustH, sortedH[i]->scenePos().y());
-            undoStack()->push(new SetItemCoordinates(this, sortedH[i], oldPos));
-        }
-    }
-
-    if(vertical != 0) {
-        if(vertical == 2) {
-            //get the centers of the cells.
-            top += (sortedV.first()->boundingRect().height() / 2);
-            bottom += (sortedV.last()->boundingRect().height() / 2);
-        }
-
-        qreal diff = bottom - top;
-        qreal spaceV = diff / (sortedV.count() - 1);
-
-
-        for(int i = 0; i < sortedV.count(); ++i) {
-            qreal adjustV = 0;
-
-            if(vertical == 2)
-                adjustV = sortedV[i]->boundingRect().height() / 2; //center v
-            else if(vertical == 3)
-                adjustV = sortedV[i]->boundingRect().height(); //bottom
+        if(horizontal == 2)
+            adjustH = i->boundingRect().width() / 2; //center h
+        else if(horizontal == 3)
+            adjustH = i->boundingRect().width(); //right
             
-            QPointF oldPos = sortedV[i]->scenePos();
-            sortedV[i]->setPos(sortedV[i]->scenePos().x(), top + (i * spaceV) - adjustV);
-            undoStack()->push(new SetItemCoordinates(this, sortedV[i], oldPos));
-        }
-    }
+        if(vertical == 2)
+            adjustV = i->boundingRect().height() / 2; //center v
+        else if(vertical == 3)
+            adjustV = i->boundingRect().height(); //bottom
 
+        int idxX = sortedH.indexOf(i);
+        int idxY = sortedV.indexOf(i);
+
+        qreal newX = 0;
+        qreal newY = 0;
+        
+        if(horizontal == 0)
+            newX = i->scenePos().x();
+        else
+            newX = left - adjustH + (idxX * spaceH);
+
+        if(vertical == 0)
+            newY = i->scenePos().y();
+        else
+            newY = top - adjustV + (idxY * spaceV);
+        
+        QPointF oldPos = i->scenePos();
+        i->setPos(newX, newY);
+        undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+    }
     undoStack()->endMacro();
 }
 
