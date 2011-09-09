@@ -867,119 +867,30 @@ void Scene::alignSelection(int alignmentStyle)
 
     //left
     if(alignmentStyle == 1) {
+        align(0,1);
         
-        qreal left = sceneRect().right();
-        foreach(QGraphicsItem* i, selectedItems()) {
-            if(i->scenePos().x() < left)
-                left = i->scenePos().x();
-        }
-
-        undoStack()->beginMacro("align selection");
-        foreach(QGraphicsItem* i, selectedItems()) {
-                QPointF oldPos = i->scenePos();
-                i->setPos(left, i->scenePos().y());
-                undoStack()->push(new SetItemCoordinates(this, i, oldPos));
-        }
-        undoStack()->endMacro();
-
     //center v
     } else if(alignmentStyle == 2) {
+        align(0, 2);
         
-        qreal left = sceneRect().right();
-        qreal right = sceneRect().left();
-        foreach(QGraphicsItem* i, selectedItems()) {
-            if(i->scenePos().x() < left)
-                left = i->scenePos().x();
-            if(i->scenePos().x() > right)
-                right = i->scenePos().x();
-        }
-        qreal diff = right - left;
-        qreal center = left + (diff / 2);
-        
-        undoStack()->beginMacro("align selection");
-        foreach(QGraphicsItem* i, selectedItems()) {
-            QPointF oldPos = i->scenePos();
-            i->setPos(center - (i->boundingRect().width()/2), i->scenePos().y());
-            undoStack()->push(new SetItemCoordinates(this, i, oldPos));
-        }
-        undoStack()->endMacro();
-
     //right
     } else if(alignmentStyle == 3) {
+        align(0, 3);
         
-        qreal right = sceneRect().left();
-        foreach(QGraphicsItem* i, selectedItems()) {
-            if(i->scenePos().x() > right)
-                right = i->scenePos().x();
-        }
-
-        undoStack()->beginMacro("align selection");
-        foreach(QGraphicsItem* i, selectedItems()) {
-                QPointF oldPos = i->scenePos();
-                i->setPos(right, i->scenePos().y());
-                undoStack()->push(new SetItemCoordinates(this, i, oldPos));
-        }
-        undoStack()->endMacro();
-
     //top
     } else if(alignmentStyle == 4) {
-        
-        qreal top = sceneRect().bottom();
-        foreach(QGraphicsItem* i, selectedItems()) {
-            if(i->scenePos().y() < top)
-                top = i->scenePos().y();
-        }
-
-        undoStack()->beginMacro("align selection");
-        foreach(QGraphicsItem* i, selectedItems()) {
-                QPointF oldPos = i->scenePos();
-                i->setPos(i->scenePos().x(), top);
-                undoStack()->push(new SetItemCoordinates(this, i, oldPos));
-        }
-        undoStack()->endMacro();
+        align(1, 0);
 
     //center h
     } else if(alignmentStyle == 5) {
-        
-        qreal top = sceneRect().bottom();
-        qreal bottom = sceneRect().top();
-        foreach(QGraphicsItem* i, selectedItems()) {
-            if(i->scenePos().y() < top)
-                top = i->scenePos().y();
-            if(i->scenePos().y() > bottom)
-                bottom = i->scenePos().y();
-        }
-        qreal diff = bottom - top;
-        qreal center = bottom + (diff / 2);
-
-        undoStack()->beginMacro("align selection");
-        foreach(QGraphicsItem* i, selectedItems()) {
-            QPointF oldPos = i->scenePos();
-            i->setPos(i->scenePos().x(), center - (i->boundingRect().height()/2));
-            undoStack()->push(new SetItemCoordinates(this, i, oldPos));
-        }
-        undoStack()->endMacro();
+        align(2, 0);
 
     //bottom
     } else if(alignmentStyle == 6) {
-        
-        qreal bottom = sceneRect().top();
-        foreach(QGraphicsItem* i, selectedItems()) {
-            if(i->scenePos().y() > bottom)
-                bottom = i->scenePos().y();
-        }
-
-        undoStack()->beginMacro("align selection");
-        foreach(QGraphicsItem* i, selectedItems()) {
-                QPointF oldPos = i->scenePos();
-                i->setPos(i->scenePos().x(), bottom);
-                undoStack()->push(new SetItemCoordinates(this, i, oldPos));
-        }
-        undoStack()->endMacro();
+        align(3, 0);
 
     //to path
     } else if(alignmentStyle == 7) {
-
         alignToPath();
 
     }
@@ -1265,6 +1176,77 @@ void Scene::distributeSelection(int distributionStyle)
     }
 
     QApplication::restoreOverrideCursor();
+}
+
+void Scene::align(int vertical, int horizontal)
+{
+
+    qreal left = sceneRect().right();
+    qreal right = sceneRect().left();
+    qreal top = sceneRect().bottom();
+    qreal bottom = sceneRect().top();
+    
+    foreach(QGraphicsItem* i, selectedItems()) {
+        if(i->scenePos().x() < left)
+            left = i->scenePos().x();
+        if(i->scenePos().x() > right)
+            right = i->scenePos().x();
+        if(i->scenePos().y() < top)
+            top = i->scenePos().y();
+        if(i->scenePos().y() > bottom)
+            bottom = i->scenePos().y();
+    }
+
+    qreal diff = right - left;
+    qreal centerH = left + (diff / 2);
+    diff = bottom - top;
+    qreal centerV = top + (diff / 2);
+    
+    qreal baseX = 0;
+    qreal baseY = 0;
+
+    if(horizontal == 1)
+        baseX = left;
+    else if(horizontal == 2)
+        baseX = centerH;
+    else if(horizontal == 3)
+        baseX = right;
+
+    if(vertical == 1)
+        baseY = top;
+    else if(vertical == 2)
+        baseY = centerV;
+    else if(vertical == 3)
+        baseY = bottom;
+    
+    undoStack()->beginMacro("align selection");
+    foreach(QGraphicsItem* i, selectedItems()) {
+        QPointF oldPos = i->scenePos();
+        qreal newX = baseX;
+        qreal newY = baseY;
+        
+        if(horizontal == 0) {
+            newX = i->scenePos().x();
+        } else if(horizontal == 2) {
+            newX -= (i->boundingRect().width()/2);
+        }
+
+        if(vertical == 0) {
+            newY = i->scenePos().y();
+        } else if(vertical == 2) {
+            newY -= (i->boundingRect().height()/2);
+        }
+        
+        i->setPos(newX, newY);
+        undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+    }
+    undoStack()->endMacro();
+    
+}
+
+void Scene::distribute(int vertical, int horizontal)
+{
+
 }
 
 void Scene::alignToPath()

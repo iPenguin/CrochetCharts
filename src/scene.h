@@ -135,6 +135,29 @@ protected:
         
     void initDemoBackground();
 
+    /**
+     * vertial:    0 - don't change alignment
+     *             1 - align top
+     *             2 - align center v
+     *             3 - align bottom
+     * horizontal: 0 - don't change alignment
+     *             1 - align left
+     *             2 - align center h
+     *             3 - align right
+     */
+    void align(int vertical, int horizontal);
+    /**
+     * vertial:    0 - don't change distribution
+     *             1 - distribute top
+     *             2 - distribute center v
+     *             3 - distribute bottom
+     * horizontal: 0 - don't change distribution
+     *             1 - distribute left
+     *             2 - distribute center h
+     *             3 - distribute right
+     */
+    void distribute(int vertical, int horizontal);
+    
     void alignToPath();
     void distributeToPath();
 
