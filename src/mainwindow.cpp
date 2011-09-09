@@ -202,7 +202,7 @@ void MainWindow::setupDocks()
     mRowsDock->setFloating(true);
     mRowsDock->setVisible(false);
     mRowsDock->setObjectName("rowsDock");
-    connect(mRowsDock, SIGNAL(arrangeGrid(QSize,QSize,QSize)), SLOT(arrangeGrid(QSize,QSize,QSize)));
+    connect(mRowsDock, SIGNAL(arrangeGrid(QSize,QSize,QSize,bool)), SLOT(arrangeGrid(QSize,QSize,QSize,bool)));
     connect(mRowsDock, SIGNAL(visibilityChanged(bool)), ui->actionShowRowsDock, SLOT(setChecked(bool)));
     
     //Mirror & Rotate.
@@ -1345,11 +1345,11 @@ void MainWindow::distributeSelection(int style)
         tab->distributeSelection(style);
 }
 
-void MainWindow::arrangeGrid(QSize grid, QSize alignment, QSize spacing)
+void MainWindow::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection)
 {
     CrochetTab* tab = curCrochetTab();
     if(tab)
-        tab->arrangeGrid(grid, alignment, spacing);
+        tab->arrangeGrid(grid, alignment, spacing, useSelection);
 }
 
 void MainWindow::mirror(int direction)

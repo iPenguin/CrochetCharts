@@ -95,6 +95,10 @@ public:
 
     void removeRow(int row);
 
+    void alignSelection(int alignmentStyle);
+    void distributeSelection(int distributionStyle);
+    void arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection);
+    
     void copy();
     void cut();
     void paste();
@@ -111,9 +115,6 @@ public slots:
 
     void updateRubberBand(int dx, int dy);
     
-    void alignSelection(int alignmentStyle);
-    void distributeSelection(int distributionStyle);
-
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);

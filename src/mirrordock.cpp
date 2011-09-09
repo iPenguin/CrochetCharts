@@ -14,13 +14,9 @@ MirrorDock::MirrorDock(QWidget *parent) :
     connect(ui->mirrorUp, SIGNAL(clicked()), SLOT(genMirror()));
     connect(ui->mirrorDown, SIGNAL(clicked()), SLOT(genMirror()));
 
-    connect(ui->rotate45, SIGNAL(clicked()), SLOT(genRotate()));
     connect(ui->rotate90, SIGNAL(clicked()), SLOT(genRotate()));
-    connect(ui->rotate135, SIGNAL(clicked()), SLOT(genRotate()));
     connect(ui->rotate180, SIGNAL(clicked()), SLOT(genRotate()));
-    connect(ui->rotate225, SIGNAL(clicked()), SLOT(genRotate()));
     connect(ui->rotate270, SIGNAL(clicked()), SLOT(genRotate()));
-    connect(ui->rotate315, SIGNAL(clicked()), SLOT(genRotate()));
 
     connect(ui->rotateCustom, SIGNAL(clicked()), SLOT(rotateCustom()));
 
@@ -37,11 +33,11 @@ void MirrorDock::genMirror()
     int direction = 1;
     if(sender() == ui->mirrorLeft)
         direction = 1;
-    if(sender() == ui->mirrorRight)
+    else if(sender() == ui->mirrorRight)
         direction = 2;
-    if(sender() == ui->mirrorUp)
+    else if(sender() == ui->mirrorUp)
         direction = 3;
-    if(sender() == ui->mirrorDown)
+    else if(sender() == ui->mirrorDown)
         direction = 4;
 
     emit mirror(direction);
@@ -51,21 +47,13 @@ void MirrorDock::genRotate()
 {
     qreal degrees = 0;
 
-    if(sender() == ui->rotate45)
-        degrees = 45;
     if(sender() == ui->rotate90)
         degrees = 90;
-    if(sender() == ui->rotate135)
-        degrees = 135;
-    if(sender() == ui->rotate180)
+    else if(sender() == ui->rotate180)
         degrees = 180;
-    if(sender() == ui->rotate225)
-        degrees = 225;
-    if(sender() == ui->rotate270)
+    else if(sender() == ui->rotate270)
         degrees = 270;
-    if(sender() == ui->rotate315)
-        degrees = 315;
-    if(sender() == ui->rotateBttn)
+    else if(sender() == ui->rotateBttn)
         degrees = ui->degrees->value();
 
     emit rotate(degrees);

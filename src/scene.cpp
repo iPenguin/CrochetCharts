@@ -1277,6 +1277,86 @@ void Scene::distributeToPath()
 
 }
 
+void Scene::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection)
+{
+
+    if(useSelection) {
+
+        int rows = grid.width();
+        int cols = grid.height();
+
+        QRectF rect = selectionArea().boundingRect();
+        rect.width() / rows;
+
+/*
+
+        if !useseleciton create cells and select them.
+
+            distribute cells based on aligment.
+
+        relPos = figure out relative position
+        distribute based on positions.
+
+        
+*/      
+/*
+        qreal left = sceneRect().right();
+        foreach(QGraphicsItem* i, selectedItems()) {
+            if(i->scenePos().x() < left)
+                left = i->scenePos().x();
+        }
+
+        undoStack()->beginMacro("align selection");
+        foreach(QGraphicsItem* i, selectedItems()) {
+                QPointF oldPos = i->scenePos();
+                i->setPos(left, i->scenePos().y());
+                undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        }
+        undoStack()->endMacro();
+
+
+        qreal left = sceneRect().right();
+        qreal right = sceneRect().left();
+
+        foreach(QGraphicsItem* i, unsorted) {
+            if(i->scenePos().x() > right)
+                right = i->scenePos().x();
+            if(i->scenePos().x() < left)
+                left = i->scenePos().x();
+
+            if(sorted.count() <= 0) {
+                sorted.append(i);
+            } else {
+                bool added = false;
+                for(int s = 0; s < sorted.count(); ++s) {
+                    if(i->scenePos().x() < sorted[s]->scenePos().x()) {
+                        sorted.insert(s, i);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if(!added)
+                    sorted.append(i);
+            }
+        }
+
+        qreal diff = right - left;
+        qreal space = diff / (sorted.count() - 1);
+
+        undoStack()->beginMacro("distribute selection");
+        for(int i = 0; i < sorted.count(); ++i) {
+            QPointF oldPos = sorted[i]->scenePos();
+            sorted[i]->setPos(left + (i * space), sorted[i]->scenePos().y());
+            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
+        }
+        undoStack()->endMacro();
+
+*/
+    }
+    
+}
+
 void Scene::copy()
 {
     if(selectedItems().count() <= 0)

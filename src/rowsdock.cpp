@@ -18,6 +18,7 @@ RowsDock::RowsDock(QWidget *parent) :
     ui->alignTop->setChecked(true);
 
     connect(ui->arrange, SIGNAL(clicked(bool)), SLOT(generateArrangement()));
+    connect(ui->createGrid, SIGNAL(clicked(bool)), SLOT(generateArrangement()));
 }
 
 RowsDock::~RowsDock()
@@ -48,6 +49,11 @@ void RowsDock::generateArrangement()
     }
 
     spacing = QSize(ui->rowSpacing->text().toInt(), ui->stitchSpacing->text().toInt());
+
+    bool useSelection = true;
+
+    if(sender() == ui->createGrid)
+        useSelection = false;
     
-    emit arrangeGrid(grid, alignment, spacing);
+    emit arrangeGrid(grid, alignment, spacing, useSelection);
 }

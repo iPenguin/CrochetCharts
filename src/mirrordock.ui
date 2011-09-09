@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>190</width>
-    <height>391</height>
+    <width>147</width>
+    <height>347</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,6 +26,9 @@
        </property>
        <item row="0" column="1">
         <widget class="QToolButton" name="mirrorUp">
+         <property name="toolTip">
+          <string>Mirror up</string>
+         </property>
          <property name="text">
           <string>U</string>
          </property>
@@ -43,6 +46,9 @@
        </item>
        <item row="2" column="1">
         <widget class="QToolButton" name="mirrorDown">
+         <property name="toolTip">
+          <string>Mirror down</string>
+         </property>
          <property name="text">
           <string>D</string>
          </property>
@@ -60,6 +66,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QToolButton" name="mirrorLeft">
+         <property name="toolTip">
+          <string>Mirror left</string>
+         </property>
          <property name="text">
           <string>L</string>
          </property>
@@ -77,6 +86,9 @@
        </item>
        <item row="1" column="2">
         <widget class="QToolButton" name="mirrorRight">
+         <property name="toolTip">
+          <string>Mirror right</string>
+         </property>
          <property name="text">
           <string>R</string>
          </property>
@@ -104,21 +116,11 @@
        <property name="margin">
         <number>2</number>
        </property>
-       <item row="2" column="0">
-        <widget class="QToolButton" name="rotate225">
-         <property name="text">
-          <string>225</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>24</width>
-           <height>24</height>
-          </size>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="1">
         <widget class="QToolButton" name="rotate180">
+         <property name="toolTip">
+          <string>Rotate 180 degrees</string>
+         </property>
          <property name="text">
           <string>180</string>
          </property>
@@ -136,6 +138,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QToolButton" name="rotate270">
+         <property name="toolTip">
+          <string>Rotate 270 degrees</string>
+         </property>
          <property name="text">
           <string>270</string>
          </property>
@@ -153,6 +158,9 @@
        </item>
        <item row="1" column="2">
         <widget class="QToolButton" name="rotate90">
+         <property name="toolTip">
+          <string>Rotate 90 degrees</string>
+         </property>
          <property name="text">
           <string>90</string>
          </property>
@@ -168,47 +176,11 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QToolButton" name="rotate135">
-         <property name="text">
-          <string>135</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>24</width>
-           <height>24</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QToolButton" name="rotate45">
-         <property name="text">
-          <string>45</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>24</width>
-           <height>24</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QToolButton" name="rotate315">
-         <property name="text">
-          <string>315</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>24</width>
-           <height>24</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
+       <item row="0" column="1">
         <widget class="QToolButton" name="rotateCustom">
+         <property name="toolTip">
+          <string>Rotate custom degrees</string>
+         </property>
          <property name="text">
           <string>C</string>
          </property>

@@ -17,7 +17,7 @@ public:
     ~RowsDock();
 
 signals:
-    void arrangeGrid(QSize grid, QSize alignment, QSize spacing);
+    void arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection);
     
 private slots:
     void generateArrangement();

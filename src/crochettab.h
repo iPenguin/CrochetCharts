@@ -56,7 +56,7 @@ public:
 
     void alignSelection(int alignmentStyle);
     void distributeSelection(int distributionStyle);
-    void arrangeGrid(QSize grid, QSize alignment, QSize spacing);
+    void arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection);
 
     void copy();
     void cut();

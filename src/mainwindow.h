@@ -162,7 +162,7 @@ private slots:
 
     void alignSelection(int style);
     void distributeSelection(int style);
-    void arrangeGrid(QSize grid, QSize alignment, QSize spacing);
+    void arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection);
 
     void mirror(int direction);
     void rotate(qreal degrees);

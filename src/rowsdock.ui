@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>216</width>
-    <height>325</height>
+    <width>196</width>
+    <height>294</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -237,7 +237,27 @@
       </property>
      </spacer>
     </item>
-    <item row="8" column="0" colspan="3">
+    <item row="8" column="3" colspan="2">
+     <widget class="QPushButton" name="arrange">
+      <property name="toolTip">
+       <string>Arrange the selected cells into a grid</string>
+      </property>
+      <property name="text">
+       <string>Arrange</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0" colspan="2">
+     <widget class="QPushButton" name="createGrid">
+      <property name="toolTip">
+       <string>Create a grid with new cells</string>
+      </property>
+      <property name="text">
+       <string>Create</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="2">
      <spacer name="verticalSpacer_2">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -245,17 +265,10 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>10</height>
+        <height>20</height>
        </size>
       </property>
      </spacer>
-    </item>
-    <item row="8" column="3" colspan="2">
-     <widget class="QPushButton" name="arrange">
-      <property name="text">
-       <string>Arrange</string>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>
