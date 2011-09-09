@@ -903,274 +903,35 @@ void Scene::distributeSelection(int distributionStyle)
 
     if(selectedItems().count() <= 0)
         return;
-
+    
     QApplication::setOverrideCursor(Qt::WaitCursor);
-
-    QList<QGraphicsItem*> unsorted = selectedItems();
-    QList<QGraphicsItem*> sorted;
     
     //left
     if(distributionStyle == 1) {
-        
-        qreal left = sceneRect().right();
-        qreal right = sceneRect().left();
-
-        foreach(QGraphicsItem* i, unsorted) {
-            if(i->scenePos().x() > right)
-                right = i->scenePos().x();
-            if(i->scenePos().x() < left)
-                left = i->scenePos().x();
-
-            if(sorted.count() <= 0) {
-                sorted.append(i);
-            } else {
-                bool added = false;
-                for(int s = 0; s < sorted.count(); ++s) {
-                    if(i->scenePos().x() < sorted[s]->scenePos().x()) {
-                        sorted.insert(s, i);
-                        added = true;
-                        break;
-                    }
-                }
-
-                if(!added)
-                    sorted.append(i);
-            }
-        }
-        
-        qreal diff = right - left;
-        qreal space = diff / (sorted.count() - 1);
-
-        undoStack()->beginMacro("distribute selection");
-        for(int i = 0; i < sorted.count(); ++i) {
-            QPointF oldPos = sorted[i]->scenePos();
-            sorted[i]->setPos(left + (i * space), sorted[i]->scenePos().y());
-            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
-        }
-        undoStack()->endMacro();
+        distribute(0, 1);
 
     //center v
     } else if(distributionStyle == 2) {
-
-        qreal left = sceneRect().right();
-        qreal right = sceneRect().left();
-
-        foreach(QGraphicsItem* i, unsorted) {
-            if(i->scenePos().x() > right)
-                right = i->scenePos().x();
-            if(i->scenePos().x() < left)
-                left = i->scenePos().x();
-
-            if(sorted.count() <= 0) {
-                sorted.append(i);
-            } else {
-                bool added = false;
-                for(int s = 0; s < sorted.count(); ++s) {
-                    if(i->scenePos().x() < sorted[s]->scenePos().x()) {
-                        sorted.insert(s, i);
-                        added = true;
-                        break;
-                    }
-                }
-
-                if(!added)
-                    sorted.append(i);
-            }
-        }
-
-        //get the centers of the cells.
-        left += (sorted.first()->boundingRect().width() / 2);
-        right += (sorted.last()->boundingRect().width() / 2);
-
-        qreal diff = right - left;
-        qreal space = diff / (sorted.count() - 1);
-
-        undoStack()->beginMacro("distribute selection");
-        for(int i = 0; i < sorted.count(); ++i) {
-            qreal center = sorted[i]->boundingRect().width() / 2;
-            QPointF oldPos = sorted[i]->scenePos();
-            sorted[i]->setPos(left + (i * space) - center, sorted[i]->scenePos().y());
-            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
-        }
-        undoStack()->endMacro();
+        distribute(0, 2);
 
     //right
     } else if(distributionStyle == 3) {
-
-        qreal left = sceneRect().right();
-        qreal right = sceneRect().left();
-
-        foreach(QGraphicsItem* i, unsorted) {
-            qreal width = i->boundingRect().width();
-            qreal px = i->scenePos().x() + width;
-            if(px > right)
-                right = px;
-            if(px < left)
-                left = px;
-
-            if(sorted.count() <= 0) {
-                sorted.append(i);
-            } else {
-                bool added = false;
-                for(int s = 0; s < sorted.count(); ++s) {
-                    qreal curX = sorted[s]->scenePos().x() + sorted[s]->boundingRect().width();
-                    if(px < curX) {
-                        sorted.insert(s, i);
-                        added = true;
-                        break;
-                    }
-                }
-
-                if(!added)
-                    sorted.append(i);
-            }
-        }
-
-        qreal diff = right - left;
-        qreal space = diff / (sorted.count() - 1);
-
-        undoStack()->beginMacro("distribute selection");
-        for(int i = 0; i < sorted.count(); ++i) {
-            qreal width = sorted[i]->boundingRect().width();
-            QPointF oldPos = sorted[i]->scenePos();
-            sorted[i]->setPos((left + (i * space) - width), sorted[i]->scenePos().y());
-            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
-        }
-        undoStack()->endMacro();
+        distribute(0, 3);
 
     //top
     } else if(distributionStyle == 4) {
-
-        qreal top = sceneRect().bottom();
-        qreal bottom = sceneRect().top();
-
-        foreach(QGraphicsItem* i, unsorted) {
-            if(i->scenePos().y() < top)
-                top = i->scenePos().y();
-            if(i->scenePos().y() > bottom)
-                bottom = i->scenePos().y();
-
-            if(sorted.count() <= 0) {
-                sorted.append(i);
-            } else {
-                bool added = false;
-                for(int s = 0; s < sorted.count(); ++s) {
-                    if(i->scenePos().y() < sorted[s]->scenePos().y()) {
-                        sorted.insert(s, i);
-                        added = true;
-                        break;
-                    }
-                }
-
-                if(!added)
-                    sorted.append(i);
-            }
-        }
-
-        qreal diff = bottom - top;
-        qreal space = diff / (sorted.count() - 1);
-
-        undoStack()->beginMacro("distribute selection");
-        for(int i = 0; i < sorted.count(); ++i) {
-            QPointF oldPos = sorted[i]->scenePos();
-            sorted[i]->setPos(sorted[i]->scenePos().x(), top + (i * space));
-            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
-        }
-        undoStack()->endMacro();
+        distribute(1, 0);
 
     //center h
     } else if(distributionStyle == 5) {
-
-        qreal top = sceneRect().bottom();
-        qreal bottom = sceneRect().top();
-
-        foreach(QGraphicsItem* i, unsorted) {
-            if(i->scenePos().y() < top)
-                top = i->scenePos().y();
-            if(i->scenePos().y() > bottom)
-                bottom = i->scenePos().y();
-
-            if(sorted.count() <= 0) {
-                sorted.append(i);
-            } else {
-                bool added = false;
-                for(int s = 0; s < sorted.count(); ++s) {
-                    if(i->scenePos().y() < sorted[s]->scenePos().y()) {
-                        sorted.insert(s, i);
-                        added = true;
-                        break;
-                    }
-                }
-
-                if(!added)
-                    sorted.append(i);
-            }
-        }
-
-        //get the centers of the cells.
-        top += (sorted.first()->boundingRect().height() / 2);
-        bottom += (sorted.last()->boundingRect().height() / 2);
-
-        qreal diff = bottom - top;
-        qreal space = diff / (sorted.count() - 1);
-
-        undoStack()->beginMacro("distribute selection");
-        for(int i = 0; i < sorted.count(); ++i) {
-            qreal center = sorted[i]->boundingRect().height() / 2;
-            QPointF oldPos = sorted[i]->scenePos();
-            sorted[i]->setPos(sorted[i]->scenePos().x(), top + (i * space) - center);
-            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
-        }
-        undoStack()->endMacro();
-
+        distribute(2, 0);
+        
     //bottom
     } else if(distributionStyle == 6) {
-
-        qreal top = sceneRect().bottom();
-        qreal bottom = sceneRect().top();
-
-        foreach(QGraphicsItem* i, unsorted) {
-            qreal height = i->boundingRect().height();
-            qreal py = i->scenePos().y() + height;
-
-            if(py < top)
-                top = py;
-            if(py > bottom)
-                bottom = py;
-
-            if(sorted.count() <= 0) {
-                sorted.append(i);
-            } else {
-                bool added = false;
-                for(int s = 0; s < sorted.count(); ++s) {
-                    qreal curY = sorted[s]->scenePos().y() + sorted[s]->boundingRect().height();
-                    if(py < curY) {
-                        sorted.insert(s, i);
-                        added = true;
-                        break;
-                    }
-                }
-
-                if(!added)
-                    sorted.append(i);
-            }
-        }
-
-        qreal diff = bottom - top;
-        qreal space = diff / (sorted.count() - 1);
-
-        undoStack()->beginMacro("distribute selection");
-        for(int i = 0; i < sorted.count(); ++i) {
-            qreal height = sorted[i]->boundingRect().height();
-            QPointF oldPos = sorted[i]->scenePos();
-            sorted[i]->setPos(sorted[i]->scenePos().x(), top - height + (i * space));
-            undoStack()->push(new SetItemCoordinates(this, sorted[i], oldPos));
-        }
-        undoStack()->endMacro();
+        distribute(3, 0);
 
     //to path
     } else if(distributionStyle == 7) {
-
         distributeToPath();
 
     }
@@ -1246,7 +1007,129 @@ void Scene::align(int vertical, int horizontal)
 
 void Scene::distribute(int vertical, int horizontal)
 {
+    QList<QGraphicsItem*> unsorted = selectedItems();
+    QList<QGraphicsItem*> sortedH;
+    QList<QGraphicsItem*> sortedV;
+    
+    qreal left = sceneRect().right();
+    qreal right = sceneRect().left();
+    qreal top = sceneRect().bottom();
+    qreal bottom = sceneRect().top();
 
+    foreach(QGraphicsItem* i, unsorted) {
+        
+        if(horizontal != 0) {
+            qreal width = 0; //left, center
+
+            if(horizontal == 3)
+                width = i->boundingRect().width(); //right
+
+            qreal ptX = i->scenePos().x() + width;
+            if(ptX > right)
+                right = ptX;
+            if(ptX < left)
+                left = ptX;
+
+            if(sortedH.count() <= 0) {
+                sortedH.append(i);
+            } else {
+                bool added = false;
+                for(int s = 0; s < sortedH.count(); ++s) {
+                    qreal curX = sortedH[s]->scenePos().x() + sortedH[s]->boundingRect().width();
+                    if(ptX < curX) {
+                        sortedH.insert(s, i);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if(!added)
+                    sortedH.append(i);
+            }
+        }
+
+        if(vertical != 0) {
+            qreal height = 0; //left, center
+
+            if(vertical == 3)
+                height = i->boundingRect().height(); //right
+
+            qreal ptY = i->scenePos().y() + height;
+            if(ptY < top)
+                top = ptY;
+            if(ptY > bottom)
+                bottom = ptY;
+
+            if(sortedV.count() <= 0) {
+                sortedV.append(i);
+            } else {
+                bool added = false;
+                for(int s = 0; s < sortedV.count(); ++s) {
+                    qreal curY = sortedV[s]->scenePos().y() + sortedV[s]->boundingRect().height();
+                    if(ptY < curY) {
+                        sortedV.insert(s, i);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if(!added)
+                    sortedV.append(i);
+            }
+        }
+    }
+
+    undoStack()->beginMacro("distribute selection");
+    if(horizontal != 0) {
+        if(horizontal == 2) {
+            //get the centers of the cells.
+            left += (sortedH.first()->boundingRect().width() / 2);
+            right += (sortedH.last()->boundingRect().width() / 2);
+        }
+
+        qreal diff = right - left;
+        qreal spaceH = diff / (sortedH.count() - 1);
+
+        for(int i = 0; i < sortedH.count(); ++i) {
+            qreal adjustH = 0; //left
+
+            if(horizontal == 2)
+                adjustH = sortedH[i]->boundingRect().width() / 2; //center h
+            else if(horizontal == 3)
+                adjustH = sortedH[i]->boundingRect().width(); //right
+
+            QPointF oldPos = sortedH[i]->scenePos();
+            sortedH[i]->setPos(left + (i * spaceH) - adjustH, sortedH[i]->scenePos().y());
+            undoStack()->push(new SetItemCoordinates(this, sortedH[i], oldPos));
+        }
+    }
+
+    if(vertical != 0) {
+        if(vertical == 2) {
+            //get the centers of the cells.
+            top += (sortedV.first()->boundingRect().height() / 2);
+            bottom += (sortedV.last()->boundingRect().height() / 2);
+        }
+
+        qreal diff = bottom - top;
+        qreal spaceV = diff / (sortedV.count() - 1);
+
+
+        for(int i = 0; i < sortedV.count(); ++i) {
+            qreal adjustV = 0;
+
+            if(vertical == 2)
+                adjustV = sortedV[i]->boundingRect().height() / 2; //center v
+            else if(vertical == 3)
+                adjustV = sortedV[i]->boundingRect().height(); //bottom
+            
+            QPointF oldPos = sortedV[i]->scenePos();
+            sortedV[i]->setPos(sortedV[i]->scenePos().x(), top + (i * spaceV) - adjustV);
+            undoStack()->push(new SetItemCoordinates(this, sortedV[i], oldPos));
+        }
+    }
+
+    undoStack()->endMacro();
 }
 
 void Scene::alignToPath()
