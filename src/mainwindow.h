@@ -13,6 +13,7 @@
 
 #include "aligndock.h"
 #include "rowsdock.h"
+#include "mirrordock.h"
 
 #include <QModelIndex>
 
@@ -79,6 +80,7 @@ private slots:
     void viewZoomOut();
     void viewShowRowsDock();
     void viewShowAlignDock();
+    void viewShowMirrorDock();
 
     void menuModesAboutToShow();
     
@@ -160,6 +162,10 @@ private slots:
 
     void alignSelection(int style);
     void distributeSelection(int style);
+    void arrangeGrid(QSize grid, QSize alignment, QSize spacing);
+
+    void mirror(int direction);
+    void rotate(qreal degrees);
     
 private:
     QColor mNewDocWidgetColor;
@@ -179,8 +185,9 @@ private:
     QDockWidget* mUndoDock;
     UndoGroup mUndoGroup;
 
-    AlignDock *mAlignDock;
-    RowsDock *mRowsDock;
+    AlignDock* mAlignDock;
+    RowsDock* mRowsDock;
+    MirrorDock* mMirrorDock;
     
     int mEditMode;
     QString mStitch;

@@ -34,6 +34,7 @@ set(crochet_qobject_headers
     roweditdialog.h
     rowsdock.h
     aligndock.h
+    mirrordock.h
     )
 
 set(crochet_resources

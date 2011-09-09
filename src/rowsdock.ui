@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>216</width>
-    <height>256</height>
+    <height>325</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -195,13 +195,6 @@
       </property>
      </widget>
     </item>
-    <item row="9" column="3" colspan="2">
-     <widget class="QPushButton" name="arrange">
-      <property name="text">
-       <string>Arrange</string>
-      </property>
-     </widget>
-    </item>
     <item row="6" column="3">
      <widget class="QLabel" name="label_8">
       <property name="sizePolicy">
@@ -239,12 +232,12 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>20</height>
+        <height>10</height>
        </size>
       </property>
      </spacer>
     </item>
-    <item row="8" column="0" colspan="5">
+    <item row="8" column="0" colspan="3">
      <spacer name="verticalSpacer_2">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -252,10 +245,17 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>20</height>
+        <height>10</height>
        </size>
       </property>
      </spacer>
+    </item>
+    <item row="8" column="3" colspan="2">
+     <widget class="QPushButton" name="arrange">
+      <property name="text">
+       <string>Arrange</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

@@ -49,5 +49,14 @@
         <file>images/align_path.svg</file>
         <file>images/distribute_path.svg</file>
         <file>images/align_distribute.svg</file>
+        <file>images/rows_columns.svg</file>
+        <file>images/mirror_down.svg</file>
+        <file>images/mirror_left.svg</file>
+        <file>images/mirror_right.svg</file>
+        <file>images/mirror_rotate.svg</file>
+        <file>images/mirror_up.svg</file>
+        <file>images/rotate90.svg</file>
+        <file>images/rotate180.svg</file>
+        <file>images/rotate270.svg</file>
     </qresource>
 </RCC>

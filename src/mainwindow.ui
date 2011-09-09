@@ -323,6 +323,7 @@
     <addaction name="separator"/>
     <addaction name="actionShowAlignDock"/>
     <addaction name="actionShowRowsDock"/>
+    <addaction name="actionShowMirrorDock"/>
     <addaction name="separator"/>
     <addaction name="actionViewFullScreen"/>
    </widget>
@@ -578,6 +579,8 @@
    <addaction name="actionIndicatorMode"/>
    <addaction name="separator"/>
    <addaction name="actionShowAlignDock"/>
+   <addaction name="actionShowRowsDock"/>
+   <addaction name="actionShowMirrorDock"/>
    <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">
@@ -994,11 +997,27 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/rows_columns.svg</normaloff>:/images/rows_columns.svg</iconset>
+   </property>
    <property name="text">
     <string>Show Rows and Stitches</string>
    </property>
    <property name="toolTip">
     <string>Show Rows and Stitches</string>
+   </property>
+  </action>
+  <action name="actionShowMirrorDock">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/mirror_rotate.svg</normaloff>:/images/mirror_rotate.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Show Mirror and Rotate</string>
    </property>
   </action>
  </widget>

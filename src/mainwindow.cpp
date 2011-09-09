@@ -43,6 +43,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     mUpdater(0),
     mAlignDock(0),
     mRowsDock(0),
+    mMirrorDock(0),
     mEditMode(10),
     mStitch("ch"),
     mFgColor(QColor(Qt::black)),
@@ -194,6 +195,7 @@ void MainWindow::setupDocks()
     mAlignDock->setObjectName("alignDock");
     connect(mAlignDock, SIGNAL(align(int)), SLOT(alignSelection(int)));
     connect(mAlignDock, SIGNAL(distribute(int)), SLOT(distributeSelection(int)));
+    connect(mAlignDock, SIGNAL(visibilityChanged(bool)), ui->actionShowAlignDock, SLOT(setChecked(bool)));
 
     //Rows & Stitches Dock.
     mRowsDock = new RowsDock(this);      
@@ -201,7 +203,16 @@ void MainWindow::setupDocks()
     mRowsDock->setVisible(false);
     mRowsDock->setObjectName("rowsDock");
     connect(mRowsDock, SIGNAL(arrangeGrid(QSize,QSize,QSize)), SLOT(arrangeGrid(QSize,QSize,QSize)));
+    connect(mRowsDock, SIGNAL(visibilityChanged(bool)), ui->actionShowRowsDock, SLOT(setChecked(bool)));
     
+    //Mirror & Rotate.
+    mMirrorDock = new MirrorDock(this);
+    mMirrorDock->setFloating(true);
+    mMirrorDock->setVisible(false);
+    mMirrorDock->setObjectName("mirrorDock");
+    connect(mMirrorDock, SIGNAL(mirror(int)), SLOT(mirror(int)));
+    connect(mMirrorDock, SIGNAL(rotate(qreal)), SLOT(rotate(qreal)));
+    connect(mMirrorDock, SIGNAL(visibilityChanged(bool)), ui->actionShowMirrorDock, SLOT(setChecked(bool)));
 }
 
 void MainWindow::setupMenus()
@@ -290,6 +301,7 @@ void MainWindow::setupMenus()
 
     connect(ui->actionShowAlignDock, SIGNAL(triggered()), SLOT(viewShowAlignDock()));
     connect(ui->actionShowRowsDock, SIGNAL(triggered()), SLOT(viewShowRowsDock()));
+    connect(ui->actionShowMirrorDock, SIGNAL(triggered()), SLOT(viewShowMirrorDock()));
     
     //Modes menu
     connect(ui->menuModes, SIGNAL(aboutToShow()), SLOT(menuModesAboutToShow()));
@@ -859,6 +871,7 @@ void MainWindow::menuViewAboutToShow()
 
     ui->actionShowAlignDock->setChecked(mAlignDock->isVisible());
     ui->actionShowRowsDock->setChecked(mRowsDock->isVisible());
+    ui->actionShowMirrorDock->setChecked(mMirrorDock->isVisible());
 }
 
 void MainWindow::fileNew()
@@ -1025,6 +1038,11 @@ void MainWindow::viewShowAlignDock()
 void MainWindow::viewShowRowsDock()
 {
     mRowsDock->setVisible(ui->actionShowRowsDock->isChecked());
+}
+
+void MainWindow::viewShowMirrorDock()
+{
+    mMirrorDock->setVisible(ui->actionShowMirrorDock->isChecked());
 }
 
 void MainWindow::menuModesAboutToShow()
@@ -1332,6 +1350,16 @@ void MainWindow::arrangeGrid(QSize grid, QSize alignment, QSize spacing)
     CrochetTab* tab = curCrochetTab();
     if(tab)
         tab->arrangeGrid(grid, alignment, spacing);
+}
+
+void MainWindow::mirror(int direction)
+{
+
+}
+
+void MainWindow::rotate(qreal degrees)
+{
+
 }
 
 void MainWindow::copy()

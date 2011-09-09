@@ -305,6 +305,11 @@ void CrochetTab::distributeSelection(int distributionStyle)
     mScene->distributeSelection(distributionStyle);
 }
 
+void CrochetTab::arrangeGrid(QSize grid, QSize alignment, QSize spacing)
+{
+
+}
+
 void CrochetTab::copy()
 {
     mScene->copy();
