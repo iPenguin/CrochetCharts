@@ -1158,10 +1158,18 @@ void Scene::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSele
     } else {
         //create new cells.
         //TODO: figure out how to deal with spacing.
+        qreal padding = 10;
 
-
-        
-        
+        for(int x = grid.width(); x > 0; --x) {
+            for(int y = grid.height(); y > 0; --y) {
+                CrochetCell* c = new CrochetCell();
+                //FIXME: use the user selected stitch
+                c->setStitch("ch");
+                addItem(c);
+                c->setPos((c->stitch()->width() + padding) * x, (c->stitch()->height() + padding) * y);
+                c->setToolTip(QString("Row: %1, Stitch: %2").arg(x).arg(y));
+            }
+        }
     }
 }
 

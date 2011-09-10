@@ -17,8 +17,8 @@ RowsDock::RowsDock(QWidget *parent) :
     verticalGroup.addButton(ui->alignBottom);
     ui->alignTop->setChecked(true);
 
-    connect(ui->arrange, SIGNAL(clicked(bool)), SLOT(generateArrangement()));
-    connect(ui->createGrid, SIGNAL(clicked(bool)), SLOT(generateArrangement()));
+    connect(ui->arrangeBttn, SIGNAL(clicked(bool)), SLOT(generateArrangement()));
+    connect(ui->createGridBttn, SIGNAL(clicked(bool)), SLOT(generateArrangement()));
 }
 
 RowsDock::~RowsDock()
