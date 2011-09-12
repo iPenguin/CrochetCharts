@@ -167,21 +167,10 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeTextElement("anchor_x", QString::number(c->mAnchor.x()));
             stream->writeTextElement("anchor_y", QString::number(c->mAnchor.y()));
 
-            stream->writeStartElement("transformation");
-                QTransform trans = c->transform();
-                stream->writeTextElement("m11", QString::number(trans.m11()));
-                stream->writeTextElement("m12", QString::number(trans.m12()));
-                stream->writeTextElement("m13", QString::number(trans.m13()));
-                stream->writeTextElement("m21", QString::number(trans.m21()));
-                stream->writeTextElement("m22", QString::number(trans.m22()));
-                stream->writeTextElement("m23", QString::number(trans.m23()));
-                stream->writeTextElement("m31", QString::number(trans.m31()));
-                stream->writeTextElement("m32", QString::number(trans.m32()));
-                stream->writeTextElement("m33", QString::number(trans.m33()));
-            stream->writeEndElement(); //transformation
-
             stream->writeTextElement("angle", QString::number(c->angle()));
             stream->writeTextElement("scale", QString::number(c->scale()));
+            stream->writeTextElement("pivotPtX", QString::number(c->transformOriginPoint().x()));
+            stream->writeTextElement("pivotPtY", QString::number(c->transformOriginPoint().y()));
             stream->writeEndElement(); //end cell
         }
 

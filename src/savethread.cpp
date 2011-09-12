@@ -8,9 +8,7 @@
 #include "stitch.h"
 
 #include <QObject>
-
 #include <QString>
-#include <QTransform>
 
 #include "scene.h"
 
@@ -31,8 +29,9 @@ void SaveThread::run()
     Stitch* s = 0;
     int row = -1, column = -1;
     QString color;
-    qreal x = 0, y = 0, anchorX = 0, anchorY = 0;
-    QTransform transform;
+    qreal x = 0, y = 0,
+          anchorX = 0, anchorY = 0,
+          pivotPtX = 0, pivotPtY = 0;
     qreal angle = 0.0, scale = 0.0;
 
     while(!(stream->isEndElement() && stream->name() == "cell")) {
@@ -56,12 +55,14 @@ void SaveThread::run()
             anchorX = stream->readElementText().toDouble();
         } else if(tag == "anchor_y") {
             anchorY = stream->readElementText().toDouble();
-        } else if(tag == "transformation") {
-            transform = loadTransform(stream);
         } else if(tag == "angle") {
             angle = stream->readElementText().toDouble();
         } else if(tag == "scale") {
             scale = stream->readElementText().toDouble();
+        } else if(tag == "pivotPtX") {
+            pivotPtX = stream->readElementText().toDouble();
+        } else if(tag == "pivotPtY") {
+            pivotPtY = stream->readElementText().toDouble();
         }
     }
 
@@ -74,48 +75,12 @@ void SaveThread::run()
     } else {
         c->setStitch(s);
     }
+
+    QPointF pivotPt = QPointF(pivotPtX, pivotPtY);
     
     c->setAnchor(anchorX, anchorY);
     c->setPos(x, y);
-    c->setTransform(transform);
     c->setColor(QColor(color));
-    c->mAngle = angle;
-    c->mScale = scale;
-}
-
-QTransform SaveThread::loadTransform(QXmlStreamReader* stream)
-{
-    QTransform transform;
-    
-    qreal m11 = transform.m11(), m12 = transform.m12(), m13 = transform.m13(),
-          m21 = transform.m21(), m22 = transform.m22(), m23 = transform.m23(),
-          m31 = transform.m31(), m32 = transform.m32(), m33 = transform.m33();
-    
-    while(!(stream->isEndElement() && stream->name() == "transformation")) {
-        stream->readNext();
-        QString tag = stream->name().toString();
-        
-        if(tag == "m11") {
-            m11 = (qreal)stream->readElementText().toDouble();
-        } else if(tag == "m12") {
-            m12 = (qreal)stream->readElementText().toDouble();
-        } else if(tag == "m13") {
-            m13 = (qreal)stream->readElementText().toDouble();
-        } else if(tag == "m21") {
-            m21 = (qreal)stream->readElementText().toDouble();
-        } else if(tag == "m22") {
-            m22 = (qreal)stream->readElementText().toDouble();
-        } else if(tag == "m23") {
-            m23 = (qreal)stream->readElementText().toDouble();
-        } else if(tag == "m31") {
-            m31 = (qreal)stream->readElementText().toDouble();
-        } else if(tag == "m32") {
-            m32 = (qreal)stream->readElementText().toDouble();
-        } else if(tag == "m33") {
-            m33 = (qreal)stream->readElementText().toDouble();
-        }
-    }
-    
-    transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
-    return transform;
+    c->setRotation(angle, pivotPt);
+    c->setScale(scale, pivotPt);
 }

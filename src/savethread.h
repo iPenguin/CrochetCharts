@@ -21,9 +21,6 @@ public:
 
     void run();
 
-private:
-    QTransform loadTransform(QXmlStreamReader* stream);
-
     CrochetTab* tab;
     QXmlStreamReader* stream;
     
