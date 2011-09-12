@@ -52,7 +52,7 @@ void RowsDock::generateArrangement()
 
     bool useSelection = true;
 
-    if(sender() == ui->createGrid)
+    if(sender() == ui->createGridBttn)
         useSelection = false;
     
     emit arrangeGrid(grid, alignment, spacing, useSelection);
