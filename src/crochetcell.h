@@ -34,6 +34,8 @@ public:
 
     qreal origHeight() { return mOrigHeight; }
     qreal origWidth() { return mOrigWidth; }
+
+    CrochetCell* copy();
     
 public slots:
 

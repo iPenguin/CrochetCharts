@@ -77,3 +77,15 @@ void CrochetCell::setRotation(qreal angle, QPointF pivotPoint)
     setAngle(angle);
     
 }
+
+CrochetCell* CrochetCell::copy()
+{
+    CrochetCell* c = new CrochetCell();
+
+    c->setStitch(stitch());
+    c->setColor(color());
+    c->setRotation(rotation(), transformOriginPoint());
+    c->setScale(scale(), transformOriginPoint());
+
+    return c;
+}
