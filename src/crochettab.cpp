@@ -310,6 +310,16 @@ void CrochetTab::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool us
     mScene->arrangeGrid(grid, alignment, spacing, useSelection);
 }
 
+void CrochetTab::mirror(int direction)
+{
+    mScene->mirror(direction);
+}
+
+void CrochetTab::rotate(qreal degrees)
+{
+    mScene->rotate(degrees);
+}
+
 void CrochetTab::copy()
 {
     mScene->copy();

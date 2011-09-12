@@ -96,6 +96,15 @@ public:
     void distributeSelection(int distributionStyle);
     void arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection);
     
+    /**
+     * directions: left = 1
+     *             right = 2
+     *             up = 3
+     *             down = 4
+     */
+    void mirror(int direction);
+    void rotate(qreal degrees);
+
     void copy();
     void cut();
     void paste();
@@ -186,6 +195,8 @@ protected:
     void updateStitchRenderer();
 
     void hideRowLines();
+
+    QRectF selectedItemsBoundingRect();
     
 protected:
     /**

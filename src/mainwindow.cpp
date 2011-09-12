@@ -1354,12 +1354,16 @@ void MainWindow::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool us
 
 void MainWindow::mirror(int direction)
 {
-
+    CrochetTab* tab = curCrochetTab();
+    if(tab)
+        tab->mirror(direction);
 }
 
 void MainWindow::rotate(qreal degrees)
 {
-
+    CrochetTab* tab = curCrochetTab();
+    if(tab)
+        tab->rotate(degrees);
 }
 
 void MainWindow::copy()
