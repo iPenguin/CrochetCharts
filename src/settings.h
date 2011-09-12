@@ -26,13 +26,19 @@ public:
 
     void trialVersionMessage(QWidget* parent);
     
-    //The folder where the user's settings are stored. W/trailing slash.
+    /**
+     * The folder where the user's settings are stored. W/trailing slash.
+     */
     QString userSettingsFolder();
 
-    //return the default value of a given key.
+    /**
+     * return the default value of a given key.
+     */
     QVariant defaultValue ( const QString& key ) const;
 
-    //list of open files. All files should be added toLower().
+    /**
+     * list of open files. All files should be added toLower().
+     */
     QMap<QString, MainWindow*> files;
 
     void saveSettings() { mSettings.sync(); }
