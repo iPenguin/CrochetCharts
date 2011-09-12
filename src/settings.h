@@ -35,12 +35,19 @@ public:
     //list of open files. All files should be added toLower().
     QMap<QString, MainWindow*> files;
 
-    //list of recent files. All strings added case sensitively (they'll be used to open the files).
-    QStringList recentFiles;
-
     void saveSettings() { mSettings.sync(); }
+
+    void addRecentFile(QString fileName);
+
+    QStringList recentFiles() { return mRecentFiles; }
+    void setRecentFiles(QStringList files) { mRecentFiles = files; }
     
 private:
+    /**
+     * list of recent files. All strings added case sensitively (they'll be used to open the files).
+     */
+    QStringList mRecentFiles;
+    
     void initDemoVersion();
     static Settings* mInstance;
     

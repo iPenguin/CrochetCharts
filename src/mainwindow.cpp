@@ -362,10 +362,7 @@ void MainWindow::openRecentFile()
 
 void MainWindow::addToRecentFiles(QString fileName)
 {
-
-    if(Settings::inst()->recentFiles.contains(fileName))
-        Settings::inst()->recentFiles.removeAll(fileName);
-    Settings::inst()->recentFiles.prepend(fileName);
+    Settings::inst()->addRecentFile(fileName);
 }
 
 void MainWindow::menuRecentFilesAboutToShow()
@@ -376,7 +373,7 @@ void MainWindow::menuRecentFilesAboutToShow()
 void MainWindow::setupRecentFiles()
 {
     QStringList files;
-    QStringList list = Settings::inst()->recentFiles;
+    QStringList list = Settings::inst()->recentFiles();
     
     int maxRecentFiles = Settings::inst()->value("maxRecentFiles").toInt();
     mRecentFilesActs.clear();
@@ -411,7 +408,7 @@ void MainWindow::setupRecentFiles()
     ui->menuOpenRecent->addActions(mRecentFilesActs);
 
     //update the master list.
-    Settings::inst()->recentFiles = files;
+    Settings::inst()->setRecentFiles(files);
 }
 
 void MainWindow::updateMenuItems()

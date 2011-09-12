@@ -30,12 +30,12 @@ Settings::Settings()
 {
     setupValueList();
     initDemoVersion();
-    recentFiles = value("recentFiles").toStringList();
+    mRecentFiles = value("recentFiles").toStringList();
 }
 
 Settings::~Settings()
 {
-    setValue("recentFiles", QVariant(recentFiles));
+    setValue("recentFiles", QVariant(mRecentFiles));
 }
 
 void Settings::initDemoVersion()
@@ -145,6 +145,15 @@ void Settings::setupValueList() {
     mValueList["showColorBorder"] = QVariant(true);
     mValueList["showColorTitle"] = QVariant(true);
 
+}
+
+void Settings::addRecentFile(QString fileName)
+{
+
+    if(mRecentFiles.contains(fileName))
+        mRecentFiles.removeAll(fileName);
+    mRecentFiles.prepend(fileName);
+    setValue("recentFiles", QVariant(mRecentFiles));
 }
 
 QString Settings::userSettingsFolder()
