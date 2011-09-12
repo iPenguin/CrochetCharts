@@ -1239,7 +1239,7 @@ void Scene::copy()
 
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
                 stream << c->type() << c->name() << c->color()
-                       << c->angle() << c->scale() << c->transformOriginPoint() << c->scenePos();
+                       << c->angle() << c->scale() << c->transformOriginPoint() << c->pos();
 
                 break;
             }
@@ -1280,8 +1280,6 @@ void Scene::paste()
             QPointF pos, transPoint;
 
             stream >> name >> color >> angle >> scale >> transPoint >> pos;
-            pos.rx() +=5;
-            pos.ry() +=5;
 
             AddCell* addCmd = new AddCell(this, pos);
             undoStack()->push(addCmd);
@@ -1289,8 +1287,10 @@ void Scene::paste()
 
             c->setStitch(name);
             c->setColor(color);
-            c->setScale(scale, transPoint);
+
+            c->setAngle(angle);
             c->setRotation(angle, transPoint);
+            c->setScale(scale, transPoint);
             c->setSelected(true);
 
         } else if(type == Indicator::Type) {
@@ -1300,8 +1300,6 @@ void Scene::paste()
             QString text;
 
             stream >> pos >> text;
-            pos.rx() += 5;
-            pos.ry() += 5;
 
             i->setText(text);
             addItem(i);
