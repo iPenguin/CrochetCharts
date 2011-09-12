@@ -71,9 +71,6 @@ public:
     int rowCount();
     int columnCount(int row);
     int maxColumnCount();
-    
-    virtual void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
-    virtual void createRow(int row, int columns, QString stitch);
 
     void setEditMode(EditMode mode) { mMode = mode; if(mode != Scene::RowEdit) hideRowLines(); }
     EditMode editMode() { return mMode; }

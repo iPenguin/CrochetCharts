@@ -153,23 +153,6 @@ int Scene::maxColumnCount()
     return max;
 }
 
-void Scene::createChart(int rows, int cols, QString stitch, QSizeF rowSize)
-{
-    Q_UNUSED(rows);
-    Q_UNUSED(cols);
-    Q_UNUSED(stitch);
-    Q_UNUSED(rowSize);
-
-}
-
-void Scene::createRow(int row, int columns, QString stitch)
-{
-    Q_UNUSED(row);
-    Q_UNUSED(columns);
-    Q_UNUSED(stitch);
-
-}
-
 void Scene::removeCell(CrochetCell* c)
 {
     removeItem(c);
@@ -1143,7 +1126,7 @@ void Scene::distributeToPath()
 
 }
 
-void Scene::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection)
+void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelection)
 {
 
     if(useSelection) {
@@ -1160,16 +1143,24 @@ void Scene::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSele
         //TODO: figure out how to deal with spacing.
         qreal padding = 10;
 
-        for(int x = grid.width(); x > 0; --x) {
-            for(int y = grid.height(); y > 0; --y) {
+        for(int x = grd.width(); x > 0; --x) {
+
+            QList<CrochetCell*> r;
+            for(int y = grd.height(); y > 0; --y) {
                 CrochetCell* c = new CrochetCell();
                 //FIXME: use the user selected stitch
                 c->setStitch("ch");
                 addItem(c);
-                c->setPos((c->stitch()->width() + padding) * x, (c->stitch()->height() + padding) * y);
-                c->setToolTip(QString("Row: %1, Stitch: %2").arg(x).arg(y));
+                r.append(c);
+
+                c->setPos((c->stitch()->width() + padding) * y, (c->stitch()->height() + padding) * x);
+                c->setToolTip(QString("Row: %1, Stitch: %2").arg(grd.width() - x + 1).arg(r.indexOf(c) + 1));
             }
+
+            qDebug() << "row:" << r;
+            grid.insert(0, r);
         }
+        qDebug() << "Grid:" << grid;
     }
 }
 

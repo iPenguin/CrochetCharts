@@ -204,7 +204,7 @@ QUndoStack* CrochetTab::undoStack()
 
 void CrochetTab::createChart(int rows, int cols, QString defStitch, QSizeF rowSize)
 {
-    mScene->createChart(rows, cols, defStitch, rowSize);
+    //mScene->createChart(rows, cols, defStitch, rowSize);
 
     SceneRounds* rounds = static_cast<SceneRounds*>(mScene);
     if(rounds) {
