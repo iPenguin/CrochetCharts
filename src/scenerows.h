@@ -35,7 +35,7 @@ public:
     void createChart(int rows, int cols, QString stitch, QSizeF rowSize);
 
 private:
-    void setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor);
+    void setCellPosition(int row, int column, CrochetCell* c, int columns);
 
 };
 

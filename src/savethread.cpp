@@ -30,7 +30,6 @@ void SaveThread::run()
     int row = -1, column = -1;
     QString color;
     qreal x = 0, y = 0,
-          anchorX = 0, anchorY = 0,
           pivotPtX = 0, pivotPtY = 0;
     qreal angle = 0.0, scale = 0.0;
 
@@ -51,10 +50,6 @@ void SaveThread::run()
             x = stream->readElementText().toDouble();
         } else if(tag == "y") {
             y = stream->readElementText().toDouble();
-        } else if(tag == "anchor_x") {
-            anchorX = stream->readElementText().toDouble();
-        } else if(tag == "anchor_y") {
-            anchorY = stream->readElementText().toDouble();
         } else if(tag == "angle") {
             angle = stream->readElementText().toDouble();
         } else if(tag == "scale") {
@@ -78,7 +73,6 @@ void SaveThread::run()
 
     QPointF pivotPt = QPointF(pivotPtX, pivotPtY);
     
-    c->setAnchor(anchorX, anchorY);
     c->setPos(x, y);
     c->setColor(QColor(color));
     c->setRotation(angle, pivotPt);

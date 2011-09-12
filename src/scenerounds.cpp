@@ -87,12 +87,12 @@ void SceneRounds::createRow(int row, int columns, QString stitch)
         c->setStitch(stitch, (row % 2));
         addItem(c);
         modelRow.append(c);
-        setCellPosition(row, i, c, columns, true);
+        setCellPosition(row, i, c, columns);
     }
     grid.insert(row, modelRow);
 }
 
-void SceneRounds::setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor)
+void SceneRounds::setCellPosition(int row, int column, CrochetCell* c, int columns)
 {
     double widthInDegrees = 360.0 / columns;
 
@@ -102,8 +102,6 @@ void SceneRounds::setCellPosition(int row, int column, CrochetCell* c, int colum
     QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
 
     qreal delta = defaultSize().width() * 0.5;
-    if(updateAnchor || c->anchor().isNull())
-        c->setAnchor(finish.x() - delta, finish.y());
     c->setPos(finish.x() - delta, finish.y());
     c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
     c->setAngle(degrees + 90);

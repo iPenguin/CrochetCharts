@@ -45,7 +45,7 @@ protected:
      */
     int getClosestColumn(QPointF mousePosition, int row);
 
-    void setCellPosition(int row, int column, CrochetCell* c, int columns, bool updateAnchor);
+    void setCellPosition(int row, int column, CrochetCell* c, int columns);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);

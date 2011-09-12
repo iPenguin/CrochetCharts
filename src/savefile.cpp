@@ -164,8 +164,6 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeTextElement("color", c->color().name());
             stream->writeTextElement("x", QString::number(c->pos().x()));
             stream->writeTextElement("y", QString::number(c->pos().y()));
-            stream->writeTextElement("anchor_x", QString::number(c->mAnchor.x()));
-            stream->writeTextElement("anchor_y", QString::number(c->mAnchor.y()));
 
             stream->writeTextElement("angle", QString::number(c->angle()));
             stream->writeTextElement("scale", QString::number(c->scale()));

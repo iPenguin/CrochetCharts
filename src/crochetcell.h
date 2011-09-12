@@ -21,11 +21,6 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     void setHighlight(bool state) { mHighlight = state; update(); }
 
-    /**
-     * The anchor is the original position of the stitch when the chart is created.
-     */
-    QPointF anchor() { return mAnchor; }
-
     qreal scale() const { return mScale; }
     void setScale(qreal newScale, QPointF pivotPoint);
 
@@ -39,15 +34,6 @@ public:
     
 public slots:
 
-    /**
-     * The anchor is the original position of the stitch when the chart is created.
-     */
-    void setAnchor(QPointF a) { mAnchor = a; }
-    /**
-     * The anchor is the original position of the stitch when the chart is created.
-     */
-    void setAnchor(qreal x, qreal y) { mAnchor = QPointF(x, y); }
-
     void setStitch(QString s, bool useAltRenderer = false);
     void setStitch(Stitch* s, bool useAltRenderer = false);
     
@@ -58,8 +44,6 @@ private:
     qreal mOrigHeight;
 
     bool mHighlight;
-
-    QPointF mAnchor;
 
 };
 
