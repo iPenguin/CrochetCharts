@@ -62,7 +62,9 @@ SaveFile::FileError SaveFile::save()
     if(!mInternalStitchSet) {
         mInternalStitchSet = new StitchSet();
         mInternalStitchSet->isTemporary = true;
+        mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
         StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
+        
     } else
         mInternalStitchSet->clearStitches();
 
