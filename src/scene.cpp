@@ -1218,11 +1218,11 @@ void Scene::paste()
 
     clearSelection();
 
+    undoStack()->beginMacro("paste items");
     while(!stream.atEnd()) {
 
         stream >> type;
         if(type == CrochetCell::Type) {
-            CrochetCell* c = new CrochetCell();
             QString name;
             QColor color;
             qreal angle, scale;
@@ -1232,17 +1232,19 @@ void Scene::paste()
             pos.rx() +=5;
             pos.ry() +=5;
 
-            addCell(c);
+            AddCell* addCmd = new AddCell(this, pos);
+            undoStack()->push(addCmd);
+            CrochetCell* c = addCmd->cell();
+
             c->setStitch(name);
             c->setColor(color);
-            c->setAngle(angle);
             c->setScale(scale, transPoint);
-            c->setPos(pos);
+            c->setRotation(angle, transPoint);
             c->setSelected(true);
 
         } else if(type == Indicator::Type) {
             Indicator* i = new Indicator();
-
+//FIXME: add this indicator to the undo stack.
             QPointF pos;
             QString text;
 
@@ -1257,6 +1259,7 @@ void Scene::paste()
 
         }
     }
+    undoStack()->endMacro();
 }
 
 void Scene::cut()
