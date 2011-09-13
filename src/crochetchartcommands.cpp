@@ -17,7 +17,7 @@ SetCellStitch::SetCellStitch(Scene* s, CrochetCell* cell, QString newSt, QUndoCo
     c = cell;
     oldStitch = c->name();
     newStitch = newSt;
-    setText(QObject::tr("Change Stitch: %1 -> %2").arg(oldStitch).arg(newStitch));
+    setText(QObject::tr("change stitch"));
 }
 
 void SetCellStitch::redo()
@@ -42,7 +42,7 @@ SetCellColor::SetCellColor(Scene* s, CrochetCell* cell, QColor newCl, QUndoComma
     c = cell;
     oldColor = c->color();
     newColor = newCl;
-    setText(QObject::tr("Change Color: %1 -> %2").arg(oldColor.name()).arg(newColor.name()));
+    setText(QObject::tr("change color"));
 }
 
 void SetCellColor::redo()
@@ -67,7 +67,7 @@ SetCellRotation::SetCellRotation(Scene* s, CrochetCell* cell, qreal oldAngl, QPo
     newAngle = cell->angle();
     pvtPt = pivotPt;
     scale = c->scale();
-    setText(QObject::tr("Change cell rotation"));
+    setText(QObject::tr("change angle"));
 }
 
 void SetCellRotation::redo()
@@ -92,7 +92,7 @@ SetItemCoordinates::SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF ol
     i = item;
     oldCoord = oldPos;
     newCoord = i->pos();
-    setText(QObject::tr("Change item position"));
+    setText(QObject::tr("change position"));
     
 }
 
@@ -117,7 +117,7 @@ SetCellScale::SetCellScale(Scene* s, CrochetCell* cell, qreal oldScle, QPointF p
     pivotPt = pvtPt;
     newScale = cell->scale();
     oldScale = oldScle;
-    setText(QObject::tr("Change cell scale"));
+    setText(QObject::tr("change scale"));
 }
 
 void SetCellScale::undo()
@@ -140,7 +140,7 @@ AddCell::AddCell(Scene* s, QPointF pos, QUndoCommand* parent)
     position = pos;
     c = new CrochetCell();
     scene = s;
-    setText(QObject::tr("Add cell"));
+    setText(QObject::tr("add stitch"));
 
 }
 
@@ -164,7 +164,7 @@ RemoveCell::RemoveCell(Scene* s, CrochetCell* cell, QUndoCommand* parent)
     c = cell;
     scene = s;
     position = c->pos();
-    setText(QObject::tr("Remove cell"));
+    setText(QObject::tr("remove stitch"));
 }
 
 void RemoveCell::redo()
@@ -187,7 +187,7 @@ AddItem::AddItem(Scene* s, QPointF pos, QUndoCommand* parent)
     position = pos;
     scene = s;
     i->setPos(pos);
-    setText(QObject::tr("Add cell"));
+    setText(QObject::tr("add item"));
 }
 
 void AddItem::undo()
