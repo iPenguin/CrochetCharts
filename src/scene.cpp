@@ -1260,8 +1260,8 @@ void Scene::rotate(qreal degrees)
 
     QPointF pivotPt = rect.bottomLeft();
     
-    group->setTransformOriginPoint(group->mapToScene(group->boundingRect().bottomLeft()));
-    group->rotate(degrees);
+    //group->setTransformOriginPoint(group->mapToScene(group->boundingRect().bottomLeft()));
+    group->setTransform(QTransform().translate(pivotPt.x(), pivotPt.y()).rotate(degrees).translate(-pivotPt.x(), -pivotPt.y()));
     destroyItemGroup(group);
     
 }
