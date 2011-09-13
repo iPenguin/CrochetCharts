@@ -22,6 +22,9 @@ AlignDock::AlignDock(QWidget *parent) :
     connect(ui->distributeRight, SIGNAL(clicked(bool)), SLOT(generateDistribution()));
     connect(ui->distributeTop, SIGNAL(clicked(bool)), SLOT(generateDistribution()));
     connect(ui->distributeToPath, SIGNAL(clicked(bool)), SLOT(generateDistribution()));
+
+    ui->alignToPath->setVisible(false);
+    ui->distributeToPath->setVisible(false);
 }
 
 AlignDock::~AlignDock()
