@@ -1251,6 +1251,22 @@ void Scene::mirror(int direction)
 
 void Scene::rotate(qreal degrees)
 {
+    if(selectedItems().count() <= 0)
+        return;
+
+    QRectF rect = selectedItemsBoundingRect();
+
+    QPointF pivotPt = rect.bottomLeft();
+
+    undoStack()->beginMacro("rotate selection");
+    foreach(QGraphicsItem* item, selectedItems()) {
+        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+        qreal oldAngle = c->angle();
+        c->setTransformOriginPoint(pivotPt);
+        c->setRotation(degrees);
+        undoStack()->push(new SetCellRotation(this, c, oldAngle, pivotPt));
+    }
+    undoStack()->endMacro();
 
 }
 
