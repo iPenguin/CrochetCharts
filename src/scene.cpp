@@ -1256,18 +1256,14 @@ void Scene::rotate(qreal degrees)
 
     QRectF rect = selectedItemsBoundingRect();
 
+    QGraphicsItemGroup* group = createItemGroup(selectedItems());
+
     QPointF pivotPt = rect.bottomLeft();
-
-    undoStack()->beginMacro("rotate selection");
-    foreach(QGraphicsItem* item, selectedItems()) {
-        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-        qreal oldAngle = c->angle();
-        c->setTransformOriginPoint(pivotPt);
-        c->setRotation(degrees, pivotPt);
-        undoStack()->push(new SetCellRotation(this, c, oldAngle, pivotPt));
-    }
-    undoStack()->endMacro();
-
+    
+    group->setTransformOriginPoint(group->mapToScene(group->boundingRect().bottomLeft()));
+    group->rotate(degrees);
+    destroyItemGroup(group);
+    
 }
 
 void Scene::copy()
