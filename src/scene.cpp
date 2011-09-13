@@ -1263,7 +1263,7 @@ void Scene::rotate(qreal degrees)
         CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
         qreal oldAngle = c->angle();
         c->setTransformOriginPoint(pivotPt);
-        c->setRotation(degrees);
+        c->setRotation(degrees, pivotPt);
         undoStack()->push(new SetCellRotation(this, c, oldAngle, pivotPt));
     }
     undoStack()->endMacro();
