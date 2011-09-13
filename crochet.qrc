@@ -58,5 +58,6 @@
         <file>images/rotate90.svg</file>
         <file>images/rotate180.svg</file>
         <file>images/rotate270.svg</file>
+        <file>images/rotate_custom.svg</file>
     </qresource>
 </RCC>

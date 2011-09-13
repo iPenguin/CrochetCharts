@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>147</width>
-    <height>347</height>
+    <height>356</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -183,6 +183,10 @@
          </property>
          <property name="text">
           <string>C</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/rotate_custom.svg</normaloff>:/images/rotate_custom.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
