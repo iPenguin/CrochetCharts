@@ -1202,8 +1202,8 @@ void Scene::mirror(int direction)
                 CrochetCell* copy = c->copy();
                 addCell(copy);
                 QPointF oldPos = item->scenePos();
-                qreal diff = item->scenePos().x() - rect.left();
-                copy->setPos(rect.left() - diff, item->scenePos().y());
+                qreal diff = rect.right() - item->scenePos().x();
+                copy->setPos(rect.right() + diff, item->scenePos().y());
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
                 copy->setSelected(true);
             }
@@ -1211,9 +1211,39 @@ void Scene::mirror(int direction)
         undoStack()->endMacro();
 
     } else if(direction == 3) { //up
-        ;
+
+        undoStack()->beginMacro("mirror selection");
+        foreach(QGraphicsItem* item, list) {
+            if(item->type() == CrochetCell::Type) {
+                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+                CrochetCell* copy = c->copy();
+                addCell(copy);
+                QPointF oldPos = item->scenePos();
+                qreal diff = item->scenePos().y() - rect.top();
+                copy->setPos(item->scenePos().x(), rect.top() - diff);
+                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
+                copy->setSelected(true);
+            }
+        }
+        undoStack()->endMacro();
+
     } else if(direction == 4) { //down
-        ;
+
+        undoStack()->beginMacro("mirror selection");
+        foreach(QGraphicsItem* item, list) {
+            if(item->type() == CrochetCell::Type) {
+                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+                CrochetCell* copy = c->copy();
+                addCell(copy);
+                QPointF oldPos = item->scenePos();
+                qreal diff = rect.bottom() - item->scenePos().y();
+                copy->setPos(item->scenePos().x(), rect.bottom() + diff);
+                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
+                copy->setSelected(true);
+            }
+        }
+        undoStack()->endMacro();
+
     }
 
     QApplication::restoreOverrideCursor();
