@@ -42,7 +42,7 @@
          <property name="margin">
           <number>0</number>
          </property>
-         <item row="0" column="0">
+         <item row="0" column="2">
           <widget class="QLabel" name="label">
            <property name="text">
             <string>Rows:</string>
@@ -55,7 +55,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
+         <item row="0" column="3">
           <widget class="QSpinBox" name="rows">
            <property name="minimumSize">
             <size>
@@ -74,7 +74,7 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
+         <item row="0" column="4">
           <widget class="QLabel" name="label_3">
            <property name="text">
             <string>Default Stitch:</string>
@@ -87,29 +87,10 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="3">
+         <item row="0" column="5">
           <widget class="QComboBox" name="defaultStitch"/>
          </item>
-         <item row="0" column="5">
-          <widget class="QComboBox" name="chartStyle">
-           <item>
-            <property name="text">
-             <string>Rows</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Rounds</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Blank</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="1" column="0">
+         <item row="1" column="2">
           <widget class="QLabel" name="label_2">
            <property name="text">
             <string>Stitches:</string>
@@ -122,7 +103,7 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="1" column="3">
           <widget class="QSpinBox" name="stitches">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -147,7 +128,7 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="2">
+         <item row="1" column="4">
           <widget class="QLabel" name="label_4">
            <property name="text">
             <string>Chart Title:</string>
@@ -160,14 +141,14 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="3">
+         <item row="1" column="5">
           <widget class="QLineEdit" name="chartTitle">
            <property name="text">
             <string>Chart</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="0" colspan="6">
+         <item row="2" column="5">
           <widget class="QDialogButtonBox" name="newDocBttnBox">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -177,7 +158,52 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="5">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Chart Style:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>chartStyle</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QComboBox" name="chartStyle">
+           <item>
+            <property name="text">
+             <string>Blank</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Rows</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Rounds</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Row Spacing:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>rowSpacing</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
           <widget class="QComboBox" name="rowSpacing">
            <property name="editable">
             <bool>false</bool>
@@ -217,32 +243,6 @@
            </item>
           </widget>
          </item>
-         <item row="1" column="4">
-          <widget class="QLabel" name="label_5">
-           <property name="text">
-            <string>Row Spacing:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="buddy">
-            <cstring>rowSpacing</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Chart Style:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="buddy">
-            <cstring>chartStyle</cstring>
-           </property>
-          </widget>
-         </item>
         </layout>
        </widget>
       </item>
@@ -272,7 +272,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1023,14 +1023,14 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>chartStyle</tabstop>
+  <tabstop>rowSpacing</tabstop>
   <tabstop>rows</tabstop>
   <tabstop>stitches</tabstop>
   <tabstop>defaultStitch</tabstop>
   <tabstop>chartTitle</tabstop>
-  <tabstop>chartStyle</tabstop>
-  <tabstop>rowSpacing</tabstop>
   <tabstop>newDocBttnBox</tabstop>
+  <tabstop>tabWidget</tabstop>
   <tabstop>patternStitches</tabstop>
   <tabstop>patternColors</tabstop>
   <tabstop>allStitches</tabstop>
