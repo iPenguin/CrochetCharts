@@ -79,14 +79,6 @@
             <screenshot>
                 <mediaobject>
                     <imageobject>
-                        <imagedata width="400" fileref="images/install-win2.png" format="PNG" />
-                    </imageobject>
-                    <caption>The license agreement page of the wizard</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
                         <imagedata width="400" fileref="images/install-win3.png" format="PNG" />
                     </imageobject>
                     <caption>Choose the installation path for @SWS_PROJECT_NAME@</caption>

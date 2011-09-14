@@ -33,6 +33,12 @@ RowEditDialog::~RowEditDialog()
 {
 }
 
+void RowEditDialog::show()
+{
+    QWidget::show();
+    updateRowList();
+}
+
 void RowEditDialog::addRow()
 {
     if(mScene->selectedItems().count() <= 0) {

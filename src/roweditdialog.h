@@ -22,6 +22,8 @@ public:
     ~RowEditDialog();
 
     void updateRowList();
+
+    void show();
     
 signals:
     /**
