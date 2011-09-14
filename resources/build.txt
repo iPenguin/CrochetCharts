@@ -20,3 +20,6 @@ mingw32-make.exe
 -make sure a copy of the help files is installed.
 
 cpack
+
+For code signing: (optionally remove the /t for alpha and beta releases).
+signtool sign /f StitchWorksSoftware.com.p12 /P [code sign password] /t http://tsa.starfieldtech.com [fileName] 
