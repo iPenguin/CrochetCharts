@@ -128,7 +128,10 @@ void RowEditDialog::updateRowList()
     int rows = mScene->grid.count();
 
     for(int i = 0; i < rows; ++i) {
-        ui->rowList->addItem(QString::number(i + 1));
+        //using this slightly more complicated addItem() allows the sorting to work correctly for numbers.
+        QListWidgetItem* item = new QListWidgetItem();
+        item->setData(Qt::DisplayRole, i + 1);
+        ui->rowList->addItem(item);
     }
 
 }
