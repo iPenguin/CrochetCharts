@@ -71,7 +71,12 @@ void Settings::trialVersionMessage(QWidget* parent)
 
 void Settings::setValue(const QString &key, const QVariant &value)
 {
-    mSettings.setValue(key, value);
+    //only save values that aren't defaults, this allows for undefined values to change with updates,
+    //while defined values are fixed.
+    if(mValueList[key] != value)
+        mSettings.setValue(key, value);
+    else
+        mSettings.remove(key);
 }
 
 QVariant Settings::value(const QString &key) const
@@ -121,7 +126,7 @@ void Settings::setupValueList() {
     mValueList["placeholder"] = QVariant("x");
     mValueList["rowCount"] = QVariant(15);
     mValueList["stitchCount"] = QVariant(15);
-    mValueList["chartStyle"] = QVariant(tr("Rows"));
+    mValueList["chartStyle"] = QVariant(tr("Blank"));
     
     mValueList["useAltColors"] = QVariant(true);
     mValueList["stitchPrimaryColor"] = QVariant("#000000");
