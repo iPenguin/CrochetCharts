@@ -1182,9 +1182,12 @@ void Scene::mirror(int direction)
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-                CrochetCell* copy = c->copy();
-                addCell(copy);
                 QPointF oldPos = item->scenePos();
+
+                AddCell* addCellCmd = new AddCell(this, oldPos);
+                undoStack()->push(addCellCmd);
+                CrochetCell* copy = c->copy(addCellCmd->cell());
+                
                 qreal diff = item->scenePos().x() - rect.left();
                 copy->setPos(rect.left() - diff, item->scenePos().y());
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
@@ -1199,9 +1202,12 @@ void Scene::mirror(int direction)
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-                CrochetCell* copy = c->copy();
-                addCell(copy);
                 QPointF oldPos = item->scenePos();
+
+                AddCell* addCellCmd = new AddCell(this, oldPos);
+                undoStack()->push(addCellCmd);
+                CrochetCell* copy = c->copy(addCellCmd->cell());
+                
                 qreal diff = rect.right() - item->scenePos().x();
                 copy->setPos(rect.right() + diff, item->scenePos().y());
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
@@ -1216,9 +1222,12 @@ void Scene::mirror(int direction)
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-                CrochetCell* copy = c->copy();
-                addCell(copy);
                 QPointF oldPos = item->scenePos();
+
+                AddCell* addCellCmd = new AddCell(this, oldPos);
+                undoStack()->push(addCellCmd);
+                CrochetCell* copy = c->copy(addCellCmd->cell());
+                
                 qreal diff = item->scenePos().y() - rect.top();
                 copy->setPos(item->scenePos().x(), rect.top() - diff);
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
@@ -1233,9 +1242,12 @@ void Scene::mirror(int direction)
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-                CrochetCell* copy = c->copy();
-                addCell(copy);
                 QPointF oldPos = item->scenePos();
+                
+                AddCell* addCellCmd = new AddCell(this, oldPos);
+                undoStack()->push(addCellCmd);
+                CrochetCell* copy = c->copy(addCellCmd->cell());
+                
                 qreal diff = rect.bottom() - item->scenePos().y();
                 copy->setPos(item->scenePos().x(), rect.bottom() + diff);
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));

@@ -30,7 +30,7 @@ public:
     qreal origHeight() { return mOrigHeight; }
     qreal origWidth() { return mOrigWidth; }
 
-    CrochetCell* copy();
+    CrochetCell* copy(CrochetCell* cell = 0);
     
 public slots:
 
