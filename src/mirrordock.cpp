@@ -20,7 +20,7 @@ MirrorDock::MirrorDock(QWidget *parent) :
 
     connect(ui->rotateCustom, SIGNAL(clicked()), SLOT(rotateCustom()));
 
-    connect(ui->rotateCustom, SIGNAL(clicked()), SLOT(genRotate()));
+    connect(ui->rotateBttn, SIGNAL(clicked()), SLOT(genRotate()));
 }
 
 MirrorDock::~MirrorDock()

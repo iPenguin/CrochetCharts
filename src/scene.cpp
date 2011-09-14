@@ -1254,13 +1254,11 @@ void Scene::rotate(qreal degrees)
     if(selectedItems().count() <= 0)
         return;
 
-    QRectF rect = selectedItemsBoundingRect();
-
     QGraphicsItemGroup* group = createItemGroup(selectedItems());
 
-    QPointF pivotPt = rect.bottomLeft();
+    QPointF pivotPt = group->boundingRect().bottomLeft();
     
-    //group->setTransformOriginPoint(group->mapToScene(group->boundingRect().bottomLeft()));
+    group->setTransformOriginPoint(group->mapToScene(group->boundingRect().bottomLeft()));
     group->setTransform(QTransform().translate(pivotPt.x(), pivotPt.y()).rotate(degrees).translate(-pivotPt.x(), -pivotPt.y()));
     destroyItemGroup(group);
     
