@@ -1157,10 +1157,8 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
                 c->setToolTip(QString("Row: %1, Stitch: %2").arg(grd.width() - x + 1).arg(r.indexOf(c) + 1));
             }
 
-            qDebug() << "row:" << r;
             grid.insert(0, r);
         }
-        qDebug() << "Grid:" << grid;
     }
 }
 
@@ -1266,14 +1264,8 @@ void Scene::rotate(qreal degrees)
     if(selectedItems().count() <= 0)
         return;
 
-    QGraphicsItemGroup* group = createItemGroup(selectedItems());
 
-    QPointF pivotPt = group->boundingRect().bottomLeft();
-    
-    group->setTransformOriginPoint(group->mapToScene(group->boundingRect().bottomLeft()));
-    group->setTransform(QTransform().translate(pivotPt.x(), pivotPt.y()).rotate(degrees).translate(-pivotPt.x(), -pivotPt.y()));
-    destroyItemGroup(group);
-    
+    undoStack()->push(new SetItemRotation(this, selectedItems(), degrees));
 }
 
 void Scene::copy()

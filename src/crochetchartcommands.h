@@ -71,6 +71,27 @@ private:
     Scene* scene;
 };
 
+class SetItemRotation : public QUndoCommand
+{
+public:
+    enum { Id = 1125 };
+
+    SetItemRotation(Scene* s, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    int id() const { return Id; }
+
+private:
+    QList<QGraphicsItem*> items;
+    qreal oldAngle;
+    qreal newAngle;
+    QPointF pivotPoint;
+
+    Scene* scene;
+};
+
 class SetItemCoordinates : public QUndoCommand
 {
 public:

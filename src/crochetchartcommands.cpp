@@ -83,6 +83,44 @@ void SetCellRotation::undo()
 }
 
 /*************************************************\
+| SetItemRotation                                 |
+\*************************************************/
+SetItemRotation::SetItemRotation(Scene* s, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    scene = s;
+    items.append(itms);
+    newAngle = degrees;
+
+    QGraphicsItemGroup* group = scene->createItemGroup(items);
+    pivotPoint = group->boundingRect().bottomLeft();
+    oldAngle = group->rotation();
+    scene->destroyItemGroup(group);
+    qDebug() <<  oldAngle << newAngle;
+    setText(QObject::tr("change angle"));
+}
+
+void SetItemRotation::redo()
+{
+
+    QGraphicsItemGroup* group = scene->createItemGroup(items);
+    group->setTransformOriginPoint(group->mapToScene(pivotPoint));
+    group->setTransform(QTransform().translate(pivotPoint.x(), pivotPoint.y()).rotate(newAngle).translate(-pivotPoint.x(), -pivotPoint.y()));
+    scene->destroyItemGroup(group);
+
+}
+
+void SetItemRotation::undo()
+{
+
+    QGraphicsItemGroup* group = scene->createItemGroup(items);
+    group->setTransformOriginPoint(group->mapToScene(pivotPoint));
+    group->setTransform(QTransform().translate(-pivotPoint.x(), -pivotPoint.y()).rotate(-newAngle).translate(pivotPoint.x(), pivotPoint.y()));
+    scene->destroyItemGroup(group);
+    
+}
+
+/*************************************************\
 | SetItemCoordinates                              |
 \*************************************************/
 SetItemCoordinates::SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF oldPos, QUndoCommand* parent)
