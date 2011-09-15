@@ -77,6 +77,7 @@ void Settings::setValue(const QString &key, const QVariant &value)
         mSettings.setValue(key, value);
     else
         mSettings.remove(key);
+
 }
 
 QVariant Settings::value(const QString &key) const
@@ -116,7 +117,7 @@ void Settings::setupValueList() {
     mValueList["recentFiles"] = QVariant(QStringList());
     
     mValueList["geometry"] = QVariant("");
-    mValueList["windowState"] = QVariant("");
+    mValueList["windowState"] = QVariant(" "); //use a space because it works for the comparison when saving variables.
     
     mValueList["generateTextRepeats"] = QVariant(true);
     mValueList["showChartCenter"] = QVariant(false);
