@@ -1160,12 +1160,12 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
             for(int y = grd.height(); y > 0; --y) {
                 CrochetCell* c = new CrochetCell();
                 //FIXME: use the user selected stitch
-                c->setStitch("ch");
+                c->setStitch(mDefaultStitch);
                 addItem(c);
                 r.append(c);
                 
                 c->useAlternateRenderer(((grd.width() - x) % 2));
-                c->setPos((c->stitch()->width() + spacing.width()) * y, (c->stitch()->height() + spacing.height()) * x);
+                c->setPos((c->stitch()->width() + spacing.width()) * y, spacing.height() * x);
                 c->setToolTip(QString("Row: %1, Stitch: %2").arg(grd.width() - x + 1).arg(r.indexOf(c) + 1));
             }
 
