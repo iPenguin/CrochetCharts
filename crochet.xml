@@ -81,7 +81,7 @@
     <stitch>
         <name>lsdc</name>
         <icon>:/stitches/double_crochet.svg</icon> <!--left_slant_-->
-        <description>left slant decrease</description>
+        <description>left slant double crochet</description>
         <category>Advanced</category>
         <ws>lsdc</ws>
     </stitch>
@@ -97,7 +97,7 @@
     <stitch>
         <name>fpdc</name>
         <icon>:/stitches/front_post_dc.svg</icon>
-        <description>front post decrease</description>
+        <description>front post double crochet</description>
         <category>Advanced</category>
         <ws>fpdc</ws>
     </stitch>
@@ -105,7 +105,7 @@
     <stitch>
         <name>bpdc</name>
         <icon>:/stitches/back_post_dc.svg</icon>
-        <description>back post decrease</description>
+        <description>back post double crochet</description>
         <category>Advanced</category>
         <ws>bpdc</ws>
     </stitch>
