@@ -923,31 +923,34 @@ void MainWindow::newChart()
         name = nextChartName(name);
 
     CrochetTab* tab = createTab(st);
-    
+
     if(name.isEmpty())
-        name = nextChartName();
-    
+            name = nextChartName();
+
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
 
-    QString ddValue = ui->rowSpacing->currentText();
-    qreal rowHeight = 96;
+    if(st != Scene::Blank) {
 
-    if(ddValue == tr("1 Chain"))
-        rowHeight = 32;
-    else if (ddValue == tr("2 Chains"))
-        rowHeight = 64;
-    else if (ddValue == tr("3 Chains"))
-        rowHeight = 96;
-    else if (ddValue == tr("4 Chains"))
-        rowHeight = 128;
-    else if (ddValue == tr("5 Chains"))
-        rowHeight = 160;
-    else if (ddValue == tr("6 Chains"))
-        rowHeight = 182;
+        QString ddValue = ui->rowSpacing->currentText();
+        qreal rowHeight = 96;
+
+        if(ddValue == tr("1 Chain"))
+            rowHeight = 32;
+        else if (ddValue == tr("2 Chains"))
+            rowHeight = 64;
+        else if (ddValue == tr("3 Chains"))
+            rowHeight = 96;
+        else if (ddValue == tr("4 Chains"))
+            rowHeight = 128;
+        else if (ddValue == tr("5 Chains"))
+            rowHeight = 160;
+        else if (ddValue == tr("6 Chains"))
+            rowHeight = 182;
+
+        tab->createChart(rows, cols, defStitch, QSizeF(32, rowHeight));
+    }
     
-    tab->createChart(rows, cols, defStitch, QSizeF(32, rowHeight));
-
     updateMenuItems();
     documentIsModified(true);
 }

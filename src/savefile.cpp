@@ -20,7 +20,6 @@
 
 #include "scene.h"
 #include "scenerounds.h"
-#include "scenerows.h"
 
 #include "stitchlibrary.h"
 #include "stitchset.h"
@@ -127,6 +126,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
 
         Scene::ChartStyle stlye = tab->mChartStyle;
         stream->writeTextElement("style", QString::number(stlye));
+        stream->writeTextElement("defaultSt", tab->scene()->mDefaultStitch);
         
         if(stlye == Scene::Rounds) {
             SceneRounds* r = static_cast<SceneRounds*>(tab->scene());
@@ -312,7 +312,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
 {
     MainWindow* mw = qobject_cast<MainWindow*>(mParent);
     CrochetTab* tab = 0;
-    QString tabName;
+    QString tabName = "", defaultSt = "";
 
     while(!(stream->isEndElement() && stream->name() == "chart")) {
         stream->readNext();
@@ -327,6 +327,9 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
 
             mTabWidget->addTab(tab, "");
             mTabWidget->widget(mTabWidget->indexOf(tab))->hide();
+        } else if(tag == "defaultSt") {
+            defaultSt = stream->readElementText();
+            tab->scene()->mDefaultStitch = defaultSt;
             
         } else if(tag == "showChartCenter") {
 

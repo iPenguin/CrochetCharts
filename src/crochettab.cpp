@@ -15,7 +15,6 @@
 #include <QDebug>
 
 #include "scene.h"
-#include "scenerows.h"
 #include "scenerounds.h"
 
 #include "textview.h"
@@ -50,7 +49,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
         mScene = new SceneRounds(mView);
         mScene->setSceneRect(-2500, -2500, 5000, 5000);
     } else {
-        mScene = new SceneRows(mView);
+        mScene = new Scene(mView);
         mScene->setSceneRect(-100, -100, 5000, 5000);
     }
 
@@ -204,7 +203,7 @@ QUndoStack* CrochetTab::undoStack()
 
 void CrochetTab::createChart(int rows, int cols, QString defStitch, QSizeF rowSize)
 {
-    //mScene->createChart(rows, cols, defStitch, rowSize);
+    mScene->createChart(rows, cols, defStitch, rowSize);
 
     SceneRounds* rounds = static_cast<SceneRounds*>(mScene);
     if(rounds) {

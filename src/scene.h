@@ -108,6 +108,8 @@ public:
     void copy();
     void cut();
     void paste();
+
+    void createChart(int rows, int cols, QString defStitch, QSizeF rowSize);
     
 public slots:
     void createRow();
@@ -246,6 +248,7 @@ private:
 
     int mRowSpacing;
     QSizeF mDefaultSize;
+    QString mDefaultStitch;
 
     QList<QGraphicsItem*> mRowSelection;
     

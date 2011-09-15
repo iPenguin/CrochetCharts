@@ -49,9 +49,11 @@ Scene::Scene(QObject* parent)
     mOrigin(0,0),
     mRowSpacing(9),
     mDefaultSize(QSizeF(32.0, 96.0)),
+    mDefaultStitch("ch"),
     mRowLine(0)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, 0);
+    initDemoBackground();
 }
 
 Scene::~Scene()
@@ -1126,6 +1128,15 @@ void Scene::distributeToPath()
 
 }
 
+void Scene::createChart(int rows, int cols, QString defStitch, QSizeF rowSize)
+{
+    
+    mDefaultSize = rowSize;
+    mDefaultStitch = defStitch;
+    arrangeGrid(QSize(rows, cols), QSize(1, 1), rowSize.toSize(), false);
+    
+}
+
 void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelection)
 {
 
@@ -1141,7 +1152,6 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
     } else {
         //create new cells.
         //TODO: figure out how to deal with spacing.
-        qreal padding = 10;
 
         for(int x = grd.width(); x > 0; --x) {
 
@@ -1152,8 +1162,9 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
                 c->setStitch("ch");
                 addItem(c);
                 r.append(c);
-
-                c->setPos((c->stitch()->width() + padding) * y, (c->stitch()->height() + padding) * x);
+                
+                c->useAlternateRenderer(((grd.width() - x) % 2));
+                c->setPos((c->stitch()->width() + spacing.width()) * y, (c->stitch()->height() + spacing.height()) * x);
                 c->setToolTip(QString("Row: %1, Stitch: %2").arg(grd.width() - x + 1).arg(r.indexOf(c) + 1));
             }
 
