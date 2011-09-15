@@ -198,7 +198,8 @@ void MainWindow::setupDocks()
     connect(mAlignDock, SIGNAL(visibilityChanged(bool)), ui->actionShowAlignDock, SLOT(setChecked(bool)));
 
     //Rows & Stitches Dock.
-    mRowsDock = new RowsDock(this);      
+    mRowsDock = new RowsDock(this);
+    mRowsDock->setEnabled(false); //TODO: remove this line when this is working again.
     mRowsDock->setFloating(true);
     mRowsDock->setVisible(false);
     mRowsDock->setObjectName("rowsDock");

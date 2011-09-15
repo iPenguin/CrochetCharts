@@ -322,7 +322,6 @@
     <addaction name="actionShowEditModeToolbar"/>
     <addaction name="separator"/>
     <addaction name="actionShowAlignDock"/>
-    <addaction name="actionShowRowsDock"/>
     <addaction name="actionShowMirrorDock"/>
     <addaction name="separator"/>
     <addaction name="actionViewFullScreen"/>
@@ -579,7 +578,6 @@
    <addaction name="actionIndicatorMode"/>
    <addaction name="separator"/>
    <addaction name="actionShowAlignDock"/>
-   <addaction name="actionShowRowsDock"/>
    <addaction name="actionShowMirrorDock"/>
    <addaction name="actionColorSelectorBg"/>
   </widget>
