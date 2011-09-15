@@ -76,34 +76,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="QPushButton" name="addRow">
-        <property name="text">
-         <string>+</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="removeRow">
-        <property name="text">
-         <string>-</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QPushButton" name="moveUp">
-        <property name="text">
-         <string>/\</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="5">
-       <widget class="QPushButton" name="moveDown">
-        <property name="text">
-         <string>\/</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="7">
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
@@ -142,11 +114,81 @@
         </item>
        </layout>
       </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QToolButton" name="addRow">
+        <property name="text">
+         <string>+</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../crochet.qrc">
+          <normaloff>:/images/plus.svg</normaloff>:/images/plus.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QToolButton" name="removeRow">
+        <property name="text">
+         <string>-</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../crochet.qrc">
+          <normaloff>:/images/minus.svg</normaloff>:/images/minus.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="4">
+       <widget class="QToolButton" name="moveUp">
+        <property name="text">
+         <string>/\</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../crochet.qrc">
+          <normaloff>:/images/arrow_up.svg</normaloff>:/images/arrow_up.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="5">
+       <widget class="QToolButton" name="moveDown">
+        <property name="text">
+         <string>\/</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../crochet.qrc">
+          <normaloff>:/images/arrow_down.svg</normaloff>:/images/arrow_down.svg</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../crochet.qrc"/>
+ </resources>
  <connections/>
 </ui>
