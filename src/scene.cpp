@@ -824,7 +824,7 @@ void Scene::drawRowLines(int row)
             end = c->pos();
 
             QGraphicsLineItem *line = addLine(QLineF(start, end));
-            line->setPen(QPen(QColor(Qt::red), 2));
+            line->setPen(QPen(QColor(Qt::black), 2));
             mRowLines.append(line);
 
             prev = c;
