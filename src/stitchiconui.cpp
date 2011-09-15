@@ -8,6 +8,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include <QUrl>
+#include <QDesktopServices>
+
 #include "stitchlibrary.h"
 
 StitchIconUi::StitchIconUi(QWidget* parent)
@@ -134,18 +137,22 @@ void StitchIconUi::saveIcon()
     if(items.count() <= 0)
         return;
 
+    QString dir = Settings::inst()->value("fileLocation").toString();
+    QString dest = QFileDialog::getExistingDirectory(this, tr("Save Folder"), dir);
+
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    if(dest.isEmpty())
+        return;
+    
     foreach(QListWidgetItem* item, items) {
-        QString dir = Settings::inst()->value("fileLocation").toString();
-        dir += "/" + QFileInfo(item->data(Qt::UserRole).toString()).fileName();
-        QString dest = QFileDialog::getSaveFileName(this, tr("Save Icon"), dir, "");
-
-        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-        if(dest.isEmpty())
-            return;
-
-        QFile::copy(item->data(Qt::UserRole).toString(), dest);
-        QApplication::restoreOverrideCursor();
+        QString fileName = item->data(Qt::UserRole).toString();
+        QFile::copy(fileName, dest + "/" + QFileInfo(fileName).fileName());
+    
     }
+
+    QString path = QDir::toNativeSeparators(dest);
+    QDesktopServices::openUrl(QUrl("file:///" + path));
+    QApplication::restoreOverrideCursor();
     
 }
 
