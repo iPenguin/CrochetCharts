@@ -65,7 +65,8 @@
         You will need your serial number to complete the installation.
         The serial number can be found in the <link linkend="helpAbout">About dialog</link>.
         If you need help installing on a second platform please <ulink url="@ORG_CONTACT@">contact me</ulink>.</para>
-        <section><title>Windows</title>
+        <section>
+            <title>Windows</title>
             <para>@SWS_PROJECT_NAME@ will run on Microsoft Windows XP, Windows Vista, and Windows 7.
             To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
             <para>To install double click the installer and follow the instructions in the Installation Wizard.</para>
@@ -123,13 +124,48 @@
                 </mediaobject>
             </screenshot>
         </section>
-        <section><title>Linux</title>
+        <section>
+            <title>Linux</title>
             <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer. If you're having any problems please <ulink url="@ORG_CONTACT@">contact me</ulink></para>
 
         </section>
         <section>
             <title>Licensing Wizard</title>
-
+            <para>The license wizard allows the user to either register or evaluate this software. To use the software you must agree to the End User License Agreement.
+                To evaluate the software you will need to supply your name, and email, when you register the software you will need to supply your name, email and serial number that you received in an email after purchasing the software form the website.
+            </para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/license-wizard1.png" format="PNG" />
+                    </imageobject>
+                    <caption>The license wizard for @SWS_PROJECT_NAME@</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/license-wizard2.png" format="PNG" />
+                    </imageobject>
+                    <caption>The license wizard ELUA for @SWS_PROJECT_NAME@</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/license-wizard3.png" format="PNG" />
+                    </imageobject>
+                    <caption>The license wizard registration page for @SWS_PROJECT_NAME@</caption>
+                </mediaobject>
+            </screenshot>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/license-wizard4.png" format="PNG" />
+                    </imageobject>
+                    <caption>Thanks for registering or trying @SWS_PROJECT_NAME@</caption>
+                </mediaobject>
+            </screenshot>
         </section>
     </chapter>
 
@@ -140,9 +176,15 @@
             This dialog gives you quick access to create a new document and chart.
         </para>
         <para>
-            Form the dialog you can set the basic information about the new chart.
-            If you select a <emphasis>Round chart</emphasis> the number of stitches is the number that is used on the inner most row and each additional row will have an increasing count of stitches.
-            If you select a <emphasis>Flat chart</emphasis> then all the rows will have the selected number of stitches in a grid-like layout.
+            From the dialog you can set the basic information about the new chart.
+                Selecting a <emphasis>Blank chart</emphasis> will present you with a blank canvas from which you can create any shape.
+        </para>
+        <para>
+            If you select a <emphasis>Round chart</emphasis> the first row of the new chart with contain the number of stitches you specified in the dialog,
+            and each subsequent row will contain an increasing number of stitches radiating out from the center of the chart.
+        </para>
+        <para>
+            If you select a <emphasis>Flat chart</emphasis> then the generated chart will be in the form of a grid with all rows having the same number of stitches.
         </para>
         <screenshot>
             <mediaobject>
@@ -178,93 +220,97 @@
 
         <section>
             <title>Tools</title>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/toolbar-win.png" format="PNG" />
-                    </imageobject>
-                    <caption>The tools on Windows</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/toolbar-mac.png" format="PNG" />
-                    </imageobject>
-                    <caption>The tools on Mac</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/toolbar.png" format="PNG" />
-                    </imageobject>
-                    <caption>The tools on Linux</caption>
-                </mediaobject>
-            </screenshot>
-            <para>The tools on the toolbar are listed below in order from left to right.
-            </para>
-            <variablelist>
-                <?dbfo list-presentation="blocks"?>
-                <varlistentry>
-                    <term>New Document</term>
-                    <listitem>Create a new document.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Open File</term>
-                    <listitem>Open an existing file.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Save</term>
-                    <listitem>Save the current file.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Export</term>
-                    <listitem>Export the document to different file formats: PDF, SVG, PNG, JPEG, TIFF, BMP.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Undo</term>
-                    <listitem>Undo the last action taken. (Unlimited level of undos)</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Redo</term>
-                    <listitem>Redo and actions that have been undone.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Stitch Mode</term>
-                    <listitem>Change the stitches of existing cells.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Color Mode</term>
-                    <listitem>Change the background color of the stitches.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Row Mode</term>
-                    <listitem>Edit the number of rows and stitches on the chart.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Position Mode</term>
-                    <listitem>Move the stitches around on the chart.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Angle Mode</term>
-                    <listitem>Rotate the stitch 360 degrees.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Stretch Mode</term>
-                    <listitem>Change the height of the stitches.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Indicator Mode</term>
-                    <listitem>Add dot and text indicators to the chart.</listitem>
-                </varlistentry>
-                <varlistentry>
-                    <term>Color Selector</term>
-                    <listitem>Select the color that will be used in Color Mode.</listitem>
-                </varlistentry>
-            </variablelist>
+            <sect3>
+                <screenshot>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata width="400" fileref="images/toolbar.png" format="PNG" />
+                        </imageobject>
+                        <caption>The tools in @SWS_PROJECT_NAME@</caption>
+                    </mediaobject>
+                </screenshot>
+                <para>The tools on the tool bar are listed below in order from left to right.
+                </para>
+                <variablelist>
+                    <?dbfo list-presentation="blocks"?>
+                    <varlistentry>
+                        <term>New Document</term>
+                        <listitem>Create a new document.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Open File</term>
+                        <listitem>Open an existing file.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Save</term>
+                        <listitem>Save the current file.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Export</term>
+                        <listitem>Export the document to different file formats: PDF, SVG, PNG, JPEG, TIFF, BMP.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>New Chart</term>
+                        <listitem>Create a new chart in this document.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Undo</term>
+                        <listitem>Undo the last action taken. (Unlimited level of undo)</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Redo</term>
+                        <listitem>Redo actions that have been undone.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Stitch Edit</term>
+                        <listitem>Add, edit or move stitches on the chart.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Color Edit</term>
+                        <listitem>Change the background color of the stitches.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Angle Edit</term>
+                        <listitem>Rotate the stitch 360 degrees.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Scale Edit</term>
+                        <listitem>Change the size of the stitches.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Row Edit</term>
+                        <listitem>Connect stitches to create rows.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Indicator Edit</term>
+                        <listitem>Add dot and text indicators to the chart.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Align and Distribute</term>
+                        <listitem>A set of tools that allows you to align and distribute stitches evenly on the chart.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Mirror and Rotate</term>
+                        <listitem>A set of tools that allows you to mirror and rotate groups of stitches on the chart.</listitem>
+                    </varlistentry>
+                    <varlistentry>
+                        <term>Color Selector</term>
+                        <listitem>Select the color that will be used in Color Mode.</listitem>
+                    </varlistentry>
+                </variablelist>
+            </sect3>
+
+            <section>
+                <title>Edit Modes</title>
+
+            </section>
+
+            <section>
+                <title>Additional Tools</title>
+
+            </section>
+            
         </section>
-        
     </chapter>
 
 
@@ -405,8 +451,8 @@
         <title>Stitch Library</title>
         <para>The Stitch Library can consist of multiple sets of stitches.
             Each set must have unique stitch names in it, but you may have multiple stitches with the same name across sets. 
-            The Master Stitch List contains all the stitches that will appear in the Stitches list in the main window. You can customize this list
-            however you want. The Default Crochet Stitches is the list of stitches that comes with the software.            
+            The Default Crochet Stitches contains all the stitches that will appear in the main application for use on charts. You can customize this list
+            however you want.      
         </para>
         <screenshot>
             <mediaobject>
