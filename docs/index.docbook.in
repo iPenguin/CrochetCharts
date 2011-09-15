@@ -56,7 +56,8 @@
 
 
 
-    <chapter id="installation"><title>Installation</title>
+    <chapter id="installation">
+        <title>Installation</title>
         <para>Because this software is licensed per user you may install it on multiple computers including any
         combination of the supported platforms below.
         To install on multiple platforms you may goto the the <ulink url="@ORG_DOWNLOAD@">downloads page</ulink>
@@ -109,7 +110,8 @@
                 </mediaobject>
             </screenshot>
         </section>
-        <section><title>Mac</title>
+        <section>
+            <title>Mac</title>
             <para>@SWS_PROJECT_NAME@ will run on Mac OS X version 10.4-10.7 (Tiger, Leopard, Snow Leopard, Lion)  To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
             <para>Once the file has been downloaded you can install the software by dragging and dropping the software into the Applications folder.</para>
             <screenshot>
@@ -123,6 +125,10 @@
         </section>
         <section><title>Linux</title>
             <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer. If you're having any problems please <ulink url="@ORG_CONTACT@">contact me</ulink></para>
+
+        </section>
+        <section>
+            <title>Licensing Wizard</title>
 
         </section>
     </chapter>
