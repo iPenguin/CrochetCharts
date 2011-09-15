@@ -19,8 +19,6 @@
 #include <QStringList>
 
 #include "scene.h"
-#include "scenerounds.h"
-
 #include "stitchlibrary.h"
 #include "stitchset.h"
 
@@ -129,8 +127,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
         stream->writeTextElement("defaultSt", tab->scene()->mDefaultStitch);
         
         if(stlye == Scene::Rounds) {
-            SceneRounds* r = static_cast<SceneRounds*>(tab->scene());
-            bool showCenter = r->showChartCenter();
+            bool showCenter = tab->scene()->showChartCenter();
             stream->writeTextElement("showChartCenter", QString::number(showCenter));
         }
 

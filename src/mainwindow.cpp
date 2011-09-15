@@ -948,7 +948,7 @@ void MainWindow::newChart()
         else if (ddValue == tr("6 Chains"))
             rowHeight = 182;
 
-        tab->createChart(rows, cols, defStitch, QSizeF(32, rowHeight));
+        tab->createChart(st, rows, cols, defStitch, QSizeF(32, rowHeight));
     }
     
     updateMenuItems();

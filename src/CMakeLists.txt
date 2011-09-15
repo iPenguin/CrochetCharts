@@ -29,7 +29,6 @@ set(crochet_qobject_headers
     tabinterface.h
     legends.h
     scene.h
-    scenerounds.h
     roweditdialog.h
     rowsdock.h
     aligndock.h

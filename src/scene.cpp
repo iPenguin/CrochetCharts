@@ -50,7 +50,8 @@ Scene::Scene(QObject* parent)
     mRowSpacing(9),
     mDefaultSize(QSizeF(32.0, 96.0)),
     mDefaultStitch("ch"),
-    mRowLine(0)
+    mRowLine(0),
+    mCenterSymbol(0)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, 0);
     initDemoBackground();
@@ -1128,7 +1129,7 @@ void Scene::distributeToPath()
 
 }
 
-void Scene::createChart(int rows, int cols, QString defStitch, QSizeF rowSize)
+void Scene::createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize)
 {
     
     mDefaultSize = rowSize;
@@ -1429,4 +1430,138 @@ QRectF Scene::selectedItemsBoundingRect()
     }
 
     return QRectF(QPointF(left - leftW, top - topH), QPointF(right + rightW, bottom + bottomH));
+}
+
+
+
+/**********
+ *Rounds Specific functions:
+ */
+
+void Scene::setShowChartCenter(bool state)
+{
+    mShowChartCenter = state;
+
+    if(mShowChartCenter) {
+        if(!mCenterSymbol) {
+            QPen pen;
+            pen.setWidth(5);
+
+            double radius = (defaultSize().height() * 0.45);
+
+            mCenterSymbol = addEllipse(-radius, -radius, radius * 2, radius * 2, pen);
+            mCenterSymbol->setToolTip(tr("Chart Center"));
+        } else {
+            addItem(mCenterSymbol);
+        }
+    } else {
+        removeItem(mCenterSymbol);
+    }
+
+}
+
+void Scene::createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize)
+{
+
+    defaultSize() = rowSize;
+
+    for(int i = 0; i < rows; ++i) {
+        //FIXME: this padding should be dependant on the height of the sts.
+        int pad = i * 12;
+
+        createRow(i, cols + pad, stitch);
+    }
+
+    setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
+
+    initDemoBackground();
+}
+
+void Scene::setCellPosition(int row, int column, CrochetCell* c, int columns)
+{
+    double widthInDegrees = 360.0 / columns;
+
+    double radius = defaultSize().height() * (row + 1) + (defaultSize().height() * 0.5);
+
+    double degrees = widthInDegrees * column;
+    QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+
+    qreal delta = defaultSize().width() * 0.5;
+    c->setPos(finish.x() - delta, finish.y());
+    c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
+    c->setAngle(degrees + 90);
+    c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
+}
+
+QPointF Scene::calcPoint(double radius, double angleInDegrees, QPointF origin)
+{
+    // Convert from degrees to radians via multiplication by PI/180
+    qreal x = (radius * cos(angleInDegrees * M_PI / 180)) + origin.x();
+    qreal y = (radius * sin(angleInDegrees * M_PI / 180)) + origin.y();
+    return QPointF(x, y);
+}
+
+void Scene::createRow(int row, int columns, QString stitch)
+{
+    CrochetCell* c = 0;
+
+    QList<CrochetCell*> modelRow;
+    for(int i = 0; i < columns; ++i) {
+        c = new CrochetCell();
+        c->setStitch(stitch, (row % 2));
+        addCell(c);
+        
+        modelRow.append(c);
+        setCellPosition(row, i, c, columns);
+    }
+    grid.insert(row, modelRow);
+}
+
+
+int Scene::getClosestRow(QPointF mousePosition)
+{
+    //double radius = defaultSize().height() * (row + 1) + (defaultSize().height() * 0.5);
+    qreal radius = sqrt(mousePosition.x() * mousePosition.x() + mousePosition.y() * mousePosition.y());
+
+    qreal temp = radius - (defaultSize().height() * 0.5);
+    qreal temp2 = temp / defaultSize().height();
+
+    int row = round(temp2 - 1);
+    if(row < 0)
+        row = 0;
+
+    if(row < grid.count()) {
+
+        QList<CrochetCell*> r;
+        grid.append(r);
+    }
+
+    return row;
+}
+
+int Scene::getClosestColumn(QPointF mousePosition, int row)
+{
+    /*
+              |
+          -,- | +,-
+        ------+------
+          -,+ | +,+
+              |
+    */
+    qreal tanx = mousePosition.y() / mousePosition.x();
+    qreal rads = atan(tanx);
+    qreal angleX = rads * 180 / M_PI;
+    qreal angle = 0.0;
+    if (mousePosition.x() >= 0 && mousePosition.y() >= 0)
+        angle = angleX;
+    else if(mousePosition.x() <= 0 && mousePosition.y() >= 0)
+        angle = 180 + angleX;
+    else if(mousePosition.x() <= 0 && mousePosition.y() <= 0)
+        angle = 180 + angleX;
+    else if(mousePosition.x() >= 0 && mousePosition.y() <= 0)
+        angle = 360 + angleX;
+
+    qreal degreesPerPos = 360.0 / grid[row].count();
+
+    return ceil(angle / degreesPerPos);
 }

@@ -15,8 +15,6 @@
 #include <QDebug>
 
 #include "scene.h"
-#include "scenerounds.h"
-
 #include "textview.h"
 
 #include "settings.h"
@@ -41,15 +39,14 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     QPoint centerOn = QPoint(0,0);
     
     mView = new ChartView(top);
-    if(style == Scene::Blank) {
-        mScene = new Scene(mView);
+    mScene = new Scene(mView);
+    
+    if(style == Scene::Blank) {  
         mScene->setSceneRect(0,0, 5000,5000);
         centerOn = QPoint(2500, 2500);
     } else if(style == Scene::Rounds) {
-        mScene = new SceneRounds(mView);
         mScene->setSceneRect(-2500, -2500, 5000, 5000);
     } else {
-        mScene = new Scene(mView);
         mScene->setSceneRect(-100, -100, 5000, 5000);
     }
 
@@ -201,16 +198,17 @@ QUndoStack* CrochetTab::undoStack()
     return mScene->undoStack();
 }
 
-void CrochetTab::createChart(int rows, int cols, QString defStitch, QSizeF rowSize)
+void CrochetTab::createChart(Scene::ChartStyle style, int rows, int cols, QString defStitch, QSizeF rowSize)
 {
-    mScene->createChart(rows, cols, defStitch, rowSize);
+    if(style == Scene::Rows) {
+        mScene->createRowsChart(rows, cols, defStitch, rowSize);
 
-    SceneRounds* rounds = static_cast<SceneRounds*>(mScene);
-    if(rounds) {
-        ui->showChartCenter->setChecked(rounds->showChartCenter());
+    } else if(style == Scene::Rounds) {
+        mScene->createRoundsChart(rows, cols, defStitch, rowSize);
+        ui->showChartCenter->setChecked(mScene->showChartCenter());
     }
-
-    mRowEditDialog->updateRowList();
+    
+    mRowEditDialog->updateRowList();    
 }
 
 void CrochetTab::setEditBgColor(QColor color)
@@ -247,8 +245,7 @@ void CrochetTab::showChartOptions()
         ui->chartOptionsBox->setVisible(false);
     }
 
-    SceneRounds* r = static_cast<SceneRounds*>(mScene);
-    if(r)
+    if(mChartStyle == Scene::Rounds)
         ui->showChartCenter->setEnabled(true);
     else
         ui->showChartCenter->setEnabled(false);
@@ -258,9 +255,7 @@ void CrochetTab::setShowChartCenter(bool state)
 {
     ui->showChartCenter->setChecked(state);
 
-    SceneRounds* r = static_cast<SceneRounds*>(mScene);
-    if(r)
-        r->setShowChartCenter(state);
+    mScene->setShowChartCenter(state);
 
     emit tabModified(true);
 }

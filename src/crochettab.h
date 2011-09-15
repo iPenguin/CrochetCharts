@@ -79,7 +79,7 @@ public slots:
 
     QUndoStack* undoStack();
 
-    void createChart(int rows, int cols, QString defStitch, QSizeF rowSize);
+    void createChart(Scene::ChartStyle style, int rows, int cols, QString defStitch, QSizeF rowSize);
 
     void copyInstructions();
 

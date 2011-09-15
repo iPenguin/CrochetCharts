@@ -109,7 +109,7 @@ public:
     void cut();
     void paste();
 
-    void createChart(int rows, int cols, QString defStitch, QSizeF rowSize);
+    void createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize);
     
 public slots:
     void createRow();
@@ -263,6 +263,41 @@ private:
     QList<QGraphicsLineItem*> mRowLines;
     
     QList<QGraphicsItem*> mDemoItems;
+
+
+
+/***
+ *
+ * Rounds specific functions:
+ */
+public:
+    bool showChartCenter() { return mShowChartCenter; }
+
+    void createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize);
+    void createRow(int row, int columns, QString stitch);
+    
+public slots:
+    void setShowChartCenter(bool state);
+
+protected:
+    /**
+     * Takes a @param mousePosition and returns the closest y co-ordinate.
+     * function assumes rounds not rows.
+     */
+    int getClosestRow(QPointF mousePosition);
+    /**
+     * Takes a @param mousePosition and @param row and returns the closest x co-ordinate.
+     * function assumes rounds not rows.
+     */
+    int getClosestColumn(QPointF mousePosition, int row);
+
+    void setCellPosition(int row, int column, CrochetCell* c, int columns);
+
+private:
+    QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
+
+    QGraphicsItem* mCenterSymbol;
+    bool mShowChartCenter;
 };
 
 #endif //SCENE_H
