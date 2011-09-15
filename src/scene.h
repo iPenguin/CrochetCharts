@@ -188,8 +188,8 @@ protected:
     void rowEditMouseMove(QGraphicsSceneMouseEvent* e);
     void rowEditMouseRelease(QGraphicsSceneMouseEvent* e);
     
-    virtual void stitchModeMouseMove(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
-    virtual void stitchModeMousePress(QGraphicsSceneMouseEvent* e) { Q_UNUSED(e); }
+    void stitchModeMouseMove(QGraphicsSceneMouseEvent* e);
+    void stitchModeMousePress(QGraphicsSceneMouseEvent* e);
     void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
     QSizeF defaultSize() const { return mDefaultSize; }

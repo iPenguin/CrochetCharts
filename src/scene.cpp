@@ -309,7 +309,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 {
-
+    
     switch(mMode) {
         case Scene::StitchEdit:
             stitchModeMouseMove(e);
@@ -322,10 +322,10 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
             break;
         case Scene::RotationEdit:
             angleModeMouseMove(e);
-            return;
+            break;
         case Scene::ScaleEdit:
             stretchModeMouseMove(e);
-            return;
+            break;
         case Scene::RowEdit:
             rowEditMouseMove(e);
             return;
@@ -345,8 +345,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
                 mRubberBand->setGeometry(rect.normalized());
                 mIsRubberband = true;
             }
-        } else {
-            mMoving = true;
+        } else if (mMoving) {
             QGraphicsScene::mouseMoveEvent(e);
         }
     }
@@ -445,6 +444,8 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 
     if(!mCurCell)
         return;
+
+    mMoving = false;
 /*
  *FIXME: if the user isn't dragging a stitch we should be painting with color.
     if(mCurCell->color() != mEditBgColor)
@@ -467,10 +468,10 @@ void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
 
-    mMoving = true;
-
     if(!mCurIndicator)
         return;
+
+    mMoving = true;
 
     QPointF start = e->buttonDownScenePos(Qt::LeftButton);
 
@@ -492,11 +493,10 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
     //if we're moving another indicator we shouldn't be creating a new one.
     if(mMoving) {
-        mMoving = false;
         return;
     }
 
-    if(!mCurIndicator && !mHasSelection) {
+    if(!mCurIndicator && !mHasSelection && !mIsRubberband) {
 
         QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
         //FIXME: dont hard code the offset for the indicator.
@@ -528,6 +528,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurCell)
         return;
 
+    mMoving = false;
     
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
     QPointF second = e->scenePos();
@@ -570,6 +571,8 @@ void Scene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurCell)
         return;
 
+    mMoving = false;
+    
     QPointF delta = e->buttonDownScenePos(Qt::LeftButton) - e->scenePos();
 
     mScale = mCurScale - (delta.y()/mCurCell->origHeight());
@@ -623,6 +626,8 @@ void Scene::rowEditMouseMove(QGraphicsSceneMouseEvent* e)
     if(!e->buttons() == Qt::LeftButton)
         return;
 
+    mMoving = false;
+
     if(!mStartCell)
         return;
 
@@ -669,6 +674,22 @@ void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
         mRowLine = 0;
     }
     
+}
+
+void Scene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
+{
+    Q_UNUSED(e);
+    
+}
+
+void Scene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
+{
+    Q_UNUSED(e);
+
+    if(!mCurCell)
+        return;
+    
+    mMoving = true;
 }
 
 void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
