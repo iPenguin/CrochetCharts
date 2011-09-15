@@ -88,7 +88,7 @@ CrochetCell* CrochetCell::copy(CrochetCell* cell)
     
     c->setStitch(stitch());
     c->setColor(color());
-    c->setRotation(rotation(), transformOriginPoint());
+    c->setRotation(angle(), transformOriginPoint());
     c->setScale(scale(), transformOriginPoint());
 
     return c;
