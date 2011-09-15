@@ -712,7 +712,7 @@
     <string>Add a chart to the current pattern</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+N</string>
+    <string>Ctrl+Shift+N</string>
    </property>
   </action>
   <action name="actionZoomIn">
@@ -990,6 +990,9 @@
    <property name="toolTip">
     <string>Show Align and Distribute</string>
    </property>
+   <property name="shortcut">
+    <string>Shift+F7</string>
+   </property>
   </action>
   <action name="actionShowRowsDock">
    <property name="checkable">
@@ -1016,6 +1019,9 @@
    </property>
    <property name="text">
     <string>Show Mirror and Rotate</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F8</string>
    </property>
   </action>
  </widget>
