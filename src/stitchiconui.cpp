@@ -15,13 +15,13 @@ StitchIconUi::StitchIconUi(QWidget* parent)
 {
     ui->setupUi(this);
 
-    connect(ui->addIcon, SIGNAL(clicked()), this, SLOT(addIcon()));
-    connect(ui->removeIcon, SIGNAL(clicked()), this, SLOT(removeIcon()));
-    connect(ui->saveIcon, SIGNAL(clicked()), this, SLOT(saveIcon()));
+    connect(ui->addIcon, SIGNAL(clicked()), SLOT(addIcon()));
+    connect(ui->removeIcon, SIGNAL(clicked()), SLOT(removeIcon()));
+    connect(ui->saveIcon, SIGNAL(clicked()), SLOT(saveIcon()));
 
-    connect(this, SIGNAL(newIconAdded(QString)), this, SLOT(updateIconList(QString)));
+    connect(this, SIGNAL(newIconAdded(QString)), SLOT(updateIconList(QString)));
 
-    connect(ui->iconList, SIGNAL(itemSelectionChanged()), this, SLOT(updateIconSelection()));
+    connect(ui->iconList, SIGNAL(itemSelectionChanged()), SLOT(updateIconSelection()));
     loadIcons();
 }
 
@@ -34,9 +34,6 @@ void StitchIconUi::loadIcons()
     QStringList dirs, setDir;
     QString userFolder = Settings::inst()->userSettingsFolder();
 
-
-    dirs << userFolder + "icons";
-
     QDir dir;
 
     dir.setPath(userFolder);
@@ -46,7 +43,7 @@ void StitchIconUi::loadIcons()
         if(folder != "." && folder != "..")
             dirs << userFolder + folder;
     }
-
+    
     //get all files from all set folders.
     foreach(QString folder, dirs) {
         dir.setPath(folder);
@@ -67,39 +64,41 @@ void StitchIconUi::addIcon()
 {
     //TODO: make this a multi-file importer.
     QString dir = Settings::inst()->value("fileLocation").toString();
-    QString source = QFileDialog::getOpenFileName(this, tr("Add Icon"), dir, "Image Files (*.svg *.svgz *.png *.gif *.jpg *.jpeg)");
+    QStringList sources = QFileDialog::getOpenFileNames(this, tr("Add Icon"), dir, "Image Files (*.svg *.svgz *.png *.gif *.jpg *.jpeg)");
 
-    if(source.isEmpty())
+    if(sources.count() <= 0)
         return;
-    
-    QString dest = Settings::inst()->userSettingsFolder() + "icons/";
-    
-    if(!QFileInfo(dest).exists())
-        QDir(Settings::inst()->userSettingsFolder()).mkpath(dest);
-    
-    QFileInfo srcInfo(source);
 
-    dest += srcInfo.fileName();
-    QFileInfo destInfo(dest);
-    
-    if(destInfo.exists()) {
-        QMessageBox msgbox(this);
-        msgbox.setText(tr("A file with the name '%1' already exists.").arg(srcInfo.fileName()));
-        msgbox.setInformativeText(tr("Would you like to replace the existing file?"));
-        msgbox.setIcon(QMessageBox::Question);
-        QPushButton* overwrite = msgbox.addButton(tr("Replace existing file"), QMessageBox::AcceptRole);
-        /*QPushButton* cancel =*/ msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
+    foreach(QString source, sources) {
+        QString dest = Settings::inst()->userSettingsFolder() + "icons/";
+
+        if(!QFileInfo(dest).exists())
+            QDir(Settings::inst()->userSettingsFolder()).mkpath(dest);
         
-        msgbox.exec();
+        QFileInfo srcInfo(source);
 
-        if (msgbox.clickedButton() != overwrite)
-            return;
+        dest += srcInfo.fileName();
+        QFileInfo destInfo(dest);
 
-        QFile::remove(dest);
+        if(destInfo.exists()) {
+            QMessageBox msgbox(this);
+            msgbox.setText(tr("A file with the name '%1' already exists.").arg(srcInfo.fileName()));
+            msgbox.setInformativeText(tr("Would you like to replace the existing file?"));
+            msgbox.setIcon(QMessageBox::Question);
+            QPushButton* overwrite = msgbox.addButton(tr("Replace existing file"), QMessageBox::AcceptRole);
+            /*QPushButton* cancel =*/ msgbox.addButton(tr("Cancel"), QMessageBox::RejectRole);
+
+            msgbox.exec();
+
+            if (msgbox.clickedButton() != overwrite)
+                return;
+
+            QFile::remove(dest);
+        }
+
+        QFile::copy(source, dest);
+        emit newIconAdded(dest);
     }
-
-    QFile::copy(source, dest);
-    emit newIconAdded(dest);
 }
 
 void StitchIconUi::removeIcon()
