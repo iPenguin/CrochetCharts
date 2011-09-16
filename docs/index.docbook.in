@@ -113,7 +113,7 @@
         </section>
         <section>
             <title>Mac</title>
-            <para>@SWS_PROJECT_NAME@ will run on Mac OS X version 10.4-10.7 (Tiger, Leopard, Snow Leopard, Lion)  To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
+            <para>@SWS_PROJECT_NAME@ will run on Mac OS X version 10.5-10.7 (Leopard, Snow Leopard, Lion)  To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
             <para>Once the file has been downloaded you can install the software by dragging and dropping the software into the Applications folder.</para>
             <screenshot>
                 <mediaobject>
