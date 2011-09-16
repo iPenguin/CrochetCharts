@@ -39,6 +39,7 @@ Scene::Scene(QObject* parent)
     mMoving(false),
     mIsRubberband(false),
     mHasSelection(false),
+    mSnapTo(false),
     mMode(Scene::StitchEdit),
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
@@ -202,15 +203,6 @@ void Scene::updateRubberBand(int dx, int dy)
 
     mRubberBandStart.setX(mRubberBandStart.x() - dx);
     mRubberBandStart.setY(mRubberBandStart.y() - dy);
-}
-
-qreal Scene::scenePosToAngle(QPointF pt)
-{
-
-    qreal rads = atan2(pt.x(), pt.y());
-    qreal angleX = rads * 180 / M_PI;
-
-    return -angleX;
 }
 
 void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
@@ -511,6 +503,14 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
 }
 
+qreal Scene::scenePosToAngle(QPointF pt)
+{
+
+    qreal rads = atan2(pt.x(), pt.y());
+    qreal angleX = rads * 180 / M_PI;
+
+    return angleX;
+}
 
 void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
 {
@@ -538,7 +538,20 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     qreal angle1 = scenePosToAngle(rel1);
     qreal angle2 = scenePosToAngle(rel2);
 
-    mAngle = mOldAngle - (angle1 - angle2);
+    mAngle = mOldAngle + (angle1 - angle2);
+
+    qreal diff = fmod(mAngle, 45.0);
+    qreal comp = abs(diff);
+    if(comp < 4 /*&& !mSnapTo*/) {
+        qreal div = mAngle - diff;
+        mAngle = div;
+/*FIXME: figure out a way to allow moving back with out snapping.
+        mSnapTo = true;
+    } else if(comp >= 4 && mSnapTo) {
+        mSnapTo = false;
+*/
+    }
+    
     mCurCell->setRotation(mAngle, mPivotPt);
 
 }

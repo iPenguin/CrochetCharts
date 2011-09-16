@@ -200,7 +200,7 @@ protected:
 
     QRectF selectedItemsBoundingRect();
     
-protected:
+private:
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
@@ -225,6 +225,7 @@ protected:
     bool mMoving;
     bool mIsRubberband;
     bool mHasSelection;
+    bool mSnapTo;
     
     EditMode mMode;
     
@@ -243,12 +244,12 @@ protected:
     //rows keeps track of the st order for individual rows;
     QList< QList<CrochetCell*> > grid;
     
-private:
     qreal scenePosToAngle(QPointF pt);
 
     int mRowSpacing;
     QSizeF mDefaultSize;
     QString mDefaultStitch;
+    
 
     QList<QGraphicsItem*> mRowSelection;
     
