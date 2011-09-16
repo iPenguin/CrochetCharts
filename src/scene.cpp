@@ -53,7 +53,7 @@ Scene::Scene(QObject* parent)
     mRowLine(0),
     mCenterSymbol(0)
 {
-    mPivotPt = QPointF(mDefaultSize.width()/2, 0);
+    mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
     initDemoBackground();
 }
 
@@ -519,7 +519,7 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
         return;
 
     mOldAngle = mCurCell->angle();
-    mPivotPt = QPointF(mCurCell->stitch()->width()/2, 0);
+    mPivotPt = QPointF(mCurCell->stitch()->width()/2, mCurCell->stitch()->height());
     mOrigin = mCurCell->mapToScene(mPivotPt);
 }
 
@@ -561,7 +561,7 @@ void Scene::stretchModeMousePress(QGraphicsSceneMouseEvent* e)
         return;
 
     mOldScale = mCurCell->scale();
-    mPivotPt = QPointF(mCurCell->stitch()->width()/2, 0);
+    mPivotPt = QPointF(mCurCell->stitch()->width()/2, mCurCell->stitch()->height());
     mCurScale = mCurCell->scale();
 }
 
