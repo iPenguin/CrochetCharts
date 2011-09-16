@@ -212,6 +212,9 @@ QString TextView::copyInstructions()
     for(int i = 0; i < rowText.count(); ++i)
         text += tr("Row %1: %2\n").arg(i+1).arg(rowText[i]);
 
+    if(text == "")
+        text = "There are no rows on this chart, to create rows please goto the \"Modes\" menu and select \"Row Edit\"";
+    
     return text;
 
 }
