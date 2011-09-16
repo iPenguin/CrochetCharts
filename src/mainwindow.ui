@@ -830,7 +830,10 @@
   </action>
   <action name="actionRemoveTab">
    <property name="text">
-    <string>Remove Tab</string>
+    <string>Remove Chart</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove chart from this document</string>
    </property>
   </action>
   <action name="actionStitchMode">
