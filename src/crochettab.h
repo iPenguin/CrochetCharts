@@ -64,6 +64,9 @@ public:
     void copy();
     void cut();
     void paste();
+
+    void group();
+    void ungroup();
     
 signals:
     void chartStitchChanged();

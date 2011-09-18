@@ -237,3 +237,53 @@ void AddItem::redo()
 {
     scene->addItem(i);
 }
+
+/*************************************************\
+| GroupItems                                      |
+\*************************************************/
+GroupItems::GroupItems(Scene* s, QList<QGraphicsItem*> itemList, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    scene = s;
+    items = itemList;
+    setText(QObject::tr("group items"));
+    group = new QGraphicsItemGroup();
+
+}
+
+void GroupItems::redo()
+{
+    group = scene->group(items);
+}
+
+void GroupItems::undo()
+{
+    scene->ungroup(group);
+    delete group;
+    group = 0;
+}
+
+/*************************************************\
+| UngroupItems                                    |
+\*************************************************/
+UngroupItems::UngroupItems(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    scene = s;
+    group = grp;
+    items = grp->childItems();
+    setText(QObject::tr("group items"));
+
+}
+
+void UngroupItems::redo()
+{
+    scene->ungroup(group);
+    delete group;
+    group = 0;
+}
+
+void UngroupItems::undo()
+{
+    group = scene->group(items);
+}

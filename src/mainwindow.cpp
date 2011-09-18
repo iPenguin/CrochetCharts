@@ -299,10 +299,6 @@ void MainWindow::setupMenus()
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out", QIcon(":/images/zoomout.png")));
     ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
-
-    connect(ui->actionShowAlignDock, SIGNAL(triggered()), SLOT(viewShowAlignDock()));
-    connect(ui->actionShowRowsDock, SIGNAL(triggered()), SLOT(viewShowRowsDock()));
-    connect(ui->actionShowMirrorDock, SIGNAL(triggered()), SLOT(viewShowMirrorDock()));
     
     //Modes menu
     connect(ui->menuModes, SIGNAL(aboutToShow()), SLOT(menuModesAboutToShow()));
@@ -330,6 +326,14 @@ void MainWindow::setupMenus()
 
     connect(ui->actionCreateRows, SIGNAL(toggled(bool)), SLOT(chartCreateRows(bool)));
     
+    //Stitches Menu
+    connect(ui->actionShowAlignDock, SIGNAL(triggered()), SLOT(viewShowAlignDock()));
+    connect(ui->actionShowRowsDock, SIGNAL(triggered()), SLOT(viewShowRowsDock()));
+    connect(ui->actionShowMirrorDock, SIGNAL(triggered()), SLOT(viewShowMirrorDock()));
+
+    connect(ui->actionGroup, SIGNAL(triggered()), SLOT(group()));
+    connect(ui->actionUngroup, SIGNAL(triggered()), SLOT(ungroup()));
+
     //Tools Menu
     connect(ui->menuTools, SIGNAL(aboutToShow()), SLOT(menuToolsAboutToShow()));
     connect(ui->actionOptions, SIGNAL(triggered()), SLOT(toolsOptions()));
@@ -1328,62 +1332,66 @@ void MainWindow::documentIsModified(bool isModified)
 void MainWindow::chartCreateRows(bool state)
 {
     CrochetTab* tab = curCrochetTab();
-    if(tab)
-        tab->showRowEditor(state);
+    if(tab) tab->showRowEditor(state);
 }
 
 void MainWindow::alignSelection(int style)
 {
     CrochetTab* tab = curCrochetTab();
-    if(tab)
-        tab->alignSelection(style);
+    if(tab) tab->alignSelection(style);
 }
 
 void MainWindow::distributeSelection(int style)
 {
     CrochetTab* tab = curCrochetTab();
-    if(tab)
-        tab->distributeSelection(style);
+    if(tab) tab->distributeSelection(style);
 }
 
 void MainWindow::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection)
 {
     CrochetTab* tab = curCrochetTab();
-    if(tab)
-        tab->arrangeGrid(grid, alignment, spacing, useSelection);
+    if(tab) tab->arrangeGrid(grid, alignment, spacing, useSelection);
 }
 
 void MainWindow::mirror(int direction)
 {
     CrochetTab* tab = curCrochetTab();
-    if(tab)
-        tab->mirror(direction);
+    if(tab) tab->mirror(direction);
 }
 
 void MainWindow::rotate(qreal degrees)
 {
     CrochetTab* tab = curCrochetTab();
-    if(tab)
-        tab->rotate(degrees);
+    if(tab) tab->rotate(degrees);
 }
 
 void MainWindow::copy()
 {
     CrochetTab* tab = curCrochetTab();
-    if(tab)
-        tab->copy();
+    if(tab) tab->copy();
 }
 
 void MainWindow::cut()
 {
     CrochetTab* tab = curCrochetTab();
-    if(tab)
-        tab->cut();
+    if(tab) tab->cut();
 }
 
 void MainWindow::paste()
 {
     CrochetTab* tab = curCrochetTab();
-    if(tab)
-        tab->paste();
+    if(tab) tab->paste();
+}
+
+void MainWindow::group()
+{
+    CrochetTab* tab = curCrochetTab();
+    if(tab) tab->group();
+}
+
+void MainWindow::ungroup()
+{
+    CrochetTab* tab = curCrochetTab();
+    if(tab) tab->ungroup();
+
 }

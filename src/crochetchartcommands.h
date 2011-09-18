@@ -194,4 +194,40 @@ private:
     Scene* scene;
 };
 
+class GroupItems : public QUndoCommand
+{
+public:
+    enum { Id = 1200 };
+
+    GroupItems(Scene* s, QList<QGraphicsItem*> itemList, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    int id() const { return Id; }
+
+private:
+    QList<QGraphicsItem*> items;
+    QGraphicsItemGroup* group;
+    Scene* scene;
+};
+
+class UngroupItems : public QUndoCommand
+{
+public:
+    enum { Id = 1210 };
+
+    UngroupItems(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    int id() const { return Id; }
+
+private:
+    QList<QGraphicsItem*> items;
+    QGraphicsItemGroup* group;
+    Scene* scene;
+};
+
 #endif //CROCHETCHARTCOMMANDS_H

@@ -272,7 +272,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -321,9 +321,6 @@
     <addaction name="actionShowMainToolbar"/>
     <addaction name="actionShowEditModeToolbar"/>
     <addaction name="separator"/>
-    <addaction name="actionShowAlignDock"/>
-    <addaction name="actionShowMirrorDock"/>
-    <addaction name="separator"/>
     <addaction name="actionViewFullScreen"/>
    </widget>
    <widget class="QMenu" name="menuChart">
@@ -365,11 +362,22 @@
     <addaction name="actionCreateRows"/>
     <addaction name="actionIndicatorMode"/>
    </widget>
+   <widget class="QMenu" name="menuStitches">
+    <property name="title">
+     <string>&amp;Stitches</string>
+    </property>
+    <addaction name="actionGroup"/>
+    <addaction name="actionUngroup"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowAlignDock"/>
+    <addaction name="actionShowMirrorDock"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuModes"/>
    <addaction name="menuChart"/>
+   <addaction name="menuStitches"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -1025,6 +1033,30 @@
    </property>
    <property name="shortcut">
     <string>Shift+F8</string>
+   </property>
+  </action>
+  <action name="actionGroup">
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/group.svg</normaloff>:/images/group.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Group</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
+  </action>
+  <action name="actionUngroup">
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/ungroup.svg</normaloff>:/images/ungroup.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Ungroup</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+G</string>
    </property>
   </action>
  </widget>

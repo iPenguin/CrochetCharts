@@ -63,5 +63,7 @@
         <file>images/arrow_up.svg</file>
         <file>images/minus.svg</file>
         <file>images/plus.svg</file>
+        <file>images/group.svg</file>
+        <file>images/ungroup.svg</file>
     </qresource>
 </RCC>

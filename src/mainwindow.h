@@ -106,6 +106,9 @@ private slots:
     void cut();
     void paste();
 
+    void group();
+    void ungroup();
+
 private slots:
     void print(QPrinter* printer);
 

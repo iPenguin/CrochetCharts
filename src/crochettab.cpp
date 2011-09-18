@@ -328,3 +328,13 @@ void CrochetTab::paste()
 {
     mScene->paste();
 }
+
+void CrochetTab::group()
+{
+    mScene->group();
+}
+
+void CrochetTab::ungroup()
+{
+    mScene->ungroup();
+}

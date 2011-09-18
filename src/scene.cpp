@@ -1183,7 +1183,7 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
         if found position stitch per user rules above.
         else leave box empty?
 
-    */   
+    */
     } else {
         //create new cells.
         //TODO: figure out how to deal with spacing.
@@ -1466,7 +1466,53 @@ QRectF Scene::selectedItemsBoundingRect()
     return QRectF(QPointF(left - leftW, top - topH), QPointF(right + rightW, bottom + bottomH));
 }
 
+void Scene::group()
+{
+    if(selectedItems().count() <= 0)
+        return;
 
+    undoStack()->push(new GroupItems(this, selectedItems()));
+}
+
+QGraphicsItemGroup* Scene::group(QList<QGraphicsItem*> items)
+{
+
+    QGraphicsItemGroup* group = createItemGroup(items);
+    group->setFlag(QGraphicsItem::ItemIsMovable);
+    group->setFlag(QGraphicsItem::ItemIsSelectable);
+    mGroups.append(group);
+
+    foreach(QGraphicsItem* item, items) {
+        item->setSelected(false);
+    }
+
+    group->setSelected(true);
+
+    return group;
+}
+
+void Scene::ungroup()
+{
+    if(selectedItems().count() <= 0)
+        return;
+    qDebug() << selectedItems().count();
+    foreach(QGraphicsItem* item, selectedItems()) {
+        qDebug() << item;
+        if(item->type() == QGraphicsItemGroup::Type) {
+            qDebug() << "ungroup";
+            QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            undoStack()->push(new UngroupItems(this, group));
+        }
+    }
+}
+
+void Scene::ungroup(QGraphicsItemGroup* group)
+{
+    qDebug() << "ungroup destroy";
+
+    mGroups.removeOne(group);
+    destroyItemGroup(group);
+}
 
 /**********
  *Rounds Specific functions:

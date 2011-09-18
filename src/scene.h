@@ -28,6 +28,8 @@ class Scene : public QGraphicsScene
     friend class RemoveCell;
     friend class RowEditDialog;
     friend class TextView;
+    friend class GroupItems;
+    friend class UngroupItems;
 public:
 
     enum EditMode {
@@ -109,6 +111,9 @@ public:
     void cut();
     void paste();
 
+    void group();
+    void ungroup();
+
     void createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize);
     
 public slots:
@@ -168,6 +173,9 @@ protected:
     
     void alignToPath();
     void distributeToPath();
+
+    QGraphicsItemGroup* group(QList<QGraphicsItem*> items);
+    void ungroup(QGraphicsItemGroup* group);
 
 protected:
     void colorModeMouseMove(QGraphicsSceneMouseEvent* e);
@@ -265,6 +273,7 @@ private:
     
     QList<QGraphicsItem*> mDemoItems;
 
+    QList<QGraphicsItemGroup*> mGroups;
 
 
 /***
