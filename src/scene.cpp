@@ -1325,12 +1325,24 @@ void Scene::copy()
 
     QByteArray copyData;
     QDataStream stream(&copyData, QIODevice::WriteOnly);
-    qDebug() << "count:" << selectedItems().count();
     QMimeData *mimeData = new QMimeData;
-    foreach(QGraphicsItem* item, selectedItems()) {
+
+    stream << selectedItems().count();
+    copyRecursively(stream, selectedItems());
+
+    mimeData->setData("application/crochet-cells", copyData);
+    QApplication::clipboard()->setMimeData(mimeData);
+
+}
+
+void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
+{
+    foreach(QGraphicsItem* item, items) {
         switch(item->type()) {
             case CrochetCell::Type: {
-                copyCell(stream, item);
+                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+                stream << c->type() << c->name() << c->color()
+                    << c->angle() << c->scale() << c->transformOriginPoint() << c->scenePos();
                 break;
             }
             case Indicator::Type: {
@@ -1340,33 +1352,17 @@ void Scene::copy()
             }
             case QGraphicsItemGroup::Type: {
                 QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
-                stream << group->type() << group->scenePos() << group->childItems().count();
-
-                foreach(QGraphicsItem* it, group->childItems()) {
-                    copyCell(stream, it);
-                }
-
+                stream << group->type() << group->childItems().count();
+                copyRecursively(stream, group->childItems());
                 break;
             }
             default:
+                qWarning() << "Copy: Unknown data type.";
                 break;
         }
-     }
-
-     mimeData->setData("application/crochet-cells", copyData);
-    QApplication::clipboard()->setMimeData(mimeData);
-
+    }
 }
-
-void Scene::copyCell(QDataStream &stream, QGraphicsItem* item)
-{
-
-    CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-    stream << c->type() << c->name() << c->color()
-           << c->angle() << c->scale() << c->transformOriginPoint() << c->pos();
-
-}
-
+    
 void Scene::paste()
 {
     const QMimeData *mimeData = QApplication::clipboard()->mimeData();
@@ -1374,20 +1370,54 @@ void Scene::paste()
     QByteArray pasteData = mimeData->data("application/crochet-cells");
     QDataStream stream(&pasteData, QIODevice::ReadOnly);
 
-    int type;
-
     clearSelection();
 
     undoStack()->beginMacro("paste items");
-    while(!stream.atEnd()) {
-//FIXME: this should be recursive code.
-        stream >> type;
-        if(type == CrochetCell::Type) {
-            pasteCell(stream);
+    int count = 0;
+    stream >> count;
+    for(int i = 0; i < count; ++i) {
+        pasteRecursively(stream);
+    }
+    
+    undoStack()->endMacro();
+}
 
-        } else if(type == Indicator::Type) {
+
+void Scene::pasteRecursively(QDataStream &stream, QGraphicsItemGroup* group)
+{
+    int type;
+    stream >> type;
+    switch(type) {
+
+        case CrochetCell::Type: {
+            QString name;
+            QColor color;
+            qreal angle, scale;
+            QPointF pos, transPoint;
+
+            stream >> name >> color >> angle >> scale >> transPoint >> pos;
+
+            AddCell* addCmd = new AddCell(this, pos);
+            undoStack()->push(addCmd);
+            CrochetCell* c = addCmd->cell();
+
+            c->setStitch(name);
+            c->setColor(color);
+
+            c->setAngle(angle);
+            c->setRotation(angle, transPoint);
+            c->setScale(scale, transPoint);
+            if(group) {
+                c->setSelected(false);
+                group->addToGroup(c);
+            } else {
+                c->setSelected(true);
+            }
+            break;
+        }
+        case Indicator::Type: {
             Indicator* i = new Indicator();
-//FIXME: add this indicator to the undo stack.
+            //FIXME: add this indicator to the undo stack.
             QPointF pos;
             QString text;
 
@@ -1397,52 +1427,32 @@ void Scene::paste()
             addItem(i);
             i->setPos(pos);
             i->setSelected(true);
-        } else if(type == QGraphicsItemGroup::Type) {
+            break;
+        }
+        case QGraphicsItemGroup::Type: {
             QGraphicsItemGroup* group = new QGraphicsItemGroup();
             QPointF pos;
             int childCount;
 
-            stream >> pos >> childCount;
-            group->setPos(pos);
+            stream >> childCount;
             group->setFlag(QGraphicsItem::ItemIsMovable);
             group->setFlag(QGraphicsItem::ItemIsSelectable);
-            
+
             for(int i = 0; i < childCount; ++i) {
-                stream >> type; //TODO: check for indicators.
-                CrochetCell* c = pasteCell(stream);
-                c->setSelected(false);
-                group->addToGroup(c);
+                pasteRecursively(stream, group);
             }
-            
+
+            group->setSelected(true);
             addItem(group);
             mGroups.append(group);
-
+            break;
+        }
+        default: {
+            qWarning() << "Paste: Unknown data type.";
+            break;
         }
     }
-    undoStack()->endMacro();
-}
 
-CrochetCell* Scene::pasteCell(QDataStream &stream)
-{
-    QString name;
-    QColor color;
-    qreal angle, scale;
-    QPointF pos, transPoint;
-
-    stream >> name >> color >> angle >> scale >> transPoint >> pos;
-
-    AddCell* addCmd = new AddCell(this, pos);
-    undoStack()->push(addCmd);
-    CrochetCell* c = addCmd->cell();
-
-    c->setStitch(name);
-    c->setColor(color);
-
-    c->setAngle(angle);
-    c->setRotation(angle, transPoint);
-    c->setScale(scale, transPoint);
-    c->setSelected(true);
-    return c;
 }
 
 void Scene::cut()

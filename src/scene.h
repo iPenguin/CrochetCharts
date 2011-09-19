@@ -117,8 +117,8 @@ public:
     void createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize);
 
 protected:
-    void copyCell(QDataStream &stream, QGraphicsItem* item);
-    CrochetCell* pasteCell(QDataStream &stream);
+    void copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items);
+    void pasteRecursively(QDataStream &stream, QGraphicsItemGroup* group = 0);
 
 public slots:
     void createRow();
