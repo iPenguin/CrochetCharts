@@ -1375,15 +1375,16 @@ void Scene::paste()
     undoStack()->beginMacro("paste items");
     int count = 0;
     stream >> count;
+    QList<QGraphicsItem*> items;
     for(int i = 0; i < count; ++i) {
-        pasteRecursively(stream);
+        pasteRecursively(stream, &items, false);
     }
     
     undoStack()->endMacro();
 }
 
 
-void Scene::pasteRecursively(QDataStream &stream, QGraphicsItemGroup* group)
+void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group, bool useGroup)
 {
     int type;
     stream >> type;
@@ -1407,9 +1408,9 @@ void Scene::pasteRecursively(QDataStream &stream, QGraphicsItemGroup* group)
             c->setAngle(angle);
             c->setRotation(angle, transPoint);
             c->setScale(scale, transPoint);
-            if(group) {
+            if(useGroup) {
                 c->setSelected(false);
-                group->addToGroup(c);
+                group->append(c);
             } else {
                 c->setSelected(true);
             }
@@ -1426,25 +1427,34 @@ void Scene::pasteRecursively(QDataStream &stream, QGraphicsItemGroup* group)
             i->setText(text);
             addItem(i);
             i->setPos(pos);
-            i->setSelected(true);
+            
+            if(useGroup) {
+                i->setSelected(false);
+                group->append(i);
+            } else {
+                i->setSelected(true);
+            }
             break;
         }
         case QGraphicsItemGroup::Type: {
-            QGraphicsItemGroup* group = new QGraphicsItemGroup();
-            QPointF pos;
             int childCount;
-
             stream >> childCount;
-            group->setFlag(QGraphicsItem::ItemIsMovable);
-            group->setFlag(QGraphicsItem::ItemIsSelectable);
-
+            QList<QGraphicsItem*> items;
             for(int i = 0; i < childCount; ++i) {
-                pasteRecursively(stream, group);
+                pasteRecursively(stream, &items, true);
             }
 
-            group->setSelected(true);
-            addItem(group);
-            mGroups.append(group);
+            GroupItems* grpItems = new GroupItems(this, items);
+            undoStack()->push(grpItems);
+            QGraphicsItemGroup* g = grpItems->group();
+            
+            if(useGroup) {
+                g->setSelected(false);
+                group->append(g);
+            } else {
+                g->setSelected(true);
+            }
+
             break;
         }
         default: {

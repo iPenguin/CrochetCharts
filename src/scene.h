@@ -118,7 +118,7 @@ public:
 
 protected:
     void copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items);
-    void pasteRecursively(QDataStream &stream, QGraphicsItemGroup* group = 0);
+    void pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group, bool useGroup = false);
 
 public slots:
     void createRow();

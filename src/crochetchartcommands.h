@@ -206,9 +206,11 @@ public:
 
     int id() const { return Id; }
 
+    QGraphicsItemGroup* group() { return mGroup; }
+
 private:
     QList<QGraphicsItem*> items;
-    QGraphicsItemGroup* group;
+    QGraphicsItemGroup* mGroup;
     Scene* scene;
 };
 

@@ -247,18 +247,18 @@ GroupItems::GroupItems(Scene* s, QList<QGraphicsItem*> itemList, QUndoCommand* p
     scene = s;
     items = itemList;
     setText(QObject::tr("group items"));
-    group = new QGraphicsItemGroup();
+    mGroup = new QGraphicsItemGroup();
 
 }
 
 void GroupItems::redo()
 {
-    group = scene->group(items);
+    mGroup = scene->group(items);
 }
 
 void GroupItems::undo()
 {
-    scene->ungroup(group);
+    scene->ungroup(mGroup);
 }
 
 /*************************************************\
