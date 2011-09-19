@@ -1376,7 +1376,7 @@ void Scene::paste()
 
     undoStack()->beginMacro("paste items");
     while(!stream.atEnd()) {
-
+//FIXME: this should be recursive code.
         stream >> type;
         if(type == CrochetCell::Type) {
             pasteCell(stream);
@@ -1400,14 +1400,19 @@ void Scene::paste()
 
             stream >> pos >> childCount;
             group->setPos(pos);
-
-
+            group->setFlag(QGraphicsItem::ItemIsMovable);
+            group->setFlag(QGraphicsItem::ItemIsSelectable);
+            
             for(int i = 0; i < childCount; ++i) {
+                stream >> type; //TODO: check for indicators.
                 CrochetCell* c = pasteCell(stream);
+                c->setSelected(false);
                 group->addToGroup(c);
             }
-            qDebug() << group->childItems().count() << group->childItems();
+            
+            addItem(group);
             mGroups.append(group);
+
         }
     }
     undoStack()->endMacro();
@@ -1516,6 +1521,7 @@ QGraphicsItemGroup* Scene::group(QList<QGraphicsItem*> items)
     foreach(QGraphicsItem* item, items) {
         item->setSelected(false);
     }
+    clearSelection();
 
     QGraphicsItemGroup* group = createItemGroup(items);
     group->setFlag(QGraphicsItem::ItemIsMovable);
