@@ -259,8 +259,6 @@ void GroupItems::redo()
 void GroupItems::undo()
 {
     scene->ungroup(group);
-    delete group;
-    group = 0;
 }
 
 /*************************************************\
@@ -279,8 +277,6 @@ UngroupItems::UngroupItems(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* pare
 void UngroupItems::redo()
 {
     scene->ungroup(group);
-    delete group;
-    group = 0;
 }
 
 void UngroupItems::undo()
