@@ -1321,21 +1321,27 @@ void Scene::copy()
 
     QByteArray copyData;
     QDataStream stream(&copyData, QIODevice::WriteOnly);
-
+    qDebug() << "count:" << selectedItems().count();
     QMimeData *mimeData = new QMimeData;
     foreach(QGraphicsItem* item, selectedItems()) {
         switch(item->type()) {
             case CrochetCell::Type: {
-
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-                stream << c->type() << c->name() << c->color()
-                       << c->angle() << c->scale() << c->transformOriginPoint() << c->pos();
-
+                copyCell(stream, item);
                 break;
             }
             case Indicator::Type: {
                 Indicator* i = qgraphicsitem_cast<Indicator*>(item);
                 stream << i->type() << i->scenePos() << i->text();
+                break;
+            }
+            case QGraphicsItemGroup::Type: {
+                QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+                stream << group->type() << group->scenePos() << group->childItems().count();
+
+                foreach(QGraphicsItem* it, group->childItems()) {
+                    copyCell(stream, it);
+                }
+
                 break;
             }
             default:
@@ -1345,6 +1351,15 @@ void Scene::copy()
 
      mimeData->setData("application/crochet-cells", copyData);
     QApplication::clipboard()->setMimeData(mimeData);
+
+}
+
+void Scene::copyCell(QDataStream &stream, QGraphicsItem* item)
+{
+
+    CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+    stream << c->type() << c->name() << c->color()
+           << c->angle() << c->scale() << c->transformOriginPoint() << c->pos();
 
 }
 
@@ -1364,24 +1379,7 @@ void Scene::paste()
 
         stream >> type;
         if(type == CrochetCell::Type) {
-            QString name;
-            QColor color;
-            qreal angle, scale;
-            QPointF pos, transPoint;
-
-            stream >> name >> color >> angle >> scale >> transPoint >> pos;
-
-            AddCell* addCmd = new AddCell(this, pos);
-            undoStack()->push(addCmd);
-            CrochetCell* c = addCmd->cell();
-
-            c->setStitch(name);
-            c->setColor(color);
-
-            c->setAngle(angle);
-            c->setRotation(angle, transPoint);
-            c->setScale(scale, transPoint);
-            c->setSelected(true);
+            pasteCell(stream);
 
         } else if(type == Indicator::Type) {
             Indicator* i = new Indicator();
@@ -1395,10 +1393,48 @@ void Scene::paste()
             addItem(i);
             i->setPos(pos);
             i->setSelected(true);
+        } else if(type == QGraphicsItemGroup::Type) {
+            QGraphicsItemGroup* group = new QGraphicsItemGroup();
+            QPointF pos;
+            int childCount;
 
+            stream >> pos >> childCount;
+            group->setPos(pos);
+
+
+            for(int i = 0; i < childCount; ++i) {
+                CrochetCell* c = pasteCell(stream);
+                group->addToGroup(c);
+            }
+            qDebug() << group->childItems().count() << group->childItems();
+            mGroups.append(group);
         }
     }
     undoStack()->endMacro();
+}
+
+CrochetCell* Scene::pasteCell(QDataStream &stream)
+{
+    QString name;
+    QColor color;
+    qreal angle, scale;
+    QPointF pos, transPoint;
+
+    stream >> name >> color >> angle >> scale >> transPoint >> pos;
+
+    AddCell* addCmd = new AddCell(this, pos);
+    undoStack()->push(addCmd);
+    CrochetCell* c = addCmd->cell();
+
+    c->setStitch(name);
+    c->setColor(color);
+
+    c->setAngle(angle);
+    c->setRotation(angle, transPoint);
+    c->setScale(scale, transPoint);
+    c->setSelected(true);
+    c->setToolTip("copy");
+    return c;
 }
 
 void Scene::cut()
@@ -1477,14 +1513,14 @@ void Scene::group()
 QGraphicsItemGroup* Scene::group(QList<QGraphicsItem*> items)
 {
 
+    foreach(QGraphicsItem* item, items) {
+        item->setSelected(false);
+    }
+
     QGraphicsItemGroup* group = createItemGroup(items);
     group->setFlag(QGraphicsItem::ItemIsMovable);
     group->setFlag(QGraphicsItem::ItemIsSelectable);
     mGroups.append(group);
-
-    foreach(QGraphicsItem* item, items) {
-        item->setSelected(false);
-    }
 
     group->setSelected(true);
 
@@ -1495,11 +1531,9 @@ void Scene::ungroup()
 {
     if(selectedItems().count() <= 0)
         return;
-    qDebug() << selectedItems().count();
+
     foreach(QGraphicsItem* item, selectedItems()) {
-        qDebug() << item;
         if(item->type() == QGraphicsItemGroup::Type) {
-            qDebug() << "ungroup";
             QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
             undoStack()->push(new UngroupItems(this, group));
         }
@@ -1508,10 +1542,10 @@ void Scene::ungroup()
 
 void Scene::ungroup(QGraphicsItemGroup* group)
 {
-    qDebug() << "ungroup destroy";
 
     mGroups.removeOne(group);
     destroyItemGroup(group);
+
 }
 
 /**********

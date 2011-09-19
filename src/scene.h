@@ -115,7 +115,11 @@ public:
     void ungroup();
 
     void createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize);
-    
+
+protected:
+    void copyCell(QDataStream &stream, QGraphicsItem* item);
+    CrochetCell* pasteCell(QDataStream &stream);
+
 public slots:
     void createRow();
     void updateRow(int row);
