@@ -1236,6 +1236,10 @@ void Scene::mirror(int direction)
                 copy->setPos(rect.left() - diff, item->scenePos().y());
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
                 copy->setSelected(true);
+            } else if( item->type() == QGraphicsItemGroup::Type) {
+                QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+
+                
             }
         }
         undoStack()->endMacro();
@@ -1438,7 +1442,6 @@ CrochetCell* Scene::pasteCell(QDataStream &stream)
     c->setRotation(angle, transPoint);
     c->setScale(scale, transPoint);
     c->setSelected(true);
-    c->setToolTip("copy");
     return c;
 }
 
