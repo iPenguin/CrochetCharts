@@ -232,4 +232,22 @@ private:
     Scene* scene;
 };
 
+class RemoveGroup : public QUndoCommand
+{
+public:
+    enum { Id = 1220 };
+
+    RemoveGroup(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    int id() const { return Id; }
+
+private:
+    QList<QGraphicsItem*> items;
+    QGraphicsItemGroup* group;
+    Scene* scene;
+};
+
 #endif //CROCHETCHARTCOMMANDS_H

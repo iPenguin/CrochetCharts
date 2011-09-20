@@ -283,3 +283,23 @@ void UngroupItems::undo()
 {
     group = scene->group(items);
 }
+
+/*************************************************\
+| RemoveGroup                                     |
+\*************************************************/
+RemoveGroup::RemoveGroup(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    items = grp->childItems();
+
+}
+
+void RemoveGroup::undo()
+{
+
+}
+
+void RemoveGroup::redo()
+{
+
+}

@@ -211,12 +211,20 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
         QList<QGraphicsItem*> items = selectedItems();
         undoStack()->beginMacro("Remove items");
         foreach(QGraphicsItem* item, items) {
-            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-            if(c) {
-                undoStack()->push(new RemoveCell(this, c));
-            } else {
-                Indicator* i = qgraphicsitem_cast<Indicator*>(item);
-                undoStack()->push(new RemoveIndicator(this, i));
+
+            switch(item->type()) {
+                case CrochetCell::Type: {
+                    CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+                    undoStack()->push(new RemoveCell(this, c));
+                }
+                case Indicator::Type: {
+                    Indicator* i = qgraphicsitem_cast<Indicator*>(item);
+                    undoStack()->push(new RemoveIndicator(this, i));
+                }
+                case QGraphicsItemGroup::Type: {
+                    QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+                    undoStack()->push(new RemoveGroup(this, group));
+                }
             }
         }
         undoStack()->endMacro();
