@@ -157,10 +157,61 @@ int Scene::maxColumnCount()
     return max;
 }
 
-void Scene::removeCell(CrochetCell* c)
+void Scene::addItem(QGraphicsItem* item)
 {
-    removeItem(c);
-    removeFromRows(c);
+    switch(item->type()) {
+        case CrochetCell::Type: {
+            QGraphicsScene::addItem(item);
+            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            connect(c, SIGNAL(stitchChanged(QString,QString)), SIGNAL(stitchChanged(QString,QString)));
+            connect(c, SIGNAL(colorChanged(QString,QString)), SIGNAL(colorChanged(QString,QString)));
+            break;
+        }
+        case Indicator::Type: {
+            QGraphicsScene::addItem(item);
+            Indicator* i = qgraphicsitem_cast<Indicator*>(item);
+            mIndicators.append(i);
+            break;
+        }
+        case QGraphicsItemGroup::Type: {
+            QGraphicsScene::addItem(item);
+            QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            mGroups.append(group);
+            break;
+        }
+        default:
+            qWarning() << "addItem: unknown type";
+            break;
+    }
+}
+
+void Scene::removeItem(QGraphicsItem* item)
+{
+
+    switch(item->type()) {
+        case CrochetCell::Type: {
+            QGraphicsScene::removeItem(item);
+            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            removeFromRows(c);
+            break;
+        }
+        case Indicator::Type: {
+            QGraphicsScene::removeItem(item);
+            Indicator* i = qgraphicsitem_cast<Indicator*>(item);
+            mIndicators.removeOne(i);
+            break;
+        }
+        case QGraphicsItemGroup::Type: {
+            QGraphicsScene::removeItem(item);
+            QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            mGroups.removeOne(group);
+            break;
+        }
+        default:
+            qWarning() << "removeItem: unknown type";
+            break;
+    }
+
 }
 
 void Scene::removeFromRows(CrochetCell* c)
@@ -173,26 +224,6 @@ void Scene::removeFromRows(CrochetCell* c)
             break;
         }
     }
-}
-
-void Scene::addIndicator(Indicator* i)
-{
-    addItem(i);
-    mIndicators.append(i);
-}
-
-void Scene::removeIndicator(Indicator* i)
-{
-    removeItem(i);
-    mIndicators.removeOne(i);
-}
-
-void Scene::addCell(CrochetCell* c)
-{
-    addItem(c);
-
-    connect(c, SIGNAL(stitchChanged(QString,QString)), SIGNAL(stitchChanged(QString,QString)));
-    connect(c, SIGNAL(colorChanged(QString,QString)), SIGNAL(colorChanged(QString,QString)));
 }
 
 void Scene::updateRubberBand(int dx, int dy)
@@ -216,20 +247,26 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
                 case CrochetCell::Type: {
                     CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
                     undoStack()->push(new RemoveCell(this, c));
+                    break;
                 }
                 case Indicator::Type: {
                     Indicator* i = qgraphicsitem_cast<Indicator*>(item);
                     undoStack()->push(new RemoveIndicator(this, i));
+                    break;
                 }
                 case QGraphicsItemGroup::Type: {
                     QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
                     undoStack()->push(new RemoveGroup(this, group));
+                    break;
                 }
+                default:
+                    qWarning() << "keyReleaseEvent: unkown type";
+                    break;
             }
         }
         undoStack()->endMacro();
     }
-        
+
     QGraphicsScene::keyReleaseEvent(keyEvent);
 }
 
@@ -1322,7 +1359,6 @@ void Scene::rotate(qreal degrees)
     if(selectedItems().count() <= 0)
         return;
 
-
     undoStack()->push(new SetItemRotation(this, selectedItems(), degrees));
 }
 
@@ -1546,22 +1582,28 @@ void Scene::group()
     undoStack()->push(new GroupItems(this, selectedItems()));
 }
 
-QGraphicsItemGroup* Scene::group(QList<QGraphicsItem*> items)
+QGraphicsItemGroup* Scene::group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g)
 {
 
-    foreach(QGraphicsItem* item, items) {
-        item->setSelected(false);
-    }
+    //clear selection because we're going to create a new selection.
     clearSelection();
 
-    QGraphicsItemGroup* group = createItemGroup(items);
-    group->setFlag(QGraphicsItem::ItemIsMovable);
-    group->setFlag(QGraphicsItem::ItemIsSelectable);
-    mGroups.append(group);
+    if(!g) {
+        g = createItemGroup(items);
+    } else {
+        foreach(QGraphicsItem* i, items) {
+            i->setSelected(false);
+            g->addToGroup(i);
+        }
+    }
 
-    group->setSelected(true);
+    g->setFlag(QGraphicsItem::ItemIsMovable);
+    g->setFlag(QGraphicsItem::ItemIsSelectable);
+    mGroups.append(g);
 
-    return group;
+    g->setSelected(true);
+
+    return g;
 }
 
 void Scene::ungroup()
@@ -1581,7 +1623,9 @@ void Scene::ungroup(QGraphicsItemGroup* group)
 {
 
     mGroups.removeOne(group);
-    destroyItemGroup(group);
+    foreach(QGraphicsItem* item, group->childItems()) {
+        group->removeFromGroup(item);
+    }
 
 }
 
@@ -1660,59 +1704,10 @@ void Scene::createRow(int row, int columns, QString stitch)
     for(int i = 0; i < columns; ++i) {
         c = new CrochetCell();
         c->setStitch(stitch, (row % 2));
-        addCell(c);
+        addItem(c);
         
         modelRow.append(c);
         setCellPosition(row, i, c, columns);
     }
     grid.insert(row, modelRow);
-}
-
-
-int Scene::getClosestRow(QPointF mousePosition)
-{
-    //double radius = defaultSize().height() * (row + 1) + (defaultSize().height() * 0.5);
-    qreal radius = sqrt(mousePosition.x() * mousePosition.x() + mousePosition.y() * mousePosition.y());
-
-    qreal temp = radius - (defaultSize().height() * 0.5);
-    qreal temp2 = temp / defaultSize().height();
-
-    int row = round(temp2 - 1);
-    if(row < 0)
-        row = 0;
-
-    if(row < grid.count()) {
-
-        QList<CrochetCell*> r;
-        grid.append(r);
-    }
-
-    return row;
-}
-
-int Scene::getClosestColumn(QPointF mousePosition, int row)
-{
-    /*
-              |
-          -,- | +,-
-        ------+------
-          -,+ | +,+
-              |
-    */
-    qreal tanx = mousePosition.y() / mousePosition.x();
-    qreal rads = atan(tanx);
-    qreal angleX = rads * 180 / M_PI;
-    qreal angle = 0.0;
-    if (mousePosition.x() >= 0 && mousePosition.y() >= 0)
-        angle = angleX;
-    else if(mousePosition.x() <= 0 && mousePosition.y() >= 0)
-        angle = 180 + angleX;
-    else if(mousePosition.x() <= 0 && mousePosition.y() <= 0)
-        angle = 180 + angleX;
-    else if(mousePosition.x() >= 0 && mousePosition.y() <= 0)
-        angle = 360 + angleX;
-
-    qreal degreesPerPos = 360.0 / grid[row].count();
-
-    return ceil(angle / degreesPerPos);
 }

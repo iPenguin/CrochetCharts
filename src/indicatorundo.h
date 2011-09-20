@@ -52,27 +52,6 @@ private:
     Scene* scene;
 };
 
-class MoveIndicator : public QUndoCommand
-{
-public:
-    enum { Id = 2220 };
-
-    MoveIndicator(Scene* s, Indicator* item, QPointF newPos, QUndoCommand* parent = 0);
-
-    void redo();
-    void undo();
-
-    bool mergeWith(const QUndoCommand* command);
-    
-    int id() const { return Id; }
-
-private:
-    Indicator* i;
-    QPointF origPosition;
-    QPointF newPosition;
-
-    Scene* scene;
-};
 
 class ChangeTextIndicator : public QUndoCommand
 {

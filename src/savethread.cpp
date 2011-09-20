@@ -61,7 +61,7 @@ void SaveThread::run()
         }
     }
 
-    tab->scene()->addCell(c);
+    tab->scene()->addItem(c);
     
     if(row > -1 && column > -1) {
         c->setStitch(s, (row % 2));

@@ -25,14 +25,14 @@ AddIndicator::AddIndicator(Scene* s, QPointF pos, QUndoCommand* parent)
 
 void AddIndicator::redo()
 {
-    scene->addIndicator(item);
+    scene->addItem(item);
     item->setPos(position);
     item->setTextInteractionFlags(Qt::TextEditorInteraction);
 }
 
 void AddIndicator::undo()
 {
-    scene->removeIndicator(item);
+    scene->removeItem(item);
 }
 
 /*************************************************\
@@ -49,57 +49,14 @@ RemoveIndicator::RemoveIndicator(Scene* s, Indicator* i, QUndoCommand* parent)
 
 void RemoveIndicator::redo()
 {
-    scene->removeIndicator(item);
+    scene->removeItem(item);
 }
 
 void RemoveIndicator::undo()
 {
-    scene->addIndicator(item);
+    scene->addItem(item);
     item->setPos(position);
     item->setTextInteractionFlags(Qt::TextEditorInteraction);
-}
-
-/*************************************************\
-| MoveIndicator                                   |
-\*************************************************/
-MoveIndicator::MoveIndicator(Scene* s, Indicator* item, QPointF newPos, QUndoCommand* parent)
-    : QUndoCommand(parent)
-{
-    i = item;
-    origPosition = i->pos();
-    newPosition = newPos;
-
-    scene = s;
-
-    setText(QObject::tr("Move indicator"));
-}
-
-void MoveIndicator::redo()
-{
-    i->setPos(newPosition);
-}
-
-void MoveIndicator::undo()
-{
-    i->setPos(origPosition);
-}
-
-bool MoveIndicator::mergeWith(const QUndoCommand* command)
-{
-    if(command->id() != id())
-        return false;
-
-    const MoveIndicator* other = static_cast<const MoveIndicator*>(command);
-
-    Indicator* i = qgraphicsitem_cast<Indicator*>(scene->itemAt(origPosition));
-    Indicator* otherI = qgraphicsitem_cast<Indicator*>(scene->itemAt(other->origPosition));
-
-    if(otherI != i)
-        return false;
-
-    newPosition = other->newPosition;
-    setText(QObject::tr("Move indicator"));
-    return true;
 }
 
 /*************************************************\

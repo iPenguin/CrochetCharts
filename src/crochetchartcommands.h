@@ -175,25 +175,6 @@ private:
     Scene* scene;
 };
 
-class AddItem : public QUndoCommand
-{
-public:
-    enum { Id = 1190 };
-
-    AddItem(Scene* s, QPointF pos, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    int id() const { return Id; }
-
-private:
-    QPointF position;
-    QGraphicsItem* i;
-
-    Scene* scene;
-};
-
 class GroupItems : public QUndoCommand
 {
 public:

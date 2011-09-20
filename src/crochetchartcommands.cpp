@@ -184,13 +184,15 @@ AddCell::AddCell(Scene* s, QPointF pos, QUndoCommand* parent)
 
 void AddCell::redo()
 {
-    scene->addCell(c);
+    
+    scene->addItem(c);
     c->setPos(position);
+    
 }
 
 void AddCell::undo()
 {
-    scene->removeCell(c);
+    scene->removeItem(c);
 }
 
 /*************************************************\
@@ -207,35 +209,13 @@ RemoveCell::RemoveCell(Scene* s, CrochetCell* cell, QUndoCommand* parent)
 
 void RemoveCell::redo()
 {
-    scene->removeCell(c);
+    scene->removeItem(c);
 }
 
 void RemoveCell::undo()
 {
-    scene->addCell(c);
+    scene->addItem(c);
     c->setPos(position);
-}
-
-/*************************************************\
-| AddItem                                         |
-\*************************************************/
-AddItem::AddItem(Scene* s, QPointF pos, QUndoCommand* parent)
-    : QUndoCommand(parent)
-{
-    position = pos;
-    scene = s;
-    i->setPos(pos);
-    setText(QObject::tr("add item"));
-}
-
-void AddItem::undo()
-{
-    scene->removeItem(i);
-}
-
-void AddItem::redo()
-{
-    scene->addItem(i);
 }
 
 /*************************************************\
@@ -247,13 +227,13 @@ GroupItems::GroupItems(Scene* s, QList<QGraphicsItem*> itemList, QUndoCommand* p
     scene = s;
     items = itemList;
     setText(QObject::tr("group items"));
-    mGroup = new QGraphicsItemGroup();
+    mGroup = 0;
 
 }
 
 void GroupItems::redo()
 {
-    mGroup = scene->group(items);
+    mGroup = scene->group(items, mGroup);
 }
 
 void GroupItems::undo()
@@ -281,7 +261,7 @@ void UngroupItems::redo()
 
 void UngroupItems::undo()
 {
-    group = scene->group(items);
+    group = scene->group(items, group);
 }
 
 /*************************************************\
@@ -290,16 +270,21 @@ void UngroupItems::undo()
 RemoveGroup::RemoveGroup(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
+    scene = s;
     items = grp->childItems();
-
-}
-
-void RemoveGroup::undo()
-{
-
+    group = grp;
+    setText(QObject::tr("remove group"));
 }
 
 void RemoveGroup::redo()
 {
+    scene->removeItem(group);
+}
 
+void RemoveGroup::undo()
+{
+    scene->addItem(group);
+    foreach(QGraphicsItem* i, group->childItems()) {
+        i->setVisible(true);
+    }
 }

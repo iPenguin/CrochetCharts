@@ -21,15 +21,9 @@ class Scene : public QGraphicsScene
     Q_OBJECT
     friend class SaveFile;
     friend class SaveThread;
-    friend class SetCellStitch;
-    friend class SetCellColor;
-    friend class SetCellRotation;
-    friend class AddCell;
-    friend class RemoveCell;
     friend class RowEditDialog;
     friend class TextView;
-    friend class GroupItems;
-    friend class UngroupItems;
+
 public:
 
     enum EditMode {
@@ -55,8 +49,6 @@ public:
     //convert x,y to rows, columns.
     CrochetCell* cell(QPoint position);
 
-    virtual void addCell(CrochetCell* c);
-
     /**
      * find the x,y positions on the grid for a given cell;
      * return QPoint(column, row);
@@ -64,7 +56,6 @@ public:
      */
     QPoint indexOf(CrochetCell* c);
     
-    void removeCell(CrochetCell* c);
     /**
      * This function removes a cell from the 'grid'. if the row is empty it removes the row too.
      */
@@ -83,9 +74,6 @@ public:
     void setEditBgColor(QColor color) { mEditBgColor = color; }
 
     QUndoStack* undoStack() { return &mUndoStack; }
-
-    void addIndicator(Indicator* i);
-    void removeIndicator(Indicator* i);
     
     QStringList modes();
 
@@ -116,6 +104,9 @@ public:
 
     void createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize);
 
+    void addItem(QGraphicsItem* item);
+    void removeItem(QGraphicsItem* item);
+    
 protected:
     void copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items);
     void pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group, bool useGroup = false);
@@ -178,7 +169,8 @@ protected:
     void alignToPath();
     void distributeToPath();
 
-    QGraphicsItemGroup* group(QList<QGraphicsItem*> items);
+public:
+    QGraphicsItemGroup* group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g);
     void ungroup(QGraphicsItemGroup* group);
 
 protected:
@@ -294,17 +286,6 @@ public slots:
     void setShowChartCenter(bool state);
 
 protected:
-    /**
-     * Takes a @param mousePosition and returns the closest y co-ordinate.
-     * function assumes rounds not rows.
-     */
-    int getClosestRow(QPointF mousePosition);
-    /**
-     * Takes a @param mousePosition and @param row and returns the closest x co-ordinate.
-     * function assumes rounds not rows.
-     */
-    int getClosestColumn(QPointF mousePosition, int row);
-
     void setCellPosition(int row, int column, CrochetCell* c, int columns);
 
 private:
