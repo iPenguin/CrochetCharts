@@ -56,11 +56,6 @@ public:
      */
     QPoint indexOf(CrochetCell* c);
     
-    /**
-     * This function removes a cell from the 'grid'. if the row is empty it removes the row too.
-     */
-    void removeFromRows(CrochetCell* c);
-    
     int rowCount();
     int columnCount(int row);
     int maxColumnCount();
@@ -111,6 +106,11 @@ protected:
     void copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items);
     void pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group, bool useGroup = false);
 
+    /**
+     * This function removes a cell from the 'grid'. if the row is empty it removes the row too.
+     */
+    void removeFromRows(CrochetCell* c);
+    
 public slots:
     void createRow();
     void updateRow(int row);

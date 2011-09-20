@@ -1283,8 +1283,9 @@ void Scene::mirror(int direction)
                 copy->setSelected(true);
             } else if( item->type() == QGraphicsItemGroup::Type) {
                 QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
-
-                
+                //QPointF newPt = QPointF(group->boundingRect().x() - group->boundingRect().width(), group->boundingRect().y());
+                group->scale(-1, 1);
+                //group->setPos(newPt);
             }
         }
         undoStack()->endMacro();
