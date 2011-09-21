@@ -27,6 +27,14 @@
 #include <QKeyEvent>
 #include "stitchlibrary.h"
 
+static void qNormalizeAngle(qreal &angle)
+{
+    while (angle < 0.0)
+        angle += 360.0 * 16;
+    while (angle > 360.0 * 16)
+        angle -= 360.0 * 16;
+}
+
 Scene::Scene(QObject* parent)
     : QGraphicsScene(parent),
     mCurCell(0),
@@ -597,6 +605,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
 */
     }
     
+    qNormalizeAngle(mAngle);
     mCurCell->setRotation(mAngle, mPivotPt);
 
 }
@@ -1570,9 +1579,12 @@ QRectF Scene::selectedItemsBoundingRect()
             bottom = i->scenePos().y();
             bottomH = i->boundingRect().height();
         }
+
     }
 
-    return QRectF(QPointF(left - leftW, top - topH), QPointF(right + rightW, bottom + bottomH));
+    QRectF rect = QRectF(QPointF(left - leftW, top - topH), QPointF(right + rightW, bottom + bottomH));
+    qDebug() << left << leftW << top << topH << right << rightW << bottom << bottomH << rect;
+    return rect;
 }
 
 void Scene::group()

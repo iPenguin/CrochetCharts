@@ -129,7 +129,7 @@ SetItemCoordinates::SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF ol
     scene = s;
     i = item;
     oldCoord = oldPos;
-    newCoord = i->pos();
+    newCoord = i->scenePos();
     setText(QObject::tr("change position"));
     //FIXME: use inverted() matrix to do scaling.
 }
@@ -203,7 +203,7 @@ RemoveCell::RemoveCell(Scene* s, CrochetCell* cell, QUndoCommand* parent)
 {
     c = cell;
     scene = s;
-    position = c->pos();
+    position = c->scenePos();
     setText(QObject::tr("remove stitch"));
 }
 
