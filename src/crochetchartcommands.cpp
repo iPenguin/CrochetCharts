@@ -129,7 +129,7 @@ SetItemCoordinates::SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF ol
     scene = s;
     i = item;
     oldCoord = oldPos;
-    newCoord = i->scenePos();
+    newCoord = i->pos();
     setText(QObject::tr("change position"));
     //FIXME: use inverted() matrix to do scaling.
 }
