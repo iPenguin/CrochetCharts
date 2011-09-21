@@ -43,7 +43,7 @@ RemoveIndicator::RemoveIndicator(Scene* s, Indicator* i, QUndoCommand* parent)
 {
     item = i;
     scene = s;
-    position = i->scenePos();
+    position = i->pos();
     setText(QObject::tr("Remove indicator"));
 }
 

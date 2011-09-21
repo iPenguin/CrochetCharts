@@ -203,7 +203,7 @@ RemoveCell::RemoveCell(Scene* s, CrochetCell* cell, QUndoCommand* parent)
 {
     c = cell;
     scene = s;
-    position = c->scenePos();
+    position = c->pos();
     setText(QObject::tr("remove stitch"));
 }
 

@@ -30,9 +30,9 @@
 static void qNormalizeAngle(qreal &angle)
 {
     while (angle < 0.0)
-        angle += 360.0 * 16;
-    while (angle > 360.0 * 16)
-        angle -= 360.0 * 16;
+        angle += 360.0;
+    while (angle > 360.0)
+        angle -= 360.0;
 }
 
 Scene::Scene(QObject* parent)
@@ -1272,7 +1272,7 @@ void Scene::mirror(int direction)
         return;
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    QRectF rect = selectedItemsBoundingRect();
+    QRectF rect = selectedItemsBoundingRect(true);
 
     QList<QGraphicsItem*> list = selectedItems();
 
@@ -1290,15 +1290,13 @@ void Scene::mirror(int direction)
                 undoStack()->push(addCellCmd);
                 CrochetCell* copy = c->copy(addCellCmd->cell());
                 
-                qreal diff = item->scenePos().x() - rect.left();
-                copy->setPos(rect.left() - diff, item->scenePos().y());
-                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
+                qreal diff = item->pos().x() - rect.left();
+                copy->setPos(rect.left() - diff, item->pos().y());
+                qreal newAngle = 360 - copy->angle();
+                qNormalizeAngle(newAngle);
+                copy->setAngle(newAngle);
                 copy->setSelected(true);
-            } else if( item->type() == QGraphicsItemGroup::Type) {
-                QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
-                //QPointF newPt = QPointF(group->boundingRect().x() - group->boundingRect().width(), group->boundingRect().y());
-                group->scale(-1, 1);
-                //group->setPos(newPt);
+
             }
         }
         undoStack()->endMacro();
@@ -1400,7 +1398,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
             case CrochetCell::Type: {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
                 stream << c->type() << c->name() << c->color()
-                    << c->angle() << c->scale() << c->transformOriginPoint() << c->scenePos();
+                    << c->angle() << c->scale() << c->transformOriginPoint() << c->pos();
                 break;
             }
             case Indicator::Type: {
@@ -1463,8 +1461,8 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group, 
             c->setStitch(name);
             c->setColor(color);
 
+            c->setTransformOriginPoint(transPoint);
             c->setAngle(angle);
-            c->setRotation(angle, transPoint);
             c->setScale(scale, transPoint);
             if(useGroup) {
                 c->setSelected(false);
@@ -1552,7 +1550,7 @@ void Scene::cut()
 
 }
 
-QRectF Scene::selectedItemsBoundingRect()
+QRectF Scene::selectedItemsBoundingRect(bool padding)
 {
     if(selectedItems().count() <= 0)
         return QRectF();
@@ -1561,6 +1559,8 @@ QRectF Scene::selectedItemsBoundingRect()
     qreal right = sceneRect().left();
     qreal top = sceneRect().bottom();
     qreal bottom = sceneRect().top();
+
+    //height and width of the object at the extremes.
     qreal leftW = 0,
           rightW = 0,
           topH = 0,
@@ -1569,25 +1569,29 @@ QRectF Scene::selectedItemsBoundingRect()
     foreach(QGraphicsItem* i, selectedItems()) {
         if(i->scenePos().x() < left) {
             left = i->scenePos().x();
-            leftW = i->boundingRect().width();
+            leftW = i->sceneBoundingRect().width();
         }
-        if(i->scenePos().x() > right) {
-            right = i->scenePos().x();
-            rightW = i->boundingRect().width();
+        if(i->scenePos().x() + i->sceneBoundingRect().right() > right) {
+            right = i->scenePos().x() + i->sceneBoundingRect().right();
+            rightW = i->sceneBoundingRect().width();
         }
         if(i->scenePos().y() < top) {
             top = i->scenePos().y();
-            topH = i->boundingRect().height();
+            topH = i->sceneBoundingRect().height();
         }
-        if(i->scenePos().y() > bottom) {
-            bottom = i->scenePos().y();
-            bottomH = i->boundingRect().height();
+        if(i->scenePos().y() + i->sceneBoundingRect().bottom() > bottom) {
+            bottom = i->scenePos().y() + i->sceneBoundingRect().bottom();
+            bottomH = i->sceneBoundingRect().height();
         }
-
     }
 
-    QRectF rect = QRectF(QPointF(left - leftW, top - topH), QPointF(right + rightW, bottom + bottomH));
-    qDebug() << left << leftW << top << topH << right << rightW << bottom << bottomH << rect;
+    QRectF rect;
+    if(padding) {
+        rect = QRectF(QPointF(left - leftW, top - topH), QPointF(right + rightW, bottom + bottomH));
+    } else {
+        rect = QRectF(QPointF(left, top), QPointF(right, bottom));
+    }
+
     return rect;
 }
 

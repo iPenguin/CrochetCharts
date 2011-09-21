@@ -202,7 +202,7 @@ protected:
 
     void hideRowLines();
 
-    QRectF selectedItemsBoundingRect();
+    QRectF selectedItemsBoundingRect(bool padding);
     
 private:
     /**

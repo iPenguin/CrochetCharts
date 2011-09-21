@@ -31,6 +31,8 @@ public:
     qreal origWidth() { return mOrigWidth; }
 
     CrochetCell* copy(CrochetCell* cell = 0);
+
+    void setAngle(qreal angle);
     
 public slots:
 

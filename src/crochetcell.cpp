@@ -13,8 +13,8 @@
 #include "settings.h"
 
 CrochetCell::CrochetCell()
-     : mScale(1.0),
-     mHighlight(false)
+    : mScale(1.0),
+    mHighlight(false)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges); //enable itemChange to pick up move changes.
@@ -64,18 +64,23 @@ void CrochetCell::setStitch(QString s, bool useAltRenderer)
 
 void CrochetCell::setStitch(Stitch* s, bool useAltRenderer)
 {
-   Cell::setStitch(s, useAltRenderer);
-   mOrigWidth = boundingRect().width();
-   mOrigHeight = boundingRect().height();
-   setColor(Qt::white);
+    Cell::setStitch(s, useAltRenderer);
+    mOrigWidth = boundingRect().width();
+    mOrigHeight = boundingRect().height();
+    setColor(Qt::white);
 }
 
 void CrochetCell::setRotation(qreal angle, QPointF pivotPoint)
 {
-    
     setTransform(QTransform().translate(pivotPoint.x(), pivotPoint.y()).rotate(angle).translate(-pivotPoint.x(), -pivotPoint.y()));
-    setAngle(angle);
+    Cell::setAngle(angle);
     
+}
+
+void CrochetCell::setAngle(qreal angle)
+{
+    Cell::setAngle(angle);
+    setTransform(QTransform().translate(boundingRect().width()/2, boundingRect().height()).rotate(angle).translate(-boundingRect().width()/2, -boundingRect().height()));
 }
 
 CrochetCell* CrochetCell::copy(CrochetCell* cell)
@@ -88,7 +93,8 @@ CrochetCell* CrochetCell::copy(CrochetCell* cell)
     
     c->setStitch(stitch());
     c->setColor(color());
-    c->setRotation(angle(), transformOriginPoint());
+    c->setTransformOriginPoint(transformOriginPoint());
+    c->setAngle(angle());
     c->setScale(scale(), transformOriginPoint());
 
     return c;
