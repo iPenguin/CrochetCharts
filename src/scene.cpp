@@ -1024,12 +1024,12 @@ void Scene::align(int vertical, int horizontal)
     foreach(QGraphicsItem* i, selectedItems()) {
         if(i->scenePos().x() < left)
             left = i->scenePos().x();
-        if(i->scenePos().x() > right)
-            right = i->scenePos().x();
+        if(i->sceneBoundingRect().right() > right)
+            right = i->sceneBoundingRect().right();
         if(i->scenePos().y() < top)
             top = i->scenePos().y();
-        if(i->scenePos().y() > bottom)
-            bottom = i->scenePos().y();
+        if(i->sceneBoundingRect().bottom() > bottom)
+            bottom = i->sceneBoundingRect().bottom();
     }
 
     qreal diff = right - left;
@@ -1063,13 +1063,17 @@ void Scene::align(int vertical, int horizontal)
         if(horizontal == 0) {
             newX = i->scenePos().x();
         } else if(horizontal == 2) {
-            newX -= (i->boundingRect().width()/2);
+            newX -= (i->sceneBoundingRect().width()/2);
+        } else if(horizontal == 3) {
+            newX -= i->sceneBoundingRect().width();
         }
 
         if(vertical == 0) {
             newY = i->scenePos().y();
         } else if(vertical == 2) {
-            newY -= (i->boundingRect().height()/2);
+            newY -= (i->sceneBoundingRect().height()/2);
+        } else if(vertical == 3) {
+            newY -= i->sceneBoundingRect().height();
         }
         
         i->setPos(newX, newY);
