@@ -142,6 +142,14 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             }
             stream->writeEndElement(); //end grid.
         }
+
+        foreach(QGraphicsItemGroup* g, tab->scene()->mGroups) {
+            stream->writeStartElement("group");
+            stream->writeAttribute("x", QString::number(g->scenePos().x()));
+            stream->writeAttribute("y", QString::number(g->scenePos().y()));
+            stream->writeCharacters(QString::number(tab->scene()->mGroups.indexOf(g)));
+            stream->writeEndElement(); //end groups
+        }
         
         foreach(QGraphicsItem* item, tab->scene()->items()) {
             
@@ -152,15 +160,22 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeStartElement("cell"); //start cell
             stream->writeTextElement("stitch", c->stitch()->name());
 
+            //if the stitch is on the grid save the grid position.
             QPoint pt = tab->scene()->indexOf(c);
             if(pt != QPoint(-1, -1)) {
                 stream->writeTextElement("row", QString::number(pt.y()));
                 stream->writeTextElement("column", QString::number(pt.x()));
             }
+
+            if(c->parentItem()) {
+                QGraphicsItemGroup* g = qgraphicsitem_cast<QGraphicsItemGroup*>(c->parentItem());
+                int groupNum = tab->scene()->mGroups.indexOf(g);
+                stream->writeTextElement("group", QString::number(groupNum));
+            }
             
             stream->writeTextElement("color", c->color().name());
-            stream->writeTextElement("x", QString::number(c->pos().x()));
-            stream->writeTextElement("y", QString::number(c->pos().y()));
+            stream->writeTextElement("x", QString::number(c->scenePos().x()));
+            stream->writeTextElement("y", QString::number(c->scenePos().y()));
 
             stream->writeTextElement("angle", QString::number(c->angle()));
             stream->writeTextElement("scale", QString::number(c->scale()));
@@ -172,8 +187,8 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
         foreach(Indicator* i, tab->scene()->indicators()) {
             stream->writeStartElement("indicator");
 
-                stream->writeTextElement("x", QString::number(i->pos().x()));
-                stream->writeTextElement("y", QString::number(i->pos().y()));
+                stream->writeTextElement("x", QString::number(i->scenePos().x()));
+                stream->writeTextElement("y", QString::number(i->scenePos().y()));
                 stream->writeTextElement("text", i->text());
                 stream->writeTextElement("textColor", i->textColor().name());
                 stream->writeTextElement("bgColor", i->bgColor().name());
@@ -355,6 +370,15 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         } else if(tag == "indicator") {
             loadIndicator(tab, stream);
             
+        } else if(tag == "group") {
+            int groupNum = stream->readElementText().toInt();
+            qreal x = stream->attributes().value("x").toString().toDouble();
+            qreal y = stream->attributes().value("y").toString().toDouble();
+            
+            QList<QGraphicsItem*> items;
+            QGraphicsItemGroup* group = tab->scene()->group(items);
+            group->setPos(x,y);
+
         }
     }
 

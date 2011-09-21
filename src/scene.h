@@ -170,7 +170,7 @@ protected:
     void distributeToPath();
 
 public:
-    QGraphicsItemGroup* group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g);
+    QGraphicsItemGroup* group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g = 0);
     void ungroup(QGraphicsItemGroup* group);
 
 protected:

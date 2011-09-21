@@ -28,6 +28,7 @@ void SaveThread::run()
     CrochetCell* c = new CrochetCell();
     Stitch* s = 0;
     int row = -1, column = -1;
+    int group = -1;
     QString color;
     qreal x = 0, y = 0,
           pivotPtX = 0, pivotPtY = 0;
@@ -58,6 +59,8 @@ void SaveThread::run()
             pivotPtX = stream->readElementText().toDouble();
         } else if(tag == "pivotPtY") {
             pivotPtY = stream->readElementText().toDouble();
+        } else if(tag == "group") {
+            group = stream->readElementText().toInt();
         }
     }
 
@@ -77,4 +80,6 @@ void SaveThread::run()
     c->setColor(QColor(color));
     c->setRotation(angle, pivotPt);
     c->setScale(scale, pivotPt);
+    if(group != -1)
+        tab->scene()->mGroups[group]->addToGroup(c);
 }
