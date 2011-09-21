@@ -286,7 +286,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
             case CrochetCell::Type: {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(gi);
                 mCurCell = c;
-                mCellStartPos = mCurCell->pos();
+                mCellStartPos = mCurCell->scenePos();
                 mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
                 break;
             }
@@ -294,7 +294,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 Indicator* i = qgraphicsitem_cast<Indicator*>(gi);
             
                 mCurIndicator = i;
-                mCellStartPos = i->pos();
+                mCellStartPos = i->scenePos();
                 break;
             }
         }
@@ -338,7 +338,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
         
     //Track object movement on scene.
         foreach(QGraphicsItem* item, selectedItems()) {
-            mOldPositions.insert(item, item->pos());
+            mOldPositions.insert(item, item->scenePos());
         }
     }
     
@@ -701,12 +701,12 @@ void Scene::rowEditMouseMove(QGraphicsSceneMouseEvent* e)
             gi->setSelected(true);
 
             if(mPreviousCell != c) {
-                QGraphicsLineItem* line = addLine(QLineF(mPreviousCell->pos(), c->pos()));
+                QGraphicsLineItem* line = addLine(QLineF(mPreviousCell->scenePos(), c->scenePos()));
                 line->setPen(QPen(QColor(Qt::black), 2));
                 mRowLines.append(line);
 
                 mPreviousCell = c;
-                startPt = c->pos();
+                startPt = c->scenePos();
             }
             
         } //else remove from list
@@ -899,8 +899,8 @@ void Scene::drawRowLines(int row)
             continue;
 
         if(prev != c) {
-            start = prev->pos();
-            end = c->pos();
+            start = prev->scenePos();
+            end = c->scenePos();
 
             QGraphicsLineItem *line = addLine(QLineF(start, end));
             line->setPen(QPen(QColor(Qt::black), 2));
