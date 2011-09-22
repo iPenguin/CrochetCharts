@@ -1272,15 +1272,15 @@ void Scene::mirror(int direction)
         return;
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    QRectF rect = selectedItemsBoundingRect(true);
+    QRectF rect = selectedItemsBoundingRect();
 
     QList<QGraphicsItem*> list = selectedItems();
 
     clearSelection();
 
+    undoStack()->beginMacro("mirror selection");
     if(direction == 1) { //left
 
-        undoStack()->beginMacro("mirror selection");
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
@@ -1292,6 +1292,7 @@ void Scene::mirror(int direction)
                 
                 qreal diff = item->pos().x() - rect.left();
                 copy->setPos(rect.left() - diff, item->pos().y());
+
                 qreal newAngle = 360 - copy->angle();
                 qNormalizeAngle(newAngle);
                 copy->setAngle(newAngle);
@@ -1299,11 +1300,9 @@ void Scene::mirror(int direction)
 
             }
         }
-        undoStack()->endMacro();
 
     } else if(direction == 2) { //right
 
-        undoStack()->beginMacro("mirror selection");
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
@@ -1313,17 +1312,18 @@ void Scene::mirror(int direction)
                 undoStack()->push(addCellCmd);
                 CrochetCell* copy = c->copy(addCellCmd->cell());
                 
-                qreal diff = rect.right() - item->scenePos().x();
-                copy->setPos(rect.right() + diff, item->scenePos().y());
-                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
+                qreal diff = rect.right() - item->pos().x();
+                copy->setPos(rect.right() + diff, item->pos().y());
+
+                qreal newAngle = 360 - copy->angle();
+                qNormalizeAngle(newAngle);
+                copy->setAngle(newAngle);
                 copy->setSelected(true);
             }
         }
-        undoStack()->endMacro();
 
     } else if(direction == 3) { //up
 
-        undoStack()->beginMacro("mirror selection");
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
@@ -1335,15 +1335,16 @@ void Scene::mirror(int direction)
                 
                 qreal diff = item->scenePos().y() - rect.top();
                 copy->setPos(item->scenePos().x(), rect.top() - diff);
-                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
+
+                qreal newAngle = 360 - copy->angle() + 180;
+                qNormalizeAngle(newAngle);
+                copy->setAngle(newAngle);
                 copy->setSelected(true);
             }
         }
-        undoStack()->endMacro();
 
     } else if(direction == 4) { //down
 
-        undoStack()->beginMacro("mirror selection");
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
@@ -1355,13 +1356,15 @@ void Scene::mirror(int direction)
                 
                 qreal diff = rect.bottom() - item->scenePos().y();
                 copy->setPos(item->scenePos().x(), rect.bottom() + diff);
-                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
+
+                qreal newAngle = 360 - copy->angle() + 180;
+                qNormalizeAngle(newAngle);
+                copy->setAngle(newAngle);
                 copy->setSelected(true);
             }
         }
-        undoStack()->endMacro();
-
     }
+    undoStack()->endMacro();
 
     QApplication::restoreOverrideCursor();
 }
@@ -1550,7 +1553,7 @@ void Scene::cut()
 
 }
 
-QRectF Scene::selectedItemsBoundingRect(bool padding)
+QRectF Scene::selectedItemsBoundingRect()
 {
     if(selectedItems().count() <= 0)
         return QRectF();
@@ -1569,30 +1572,23 @@ QRectF Scene::selectedItemsBoundingRect(bool padding)
     foreach(QGraphicsItem* i, selectedItems()) {
         if(i->scenePos().x() < left) {
             left = i->scenePos().x();
-            leftW = i->sceneBoundingRect().width();
+            leftW = i->boundingRect().width();
         }
-        if(i->scenePos().x() + i->sceneBoundingRect().right() > right) {
-            right = i->scenePos().x() + i->sceneBoundingRect().right();
-            rightW = i->sceneBoundingRect().width();
+        if(i->scenePos().x() + i->boundingRect().right() > right) {
+            right = i->scenePos().x() + i->boundingRect().right();
+            rightW = i->boundingRect().width();
         }
         if(i->scenePos().y() < top) {
             top = i->scenePos().y();
-            topH = i->sceneBoundingRect().height();
+            topH = i->boundingRect().height();
         }
-        if(i->scenePos().y() + i->sceneBoundingRect().bottom() > bottom) {
-            bottom = i->scenePos().y() + i->sceneBoundingRect().bottom();
-            bottomH = i->sceneBoundingRect().height();
+        if(i->scenePos().y() + i->boundingRect().bottom() > bottom) {
+            bottom = i->scenePos().y() + i->boundingRect().bottom();
+            bottomH = i->boundingRect().height();
         }
     }
 
-    QRectF rect;
-    if(padding) {
-        rect = QRectF(QPointF(left - leftW, top - topH), QPointF(right + rightW, bottom + bottomH));
-    } else {
-        rect = QRectF(QPointF(left, top), QPointF(right, bottom));
-    }
-
-    return rect;
+    return QRectF(QPointF(left - leftW, top - topH), QPointF(right + rightW, bottom + bottomH));;
 }
 
 void Scene::group()
