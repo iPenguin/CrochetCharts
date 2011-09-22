@@ -23,13 +23,19 @@ SetCellStitch::SetCellStitch(Scene* s, CrochetCell* cell, QString newSt, QUndoCo
 void SetCellStitch::redo()
 {
     QPoint pos = scene->indexOf(c);
-    c->setStitch(newStitch, (pos.y() % 2));
+    bool useAlt = false;
+    if(pos.y() != -1)
+       useAlt = (pos.y() % 2);
+    c->setStitch(newStitch, useAlt);
 }
 
 void SetCellStitch::undo()
 {
     QPoint pos = scene->indexOf(c);
-    c->setStitch(oldStitch, (pos.y() % 2));
+    bool useAlt = false;
+    if(pos.y() != -1)
+       useAlt = (pos.y() % 2);
+    c->setStitch(oldStitch, useAlt);
 }
 
 /*************************************************\
