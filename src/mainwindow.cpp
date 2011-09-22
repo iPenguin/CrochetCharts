@@ -181,18 +181,15 @@ void MainWindow::setupDocks()
 {
     //Undo Dock.
     mUndoDock = new QDockWidget(this);
+    mUndoDock->setVisible(false);
     mUndoDock->setObjectName("undoHistory");
     QUndoView* view = new QUndoView(&mUndoGroup, mUndoDock);
     mUndoDock->setWidget(view);
     mUndoDock->setWindowTitle(tr("Undo History"));
     mUndoDock->setFloating(true);
-    mUndoDock->setVisible(false);
 
     //Align & Distribute Dock
     mAlignDock = new AlignDock(this);
-    mAlignDock->setFloating(true);
-    mAlignDock->setVisible(false);
-    mAlignDock->setObjectName("alignDock");
     connect(mAlignDock, SIGNAL(align(int)), SLOT(alignSelection(int)));
     connect(mAlignDock, SIGNAL(distribute(int)), SLOT(distributeSelection(int)));
     connect(mAlignDock, SIGNAL(visibilityChanged(bool)), ui->actionShowAlignDock, SLOT(setChecked(bool)));
@@ -200,17 +197,11 @@ void MainWindow::setupDocks()
     //Rows & Stitches Dock.
     mRowsDock = new RowsDock(this);
     mRowsDock->setEnabled(false); //TODO: remove this line when this is working again.
-    mRowsDock->setFloating(true);
-    mRowsDock->setVisible(false);
-    mRowsDock->setObjectName("rowsDock");
     connect(mRowsDock, SIGNAL(arrangeGrid(QSize,QSize,QSize,bool)), SLOT(arrangeGrid(QSize,QSize,QSize,bool)));
     connect(mRowsDock, SIGNAL(visibilityChanged(bool)), ui->actionShowRowsDock, SLOT(setChecked(bool)));
     
     //Mirror & Rotate.
     mMirrorDock = new MirrorDock(this);
-    mMirrorDock->setFloating(true);
-    mMirrorDock->setVisible(false);
-    mMirrorDock->setObjectName("mirrorDock");
     connect(mMirrorDock, SIGNAL(mirror(int)), SLOT(mirror(int)));
     connect(mMirrorDock, SIGNAL(rotate(qreal)), SLOT(rotate(qreal)));
     connect(mMirrorDock, SIGNAL(visibilityChanged(bool)), ui->actionShowMirrorDock, SLOT(setChecked(bool)));

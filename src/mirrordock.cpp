@@ -6,6 +6,9 @@ MirrorDock::MirrorDock(QWidget *parent) :
     ui(new Ui::MirrorDock)
 {
     ui->setupUi(this);
+    setVisible(false);
+    setFloating(true);
+    setObjectName("mirrorDock");
 
     ui->rotateCustomWidgets->hide();
 

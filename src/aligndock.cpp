@@ -6,6 +6,9 @@ AlignDock::AlignDock(QWidget *parent) :
     ui(new Ui::AlignDock)
 {
     ui->setupUi(this);
+    setVisible(false);
+    setFloating(true);
+    setObjectName("alignDock");
 
     connect(ui->alignBottom, SIGNAL(clicked(bool)), SLOT(generateAlignment()));
     connect(ui->alignCenterH, SIGNAL(clicked(bool)), SLOT(generateAlignment()));

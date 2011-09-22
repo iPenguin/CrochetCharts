@@ -6,6 +6,9 @@ RowsDock::RowsDock(QWidget *parent) :
     ui(new Ui::RowsDock)
 {
     ui->setupUi(this);
+    setVisible(false);
+    setFloating(true);
+    setObjectName("rowsDock");
 
     horizonalGroup.addButton(ui->alignLeft);
     horizonalGroup.addButton(ui->alignCenterH);
