@@ -248,7 +248,7 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
 {
     if(keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
         QList<QGraphicsItem*> items = selectedItems();
-        undoStack()->beginMacro("Remove items");
+        undoStack()->beginMacro("remove items");
         foreach(QGraphicsItem* item, items) {
 
             switch(item->type()) {
