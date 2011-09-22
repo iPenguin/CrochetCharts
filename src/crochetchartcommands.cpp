@@ -99,7 +99,8 @@ SetItemRotation::SetItemRotation(Scene* s, QList<QGraphicsItem*> itms, qreal deg
     newAngle = degrees;
 
     QGraphicsItemGroup* group = scene->createItemGroup(items);
-    pivotPoint = group->boundingRect().bottomLeft();
+    pivotPoint = scene->selectedItemsBoundingRect(items).bottomLeft();
+    qDebug() << "pivot pt" << scene->selectedItemsBoundingRect(items) << group->boundingRect();
     oldAngle = group->rotation();
     scene->destroyItemGroup(group);
     qDebug() <<  oldAngle << newAngle;
@@ -110,7 +111,6 @@ void SetItemRotation::redo()
 {
 
     QGraphicsItemGroup* group = scene->createItemGroup(items);
-    group->setTransformOriginPoint(group->mapToScene(pivotPoint));
     group->setTransform(QTransform().translate(pivotPoint.x(), pivotPoint.y()).rotate(newAngle).translate(-pivotPoint.x(), -pivotPoint.y()));
     scene->destroyItemGroup(group);
 
@@ -120,7 +120,6 @@ void SetItemRotation::undo()
 {
 
     QGraphicsItemGroup* group = scene->createItemGroup(items);
-    group->setTransformOriginPoint(group->mapToScene(pivotPoint));
     group->setTransform(QTransform().translate(-pivotPoint.x(), -pivotPoint.y()).rotate(-newAngle).translate(pivotPoint.x(), pivotPoint.y()));
     scene->destroyItemGroup(group);
     

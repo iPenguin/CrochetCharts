@@ -592,7 +592,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     qreal angle2 = scenePosToAngle(rel2);
 
     mAngle = mOldAngle + (angle1 - angle2);
-
+qDebug() << mOldAngle << mAngle << mPivotPt << mOrigin;
     qreal diff = fmod(mAngle, 45.0);
     qreal comp = abs(diff);
     if(comp < 4 /*&& !mSnapTo*/) {
@@ -1272,7 +1272,7 @@ void Scene::mirror(int direction)
         return;
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    QRectF rect = selectedItemsBoundingRect();
+    QRectF rect = selectedItemsBoundingRect(selectedItems());
 
     addLine(QLineF(rect.topLeft(), rect.topRight()));
     addLine(QLineF(rect.topLeft(), rect.bottomLeft()));
@@ -1382,7 +1382,30 @@ void Scene::rotate(qreal degrees)
     if(selectedItems().count() <= 0)
         return;
 
-    undoStack()->push(new SetItemRotation(this, selectedItems(), degrees));
+    qreal newAngle = degrees;
+    qNormalizeAngle(newAngle);
+
+    QPointF pivotPt = selectedItemsBoundingRect(selectedItems()).bottomLeft();
+
+    QGraphicsItemGroup* g = createItemGroup(selectedItems());
+    g->rotate(newAngle);
+    destroyItemGroup(g);
+    
+    foreach(QGraphicsItem* i, selectedItems()) {
+        if(i->type() == CrochetCell::Type) {
+            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(i);
+            i->setTransformOriginPoint(i->boundingRect().width()/2, i->boundingRect().bottom());
+            c->setAngle(c->angle() + newAngle);
+            //c->setPos(pivotPt.x() - c->y(), pivotPt.y() - c->x());
+           // c->setAngle(newAngle);
+            //TODO: push new SetItemCoordinates()
+            //TODO: push new Angle
+        
+            //setTransform(QTransform().translate(pivotPoint.x(), pivotPoint.y()).rotate(newAngle).translate(-pivotPoint.x(), -pivotPoint.y()))
+        }
+    }
+
+    //undoStack()->push(new SetItemRotation(this, selectedItems(), degrees));
 }
 
 void Scene::copy()
@@ -1561,9 +1584,9 @@ void Scene::cut()
 
 }
 
-QRectF Scene::selectedItemsBoundingRect()
+QRectF Scene::selectedItemsBoundingRect(QList<QGraphicsItem*> items)
 {
-    if(selectedItems().count() <= 0)
+    if(items.count() <= 0)
         return QRectF();
 
     qreal left = sceneRect().right();
@@ -1574,7 +1597,7 @@ QRectF Scene::selectedItemsBoundingRect()
     //height and width of the object at the extremes.
     qreal leftW = 0;
 
-    foreach(QGraphicsItem* i, selectedItems()) {
+    foreach(QGraphicsItem* i, items) {
         if(i->scenePos().x() < left) {
             left = i->scenePos().x();
             leftW = i->sceneBoundingRect().width() - i->boundingRect().width();

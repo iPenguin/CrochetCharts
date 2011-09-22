@@ -173,6 +173,8 @@ public:
     QGraphicsItemGroup* group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g = 0);
     void ungroup(QGraphicsItemGroup* group);
 
+    QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
+    
 protected:
     void colorModeMouseMove(QGraphicsSceneMouseEvent* e);
     void colorModeMouseRelease(QGraphicsSceneMouseEvent* e);
@@ -201,8 +203,6 @@ protected:
     void updateStitchRenderer();
 
     void hideRowLines();
-
-    QRectF selectedItemsBoundingRect();
     
 private:
     /**
