@@ -1339,7 +1339,7 @@ void Scene::mirror(int direction)
                 CrochetCell* copy = c->copy(addCellCmd->cell());
 
                 qreal diff = item->pos().y() - rect.top();
-                copy->setPos(item->pos().x(), rect.top() - diff);
+                copy->setPos(item->pos().x(), rect.top() - diff - (2*item->sceneBoundingRect().height()));
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
 
                 qreal newAngle = 360 - copy->angle() + 180;
@@ -1362,7 +1362,7 @@ void Scene::mirror(int direction)
                 CrochetCell* copy = c->copy(addCellCmd->cell());
                 
                 qreal diff = rect.bottom() - item->pos().y();
-                copy->setPos(item->pos().x(), rect.bottom());
+                copy->setPos(item->pos().x(), rect.bottom() - diff);
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
 
                 qreal newAngle = 360 - copy->angle() + 180;
@@ -1572,27 +1572,25 @@ QRectF Scene::selectedItemsBoundingRect()
     qreal bottom = sceneRect().top();
 
     //height and width of the object at the extremes.
-    qreal leftW = 0,
-          topH = 0;
+    qreal leftW = 0;
 
     foreach(QGraphicsItem* i, selectedItems()) {
         if(i->scenePos().x() < left) {
             left = i->scenePos().x();
-            leftW = i->boundingRect().width();
+            leftW = i->sceneBoundingRect().width() - i->boundingRect().width();
         }
         if(i->scenePos().x() + i->boundingRect().right() > right) {
             right = i->scenePos().x() + i->boundingRect().right();
         }
         if(i->scenePos().y() < top) {
             top = i->scenePos().y();
-            topH = i->boundingRect().height();
         }
         if(i->scenePos().y() + i->boundingRect().bottom() > bottom) {
             bottom = i->scenePos().y() + i->boundingRect().bottom();
         }
     }
 
-    return QRectF(QPointF(left - leftW, top - topH), QPointF(right, bottom));
+    return QRectF(QPointF(left - leftW, top), QPointF(right, bottom));
 }
 
 void Scene::group()
