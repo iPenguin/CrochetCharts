@@ -1565,9 +1565,7 @@ QRectF Scene::selectedItemsBoundingRect()
 
     //height and width of the object at the extremes.
     qreal leftW = 0,
-          rightW = 0,
-          topH = 0,
-          bottomH = 0;
+          topH = 0;
 
     foreach(QGraphicsItem* i, selectedItems()) {
         if(i->scenePos().x() < left) {
@@ -1576,7 +1574,6 @@ QRectF Scene::selectedItemsBoundingRect()
         }
         if(i->scenePos().x() + i->boundingRect().right() > right) {
             right = i->scenePos().x() + i->boundingRect().right();
-            rightW = i->boundingRect().width();
         }
         if(i->scenePos().y() < top) {
             top = i->scenePos().y();
@@ -1584,11 +1581,10 @@ QRectF Scene::selectedItemsBoundingRect()
         }
         if(i->scenePos().y() + i->boundingRect().bottom() > bottom) {
             bottom = i->scenePos().y() + i->boundingRect().bottom();
-            bottomH = i->boundingRect().height();
         }
     }
 
-    return QRectF(QPointF(left - leftW, top - topH), QPointF(right + rightW, bottom + bottomH));;
+    return QRectF(QPointF(left - leftW, top - topH), QPointF(right, bottom));;
 }
 
 void Scene::group()
