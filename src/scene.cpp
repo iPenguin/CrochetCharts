@@ -287,6 +287,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     
     mLeftButtonDownPos = e->buttonDownPos(Qt::LeftButton);
 
+    mMoving = false;
+    mIsRubberband = false;
+    
     QGraphicsItem* gi = itemAt(e->scenePos());
     if(gi) {
         
@@ -305,11 +308,15 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 mCellStartPos = i->scenePos();
                 break;
             }
+            case QGraphicsEllipseItem::Type: {
+                mMoving = true;
+                break;
+            }
+            default:
+                qWarning() << "mousePress: Unknown object type.";
+                break;
         }
     }
-
-    mMoving = false;
-    mIsRubberband = false;
     
     switch(mMode) {
         case Scene::StitchEdit:
@@ -377,12 +384,12 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
         default:
             break;
     }
-    
+
     qreal diff = (e->buttonDownScenePos(Qt::LeftButton)- e->scenePos()).manhattanLength();
 
     if(diff >= QApplication::startDragDistance()) {
 
-        if(!mCurCell) {
+        if(!mCurCell && !mMoving) {
             if(mRubberBand) {
                 QGraphicsView* view = views().first();
                 QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
@@ -391,6 +398,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
                 mIsRubberband = true;
             }
         } else if (mMoving) {
+
             QGraphicsScene::mouseMoveEvent(e);
         }
     }
@@ -1670,8 +1678,16 @@ void Scene::setShowChartCenter(bool state)
 
             double radius = (defaultSize().height() * 0.45);
 
-            mCenterSymbol = addEllipse(-radius, -radius, radius * 2, radius * 2, pen);
+            QGraphicsView* view =  views().first();
+            QPointF topLeft = view->mapToScene(0, 0);
+            QPointF bottomRight = view->mapToScene(view->width(), view->height());
+            
+            QRectF rect(topLeft, bottomRight);
+            
+            mCenterSymbol = addEllipse(rect.center().x()-radius, rect.center().y()-radius, radius * 2, radius * 2, pen);
             mCenterSymbol->setToolTip(tr("Chart Center"));
+            mCenterSymbol->setFlag(QGraphicsItem::ItemIsMovable);
+            mCenterSymbol->setFlag(QGraphicsItem::ItemIsSelectable);
         } else {
             addItem(mCenterSymbol);
         }

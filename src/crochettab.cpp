@@ -244,11 +244,6 @@ void CrochetTab::showChartOptions()
         ui->moreBttn->setText(tr("&More >>"));
         ui->chartOptionsBox->setVisible(false);
     }
-
-    if(mChartStyle == Scene::Rounds)
-        ui->showChartCenter->setEnabled(true);
-    else
-        ui->showChartCenter->setEnabled(false);
 }
 
 void CrochetTab::setShowChartCenter(bool state)
