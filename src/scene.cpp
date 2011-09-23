@@ -592,7 +592,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     qreal angle2 = scenePosToAngle(rel2);
 
     mAngle = mOldAngle + (angle1 - angle2);
-qDebug() << mOldAngle << mAngle << mPivotPt << mOrigin;
+
     qreal diff = fmod(mAngle, 45.0);
     qreal comp = abs(diff);
     if(comp < 4 /*&& !mSnapTo*/) {
@@ -1275,11 +1275,6 @@ void Scene::mirror(int direction)
 
     QRectF rect = selectedItemsBoundingRect(selectedItems());
 
-    addLine(QLineF(rect.topLeft(), rect.topRight()));
-    addLine(QLineF(rect.topLeft(), rect.bottomLeft()));
-    addLine(QLineF(rect.bottomLeft(), rect.bottomRight()));
-    addLine(QLineF(rect.bottomRight(), rect.topRight()));
-
     QList<QGraphicsItem*> list = selectedItems();
 
     clearSelection();
@@ -1389,6 +1384,7 @@ void Scene::rotate(qreal degrees)
     QPointF pivotPt = selectedItemsBoundingRect(selectedItems()).bottomLeft();
 
     QGraphicsItemGroup* g = createItemGroup(selectedItems());
+    g->setTransformOriginPoint(pivotPt);
     g->setRotation(newAngle);
     destroyItemGroup(g);
 
