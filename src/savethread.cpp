@@ -79,7 +79,7 @@ void SaveThread::run()
     c->setPos(x, y);
     c->setColor(QColor(color));
     c->setTransformOriginPoint(pivotPt);
-    c->rotate(angle);
+    c->setRotation(angle);
     c->setScale(scale, pivotPt);
     if(group != -1)
         tab->scene()->mGroups[group]->addToGroup(c);
