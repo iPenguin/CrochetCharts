@@ -1383,8 +1383,14 @@ void Scene::rotate(qreal degrees)
     qreal newAngle = degrees;
     qNormalizeAngle(newAngle);
 
-    QPointF pivotPt = selectedItemsBoundingRect(selectedItems()).bottomLeft();
-
+    QPointF pivotPt;
+    
+    if(mCenterSymbol) {
+        pivotPt = mCenterSymbol->boundingRect().center();
+    } else {
+        pivotPt = selectedItemsBoundingRect(selectedItems()).bottomLeft();
+    }
+    
     QGraphicsItemGroup* g = createItemGroup(selectedItems());
     g->setTransformOriginPoint(pivotPt);
     g->setRotation(newAngle);
@@ -1481,9 +1487,9 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group, 
             c->setStitch(name);
             c->setColor(color);
 
+            c->setScale(scale, transPoint);
             c->setTransformOriginPoint(transPoint);
             c->setRotation(angle);
-            c->setScale(scale, transPoint);
             if(useGroup) {
                 c->setSelected(false);
                 group->append(c);
