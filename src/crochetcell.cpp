@@ -70,19 +70,6 @@ void CrochetCell::setStitch(Stitch* s, bool useAltRenderer)
     setColor(Qt::white);
 }
 
-void CrochetCell::setRotation(qreal angle, QPointF pivotPoint)
-{
-    setTransform(QTransform().translate(pivotPoint.x(), pivotPoint.y()).rotate(angle).translate(-pivotPoint.x(), -pivotPoint.y()));
-    Cell::setAngle(angle);
-    
-}
-
-void CrochetCell::setAngle(qreal angle)
-{
-    Cell::setAngle(angle);
-    setTransform(QTransform().translate(boundingRect().width()/2, boundingRect().height()).rotate(angle).translate(-boundingRect().width()/2, -boundingRect().height()));
-}
-
 CrochetCell* CrochetCell::copy(CrochetCell* cell)
 {
     CrochetCell* c = 0;
@@ -94,7 +81,7 @@ CrochetCell* CrochetCell::copy(CrochetCell* cell)
     c->setStitch(stitch());
     c->setColor(color());
     c->setTransformOriginPoint(transformOriginPoint());
-    c->setAngle(angle());
+    c->rotate(rotation());
     c->setScale(scale(), transformOriginPoint());
 
     return c;

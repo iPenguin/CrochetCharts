@@ -24,15 +24,10 @@ public:
     qreal scale() const { return mScale; }
     void setScale(qreal newScale, QPointF pivotPoint);
 
-    void setRotation(qreal angle, QPointF pivotPoint);
-
-
     qreal origHeight() { return mOrigHeight; }
     qreal origWidth() { return mOrigWidth; }
 
     CrochetCell* copy(CrochetCell* cell = 0);
-
-    void setAngle(qreal angle);
     
 public slots:
 

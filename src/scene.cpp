@@ -571,8 +571,8 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
     if(!mCurCell)
         return;
 
-    mOldAngle = mCurCell->angle();
-    mPivotPt = QPointF(mCurCell->stitch()->width()/2, mCurCell->stitch()->height());
+    mOldAngle = mCurCell->rotation();
+    mPivotPt = QPointF(mCurCell->boundingRect().width()/2, mCurCell->boundingRect().bottom());
     mOrigin = mCurCell->mapToScene(mPivotPt);
 }
 
@@ -606,7 +606,8 @@ qDebug() << mOldAngle << mAngle << mPivotPt << mOrigin;
     }
     
     qNormalizeAngle(mAngle);
-    mCurCell->setRotation(mAngle, mPivotPt);
+    mCurCell->setTransformOriginPoint(mPivotPt);
+    mCurCell->setRotation(mAngle);
 
 }
 
@@ -1298,9 +1299,9 @@ void Scene::mirror(int direction)
                 qreal diff = item->pos().x() - rect.left();
                 copy->setPos(rect.left() - diff, item->pos().y());
 
-                qreal newAngle = 360 - copy->angle();
+                qreal newAngle = 360 - copy->rotation();
                 qNormalizeAngle(newAngle);
-                copy->setAngle(newAngle);
+                copy->setRotation(newAngle);
                 copy->setSelected(true);
 
             }
@@ -1320,9 +1321,9 @@ void Scene::mirror(int direction)
                 qreal diff = rect.right() - item->pos().x();
                 copy->setPos(rect.right() + diff, item->pos().y());
 
-                qreal newAngle = 360 - copy->angle();
+                qreal newAngle = 360 - copy->rotation();
                 qNormalizeAngle(newAngle);
-                copy->setAngle(newAngle);
+                copy->setRotation(newAngle);
                 copy->setSelected(true);
             }
         }
@@ -1342,10 +1343,10 @@ void Scene::mirror(int direction)
                 copy->setPos(item->pos().x(), rect.top() - diff - (2*item->sceneBoundingRect().height()));
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
 
-                qreal newAngle = 360 - copy->angle() + 180;
+                qreal newAngle = 360 - copy->rotation() + 180;
                 qNormalizeAngle(newAngle);
                 copy->setTransformOriginPoint(copy->boundingRect().width()/2, 0);
-                copy->setAngle(newAngle);
+                copy->setRotation(newAngle);
                 copy->setSelected(true);
             }
         }
@@ -1365,9 +1366,9 @@ void Scene::mirror(int direction)
                 copy->setPos(item->pos().x(), rect.bottom() - diff);
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
 
-                qreal newAngle = 360 - copy->angle() + 180;
+                qreal newAngle = 360 - copy->rotation() + 180;
                 qNormalizeAngle(newAngle);
-                copy->setAngle(newAngle);
+                copy->setRotation(newAngle);
                 copy->setSelected(true);
             }
         }
@@ -1388,22 +1389,9 @@ void Scene::rotate(qreal degrees)
     QPointF pivotPt = selectedItemsBoundingRect(selectedItems()).bottomLeft();
 
     QGraphicsItemGroup* g = createItemGroup(selectedItems());
-    g->rotate(newAngle);
+    g->setRotation(newAngle);
     destroyItemGroup(g);
-    
-    foreach(QGraphicsItem* i, selectedItems()) {
-        if(i->type() == CrochetCell::Type) {
-            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(i);
-            i->setTransformOriginPoint(i->boundingRect().width()/2, i->boundingRect().bottom());
-            c->setAngle(c->angle() + newAngle);
-            //c->setPos(pivotPt.x() - c->y(), pivotPt.y() - c->x());
-           // c->setAngle(newAngle);
-            //TODO: push new SetItemCoordinates()
-            //TODO: push new Angle
-        
-            //setTransform(QTransform().translate(pivotPoint.x(), pivotPoint.y()).rotate(newAngle).translate(-pivotPoint.x(), -pivotPoint.y()))
-        }
-    }
+
 
     //undoStack()->push(new SetItemRotation(this, selectedItems(), degrees));
 }
@@ -1432,7 +1420,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
             case CrochetCell::Type: {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
                 stream << c->type() << c->name() << c->color()
-                    << c->angle() << c->scale() << c->transformOriginPoint() << c->pos();
+                    << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos();
                 break;
             }
             case Indicator::Type: {
@@ -1496,7 +1484,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group, 
             c->setColor(color);
 
             c->setTransformOriginPoint(transPoint);
-            c->setAngle(angle);
+            c->setRotation(angle);
             c->setScale(scale, transPoint);
             if(useGroup) {
                 c->setSelected(false);
@@ -1726,7 +1714,7 @@ void Scene::setCellPosition(int row, int column, CrochetCell* c, int columns)
     qreal delta = defaultSize().width() * 0.5;
     c->setPos(finish.x() - delta, finish.y());
     c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
-    c->setAngle(degrees + 90);
+    c->setRotation(degrees + 90);
     c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
 }
 

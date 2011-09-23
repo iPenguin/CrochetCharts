@@ -70,7 +70,7 @@ SetCellRotation::SetCellRotation(Scene* s, CrochetCell* cell, qreal oldAngl, QPo
     scene = s;
     c = cell;
     oldAngle = oldAngl;
-    newAngle = cell->angle();
+    newAngle = cell->rotation();
     pvtPt = pivotPt;
     scale = c->scale();
     setText(QObject::tr("change angle"));
@@ -78,14 +78,14 @@ SetCellRotation::SetCellRotation(Scene* s, CrochetCell* cell, qreal oldAngl, QPo
 
 void SetCellRotation::redo()
 {
-    
-    c->setRotation(newAngle, pvtPt);
+    c->setTransformOriginPoint(pvtPt);
+    c->setRotation(newAngle);
 }
 
 void SetCellRotation::undo()
 {
-    c->setRotation(oldAngle, pvtPt);
-    c->setScale(scale, pvtPt);
+    c->setRotation(oldAngle);
+    //c->setScale(scale, pvtPt);
 }
 
 /*************************************************\
@@ -100,10 +100,9 @@ SetItemRotation::SetItemRotation(Scene* s, QList<QGraphicsItem*> itms, qreal deg
 
     QGraphicsItemGroup* group = scene->createItemGroup(items);
     pivotPoint = scene->selectedItemsBoundingRect(items).bottomLeft();
-    qDebug() << "pivot pt" << scene->selectedItemsBoundingRect(items) << group->boundingRect();
+
     oldAngle = group->rotation();
     scene->destroyItemGroup(group);
-    qDebug() <<  oldAngle << newAngle;
     setText(QObject::tr("change angle"));
 }
 
@@ -111,7 +110,7 @@ void SetItemRotation::redo()
 {
 
     QGraphicsItemGroup* group = scene->createItemGroup(items);
-    group->setTransform(QTransform().translate(pivotPoint.x(), pivotPoint.y()).rotate(newAngle).translate(-pivotPoint.x(), -pivotPoint.y()));
+    group->setRotation(newAngle);
     scene->destroyItemGroup(group);
 
 }
@@ -120,7 +119,7 @@ void SetItemRotation::undo()
 {
 
     QGraphicsItemGroup* group = scene->createItemGroup(items);
-    group->setTransform(QTransform().translate(-pivotPoint.x(), -pivotPoint.y()).rotate(-newAngle).translate(pivotPoint.x(), pivotPoint.y()));
+    group->setRotation(oldAngle);
     scene->destroyItemGroup(group);
     
 }

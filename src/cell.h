@@ -24,9 +24,6 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     int type () const { return Cell::Type; }
 
-    void setAngle(qreal angle);
-    qreal angle() const { return mAngle; }
-
     void setColor(QColor c = QColor(Qt::white));
     QColor color() const { return mColor; }
     
@@ -48,8 +45,6 @@ signals:
 public slots:
 
 private:
-    qreal mAngle;
-    
     QColor mColor;
     Stitch* mStitch;
 };

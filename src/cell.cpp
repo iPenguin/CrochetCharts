@@ -14,7 +14,6 @@
 
 Cell::Cell(QGraphicsItem* parent)
     : QGraphicsSvgItem(parent),
-    mAngle(0),
     mStitch(0)
 {
     setCachingEnabled(false);
@@ -90,11 +89,6 @@ QString Cell::name()
         return mStitch->name();
     else
         return QString();
-}
-
-void Cell::setAngle(qreal angle)
-{
-    mAngle = angle;
 }
 
 void Cell::useAlternateRenderer(bool useAlt)
