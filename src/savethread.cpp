@@ -80,7 +80,8 @@ void SaveThread::run()
     c->setColor(QColor(color));
     c->setTransformOriginPoint(pivotPt);
     c->setRotation(angle);
-    c->setScale(scale, pivotPt);
+    qDebug() << "FIXME: load scale";
+    c->setScale(scale, scale);
     if(group != -1)
         tab->scene()->mGroups[group]->addToGroup(c);
 }

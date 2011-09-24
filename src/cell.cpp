@@ -14,7 +14,8 @@
 
 Cell::Cell(QGraphicsItem* parent)
     : QGraphicsSvgItem(parent),
-    mStitch(0)
+    mStitch(0),
+    mScale(QPointF(1.0, 1.0))
 {
     setCachingEnabled(false);
     setAcceptHoverEvents(true);
@@ -95,4 +96,12 @@ void Cell::useAlternateRenderer(bool useAlt)
 {
     if(mStitch->isSvg() && mStitch->renderSvg()->isValid())
         setSharedRenderer(mStitch->renderSvg(useAlt));
+}
+
+void Cell::setScale(qreal sx, qreal sy)
+{
+    if(mScale != QPointF(sx, sy)) {
+        mScale = QPointF(sx, sy);
+        QGraphicsSvgItem::scale(sx, sy);
+    }
 }

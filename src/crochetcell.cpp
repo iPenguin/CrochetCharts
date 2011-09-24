@@ -13,8 +13,7 @@
 #include "settings.h"
 
 CrochetCell::CrochetCell()
-    : mScale(1.0),
-    mHighlight(false)
+    : mHighlight(false)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
 }
@@ -43,29 +42,15 @@ void CrochetCell::paint(QPainter* painter, const QStyleOptionGraphicsItem* optio
     }
 }
 
-void CrochetCell::setScale(qreal newScale, QPointF pivotPoint)
-{
-    qreal newSize = mOrigHeight * newScale;
-    qreal scale = newSize/mOrigHeight;
-    mScale = newScale;
-
-    setTransformOriginPoint(pivotPoint);
-    Cell::setScale(scale);
-}
-
 void CrochetCell::setStitch(QString s, bool useAltRenderer)
 {
     Cell::setStitch(s, useAltRenderer);
-    mOrigWidth = boundingRect().width();
-    mOrigHeight = boundingRect().height();
     setColor(Qt::white);
 }
 
 void CrochetCell::setStitch(Stitch* s, bool useAltRenderer)
 {
     Cell::setStitch(s, useAltRenderer);
-    mOrigWidth = boundingRect().width();
-    mOrigHeight = boundingRect().height();
     setColor(Qt::white);
 }
 
@@ -76,12 +61,13 @@ CrochetCell* CrochetCell::copy(CrochetCell* cell)
         c = new CrochetCell();
     else
         c = cell;
-    
+
     c->setStitch(stitch());
     c->setColor(color());
     c->setTransformOriginPoint(transformOriginPoint());
     c->setRotation(rotation());
-    c->setScale(scale(), transformOriginPoint());
+    qDebug() << "FIXME: copy scale";
+    //c->setScale(scale().x(), scale().y());
 
     return c;
 }

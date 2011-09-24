@@ -66,8 +66,6 @@ private:
     qreal newAngle;
     QPointF pvtPt;
     
-    qreal scale;
-    
     Scene* scene;
 };
 
@@ -117,7 +115,7 @@ class SetCellScale : public QUndoCommand
 public:
     enum { Id = 1140 };
 
-    SetCellScale(Scene* s, CrochetCell* cell, qreal oldScle, QPointF pvtPt, QUndoCommand* parent = 0);
+    SetCellScale(Scene* s, CrochetCell* cell, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -125,8 +123,8 @@ public:
     int id() const { return Id; }
     
 private:
-    qreal oldScale;
-    qreal newScale;
+    QPointF oldScale;
+    QPointF newScale;
 
     QPointF pivotPt;
     

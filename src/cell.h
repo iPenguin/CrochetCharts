@@ -38,6 +38,9 @@ public:
 
     void useAlternateRenderer(bool useAlt);
     
+    QPointF scale() { return mScale; }
+    void setScale(qreal sx, qreal sy);
+
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
@@ -47,6 +50,8 @@ public slots:
 private:
     QColor mColor;
     Stitch* mStitch;
+
+    QPointF mScale;
 };
 
 #endif // CELL_H

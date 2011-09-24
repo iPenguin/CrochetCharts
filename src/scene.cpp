@@ -52,8 +52,8 @@ Scene::Scene(QObject* parent)
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
-    mScale(1.0),
-    mOldScale(1.0),
+    mOldScale(QPointF(1.0, 1.0)),
+    mPrevScale(QPointF(1.0,1.0)),
     mAngle(0.0),
     mOrigin(0,0),
     mRowSpacing(9),
@@ -330,7 +330,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
             angleModeMousePress(e);
             break;
         case Scene::ScaleEdit:
-            stretchModeMousePress(e);
+            scaleModeMousePress(e);
             break;
         case Scene::RowEdit:
             rowEditMousePress(e);
@@ -380,7 +380,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
             angleModeMouseMove(e);
             break;
         case Scene::ScaleEdit:
-            stretchModeMouseMove(e);
+            scaleModeMouseMove(e);
             break;
         case Scene::RowEdit:
             rowEditMouseMove(e);
@@ -425,7 +425,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
             angleModeMouseRelease(e);
             break;
         case Scene::ScaleEdit:
-            stretchModeMouseRelease(e);
+            scaleModeMouseRelease(e);
             break;
         case Scene::RowEdit:
             rowEditMouseRelease(e);
@@ -634,18 +634,17 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent* e)
     mOldAngle = 0;
 }
 
-void Scene::stretchModeMousePress(QGraphicsSceneMouseEvent* e)
+void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
     if(!mCurCell)
         return;
-
     mOldScale = mCurCell->scale();
+    mPrevScale = mOldScale;
     mPivotPt = QPointF(mCurCell->stitch()->width()/2, mCurCell->stitch()->height());
-    mCurScale = mCurCell->scale();
 }
 
-void Scene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
+void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
     if(!mCurCell)
@@ -653,13 +652,27 @@ void Scene::stretchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
     mMoving = false;
     
-    QPointF delta = e->buttonDownScenePos(Qt::LeftButton) - e->scenePos();
+    QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
 
-    mScale = mCurScale - (delta.y()/mCurCell->origHeight());
-    mCurCell->setScale(mScale, mPivotPt);
+    QSize newSize = QSize(mCurCell->boundingRect().width() + delta.x(), mCurCell->boundingRect().height() + delta.y());
+
+    if(newSize.width() < 1 || newSize.height() < 1)
+        return;
+
+    QPointF baseScale = QPointF(newSize.width() / mCurCell->boundingRect().width(),
+                               newSize.height() / mCurCell->boundingRect().height());
+
+    if(e->modifiers() == Qt::ControlModifier) {
+        baseScale.ry() = baseScale.rx();
+    }
+
+    QPointF newScale = QPointF(baseScale.x() / mPrevScale.x(), baseScale.y() / mPrevScale.y());
+
+    mCurCell->setScale(newScale.x(), newScale.y());
+    mPrevScale = baseScale;
 }
 
-void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     
     Q_UNUSED(e);
@@ -667,8 +680,9 @@ void Scene::stretchModeMouseRelease(QGraphicsSceneMouseEvent* e)
         return;
 
     undoStack()->push(new SetCellScale(this, mCurCell, mOldScale, mPivotPt));
-    mScale = 1.0;
-    mOldScale = 1.0;
+
+    mOldScale.setX(1.0);
+    mOldScale.setY(1.0);
 }
 
 void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
@@ -1494,7 +1508,8 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             c->setStitch(name);
             c->setColor(color);
 
-            c->setScale(scale, transPoint);
+            qDebug() << "FIXME: paste set scale";
+            c->setScale(scale, scale);
             c->setTransformOriginPoint(transPoint);
             c->setRotation(angle);
 

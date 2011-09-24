@@ -31,7 +31,7 @@ public:
         ColorEdit = 11,       //place colors behind stitches.
         RowEdit = 12,
         RotationEdit = 14,       //adjust the angle of the
-        ScaleEdit = 15,       //stretch the stitches.
+        ScaleEdit = 15,       //scale the stitches.
         IndicatorEdit = 16
     };
 
@@ -186,9 +186,9 @@ protected:
     void angleModeMouseMove(QGraphicsSceneMouseEvent* e);
     void angleModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
-    void stretchModeMousePress(QGraphicsSceneMouseEvent* e);
-    void stretchModeMouseMove(QGraphicsSceneMouseEvent* e);
-    void stretchModeMouseRelease(QGraphicsSceneMouseEvent* e);
+    void scaleModeMousePress(QGraphicsSceneMouseEvent* e);
+    void scaleModeMouseMove(QGraphicsSceneMouseEvent* e);
+    void scaleModeMouseRelease(QGraphicsSceneMouseEvent* e);
 
     void rowEditMousePress(QGraphicsSceneMouseEvent* e);
     void rowEditMouseMove(QGraphicsSceneMouseEvent* e);
@@ -237,9 +237,8 @@ private:
     QColor mEditFgColor;
     QColor mEditBgColor;
 
-    qreal mScale;
-    qreal mOldScale;
-    qreal mCurScale;
+    QPointF mOldScale;
+    QPointF mPrevScale;
 
     qreal mAngle;
     QPointF mPivotPt;

@@ -939,7 +939,7 @@
    </property>
    <property name="icon">
     <iconset resource="../crochet.qrc">
-     <normaloff>:/images/stretch_mode.svg</normaloff>:/images/stretch_mode.svg</iconset>
+     <normaloff>:/images/scale_mode.svg</normaloff>:/images/scale_mode.svg</iconset>
    </property>
    <property name="text">
     <string>Scale Edit</string>

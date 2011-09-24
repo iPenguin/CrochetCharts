@@ -72,7 +72,6 @@ SetCellRotation::SetCellRotation(Scene* s, CrochetCell* cell, qreal oldAngl, QPo
     oldAngle = oldAngl;
     newAngle = cell->rotation();
     pvtPt = pivotPt;
-    scale = c->scale();
     setText(QObject::tr("change angle"));
 }
 
@@ -85,7 +84,6 @@ void SetCellRotation::redo()
 void SetCellRotation::undo()
 {
     c->setRotation(oldAngle);
-    //c->setScale(scale, pvtPt);
 }
 
 /*************************************************\
@@ -151,7 +149,7 @@ void SetItemCoordinates::redo()
 /*************************************************\
  | SetCellScale                                   |
 \*************************************************/
-SetCellScale::SetCellScale(Scene* s, CrochetCell* cell, qreal oldScle, QPointF pvtPt, QUndoCommand* parent)
+SetCellScale::SetCellScale(Scene* s, CrochetCell* cell, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -164,12 +162,12 @@ SetCellScale::SetCellScale(Scene* s, CrochetCell* cell, qreal oldScle, QPointF p
 
 void SetCellScale::undo()
 {
-    c->setScale(oldScale, pivotPt);
+    c->setScale(oldScale.x(), oldScale.y());
 }
 
 void SetCellScale::redo()
 {
-    c->setScale(newScale, pivotPt);
+    c->setScale(newScale.x(), newScale.y());
 }
 
 /*************************************************\

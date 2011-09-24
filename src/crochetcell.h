@@ -21,12 +21,6 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     void setHighlight(bool state) { mHighlight = state; update(); }
 
-    qreal scale() const { return mScale; }
-    void setScale(qreal newScale, QPointF pivotPoint);
-
-    qreal origHeight() { return mOrigHeight; }
-    qreal origWidth() { return mOrigWidth; }
-
     CrochetCell* copy(CrochetCell* cell = 0);
     
 public slots:
@@ -35,11 +29,6 @@ public slots:
     void setStitch(Stitch* s, bool useAltRenderer = false);
     
 private:
-    qreal mScale;
-
-    qreal mOrigWidth;
-    qreal mOrigHeight;
-
     bool mHighlight;
 
 };
