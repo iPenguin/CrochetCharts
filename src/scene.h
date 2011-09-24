@@ -104,7 +104,7 @@ public:
     
 protected:
     void copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items);
-    void pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group, bool useGroup = false);
+    void pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group);
 
     /**
      * This function removes a cell from the 'grid'. if the row is empty it removes the row too.
