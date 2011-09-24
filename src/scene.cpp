@@ -312,6 +312,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 mMoving = true;
                 break;
             }
+            case QGraphicsItemGroup::Type: {
+                mMoving = true;
+                break;
+            }
             default:
                 qWarning() << "mousePress: Unknown object type.";
                 break;
