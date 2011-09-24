@@ -656,7 +656,7 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
 
     QSize newSize = QSize(mCurCell->boundingRect().width() + delta.x(), mCurCell->boundingRect().height() + delta.y());
 
-    if(newSize.width() < 1 || newSize.height() < 1)
+    if((newSize.width() < 1 && newSize.width() > -1) || (newSize.height() < 1 && newSize.height() > -1))
         return;
 
     QPointF baseScale = QPointF(newSize.width() / mCurCell->boundingRect().width(),
