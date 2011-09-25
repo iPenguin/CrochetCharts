@@ -42,6 +42,7 @@ SaveFile::~SaveFile()
 
 SaveFile::FileError SaveFile::save()
 {
+    qDebug() << "save start";
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly)) {
         //TODO: some nice dialog to warn the user.
@@ -57,14 +58,16 @@ SaveFile::FileError SaveFile::save()
     out.setVersion(QDataStream::Qt_4_7);
 
     if(!mInternalStitchSet) {
+qDebug() << "create internal set";
         mInternalStitchSet = new StitchSet();
         mInternalStitchSet->isTemporary = true;
         mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
         StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
         
-    } else
+    } else {
         mInternalStitchSet->clearStitches();
-
+    }
+qDebug() << "start document";
     //start xml save...
     QString* data = new QString();
     QXmlStreamWriter stream(data);
@@ -74,23 +77,24 @@ SaveFile::FileError SaveFile::save()
     stream.writeStartElement("pattern"); //start pattern
     //TODO: dont need to set the version when saving into a binary file.
     stream.writeAttribute("version", QString::number(SaveFile::Version_1_0));
-
+    qDebug() << "save stitches";
     //create the StitchSet then save the icons.
     saveCustomStitches(&stream);
     mInternalStitchSet->saveIcons(&out);
-
+qDebug() << "save colors";
     saveColors(&stream);
+qDebug() << "save charts";
     saveCharts(&stream);
     stream.writeEndElement();
     
     stream.writeEndDocument();
-
+qDebug() << "end doc";
     //put xml into binary file.
     out << data->toLatin1();
     file.close();
     delete data;
     data = 0;
-    
+    qDebug() << "save end";
     return SaveFile::No_Error;
 }
 
@@ -116,23 +120,31 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
     int tabCount = mTabWidget->count();
     
     for(int i = 0; i < tabCount; ++i) {
-        stream->writeStartElement("chart"); //start chart
         CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
         if(!tab)
             continue;
+
+        stream->writeStartElement("chart"); //start chart
+
         stream->writeTextElement("name", mTabWidget->tabText(i));
 
-        Scene::ChartStyle stlye = tab->mChartStyle;
-        stream->writeTextElement("style", QString::number(stlye));
+        stream->writeTextElement("style", QString::number(tab->mChartStyle));
         stream->writeTextElement("defaultSt", tab->scene()->mDefaultStitch);
         
-        if(stlye == Scene::Rounds) {
-            bool showCenter = tab->scene()->showChartCenter();
-            stream->writeTextElement("showChartCenter", QString::number(showCenter));
+        qDebug() << "chart center";
+        bool showCenter = tab->scene()->showChartCenter();
+        if(showCenter) {
+            stream->writeStartElement("chartCenter");
+            stream->writeAttribute("x", QString::number(tab->scene()->mCenterSymbol->x()));
+            stream->writeAttribute("y", QString::number(tab->scene()->mCenterSymbol->y()));
+            stream->writeEndElement(); //end chart center
         }
-
-        stream->writeTextElement("defaultRowSpacing", QString::number(tab->scene()->mDefaultSize.height()));
-
+        qDebug() << "row spacing";
+        stream->writeStartElement("rowSpacing");
+        stream->writeAttribute("width", QString::number(tab->scene()->mDefaultSize.width()));
+        stream->writeAttribute("height", QString::number(tab->scene()->mDefaultSize.height()));
+        stream->writeEndElement(); //row spacing
+        qDebug() << "grid";
         if(tab->scene()->rowCount() >= 1 && tab->scene()->maxColumnCount() >= 1) {
             stream->writeStartElement("grid");
             int rowCount = tab->scene()->rowCount();
@@ -142,7 +154,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             }
             stream->writeEndElement(); //end grid.
         }
-
+        qDebug() << "groups";
         foreach(QGraphicsItemGroup* g, tab->scene()->mGroups) {
             stream->writeStartElement("group");
             stream->writeAttribute("x", QString::number(g->scenePos().x()));
@@ -150,7 +162,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeCharacters(QString::number(tab->scene()->mGroups.indexOf(g)));
             stream->writeEndElement(); //end groups
         }
-        
+        qDebug() << "foreach start";
         foreach(QGraphicsItem* item, tab->scene()->items()) {
             
             CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
@@ -172,21 +184,26 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
                 int groupNum = tab->scene()->mGroups.indexOf(g);
                 stream->writeTextElement("group", QString::number(groupNum));
             }
-            
+            qDebug() << "color";
             stream->writeTextElement("color", c->color().name());
             stream->writeTextElement("x", QString::number(c->pos().x()));
             stream->writeTextElement("y", QString::number(c->pos().y()));
 
             stream->writeTextElement("angle", QString::number(c->rotation()));
+            qDebug() << "scale";
             stream->writeStartElement("scale");
             stream->writeAttribute("x", QString::number(c->scale().x()));
             stream->writeAttribute("y", QString::number(c->scale().y()));
             stream->writeEndElement(); //end scale
-            stream->writeTextElement("pivotPtX", QString::number(c->transformOriginPoint().x()));
-            stream->writeTextElement("pivotPtY", QString::number(c->transformOriginPoint().y()));
+
+            stream->writeStartElement("pivotPoint");
+            stream->writeAttribute("x", QString::number(c->transformOriginPoint().x()));
+            stream->writeAttribute("y", QString::number(c->transformOriginPoint().y()));
+            stream->writeEndElement(); //end pivotPoint
+
             stream->writeEndElement(); //end cell
         }
-
+        qDebug() << "indicators";
         foreach(Indicator* i, tab->scene()->indicators()) {
             stream->writeStartElement("indicator");
 
@@ -201,7 +218,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
 
         stream->writeEndElement(); // end chart
     }
-    
+    qDebug() << "return";
     return true;
 }
 
@@ -225,6 +242,7 @@ void SaveFile::saveColors(QXmlStreamWriter* stream)
 
 SaveFile::FileError SaveFile::load()
 {
+    qDebug() << "load start";
     QFile file(fileName);
 
     if(!file.open(QIODevice::ReadOnly)) {
@@ -264,7 +282,7 @@ SaveFile::FileError SaveFile::load()
 
     if(version == SaveFile::Version_1_0)
         in.setVersion(QDataStream::Qt_4_7);
-
+    qDebug() << "load internal stitches";
     mInternalStitchSet = new StitchSet();
     mInternalStitchSet->isTemporary = true;
     mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
@@ -283,12 +301,13 @@ SaveFile::FileError SaveFile::load()
         qWarning() << "Error loading saved file: " << stream.errorString();
         return SaveFile::Err_GettingFileContents;
     }
-    
+    qDebug() << "load doc";
     while (!stream.atEnd() && !stream.hasError()) {
 
         stream.readNext();
         if (stream.isStartElement()) {
             QString name = stream.name().toString();
+            qDebug() << "load " << name;
             if(name == "colors")
                 loadColors(&stream);
             else if(name == "chart")
@@ -299,7 +318,7 @@ SaveFile::FileError SaveFile::load()
     }
 
     StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
-
+    qDebug() << "end load";
     return SaveFile::No_Error;
 }
 
@@ -346,12 +365,12 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             defaultSt = stream->readElementText();
             tab->scene()->mDefaultStitch = defaultSt;
             
-        } else if(tag == "showChartCenter") {
-
-            if(tab->mChartStyle != Scene::Rounds)
-                continue;
+        } else if(tag == "chartCenter") {
+            qreal x = stream->attributes().value("x").toString().toDouble();
+            qreal y = stream->attributes().value("y").toString().toDouble();
             tab->blockSignals(true);
-            tab->setShowChartCenter(stream->readElementText().toInt());
+            tab->setShowChartCenter(true);
+            tab->scene()->mCenterSymbol->setPos(x, y);
             tab->blockSignals(false);
 
         } else if(tag == "grid") {

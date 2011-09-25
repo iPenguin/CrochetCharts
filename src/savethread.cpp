@@ -30,9 +30,10 @@ void SaveThread::run()
     int row = -1, column = -1;
     int group = -1;
     QString color;
-    qreal x = 0, y = 0,
-          pivotPtX = 0, pivotPtY = 0;
-    qreal angle = 0.0, scale = 0.0;
+    qreal x = 0, y = 0;
+    QPointF pivotPoint;
+    qreal angle = 0.0;
+    QPointF scale;
 
     while(!(stream->isEndElement() && stream->name() == "cell")) {
         stream->readNext();
@@ -54,11 +55,11 @@ void SaveThread::run()
         } else if(tag == "angle") {
             angle = stream->readElementText().toDouble();
         } else if(tag == "scale") {
-            scale = stream->readElementText().toDouble();
-        } else if(tag == "pivotPtX") {
-            pivotPtX = stream->readElementText().toDouble();
-        } else if(tag == "pivotPtY") {
-            pivotPtY = stream->readElementText().toDouble();
+            scale.rx() = stream->attributes().value("x").toString().toDouble();
+            scale.ry() = stream->attributes().value("y").toString().toDouble();
+        } else if(tag == "pivotPoint") {
+            pivotPoint.rx() = stream->attributes().value("x").toString().toDouble();
+            pivotPoint.ry() = stream->attributes().value("y").toString().toDouble();
         } else if(tag == "group") {
             group = stream->readElementText().toInt();
         }
@@ -73,15 +74,13 @@ void SaveThread::run()
     } else {
         c->setStitch(s);
     }
-
-    QPointF pivotPt = QPointF(pivotPtX, pivotPtY);
     
     c->setPos(x, y);
     c->setColor(QColor(color));
-    c->setTransformOriginPoint(pivotPt);
+    c->setTransformOriginPoint(pivotPoint);
     c->setRotation(angle);
-    qDebug() << "FIXME: load scale";
-    c->setScale(scale, scale);
+
+    c->setScale(scale.x(), scale.y());
     if(group != -1)
         tab->scene()->mGroups[group]->addToGroup(c);
 }

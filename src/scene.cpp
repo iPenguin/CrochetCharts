@@ -60,7 +60,8 @@ Scene::Scene(QObject* parent)
     mDefaultSize(QSizeF(32.0, 96.0)),
     mDefaultStitch("ch"),
     mRowLine(0),
-    mCenterSymbol(0)
+    mCenterSymbol(0),
+    mShowChartCenter(false)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
     initDemoBackground();
@@ -1496,7 +1497,8 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
         case CrochetCell::Type: {
             QString name;
             QColor color;
-            qreal angle, scale;
+            qreal angle;
+            QPointF scale;
             QPointF pos, transPoint;
 
             stream >> name >> color >> angle >> scale >> transPoint >> pos;
@@ -1509,7 +1511,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             c->setColor(color);
 
             qDebug() << "FIXME: paste set scale";
-            c->setScale(scale, scale);
+            c->setScale(scale.x(), scale.y());
             c->setTransformOriginPoint(transPoint);
             c->setRotation(angle);
 
