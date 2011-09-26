@@ -14,9 +14,10 @@
 
 Cell::Cell(QGraphicsItem* parent)
     : QGraphicsSvgItem(parent),
+    origWidth(64.0),
+    origHeight(64.0),
     mStitch(0),
-    mScale(QPointF(1.0, 1.0)),
-    mActualScale(QPointF(1.0, 1.0))
+    mScale(QPointF(1.0, 1.0))
 {
     setCachingEnabled(false);
     setAcceptHoverEvents(true);
@@ -56,7 +57,10 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
 
         if(doUpdate)
             update();
-            
+
+        origWidth = s->width();
+        origHeight = s->height();
+        
         emit stitchChanged(old, s->name());
     }
 }
@@ -101,17 +105,8 @@ void Cell::useAlternateRenderer(bool useAlt)
 
 void Cell::setScale(qreal sx, qreal sy)
 {
-
-    mActualScale.setX(mActualScale.x()*sx);
-    mActualScale.setY(mActualScale.y()*sy);
-    
-    mScale = QPointF(sx, sy);
-    QGraphicsSvgItem::scale(sx, sy);
-}
-
-void Cell::setActualScale(qreal sx, qreal sy)
-{
     QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
 
-    setScale(newScale.x(), newScale.y());
+    QGraphicsSvgItem::scale(newScale.x(), newScale.y());
+    mScale = QPointF(sx, sy);
 }

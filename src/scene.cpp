@@ -650,6 +650,7 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
         return;
     
     mOldScale = mCurCell->scale();
+    qDebug() << "old scale" << mOldScale << mCurCell->scale();
     mPrevScale = mOldScale;
     mPivotPt = QPointF(mCurCell->stitch()->width()/2, mCurCell->stitch()->height());
 }
@@ -669,21 +670,21 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
     
     QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
 
-    QSize newSize = QSize(mCurCell->boundingRect().width() + delta.x(), mCurCell->boundingRect().height() + delta.y());
+    QSize newSize = QSize(mCurCell->origWidth + delta.x(), mCurCell->origHeight + delta.y());
 
     if((newSize.width() < 1 && newSize.width() > -1) || (newSize.height() < 1 && newSize.height() > -1))
         return;
 
-    QPointF baseScale = QPointF(newSize.width() / mCurCell->boundingRect().width(),
-                               newSize.height() / mCurCell->boundingRect().height());
+    QPointF baseScale = QPointF(newSize.width() / mCurCell->origWidth,
+                               newSize.height() / mCurCell->origHeight);
 
     if(e->modifiers() == Qt::ControlModifier) {
         baseScale.ry() = baseScale.rx();
     }
 
-    QPointF newScale = QPointF(baseScale.x() / mPrevScale.x(), baseScale.y() / mPrevScale.y());
+    QPointF relativeScale = QPointF(baseScale.x() / mPrevScale.x(), baseScale.y() / mPrevScale.y());
 
-    mCurCell->setScale(newScale.x(), newScale.y());
+    mCurCell->setScale(baseScale.x(), baseScale.y());
     mPrevScale = baseScale;
 }
 
@@ -698,7 +699,7 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
         return;
     
     undoStack()->push(new SetCellScale(this, mCurCell, mOldScale, mPivotPt));
-
+qDebug() << "end" << mCurCell->scale() << mCurCell->scale() << mOldScale;
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
 }
@@ -1456,7 +1457,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
             case CrochetCell::Type: {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
                 stream << c->type() << c->name() << c->color()
-                    << c->rotation() << c->actualScale() << c->transformOriginPoint() << c->pos();
+                    << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos();
                 break;
             }
             case Indicator::Type: {
