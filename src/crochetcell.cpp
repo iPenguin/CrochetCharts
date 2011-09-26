@@ -66,8 +66,7 @@ CrochetCell* CrochetCell::copy(CrochetCell* cell)
     c->setColor(color());
     c->setTransformOriginPoint(transformOriginPoint());
     c->setRotation(rotation());
-    qDebug() << "FIXME: copy scale";
-    //c->setScale(scale().x(), scale().y());
+    c->setScale(scale().x(), scale().y());
 
     return c;
 }

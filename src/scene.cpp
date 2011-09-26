@@ -1506,10 +1506,9 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             c->setStitch(name);
             c->setColor(color);
 
-            qDebug() << "FIXME: paste set scale";
-            c->setScale(scale.x(), scale.y());
             c->setTransformOriginPoint(transPoint);
             c->setRotation(angle);
+            c->setScale(scale.x(), scale.y());
 
             c->setSelected(false);
             group->append(c);

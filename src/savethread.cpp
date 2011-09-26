@@ -30,38 +30,49 @@ void SaveThread::run()
     int row = -1, column = -1;
     int group = -1;
     QString color;
-    qreal x = 0, y = 0;
+    QPointF position(0.0,0.0);
     QPointF pivotPoint;
     qreal angle = 0.0;
-    QPointF scale;
+    QPointF scale = QPointF(1.0,1.0);
 
     while(!(stream->isEndElement() && stream->name() == "cell")) {
         stream->readNext();
         QString tag = stream->name().toString();
-        
+
         if(tag == "stitch") {
             QString st = stream->readElementText();
             s = StitchLibrary::inst()->findStitch(st);
+
         } else if(tag == "row") {
             row = stream->readElementText().toInt();
+
         } else if(tag == "column") {
             column = stream->readElementText().toInt();
+
         } else if(tag == "color") {
             color = stream->readElementText();
-        } else if(tag == "x") {
-            x = stream->readElementText().toDouble();
-        } else if(tag == "y") {
-            y = stream->readElementText().toDouble();
+
+        } else if(tag == "position") {
+            position.rx() = stream->attributes().value("x").toString().toDouble();
+            position.ry() = stream->attributes().value("y").toString().toDouble();
+            stream->readElementText();
+
         } else if(tag == "angle") {
             angle = stream->readElementText().toDouble();
+
         } else if(tag == "scale") {
             scale.rx() = stream->attributes().value("x").toString().toDouble();
             scale.ry() = stream->attributes().value("y").toString().toDouble();
+            stream->readElementText();
+
         } else if(tag == "pivotPoint") {
             pivotPoint.rx() = stream->attributes().value("x").toString().toDouble();
             pivotPoint.ry() = stream->attributes().value("y").toString().toDouble();
+            stream->readElementText();
+
         } else if(tag == "group") {
             group = stream->readElementText().toInt();
+
         }
     }
 
@@ -75,7 +86,7 @@ void SaveThread::run()
         c->setStitch(s);
     }
     
-    c->setPos(x, y);
+    c->setPos(position);
     c->setColor(QColor(color));
     c->setTransformOriginPoint(pivotPoint);
     c->setRotation(angle);

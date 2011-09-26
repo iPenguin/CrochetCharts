@@ -42,7 +42,7 @@ SaveFile::~SaveFile()
 
 SaveFile::FileError SaveFile::save()
 {
-    qDebug() << "save start";
+
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly)) {
         //TODO: some nice dialog to warn the user.
@@ -58,7 +58,7 @@ SaveFile::FileError SaveFile::save()
     out.setVersion(QDataStream::Qt_4_7);
 
     if(!mInternalStitchSet) {
-qDebug() << "create internal set";
+
         mInternalStitchSet = new StitchSet();
         mInternalStitchSet->isTemporary = true;
         mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
@@ -67,7 +67,7 @@ qDebug() << "create internal set";
     } else {
         mInternalStitchSet->clearStitches();
     }
-qDebug() << "start document";
+
     //start xml save...
     QString* data = new QString();
     QXmlStreamWriter stream(data);
@@ -77,24 +77,24 @@ qDebug() << "start document";
     stream.writeStartElement("pattern"); //start pattern
     //TODO: dont need to set the version when saving into a binary file.
     stream.writeAttribute("version", QString::number(SaveFile::Version_1_0));
-    qDebug() << "save stitches";
+
     //create the StitchSet then save the icons.
     saveCustomStitches(&stream);
     mInternalStitchSet->saveIcons(&out);
-qDebug() << "save colors";
+
     saveColors(&stream);
-qDebug() << "save charts";
+
     saveCharts(&stream);
     stream.writeEndElement();
     
     stream.writeEndDocument();
-qDebug() << "end doc";
+
     //put xml into binary file.
     out << data->toLatin1();
     file.close();
     delete data;
     data = 0;
-    qDebug() << "save end";
+
     return SaveFile::No_Error;
 }
 
@@ -130,8 +130,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
 
         stream->writeTextElement("style", QString::number(tab->mChartStyle));
         stream->writeTextElement("defaultSt", tab->scene()->mDefaultStitch);
-        
-        qDebug() << "chart center";
+
         bool showCenter = tab->scene()->showChartCenter();
         if(showCenter) {
             stream->writeStartElement("chartCenter");
@@ -139,12 +138,12 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeAttribute("y", QString::number(tab->scene()->mCenterSymbol->y()));
             stream->writeEndElement(); //end chart center
         }
-        qDebug() << "row spacing";
+
         stream->writeStartElement("rowSpacing");
         stream->writeAttribute("width", QString::number(tab->scene()->mDefaultSize.width()));
         stream->writeAttribute("height", QString::number(tab->scene()->mDefaultSize.height()));
         stream->writeEndElement(); //row spacing
-        qDebug() << "grid";
+
         if(tab->scene()->rowCount() >= 1 && tab->scene()->maxColumnCount() >= 1) {
             stream->writeStartElement("grid");
             int rowCount = tab->scene()->rowCount();
@@ -154,7 +153,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             }
             stream->writeEndElement(); //end grid.
         }
-        qDebug() << "groups";
+
         foreach(QGraphicsItemGroup* g, tab->scene()->mGroups) {
             stream->writeStartElement("group");
             stream->writeAttribute("x", QString::number(g->scenePos().x()));
@@ -162,7 +161,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeCharacters(QString::number(tab->scene()->mGroups.indexOf(g)));
             stream->writeEndElement(); //end groups
         }
-        qDebug() << "foreach start";
+
         foreach(QGraphicsItem* item, tab->scene()->items()) {
             
             CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
@@ -175,8 +174,10 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             //if the stitch is on the grid save the grid position.
             QPoint pt = tab->scene()->indexOf(c);
             if(pt != QPoint(-1, -1)) {
-                stream->writeTextElement("row", QString::number(pt.y()));
-                stream->writeTextElement("column", QString::number(pt.x()));
+                stream->writeStartElement("grid");
+                stream->writeAttribute("row", QString::number(pt.y()));
+                stream->writeAttribute("column", QString::number(pt.x()));
+                stream->writeEndElement(); //grid
             }
 
             if(c->parentItem()) {
@@ -184,13 +185,15 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
                 int groupNum = tab->scene()->mGroups.indexOf(g);
                 stream->writeTextElement("group", QString::number(groupNum));
             }
-            qDebug() << "color";
-            stream->writeTextElement("color", c->color().name());
-            stream->writeTextElement("x", QString::number(c->pos().x()));
-            stream->writeTextElement("y", QString::number(c->pos().y()));
 
+            stream->writeStartElement("position");
+            stream->writeAttribute("x", QString::number(c->pos().x()));
+            stream->writeAttribute("y", QString::number(c->pos().y()));
+            stream->writeEndElement(); //position
+
+            stream->writeTextElement("color", c->color().name());
             stream->writeTextElement("angle", QString::number(c->rotation()));
-            qDebug() << "scale";
+
             stream->writeStartElement("scale");
             stream->writeAttribute("x", QString::number(c->scale().x()));
             stream->writeAttribute("y", QString::number(c->scale().y()));
@@ -203,7 +206,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
 
             stream->writeEndElement(); //end cell
         }
-        qDebug() << "indicators";
+
         foreach(Indicator* i, tab->scene()->indicators()) {
             stream->writeStartElement("indicator");
 
@@ -218,7 +221,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
 
         stream->writeEndElement(); // end chart
     }
-    qDebug() << "return";
+
     return true;
 }
 
@@ -242,7 +245,7 @@ void SaveFile::saveColors(QXmlStreamWriter* stream)
 
 SaveFile::FileError SaveFile::load()
 {
-    qDebug() << "load start";
+
     QFile file(fileName);
 
     if(!file.open(QIODevice::ReadOnly)) {
@@ -282,7 +285,7 @@ SaveFile::FileError SaveFile::load()
 
     if(version == SaveFile::Version_1_0)
         in.setVersion(QDataStream::Qt_4_7);
-    qDebug() << "load internal stitches";
+
     mInternalStitchSet = new StitchSet();
     mInternalStitchSet->isTemporary = true;
     mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
@@ -301,24 +304,28 @@ SaveFile::FileError SaveFile::load()
         qWarning() << "Error loading saved file: " << stream.errorString();
         return SaveFile::Err_GettingFileContents;
     }
-    qDebug() << "load doc";
+
     while (!stream.atEnd() && !stream.hasError()) {
 
         stream.readNext();
         if (stream.isStartElement()) {
             QString name = stream.name().toString();
-            qDebug() << "load " << name;
-            if(name == "colors")
+
+            if(name == "colors") {
                 loadColors(&stream);
-            else if(name == "chart")
+
+            } else if(name == "chart") {
                 loadChart(&stream);
-            else if(name == "stitch_set")
+
+            } else if(name == "stitch_set") {
                 mInternalStitchSet->loadXmlStitchSet(&stream, true);
+
+            }
         }
     }
 
     StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
-    qDebug() << "end load";
+
     return SaveFile::No_Error;
 }
 
@@ -376,9 +383,11 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         } else if(tag == "grid") {
             loadGrid(stream, tab->scene());
             
-        } else if(tag == "defaultRowSpacing") {
-            qreal height = stream->readElementText().toDouble();
+        } else if(tag == "rowSpacing") {
+            qreal width = stream->attributes().value("width").toString().toDouble();
+            qreal height = stream->attributes().value("height").toString().toDouble();
             tab->scene()->mDefaultSize.setHeight(height);
+            tab->scene()->mDefaultSize.setWidth(width);
             
         } else if(tag == "cell") {
             SaveThread* sth = new SaveThread(tab, stream);

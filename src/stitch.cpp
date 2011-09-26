@@ -70,6 +70,7 @@ void Stitch::setupSvgFiles()
 
 bool Stitch::isSvg()
 {
+
     QString fileName = mFile.toLower();
 
     if(fileName.endsWith(".svg") || fileName.endsWith(".svgz"))

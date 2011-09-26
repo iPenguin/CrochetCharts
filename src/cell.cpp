@@ -100,8 +100,6 @@ void Cell::useAlternateRenderer(bool useAlt)
 
 void Cell::setScale(qreal sx, qreal sy)
 {
-    if(mScale != QPointF(sx, sy)) {
-        mScale = QPointF(sx, sy);
-        QGraphicsSvgItem::scale(sx, sy);
-    }
+    mScale = QPointF(sx, sy);
+    QGraphicsSvgItem::scale(sx, sy);
 }
