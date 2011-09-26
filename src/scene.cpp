@@ -53,7 +53,6 @@ Scene::Scene(QObject* parent)
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
     mOldScale(QPointF(1.0, 1.0)),
-    mPrevScale(QPointF(1.0,1.0)),
     mAngle(0.0),
     mOrigin(0,0),
     mRowSpacing(9),
@@ -650,8 +649,6 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
         return;
     
     mOldScale = mCurCell->scale();
-    qDebug() << "old scale" << mOldScale << mCurCell->scale();
-    mPrevScale = mOldScale;
     mPivotPt = QPointF(mCurCell->stitch()->width()/2, mCurCell->stitch()->height());
 }
 
@@ -682,10 +679,7 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
         baseScale.ry() = baseScale.rx();
     }
 
-    QPointF relativeScale = QPointF(baseScale.x() / mPrevScale.x(), baseScale.y() / mPrevScale.y());
-
     mCurCell->setScale(baseScale.x(), baseScale.y());
-    mPrevScale = baseScale;
 }
 
 void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
@@ -699,7 +693,7 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
         return;
     
     undoStack()->push(new SetCellScale(this, mCurCell, mOldScale, mPivotPt));
-qDebug() << "end" << mCurCell->scale() << mCurCell->scale() << mOldScale;
+    
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
 }

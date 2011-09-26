@@ -240,8 +240,7 @@ private:
     QColor mEditBgColor;
 
     QPointF mOldScale;
-    QPointF mPrevScale;
-
+    
     qreal mAngle;
     QPointF mPivotPt;
     QPointF mOrigin;
