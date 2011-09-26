@@ -358,7 +358,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
         
     //Track object movement on scene.
         foreach(QGraphicsItem* item, selectedItems()) {
-            mOldPositions.insert(item, item->scenePos());
+            mOldPositions.insert(item, item->pos());
         }
     }
     
