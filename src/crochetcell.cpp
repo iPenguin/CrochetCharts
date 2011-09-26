@@ -66,7 +66,7 @@ CrochetCell* CrochetCell::copy(CrochetCell* cell)
     c->setColor(color());
     c->setTransformOriginPoint(transformOriginPoint());
     c->setRotation(rotation());
-    c->setScale(scale().x(), scale().y());
+    c->setScale(actualScale().x(), actualScale().y());
 
     return c;
 }

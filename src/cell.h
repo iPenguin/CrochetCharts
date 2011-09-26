@@ -41,6 +41,9 @@ public:
     QPointF scale() { return mScale; }
     void setScale(qreal sx, qreal sy);
 
+    QPointF actualScale() {return mActualScale; }
+    void setActualScale(qreal sx, qreal sy);
+
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
@@ -52,6 +55,7 @@ private:
     Stitch* mStitch;
 
     QPointF mScale;
+    QPointF mActualScale;
 };
 
 #endif // CELL_H

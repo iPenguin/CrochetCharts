@@ -1439,7 +1439,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
             case CrochetCell::Type: {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
                 stream << c->type() << c->name() << c->color()
-                    << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos();
+                    << c->rotation() << c->actualScale() << c->transformOriginPoint() << c->pos();
                 break;
             }
             case Indicator::Type: {

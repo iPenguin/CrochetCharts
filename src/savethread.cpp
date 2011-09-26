@@ -91,7 +91,7 @@ void SaveThread::run()
     c->setTransformOriginPoint(pivotPoint);
     c->setRotation(angle);
 
-    c->setScale(scale.x(), scale.y());
+    c->setActualScale(scale.x(), scale.y());
     if(group != -1)
         tab->scene()->mGroups[group]->addToGroup(c);
 }

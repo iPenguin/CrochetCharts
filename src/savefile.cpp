@@ -195,8 +195,8 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeTextElement("angle", QString::number(c->rotation()));
 
             stream->writeStartElement("scale");
-            stream->writeAttribute("x", QString::number(c->scale().x()));
-            stream->writeAttribute("y", QString::number(c->scale().y()));
+            stream->writeAttribute("x", QString::number(c->actualScale().x()));
+            stream->writeAttribute("y", QString::number(c->actualScale().y()));
             stream->writeEndElement(); //end scale
 
             stream->writeStartElement("pivotPoint");
