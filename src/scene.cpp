@@ -1399,24 +1399,20 @@ void Scene::rotate(qreal degrees)
     if(selectedItems().count() <= 0)
         return;
 
+    undoStack()->push(new SetItemRotation(this, selectedItems(), degrees));
+}
+
+void Scene::rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint)
+{
+
     qreal newAngle = degrees;
     qNormalizeAngle(newAngle);
 
-    QPointF pivotPt;
-    
-    if(mCenterSymbol) {
-        pivotPt = mCenterSymbol->boundingRect().center();
-    } else {
-        pivotPt = selectedItemsBoundingRect(selectedItems()).bottomLeft();
-    }
-    
-    QGraphicsItemGroup* g = createItemGroup(selectedItems());
-    g->setTransformOriginPoint(pivotPt);
+    QGraphicsItemGroup* g = createItemGroup(items);
+    g->setTransformOriginPoint(pivotPoint);
     g->setRotation(newAngle);
     destroyItemGroup(g);
 
-
-    //undoStack()->push(new SetItemRotation(this, selectedItems(), degrees));
 }
 
 void Scene::copy()

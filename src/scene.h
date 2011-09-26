@@ -174,6 +174,8 @@ public:
     void ungroup(QGraphicsItemGroup* group);
 
     QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
+
+    void rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint);
     
 protected:
     void colorModeMouseMove(QGraphicsSceneMouseEvent* e);
@@ -280,6 +282,9 @@ public:
 
     void createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize);
     void createRow(int row, int columns, QString stitch);
+
+    bool hasChartCenter() { return (mCenterSymbol ? true : false); }
+    QGraphicsItem* chartCenter() { return mCenterSymbol; }
     
 public slots:
     void setShowChartCenter(bool state);

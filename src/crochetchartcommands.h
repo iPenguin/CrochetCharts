@@ -85,8 +85,8 @@ private:
     QList<QGraphicsItem*> items;
     qreal oldAngle;
     qreal newAngle;
-    QPointF pivotPoint;
 
+    QPointF pivotPoint;
     Scene* scene;
 };
 

@@ -96,30 +96,24 @@ SetItemRotation::SetItemRotation(Scene* s, QList<QGraphicsItem*> itms, qreal deg
     items.append(itms);
     newAngle = degrees;
 
-    QGraphicsItemGroup* group = scene->createItemGroup(items);
-    pivotPoint = scene->selectedItemsBoundingRect(items).bottomLeft();
+    if(scene->hasChartCenter()) {
+        pivotPoint = scene->chartCenter()->boundingRect().center();
+    } else {
+        pivotPoint = scene->selectedItemsBoundingRect(items).bottomLeft();
+    }
 
-    oldAngle = group->rotation();
-    scene->destroyItemGroup(group);
-    setText(QObject::tr("change angle"));
+    setText(QObject::tr("rotate selection"));
 }
 
 void SetItemRotation::redo()
 {
-
-    QGraphicsItemGroup* group = scene->createItemGroup(items);
-    group->setRotation(newAngle);
-    scene->destroyItemGroup(group);
+    scene->rotateSelection(newAngle, items, pivotPoint);
 
 }
 
 void SetItemRotation::undo()
 {
-
-    QGraphicsItemGroup* group = scene->createItemGroup(items);
-    group->setRotation(oldAngle);
-    scene->destroyItemGroup(group);
-    
+    scene->rotateSelection(-newAngle, items, pivotPoint);
 }
 
 /*************************************************\
