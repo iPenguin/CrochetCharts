@@ -594,6 +594,11 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurCell)
         return;
 
+    if(selectedItems().count() > 1) {
+        mMoving = true;
+        return;
+    }
+
     mMoving = false;
     
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
@@ -629,6 +634,9 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent* e)
     Q_UNUSED(e);
     if(!mCurCell)
         return;
+
+    if(mMoving)
+        return;
     
 //FIXME: use a constant pviot point.
     undoStack()->push(new SetCellRotation(this, mCurCell, mOldAngle, mPivotPt));
@@ -640,6 +648,7 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
     Q_UNUSED(e);
     if(!mCurCell)
         return;
+    
     mOldScale = mCurCell->scale();
     mPrevScale = mOldScale;
     mPivotPt = QPointF(mCurCell->stitch()->width()/2, mCurCell->stitch()->height());
@@ -651,6 +660,11 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurCell)
         return;
 
+    if(selectedItems().count() > 1) {
+        mMoving = true;
+        return;
+    }
+    
     mMoving = false;
     
     QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
@@ -680,6 +694,9 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
     if(!mCurCell)
         return;
 
+    if(mMoving)
+        return;
+    
     undoStack()->push(new SetCellScale(this, mCurCell, mOldScale, mPivotPt));
 
     mOldScale.setX(1.0);
