@@ -188,7 +188,7 @@ void Scene::addItem(QGraphicsItem* item)
             break;
         }
         default:
-            qWarning() << "addItem: unknown type";
+            qWarning() << "addItem - unknown type: " << item->type();
             break;
     }
 }
@@ -216,7 +216,7 @@ void Scene::removeItem(QGraphicsItem* item)
             break;
         }
         default:
-            qWarning() << "removeItem: unknown type";
+            qWarning() << "removeItem - unknown type:" << item->type();
             break;
     }
 
@@ -268,7 +268,7 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
                     break;
                 }
                 default:
-                    qWarning() << "keyReleaseEvent: unkown type";
+                    qWarning() << "keyReleaseEvent - unknown type: " << item->type();
                     break;
             }
         }
@@ -317,7 +317,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 break;
             }
             default:
-                qWarning() << "mousePress: Unknown object type.";
+                qWarning() << "mousePress - Unknown object type: " << gi->type();
                 break;
         }
     }
@@ -1056,12 +1056,21 @@ void Scene::align(int vertical, int horizontal)
     qreal bottom = sceneRect().top();
     
     foreach(QGraphicsItem* i, selectedItems()) {
-        if(i->scenePos().x() < left)
-            left = i->scenePos().x();
+        qreal tmpLeft, tmpTop;
+        if(i->type() == QGraphicsItemGroup::Type) {
+            tmpLeft = i->sceneBoundingRect().left();
+            tmpTop = i->sceneBoundingRect().top();
+        } else {
+            tmpLeft = i->scenePos().x();
+            tmpTop = i->scenePos().y();
+        }
+        
+        if(tmpLeft < left)
+            left = tmpLeft;
         if(i->sceneBoundingRect().right() > right)
             right = i->sceneBoundingRect().right();
-        if(i->scenePos().y() < top)
-            top = i->scenePos().y();
+        if(tmpTop < top)
+            top = tmpTop;
         if(i->sceneBoundingRect().bottom() > bottom)
             bottom = i->sceneBoundingRect().bottom();
     }
@@ -1073,7 +1082,7 @@ void Scene::align(int vertical, int horizontal)
     
     qreal baseX = 0;
     qreal baseY = 0;
-
+    
     if(horizontal == 1)
         baseX = left;
     else if(horizontal == 2)
@@ -1087,7 +1096,7 @@ void Scene::align(int vertical, int horizontal)
         baseY = centerV;
     else if(vertical == 3)
         baseY = bottom;
-    
+
     undoStack()->beginMacro("align selection");
     foreach(QGraphicsItem* i, selectedItems()) {
         QPointF oldPos = i->scenePos();
@@ -1109,7 +1118,16 @@ void Scene::align(int vertical, int horizontal)
         } else if(vertical == 3) {
             newY -= i->sceneBoundingRect().height();
         }
-        
+
+        if(i->type() == QGraphicsItemGroup::Type) {
+            if(newX == 0) newX = i->sceneBoundingRect().left();
+            if(newY == 0) newY = i->sceneBoundingRect().top();
+            
+            newX -= i->sceneBoundingRect().left();
+            newY -= i->sceneBoundingRect().top();
+            qDebug() << newX << newY;
+        }
+
         i->setPos(newX, newY);
         undoStack()->push(new SetItemCoordinates(this, i, oldPos));
     }
@@ -1308,6 +1326,9 @@ void Scene::mirror(int direction)
 
     QRectF rect = selectedItemsBoundingRect(selectedItems());
 
+    QGraphicsRectItem* r = addRect(rect);
+    r->setZValue(-1000);
+    
     QList<QGraphicsItem*> list = selectedItems();
 
     clearSelection();
@@ -1318,14 +1339,14 @@ void Scene::mirror(int direction)
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-                QPointF oldPos = item->pos();
+                QPointF oldPos = c->pos();
 
                 AddCell* addCellCmd = new AddCell(this, oldPos);
                 undoStack()->push(addCellCmd);
                 CrochetCell* copy = c->copy(addCellCmd->cell());
                 
-                qreal diff = item->pos().x() - rect.left();
-                copy->setPos(rect.left() - diff, item->pos().y());
+                qreal diff = (rect.left() - c->pos().x()) - c->boundingRect().width();
+                copy->setPos(rect.left() + diff, c->pos().y());
 
                 qreal newAngle = 360 - copy->rotation();
                 qNormalizeAngle(newAngle);
@@ -1340,14 +1361,14 @@ void Scene::mirror(int direction)
         foreach(QGraphicsItem* item, list) {
             if(item->type() == CrochetCell::Type) {
                 CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
-                QPointF oldPos = item->pos();
+                QPointF oldPos = c->pos();
 
                 AddCell* addCellCmd = new AddCell(this, oldPos);
                 undoStack()->push(addCellCmd);
                 CrochetCell* copy = c->copy(addCellCmd->cell());
-                
-                qreal diff = rect.right() - item->pos().x();
-                copy->setPos(rect.right() + diff, item->pos().y());
+
+                qreal diff = (rect.right() - c->pos().x()) - c->boundingRect().width();
+                copy->setPos(rect.right() + diff, c->pos().y());
 
                 qreal newAngle = 360 - copy->rotation();
                 qNormalizeAngle(newAngle);
@@ -1367,13 +1388,12 @@ void Scene::mirror(int direction)
                 undoStack()->push(addCellCmd);
                 CrochetCell* copy = c->copy(addCellCmd->cell());
 
-                qreal diff = item->pos().y() - rect.top();
-                copy->setPos(item->pos().x(), rect.top() - diff - (2*item->sceneBoundingRect().height()));
+                qreal diff = (rect.top() - item->pos().y()) - item->boundingRect().height();
+                copy->setPos(item->pos().x(), rect.top() - diff);
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
 
                 qreal newAngle = 360 - copy->rotation() + 180;
                 qNormalizeAngle(newAngle);
-                copy->setTransformOriginPoint(copy->boundingRect().width()/2, 0);
                 copy->setRotation(newAngle);
                 copy->setSelected(true);
             }
@@ -1466,7 +1486,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
                 break;
             }
             default:
-                qWarning() << "Copy: Unknown data type.";
+                qWarning() << "Copy - Unknown data type: " << item->type();
                 break;
         }
     }
@@ -1559,7 +1579,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             break;
         }
         default: {
-            qWarning() << "Paste: Unknown data type.";
+            qWarning() << "Paste - Unknown data type:" << type;
             break;
         }
     }
@@ -1611,20 +1631,20 @@ QRectF Scene::selectedItemsBoundingRect(QList<QGraphicsItem*> items)
     foreach(QGraphicsItem* i, items) {
         if(i->scenePos().x() < left) {
             left = i->scenePos().x();
-            leftW = i->sceneBoundingRect().width() - i->boundingRect().width();
+            leftW = i->boundingRect().width();
         }
-        if(i->scenePos().x() + i->boundingRect().right() > right) {
-            right = i->scenePos().x() + i->boundingRect().right();
+        if(i->sceneBoundingRect().right() > right) {
+            right = i->sceneBoundingRect().right();
         }
         if(i->scenePos().y() < top) {
             top = i->scenePos().y();
         }
-        if(i->scenePos().y() + i->boundingRect().bottom() > bottom) {
-            bottom = i->scenePos().y() + i->boundingRect().bottom();
+        if(i->sceneBoundingRect().bottom() > bottom) {
+            bottom = i->sceneBoundingRect().bottom();
         }
     }
 
-    return QRectF(QPointF(left - leftW, top), QPointF(right, bottom));
+    return QRectF(QPointF(left, top), QPointF(right, bottom));
 }
 
 void Scene::group()
