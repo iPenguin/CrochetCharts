@@ -15,7 +15,7 @@ class SetCellStitch : public QUndoCommand
 public:
     enum { Id = 1100 };
     
-    SetCellStitch(Scene* s, CrochetCell* cell, QString newSt, QUndoCommand* parent = 0);
+    SetCellStitch(Scene* s, Cell* cell, QString newSt, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -25,7 +25,7 @@ public:
 private:
     QString oldStitch;
     QString newStitch;
-    CrochetCell* c;
+    Cell* c;
     Scene* scene;
 };
 
@@ -34,7 +34,7 @@ class SetCellColor : public QUndoCommand
 public:
     enum { Id = 1110 };
     
-    SetCellColor(Scene* s, CrochetCell* cell, QColor newCl, QUndoCommand* parent = 0);
+    SetCellColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -44,7 +44,7 @@ public:
 private:
     QColor oldColor;
     QColor newColor;
-    CrochetCell* c;
+    Cell* c;
     Scene* scene;
 };
 
@@ -53,7 +53,7 @@ class SetCellRotation : public QUndoCommand
 public:
     enum { Id = 1120 };
     
-    SetCellRotation(Scene* s, CrochetCell* cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent = 0);
+    SetCellRotation(Scene* s, Cell* cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -61,7 +61,7 @@ public:
     int id() const { return Id; }
     
 private:
-    CrochetCell* c;
+    Cell* c;
     qreal oldAngle;
     qreal newAngle;
     QPointF pvtPt;
@@ -115,7 +115,7 @@ class SetCellScale : public QUndoCommand
 public:
     enum { Id = 1140 };
 
-    SetCellScale(Scene* s, CrochetCell* cell, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent = 0);
+    SetCellScale(Scene* s, Cell* cell, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -128,7 +128,7 @@ private:
 
     QPointF pivotPt;
     
-    CrochetCell* c;
+    Cell* c;
     Scene* scene;
     
 };
@@ -145,10 +145,10 @@ public:
 
     int id() const { return Id; }
 
-    CrochetCell* cell() { return c; }
+    Cell* cell() { return c; }
     
 private:
-    CrochetCell* c;
+    Cell* c;
     QPointF position;
 
     Scene* scene;
@@ -159,7 +159,7 @@ class RemoveCell : public QUndoCommand
 public:
     enum { Id = 1160 };
 
-    RemoveCell(Scene* s, CrochetCell* c, QUndoCommand* parent = 0);
+    RemoveCell(Scene* s, Cell* c, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -167,7 +167,7 @@ public:
     int id() const { return Id; }
 
 private:
-    CrochetCell* c;
+    Cell* c;
     QPointF position;
 
     Scene* scene;

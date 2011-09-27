@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <QObject>
 
-#include "../src/crochetcell.h"
+#include "../src/cell.h"
 
 class TestCell : public QObject
 {

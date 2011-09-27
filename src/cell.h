@@ -19,11 +19,14 @@ public:
     
     explicit Cell(QGraphicsItem* parent = 0);
     ~Cell();
-
+    
     QRectF boundingRect() const;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     int type () const { return Cell::Type; }
 
+    void setHighlight(bool state) { mHighlight = state; update(); }
+    Cell* copy(Cell* cell = 0);
+    
     void setColor(QColor c = QColor(Qt::white));
     QColor color() const { return mColor; }
     
@@ -48,13 +51,12 @@ signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
     
-public slots:
-
 private:
     QColor mColor;
     Stitch* mStitch;
 
     QPointF mScale;
+    bool mHighlight;
 };
 
 #endif // CELL_H

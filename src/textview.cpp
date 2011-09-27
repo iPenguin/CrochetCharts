@@ -32,7 +32,7 @@ QString TextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
 
     //create a list of stitches
     for(int c = 0; c < cols; ++c) {
-        CrochetCell* cell = mScene->grid[row][c];
+        Cell* cell = mScene->grid[row][c];
         if(!cell)
             continue;
 

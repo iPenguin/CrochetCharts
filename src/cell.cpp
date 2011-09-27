@@ -17,10 +17,12 @@ Cell::Cell(QGraphicsItem* parent)
     origWidth(64.0),
     origHeight(64.0),
     mStitch(0),
-    mScale(QPointF(1.0, 1.0))
+    mScale(QPointF(1.0, 1.0)),
+    mHighlight(false)
 {
     setCachingEnabled(false);
     setAcceptHoverEvents(true);
+    setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
@@ -38,7 +40,26 @@ QRectF Cell::boundingRect() const
 
 void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-    QGraphicsSvgItem::paint(painter, option, widget);
+    QColor clr = color();
+    if(!clr.isValid())
+        clr = QColor(Qt::white);
+
+    if(clr != Qt::white)
+        painter->fillRect(option->rect, clr);
+    if(mHighlight)
+        painter->fillRect(option->rect, option->palette.highlight());
+
+    if(stitch()->isSvg()) {
+        QGraphicsSvgItem::paint(painter, option, widget);
+    } else {
+        painter->drawPixmap(option->rect.x(), option->rect.y(), *(stitch()->renderPixmap()));
+
+         if(option->state & QStyle::State_Selected) {
+            painter->setPen(Qt::DashLine);
+            painter->drawRect(option->rect);
+            painter->setPen(Qt::SolidLine);
+        }
+    }
 }
 
 void Cell::setStitch(Stitch* s, bool useAltRenderer)
@@ -63,6 +84,8 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
         
         emit stitchChanged(old, s->name());
     }
+    
+    setColor(Qt::white);
 }
 
 void Cell::setColor(QColor c)
@@ -109,4 +132,21 @@ void Cell::setScale(qreal sx, qreal sy)
 
     QGraphicsSvgItem::scale(newScale.x(), newScale.y());
     mScale = QPointF(sx, sy);
+}
+
+Cell* Cell::copy(Cell* cell)
+{
+    Cell* c = 0;
+    if(!cell)
+        c = new Cell();
+    else
+        c = cell;
+
+    c->setStitch(stitch());
+    c->setColor(color());
+    c->setTransformOriginPoint(transformOriginPoint());
+    c->setRotation(rotation());
+    c->setScale(scale().x(), scale().y());
+
+    return c;
 }

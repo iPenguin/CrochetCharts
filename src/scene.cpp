@@ -4,7 +4,7 @@
 \*************************************************/
 #include "scene.h"
 
-#include "crochetcell.h"
+#include "cell.h"
 
 #include <QFontMetrics>
 #include <QGraphicsSimpleTextItem>
@@ -126,7 +126,7 @@ void Scene::initDemoBackground()
     }
 }
 
-CrochetCell* Scene::cell(int row, int column)
+Cell* Scene::cell(int row, int column)
 {
     if(row >= grid.count())
         return 0;
@@ -136,7 +136,7 @@ CrochetCell* Scene::cell(int row, int column)
     return grid[row][column];
 }
 
-CrochetCell* Scene::cell(QPoint position)
+Cell* Scene::cell(QPoint position)
 {
     return cell(position.y(), position.x());
 }
@@ -168,9 +168,9 @@ int Scene::maxColumnCount()
 void Scene::addItem(QGraphicsItem* item)
 {
     switch(item->type()) {
-        case CrochetCell::Type: {
+        case Cell::Type: {
             QGraphicsScene::addItem(item);
-            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            Cell* c = qgraphicsitem_cast<Cell*>(item);
             connect(c, SIGNAL(stitchChanged(QString,QString)), SIGNAL(stitchChanged(QString,QString)));
             connect(c, SIGNAL(colorChanged(QString,QString)), SIGNAL(colorChanged(QString,QString)));
             break;
@@ -197,9 +197,9 @@ void Scene::removeItem(QGraphicsItem* item)
 {
 
     switch(item->type()) {
-        case CrochetCell::Type: {
+        case Cell::Type: {
             QGraphicsScene::removeItem(item);
-            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            Cell* c = qgraphicsitem_cast<Cell*>(item);
             removeFromRows(c);
             break;
         }
@@ -222,7 +222,7 @@ void Scene::removeItem(QGraphicsItem* item)
 
 }
 
-void Scene::removeFromRows(CrochetCell* c)
+void Scene::removeFromRows(Cell* c)
 {
     for(int y = 0; y < grid.count(); ++y) {
         if(grid[y].contains(c)) {
@@ -252,8 +252,8 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
         foreach(QGraphicsItem* item, items) {
 
             switch(item->type()) {
-                case CrochetCell::Type: {
-                    CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+                case Cell::Type: {
+                    Cell* c = qgraphicsitem_cast<Cell*>(item);
                     undoStack()->push(new RemoveCell(this, c));
                     break;
                 }
@@ -294,8 +294,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     if(gi) {
         
         switch(gi->type()) {
-            case CrochetCell::Type: {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(gi);
+            case Cell::Type: {
+                Cell* c = qgraphicsitem_cast<Cell*>(gi);
                 mCurCell = c;
                 mCellStartPos = mCurCell->scenePos();
                 mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
@@ -706,7 +706,7 @@ void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
 
 
     QGraphicsItem* gi = itemAt(e->scenePos());
-    mStartCell = qgraphicsitem_cast<CrochetCell*>(gi);
+    mStartCell = qgraphicsitem_cast<Cell*>(gi);
     if(mStartCell) {
 
         if(mRowSelection.contains(gi) && mRowSelection.last() == gi) {
@@ -742,7 +742,7 @@ void Scene::rowEditMouseMove(QGraphicsSceneMouseEvent* e)
     
     QGraphicsItem* gi = itemAt(e->scenePos());
     if(gi) {
-        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(gi);
+        Cell* c = qgraphicsitem_cast<Cell*>(gi);
         if(!c)
             return;
         if(!mRowSelection.contains(gi)) {
@@ -827,10 +827,10 @@ void Scene::createRow()
     if(selectedItems().count() <= 0)
         return;
     
-    QList<CrochetCell*> r;
+    QList<Cell*> r;
 
     foreach(QGraphicsItem* i, mRowSelection) {
-        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(i);
+        Cell* c = qgraphicsitem_cast<Cell*>(i);
         removeFromRows(c);
         c->useAlternateRenderer((grid.count() % 2));
         r.append(c);
@@ -845,10 +845,10 @@ void Scene::updateRow(int row)
     if(selectedItems().count() <= 0)
         return;
 
-    QList<CrochetCell*> r;
+    QList<Cell*> r;
 
     foreach(QGraphicsItem* i, mRowSelection) {
-        CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(i);
+        Cell* c = qgraphicsitem_cast<Cell*>(i);
         removeFromRows(c);
         c->useAlternateRenderer((row % 2));
         r.append(c);
@@ -858,7 +858,7 @@ void Scene::updateRow(int row)
     
 }
 
-QPoint Scene::indexOf(CrochetCell* c)
+QPoint Scene::indexOf(Cell* c)
 {
     for(int y = 0; y < grid.count(); ++y) {
         if(grid[y].contains(c)) {
@@ -879,7 +879,7 @@ void Scene::highlightRow(int row)
     mRowSelection.clear();
 
     for(int i = 0; i < grid[row].count(); ++i) {
-        CrochetCell* c = grid[row][i];
+        Cell* c = grid[row][i];
         if(c) {
             c->setSelected(true);
             mRowSelection.append(c);
@@ -891,14 +891,14 @@ void Scene::highlightRow(int row)
 
 void Scene::moveRowDown(int row)
 {
-    QList<CrochetCell*> r = grid.takeAt(row);
+    QList<Cell*> r = grid.takeAt(row);
     grid.insert(row + 1, r);
     updateStitchRenderer();
 }
 
 void Scene::moveRowUp(int row)
 {
-    QList<CrochetCell*> r = grid.takeAt(row);
+    QList<Cell*> r = grid.takeAt(row);
     grid.insert(row - 1, r);
     updateStitchRenderer();
     
@@ -916,7 +916,7 @@ void Scene::updateStitchRenderer()
 {
 
     for(int i = 0; i < grid.count(); ++i) {
-        foreach(CrochetCell* c, grid[i]) {
+        foreach(Cell* c, grid[i]) {
             c->useAlternateRenderer((i % 2));
         }
     }
@@ -1300,9 +1300,9 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
 
         for(int x = grd.width(); x > 0; --x) {
 
-            QList<CrochetCell*> r;
+            QList<Cell*> r;
             for(int y = grd.height(); y > 0; --y) {
-                CrochetCell* c = new CrochetCell();
+                Cell* c = new Cell();
                 //FIXME: use the user selected stitch
                 c->setStitch(mDefaultStitch);
                 addItem(c);
@@ -1337,13 +1337,13 @@ void Scene::mirror(int direction)
     if(direction == 1) { //left
 
         foreach(QGraphicsItem* item, list) {
-            if(item->type() == CrochetCell::Type) {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            if(item->type() == Cell::Type) {
+                Cell* c = qgraphicsitem_cast<Cell*>(item);
                 QPointF oldPos = c->pos();
 
                 AddCell* addCellCmd = new AddCell(this, oldPos);
                 undoStack()->push(addCellCmd);
-                CrochetCell* copy = c->copy(addCellCmd->cell());
+                Cell* copy = c->copy(addCellCmd->cell());
                 
                 qreal diff = (rect.left() - c->pos().x()) - c->boundingRect().width();
                 copy->setPos(rect.left() + diff, c->pos().y());
@@ -1359,13 +1359,13 @@ void Scene::mirror(int direction)
     } else if(direction == 2) { //right
 
         foreach(QGraphicsItem* item, list) {
-            if(item->type() == CrochetCell::Type) {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            if(item->type() == Cell::Type) {
+                Cell* c = qgraphicsitem_cast<Cell*>(item);
                 QPointF oldPos = c->pos();
 
                 AddCell* addCellCmd = new AddCell(this, oldPos);
                 undoStack()->push(addCellCmd);
-                CrochetCell* copy = c->copy(addCellCmd->cell());
+                Cell* copy = c->copy(addCellCmd->cell());
 
                 qreal diff = (rect.right() - c->pos().x()) - c->boundingRect().width();
                 copy->setPos(rect.right() + diff, c->pos().y());
@@ -1380,13 +1380,13 @@ void Scene::mirror(int direction)
     } else if(direction == 3) { //up
 
         foreach(QGraphicsItem* item, list) {
-            if(item->type() == CrochetCell::Type) {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            if(item->type() == Cell::Type) {
+                Cell* c = qgraphicsitem_cast<Cell*>(item);
                 QPointF oldPos = item->pos();
 
                 AddCell* addCellCmd = new AddCell(this, oldPos);
                 undoStack()->push(addCellCmd);
-                CrochetCell* copy = c->copy(addCellCmd->cell());
+                Cell* copy = c->copy(addCellCmd->cell());
 
                 qreal diff = (rect.top() - item->pos().y()) - item->boundingRect().height();
                 copy->setPos(item->pos().x(), rect.top() - diff);
@@ -1402,13 +1402,13 @@ void Scene::mirror(int direction)
     } else if(direction == 4) { //down
 
         foreach(QGraphicsItem* item, list) {
-            if(item->type() == CrochetCell::Type) {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            if(item->type() == Cell::Type) {
+                Cell* c = qgraphicsitem_cast<Cell*>(item);
                 QPointF oldPos = item->pos();
                 
                 AddCell* addCellCmd = new AddCell(this, oldPos);
                 undoStack()->push(addCellCmd);
-                CrochetCell* copy = c->copy(addCellCmd->cell());
+                Cell* copy = c->copy(addCellCmd->cell());
                 
                 qreal diff = rect.bottom() - item->pos().y();
                 copy->setPos(item->pos().x(), rect.bottom() - diff);
@@ -1468,8 +1468,8 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
 {
     foreach(QGraphicsItem* item, items) {
         switch(item->type()) {
-            case CrochetCell::Type: {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            case Cell::Type: {
+                Cell* c = qgraphicsitem_cast<Cell*>(item);
                 stream << c->type() << c->name() << c->color()
                     << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos();
                 break;
@@ -1522,7 +1522,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
     stream >> type;
     switch(type) {
 
-        case CrochetCell::Type: {
+        case Cell::Type: {
             QString name;
             QColor color;
             qreal angle;
@@ -1533,7 +1533,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 
             AddCell* addCmd = new AddCell(this, pos);
             undoStack()->push(addCmd);
-            CrochetCell* c = addCmd->cell();
+            Cell* c = addCmd->cell();
 
             c->setStitch(name);
             c->setColor(color);
@@ -1597,8 +1597,8 @@ void Scene::cut()
     foreach(QGraphicsItem* item, selectedItems()) {
 
         switch(item->type()) {
-            case CrochetCell::Type: {
-                CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            case Cell::Type: {
+                Cell* c = qgraphicsitem_cast<Cell*>(item);
                 undoStack()->push(new RemoveCell(this, c));
                 break;
             }
@@ -1753,7 +1753,7 @@ void Scene::createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize
     initDemoBackground();
 }
 
-void Scene::setCellPosition(int row, int column, CrochetCell* c, int columns)
+void Scene::setCellPosition(int row, int column, Cell* c, int columns)
 {
     double widthInDegrees = 360.0 / columns;
 
@@ -1779,11 +1779,11 @@ QPointF Scene::calcPoint(double radius, double angleInDegrees, QPointF origin)
 
 void Scene::createRow(int row, int columns, QString stitch)
 {
-    CrochetCell* c = 0;
+    Cell* c = 0;
 
-    QList<CrochetCell*> modelRow;
+    QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
-        c = new CrochetCell();
+        c = new Cell();
         c->setStitch(stitch, (row % 2));
         addItem(c);
         

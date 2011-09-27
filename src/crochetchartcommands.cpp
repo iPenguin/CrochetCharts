@@ -10,7 +10,7 @@
 /*************************************************\
 | SetCellStitch                                   |
 \*************************************************/
-SetCellStitch::SetCellStitch(Scene* s, CrochetCell* cell, QString newSt, QUndoCommand* parent)
+SetCellStitch::SetCellStitch(Scene* s, Cell* cell, QString newSt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -41,7 +41,7 @@ void SetCellStitch::undo()
 /*************************************************\
 | SetCellColor                                    |
 \*************************************************/
-SetCellColor::SetCellColor(Scene* s, CrochetCell* cell, QColor newCl, QUndoCommand* parent)
+SetCellColor::SetCellColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -64,7 +64,7 @@ void SetCellColor::undo()
 /*************************************************\
 | SetCellRotation                                 |
 \*************************************************/
-SetCellRotation::SetCellRotation(Scene* s, CrochetCell* cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent)
+SetCellRotation::SetCellRotation(Scene* s, Cell* cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -143,7 +143,7 @@ void SetItemCoordinates::redo()
 /*************************************************\
  | SetCellScale                                   |
 \*************************************************/
-SetCellScale::SetCellScale(Scene* s, CrochetCell* cell, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent)
+SetCellScale::SetCellScale(Scene* s, Cell* cell, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -172,7 +172,7 @@ AddCell::AddCell(Scene* s, QPointF pos, QUndoCommand* parent)
 {
 
     position = pos;
-    c = new CrochetCell();
+    c = new Cell();
     scene = s;
     setText(QObject::tr("add stitch"));
 
@@ -194,7 +194,7 @@ void AddCell::undo()
 /*************************************************\
 | RemoveCell                                      |
 \*************************************************/
-RemoveCell::RemoveCell(Scene* s, CrochetCell* cell, QUndoCommand* parent)
+RemoveCell::RemoveCell(Scene* s, Cell* cell, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     c = cell;

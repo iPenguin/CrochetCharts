@@ -164,7 +164,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
 
         foreach(QGraphicsItem* item, tab->scene()->items()) {
             
-            CrochetCell* c = qgraphicsitem_cast<CrochetCell*>(item);
+            Cell* c = qgraphicsitem_cast<Cell*>(item);
             if(!c)
                 continue;
             
@@ -427,7 +427,7 @@ void SaveFile::loadGrid(QXmlStreamReader* stream, Scene* scene)
 
         if(tag == "row") {
             int cols = stream->readElementText().toInt();
-            QList<CrochetCell*> row;
+            QList<Cell*> row;
             for(int i = 0; i < cols; ++i) {
                 row.append(0);
             }

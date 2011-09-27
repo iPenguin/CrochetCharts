@@ -4,7 +4,7 @@
 \*************************************************/
 #include "savethread.h"
 
-#include "crochetcell.h"
+#include "cell.h"
 #include "stitch.h"
 
 #include <QObject>
@@ -25,7 +25,7 @@ SaveThread::~SaveThread()
 void SaveThread::run()
 {
 
-    CrochetCell* c = new CrochetCell();
+    Cell* c = new Cell();
     Stitch* s = 0;
     int row = -1, column = -1;
     int group = -1;

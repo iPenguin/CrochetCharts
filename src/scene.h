@@ -7,7 +7,7 @@
 
 #include <QGraphicsScene>
 
-#include "crochetcell.h"
+#include "cell.h"
 
 #include <QUndoStack>
 #include <QRubberBand>
@@ -45,16 +45,16 @@ public:
     ~Scene();
 
     //if you have the position in x, y use the overload function
-    CrochetCell* cell(int row, int column);
+    Cell* cell(int row, int column);
     //convert x,y to rows, columns.
-    CrochetCell* cell(QPoint position);
+    Cell* cell(QPoint position);
 
     /**
      * find the x,y positions on the grid for a given cell;
      * return QPoint(column, row);
      * if return = -1,-1 isVoid.
      */
-    QPoint indexOf(CrochetCell* c);
+    QPoint indexOf(Cell* c);
     
     int rowCount();
     int columnCount(int row);
@@ -109,7 +109,7 @@ protected:
     /**
      * This function removes a cell from the 'grid'. if the row is empty it removes the row too.
      */
-    void removeFromRows(CrochetCell* c);
+    void removeFromRows(Cell* c);
     
 public slots:
     void createRow();
@@ -210,7 +210,7 @@ private:
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
-    CrochetCell* mCurCell;
+    Cell* mCurCell;
     QPointF mCellStartPos;
     QPointF mLeftButtonDownPos;
     
@@ -246,7 +246,7 @@ private:
     QPointF mOrigin;
 
     //rows keeps track of the st order for individual rows;
-    QList< QList<CrochetCell*> > grid;
+    QList< QList<Cell*> > grid;
     
     qreal scenePosToAngle(QPointF pt);
 
@@ -261,9 +261,9 @@ private:
     
     QList<Indicator*> mIndicators;
 
-    CrochetCell* mStartCell;
-    CrochetCell* mEndCell;
-    CrochetCell* mPreviousCell;
+    Cell* mStartCell;
+    Cell* mEndCell;
+    Cell* mPreviousCell;
     QGraphicsLineItem* mRowLine;
     QList<QGraphicsLineItem*> mRowLines;
     
@@ -289,7 +289,7 @@ public slots:
     void setShowChartCenter(bool state);
 
 protected:
-    void setCellPosition(int row, int column, CrochetCell* c, int columns);
+    void setCellPosition(int row, int column, Cell* c, int columns);
 
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);

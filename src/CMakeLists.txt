@@ -8,7 +8,6 @@ set(crochet_qobject_headers
     mainwindow.h
     cell.h
     crochettab.h
-    crochetcell.h
     mainwindow.h
     stitchset.h
     licensewizard.h
