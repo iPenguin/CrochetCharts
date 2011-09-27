@@ -402,7 +402,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             loadIndicator(tab, stream);
             
         } else if(tag == "group") {
-            int groupNum = stream->readElementText().toInt();
+            stream->readElementText().toInt();
             qreal x = stream->attributes().value("x").toString().toDouble();
             qreal y = stream->attributes().value("y").toString().toDouble();
             
