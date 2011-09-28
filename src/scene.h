@@ -60,7 +60,7 @@ public:
     int columnCount(int row);
     int maxColumnCount();
 
-    void setEditMode(EditMode mode) { mMode = mode; if(mode != Scene::RowEdit) hideRowLines(); }
+    void setEditMode(EditMode mode);
     EditMode editMode() { return mMode; }
 
     void setEditStitch(QString stitch) { mEditStitch = stitch; }
@@ -120,6 +120,8 @@ public slots:
      */
     void highlightRow(int row);
     void drawRowLines(int row);
+
+    void highlightIndicators(bool state);
 
     void updateRubberBand(int dx, int dy);
     
@@ -210,6 +212,7 @@ private:
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
+    QGraphicsItem* mCurItem;
     Cell* mCurCell;
     QPointF mCellStartPos;
     QPointF mLeftButtonDownPos;

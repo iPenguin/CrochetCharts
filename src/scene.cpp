@@ -35,8 +35,9 @@ static void qNormalizeAngle(qreal &angle)
         angle -= 360.0;
 }
 
-Scene::Scene(QObject* parent)
-    : QGraphicsScene(parent),
+Scene::Scene(QObject* parent) :
+    QGraphicsScene(parent),
+    mCurItem(0),
     mCurCell(0),
     mCellStartPos(QPointF(0,0)),
     mLeftButtonDownPos(QPointF(0,0)),
@@ -246,6 +247,12 @@ void Scene::updateRubberBand(int dx, int dy)
 
 void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
 {
+
+    QGraphicsScene::keyReleaseEvent(keyEvent);
+
+    if(keyEvent->isAccepted())
+        return;
+
     if(keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
         QList<QGraphicsItem*> items = selectedItems();
         undoStack()->beginMacro("remove items");
@@ -274,8 +281,6 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
         }
         undoStack()->endMacro();
     }
-
-    QGraphicsScene::keyReleaseEvent(keyEvent);
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
@@ -290,19 +295,19 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     mMoving = false;
     mIsRubberband = false;
     
-    QGraphicsItem* gi = itemAt(e->scenePos());
-    if(gi) {
+    mCurItem = itemAt(e->scenePos());
+    if(mCurItem) {
         
-        switch(gi->type()) {
+        switch(mCurItem->type()) {
             case Cell::Type: {
-                Cell* c = qgraphicsitem_cast<Cell*>(gi);
+                Cell* c = qgraphicsitem_cast<Cell*>(mCurItem);
                 mCurCell = c;
                 mCellStartPos = mCurCell->scenePos();
                 mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
                 break;
             }
             case Indicator::Type: {
-                Indicator* i = qgraphicsitem_cast<Indicator*>(gi);
+                Indicator* i = qgraphicsitem_cast<Indicator*>(mCurItem);
             
                 mCurIndicator = i;
                 mCellStartPos = i->scenePos();
@@ -317,7 +322,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 break;
             }
             default:
-                qWarning() << "mousePress - Unknown object type: " << gi->type();
+                qWarning() << "mousePress - Unknown object type: " << mCurItem->type();
                 break;
         }
     }
@@ -393,7 +398,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 
     if(diff >= QApplication::startDragDistance()) {
 
-        if(!mCurCell && !mMoving) {
+        if(!mCurItem && !mMoving) {
             if(mRubberBand) {
                 QGraphicsView* view = views().first();
                 QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
@@ -490,7 +495,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
         initDemoBackground();
         mMoving = false;
     }
-    
+    mCurItem = 0;
     mHasSelection = false;
 }
 
@@ -525,17 +530,9 @@ void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
 
-    if(!mCurIndicator)
-        return;
+    if(mCurCell || mCurIndicator)
+        mMoving = true;
 
-    mMoving = true;
-
-    QPointF start = e->buttonDownScenePos(Qt::LeftButton);
-
-    QPointF delta =  e->scenePos() - start;
-    QPointF newPos = mCellStartPos + delta;
-
-    mCurIndicator->setPos(newPos);
 }
 
 void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
@@ -590,13 +587,14 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
 
 void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
-    if(!mCurCell)
+    if(!mCurItem)
         return;
 
-    if(selectedItems().count() > 1) {
+    if(selectedItems().count() > 1 || !mCurCell) {
         mMoving = true;
         return;
     }
+
 
     mMoving = false;
     
@@ -655,10 +653,10 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(!mCurItem)
         return;
 
-    if(selectedItems().count() > 1) {
+    if(selectedItems().count() > 1 || !mCurCell) {
         mMoving = true;
         return;
     }
@@ -792,8 +790,7 @@ void Scene::stitchModeMousePress(QGraphicsSceneMouseEvent* e)
 void Scene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-
-    if(!mCurCell)
+    if(!mCurItem)
         return;
     
     mMoving = true;
@@ -810,6 +807,9 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
         mCurCell = 0;
 
     } else if(!mIsRubberband && !mMoving && !mHasSelection) {
+
+        if(mCurItem)
+            return;
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
@@ -1791,4 +1791,26 @@ void Scene::createRow(int row, int columns, QString stitch)
         setCellPosition(row, i, c, columns);
     }
     grid.insert(row, modelRow);
+}
+
+void Scene::setEditMode(EditMode mode)
+{
+    mMode = mode;
+    if(mode != Scene::RowEdit)
+        hideRowLines();
+
+    bool state = false;
+    if (mode == Scene::IndicatorEdit)
+        state = true;
+    highlightIndicators(state);
+}
+
+void Scene::highlightIndicators(bool state)
+{
+    foreach(Indicator* i, mIndicators) {
+        if(!state)
+            i->setTextInteractionFlags(Qt::NoTextInteraction);
+        i->highlight = state;
+        i->update();
+    }
 }

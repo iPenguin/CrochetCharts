@@ -135,6 +135,7 @@ void Settings::setupValueList() {
 
     mValueList["chartRowIndicator"] = QVariant(tr("Dots and Text"));
     mValueList["chartIndicatorColor"] = QVariant("#c00000");
+    mValueList["showIndicatorOutline"] = QVariant(false);
     
     //stitch legend options
     mValueList["stitchLegendColumnCount"] = QVariant(2);

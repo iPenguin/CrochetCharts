@@ -14,6 +14,7 @@ class QGraphicsItem;
 class QGraphicsScene;
 class QGraphicsSceneMouseEvent;
 class QFocusEvent;
+class QKeyEvent;
 
 class Indicator : public QGraphicsTextItem
 {
@@ -38,8 +39,12 @@ public:
     QColor textColor() { return mTextColor; }
     void setTextColor(QColor c) { mTextColor = c; }
 
+    bool highlight;
+
 protected:
+    void focusInEvent(QFocusEvent *event);
     void focusOutEvent(QFocusEvent* event);
+    void keyReleaseEvent(QKeyEvent *event);
     
 private:
 
