@@ -1649,7 +1649,7 @@ QRectF Scene::selectedItemsBoundingRect(QList<QGraphicsItem*> items)
 
 void Scene::group()
 {
-    if(selectedItems().count() <= 0)
+    if(selectedItems().count() <= 1)
         return;
 
     undoStack()->push(new GroupItems(this, selectedItems()));
