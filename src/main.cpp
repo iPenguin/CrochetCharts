@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     arguments.removeFirst(); // remove the application name from the list.
     
     MainWindow w(arguments);
-    w.show();
+    w.showMaximized();
     splash.finish(&w);
     return a.exec();
 }
