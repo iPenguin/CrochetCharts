@@ -170,6 +170,9 @@ int Scene::maxColumnCount()
 
 void Scene::addItem(QGraphicsItem* item)
 {
+    if(!item)
+        return;
+    
     switch(item->type()) {
         case Cell::Type: {
             QGraphicsScene::addItem(item);
@@ -197,13 +200,16 @@ void Scene::addItem(QGraphicsItem* item)
         }
         default:
             qWarning() << "addItem - unknown type: " << item->type();
+            QGraphicsScene::addItem(item);
             break;
     }
 }
 
 void Scene::removeItem(QGraphicsItem* item)
 {
-
+    if(!item)
+        return;
+    
     switch(item->type()) {
         case Cell::Type: {
             QGraphicsScene::removeItem(item);
@@ -225,6 +231,7 @@ void Scene::removeItem(QGraphicsItem* item)
         }
         default:
             qWarning() << "removeItem - unknown type:" << item->type();
+            QGraphicsScene::removeItem(item);
             break;
     }
 
@@ -1072,7 +1079,7 @@ void Scene::align(int vertical, int horizontal)
             tmpLeft = i->scenePos().x();
             tmpTop = i->scenePos().y();
         }
-        
+        qDebug() << "align: " << i->type() << i->pos() << i->scenePos();
         if(tmpLeft < left)
             left = tmpLeft;
         if(i->sceneBoundingRect().right() > right)
@@ -1772,6 +1779,7 @@ void Scene::editorGotFocus(Indicator* item)
 
 void Scene::setShowChartCenter(bool state)
 {
+
     mShowChartCenter = state;
 
     if(mShowChartCenter) {
@@ -1781,20 +1789,27 @@ void Scene::setShowChartCenter(bool state)
 
             double radius = (defaultSize().height() * 0.45);
 
-            QGraphicsView* view =  views().first();
-            QPointF topLeft = view->mapToScene(0, 0);
-            QPointF bottomRight = view->mapToScene(view->width(), view->height());
-            
-            QRectF rect(topLeft, bottomRight);
-            
+            QRectF rect = QRectF(0,0,0,0);
+
+            //FIXME: this is really bad.
+            if(sceneRect().left() > -2500) {
+                QGraphicsView* view =  views().first();
+                QPointF topLeft = view->mapToScene(0, 0);
+                QPointF bottomRight = view->mapToScene(view->width(), view->height());
+
+                rect = QRectF(topLeft, bottomRight);
+            }
+
             mCenterSymbol = addEllipse(rect.center().x()-radius, rect.center().y()-radius, radius * 2, radius * 2, pen);
             mCenterSymbol->setToolTip(tr("Chart Center"));
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsMovable);
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsSelectable);
         } else {
+
             addItem(mCenterSymbol);
         }
     } else {
+
         removeItem(mCenterSymbol);
     }
 
@@ -1815,6 +1830,7 @@ void Scene::createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize
     setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
 
     initDemoBackground();
+
 }
 
 void Scene::setCellPosition(int row, int column, Cell* c, int columns)
@@ -1826,11 +1842,9 @@ void Scene::setCellPosition(int row, int column, Cell* c, int columns)
     double degrees = widthInDegrees * column;
     QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
 
-    qreal delta = defaultSize().width() * 0.5;
-    c->setPos(finish.x() - delta, finish.y());
-    c->setTransform(QTransform().translate(delta,0).rotate(degrees + 90).translate(-delta, 0));
+    //qreal delta = defaultSize().width() * 0.5;
+    c->setPos(finish.x() /*- delta*/, finish.y());
     c->setRotation(degrees + 90);
-    c->setToolTip(tr("Row: %1, St: %2").arg(row+1).arg(column+1));
 }
 
 QPointF Scene::calcPoint(double radius, double angleInDegrees, QPointF origin)
@@ -1843,6 +1857,7 @@ QPointF Scene::calcPoint(double radius, double angleInDegrees, QPointF origin)
 
 void Scene::createRow(int row, int columns, QString stitch)
 {
+
     Cell* c = 0;
 
     QList<Cell*> modelRow;
@@ -1855,6 +1870,7 @@ void Scene::createRow(int row, int columns, QString stitch)
         setCellPosition(row, i, c, columns);
     }
     grid.insert(row, modelRow);
+
 }
 
 void Scene::setEditMode(EditMode mode)
