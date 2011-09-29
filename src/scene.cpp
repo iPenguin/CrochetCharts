@@ -1712,7 +1712,7 @@ void Scene::ungroup(QGraphicsItemGroup* group)
 
 void Scene::editorLostFocus(Indicator *item)
  {
-    qDebug() << "lost focus";
+
     QTextCursor cursor = item->textCursor();
     cursor.clearSelection();
     item->setTextCursor(cursor);

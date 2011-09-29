@@ -12,7 +12,10 @@
 #include <QKeyEvent>
 #include <QGraphicsSceneEvent>
 #include <QTextCursor>
-#include <qtextdocument.h>
+#include <QTextDocument>
+#include <QTextBlock>
+#include <QAbstractTextDocumentLayout>
+#include <QTextLayout>
 
 Indicator::Indicator(QGraphicsItem* parent, QGraphicsScene* scene)
     : QGraphicsTextItem(parent, scene),
@@ -31,17 +34,19 @@ Indicator::~Indicator()
 QRectF Indicator::boundingRect() const
 {
     QRectF rect = QGraphicsTextItem::boundingRect();
+    /*
     rect.setLeft(rect.left() - 7);
     rect.setTop(rect.top() - 7);
     rect.setWidth(rect.width() + 7);
     rect.setHeight(rect.height() + 7);
+    */
     return rect;
 }
 
 QPainterPath Indicator::shape() const
 {
     QPainterPath path = QGraphicsTextItem::shape();
-    path.addEllipse(-7, -7, 12, 12);
+    //path.addEllipse(-7, -7, 12, 12);
     return path;
 }
 
@@ -53,10 +58,15 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     bool showOutline = Settings::inst()->value("showIndicatorOutline").toBool();
 
     QRect rect = option->rect;
-    rect.setTop(0);
-    rect.setLeft(0);
+    rect.setTop(7);
+    rect.setLeft(7);
     
-    if(highlight || showOutline) {
+    if(option->state & (QStyle::State_Selected | QStyle::State_HasFocus)) {
+        QPen pen = QPen(QColor(Qt::black));
+        pen.setStyle(Qt::DashLine);
+        painter->setPen(pen);
+        painter->drawRect(rect);
+    } else if(highlight || showOutline) {
         painter->setPen(QColor(Qt::gray));
         painter->drawRect(rect);
     }
@@ -66,14 +76,25 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
         painter->setPen(QColor(color));
         painter->setBackgroundMode(Qt::OpaqueMode);
         painter->setBrush(QBrush(QColor(color)));
-        painter->drawEllipse(-7,-7, 12,12);
+        painter->drawEllipse(0,0, 12,12);
         painter->setBackgroundMode(Qt::TransparentMode);
     }
 
     if(style == "Text" || style == "Dots and Text") {
-        QStyleOptionGraphicsItem opt = *option;
-        opt.rect = rect;
-        QGraphicsTextItem::paint(painter, &opt, widget);
+        painter->setPen(QColor(Qt::black));
+        //painter->drawText(rect, text());
+        document()->drawContents(painter, rect);
+
+        QTextBlock block = document()->findBlock(textCursor().position());
+        QTextLine line = block.layout()->lineForTextPosition(textCursor().positionInBlock());
+        qreal cursor_y_position = document()->documentLayout()->blockBoundingRect(block).y() + line.y();
+        qreal line_height = line.height();
+        qDebug("New cursor position: %.2f %.2f", cursor_y_position, line_height);
+
+        QTextLayout l(text());
+        l.beginLayout();
+
+        l.endLayout();
     }
 
 }
