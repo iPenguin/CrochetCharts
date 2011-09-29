@@ -1760,10 +1760,7 @@ void Scene::editorGotFocus(Indicator* item)
         if(i != item) {
             i->clearFocus();
             i->setSelected(false);
-        } else {
-            i->setSelected(true);
         }
-        
     }
     
 }
