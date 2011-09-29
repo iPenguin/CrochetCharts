@@ -27,6 +27,8 @@
 #include <QKeyEvent>
 #include "stitchlibrary.h"
 
+#include <QTextCursor>
+
 static void qNormalizeAngle(qreal &angle)
 {
     while (angle < 0.0)
@@ -179,7 +181,12 @@ void Scene::addItem(QGraphicsItem* item)
         case Indicator::Type: {
             QGraphicsScene::addItem(item);
             Indicator* i = qgraphicsitem_cast<Indicator*>(item);
+            connect(i, SIGNAL(lostFocus(Indicator*)), SLOT(editorLostFocus(Indicator*)));
+            connect(i, SIGNAL(gotFocus(Indicator*)), SLOT(editorGotFocus(Indicator*)));
+            //TODO: add font selection & styling etc.
+            //connect(i, SIGNAL(selectedChange(QGraphicsItem*)), this, SIGNAL(itemSelected(QGraphicsItem*)));
             mIndicators.append(i);
+            i->setText(QString::number(mIndicators.count()));
             break;
         }
         case QGraphicsItemGroup::Type: {
@@ -296,6 +303,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     mIsRubberband = false;
     
     mCurItem = itemAt(e->scenePos());
+    
     if(mCurItem) {
         
         switch(mCurItem->type()) {
@@ -415,7 +423,8 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
 {
-
+    QGraphicsScene::mouseReleaseEvent(e);
+    
     switch(mMode) {
         case Scene::StitchEdit:
             stitchModeMouseRelease(e);
@@ -478,7 +487,6 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
     delete mRubberBand;
     mRubberBand = 0;
 
-    QGraphicsScene::mouseReleaseEvent(e);
     if(mMoving) {
         //update the size of the scene rect based on where the items are on the scene.
         QRectF ibr = itemsBoundingRect();
@@ -1702,9 +1710,32 @@ void Scene::ungroup(QGraphicsItemGroup* group)
 
 }
 
-/**********
- *Rounds Specific functions:
- */
+void Scene::editorLostFocus(Indicator *item)
+ {
+    qDebug() << "lost focus";
+    QTextCursor cursor = item->textCursor();
+    cursor.clearSelection();
+    item->setTextCursor(cursor);
+ }
+
+void Scene::editorGotFocus(Indicator* item)
+{
+    foreach(Indicator *i, mIndicators) {
+        if(i != item) {
+            i->clearFocus();
+            i->setSelected(false);
+        } else {
+            i->setSelected(true);
+        }
+        
+    }
+    
+}
+
+
+/*************************************************\
+| Rounds Specific functions:                      |
+\*************************************************/
 
 void Scene::setShowChartCenter(bool state)
 {

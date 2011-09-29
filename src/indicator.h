@@ -18,7 +18,7 @@ class QKeyEvent;
 
 class Indicator : public QGraphicsTextItem
 {
-
+    Q_OBJECT
     friend class SaveFile;
 public:
     enum {Type = UserType + 15 };
@@ -26,7 +26,7 @@ public:
     Indicator(QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
     ~Indicator();
 
-    QRectF boundingRect();
+    QRectF boundingRect() const;
     int type() const { return Type; }
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 
@@ -39,13 +39,20 @@ public:
     QColor textColor() { return mTextColor; }
     void setTextColor(QColor c) { mTextColor = c; }
 
+    QPainterPath shape() const;
+    
     bool highlight;
 
-protected:
-    void focusInEvent(QFocusEvent *event);
-    void focusOutEvent(QFocusEvent* event);
-    void keyReleaseEvent(QKeyEvent *event);
+signals:
+    void lostFocus(Indicator *item);
+    void gotFocus(Indicator *item);
     
+protected:
+    void focusInEvent(QFocusEvent* event);
+    void focusOutEvent(QFocusEvent* event);
+    void keyReleaseEvent(QKeyEvent* event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
+
 private:
 
     QColor mBgColor;

@@ -32,6 +32,7 @@ set(crochet_qobject_headers
     rowsdock.h
     aligndock.h
     mirrordock.h
+    indicator.h
     )
 
 set(crochet_resources

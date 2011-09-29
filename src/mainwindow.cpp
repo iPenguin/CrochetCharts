@@ -651,21 +651,21 @@ void MainWindow::helpAbout()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    qDebug() << "close event";
+
     if(safeToClose()) {
         Settings::inst()->setValue("geometry", saveGeometry());
         Settings::inst()->setValue("windowState", saveState());
 
         if(Settings::inst()->files.contains(mFile->fileName.toLower()))
             Settings::inst()->files.remove(mFile->fileName.toLower());
-        qDebug() << "cleanup";
+
         mFile->cleanUp();
-        qDebug() << "main window close";
+
         QMainWindow::closeEvent(event);
     } else {
         event->ignore();
     }
-    qDebug() << "close event end";
+    
 }
 
 bool MainWindow::safeToClose()
@@ -804,10 +804,10 @@ void MainWindow::fileSaveAs()
     if(Settings::inst()->files.contains(mFile->fileName.toLower()))
         Settings::inst()->files.remove(mFile->fileName.toLower());
     Settings::inst()->files.insert(fileName.toLower(), this);
-    qDebug() << "save";
+
     mFile->fileName = fileName;
     mFile->save();
-    qDebug() << "saved";
+
     setApplicationTitle();
     setWindowModified(false);
     QApplication::restoreOverrideCursor();

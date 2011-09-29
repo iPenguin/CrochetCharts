@@ -124,6 +124,9 @@ public slots:
     void highlightIndicators(bool state);
 
     void updateRubberBand(int dx, int dy);
+
+    void editorLostFocus(Indicator *item);
+    void editorGotFocus(Indicator *item);
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);
@@ -207,6 +210,8 @@ protected:
     void updateStitchRenderer();
 
     void hideRowLines();
+
+    
     
 private:
     /**
