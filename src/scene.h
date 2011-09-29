@@ -174,6 +174,12 @@ protected:
     void alignToPath();
     void distributeToPath();
 
+    /**
+     * Because of the fact that the group doesn't return the correct scene co-ordinates
+     * this function will correct them.
+     */
+    QPointF calcGroupPos(QGraphicsItem* group, QPointF newScenePos);
+
 public:
     QGraphicsItemGroup* group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g = 0);
     void ungroup(QGraphicsItemGroup* group);

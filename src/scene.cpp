@@ -1128,12 +1128,13 @@ void Scene::align(int vertical, int horizontal)
         }
 
         if(i->type() == QGraphicsItemGroup::Type) {
-            if(newX == 0) newX = i->sceneBoundingRect().left();
-            if(newY == 0) newY = i->sceneBoundingRect().top();
-            
-            newX -= i->sceneBoundingRect().left();
-            newY -= i->sceneBoundingRect().top();
-            qDebug() << newX << newY;
+            QPointF newPos = calcGroupPos(i, QPointF(newX, newY));
+            newX = newPos.x();
+            newY = newPos.y();
+            if(horizontal == 0)
+                newX = i->scenePos().x();
+            if(vertical == 0)
+                newY = i->scenePos().y();
         }
 
         i->setPos(newX, newY);
@@ -1141,6 +1142,13 @@ void Scene::align(int vertical, int horizontal)
     }
     undoStack()->endMacro();
     
+}
+
+QPointF Scene::calcGroupPos(QGraphicsItem* group, QPointF newScenePos)
+{
+    QPointF origin = group->sceneBoundingRect().topLeft() - group->scenePos();
+    QPointF delta = newScenePos - origin;
+    return delta;
 }
 
 void Scene::distribute(int vertical, int horizontal)
@@ -1163,6 +1171,9 @@ void Scene::distribute(int vertical, int horizontal)
                 width = i->boundingRect().width(); //right
 
             qreal ptX = i->scenePos().x() + width;
+            if(i->type() == QGraphicsItemGroup::Type)
+                ptX = i->boundingRect().left() + width;
+            
             if(ptX > right)
                 right = ptX;
             if(ptX < left)
@@ -1173,7 +1184,12 @@ void Scene::distribute(int vertical, int horizontal)
             } else {
                 bool added = false;
                 for(int s = 0; s < sortedH.count(); ++s) {
-                    qreal curX = sortedH[s]->scenePos().x() + sortedH[s]->boundingRect().width();
+                    qreal curX;
+                    if(sortedH[s]->type() == QGraphicsItemGroup::Type)
+                        curX = sortedH[s]->boundingRect().left() + sortedH[s]->boundingRect().width();
+                    else
+                        curX = sortedH[s]->scenePos().x() + sortedH[s]->boundingRect().width();
+                    
                     if(ptX < curX) {
                         sortedH.insert(s, i);
                         added = true;
@@ -1193,6 +1209,9 @@ void Scene::distribute(int vertical, int horizontal)
                 height = i->boundingRect().height(); //right
 
             qreal ptY = i->scenePos().y() + height;
+            if(i->type() == QGraphicsItemGroup::Type)
+                ptY = i->boundingRect().y() + height;
+            
             if(ptY < top)
                 top = ptY;
             if(ptY > bottom)
@@ -1203,7 +1222,12 @@ void Scene::distribute(int vertical, int horizontal)
             } else {
                 bool added = false;
                 for(int s = 0; s < sortedV.count(); ++s) {
-                    qreal curY = sortedV[s]->scenePos().y() + sortedV[s]->boundingRect().height();
+                    qreal curY;
+                    if(sortedV[s]->type() == QGraphicsItemGroup::Type)
+                        curY = sortedV[s]->boundingRect().top() + sortedV[s]->boundingRect().height();
+                    else
+                        curY = sortedV[s]->scenePos().y() + sortedV[s]->boundingRect().height();
+                    
                     if(ptY < curY) {
                         sortedV.insert(s, i);
                         added = true;
@@ -1263,6 +1287,18 @@ void Scene::distribute(int vertical, int horizontal)
             newY = i->scenePos().y();
         else
             newY = top - adjustV + (idxY * spaceV);
+
+        if(i->type() == QGraphicsItemGroup::Type) {
+            QPointF newPos = calcGroupPos(i, QPointF(newX, newY));
+            newX = newPos.x();
+            newY = newPos.y();
+
+            if(horizontal == 0)
+                newX = i->scenePos().x();
+
+            if(vertical == 0)
+                newY = i->scenePos().y();
+        }
         
         QPointF oldPos = i->scenePos();
         i->setPos(newX, newY);
