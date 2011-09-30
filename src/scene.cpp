@@ -786,6 +786,9 @@ void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
 
+    if(selectedItems().count() <= 0)
+        hideRowLines();
+        
     mStartCell = 0;
     
     if(mRowLine) {
