@@ -23,6 +23,6 @@ public:
 
     CrochetTab* tab;
     QXmlStreamReader* stream;
-    
+
 };
 #endif //SAVETHREAD_H

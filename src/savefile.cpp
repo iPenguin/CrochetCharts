@@ -204,6 +204,19 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeAttribute("y", QString::number(c->transformOriginPoint().y()));
             stream->writeEndElement(); //end pivotPoint
 
+            stream->writeStartElement("transformation");
+            QTransform trans = c->transform();
+            stream->writeAttribute("m11", QString::number(trans.m11()));
+            stream->writeAttribute("m12", QString::number(trans.m12()));
+            stream->writeAttribute("m13", QString::number(trans.m13()));
+            stream->writeAttribute("m21", QString::number(trans.m21()));
+            stream->writeAttribute("m22", QString::number(trans.m22()));
+            stream->writeAttribute("m23", QString::number(trans.m23()));
+            stream->writeAttribute("m31", QString::number(trans.m31()));
+            stream->writeAttribute("m32", QString::number(trans.m32()));
+            stream->writeAttribute("m33", QString::number(trans.m33()));
+            stream->writeEndElement(); //transformation
+            
             stream->writeEndElement(); //end cell
         }
 

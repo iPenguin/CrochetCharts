@@ -636,6 +636,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     }
     
     qNormalizeAngle(mAngle);
+
     mCurCell->setTransformOriginPoint(mPivotPt);
     mCurCell->setRotation(mAngle);
 
@@ -1494,18 +1495,11 @@ void Scene::rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF 
     qreal newAngle = degrees;
     qNormalizeAngle(newAngle);
 
-    qDebug() << items.first()->rotation() << items.last()->rotation();
     QGraphicsItemGroup* g = createItemGroup(items);
     g->setTransformOriginPoint(pivotPoint);
     g->setRotation(newAngle);
     destroyItemGroup(g);
 
-    qDebug() << items.first()->rotation() << items.last()->rotation();
-/*
-    foreach(QGraphicsItem* i, items) {
-        i->setTransform(QTransform().translate(pivotPoint.x(), pivotPoint.y()).rotate(newAngle).translate(-pivotPoint.x(), -pivotPoint.y()), true);
-    }
-*/
 }
 
 void Scene::copy()
