@@ -1680,19 +1680,24 @@ QRectF Scene::selectedItemsBoundingRect(QList<QGraphicsItem*> items)
     qreal top = sceneRect().bottom();
     qreal bottom = sceneRect().top();
 
-    //height and width of the object at the extremes.
-    qreal leftW = 0;
-
     foreach(QGraphicsItem* i, items) {
-        if(i->scenePos().x() < left) {
-            left = i->scenePos().x();
-            leftW = i->boundingRect().width();
+        qreal tempX, tempY;
+        if(i->type() != Cell::Type) {
+            tempX = i->sceneBoundingRect().left();
+            tempY = i->sceneBoundingRect().top();
+        } else {
+            tempX = i->pos().x();
+            tempY = i->pos().y();
+        }
+
+        if(tempX < left) {
+            left = tempX;
         }
         if(i->sceneBoundingRect().right() > right) {
             right = i->sceneBoundingRect().right();
         }
-        if(i->scenePos().y() < top) {
-            top = i->scenePos().y();
+        if(tempY < top) {
+            top = tempY;
         }
         if(i->sceneBoundingRect().bottom() > bottom) {
             bottom = i->sceneBoundingRect().bottom();
@@ -1776,6 +1781,13 @@ void Scene::editorGotFocus(Indicator* item)
     
 }
 
+void Scene::setSceneRectToItems()
+{
+
+    QRectF rect = selectedItemsBoundingRect(items());
+    setSceneRect(rect);
+    
+}
 
 /*************************************************\
 | Rounds Specific functions:                      |

@@ -187,6 +187,11 @@ public:
     QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
 
     void rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint);
+
+    /**
+     * This function sets the sceneRect to the outside edges of all objects on the scene.
+     */
+    void setSceneRectToItems();
     
 protected:
     void colorModeMouseMove(QGraphicsSceneMouseEvent* e);
