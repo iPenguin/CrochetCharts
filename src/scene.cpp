@@ -1075,14 +1075,14 @@ void Scene::align(int vertical, int horizontal)
     
     foreach(QGraphicsItem* i, selectedItems()) {
         qreal tmpLeft, tmpTop;
-        if(i->type() == QGraphicsItemGroup::Type) {
+        if(i->type() != Cell::Type) {
             tmpLeft = i->sceneBoundingRect().left();
             tmpTop = i->sceneBoundingRect().top();
         } else {
             tmpLeft = i->scenePos().x();
             tmpTop = i->scenePos().y();
         }
-        qDebug() << "align: " << i->type() << i->pos() << i->scenePos();
+
         if(tmpLeft < left)
             left = tmpLeft;
         if(i->sceneBoundingRect().right() > right)
@@ -1137,7 +1137,7 @@ void Scene::align(int vertical, int horizontal)
             newY -= i->sceneBoundingRect().height();
         }
 
-        if(i->type() == QGraphicsItemGroup::Type) {
+        if(i->type() != Cell::Type) {
             QPointF newPos = calcGroupPos(i, QPointF(newX, newY));
             newX = newPos.x();
             newY = newPos.y();
@@ -1181,7 +1181,7 @@ void Scene::distribute(int vertical, int horizontal)
                 width = i->boundingRect().width(); //right
 
             qreal ptX = i->scenePos().x() + width;
-            if(i->type() == QGraphicsItemGroup::Type)
+            if(i->type() != Cell::Type)
                 ptX = i->boundingRect().left() + width;
             
             if(ptX > right)
@@ -1195,7 +1195,7 @@ void Scene::distribute(int vertical, int horizontal)
                 bool added = false;
                 for(int s = 0; s < sortedH.count(); ++s) {
                     qreal curX;
-                    if(sortedH[s]->type() == QGraphicsItemGroup::Type)
+                    if(sortedH[s]->type() != Cell::Type)
                         curX = sortedH[s]->boundingRect().left() + sortedH[s]->boundingRect().width();
                     else
                         curX = sortedH[s]->scenePos().x() + sortedH[s]->boundingRect().width();
@@ -1219,7 +1219,7 @@ void Scene::distribute(int vertical, int horizontal)
                 height = i->boundingRect().height(); //right
 
             qreal ptY = i->scenePos().y() + height;
-            if(i->type() == QGraphicsItemGroup::Type)
+            if(i->type() != Cell::Type)
                 ptY = i->boundingRect().y() + height;
             
             if(ptY < top)
@@ -1233,7 +1233,7 @@ void Scene::distribute(int vertical, int horizontal)
                 bool added = false;
                 for(int s = 0; s < sortedV.count(); ++s) {
                     qreal curY;
-                    if(sortedV[s]->type() == QGraphicsItemGroup::Type)
+                    if(sortedV[s]->type() != Cell::Type)
                         curY = sortedV[s]->boundingRect().top() + sortedV[s]->boundingRect().height();
                     else
                         curY = sortedV[s]->scenePos().y() + sortedV[s]->boundingRect().height();
@@ -1298,7 +1298,7 @@ void Scene::distribute(int vertical, int horizontal)
         else
             newY = top - adjustV + (idxY * spaceV);
 
-        if(i->type() == QGraphicsItemGroup::Type) {
+        if(i->type() != Cell::Type) {
             QPointF newPos = calcGroupPos(i, QPointF(newX, newY));
             newX = newPos.x();
             newY = newPos.y();
