@@ -681,7 +681,8 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
     
     QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
 
-    QSize newSize = QSize(mCurCell->origWidth + delta.x(), mCurCell->origHeight + delta.y());
+    QSize oldSize = QSize(mCurCell->origWidth * mOldScale.x(), mCurCell->origHeight * mOldScale.y());
+    QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
 
     if((newSize.width() < 1 && newSize.width() > -1) || (newSize.height() < 1 && newSize.height() > -1))
         return;
