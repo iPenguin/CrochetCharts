@@ -375,6 +375,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         } else if(tag == "chartCenter") {
             qreal x = stream->attributes().value("x").toString().toDouble();
             qreal y = stream->attributes().value("y").toString().toDouble();
+            stream->readElementText();
             tab->blockSignals(true);
             tab->setShowChartCenter(true);
             tab->scene()->mCenterSymbol->setPos(x, y);

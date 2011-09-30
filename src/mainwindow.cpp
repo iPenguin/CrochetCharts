@@ -81,7 +81,6 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
 
 MainWindow::~MainWindow()
 {
-    delete ui;
 }
 
 void MainWindow::loadFiles(QStringList fileNames)

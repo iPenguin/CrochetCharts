@@ -1804,7 +1804,6 @@ void Scene::setShowChartCenter(bool state)
             }
 
             mCenterSymbol = addEllipse(rect.center().x()-radius, rect.center().y()-radius, radius * 2, radius * 2, pen);
-            mCenterSymbol->setToolTip(tr("Chart Center"));
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsMovable);
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsSelectable);
         } else {
