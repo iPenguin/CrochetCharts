@@ -7,11 +7,12 @@
 
 #include <QString>
 #include <QList>
+#include <QObject>
 
 class QSvgRenderer;
 class QPixmap;
 
-class Stitch
+class Stitch : public QObject
 {
     friend class StitchSet;
     friend class TestStitch;

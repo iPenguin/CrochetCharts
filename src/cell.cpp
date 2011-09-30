@@ -32,6 +32,9 @@ Cell::~Cell()
 
 QRectF Cell::boundingRect() const
 {
+    if(!stitch())
+        return QRectF(0,0,0,0);
+
     if(stitch()->isSvg())
         return QGraphicsSvgItem::boundingRect();
     else
@@ -40,6 +43,10 @@ QRectF Cell::boundingRect() const
 
 void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
+
+    if(!stitch())
+        return;
+
     QColor clr = color();
     if(!clr.isValid())
         clr = QColor(Qt::white);

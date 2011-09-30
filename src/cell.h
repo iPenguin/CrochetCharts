@@ -7,6 +7,7 @@
 
 #include <QtSvg/QGraphicsSvgItem>
 #include "stitch.h"
+#include <QPointer>
 
 class Cell : public QGraphicsSvgItem
 {
@@ -53,7 +54,7 @@ signals:
     
 private:
     QColor mColor;
-    Stitch* mStitch;
+    QPointer<Stitch> mStitch;
 
     QPointF mScale;
     bool mHighlight;
