@@ -43,12 +43,10 @@ void SaveThread::run()
             QString st = stream->readElementText();
             s = StitchLibrary::inst()->findStitch(st);
 
-        } else if(tag == "row") {
-            row = stream->readElementText().toInt();
-
-        } else if(tag == "column") {
-            column = stream->readElementText().toInt();
-
+        } else if(tag == "grid") {
+            row = stream->attributes().value("row").toString().toDouble();
+            column = stream->attributes().value("column").toString().toDouble();
+            stream->readElementText();
         } else if(tag == "color") {
             color = stream->readElementText();
 
