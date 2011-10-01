@@ -332,6 +332,7 @@
     <addaction name="separator"/>
     <addaction name="actionEditName"/>
     <addaction name="separator"/>
+    <addaction name="actionShowChartCenter"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -1057,6 +1058,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+G</string>
+   </property>
+  </action>
+  <action name="actionShowChartCenter">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Chart Center</string>
    </property>
   </action>
  </widget>

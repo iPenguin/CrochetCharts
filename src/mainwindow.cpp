@@ -307,6 +307,8 @@ void MainWindow::setupMenus()
     connect(ui->actionAddChart, SIGNAL(triggered()), SLOT(documentNewChart()));
     connect(ui->actionRemoveTab, SIGNAL(triggered()), SLOT(removeCurrentTab()));
 
+    connect(ui->actionShowChartCenter, SIGNAL(triggered()), SLOT(chartsShowChartCenter()));
+
     ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
     
     connect(ui->menuChart, SIGNAL(aboutToShow()), SLOT(menuChartAboutToShow()));
@@ -1124,13 +1126,26 @@ void MainWindow::menuChartAboutToShow()
     bool state = hasTab();
     ui->actionRemoveTab->setEnabled(state);
     ui->actionEditName->setEnabled(state);
-    ui->actionCreateRows->setEnabled(state);
-    if(!state) {
-        ui->actionCreateRows->setChecked(false);
-        CrochetTab* curTab = curCrochetTab();
-        if(curTab)
-            curTab->showRowEditor(false);
+    ui->actionShowChartCenter->setEnabled(state);
+
+    CrochetTab* tab = curCrochetTab();
+    if(tab) {
+        ui->actionShowChartCenter->setChecked(tab->hasChartCenter());
+    } else {
+        ui->actionShowChartCenter->setChecked(false);
     }
+
+}
+
+void MainWindow::chartsShowChartCenter()
+{
+
+    CrochetTab* tab = curCrochetTab();
+    if(tab) {
+        qDebug() << ui->actionShowChartCenter->isChecked();
+        tab->setChartCenter(ui->actionShowChartCenter->isChecked());
+    }
+
 }
 
 void MainWindow::chartEditName()

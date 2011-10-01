@@ -1794,6 +1794,11 @@ void Scene::setSceneRectToItems()
 | Rounds Specific functions:                      |
 \*************************************************/
 
+bool Scene::showChartCenter()
+{
+    return mShowChartCenter;
+}
+
 void Scene::setShowChartCenter(bool state)
 {
 

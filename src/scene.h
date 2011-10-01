@@ -296,11 +296,17 @@ private:
  * Rounds specific functions:
  */
 public:
-    bool showChartCenter() { return mShowChartCenter; }
+    /**
+     * Is there a visible center symbol?
+     */
+    bool showChartCenter();
 
     void createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize);
     void createRow(int row, int columns, QString stitch);
 
+    /**
+     * Does the chart have a symbol at all?
+     */
     bool hasChartCenter() { return (mCenterSymbol ? true : false); }
     QGraphicsItem* chartCenter() { return mCenterSymbol; }
     

@@ -91,6 +91,7 @@ private slots:
 
     void menuChartAboutToShow();
     void chartEditName();
+    void chartsShowChartCenter();
     void chartCreateRows(bool state);
 
     void menuToolsAboutToShow();

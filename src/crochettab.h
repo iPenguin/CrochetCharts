@@ -67,6 +67,9 @@ public:
 
     void group();
     void ungroup();
+
+    bool hasChartCenter();
+    void setChartCenter(bool state);
     
 signals:
     void chartStitchChanged();

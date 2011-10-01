@@ -89,6 +89,9 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     
     ui->chartOptionsBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked()), SLOT(showChartOptions()));
+
+    //FIXME: remove this later:
+    ui->moreBttn->setVisible(false);
    
     connect(ui->copyInstructions, SIGNAL(clicked()), SLOT(copyInstructions()));
 
@@ -344,4 +347,14 @@ void CrochetTab::group()
 void CrochetTab::ungroup()
 {
     mScene->ungroup();
+}
+
+bool CrochetTab::hasChartCenter()
+{
+    return mScene->showChartCenter();
+}
+
+void CrochetTab::setChartCenter(bool state)
+{
+    mScene->setShowChartCenter(state);
 }
