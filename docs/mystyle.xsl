@@ -104,7 +104,16 @@
         <xsl:call-template name="inline.boldseq"/>
     </xsl:template>
 
-
+    <xsl:template match="d:caption">
+        <fo:block>
+            <xsl:if test="@align = 'right' or @align = 'left' or @align='center'">
+            <xsl:attribute name="text-align"><xsl:value-of
+                                select="@align"/></xsl:attribute>
+            </xsl:if>
+            <xsl:call-template name="inline.italicseq" />
+        </fo:block>
+    </xsl:template>
+    
 <!-- style <link> -->
     <xsl:attribute-set name="xref.properties">
         <xsl:attribute name="color">blue</xsl:attribute>
@@ -121,9 +130,5 @@
     <xsl:attribute-set name="variablelist.term.properties">
         <xsl:attribute name="font-weight">bold</xsl:attribute>
     </xsl:attribute-set>
-
-<!-- Style <caption> -->
-    <xsl:attribute-set name="d:caption.properties">
-        <xsl:attribute name="font-style">italic</xsl:attribute>
-    </xsl:attribute-set>
+    
 </xsl:stylesheet>
