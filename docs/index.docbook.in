@@ -198,6 +198,7 @@
                 <caption>The main window showing the New Chart Options dialog</caption>
             </mediaobject>
         </screenshot>
+        <!-- -->
         <para>While editing the chart you can change the stitch, color, position, rotation, and height of the stitches, you can add new stitches and rows.
             You can also add an unlimited number of movable indicators to the chart.
             You can used the indicators as row number indicators, or to draw attention to part of the chart.
