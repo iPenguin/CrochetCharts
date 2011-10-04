@@ -175,9 +175,10 @@
     <chapter id="creating-charts"><title>Creating Charts</title>
         <para>When you first open @SWS_PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
             This dialog gives you quick access to create a new document with a chart.
+            A document can contain any number of charts. To add more charts simply goto <menuchoice><guimenu>Charts</guimenu><guimenuitem>Add Chart</guimenuitem></menuchoice>.
             The Default Stitch is the stitch used when generating Rows or Rounds.
 
-            The Row Spacing option allows you to specify how much distance shoud be between the rows, the unit of distance is the height of a chain stitch. 
+            The Row Spacing option allows you to specify how much distance should be between the rows, the unit of distance is the height of a chain stitch. 
         </para>
         <para>
             From the dialog you can set the basic information about the new chart.
