@@ -494,6 +494,7 @@
             Each set must have unique stitch names in it, but you may have multiple stitches with the same name across sets. 
             The Default Crochet Stitches contains all the stitches that will appear in the main application for use on charts. You can customize this list
             however you want.      
+            The library loads the stitches as follows: first it loads the built in stitches, then it loads any additional sets you may have added, and finally it loads any customizations or changes you have made to the stitches.
         </para>
         <screenshot>
             <mediaobject>
