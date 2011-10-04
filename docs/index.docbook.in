@@ -181,6 +181,8 @@
             From the dialog you can set the basic information about the new chart.
             Selecting a <emphasis>Blank</emphasis> chart style will present you with a blank canvas from which you can create a free form pattern.
             This gives you the flexibility to create charts like you would in most drawing programs except @SWS_PROJECT_NAME@ uses stitches instead of pixels.
+
+            The Row Spacing option allows you to specify how much distance shoud be between the rows, the unit of distance is the height of a chain stitch. 
         </para>
         <para>
             If you select a <emphasis>Rows</emphasis> chart style then you will get all the functionality of a Blank chart with the addition that the software will
