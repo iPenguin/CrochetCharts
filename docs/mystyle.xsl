@@ -121,5 +121,9 @@
     <xsl:attribute-set name="variablelist.term.properties">
         <xsl:attribute name="font-weight">bold</xsl:attribute>
     </xsl:attribute-set>
-    
+
+<!-- Style <caption> -->
+    <xsl:attribute-set name="d:caption.properties">
+        <xsl:attribute name="font-style">italic</xsl:attribute>
+    </xsl:attribute-set>
 </xsl:stylesheet>

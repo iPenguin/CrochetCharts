@@ -113,8 +113,8 @@
         </section>
         <section>
             <title>Mac</title>
-            <para>@SWS_PROJECT_NAME@ will run on Mac OS X version 10.5-10.7 (Leopard, Snow Leopard, Lion)  To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
-            <para>Once the file has been downloaded you can install the software by dragging and dropping the software into the Applications folder.</para>
+            <para>@SWS_PROJECT_NAME@ will run on Mac OS X version 10.5-10.7 (Leopard, Snow Leopard, Lion). To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
+            <para>Once the file has been downloaded you can install the software by dragging and dropping @SWS_PROJECT_NAME@ into the Applications folder.</para>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -132,7 +132,8 @@
         <section>
             <title>Licensing Wizard</title>
             <para>The license wizard allows the user to either register or evaluate this software. To use the software you must agree to the End User License Agreement.
-                To evaluate the software you will need to supply your name, and email, when you register the software you will need to supply your name, email and serial number that you received in an email after purchasing the software form the website.
+                To evaluate the software you will need to supply your name, and email address. When you register the software you will need to supply your name, email address and serial number.
+                The serial number should have arrived in an email called "Stitch Works Software - License Information for Order#XXX".
             </para>
             <screenshot>
                 <mediaobject>
@@ -173,19 +174,22 @@
 
     <chapter id="creating-charts"><title>Creating Charts</title>
         <para>When you first open @SWS_PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
-            This dialog gives you quick access to create a new document and chart.
+            This dialog gives you quick access to create a new document with a chart.
         </para>
         <para>
             From the dialog you can set the basic information about the new chart.
-                Selecting a <emphasis>Blank chart</emphasis> will present you with a blank canvas from which you can create any shape.
+            Selecting a <emphasis>Blank</emphasis> chart style will present you with a blank canvas from which you can create a free form pattern.
+            This gives you the flexibility to create charts like you would in most drawing programs except @SWS_PROJECT_NAME@ uses stitches instead of pixels.
         </para>
         <para>
-            If you select a <emphasis>Round chart</emphasis> the first row of the new chart with contain the number of stitches you specified in the dialog,
+            If you select a <emphasis>Rows</emphasis> chart style then you will get all the functionality of a Blank chart with the addition that the software will
+            create a grid of stitches as defined by the Rows, Stitches, Row Spacing and Default Stitch, and add those stitches to the <link linkend="modes-row-edit">defined Rows</link>.
+        </para>
+        <para>
+            If you select a <emphasis>Rounds</emphasis> chart style the first row of the new chart with contain the number of stitches you specified in the dialog,
             and each subsequent row will contain an increasing number of stitches radiating out from the center of the chart.
         </para>
-        <para>
-            If you select a <emphasis>Flat chart</emphasis> then the generated chart will be in the form of a grid with all rows having the same number of stitches.
-        </para>
+
         <screenshot>
             <mediaobject>
                 <imageobject>
@@ -270,7 +274,7 @@
                         <listitem>Change the background color of the stitches.</listitem>
                     </varlistentry>
                     <varlistentry>
-                        <term>Angle Edit</term>
+                        <term>Rotation Edit</term>
                         <listitem>Rotate the stitch 360 degrees.</listitem>
                     </varlistentry>
                     <varlistentry>
@@ -300,9 +304,45 @@
                 </variablelist>
             </sect3>
 
-            <section>
+            <section id="edit-modes">
                 <title>Edit Modes</title>
+                <section id="modes-stitch-edit">
+                    <title>Stitch Edit</title>
+                    
+                </section>
+                <section id="modes-color-edit">
+                    <title>Color Edit</title>
 
+                </section>
+                <section id="modes-rotation-edit">
+                    <title>Rotation Edit</title>
+
+                </section>
+                <section id="modes-scale-edit">
+                    <title>Scale Edit</title>
+
+                </section>
+                <section id="modes-row-edit">
+                    <title>Row Edit</title>
+                    <screenshot>
+                        <mediaobject>
+                            <imageobject>
+                                <imagedata width="400" fileref="images/mode-row-edit-ui.png" format="PNG" />
+                            </imageobject>
+                            <caption>The user interface for row edit mode</caption>
+                        </mediaobject>
+                    </screenshot>
+                    <para>@SWS_PROJECT_NAME@ allows the user to place stitches anywhere on the chart, because of this flexibility there is no way to automatically decide which row a stitch belongs on.
+                        The purpose of this interface is to define which stitches belong on each row, and in what order.
+                    </para>
+                    <para>
+                        Defining rows provides the following benefits: automatically alternate row colors as defined in the settings, and automatically generate written instructions for the chart.
+                    </para>
+                </section>
+                <section id="modes-indicator-edit">
+                    <title>Indicator Edit</title>
+
+                </section>
             </section>
 
             <section>
