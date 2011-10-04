@@ -175,6 +175,7 @@
     <chapter id="creating-charts"><title>Creating Charts</title>
         <para>When you first open @SWS_PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
             This dialog gives you quick access to create a new document with a chart.
+            The Default Stitch is the stitch used when generating Rows or Rounds.
         </para>
         <para>
             From the dialog you can set the basic information about the new chart.
