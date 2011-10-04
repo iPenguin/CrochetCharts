@@ -188,7 +188,9 @@
             create a grid of stitches as defined by the Rows, Stitches, Row Spacing and Default Stitch, and add those stitches to the <link linkend="modes-row-edit">defined Rows</link>.
         </para>
         <para>
-            If you select a <emphasis>Rounds</emphasis> chart style the first row of the new chart with contain the number of stitches you specified in the dialog,
+            If you select a <emphasis>Rounds</emphasis> chart style you will get all the functionality of a Blank chart with the addition that the software will
+            create a rounds of stitches starting in the center of the chart and working out, increasing by 12 stitches every row.
+            the first row of the new chart with contain the number of stitches you specified in the dialog,
             and each subsequent row will contain an increasing number of stitches radiating out from the center of the chart.
         </para>
 
