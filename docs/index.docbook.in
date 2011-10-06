@@ -514,7 +514,7 @@
             <varlistentry>
                 <term>Selection</term>
                 <listitem>This allows you to choose to export the chart, stitch legend, or color legend.
-                    Additionally if you export to PDF you can export all charts into one file.</listitem>
+                    Additionally if you export to PDF you can export all charts into one file with each chart on it's own page.</listitem>
             </varlistentry>
             
             <varlistentry>
