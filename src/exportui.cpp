@@ -335,7 +335,7 @@ void ExportUi::setSelection(QString selection)
     } else {
         CrochetTab* tab = 0;
         for(int i = 0; i < mTabWidget->count(); ++i) {
-            if(selection == mTabWidget->tabText(i)) {
+            if(selection == mTabWidget->tabText(i) || selection == tr("All Charts")) {
                 tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
                 break;
             }
@@ -350,6 +350,7 @@ void ExportUi::setSelection(QString selection)
         ui->colorLegendOptions->hide();
 //FIXME: Add Chart Options.
         ui->chartOptions->hide();
+        ui->view->centerOn(tab->scene()->sceneRect().center());
     }
 
     updateChartSizeRatio();
