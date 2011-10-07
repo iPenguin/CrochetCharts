@@ -697,17 +697,17 @@
             You will then be dropped back to the Stitch Library with a new row added containing the
             name of the new stitch, and a question mark for an icon.
             To change any of the information about the stitch just click on each section.
-            The Icon and Categories will open a drop down lists that you have to click on again to show you the possible options.
+            The Icon and Categories will open a drop down lists that you have to click on again to show you the options.
             If you want to add icons to the list of selections you can <link linkend="stitch-library-custom-icons">add your own custom icons</link>.
             </para>
         </section>
         <section>
-            <title>Adding Stitches to the Master Stitch List</title>
-            <para>To use custom stitches to create charts you have to include the stitches in the Master Stitch List.
+            <title>Adding Stitches to the Default Stitches list</title>
+            <para>To use custom stitches to create charts you have to include the stitches in the Default Stitches list.
                 To include your custom stitches check the "Selected" check box next to the stitch or stitches you wish
                 to add and press the <guibutton>Add Selected To Master</guibutton> button.
             </para>
-            <para>The Master Stitch List like any stitch set can only have uniquely named stitches. If you try to include a stitch name
+            <para>The Default Stitches set like any stitch set in @SWS_PROJECT_NAME@ can only have uniquely named stitches. If you try to include a stitch name
                 that is already in the list you will be prompted with a choice of how to proceed.
             </para>
             <screenshot>
