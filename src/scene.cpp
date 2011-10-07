@@ -1340,7 +1340,9 @@ void Scene::createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSiz
 
 void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelection)
 {
+    //FIXME: make this function create a grid out of a selection of stitches.
     Q_UNUSED(alignment);
+
     if(useSelection) {
     /*
         boundingRect().height()[.width()] / rows/[cols] = MOE for spacing.
