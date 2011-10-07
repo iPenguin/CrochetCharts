@@ -197,7 +197,7 @@
             If you select a <emphasis>Rows</emphasis> chart style then you will get all the functionality
             of a Blank chart with the addition that the software will create a grid of stitches
             as defined by the Rows, Stitches, Row Spacing and Default Stitch.
-            The software will add those stitches to the <link linkend="modes-row-edit">defined Rows</link>.
+            The software will add those stitches to the <link linkend="tools-row-edit">defined Rows</link>.
         </para>
         <para>
             If you select a <emphasis>Rounds</emphasis> chart style you will get all the functionality
@@ -372,7 +372,7 @@
                             </para>
                             <para>To create a row select the Row Edit mode icon from the tool bar,
                                 or select <menuchoice><guimenu>Modes</guimenu><guimenuitem>Row Edit</guimenuitem></menuchoice>.
-                                The Row Edit interface will open as in the screen shot above.
+                                The Row Edit interface will open as in the screenshot above.
                             </para>
                             <para>
                                 To create your first row go ahead and select the first stitch of the new row.
@@ -507,7 +507,7 @@
                 <caption>Options window for export as a jpeg, png, tiff, or bmp</caption>
             </mediaobject>
         </screenshot>
-        <para>The above screen shots show all the possible options for exporting images. Below is an explanation of these options.
+        <para>The above screenshots show all the possible options for exporting images. Below is an explanation of these options.
         </para>
         <variablelist>
             <?dbfo list-presentation="blocks"?>
@@ -522,7 +522,8 @@
                 <listitem>
                     <para>The quality of the image output.
                         96 dpi is usually considered standard quality, and 300 dpi is print or publication quality.
-                        You should be aware that higher quality means larger file size.
+                        You should be aware that higher quality means larger file size,
+                        and that you should weigh that against your intended use of the file.
                     </para>
                 </listitem>
             </varlistentry>
@@ -531,7 +532,7 @@
                 <term>Page to Chart Size</term>
                 <listitem>
                     <para>By default the page size is set for a standard A4 letter page and the chart is scaled to fit onto the page.
-                        If the<emphasis>Page to Chart Size</emphasis> option is checked then the page size is set to the size of the chart.
+                        If the <emphasis>Page to Chart Size</emphasis> option is checked then the page size is set to the size of the chart.
                     </para>
                 </listitem>
             </varlistentry>            
@@ -539,11 +540,12 @@
             <varlistentry>
                 <term>Height and Width</term>
                 <listitem>Set the dimensions of the image to be generated.
-                    You should be aware that larger image size means larger file size.</listitem>
+                    You should be aware that higher quality means larger file size,
+                        and that you should weigh that against your intended use of the file.</listitem>
             </varlistentry>
         </variablelist>
         
-        <section>
+        <section id="export-charts">
             <title>Charts</title>
             <screenshot>
                 <mediaobject>
@@ -553,15 +555,13 @@
                     <caption>Options window for export a chart</caption>
                 </mediaobject>
             </screenshot>
-            <para>When you export a chart you are presented with the standard options for all exports.
+            <para>When you export a chart you are presented with the <link linkend="exporting-files">standard options for all exports</link>.
+                You can choose the resolution, height, width, and page to chart size options depending on the file type you want to export to.
             </para>
         </section>
-        <section>
+        
+        <section id="export-instructions">
             <title>Instructions</title>
-            <para>On the main interface you can export the written instructions for the chart by pressing the <guibutton>Copy Instructions</guibutton> button on the left between the chart and the instructions.
-            This button will add the row numbers, remove any placeholder stitches, and clean up the text to be generally publication ready.
-            This clean version of the text will automatically be copied to the clipboard where you can then paste it directly into another application.
-            </para>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -570,16 +570,27 @@
                     <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
                 </mediaobject>
             </screenshot>
-
+            <para>From the main interface you can export the written instructions for the chart by pressing
+                the <guibutton>Copy Instructions</guibutton> button on the bottom left of the application.
+                This button will add the row numbers, remove any placeholder stitches, capitalize the first letter,
+                put a period at the end of the row, and generate repeats to make it publication ready.
+                You can tell @SWS_PROJECT_NAME@ that you don't want it to generate text repeats in the
+                <link linkend="options-charts">Chart Options/Preferences</link>, if you'd rather have every stitch written out.
+                This cleaned up version of the written instructions will automatically be copied to the clipboard where you can
+                then paste it directly into another application as plain text.
+            </para>
         </section>
-        <section>
+        
+        <section id="export-legends">
             <title>Legends</title>
-            <sect3>
+            <para>
+                @SWS_PROJECT_NAME@ supports output of Stitch Legends, and Color Legends.
+                These legends contain all the stitches or colors (respectively) used on all tabs in the document.
+                The <emphasis>Pattern Stitches</emphasis> and <emphasis>Pattern Colors</emphasis> docks
+                on the main interface give an interactive view of what the legends will contain.
+            </para>
+            <sect3 id="export-stitch-legend">
                 <title>Stitch Legends</title>
-                <para>When you export a stitch legend you can update how you want the legend to look right before you save it as a file.
-                    However if you have settings that you want on at all times you can make them default by setting them in the
-                    <link linkend="options-legends-stitch">Options/Preferences</link>.
-                </para>
                 <screenshot>
                     <mediaobject>
                         <imageobject>
@@ -588,13 +599,17 @@
                         <caption>Options window for export a Stitch Legend</caption>
                     </mediaobject>
                 </screenshot>
-            </sect3>
-            <sect3>
-                <title>Color Legends</title>
-                <para>When you export a color legend you can update how you want the legend to look right before you save it as a file.
-                    However if you have settings that you want on at all times you can make them default by setting them in the
-                    <link linkend="options-legends-color">Options/Preferences</link>.
+                <para>When you export a stitch legend you are presented with the <link linkend="exporting-files">standard export options</link>
+                    at the top of the dialog, and Stitch Legend specific options at the bottom.
+                    Those options include showing a title for the legend, showing a border around the legend,
+                    showing the stitch descriptions, and specifying the column count for the legend.
+                    If you have settings that you prefer and would like to see whenever you use the
+                    export dialog you can make them the defaults by setting them in the <link linkend="options-legends-stitch">Legend Options/Preferences</link>.
                 </para>
+            </sect3>
+            
+            <sect3 id="export-color-legend">
+                <title>Color Legends</title>
                 <screenshot>
                     <mediaobject>
                         <imageobject>
@@ -603,19 +618,32 @@
                         <caption>The main window highlighting the <guibutton>Copy Instructions</guibutton> button</caption>
                     </mediaobject>
                 </screenshot>
+                <para>When you export a stitch legend you are presented with the <link linkend="exporting-files">standard export options</link>
+                    at the top of the dialog, and Color Legend specific options at the bottom.
+                    Those options include showing a title for the legend, showing a border around the legend,
+                    showing the hexadecimal value of the color (the standard representation of colors for the internet),
+                    user selected prefix for colors, and specifying the column count for the legend.
+                    If you have settings that you prefer and would like to see whenever you use the
+                    export dialog you can make them the defaults by setting them in the <link linkend="options-legends-color">Legend Options/Preferences</link>.
+                </para>
             </sect3>
+            
         </section>
+        
     </chapter>
-
 
 
     <chapter id="stitch-library">
         <title>Stitch Library</title>
         <para>The Stitch Library can consist of multiple sets of stitches.
-            Each set must have unique stitch names in it, but you may have multiple stitches with the same name across sets. 
-            The Default Crochet Stitches contains all the stitches that will appear in the main application for use on charts. You can customize this list
-            however you want.      
-            The library loads the stitches as follows: first it loads the built in stitches, then it loads any additional sets you may have added, and finally it loads any customizations or changes you have made to the stitches.
+            Each stitch within a set must have a unique name, however you may have multiple sets that
+            have a stitch with the same name in them.
+            The <emphasis>Default Stitches</emphasis> set contains all the stitches that will appear
+            in the main application for use on charts. You can customize this list however you want.
+            Any stitches not in this list will not show up the <emphasis>Stitches</emphasis> list dock.
+            The library loads the stitches as follows: first it loads the built in stitches,
+            then it loads any additional sets you may have added,
+            and finally it loads any customizations or changes you have made on top of the existing stitches.
         </para>
         <screenshot>
             <mediaobject>
@@ -626,9 +654,10 @@
             </mediaobject>
         </screenshot>
         <para>To open the Stitch Library goto <menuchoice><guimenu>Tools</guimenu><guimenuitem>Stitch Library</guimenuitem></menuchoice>.
-        From here you can add and remove Stitches, Stitch Sets and Icons, print the set and reset the library.
+        From here you can add and remove Stitches, Stitch Sets and Icons, print the set and reset the library to it's original state.
         </para>
-        <section>
+        
+        <section id="library-new-set">
             <title>Creating New Stitch Sets</title>
             <screenshot>
                 <mediaobject>
@@ -639,8 +668,8 @@
                 </mediaobject>
             </screenshot>
             <para>To create a new Stitch Set click on the <guibutton>Add Set</guibutton> button. you will be prompted to enter a set name.
-            Once you have entered a new set name that list will be loaded in the Stitch Library with a new stitch ready for editing.
-            From this point you can edit the stitch like normal and add more stitches to the set.
+            Once you have entered a new set name a new list will be loaded in the Stitch Library with a new stitch ready for editing.
+            From this point you can <link linkend="library-new-stitch">edit the stitch like normal</link> and add more stitches to the set.
             </para>
             <screenshot>
                 <mediaobject>
@@ -653,7 +682,8 @@
             <para>
             </para>
         </section>
-        <section>
+        
+        <section id="library-new-stitch">
             <title>Creating New Stitches</title>
             <screenshot>
                 <mediaobject>
@@ -664,7 +694,8 @@
                 </mediaobject>
             </screenshot>
             <para>To create a new stitch click on the <guibutton>Add Stitch</guibutton> button and supply a new name for the stitch.
-            You will then be dropped back to the Stitch Library with a new row added containing the name of the new stitch, and a question mark for an icon.
+            You will then be dropped back to the Stitch Library with a new row added containing the
+            name of the new stitch, and a question mark for an icon.
             To change any of the information about the stitch just click on each section.
             The Icon and Categories will open a drop down lists that you have to click on again to show you the possible options.
             If you want to add icons to the list of selections you can <link linkend="stitch-library-custom-icons">add your own custom icons</link>.
@@ -756,8 +787,9 @@
                 SVG is not as well known a format as the others so here are a few applications that can generate SVG files if you choose to use it:
                     <ulink url="http://inkscape.org">Inkscape</ulink>,
                     <ulink url="http://libreoffice.org">LibreOffice</ulink> Draw,
-                    <ulink url="http://openoffice.org">OpenOffice</ulink> Draw, and
-                    <ulink url="http://docs.google.com">Google Docs</ulink>, among others.
+                    <ulink url="http://openoffice.org">OpenOffice</ulink> Draw,
+                    <ulink url="http://docs.google.com">Google Docs</ulink>, and
+                    <ulink url="http://www.adobe.com/products/illustrator/">Adobe Illustrator</ulink>.
             </para>
             <para>I recommend a canvas size of 64x64 px as the default size.
                 If you need to use a different size I recommend changing the size in increments of 32.
