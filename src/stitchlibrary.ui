@@ -188,6 +188,9 @@
      </property>
      <item>
       <widget class="QPushButton" name="createSet">
+       <property name="toolTip">
+        <string>Add a new set of stitches</string>
+       </property>
        <property name="text">
         <string>&amp;Add Set</string>
        </property>
@@ -195,6 +198,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="removeSet">
+       <property name="toolTip">
+        <string>Remove the stitch set current displayed</string>
+       </property>
        <property name="text">
         <string>Remove Set</string>
        </property>
@@ -218,6 +224,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="addStitch">
+       <property name="toolTip">
+        <string>Add a new stitch to this set</string>
+       </property>
        <property name="text">
         <string>Add Stitch</string>
        </property>
@@ -225,6 +234,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="removeStitch">
+       <property name="toolTip">
+        <string>Remove selected stitches from this set</string>
+       </property>
        <property name="text">
         <string>Remove Stitch</string>
        </property>
@@ -232,8 +244,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="addSelected">
+       <property name="toolTip">
+        <string>Add the selected stitches to the Default Stitches list</string>
+       </property>
        <property name="text">
-        <string>Add Selected To Master</string>
+        <string>Add To List</string>
        </property>
       </widget>
      </item>
@@ -255,6 +270,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="icons">
+       <property name="toolTip">
+        <string>Manage custom icons available to all stitch sets</string>
+       </property>
        <property name="text">
         <string>Manage Icons</string>
        </property>
@@ -278,6 +296,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="importSet">
+       <property name="toolTip">
+        <string>Import a custom stitch set</string>
+       </property>
        <property name="text">
         <string>&amp;Import Set</string>
        </property>
@@ -285,6 +306,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="exportSet">
+       <property name="toolTip">
+        <string>Export this stitch set to a stand alone file</string>
+       </property>
        <property name="text">
         <string>E&amp;xport Set</string>
        </property>
@@ -308,6 +332,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="printSet">
+       <property name="toolTip">
+        <string>Print the current stitch set</string>
+       </property>
        <property name="text">
         <string>&amp;Print Set</string>
        </property>
@@ -315,6 +342,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="resetLibrary">
+       <property name="toolTip">
+        <string>Reset the stitch library to it original state</string>
+       </property>
        <property name="text">
         <string>&amp;Reset Library</string>
        </property>
