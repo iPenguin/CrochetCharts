@@ -170,9 +170,15 @@
         </section>
     </chapter>
 
+    <chapter id="quick-guide">
+        <title>Quick Guide to Making a Chart</title>
+        <para>This chapter will give a general overview for creating a new chart.
+            It will reference all the other chapters for greater details on specific features.
+        </para>
+    </chapter>
 
-
-    <chapter id="creating-charts"><title>Creating Charts</title>
+    <chapter id="creating-charts">
+        <title>Add Charts to a Document</title>
         <para>When you first open @SWS_PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
             This dialog gives you quick access to create a new document with a single chart.
             A document can contain any number of charts.
@@ -245,7 +251,7 @@
                         <imageobject>
                             <imagedata width="400" fileref="images/toolbar.png" format="PNG" />
                         </imageobject>
-                        <caption>The tools in @SWS_PROJECT_NAME@</caption>
+                        <caption>The toolbar in @SWS_PROJECT_NAME@</caption>
                     </mediaobject>
                 </screenshot>
                 <para>The tools on the tool bar are listed below in order from left to right:
@@ -667,9 +673,12 @@
                     <caption>The prompt for a new Stitch Set</caption>
                 </mediaobject>
             </screenshot>
-            <para>To create a new Stitch Set click on the <guibutton>Add Set</guibutton> button. you will be prompted to enter a set name.
-            Once you have entered a new set name a new list will be loaded in the Stitch Library with a new stitch ready for editing.
-            From this point you can <link linkend="library-new-stitch">edit the stitch like normal</link> and add more stitches to the set.
+            <para>To create a new Stitch Set click on the <guibutton>Add Set</guibutton> button.
+                You will be prompted to enter a set name. Once you have entered a new set name a new
+                list will be loaded in the Stitch Library with a new stitch ready for editing.
+                From this point you can <link linkend="library-new-stitch">edit the stitch like normal</link>
+                and add more stitches to the set. To use the new stitches on a chart you need to
+                <link linkend="library-add-to-defaults">add the stitches to the Default Stitches list</link>.
             </para>
             <screenshot>
                 <mediaobject>
@@ -699,16 +708,21 @@
             To change any of the information about the stitch just click on each section.
             The Icon and Categories will open a drop down lists that you have to click on again to show you the options.
             If you want to add icons to the list of selections you can <link linkend="stitch-library-custom-icons">add your own custom icons</link>.
+            If you've added the stitch to a new set and you want to use it to create charts you will
+            need to <link linkend="library-add-to-defaults">add the stitch to the Default Stitch list</link>.
             </para>
         </section>
-        <section>
+        
+        <section id="library-add-to-defaults">
             <title>Adding Stitches to the Default Stitches list</title>
             <para>To use custom stitches to create charts you have to include the stitches in the Default Stitches list.
                 To include your custom stitches check the "Selected" check box next to the stitch or stitches you wish
-                to add and press the <guibutton>Add Selected To Master</guibutton> button.
+                to add and press the <guibutton>Add To List</guibutton> button.
             </para>
-            <para>The Default Stitches set like any stitch set in @SWS_PROJECT_NAME@ can only have uniquely named stitches. If you try to include a stitch name
-                that is already in the list you will be prompted with a choice of how to proceed.
+            <para>The Default Stitches set like any stitch set in @SWS_PROJECT_NAME@ can only have
+                uniquely named stitches. If you try to include a stitch name that is already in the
+                list you will be prompted to either replace the existing stitch, keep the original stitch as is,
+                or stop adding stitches if you are adding more than one stitch.
             </para>
             <screenshot>
                 <mediaobject>
@@ -721,14 +735,17 @@
         </section>
         <section>
             <title>Importing / Exporting Stitch Sets</title>
-            <para>If you have a set of stitches that you want to share with your friends, co-workers, or others you can Export the set.
-                To export the Stitch Set in the Stitch Library click on the <guibutton>Export Set</guibutton> and you will be prompted to
-                supply a file name. The currently displayed set will be exported into a single stand alone file that other users of the
-                software can import and use themselves.
+            <para>If you have a set of stitches that you want to share with your friends, co-workers,
+                or others you can Export the set to a single file.
+                To export the Stitch Set in the Stitch Library click on the <guibutton>Export Set</guibutton>
+                button and you will be prompted to supply a file name.
+                The currently displayed set will be exported into a single stand alone file that other
+                users of@SWS_PROJECT_NAME@ can import and use themselves.
             </para>
-            <para>To import a pre-existing set go into the Stitch Library and click on the <guibutton>Import Set</guibutton> button.
-            You will be prompted to select the file you wish to import. If the name of the set conflicts with a set you already have in
-            the library you will be prompted to give the set a new name, override the existing set, or to not import the new set.
+            <para>To import a set that someone has given you go into the Stitch Library and click on
+                the <guibutton>Import Set</guibutton> button. You will be prompted to select the file you wish to import.
+                If the name of the set conflicts with a set you already have in the library you will be
+                prompted to give the set a new name, override the existing set, or to stop the import process.
         </para>
         <screenshot>
                 <mediaobject>
@@ -750,15 +767,22 @@
                 </mediaobject>
             </screenshot>
             <para>To add custom icons click on the <guibutton>Manage Icons</guibutton> button in the <link linkend="stitch-library">Stitch Library</link>.
-            This will take you to the Stitch Icon List where you can Add Icons, Remove Icons and Save Icons.
+                This will take you to the Stitch Icon List where you can Add Icons, Remove Icons and Save Icons.
             </para>
-            <para>When you Add an Icon to the Stitch Library the software makes a copy of the icon so that it cannot be moved or lost. Removing the icon will also remove the copy.
-                The Save Icon function allows you to duplicate custom icons saved in the Stitch Library and copy them to a useful location.
+            <para>When you add an icon to the Stitch Library the software makes a copy of the icon so
+                that you don't have to worry about moving or deleting the icons you've added.
+                Removing the icon from the list deletes the copy.
+                The <emphasis>Save Icons</emphasis> function allows you to saved a copy of the icon
+                or icons and copy them to a useful location where you can make changes and they save them back into the library later.
+                All of the functions for Managing the icons (Add Icons, Remove Icons, and Save Icons) can be used on groups of icons
+                as well as individual icons.
             </para>
         </section>
         <section>
             <title>Creating an Icon</title>
-            <para>To create icons for @SWS_PROJECT_NAME@ you should use your favorite drawing program to create files in one of the following formats:</para>
+            <para>To create icons for @SWS_PROJECT_NAME@ you should use your favorite drawing program
+                to create files in one of the following formats:
+            </para>
             <variablelist>
                 <?dbfo list-presentation="blocks"?>
                 <varlistentry>
@@ -780,22 +804,24 @@
             </variablelist>
             <para>
                 Transparent backgrounds are useful if you want to place color behind the stitches or if some of the stitches overlap.
-                Proper scaling is good because it means that no mater how large the chart the stitches will always look good.
+                Proper scaling is good because it means that no mater how much you zoom in on the chart
+                or scale up the stitches they will always look good.
             </para>
             <para>
                 I recommend using the SVG file format when possible.
-                SVG is not as well known a format as the others so here are a few applications that can generate SVG files if you choose to use it:
+                SVG is not as well known a format as the others, but it is becoming an industry standard. Here are a few applications that
+                can generate SVG files if you choose to use it:
                     <ulink url="http://inkscape.org">Inkscape</ulink>,
                     <ulink url="http://libreoffice.org">LibreOffice</ulink> Draw,
                     <ulink url="http://openoffice.org">OpenOffice</ulink> Draw,
                     <ulink url="http://docs.google.com">Google Docs</ulink>, and
                     <ulink url="http://www.adobe.com/products/illustrator/">Adobe Illustrator</ulink>.
             </para>
-            <para>I recommend a canvas size of 64x64 px as the default size.
+            <para>I recommend a canvas size of 32x32 px as the default size.
                 If you need to use a different size I recommend changing the size in increments of 32.
-                So a chain stitch is 64x32, a single crochet is 64x64 and a double crochet is 64x96.
+                So a single crochet is 32x32, a half double crochet is 32x64, and a double crochet is 32x96.
             </para>
-            <para>If you want your stitches to match the existing stitches I'm using a stroke width of 4.0 and rounded caps and joints.
+            <para>If you want your stitches to match the default stitches I'm using a stroke width of 4.0 and rounded caps and joints.
             </para>
         </section>
     </chapter>
