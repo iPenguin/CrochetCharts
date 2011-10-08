@@ -779,7 +779,7 @@
             </para>
         </section>
         <section>
-            <title>Creating an Icon</title>
+            <title>Tips on Creating an Icon</title>
             <para>To create icons for @SWS_PROJECT_NAME@ you should use your favorite drawing program
                 to create files in one of the following formats:
             </para>
@@ -823,6 +823,10 @@
             </para>
             <para>If you want your stitches to match the default stitches I'm using a stroke width of 4.0 and rounded caps and joints.
             </para>
+            <para>If you use one of the other file types (png, gif) that support transparent background you should be aware that most
+                drawing applications do not turn on transparency by default. You should consult the documentation for your application
+                on the proper way to enable it.
+            </para>
         </section>
     </chapter>
 
@@ -831,10 +835,11 @@
     <chapter id="options-preferences">
         <title>Options / Preferences</title>
         <para>The options have been divided into sections. The first section contains the general application settings.
-            The Charts section contains settings that effect the creation and layout of charts.
-            The Instructions section contains settings that effect how the written instructions are generated and exported as plain text.
+            The Charts section contains settings that effect the creation and layout of charts and their written instructions.
             The Legend section contains the default settings for generating stitch and color legends.
-            All of these settings can usually be overridden at the point of use.
+            Usually, these settings can be overridden at the point at which they are used.
+            For example, if you set default options on the Legends you can change them, temporarily,
+            while you are on the <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice> dialog.
         </para>
         <para>If you change the settings and you are unhappy with them you can always return the application to the default state
             by clicking the <guibutton>Restore Defaults</guibutton> button.
