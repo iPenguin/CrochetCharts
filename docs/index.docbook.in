@@ -174,6 +174,50 @@
         <title>Quick Guide to Making a Chart</title>
         <para>This chapter will give a general overview for creating a new chart.
             It will reference all the other chapters for greater details on specific features.
+            This is just a general guide and is not the only way to create charts with @SWS_PROJECT_NAME@.
+            The software is flexable enough to allow for multiple workflows and I would suggest you design
+            however you feel most comfortable. Therefore consider this chapter as a starting point and not an
+            ending point.
+        </para>
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/sample-square.png" format="PNG" />
+                </imageobject>
+                <caption>Sample chart</caption>
+            </mediaobject>
+        </screenshot>
+        <para>
+            (1) Create a <link linkend="creating-charts">new <emphasis>Blank</emphasis> chart</link>.
+        </para>
+        <para>
+            (2) <link linkend="">Add the chart center symbol</link>, in the menu <menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Chart Center</guimenuitem></menuchoice>
+        </para>
+        <para>
+            (3) Create the first row of stitches
+        </para>
+        <para>
+            (4) Create the top wedge with the chain stitches on the right.
+        </para>
+        <para>
+            (5) Use align and distribute to space out the stitches.
+            I started with the center column distribute vertically. Create the first row, copy/paste and add stitches for each row.
+        </para>
+        <para>
+            (6) Scale and rotate the stitches as needed to fit the space you want.
+            When scaling if you ctrl-click (apple-click) on the stitch it will persevere the ratio of the stitch.
+        </para>
+        <para>
+            (7) Select the stitches from row 2 to 5, copy, paste and rotate 90 (gives you the right side)
+        </para>
+        <para>
+            (8) Paste rotate 180 gives you the bottom, paste rotate 270 gives you the left.
+        </para>
+        <para>
+            (9) Add indicators for rows, and/or other features.
+        </para>
+        <para>
+            (10) Minor adjustments as desired.
         </para>
     </chapter>
 
@@ -185,7 +229,7 @@
             To add more charts simply goto <menuchoice><guimenu>Charts</guimenu><guimenuitem>Add Chart</guimenuitem></menuchoice>.
         </para>
         <para>
-            The Default Stitch is the stitch used when generating Rows or Rounds.
+            The Default Stitch is the stitch used when generating <emphasis>Rows</emphasis> or <emphasis>Rounds</emphasis>.
             You can set which stitch is used as the default in the <link linkend="options-preferences">Options/Preferences</link>.
         </para>
         <para>
@@ -779,7 +823,7 @@
             </para>
         </section>
         <section>
-            <title>Tips on Creating an Icon</title>
+            <title>Tips on Creating Icons</title>
             <para>To create icons for @SWS_PROJECT_NAME@ you should use your favorite drawing program
                 to create files in one of the following formats:
             </para>
@@ -858,17 +902,19 @@
             <variablelist>
                <?dbfo list-presentation="blocks"?>
                <varlistentry>
-                   <term>Check for updates on Startup</term>
+                   <term>Check for Updates on Startup</term>
                    <listitem>
-                       <para>Every time you start this software it will attempt to connect to @ORG_WEBSITE@ to check for updates. If an update is found you will be prompted to download it.
-                       You can still check for updates manually even if this feature is disabled.</para>
-                       <para>To checkout for updates manually goto <menuchoice><guimenu>Tools</guimenu><guimenuitem>Check for Updates</guimenuitem></menuchoice></para>
+                       <para>Every time you start @SWS_PROJECT_NAME@ it will attempt to connect to @ORG_WEBSITE@ to check for updates.
+                            If an update is found you will be prompted to download and install it.
+                            Even if this feature is disable you can still check for updates manually
+                            by going to <menuchoice><guimenu>Tools</guimenu><guimenuitem>Check for Updates</guimenuitem></menuchoice>
+                       </para>
                    </listitem>
                </varlistentry>
                <varlistentry>
                    <term>File Location</term>
                    <listitem>
-                       <para>This is the default folder that opens when you go to load or save a file.</para>
+                       <para>This is the default folder that opens when you go to load or save a file, an icon, or export a document.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
@@ -898,7 +944,9 @@
                <varlistentry>
                    <term>Default Stitch</term>
                    <listitem>
-                       <para>The default stitch used when creating new charts. This can be overridden when you create a new chart.</para>
+                       <para>The default stitch used when creating new <emphasis>Rows</emphasis> and <emphasis>Rounds</emphasis> chart.
+                            This option can be overridden when you create a new chart.
+                       </para>
                    </listitem>
                </varlistentry>
                <varlistentry>
@@ -910,49 +958,65 @@
                <varlistentry>
                    <term>Rows</term>
                    <listitem>
-                       <para>The default number of rows on new charts.</para>
+                       <para>The default number of rows to create on new <emphasis>Rows</emphasis> or <emphasis>Rounds</emphasis> charts.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
                    <term>Stitches</term>
                    <listitem>
-                       <para>The default number of stitches on a new chart.</para>
+                       <para>The default number of stitches to create on a new <emphasis>Rows</emphasis> or <emphasis>Rounds</emphasis> chart.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                   <term>Free form</term>
+                   <term>Show Chart Center</term>
                    <listitem>
-                       <para>Allow the stitches to be moved anywhere.</para>
+                       <para>Show the chart center symbol (a ring) on <emphasis>Rounds</emphasis> charts.
+                       </para>
+                   </listitem>
+               </varlistentry>
+               <varlistentry>
+                   <term>Style</term>
+                   <listitem>
+                       <para>The default chart style to use when creating a new chart.
+                            A <emphasis>Blank</emphasis> chart start with no stitches on the canvas.
+                            A <emphasis>Rows</emphasis> chart creates a grid of stitches on the canvas
+                            with <emphasis>Row</emphasis> rows and <emphasis>Stitch</emphasis> columns of stitches.
+                            A <emphasis>Rounds</emphasis> chart creates rounds of stitches on the canvas the first round
+                            contains <emphasis>Stitch</emphasis> stitches and each subsequent row contains an additional 12 stitches.
+                       </para>
                    </listitem>
                </varlistentry>
                <varlistentry>
                    <term>Alternate row colors</term>
                    <listitem>
-                       <para>Use the Primary / Alternate colors to draw the stitches in each row.</para>
+                       <para>Use the Primary / Alternate colors to draw the stitches in each row.
+                       </para>
                    </listitem>
                </varlistentry>
                <varlistentry>
-                    <term>Row indicator</term>
-                    <listitem><para>Use either a number, a dot, or both to indicate where the rows start.</para></listitem>
+                    <term>Row indicator style</term>
+                    <listitem>
+                        <para>Use either a number, a dot, or both to indicate anything you want on the chart.
+                            By default the indicator text will contain the current count of indicators on the chart.
+                        </para>
+                    </listitem>
                 </varlistentry>
                 <varlistentry>
                     <term>Indicator color</term>
-                    <listitem><para>What color to use for the indicator.</para></listitem>
+                    <listitem>
+                        <para>The color to use for the indicator dot.
+                        </para>
+                    </listitem>
+                </varlistentry>
+                <varlistentry>
+                    <term>Generate Repeats</term>
+                    <listitem>
+                        <para>If unchecked the software will write out all the stitches individually.
+                        </para>
+                    </listitem>
                 </varlistentry>
             </variablelist>
             
-        </section>
-        
-        <section id="options-instructions">
-            <title>Instructions</title>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/options-instructions.png" format="PNG" />
-                    </imageobject>
-                    <caption>The instruction options dialog</caption>
-                </mediaobject>
-            </screenshot>
         </section>
         
         <section id="options-legends">
@@ -965,7 +1029,6 @@
                     <caption>The legend options dialog</caption>
                 </mediaobject>
             </screenshot>
-
                         
             <sect3 id="options-legends-stitch">
                 <title>Stitch Legends</title>
@@ -986,7 +1049,7 @@
                     <varlistentry>
                         <term>Show Title</term>
                         <listitem>
-                            <para>This will remove the title block and the top of the legend.
+                            <para>This will show the title block and the top of the legend.
                             </para>
                             <screenshot>
                                 <mediaobject>
@@ -1002,12 +1065,14 @@
                     <varlistentry>
                         <term>Show Border</term>
                         <listitem>
+                            <para>Show the border around the entire outside edge of the legend.
+                            </para>
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
                                         <imagedata width="400" fileref="images/legend-stitch-no-border.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example stitch legend with all options turned on and column count set to 4</caption>
+                                    <caption>Border turned off</caption>
                                 </mediaobject>
                             </screenshot>
                         </listitem>
@@ -1016,12 +1081,14 @@
                     <varlistentry>
                         <term>Show Description</term>
                         <listitem>
+                            <para>Show the stitch descriptions in the legend.
+                            </para>
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
                                         <imagedata width="200" fileref="images/legend-stitch-no-description.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example stitch legend with all options turned on and column count set to 4</caption>
+                                    <caption>A legend with the descriptions turned off</caption>
                                 </mediaobject>
                             </screenshot>
                         </listitem>
@@ -1030,26 +1097,15 @@
                     <varlistentry>
                         <term>Column Count</term>
                         <listitem>
+                            <para>This allows you to specify the number of columns in the legend.
+                            The software will try to fit the stitches into the columns evenly.
+                            </para>
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
                                         <imagedata width="200" fileref="images/legend-stitch-2-columns.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example stitch legend with all options turned on and column count set to 4</caption>
-                                </mediaobject>
-                            </screenshot>
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry>
-                        <term>Show Blocks</term>
-                        <listitem>
-                            <screenshot>
-                                <mediaobject>
-                                    <imageobject>
-                                        <imagedata width="400" fileref="images/legend-stitch-with-blocks.png" format="PNG" />
-                                    </imageobject>
-                                    <caption>An example stitch legend with all options turned on and column count set to 4</caption>
+                                    <caption>A legend with 2 columns</caption>
                                 </mediaobject>
                             </screenshot>
                         </listitem>
@@ -1075,12 +1131,14 @@
                     <varlistentry>
                         <term>Show Title</term>
                         <listitem>
+                            <para>This will show the title block and the top of the legend.
+                            </para>
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
                                         <imagedata width="300" fileref="images/legend-color-no-title.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example color legend with all options turned on</caption>
+                                    <caption>A color legend without the title</caption>
                                 </mediaobject>
                             </screenshot>
                         </listitem>
@@ -1088,12 +1146,14 @@
                     <varlistentry>
                         <term>Show Border</term>
                         <listitem>
+                            <para>Show the border around the entire outside edge of the legend.
+                            </para>
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
                                         <imagedata width="300" fileref="images/legend-color-no-border.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example color legend with all options turned on</caption>
+                                    <caption>A color legend without border</caption>
                                 </mediaobject>
                             </screenshot>
                         </listitem>
@@ -1101,12 +1161,15 @@
                     <varlistentry>
                         <term>Show Hex Value</term>
                         <listitem>
+                            <para>Show the hexadecimal (hex) value of the color.
+                                The hex value is a common standard for communicating colors on the internet.
+                            </para>
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
                                         <imagedata width="150" fileref="images/legend-color-no-hex-value.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example color legend with all options turned on</caption>
+                                    <caption>A color legend without hex values</caption>
                                 </mediaobject>
                             </screenshot>
                         </listitem>
@@ -1114,12 +1177,14 @@
                     <varlistentry>
                         <term>Color Prefix</term>
                         <listitem>
+                            <para>The color prefix can be no characters or it can be multiple characters.
+                            </para>
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
                                         <imagedata width="300" fileref="images/legend-color-no-prefix.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example color legend with all options turned on</caption>
+                                    <caption>A color legend with no prefix</caption>
                                 </mediaobject>
                             </screenshot>
                             <screenshot>
@@ -1127,7 +1192,7 @@
                                     <imageobject>
                                         <imagedata width="300" fileref="images/legend-color-color-prefix.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example color legend with all options turned on</caption>
+                                    <caption>A color legend with the word Color as a prefix</caption>
                                 </mediaobject>
                             </screenshot>
                         </listitem>
@@ -1135,12 +1200,15 @@
                     <varlistentry>
                         <term>Column Count</term>
                         <listitem>
+                            <para>This allows you to specify the number of columns in the legend.
+                            The software will try to create even columns.
+                            </para>
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
                                         <imagedata width="400" fileref="images/legend-color-7-columns.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example color legend with all options turned on</caption>
+                                    <caption>A color legend with 7 columns</caption>
                                 </mediaobject>
                             </screenshot>
                             <screenshot>
@@ -1148,7 +1216,7 @@
                                     <imageobject>
                                         <imagedata width="300" fileref="images/legend-color-7-columns-only.png" format="PNG" />
                                     </imageobject>
-                                    <caption>An example color legend with all options turned on</caption>
+                                    <caption>A color legend with all the options turned off</caption>
                                 </mediaobject>
                             </screenshot>
                         </listitem>
@@ -1166,14 +1234,17 @@
         <sect1>
             <title>Check for Updates</title>
             <para>By default the software will silently check for updates every time you start the software.
-                If it find an update you will be prompted to update the software.
+                If it finds an update you will be prompted to install the new version.
+                If you do not wish the software to check for update on startup you can disable this feature
+                by going to the <link linkend="options-application">Application Options/Preferences</link>
+                and uncheck the option for this feature.
             </para>
             <screenshot>
                 <mediaobject>
                     <imageobject>
                         <imagedata width="400" scalefit="1" fileref="images/tools-updates.png" format="PNG" />
                     </imageobject>
-                    <caption>No updates</caption>
+                    <caption>The dialog when there are no updates</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -1181,7 +1252,7 @@
                     <imageobject>
                         <imagedata width="400" scalefit="1" fileref="images/tools-updates-new.png" format="PNG" />
                     </imageobject>
-                    <caption>A new version is available</caption>
+                    <caption>The dialog when a new version is available for download</caption>
                 </mediaobject>
             </screenshot>
         </sect1>
@@ -1193,11 +1264,11 @@
                     <imageobject>
                         <imagedata width="400" scalefit="1" fileref="images/help-about.png" format="PNG" />
                     </imageobject>
-                    <caption>The about this application dialog.</caption>
+                    <caption>The about this application dialog</caption>
                 </mediaobject>
             </screenshot>
-            <para>The About dialog can be accessed by going to the <menuchoice><guimenu>Help</guimenu><guimenuitem>About @SWS_PROJECT_NAME@</guimenuitem></menuchoice> option.
-            Or on the Mac by going to <menuchoice><guimenu>@SWS_PROJECT_NAME@</guimenu><guimenuitem>About @SWS_PROJECT_NAME@</guimenuitem></menuchoice>.
+            <para>The About dialog can be accessed by going to the <menuchoice><guimenu>Help</guimenu><guimenuitem>About @SWS_PROJECT_NAME@</guimenuitem></menuchoice> option,
+            or on the Mac by going to <menuchoice><guimenu>@SWS_PROJECT_NAME@</guimenu><guimenuitem>About @SWS_PROJECT_NAME@</guimenuitem></menuchoice>.
             </para>
             <para>This dialog contains the full version string and build date, copyright notice, description,
                 dedication and license information. The license information is required to use the software.
@@ -1208,16 +1279,22 @@
     
     <chapter id="troubleshooting">
         <title>Troubleshooting</title>
-        <para>
-            If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact me</ulink> so I can look into the issue.
-            I take bugs and defects very seriously and the sooner I know about them the sooner I can fix them.
-        </para>
-        <para>
-            Is the software missing a feature, or do you have an idea for something that should be included in the software?
-            You should <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know.
-            I want this software to make creating charts easier for the users and the best way to do that is to have the users give me feedback about what is
-            and isn't working for them.
-        </para>
+        <section>
+            <title>Bugs</title>
+            <para>
+                If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact me</ulink> so I can look into the issue.
+                I take bugs and defects very seriously and the sooner I know about them the sooner I can fix them.
+            </para>
+        </section>
+        <section>
+            <title>Features</title>
+            <para>
+                Is the software missing a feature? Do you have an idea that should be included in the software?
+                You should <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know.
+                I want this software to make creating charts easy for the users and the best way to do that
+                is to have the users give me feedback about what is and isn't working for them.
+            </para>
+        </section>
     </chapter>
 
 
