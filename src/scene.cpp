@@ -1858,16 +1858,23 @@ void Scene::createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize
 
 void Scene::setCellPosition(int row, int column, Cell* c, int columns)
 {
+
     double widthInDegrees = 360.0 / columns;
 
     double radius = defaultSize().height() * (row + 1) + (defaultSize().height() * 0.5);
 
     double degrees = widthInDegrees * column;
-    QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
 
-    //qreal delta = defaultSize().width() * 0.5;
-    c->setPos(finish.x() /*- delta*/, finish.y());
+    QPointF pivotPt = QPointF(c->boundingRect().width()/2, c->boundingRect().height());
+    c->setTransformOriginPoint(pivotPt);
     c->setRotation(degrees + 90);
+
+    QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
+    finish.rx() -= c->sceneBoundingRect().width()/2;
+    finish.ry() -= c->sceneBoundingRect().height()/2;
+
+    c->setPos(finish.x(), finish.y());
+
 }
 
 QPointF Scene::calcPoint(double radius, double angleInDegrees, QPointF origin)
