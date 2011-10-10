@@ -1446,12 +1446,13 @@ void Scene::mirror(int direction)
                 undoStack()->push(addCellCmd);
                 Cell* copy = c->copy(addCellCmd->cell());
 
-                qreal diff = (rect.top() - item->pos().y()) - item->boundingRect().height();
-                copy->setPos(item->pos().x(), rect.top() - diff);
-                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
+                qreal diff = (rect.top() - c->pos().y()) - c->boundingRect().height();
+                copy->setPos(c->pos().x(), rect.top() + diff - copy->boundingRect().height());
 
+                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
                 qreal newAngle = 360 - copy->rotation() + 180;
                 qNormalizeAngle(newAngle);
+                copy->setTransformOriginPoint(copy->boundingRect().width()/2, copy->boundingRect().height());
                 copy->setRotation(newAngle);
                 copy->setSelected(true);
             }
@@ -1468,12 +1469,14 @@ void Scene::mirror(int direction)
                 undoStack()->push(addCellCmd);
                 Cell* copy = c->copy(addCellCmd->cell());
                 
-                qreal diff = rect.bottom() - item->pos().y();
-                copy->setPos(item->pos().x(), rect.bottom() - diff);
+                qreal diff = (rect.bottom() - c->pos().y()) - c->boundingRect().height();
+                copy->setPos(c->pos().x(), rect.bottom() + diff - copy->boundingRect().height());
+
                 undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
 
                 qreal newAngle = 360 - copy->rotation() + 180;
                 qNormalizeAngle(newAngle);
+                copy->setTransformOriginPoint(copy->boundingRect().width()/2, copy->boundingRect().height());
                 copy->setRotation(newAngle);
                 copy->setSelected(true);
             }
@@ -1684,23 +1687,14 @@ QRectF Scene::selectedItemsBoundingRect(QList<QGraphicsItem*> items)
     qreal bottom = sceneRect().top();
 
     foreach(QGraphicsItem* i, items) {
-        qreal tempX, tempY;
-        if(i->type() != Cell::Type) {
-            tempX = i->sceneBoundingRect().left();
-            tempY = i->sceneBoundingRect().top();
-        } else {
-            tempX = i->pos().x();
-            tempY = i->pos().y();
-        }
-
-        if(tempX < left) {
-            left = tempX;
+        if(i->sceneBoundingRect().left() < left) {
+            left = i->sceneBoundingRect().left();
         }
         if(i->sceneBoundingRect().right() > right) {
             right = i->sceneBoundingRect().right();
         }
-        if(tempY < top) {
-            top = tempY;
+        if(i->sceneBoundingRect().top() < top) {
+            top = i->sceneBoundingRect().top();
         }
         if(i->sceneBoundingRect().bottom() > bottom) {
             bottom = i->sceneBoundingRect().bottom();
