@@ -1383,10 +1383,6 @@ void Scene::mirror(int direction)
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     QRectF rect = selectedItemsBoundingRect(selectedItems());
-
-    QGraphicsRectItem* r = addRect(rect);
-    r->setZValue(-1000);
-    
     QList<QGraphicsItem*> list = selectedItems();
 
     clearSelection();
