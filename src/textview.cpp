@@ -195,6 +195,11 @@ QString TextView::copyInstructions()
         rowText << generateTextRow(r, true, true);
     }
 
+    QMap<QString, QStringList> data;
+    QString prefix = ".sws_rows_";
+
+    data = generateRepeatRows(rowText, prefix);
+    qDebug() << data;
     for(int i = 0; i < rowText.count(); ++i) {
         QString row = rowText[i];
         //don't match rows that are already repeats.
@@ -217,4 +222,45 @@ QString TextView::copyInstructions()
     
     return text;
 
+}
+
+QMap< QString, QStringList > TextView::generateRepeatRows(QStringList rows, QString prefix)
+{
+    QMap<QString, QStringList> data;
+    QStringList newRows;
+    int count = rows.count();
+
+    for(int i = 0; i < count; ++i) {
+        QString value = rows.value(i);
+        for(int j = i + 1; j < count; ++j) {
+            if(rows.value(i) == rows.value(j)) {
+                int diff = j - i;
+                int diffSts = false;
+                for(int l = 0; l <= diff; ++l) {
+                    if(rows.value(i + l) != rows.value(i))
+                        diffSts = true;
+                }
+                if(!diffSts)
+                    continue;
+
+                int count = matchCount(rows, i, diff);
+qDebug() << count;
+                if(count > 1) {
+                    QStringList sub;
+                    for(int k = 0; k < diff; ++k) {
+                        sub.append(rows.value(k));
+                        newRows.append(prefix + QString::number(i));
+                    }
+                    data.insert(prefix + QString::number(i), sub);
+                    j += (diff * count);
+                    i += (diff * count);
+                }
+            }
+        }
+        if(i < count)
+            newRows.append(value);
+    }
+
+    data.insert("rows", newRows);
+    return data;
 }

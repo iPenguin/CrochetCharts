@@ -36,11 +36,13 @@ private:
     QString cleanToken(QString token);
 
     QMap<QString, QStringList> generateRepeats(QStringList stitches, QString prefix);
+    QMap< QString, QStringList > generateRepeatRows(QStringList stitches, QString prefix);
 
     /**
      * Take a list of stitches and convert them into a crochet sentence.
      */
     QString generateText(QStringList row, bool useRepeats = false);
+    
     int matchCount(QStringList stitches, int startPos, int length);
 
 private:
