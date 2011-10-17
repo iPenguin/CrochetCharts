@@ -1528,7 +1528,8 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(item);
                 stream << c->type() << c->name() << c->color()
-                    << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos();
+                    << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos()
+                    << c->transform();
                 break;
             }
             case Indicator::Type: {
@@ -1585,8 +1586,9 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             qreal angle;
             QPointF scale;
             QPointF pos, transPoint;
+            QTransform trans;
 
-            stream >> name >> color >> angle >> scale >> transPoint >> pos;
+            stream >> name >> color >> angle >> scale >> transPoint >> pos >> trans;
 
             AddCell* addCmd = new AddCell(this, pos);
             undoStack()->push(addCmd);
@@ -1597,7 +1599,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 
             c->setTransformOriginPoint(transPoint);
             c->setRotation(angle);
-            c->setScale(scale.x(), scale.y());
+            c->setTransform(trans);
 
             c->setSelected(false);
             group->append(c);
