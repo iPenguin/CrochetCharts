@@ -206,6 +206,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
 
             stream->writeStartElement("transformation");
             QTransform trans = c->transform();
+     
             stream->writeAttribute("m11", QString::number(trans.m11()));
             stream->writeAttribute("m12", QString::number(trans.m12()));
             stream->writeAttribute("m13", QString::number(trans.m13()));

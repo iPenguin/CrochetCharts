@@ -105,8 +105,6 @@ void SaveThread::run()
     c->setColor(QColor(color));
     c->setTransformOriginPoint(pivotPoint);
     c->setRotation(angle);
-
-    c->setScale(scale.x(), scale.y());
     
     if(group != -1)
         tab->scene()->mGroups[group]->addToGroup(c);
