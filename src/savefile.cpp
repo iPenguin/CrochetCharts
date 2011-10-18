@@ -134,9 +134,10 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
         bool showCenter = tab->scene()->showChartCenter();
         if(showCenter) {
             stream->writeStartElement("chartCenter");
-            stream->writeAttribute("x", QString::number(tab->scene()->mCenterSymbol->pos().x()));
-            stream->writeAttribute("y", QString::number(tab->scene()->mCenterSymbol->pos().y()));
+            stream->writeAttribute("x", QString::number(tab->scene()->mCenterSymbol->scenePos().x()));
+            stream->writeAttribute("y", QString::number(tab->scene()->mCenterSymbol->scenePos().y()));
             stream->writeEndElement(); //end chart center
+            
         }
 
         stream->writeStartElement("rowSpacing");
@@ -389,6 +390,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         } else if(tag == "chartCenter") {
             qreal x = stream->attributes().value("x").toString().toDouble();
             qreal y = stream->attributes().value("y").toString().toDouble();
+
             stream->readElementText();
             tab->blockSignals(true);
             tab->setShowChartCenter(true);
