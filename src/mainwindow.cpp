@@ -156,7 +156,7 @@ void MainWindow::setupNewTabDialog()
 
 void MainWindow::newChartUpdateStyle(QString style)
 {
-    qDebug() << style ;
+
     if(style == tr("Blank")) {
         ui->rows->setEnabled(false);
         ui->stitches->setEnabled(false);

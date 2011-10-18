@@ -199,7 +199,7 @@ QString TextView::copyInstructions()
     QString prefix = ".sws_rows_";
 
     data = generateRepeatRows(rowText, prefix);
-    qDebug() << data;
+    
     for(int i = 0; i < rowText.count(); ++i) {
         QString row = rowText[i];
         //don't match rows that are already repeats.
@@ -244,7 +244,7 @@ QMap< QString, QStringList > TextView::generateRepeatRows(QStringList rows, QStr
                     continue;
 
                 int count = matchCount(rows, i, diff);
-qDebug() << count;
+                
                 if(count > 1) {
                     QStringList sub;
                     for(int k = 0; k < diff; ++k) {

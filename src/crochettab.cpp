@@ -40,15 +40,9 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     
     mView = new ChartView(top);
     mScene = new Scene(mView);
-    
-    if(style == Scene::Blank) {  
-        mScene->setSceneRect(0,0, 5000,5000);
-        centerOn = QPoint(2500, 2500);
-    } else if(style == Scene::Rounds) {
-        mScene->setSceneRect(-2500, -2500, 5000, 5000);
-    } else {
-        mScene->setSceneRect(-100, -100, 5000, 5000);
-    }
+
+    mScene->setSceneRect(-2500,-2500, 5000,5000);
+    centerOn = QPoint(0, 0);
 
     mTextView = new TextView(this, mScene);
 
