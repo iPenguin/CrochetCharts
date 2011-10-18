@@ -97,7 +97,7 @@ SetItemRotation::SetItemRotation(Scene* s, QList<QGraphicsItem*> itms, qreal deg
     newAngle = degrees;
 
     if(scene->hasChartCenter()) {
-        pivotPoint = scene->chartCenter()->boundingRect().center();
+        pivotPoint = scene->chartCenter()->sceneBoundingRect().center();
     } else {
         pivotPoint = scene->selectedItemsBoundingRect(items).bottomLeft();
     }
