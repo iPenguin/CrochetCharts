@@ -54,6 +54,8 @@ protected slots:
 
     void tabChanged(int newTab);
     
+    void newChartUpdateStyle(QString style);
+    
 //menu functions/slots:
 private slots:
     void menuFileAboutToShow();

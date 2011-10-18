@@ -42,54 +42,6 @@
          <property name="margin">
           <number>0</number>
          </property>
-         <item row="0" column="2">
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Rows:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="buddy">
-            <cstring>rows</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QSpinBox" name="rows">
-           <property name="minimumSize">
-            <size>
-             <width>75</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="minimum">
-            <number>1</number>
-           </property>
-           <property name="maximum">
-            <number>1000000000</number>
-           </property>
-           <property name="value">
-            <number>5</number>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Default Stitch:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="buddy">
-            <cstring>defaultStitch</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="5">
-          <widget class="QComboBox" name="defaultStitch"/>
-         </item>
          <item row="1" column="2">
           <widget class="QLabel" name="label_2">
            <property name="text">
@@ -128,36 +80,6 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="4">
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Chart Title:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-           <property name="buddy">
-            <cstring>chartTitle</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="5">
-          <widget class="QLineEdit" name="chartTitle">
-           <property name="text">
-            <string>Chart</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="5">
-          <widget class="QDialogButtonBox" name="newDocBttnBox">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="standardButtons">
-            <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label_6">
            <property name="text">
@@ -190,7 +112,7 @@
            </item>
           </widget>
          </item>
-         <item row="1" column="0">
+         <item row="2" column="0">
           <widget class="QLabel" name="label_5">
            <property name="text">
             <string>Row Spacing:</string>
@@ -203,7 +125,7 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <widget class="QComboBox" name="rowSpacing">
            <property name="editable">
             <bool>false</bool>
@@ -241,6 +163,84 @@
              <string>6 Chains</string>
             </property>
            </item>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Rows:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>rows</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QSpinBox" name="rows">
+           <property name="minimumSize">
+            <size>
+             <width>75</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+           <property name="maximum">
+            <number>1000000000</number>
+           </property>
+           <property name="value">
+            <number>5</number>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Default Stitch:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>defaultStitch</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QComboBox" name="defaultStitch"/>
+         </item>
+         <item row="3" column="0" colspan="6">
+          <widget class="QDialogButtonBox" name="newDocBttnBox">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="standardButtons">
+            <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3" colspan="3">
+          <widget class="QLineEdit" name="chartTitle">
+           <property name="text">
+            <string>Chart</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Chart Title:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>chartTitle</cstring>
+           </property>
           </widget>
          </item>
         </layout>
@@ -1081,11 +1081,11 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>chartStyle</tabstop>
-  <tabstop>rowSpacing</tabstop>
   <tabstop>rows</tabstop>
+  <tabstop>rowSpacing</tabstop>
+  <tabstop>chartTitle</tabstop>
   <tabstop>stitches</tabstop>
   <tabstop>defaultStitch</tabstop>
-  <tabstop>chartTitle</tabstop>
   <tabstop>newDocBttnBox</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>patternStitches</tabstop>

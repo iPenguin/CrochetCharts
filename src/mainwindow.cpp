@@ -146,12 +146,28 @@ void MainWindow::setupNewTabDialog()
     ui->defaultStitch->setCurrentIndex(ui->defaultStitch->findText(defSt));
 
     ui->chartStyle->setCurrentIndex(ui->chartStyle->findText(defStyle));
-    
-    //TODO: see if you can make "returnPressed" focus and click the ok button for the spin boxes.
-    connect(ui->chartTitle, SIGNAL(returnPressed()), this, SLOT(newChart()));
+
+    newChartUpdateStyle(defStyle);
+    connect(ui->chartStyle, SIGNAL(currentIndexChanged(QString)), SLOT(newChartUpdateStyle(QString)));
     
     connect(ui->newDocBttnBox, SIGNAL(accepted()), this, SLOT(newChart()));
     connect(ui->newDocBttnBox, SIGNAL(rejected()), ui->newDocument, SLOT(hide()));   
+}
+
+void MainWindow::newChartUpdateStyle(QString style)
+{
+    qDebug() << style ;
+    if(style == tr("Blank")) {
+        ui->rows->setEnabled(false);
+        ui->stitches->setEnabled(false);
+        ui->rowSpacing->setEnabled(false);
+        ui->defaultStitch->setEnabled(false);
+    } else if(style == tr("Rounds") || style == tr("Rows")) {
+        ui->rows->setEnabled(true);
+        ui->stitches->setEnabled(true);
+        ui->rowSpacing->setEnabled(true);
+        ui->defaultStitch->setEnabled(true);
+    }
 }
 
 void MainWindow::setupStitchPalette()
