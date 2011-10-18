@@ -449,8 +449,17 @@ void ExportUi::exportPdf()
 void ExportUi::exportSvg()
 {
     int tabCount = mTabWidget->count();
+
+    CrochetTab* tab = 0;
+
+    for(int i = 0; i < tabCount; ++i) {
+        if(selection == mTabWidget->tabText(i)) {
+            tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+
+        }
+    }
     
-    QRectF rect = ui->view->scene()->sceneRect();
+    QRectF rect = tab->scene()->itemsBoundingRect();
 
     QSvgGenerator gen;
     gen.setFileName(fileName);
@@ -464,12 +473,8 @@ void ExportUi::exportSvg()
     QPainter p;
     p.begin(&gen);
     
-    for(int i = 0; i < tabCount; ++i) {
-        if(selection == mTabWidget->tabText(i)) {
-            CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
-            tab->renderChart(&p, QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height)));
-        }
-    }
+    tab->renderChart(&p, QRectF(QPointF(rect.x(), rect.y()),QSizeF((qreal)width, (qreal)height)));
+    
     p.end();
 
 }
