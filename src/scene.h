@@ -232,6 +232,8 @@ private:
     Cell* mCurCell;
     QPointF mCellStartPos;
     QPointF mLeftButtonDownPos;
+
+    QPainterPath mSelectionPath;
     
     Indicator* mCurIndicator;
     

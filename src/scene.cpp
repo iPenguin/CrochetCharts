@@ -306,10 +306,18 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 {
+    
     if(selectedItems().count() > 0)
         mHasSelection = true;
     
+    if(mHasSelection && e->modifiers() == Qt::ControlModifier)
+        mSelectionPath = selectionArea();
+
     QGraphicsScene::mousePressEvent(e);
+
+    //FIXME: there has to be a better way to keep the current selection.
+    if(mHasSelection && e->modifiers() == Qt::ControlModifier)
+        setSelectionArea(mSelectionPath);
     
     mLeftButtonDownPos = e->buttonDownPos(Qt::LeftButton);
 
@@ -368,8 +376,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     
     if(e->buttons() != Qt::LeftButton)
         return;
-    
-    if(selectedItems().count() <= 0) {
+
+    if(selectedItems().count() <= 0 || e->modifiers() == Qt::ControlModifier) {
         
         ChartView* view = qobject_cast<ChartView*>(parent());
 
@@ -472,8 +480,13 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
         QPolygonF p = view->mapToScene(rect.normalized());
         QPainterPath path;
         path.addPolygon(p);
-        setSelectionArea(path);
 
+        //if user is holding down ctrl add items to existing selection.
+        if(mHasSelection && e->modifiers() == Qt::ControlModifier) {
+            path.addPath(mSelectionPath);
+        }
+
+        setSelectionArea(path);
         mRubberBand->hide();
     }
 
@@ -1956,7 +1969,6 @@ void Scene::updateQuarterLines()
         return;
 
     if(mCenterSymbol && mCenterSymbol->isVisible()) {
-        qDebug() << "vis" << mCenterSymbol->pos();
 
         QLineF line = QLineF(mCenterSymbol->sceneBoundingRect().center().x(), sceneRect().top(),
                             mCenterSymbol->sceneBoundingRect().center().x(), sceneRect().bottom());
