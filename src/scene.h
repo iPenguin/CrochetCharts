@@ -332,6 +332,8 @@ protected slots:
 private:
     QGraphicsLineItem* mVerticalLine;
     QGraphicsLineItem* mHorizontalLine;
+    QGraphicsLineItem* mAngleLine1;
+    QGraphicsLineItem* mAngleLine2;
     bool mShowQuarterLines;
 
 };
