@@ -352,8 +352,8 @@ void ExportUi::setSelection(QString selection)
         ui->chartOptions->hide();
         ui->view->centerOn(tab->scene()->sceneRect().center());
     }
-
-    updateChartSizeRatio();
+    
+    updateChartSizeRatio(selection);
 }
 
 void ExportUi::exportLegendPdf()
@@ -498,10 +498,29 @@ void ExportUi::exportImg()
     img.save(fileName);
 }
 
-void ExportUi::updateChartSizeRatio()
+void ExportUi::updateChartSizeRatio(QString selection)
 {
-    ui->width->setValue(ui->view->sceneRect().width());
-    ui->height->setValue(ui->view->sceneRect().height());
+
+    if(selection == tr("Stitch Legend") || selection == tr("Color Legend")) {
+        ui->width->setValue(ui->view->sceneRect().width());
+        ui->height->setValue(ui->view->sceneRect().height());
+    } else {
+
+        CrochetTab* tab = 0;
+        for(int i = 0; i < mTabWidget->count(); ++i) {
+            if(selection == mTabWidget->tabText(i)) {
+                tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+                break;
+            }
+        }
+        if(!tab)
+            return;
+        
+        QRectF rect = tab->scene()->itemsBoundingRect();
+
+        ui->height->setValue(rect.height());
+        ui->width->setValue(rect.width());
+    }
 }
 
 qreal ExportUi::sceneRatio()

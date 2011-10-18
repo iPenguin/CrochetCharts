@@ -134,8 +134,8 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
         bool showCenter = tab->scene()->showChartCenter();
         if(showCenter) {
             stream->writeStartElement("chartCenter");
-            stream->writeAttribute("x", QString::number(tab->scene()->mCenterSymbol->x()));
-            stream->writeAttribute("y", QString::number(tab->scene()->mCenterSymbol->y()));
+            stream->writeAttribute("x", QString::number(tab->scene()->mCenterSymbol->pos().x()));
+            stream->writeAttribute("y", QString::number(tab->scene()->mCenterSymbol->pos().y()));
             stream->writeEndElement(); //end chart center
         }
 

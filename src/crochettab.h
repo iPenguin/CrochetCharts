@@ -70,6 +70,9 @@ public:
 
     bool hasChartCenter();
     void setChartCenter(bool state);
+
+    void setQuarterLines(bool state);
+    bool hasQuarterLines();
     
 signals:
     void chartStitchChanged();

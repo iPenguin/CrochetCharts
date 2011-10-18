@@ -61,7 +61,7 @@ private:
     void exportSvg();
     void exportImg();
     
-    void updateChartSizeRatio();
+    void updateChartSizeRatio(QString selection);
     qreal sceneRatio();
 
     Ui::ExportDialog* ui;

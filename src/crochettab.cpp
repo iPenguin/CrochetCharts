@@ -125,7 +125,7 @@ void CrochetTab::renderChart(QPainter* painter, QRectF rect)
 {
     QRectF sceneRect = mScene->sceneRect();
 
-    mScene->setSceneRectToItems();
+    mScene->setSceneRect(mScene->itemsBoundingRect());
     if(!rect.isValid())
         mScene->render(painter);
     else
@@ -358,3 +358,14 @@ void CrochetTab::setChartCenter(bool state)
 {
     mScene->setShowChartCenter(state);
 }
+
+bool CrochetTab::hasQuarterLines()
+{
+    return mScene->showQuarterLines();
+}
+
+void CrochetTab::setQuarterLines(bool state)
+{
+    mScene->setShowQuarterLines(state);
+}
+

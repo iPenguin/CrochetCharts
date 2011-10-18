@@ -63,10 +63,17 @@ Scene::Scene(QObject* parent) :
     mDefaultStitch("ch"),
     mRowLine(0),
     mCenterSymbol(0),
-    mShowChartCenter(false)
+    mShowChartCenter(false),
+    mVerticalLine(0),
+    mHorizontalLine(0),
+    mShowQuarterLines(false)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
     initDemoBackground();
+
+    mVerticalLine = new QGraphicsLineItem();
+    mHorizontalLine = new QGraphicsLineItem();
+
 }
 
 Scene::~Scene()
@@ -199,7 +206,7 @@ void Scene::addItem(QGraphicsItem* item)
             break;
         }
         default:
-            qWarning() << "addItem - unknown type: " << item->type();
+            qWarning() << "Adding unknown type: " << item->type();
             QGraphicsScene::addItem(item);
             break;
     }
@@ -230,7 +237,7 @@ void Scene::removeItem(QGraphicsItem* item)
             break;
         }
         default:
-            qWarning() << "removeItem - unknown type:" << item->type();
+            qWarning() << "Removing unknown type:" << item->type();
             QGraphicsScene::removeItem(item);
             break;
     }
@@ -424,6 +431,9 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
         } else if (mMoving) {
 
             QGraphicsScene::mouseMoveEvent(e);
+            if(selectedItems().contains(mCenterSymbol)) {
+                updateQuarterLines();
+            }
         }
     }
 }
@@ -1776,11 +1786,13 @@ void Scene::editorGotFocus(Indicator* item)
     
 }
 
-void Scene::setSceneRectToItems()
+QRectF Scene::itemsBoundingRect()
 {
-
-    QRectF rect = selectedItemsBoundingRect(items());
-    setSceneRect(rect);
+    QList<QGraphicsItem*> itemList = items();
+    itemList.removeOne(mVerticalLine);
+    itemList.removeOne(mHorizontalLine);
+    QRectF rect = selectedItemsBoundingRect(itemList);
+    return rect;
     
 }
 
@@ -1819,13 +1831,17 @@ void Scene::setShowChartCenter(bool state)
             mCenterSymbol = addEllipse(rect.center().x()-radius, rect.center().y()-radius, radius * 2, radius * 2, pen);
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsMovable);
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsSelectable);
+
+            updateQuarterLines();
         } else {
 
             addItem(mCenterSymbol);
+            updateQuarterLines();
         }
     } else {
 
         removeItem(mCenterSymbol);
+        updateQuarterLines();
     }
 
 }
@@ -1914,5 +1930,47 @@ void Scene::highlightIndicators(bool state)
             i->setTextInteractionFlags(Qt::NoTextInteraction);
         i->highlight = state;
         i->update();
+    }
+}
+
+void Scene::setShowQuarterLines(bool state)
+{
+
+    if(mShowQuarterLines != state) {
+        mShowQuarterLines = state;
+        if(state) {
+            addItem(mVerticalLine);
+            addItem(mHorizontalLine);
+        } else {
+            removeItem(mVerticalLine);
+            removeItem(mHorizontalLine);
+        }
+    }
+    
+    updateQuarterLines();
+}
+
+void Scene::updateQuarterLines()
+{
+    if(!showQuarterLines())
+        return;
+
+    if(mCenterSymbol && mCenterSymbol->isVisible()) {
+        qDebug() << "vis" << mCenterSymbol->pos();
+
+        QLineF line = QLineF(mCenterSymbol->sceneBoundingRect().center().x(), sceneRect().top(),
+                            mCenterSymbol->sceneBoundingRect().center().x(), sceneRect().bottom());
+        mVerticalLine->setLine(line);
+
+        line = QLineF(sceneRect().left(), mCenterSymbol->sceneBoundingRect().center().y(),
+                    sceneRect().right(), mCenterSymbol->sceneBoundingRect().center().y());
+        mHorizontalLine->setLine(line);
+
+    } else {
+
+        mVerticalLine->setLine(QLineF(sceneRect().center().x(), sceneRect().top(),
+                                      sceneRect().center().x(), sceneRect().bottom()));
+        mHorizontalLine->setLine(QLineF(sceneRect().left(), sceneRect().center().y(),
+                                        sceneRect().right(), sceneRect().center().y()));
     }
 }

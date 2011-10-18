@@ -189,9 +189,9 @@ public:
     void rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint);
 
     /**
-     * This function sets the sceneRect to the outside edges of all objects on the scene.
+     * This function overrides the itemsBoundingRect().
      */
-    void setSceneRectToItems();
+    QRectF itemsBoundingRect();
     
 protected:
     void colorModeMouseMove(QGraphicsSceneMouseEvent* e);
@@ -314,13 +314,24 @@ public slots:
     void setShowChartCenter(bool state);
 
 protected:
-    void setCellPosition(int row, int column, Cell* c, int columns);
-
+    void setCellPosition(int row, int column, Cell* c, int columns);  
+    
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
     QGraphicsItem* mCenterSymbol;
     bool mShowChartCenter;
+
+public:
+    bool showQuarterLines() { return mShowQuarterLines; }
+    void setShowQuarterLines(bool state);
+protected slots:
+    void updateQuarterLines();
+private:
+    QGraphicsLineItem* mVerticalLine;
+    QGraphicsLineItem* mHorizontalLine;
+    bool mShowQuarterLines;
+
 };
 
 #endif //SCENE_H
