@@ -22,5 +22,7 @@
         <file>dc3cluster.svg</file>
         <file>dc5popcorn.svg</file>
         <file>hdc3cluster.svg</file>
+        <file>worked_in_back_loop.svg</file>
+        <file>worked_in_front_loop.svg</file>
     </qresource>
 </RCC>

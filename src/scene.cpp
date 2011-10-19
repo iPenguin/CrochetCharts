@@ -66,6 +66,8 @@ Scene::Scene(QObject* parent) :
     mShowChartCenter(false),
     mVerticalLine(0),
     mHorizontalLine(0),
+    mAngleLine1(0),
+    mAngleLine2(0),
     mShowQuarterLines(false)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
@@ -73,6 +75,8 @@ Scene::Scene(QObject* parent) :
 
     mVerticalLine = new QGraphicsLineItem();
     mHorizontalLine = new QGraphicsLineItem();
+    mAngleLine1 = new QGraphicsLineItem();
+    mAngleLine2 = new QGraphicsLineItem();
 
 }
 
@@ -1804,6 +1808,8 @@ QRectF Scene::itemsBoundingRect()
     QList<QGraphicsItem*> itemList = items();
     itemList.removeOne(mVerticalLine);
     itemList.removeOne(mHorizontalLine);
+    itemList.removeOne(mAngleLine1);
+    itemList.removeOne(mAngleLine2);
     QRectF rect = selectedItemsBoundingRect(itemList);
     return rect;
     
@@ -1954,9 +1960,13 @@ void Scene::setShowQuarterLines(bool state)
         if(state) {
             addItem(mVerticalLine);
             addItem(mHorizontalLine);
+            addItem(mAngleLine1);
+            addItem(mAngleLine2);
         } else {
             removeItem(mVerticalLine);
             removeItem(mHorizontalLine);
+            removeItem(mAngleLine1);
+            removeItem(mAngleLine2);
         }
     }
     
@@ -1978,11 +1988,25 @@ void Scene::updateQuarterLines()
                     sceneRect().right(), mCenterSymbol->sceneBoundingRect().center().y());
         mHorizontalLine->setLine(line);
 
+        QPointF diff = sceneRect().center() - mCenterSymbol->sceneBoundingRect().center();
+        line = QLineF(sceneRect().left() - diff.x(), sceneRect().top() - diff.y(),
+                    sceneRect().right() - diff.x(), sceneRect().bottom() - diff.y());
+        mAngleLine1->setLine(line);
+        
+        line = QLineF(sceneRect().right() - diff.x(), sceneRect().top() - diff.y(),
+                    sceneRect().left() - diff.x(), sceneRect().bottom() - diff.y());
+        mAngleLine2->setLine(line);
+        
     } else {
 
         mVerticalLine->setLine(QLineF(sceneRect().center().x(), sceneRect().top(),
-                                      sceneRect().center().x(), sceneRect().bottom()));
+                                    sceneRect().center().x(), sceneRect().bottom()));
         mHorizontalLine->setLine(QLineF(sceneRect().left(), sceneRect().center().y(),
-                                        sceneRect().right(), sceneRect().center().y()));
+                                    sceneRect().right(), sceneRect().center().y()));
+
+        mAngleLine1->setLine(QLineF(sceneRect().left(), sceneRect().top(),
+                                    sceneRect().right(), sceneRect().bottom()));
+        mAngleLine2->setLine(QLineF(sceneRect().right(), sceneRect().top(),
+                                    sceneRect().left(), sceneRect().bottom()));
     }
 }
