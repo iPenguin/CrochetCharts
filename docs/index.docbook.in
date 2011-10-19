@@ -51,7 +51,10 @@
 
     <preface id="introduction" version="5.0" xmlns="http://docbook.org/ns/docbook">
         <title>Introduction</title>
-        <para>This is the user guide for <application>@SWS_PROJECT_NAME@</application> by @PROJECT_VENDOR@. If you have any questions that are not answered in this document please <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know so that I can answer your questions and improve this guide.</para>
+        <para>This is the user guide for <application>@SWS_PROJECT_NAME@</application> by @PROJECT_VENDOR@.
+        If you have any questions that are not answered in this document please
+        <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know so that I can answer your
+        questions and improve this guide.</para>
     </preface>
 
 
@@ -68,8 +71,11 @@
         <section>
             <title>Windows</title>
             <para>@SWS_PROJECT_NAME@ will run on Microsoft Windows XP, Windows Vista, and Windows 7.
-            To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
-            <para>To install double click the installer and follow the instructions in the Installation Wizard.</para>
+                To install the software you can download the setup file from
+                <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.
+            </para>
+            <para>To install double click the installer and follow the instructions in the Installation Wizard.
+            </para>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -113,8 +119,13 @@
         </section>
         <section>
             <title>Mac</title>
-            <para>@SWS_PROJECT_NAME@ will run on Mac OS X version 10.5-10.7 (Leopard, Snow Leopard, Lion). To install the software you can download the setup file from <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.</para>
-            <para>Once the file has been downloaded you can install the software by dragging and dropping @SWS_PROJECT_NAME@ into the Applications folder.</para>
+            <para>@SWS_PROJECT_NAME@ will run on Mac OS X version 10.5-10.7 (Leopard, Snow Leopard, Lion).
+                To install the software you can download the setup file from
+                <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.
+            </para>
+            <para>Once the file has been downloaded you can install the software by dragging and dropping
+                @SWS_PROJECT_NAME@ into the Applications folder.
+            </para>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -126,13 +137,17 @@
         </section>
         <section>
             <title>Linux</title>
-            <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer. If you're having any problems please <ulink url="@ORG_CONTACT@">contact me</ulink></para>
-
+            <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer.
+                If you're having any problems please <ulink url="@ORG_CONTACT@">contact me</ulink>
+            </para>
         </section>
+        
         <section>
             <title>Licensing Wizard</title>
-            <para>The license wizard allows the user to either register or evaluate this software. To use the software you must agree to the End User License Agreement.
-                To evaluate the software you will need to supply your name, and email address. When you register the software you will need to supply your name, email address and serial number.
+            <para>The license wizard allows the user to either register or evaluate this software.
+                To use the software you must agree to the End User License Agreement.
+                To evaluate the software you will need to supply your name, and email address.
+                When you register the software you will need to supply your name, email address and serial number.
                 The serial number should have arrived in an email called "Stitch Works Software - License Information for Order#XXXX".
             </para>
             <screenshot>
@@ -172,12 +187,14 @@
 
     <chapter id="quick-guide">
         <title>Quick Guide to Making a Chart</title>
-        <para>This chapter will give a general overview for creating a new chart.
-            It will reference all the other chapters for greater details on specific features.
-            This is just a general guide and is not the only way to create charts with @SWS_PROJECT_NAME@.
-            The software is flexable enough to allow for multiple workflows and I would suggest you design
-            however you feel most comfortable. Therefore consider this chapter as a starting point and not an
-            ending point.
+        <para>This chapter will give a very quick overview for creating a new chart.
+            For more details about how to use the features referred to in this quick guide follow the
+            links presented.
+        </para>
+        <para>
+            This is only a general guide and is not the only way to create charts with @SWS_PROJECT_NAME@.
+            However the work flow presented here is likely the easiest and fastest way to create a chart.
+            Hopefully you will consider this chapter as a starting point and not an ending point.
         </para>
         <screenshot>
             <mediaobject>
@@ -191,38 +208,40 @@
             (1) Create a <link linkend="creating-charts">new <emphasis>Blank</emphasis> chart</link>.
         </para>
         <para>
-            (2) <link linkend="charts-show-chart-center">Add the chart center symbol</link>, in the menu <menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Chart Center</guimenuitem></menuchoice>
+            (2) <link linkend="charts-show-chart-center">Add the chart center symbol</link>,
+            in the menu <menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Chart Center</guimenuitem></menuchoice>
         </para>
         <para>
-            (3) Create the first row of stitches
+            (3) <link linkend="charts-show-quarter-lines">Show the Wedge Lines</link> on the chart using
+                <menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Wedge Lines</guimenuitem></menuchoice>
         </para>
         <para>
-            (4) Create the top wedge with the chain stitches on the right.
+            (4) Create the top wedge of the chart.
         </para>
         <para>
-            (5) Use align and distribute to space out the stitches.
-            I started with the center column distribute vertically. Create the first row, copy/paste and add stitches for each row.
+            (5) <link linkend="tools-rotation-edit">Rotate</link> and <link linkend="tools-scale-edit">scale</link>
+                individual stitches as need, copy, paste and <link linkend="tools-mirror-rotate">mirror</link>.
+                Use <link linkend="tools-align-distribute">align and distribute</link> to help with spacing.
+                When scaling if you <keycap>Ctrl</keycap>-click (<keycap>Apple</keycap>-click) on the
+                stitch it will persevere the ratio of the stitch.
         </para>
         <para>
-            (6) Scale and rotate the stitches as needed to fit the space you want.
-            When scaling if you ctrl-click (apple-click) on the stitch it will persevere the ratio of the stitch.
+            (6) Select the wedge of stitches you have just created, copy, paste and <link linkend="tools-mirror-rotate">rotate 90</link>
+                This will give you the right side of the pattern.
+                Paste and rotate 180 gives you the bottom, and paste and rotate 270 gives you the left.
         </para>
         <para>
-            (7) Select the stitches from row 2 to 5, copy, paste and rotate 90 (gives you the right side)
+            (7) Add <link linkend="tools-indicator-edit">indicators</link> for rows, and/or other
+                features you wish to highlight on the chart. Make any other minor adjustments as desired.
         </para>
         <para>
-            (8) Paste rotate 180 gives you the bottom, paste rotate 270 gives you the left.
-        </para>
-        <para>
-            (9) Add indicators for rows, and/or other features.
-        </para>
-        <para>
-            (10) Minor adjustments as desired.
+            (8) <link linkend="tools-export">Export the chart and legends</link> to your desired file formats for use in
+            documents, or for publication.
         </para>
     </chapter>
 
     <chapter id="creating-charts">
-        <title>Add Charts to a Document</title>
+        <title>Adding Charts to a Document</title>
         <para>When you first open @SWS_PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
             This dialog gives you quick access to create a new document with a single chart.
             A document can contain any number of charts.
@@ -263,7 +282,8 @@
                 <caption>The main window showing the New Chart Options dialog</caption>
             </mediaobject>
         </screenshot>
-        <para>While editing the chart you can change the stitches, colors, positions, rotation, and scale of the stitches, you can add new stitches and rows.
+        <para>While editing the chart you can change the stitches, colors, positions, rotation,
+            and scale of the stitches, you can add new stitches and rows.
             You can also add an unlimited number of movable indicators to the chart that can contain text.
             You can used the indicators as row number indicators, or to draw attention to other parts of the chart.
         </para>
@@ -526,9 +546,12 @@
                 <title>Show Wedge Lines</title>
                 <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Wedge Lines</guimenuitem></menuchoice>
                 </para>
-                <para>This option show a vertical and horizontal line and 2 45&#0176; lines that go through the center point of the chart, or if you have the
-                    Center symbol visible they cross at the center of the symbol. These lines are very useful when creating a round chart
-                    where you want to start by creating a wedge shape design.
+                <para>This option show a vertical and horizontal line and two 45&#0176; lines that go
+                    through the center point of the chart, or if you have the Center symbol visible
+                    they cross at the center of the symbol. These lines are very useful when creating
+                    a round chart where you want to start by creating a wedge shape design. If you
+                    keep your stitches with in the lines when you go to rotate the selection around
+                    the center point you will have a consistent looking repeat.
                 </para>
             </section>
         </section>
@@ -538,7 +561,9 @@
 
     <chapter id="exporting-files">
         <title>Exporting Files</title>
-        <para>All pieces of your work can be exported to formats that are commonly used on websites, in magazines, and in publication.</para>
+        <para>All pieces of your work can be exported to formats that are commonly used on websites,
+            in magazines, and in publication.
+        </para>
         <para>You can export to any of the following file formats: PDF, SVG, JPEG, PNG, TIFF, and BMP.
             The first two formats are vectored graphics which means they will not pixelate when you zoom in or blow up the image.
             For this reason they are commonly used in magazines and publications.
