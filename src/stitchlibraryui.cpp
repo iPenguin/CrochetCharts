@@ -305,9 +305,40 @@ void StitchLibraryUi::printStitchSet()
     if(dialog.exec() != QDialog::Accepted)
         return;
     
+    const int rows = ui->listView->model()->rowCount();
+    const int cols = ui->listView->model()->columnCount();
+
+    // calculate the total width/height table would need without scaling
+    double totalWidth = 0.0;
+    for (int c = 0; c < cols; ++c) {
+        totalWidth += ui->listView->columnWidth(c);
+    }
+    
+    double totalHeight = 0.0;
+    for (int r = 0; r < rows; ++r) {
+        totalHeight += ui->listView->rowHeight(r);
+    }
+    
     QPainter p;
     p.begin(&printer);
-    ui->listView->render(&p);
+
+    // calculate proper scale factors
+    const double scaleX = printer.pageRect().width() / totalWidth;
+    const double scaleY = printer.pageRect().height() / totalHeight;
+    double scale = qMin(scaleX, scaleY);
+    p.scale(scale, scale);
+
+    // paint cells
+    for (int r = 0; r < rows; ++r) {
+        for (int c = 0; c < cols; ++c) {
+            QModelIndex idx = ui->listView->model()->index(r, c);
+            QStyleOptionViewItem option;// = ui->listView->viewOptions();
+            option.palette.setColor(QPalette::Text, QColor(Qt::black));
+            option.rect = ui->listView->visualRect(idx);
+            ui->listView->itemDelegate()->paint(&p, option, idx);
+        }
+    }
+    
     p.end();
 }
 
