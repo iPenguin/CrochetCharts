@@ -182,4 +182,19 @@
        <ws>dc5popcorn</ws>
    </stitch>
 
+    <stitch>
+       <name>wibloop</name>
+       <icon>:/stitches/worked_in_back_loop.svg</icon>
+       <description>worked in back loop</description>
+       <category>Advanced</category>
+       <ws>wibloop</ws>
+   </stitch>
+
+    <stitch>
+       <name>wifloop</name>
+       <icon>:/stitches/worked_in_front_loop.svg</icon>
+       <description>worked in front loop</description>
+       <category>Advanced</category>
+       <ws>wifloop</ws>
+   </stitch>
 </stitch_set>
