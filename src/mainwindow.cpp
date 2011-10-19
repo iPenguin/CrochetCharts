@@ -946,27 +946,24 @@ void MainWindow::newChart()
     ui->tabWidget->addTab(tab, name);
     ui->tabWidget->setCurrentWidget(tab);
 
-    if(st != Scene::Blank) {
+    QString ddValue = ui->rowSpacing->currentText();
+    qreal rowHeight = 96;
 
-        QString ddValue = ui->rowSpacing->currentText();
-        qreal rowHeight = 96;
+    if(ddValue == tr("1 Chain"))
+        rowHeight = 32;
+    else if (ddValue == tr("2 Chains"))
+        rowHeight = 64;
+    else if (ddValue == tr("3 Chains"))
+        rowHeight = 96;
+    else if (ddValue == tr("4 Chains"))
+        rowHeight = 128;
+    else if (ddValue == tr("5 Chains"))
+        rowHeight = 160;
+    else if (ddValue == tr("6 Chains"))
+        rowHeight = 182;
 
-        if(ddValue == tr("1 Chain"))
-            rowHeight = 32;
-        else if (ddValue == tr("2 Chains"))
-            rowHeight = 64;
-        else if (ddValue == tr("3 Chains"))
-            rowHeight = 96;
-        else if (ddValue == tr("4 Chains"))
-            rowHeight = 128;
-        else if (ddValue == tr("5 Chains"))
-            rowHeight = 160;
-        else if (ddValue == tr("6 Chains"))
-            rowHeight = 182;
+    tab->createChart(st, rows, cols, defStitch, QSizeF(32, rowHeight));
 
-        tab->createChart(st, rows, cols, defStitch, QSizeF(32, rowHeight));
-    }
-    
     updateMenuItems();
     documentIsModified(true);
 }

@@ -215,6 +215,8 @@ void CrochetTab::createChart(Scene::ChartStyle style, int rows, int cols, QStrin
     } else if(style == Scene::Rounds) {
         mScene->createRoundsChart(rows, cols, defStitch, rowSize);
         ui->showChartCenter->setChecked(mScene->showChartCenter());
+    } else if(style == Scene::Blank) {
+        mScene->createBlankChart();
     }
     
     mRowEditDialog->updateRowList();    

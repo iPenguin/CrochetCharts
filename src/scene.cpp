@@ -71,7 +71,6 @@ Scene::Scene(QObject* parent) :
     mShowQuarterLines(false)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
-    initDemoBackground();
 
     mVerticalLine = new QGraphicsLineItem();
     mHorizontalLine = new QGraphicsLineItem();
@@ -353,6 +352,11 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
             }
             case QGraphicsItemGroup::Type: {
                 mMoving = true;
+                break;
+            }
+            case QGraphicsSimpleTextItem::Type: {
+                //If we've selected the background text pretend we didn't select it.
+                mCurItem = 0;
                 break;
             }
             default:
@@ -1362,7 +1366,14 @@ void Scene::createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSiz
     mDefaultSize = rowSize;
     mDefaultStitch = defStitch;
     arrangeGrid(QSize(rows, cols), QSize(1, 1), rowSize.toSize(), false);
+
+    initDemoBackground();
     
+}
+
+void Scene::createBlankChart()
+{
+    initDemoBackground();
 }
 
 void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelection)

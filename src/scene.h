@@ -98,6 +98,7 @@ public:
     void ungroup();
 
     void createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize);
+    void createBlankChart();
 
     void addItem(QGraphicsItem* item);
     void removeItem(QGraphicsItem* item);
