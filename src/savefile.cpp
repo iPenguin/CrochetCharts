@@ -430,6 +430,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
         }
     }
 
+    tab->scene()->initDemoBackground();
     tab->updateRows();
     int index = mTabWidget->indexOf(tab);
     mTabWidget->setTabText(index, tabName);
