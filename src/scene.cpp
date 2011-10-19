@@ -1834,7 +1834,7 @@ void Scene::setShowChartCenter(bool state)
             QPen pen;
             pen.setWidth(5);
 
-            double radius = (defaultSize().height() * 0.45);
+            double radius = (96 * 0.5);
 
             QRectF rect = QRectF(0,0,0,0);
 
@@ -1888,7 +1888,7 @@ void Scene::setCellPosition(int row, int column, Cell* c, int columns)
 
     double widthInDegrees = 360.0 / columns;
 
-    double radius = defaultSize().height() * (row + 1) + (defaultSize().height() * 0.5);
+    double radius = defaultSize().height() * (row + 1) + (32);
 
     double degrees = widthInDegrees * column;
 
@@ -1897,8 +1897,8 @@ void Scene::setCellPosition(int row, int column, Cell* c, int columns)
     c->setRotation(degrees + 90);
 
     QPointF finish = calcPoint(radius, degrees, QPointF(0,0));
-    finish.rx() -= c->sceneBoundingRect().width()/2;
-    finish.ry() -= c->sceneBoundingRect().height()/2;
+    finish.rx() -= c->boundingRect().width()/2;
+    finish.ry() -= c->boundingRect().height()/2;
 
     c->setPos(finish.x(), finish.y());
 
