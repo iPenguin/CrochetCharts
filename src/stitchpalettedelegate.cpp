@@ -36,7 +36,13 @@ void StitchPaletteDelegate::paint(QPainter* painter, const QStyleOptionViewItem 
     if(index.column() == 0) {
         painter->drawText(rect.left() + pad, rect.top() + option.fontMetrics.height(), s->name());  
     } else if(index.column() == 1) {
-        QPixmap pix = (s->renderPixmap()->scaled(32, 32, Qt::KeepAspectRatio,Qt::SmoothTransformation));
+        qreal size;
+        if(s->width() > 32 || s->height() > 32)
+            size = 32;
+        else
+            size = s->width();
+
+        QPixmap pix = (s->renderPixmap()->scaled(size, size, Qt::KeepAspectRatio,Qt::SmoothTransformation));
         painter->drawPixmap(rect.left() + pad, rect.top() + pad, pix);      
     }
 }
