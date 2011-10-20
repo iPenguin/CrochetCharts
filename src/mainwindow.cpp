@@ -370,6 +370,7 @@ void MainWindow::openRecentFile()
         loadFiles(files);
     }
 
+    setApplicationTitle();
     updateMenuItems();
     QApplication::restoreOverrideCursor();
 }
