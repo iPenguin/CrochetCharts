@@ -79,22 +79,6 @@
     </stitch>
 
     <stitch>
-        <name>lsdc</name>
-        <icon>:/stitches/dc.svg</icon> <!--left_slant_-->
-        <description>left slant double crochet</description>
-        <category>Advanced</category>
-        <ws>lsdc</ws>
-    </stitch>
-
-    <stitch>
-        <name>rsdc</name>
-        <icon>:/stitches/dc.svg</icon> <!--right_slant_-->
-        <description>right slant double crochet</description>
-        <category>Advanced</category>
-        <ws>rsdc</ws>
-    </stitch>
-
-    <stitch>
         <name>FPdc</name>
         <icon>:/stitches/FPdc.svg</icon>
         <description>front post double crochet</description>
