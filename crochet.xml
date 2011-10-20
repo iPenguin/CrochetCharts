@@ -15,7 +15,7 @@
     </stitch>
 
     <stitch>
-        <name>ss</name>
+        <name>sl st</name>
         <icon>:/stitches/slip.svg</icon>
         <description>slip stitch</description>
         <category>Basic</category>
@@ -55,27 +55,27 @@
     </stitch>
 
     <stitch>
-        <name>tc</name>
+        <name>tr</name>
         <icon>:/stitches/treble_crochet.svg</icon>
         <description>treble crochet</description>
         <category>Basic</category>
-        <ws>tc</ws>
+        <ws>tr</ws>
     </stitch>
 
     <stitch>
-        <name>dtc</name>
+        <name>dtr</name>
         <icon>:/stitches/double_treble_crochet.svg</icon>
         <description>double treble crochet</description>
         <category>Basic</category>
-        <ws>dtc</ws>
+        <ws>dtr</ws>
     </stitch>
 
     <stitch>
-        <name>ttc</name>
+        <name>ttr</name>
         <icon>:/stitches/triple_treble_crochet.svg</icon>
         <description>triple treble crochet</description>
         <category>Basic</category>
-        <ws>ttc</ws>
+        <ws>ttr</ws>
     </stitch>
 
     <stitch>
@@ -95,35 +95,99 @@
     </stitch>
 
     <stitch>
-        <name>fpdc</name>
+        <name>FPdc</name>
         <icon>:/stitches/front_post_dc.svg</icon>
         <description>front post double crochet</description>
         <category>Advanced</category>
-        <ws>fpdc</ws>
+        <ws>FPdc</ws>
     </stitch>
 
     <stitch>
-        <name>bpdc</name>
+        <name>BPdc</name>
         <icon>:/stitches/back_post_dc.svg</icon>
         <description>back post double crochet</description>
         <category>Advanced</category>
-        <ws>bpdc</ws>
+        <ws>BPdc</ws>
     </stitch>
 
     <stitch>
-        <name>ch3picot</name>
+        <name>FPtr</name>
+        <icon>:/stitches/front_post_tr.svg</icon>
+        <description>front post treble crochet</description>
+        <category>Advanced</category>
+        <ws>FPtr</ws>
+    </stitch>
+
+    <stitch>
+        <name>BPtr</name>
+        <icon>:/stitches/back_post_tr.svg</icon>
+        <description>back post treble crochet</description>
+        <category>Advanced</category>
+        <ws>BPtr</ws>
+    </stitch>
+    
+    <stitch>
+        <name>ch-3 picot</name>
         <icon>:/stitches/ch3_picot.svg</icon>
         <description>chain 3 picot</description>
         <category>Advanced</category>
-        <ws>ch3picot</ws>
+        <ws>ch-3 picot</ws>
     </stitch>
 
     <stitch>
-       <name>sc2tog</name>
-       <icon>:/stitches/sc2tog.svg</icon>
-       <description>single crochet 2 together</description>
-       <category>Advanced</category>
-       <ws>sc2tog</ws>
+        <name>sc2tog</name>
+        <icon>:/stitches/sc2tog.svg</icon>
+        <description>single crochet 2 together</description>
+        <category>Advanced</category>
+        <ws>sc2tog</ws>
+    </stitch>
+
+    <stitch>
+        <name>sc3tog</name>
+        <icon>:/stitches/sc3tog.svg</icon>
+        <description>single crochet 3 together</description>
+        <category>Advanced</category>
+        <ws>sc3tog</ws>
+    </stitch>
+
+    <stitch>
+        <name>dc2tog</name>
+        <icon>:/stitches/dc2tog.svg</icon>
+        <description>double crochet 2 together</description>
+        <category>Advanced</category>
+        <ws>dc2tog</ws>
+    </stitch>
+
+    <stitch>
+        <name>dc3tog</name>
+        <icon>:/stitches/dc3tog.svg</icon>
+        <description>double crochet 3 together</description>
+        <category>Advanced</category>
+        <ws>dc3tog</ws>
+    </stitch>
+
+    <stitch>
+        <name>dc3cluster</name>
+        <icon>:/stitches/dc3cluster.svg</icon>
+        <description>double crochet 3 cluster</description>
+        <category>Advanced</category>
+        <ws>dc3cluster</ws>
+    </stitch>
+
+    <stitch>
+        <name>hdc3cluster</name>
+        <icon>:/stitches/hdc3cluster.svg</icon>
+        <description>bobble</description>
+        <category>Advanced</category>
+        <ws>hdc3cluster</ws>
+    </stitch>
+
+    <stitch>
+        <name>dc5popcorn</name>
+        <icon>:/stitches/dc5popcorn.svg</icon>
+        <description>double crochet 5 popcorn</description>
+        <category>Advanced</category>
+        <ws>dc5popcorn</ws>
     </stitch>
 
     <stitch>
@@ -133,68 +197,20 @@
         <category>Advanced</category>
         <ws>dc5shell</ws>
     </stitch>
+    
+    <stitch>
+        <name>blo</name>
+        <icon>:/stitches/worked_in_back_loop.svg</icon>
+        <description>worked in back loop</description>
+        <category>Advanced</category>
+        <ws>blo</ws>
+    </stitch>
 
     <stitch>
-       <name>sc3tog</name>
-       <icon>:/stitches/sc3tog.svg</icon>
-       <description>single crochet 3 together</description>
-       <category>Advanced</category>
-       <ws>sc3tog</ws>
-   </stitch>
-
-   <stitch>
-       <name>dc2tog</name>
-       <icon>:/stitches/dc2tog.svg</icon>
-       <description>double crochet 2 together</description>
-       <category>Advanced</category>
-       <ws>dc2tog</ws>
-   </stitch>
-
-   <stitch>
-       <name>dc3tog</name>
-       <icon>:/stitches/dc3tog.svg</icon>
-       <description>double crochet 3 together</description>
-       <category>Advanced</category>
-       <ws>dc3tog</ws>
-   </stitch>
-
-   <stitch>
-       <name>dc3cluster</name>
-       <icon>:/stitches/dc3cluster.svg</icon>
-       <description>double crochet 3 cluster</description>
-       <category>Advanced</category>
-       <ws>dc3cluster</ws>
-   </stitch>
-
-   <stitch>
-       <name>hdc3cluster</name>
-       <icon>:/stitches/hdc3cluster.svg</icon>
-       <description>bobble</description>
-       <category>Advanced</category>
-       <ws>hdc3cluster</ws>
-   </stitch>
-
-   <stitch>
-       <name>dc5popcorn</name>
-       <icon>:/stitches/dc5popcorn.svg</icon>
-       <description>double crochet 5 popcorn</description>
-       <category>Advanced</category>
-       <ws>dc5popcorn</ws>
-   </stitch>
-
-    <stitch>
-       <name>wibloop</name>
-       <icon>:/stitches/worked_in_back_loop.svg</icon>
-       <description>worked in back loop</description>
-       <category>Advanced</category>
-       <ws>wibloop</ws>
-   </stitch>
-
-    <stitch>
-       <name>wifloop</name>
+       <name>flo</name>
        <icon>:/stitches/worked_in_front_loop.svg</icon>
        <description>worked in front loop</description>
        <category>Advanced</category>
-       <ws>wifloop</ws>
+       <ws>flo</ws>
    </stitch>
 </stitch_set>
