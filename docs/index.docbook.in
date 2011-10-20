@@ -163,7 +163,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/license-wizard2.png" format="PNG" />
                     </imageobject>
-                    <caption>The license wizard ELUA for @SWS_PROJECT_NAME@</caption>
+                    <caption>The license wizard EULA for @SWS_PROJECT_NAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -199,7 +199,7 @@
         <screenshot>
             <mediaobject>
                 <imageobject>
-                    <imagedata width="400" fileref="images/sample-square.png" format="PNG" />
+                    <imagedata width="250" fileref="images/sample-square.png" format="PNG" />
                 </imageobject>
                 <caption>Sample chart</caption>
             </mediaobject>
@@ -216,8 +216,17 @@
                 <menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Wedge Lines</guimenuitem></menuchoice>
         </para>
         <para>
-            (4) Create the top wedge of the chart.
+            (4) Create the top wedge of the chart. For best results make sure your stitches are placed within
+            the Wedge Lines so that they translate to the other three quarters of the chart well.
         </para>
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/quick-guide-create-wedge.png" format="PNG" />
+                </imageobject>
+                <caption>The chart after step 4</caption>
+            </mediaobject>
+        </screenshot>
         <para>
             (5) <link linkend="tools-rotation-edit">Rotate</link> and <link linkend="tools-scale-edit">scale</link>
                 individual stitches as need, copy, paste and <link linkend="tools-mirror-rotate">mirror</link>.
@@ -226,16 +235,35 @@
                 stitch it will persevere the ratio of the stitch.
         </para>
         <para>
-            (6) Select the wedge of stitches you have just created, copy, paste and <link linkend="tools-mirror-rotate">rotate 90</link>
-                This will give you the right side of the pattern.
-                Paste and rotate 180 gives you the bottom, and paste and rotate 270 gives you the left.
+            (6) Select the wedge of stitches you have just created, copy, paste and <link linkend="tools-mirror-rotate">rotate 90&#0176;</link>,
+                this will give you the right side of the pattern.
+                Paste and rotate 180&#0176; gives you the bottom, and paste and rotate 270&#0176; gives you the left.
         </para>
         <para>
             (7) Add <link linkend="tools-indicator-edit">indicators</link> for rows, and/or other
                 features you wish to highlight on the chart. Make any other minor adjustments as desired.
         </para>
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/quick-guide-paste-rotate.png" format="PNG" />
+                </imageobject>
+                <caption>The chart after step 7</caption>
+            </mediaobject>
+        </screenshot>
         <para>
-            (8) <link linkend="tools-export">Export the chart and legends</link> to your desired file formats for use in
+            (8) Connect stitches to <link linkend="tools-row-edit">create the chart rows</link>.
+        </para>
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/quick-guide-row-edit.png" format="PNG" />
+                </imageobject>
+                <caption>The chart after step 8</caption>
+            </mediaobject>
+        </screenshot>
+        <para>
+            (9) <link linkend="tools-export">Export the chart and legends</link> to your desired file formats for use in
             documents, or for publication.
         </para>
     </chapter>
@@ -906,8 +934,8 @@
                     <ulink url="http://www.adobe.com/products/illustrator/">Adobe Illustrator</ulink>.
             </para>
             <para>I recommend a canvas size of 32x32 px as the default size.
-                If you need to use a different size I recommend changing the size in increments of 32.
-                So a single crochet is 32x32, a half double crochet is 32x64, and a double crochet is 32x96.
+                If you need to use a different size I recommend changing the size in increments of 16 or 32.
+                So a single crochet is 32x32, a half double crochet is 32x64, and a double crochet is 32x80.
             </para>
             <para>If you want your stitches to match the default stitches I'm using a stroke width of 4.0 and rounded caps and joints.
             </para>
@@ -1082,9 +1110,9 @@
                 <screenshot>
                     <mediaobject>
                         <imageobject>
-                            <imagedata width="400" fileref="images/legend-stitch-all.png" format="PNG" />
+                            <imagedata width="250" fileref="images/legend-stitch-all.png" format="PNG" />
                         </imageobject>
-                        <caption>An example stitch legend with all options turned on and column count set to 4</caption>
+                        <caption>An example stitch legend with all options turned on and column count set to 2</caption>
                     </mediaobject>
                 </screenshot>
                 
@@ -1098,7 +1126,7 @@
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
-                                        <imagedata width="400" fileref="images/legend-stitch-no-title.png" format="PNG" />
+                                        <imagedata width="250" fileref="images/legend-stitch-no-title.png" format="PNG" />
                                     </imageobject>
                                     <caption>The stitch legend without the title</caption>
                                 </mediaobject>
@@ -1114,7 +1142,7 @@
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
-                                        <imagedata width="400" fileref="images/legend-stitch-no-border.png" format="PNG" />
+                                        <imagedata width="250" fileref="images/legend-stitch-no-border.png" format="PNG" />
                                     </imageobject>
                                     <caption>Border turned off</caption>
                                 </mediaobject>
@@ -1130,7 +1158,7 @@
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
-                                        <imagedata width="200" fileref="images/legend-stitch-no-description.png" format="PNG" />
+                                        <imagedata width="150" fileref="images/legend-stitch-no-description.png" format="PNG" />
                                     </imageobject>
                                     <caption>A legend with the descriptions turned off</caption>
                                 </mediaobject>
@@ -1147,9 +1175,25 @@
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
-                                        <imagedata width="200" fileref="images/legend-stitch-2-columns.png" format="PNG" />
+                                        <imagedata width="300" fileref="images/legend-stitch-3-columns.png" format="PNG" />
                                     </imageobject>
-                                    <caption>A legend with 2 columns</caption>
+                                    <caption>A legend with 3 columns</caption>
+                                </mediaobject>
+                            </screenshot>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="150" fileref="images/legend-stitch-1-column.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>A legend with 1 column</caption>
+                                </mediaobject>
+                            </screenshot>
+                            <screenshot>
+                                <mediaobject>
+                                    <imageobject>
+                                        <imagedata width="150" fileref="images/legend-stitch-all-off.png" format="PNG" />
+                                    </imageobject>
+                                    <caption>A legend with all options turned off</caption>
                                 </mediaobject>
                             </screenshot>
                         </listitem>
@@ -1164,7 +1208,7 @@
                 <screenshot>
                     <mediaobject>
                         <imageobject>
-                            <imagedata width="300" fileref="images/legend-color-all.png" format="PNG" />
+                            <imagedata width="250" fileref="images/legend-color-all.png" format="PNG" />
                         </imageobject>
                         <caption>An example color legend with all options turned on</caption>
                     </mediaobject>
@@ -1180,7 +1224,7 @@
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
-                                        <imagedata width="300" fileref="images/legend-color-no-title.png" format="PNG" />
+                                        <imagedata width="250" fileref="images/legend-color-no-title.png" format="PNG" />
                                     </imageobject>
                                     <caption>A color legend without the title</caption>
                                 </mediaobject>
@@ -1195,7 +1239,7 @@
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
-                                        <imagedata width="300" fileref="images/legend-color-no-border.png" format="PNG" />
+                                        <imagedata width="250" fileref="images/legend-color-no-border.png" format="PNG" />
                                     </imageobject>
                                     <caption>A color legend without border</caption>
                                 </mediaobject>
@@ -1211,7 +1255,7 @@
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
-                                        <imagedata width="150" fileref="images/legend-color-no-hex-value.png" format="PNG" />
+                                        <imagedata width="100" fileref="images/legend-color-no-hex-value.png" format="PNG" />
                                     </imageobject>
                                     <caption>A color legend without hex values</caption>
                                 </mediaobject>
@@ -1226,7 +1270,7 @@
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
-                                        <imagedata width="300" fileref="images/legend-color-no-prefix.png" format="PNG" />
+                                        <imagedata width="250" fileref="images/legend-color-no-prefix.png" format="PNG" />
                                     </imageobject>
                                     <caption>A color legend with no prefix</caption>
                                 </mediaobject>
@@ -1234,7 +1278,7 @@
                             <screenshot>
                                 <mediaobject>
                                     <imageobject>
-                                        <imagedata width="300" fileref="images/legend-color-color-prefix.png" format="PNG" />
+                                        <imagedata width="250" fileref="images/legend-color-color-prefix.png" format="PNG" />
                                     </imageobject>
                                     <caption>A color legend with the word Color as a prefix</caption>
                                 </mediaobject>
@@ -1281,7 +1325,7 @@
                 If it finds an update you will be prompted to install the new version.
                 If you do not wish the software to check for update on startup you can disable this feature
                 by going to the <link linkend="options-application">Application Options/Preferences</link>
-                and uncheck the option for this feature.
+                and un-check the option for this feature.
             </para>
             <screenshot>
                 <mediaobject>
