@@ -10,7 +10,7 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="64"
-   height="96"
+   height="80"
    id="svg4099"
    version="1.1"
    inkscape:version="0.48.1 r9760"
@@ -25,17 +25,17 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.75"
-     inkscape:cx="-20.611001"
-     inkscape:cy="74.13361"
+     inkscape:cx="-23.092792"
+     inkscape:cy="59.588155"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:document-units="px"
      inkscape:grid-bbox="true"
      inkscape:window-width="1280"
-     inkscape:window-height="929"
-     inkscape:window-x="-4"
-     inkscape:window-y="-3"
-     inkscape:window-maximized="1" />
+     inkscape:window-height="752"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata4104">
     <rdf:RDF>
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -52,30 +52,30 @@
      id="layer1"
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     transform="translate(0,32)">
+     transform="translate(0,16)">
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 19.894444,-28.55319 25.237045,0"
+       d="m 19.894444,-12.55319 25.237045,0"
        id="path4111"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="M 31.667449,-28.360369 3.8389596,60.381239"
+       d="M 31.667449,-10.664798 3.8389596,61.461714"
        id="path4109"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="M 12.476761,4.8394136 26.557095,15.93286"
+       d="M 12.476761,12.839414 26.557095,23.93286"
        id="path4113-6"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="M 33.358482,-27.279895 61.186971,61.461714"
+       d="M 33.358482,-10.664799 61.186971,61.461714"
        id="path4109-0"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="M 38.201596,9.6407489 55.144034,15.49516"
+       d="m 36.928869,18.004385 16.942438,5.854411"
        id="path4113-6-7"
        inkscape:connector-curvature="0" />
   </g>
