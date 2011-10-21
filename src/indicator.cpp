@@ -19,7 +19,7 @@
 
 Indicator::Indicator(QGraphicsItem* parent, QGraphicsScene* scene)
     : QGraphicsTextItem(parent, scene),
-      highlight(true)
+      highlight(false)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
