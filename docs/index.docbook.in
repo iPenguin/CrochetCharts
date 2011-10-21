@@ -268,6 +268,8 @@
         </para>
     </chapter>
 
+
+    
     <chapter id="creating-charts">
         <title>Adding Charts to a Document</title>
         <para>When you first open @SWS_PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
@@ -300,6 +302,7 @@
             If you select a <emphasis>Rounds</emphasis> chart style you will get all the functionality
             of a Blank chart with the addition that the software will create rounds of stitches starting
             in the center of the chart and working out, increasing by 12 stitches every row.
+            The software will add those stitches to the <link linkend="tools-row-edit">defined Rows</link>.
         </para>
 
         <screenshot>
@@ -321,7 +324,7 @@
                 <imageobject>
                     <imagedata width="400" fileref="images/document-new-flat.png" format="PNG" />
                 </imageobject>
-                <caption>The main window showing a basic flat chart</caption>
+                <caption>The main window showing a basic Rows chart</caption>
             </mediaobject>
         </screenshot>
         
@@ -331,262 +334,228 @@
                 <imageobject>
                     <imagedata width="400" fileref="images/document-new-round.png" format="PNG" />
                 </imageobject>
-                <caption>The main window showing a basic round chart</caption>
+                <caption>The main window showing a basic Rounds chart</caption>
             </mediaobject>
         </screenshot>
-
-        <section>
-            <title>Tools</title>
-            <sect3>
-                <screenshot>
-                    <mediaobject>
-                        <imageobject>
-                            <imagedata width="400" fileref="images/toolbar.png" format="PNG" />
-                        </imageobject>
-                        <caption>The toolbar in @SWS_PROJECT_NAME@</caption>
-                    </mediaobject>
-                </screenshot>
-                <para>The tools on the tool bar are listed below in order from left to right:
-                    <link linkend="tools-new-document">New Document</link>,
-                    <link linkend="tools-open-file">Open File</link>,
-                    <link linkend="tools-save-file">Save File</link>,
-                    <link linkend="tools-export">Export</link>,
-                    <link linkend="tools-new-chart">New Chart</link>,
-                    <link linkend="tools-undo">Undo</link>,
-                    <link linkend="tools-redo">Redo</link>,
-                    <link linkend="tools-stitch-edit">Stitch Edit</link>,
-                    <link linkend="tools-color-edit">Color Edit</link>,
-                    <link linkend="tools-rotation-edit">Rotation Edit</link>,
-                    <link linkend="tools-scale-edit">Scale Edit</link>,
-                    <link linkend="tools-row-edit">Row Edit</link>,
-                    <link linkend="tools-indicator-edit">Indicator Edit</link>,
-                    <link linkend="tools-align-distribute">Align and Distribute Tools</link>,
-                    <link linkend="tools-mirror-rotate">Mirror and Rotate Tools</link>, and
-                    <link linkend="tools-color-selector">Color Selector</link>.
-                    
-                </para>
-                <variablelist>
-                    <?dbfo list-presentation="blocks"?>
-                    <varlistentry id="tools-new-document">
-                        <term>New Document</term>
-                        <listitem>Create a new document.</listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-open-file">
-                        <term>Open File</term>
-                        <listitem>Open an existing file.</listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-save-file">
-                        <term>Save</term>
-                        <listitem>Save the current file.</listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-export">
-                        <term>Export</term>
-                        <listitem>
-                            <para>This option allows you to export charts, and legends to different
-                                file formats: PDF, SVG, PNG, JPEG, TIFF, BMP. The quality of the exports
-                                can be controlled and you can adjust it from web quality to publication quality.
-                                See <link linkend="exporting-files">Exporting Files</link> for more information about exporting files.
-                            </para>
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-new-chart">
-                        <term>New Chart</term>
-                        <listitem>
-                            <para>Add a new chart to this document.
-                                A document can contain any number of charts.
-                            </para>
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-undo">
-                        <term>Undo</term>
-                        <listitem>Undo the last action taken. (Unlimited level of undo)</listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-redo">
-                        <term>Redo</term>
-                        <listitem>Redo actions that have been undone.</listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-stitch-edit">
-                        <term>Stitch Edit</term>
-                        <listitem>
-                            <para>This mode allows you to add, edit and move stitches on the chart.
-                            </para>
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-color-edit">
-                        <term>Color Edit</term>
-                        <listitem>
-                            <para>This mode allows you to edit the background colors used behind the stitches.
-                                If you wish to edit the color of the stitches themselves you can change the
-                                primary and secondary colors in the <link linkend="options-charts">Chart Options/Preferences</link>.
-                            </para>
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-rotation-edit">
-                        <term>Rotation Edit</term>
-                        <listitem>
-                            <para>In this mode you can edit the angle that the stitch is tilted at.
-                                You can rotate the stitch 360&#0176; relative to the bottom of the stitch.
-                            </para>
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-scale-edit">
-                        <term>Scale Edit</term>
-                        <listitem>
-                            <para>This mode allows you to scale the size of the stitch height and width independently of each other.
-                                If you would like to scale the stitch in a 1:1 ratio you can hold the <keycap>Ctrl</keycap>
-                                (or <keycap>Apple</keycap>) key while you scale it.
-                            </para>
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-row-edit">
-                        <term>Row Edit</term>
-                        <listitem>
-                            <screenshot>
-                                <mediaobject>
-                                    <imageobject>
-                                        <imagedata width="400" fileref="images/mode-row-edit-ui.png" format="PNG" />
-                                    </imageobject>
-                                    <caption>The user interface for row edit mode</caption>
-                                </mediaobject>
-                            </screenshot>
-                            <para>@SWS_PROJECT_NAME@ allows the user to place stitches anywhere on the chart,
-                                because of this flexibility there is no way to automatically decide which row a stitch belongs on.
-                                The purpose of this interface is to define which stitches belong on each row, and in what order.
-                            </para>
-                            <para>
-                                Defining rows provides the following benefits: automatically alternate row colors as defined in the settings,
-                                and automatically generate written instructions for the chart.
-                            </para>
-                            <para>To create a row select the Row Edit mode icon from the tool bar,
-                                or select <menuchoice><guimenu>Modes</guimenu><guimenuitem>Row Edit</guimenuitem></menuchoice>.
-                                The Row Edit interface will open as in the screenshot above.
-                            </para>
-                            <para>
-                                To create your first row go ahead and select the first stitch of the new row.
-                                Without releasing the mouse button click and drag to to the next stitch in the row.
-                                A red line will connect the mouse to the last stitch in the row.
-                                When you connect a new stitch to the row it will for a black line between the new stitch and the previous stitch.
-                                The red line will now connect the mouse to the new stitch.
-                                Continue to connect all the stitches in the row.
-                                Once you are done creating the row release the mouse button,
-                                and click on the green plus (+) in the Edit Rows dialog at the bottom of the screen.
-                                Your row will not be tracked until you've added it to the list with the green plus (+).
-                            </para>
-                            <para>
-                                The red minus (-) removes the selected row from the list (it does not remove the stitches from the chart),
-                                and the up and down arrows change the order of the rows.
-                            </para>
-                            <para>
-                                If you release the mouse button while creating a row,
-                                or if you come back later and want to add more stitches to a row you can do so.
-                                If you are adding stitches to the end of a row just click on the last stitch drag the red line to the next stitches in order.
-                                If you want to add stitches into the middle of the row you will have to start from the first stitch of the row.
-                            </para>
-                                
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-indicator-edit">
-                        <term>Indicator Edit</term>
-                        <listitem>
-                            <para>Indicators can be used as row indicators, or to point out pieces of the chart that need special notes.
-                                The indicators on the chart can show the dot and/or text based on the <link linkend="options-charts">Chart Options/Preferences</link>.
-                            </para>
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-align-distribute">
-                        <term>Align and Distribute</term>
-                        <listitem>
-                            <screenshot>
-                                <mediaobject>
-                                    <imageobject>
-                                        <imagedata width="100" fileref="images/dock-align-distribute.png" format="PNG" />
-                                    </imageobject>
-                                    <caption>The align and distribute tools</caption>
-                                </mediaobject>
-                            </screenshot>
-                            <para>A set of tools that allows you to align and distribute stitches evenly on the chart.
-                            </para>
-                            <para>You can align to left edge, right edge, center on the vertical axis,
-                                top edge, bottom edge, center on the horizontal axis.
-                            </para>
-                            <para>You can distribute equidistantly on left edges, right edges, from the centers horizontally, or
-                                on the top edges, bottom edges, or from the centers vertically.
-                            </para>
-                            </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-mirror-rotate">
-                        <term>Mirror and Rotate</term>
-                        <listitem>
-                            <screenshot>
-                                <mediaobject>
-                                    <imageobject>
-                                        <imagedata width="100" fileref="images/dock-mirror-rotate.png" format="PNG" />
-                                    </imageobject>
-                                    <caption>The mirror and rotate tools</caption>
-                                </mediaobject>
-                            </screenshot>
-                            <para>A set of tools that allows you to mirror and rotate groups of stitches on the chart.
-                            </para>
-                            <para>Mirroring can be done up, down, left, and right.
-                            </para>
-                            <para>Rotating stitches using this tool will be done from bottom left corner of the group of stitches selected,
-                                unless you have a chart center on the chart (<menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Chart Center</guimenuitem></menuchoice>)
-                                in which case the selection will be rotated around the center of the chart.
-                            </para>
-                            <para>There are 3 buttons that represent 90&#0176; (on the right), 180&#0176; (on the bottom), 270&#0176; (on the left),
-                                and a fourth button (on the top) representing a custom option that allows you to select exactly how many degrees you want to rotate the selection.
-                            </para>
-                        </listitem>
-                    </varlistentry>
-                    
-                    <varlistentry id="tools-color-selector">
-                        <term>Color Selector</term>
-                        <listitem>Select the color that will be used in Color Edit.</listitem>
-                    </varlistentry>
-                </variablelist>
-            </sect3>
-        </section>
-        <section>
-            <title>Additional Menu Tools</title>
-            <section id="charts-show-chart-center">
-                <title>Show Chart Center</title>
-                <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Chart Center</guimenuitem></menuchoice>
-                </para>
-                <para>This option allows you to show a circle as the center of the chart. If the center is visible it will be used
-                    as the pivot point for the rotation functions of the <link linkend="tools-mirror-rotate">Mirror and Rotate tools</link>.
-                </para>
-            </section>
-            <section id="charts-show-quarter-lines">
-                <title>Show Wedge Lines</title>
-                <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Wedge Lines</guimenuitem></menuchoice>
-                </para>
-                <para>This option show a vertical and horizontal line and two 45&#0176; lines that go
-                    through the center point of the chart, or if you have the Center symbol visible
-                    they cross at the center of the symbol. These lines are very useful when creating
-                    a round chart where you want to start by creating a wedge shape design. If you
-                    keep your stitches with in the lines when you go to rotate the selection around
-                    the center point you will have a consistent looking repeat.
-                </para>
-            </section>
-        </section>
     </chapter>
 
 
+    
+    <chapter id="tools">
+        <title>Tools</title>
+        <screenshot>
+            <mediaobject>
+                <imageobject>
+                    <imagedata width="400" fileref="images/toolbar.png" format="PNG" />
+                </imageobject>
+                <caption>The toolbar in @SWS_PROJECT_NAME@</caption>
+            </mediaobject>
+        </screenshot>
+        <para>The tools on the tool bar are listed below in order from left to right:
+            New Document, Open File, Save File,
+            <link linkend="tools-export">Export</link>,
+            <link linkend="tools-new-chart">Add Chart</link>,
+            Undo, Redo,
+            <link linkend="tools-stitch-edit">Stitch Edit</link>,
+            <link linkend="tools-color-edit">Color Edit</link>,
+            <link linkend="tools-rotation-edit">Rotation Edit</link>,
+            <link linkend="tools-scale-edit">Scale Edit</link>,
+            <link linkend="tools-row-edit">Row Edit</link>,
+            <link linkend="tools-indicator-edit">Indicator Edit</link>,
+            <link linkend="tools-align-distribute">Align and Distribute Tools</link>,
+            <link linkend="tools-mirror-rotate">Mirror and Rotate Tools</link>, and
+            <link linkend="tools-color-selector">Color Selector</link>.
 
+        </para>
+
+        <section id="tools-export">
+            <title>Export</title>
+            <para><menuchoice><guimenu>File</guimenu><guimenuitem>Export...</guimenuitem></menuchoice></para>
+            <para>This option allows you to export charts, and legends to different
+                file formats: PDF, SVG, PNG, JPEG, TIFF, BMP. The quality of the exports
+                can be controlled and you can adjust it from web quality to publication quality.
+                See <link linkend="exporting-files">Exporting Files</link> for more information about exporting files.
+            </para>
+        </section>
+
+        <section id="tools-new-chart">
+            <title>Add Chart</title>
+            <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Add Chart</guimenuitem></menuchoice></para>
+            <para>Add a new chart to this document. A document can contain any number of charts.
+            </para>
+        </section>
+
+        <section id="tools-stitch-edit">
+            <title>Stitch Edit</title>
+            <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Stitch Edit</guimenuitem></menuchoice></para>
+            <para>This mode allows you to add, edit and move stitches on the chart.
+            </para>
+        </section>
+
+        <section id="tools-color-edit">
+            <title>Color Edit</title>
+            <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Color Edit</guimenuitem></menuchoice></para>
+            <para>This mode allows you to edit the background colors used behind the stitches.
+                If you wish to edit the color of the stitches themselves you can change the
+                primary and secondary colors in the <link linkend="options-charts">Chart Options/Preferences</link>.
+            </para>
+        </section>
+
+        <section id="tools-rotation-edit">
+            <title>Rotation Edit</title>
+            <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Rotation Edit</guimenuitem></menuchoice></para>
+            <para>In this mode you can edit the angle that the stitch is tilted at.
+                You can rotate the stitch 360&#0176; relative to the bottom of the stitch.
+            </para>
+        </section>
+
+        <section id="tools-scale-edit">
+            <title>Scale Edit</title>
+            <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Scale Edit</guimenuitem></menuchoice></para>
+            <para>This mode allows you to scale the size of the stitch height and width independently of each other.
+                If you would like to scale the stitch in a 1:1 ratio you can hold the <keycap>Ctrl</keycap>
+                (or <keycap>Apple</keycap>) key while you scale it.
+            </para>
+        </section>
+
+        <section id="tools-row-edit">
+            <title>Row Edit</title>
+            <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Row Edit</guimenuitem></menuchoice></para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/mode-row-edit-ui.png" format="PNG" />
+                    </imageobject>
+                    <caption>The user interface for row edit mode</caption>
+                </mediaobject>
+            </screenshot>
+            <para>@SWS_PROJECT_NAME@ allows the user to place stitches anywhere on the chart,
+                because of this flexibility there is no way to automatically decide which row a stitch belongs on.
+                The purpose of this interface is to define which stitches belong on each row, and in what order.
+            </para>
+            <para>
+                Defining rows provides the following benefits: automatically alternate row colors as defined in the settings,
+                and automatically generate written instructions for the chart.
+            </para>
+            <para>To create a row select the Row Edit mode icon from the tool bar,
+                or select <menuchoice><guimenu>Modes</guimenu><guimenuitem>Row Edit</guimenuitem></menuchoice>.
+                The Row Edit interface will open as in the screenshot above.
+            </para>
+            <para>
+                To create your first row go ahead and select the first stitch of the new row.
+                Without releasing the mouse button click and drag to to the next stitch in the row.
+                A red line will connect the mouse to the last stitch in the row.
+                When you connect a new stitch to the row it will for a black line between the new stitch and the previous stitch.
+                The red line will now connect the mouse to the new stitch.
+                Continue to connect all the stitches in the row.
+                Once you are done creating the row release the mouse button,
+                and click on the green plus (+) in the Edit Rows dialog at the bottom of the screen.
+                Your row will not be tracked until you've added it to the list with the green plus (+).
+            </para>
+            <para>
+                The red minus (-) removes the selected row from the list (it does not remove the stitches from the chart),
+                and the up and down arrows change the order of the rows.
+            </para>
+            <para>
+                If you release the mouse button while creating a row,
+                or if you come back later and want to add more stitches to a row you can do so.
+                If you are adding stitches to the end of a row just click on the last stitch drag the red line to the next stitches in order.
+                If you want to add stitches into the middle of the row you will have to start from the first stitch of the row.
+            </para>
+        </section>
+
+        <section id="tools-indicator-edit">
+            <title>Indicator Edit</title>
+            <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Indicator Edit</guimenuitem></menuchoice></para>
+            <para>Indicators can be used as row indicators, or to point out pieces of the chart that need special notes.
+                The indicators on the chart can show the dot and/or text based on the <link linkend="options-charts">Chart Options/Preferences</link>.
+            </para>
+        </section>
+
+        <section id="tools-align-distribute">
+            <title>Align and Distribute</title>
+            <para><menuchoice><guimenu>Stitches</guimenu><guimenuitem>Show Align and Distribute</guimenuitem></menuchoice></para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="100" fileref="images/dock-align-distribute.png" format="PNG" />
+                    </imageobject>
+                    <caption>The align and distribute tools</caption>
+                </mediaobject>
+            </screenshot>
+            <para>A set of tools that allows you to align and distribute stitches evenly on the chart.
+            </para>
+            <para>You can align to left edge, right edge, center on the vertical axis,
+                top edge, bottom edge, center on the horizontal axis.
+            </para>
+            <para>You can distribute equidistantly on left edges, right edges, from the centers horizontally, or
+                on the top edges, bottom edges, or from the centers vertically.
+            </para>
+        </section>
+
+        <section id="tools-mirror-rotate">
+            <title>Mirror and Rotate</title>
+            <para><menuchoice><guimenu>Stitches</guimenu><guimenuitem>Show Mirror and Rotate</guimenuitem></menuchoice></para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="100" fileref="images/dock-mirror-rotate.png" format="PNG" />
+                    </imageobject>
+                    <caption>The mirror and rotate tools</caption>
+                </mediaobject>
+            </screenshot>
+            <para>A set of tools that allows you to mirror and rotate groups of stitches on the chart.
+            </para>
+            <para>Mirroring can be done up, down, left, and right.
+            </para>
+            <para>Rotating stitches using this tool will be done from bottom left corner of the group of stitches selected,
+                unless you have a chart center on the chart (<menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Chart Center</guimenuitem></menuchoice>)
+                in which case the selection will be rotated around the center of the chart.
+            </para>
+            <para>There are 3 buttons that represent 90&#0176; (on the right), 180&#0176; (on the bottom), 270&#0176; (on the left),
+                and a fourth button (on the top) representing a custom option that allows you to select exactly how many degrees you want to rotate the selection.
+            </para>
+        </section>
+
+        <section id="tools-color-selector">
+            <title>Color Selector</title>
+            <para>Select the color that will be used in Color Edit.</para>
+        </section>
+
+        <section id="charts-show-chart-center">
+            <title>Show Chart Center</title>
+            <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Chart Center</guimenuitem></menuchoice>
+            </para>
+            <para>This option allows you to show a circle as the center of the chart. If the center is visible it will be used
+                as the pivot point for the rotation functions of the <link linkend="tools-mirror-rotate">Mirror and Rotate tools</link>.
+            </para>
+        </section>
+        <section id="charts-show-quarter-lines">
+            <title>Show Wedge Lines</title>
+            <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Wedge Lines</guimenuitem></menuchoice>
+            </para>
+            <para>This option show a vertical and horizontal line and two 45&#0176; lines that go
+                through the center point of the chart, or if you have the Center symbol visible
+                they cross at the center of the symbol. These lines are very useful when creating
+                a round chart where you want to start by creating a wedge shape design. If you
+                keep your stitches with in the lines when you go to rotate the selection around
+                the center point you will have a consistent looking repeat.
+            </para>
+        </section>
+        <section>
+            <title>Grouping</title>
+            <para><menuchoice><guimenu>Stitches</guimenu><guimenuitem>Group</guimenuitem></menuchoice>
+            and <menuchoice><guimenu>Stitches</guimenu><guimenuitem>Ungroup</guimenuitem></menuchoice>
+            </para>
+            <para>This option allows you to group and ungroup stitches together. When stitches are grouped
+                they can be moved and changed as one unit.
+            </para>
+        </section>
+            
+    </chapter>
+
+
+    
     <chapter id="exporting-files">
         <title>Exporting Files</title>
         <para>All pieces of your work can be exported to formats that are commonly used on websites,
@@ -1330,7 +1299,7 @@
             <screenshot>
                 <mediaobject>
                     <imageobject>
-                        <imagedata width="400" scalefit="1" fileref="images/tools-updates.png" format="PNG" />
+                        <imagedata width="250" scalefit="1" fileref="images/tools-updates.png" format="PNG" />
                     </imageobject>
                     <caption>The dialog when there are no updates</caption>
                 </mediaobject>
@@ -1338,7 +1307,7 @@
             <screenshot>
                 <mediaobject>
                     <imageobject>
-                        <imagedata width="400" scalefit="1" fileref="images/tools-updates-new.png" format="PNG" />
+                        <imagedata width="300" scalefit="1" fileref="images/tools-updates-new.png" format="PNG" />
                     </imageobject>
                     <caption>The dialog when a new version is available for download</caption>
                 </mediaobject>
@@ -1350,7 +1319,7 @@
             <screenshot>
                 <mediaobject>
                     <imageobject>
-                        <imagedata width="400" scalefit="1" fileref="images/help-about.png" format="PNG" />
+                        <imagedata width="300" scalefit="1" fileref="images/help-about.png" format="PNG" />
                     </imageobject>
                     <caption>The about this application dialog</caption>
                 </mediaobject>
