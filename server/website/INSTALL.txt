@@ -1,4 +1,0 @@
-For SSL you need to add the following line to the settings.php file:
-$conf['https'] = TRUE;
-
-
