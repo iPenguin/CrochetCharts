@@ -1,7 +1,7 @@
 include(InstallRequiredSystemLibraries)
 
 
-set(PROJECT_DESCRIPTION  "Chart desing software for crochet")
+set(PROJECT_DESCRIPTION  "Chart design software for crochet")
 set(PROJECT_VENDOR       "Stitch Works Software")
 set(PROJECT_LIFE         "2010-2011")
 set(ORG_BASE_URL         "StitchWorksSoftware.com")
@@ -117,13 +117,20 @@ elseif(APPLE)
 
 else()
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Brian Milco")
+
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Brian Milco <${PROJECT_CONTACT}>")
+    #set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4, libqtcore4, libqtnetwork4, libqtxml4, libqtsvg4")
+    set(CPACK_DEBIAN_PACKAGE_SECTION "Miscellaneous")
+    set(CPACK_DEBIAN_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION})
+
+
     set(CPACK_RPM_PACKAGE_LICENSE "Commercial")
-    set(CPACK_RPM_PACKAGE_GROUP "Amusements/Graphics")
+    set(CPACK_RPM_PACKAGE_GROUP "Applications/Productivity")
+    set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
+    set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
+    set(CPACK_RPM_PACKAGE_REQUIRES "requires: qt >= 4.7, qt-x11 >= 4.7")
 
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4:4.7.0), libqtcore4 (>= 4:4.7.0), libqtnetwork4 (>= 4:4.7.0), libqtxml4 (>= 4:4.7.0), libqtsvg4 (>= 4:4.7.0)")
 
-    #depends(qt4 >= 4.7)
     #TODO: finish adding the deb and rpm stuff here.
 endif()
 
