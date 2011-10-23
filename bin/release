@@ -14,7 +14,11 @@ if [ $PLATFORM == "Darwin" ]; then
 
     cmake .. -DSWS_DOCS=ON -DCMAKE_BUILD_TYPE=Release && make && cpack
 elif [ $PLATFORM == "Linux" ]; then
-    print "TODO: linux"
+    
+    mkdir -p ~/crochet.git/build
+    cd ~/crochet.git/build
+
+    cmake .. -DSWS_DOCS=ON -DCMAKE_BUILD_TYPE=Release && make && cpack
 elif [ $PLATFORM == "Cygwin" ]; then
     print "TODO: windows"
 else
