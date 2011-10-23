@@ -610,17 +610,22 @@ void MainWindow::documentNewChart()
 
 void MainWindow::helpCrochetHelp()
 {
-
+    QString path = QFileInfo(QApplication::applicationFilePath()).path();
+    QString file ="";
 #ifdef Q_WS_WIN
-    QString file = QString("../docs/CrochetCharts.chm");
-#elseifdef Q_WS_MAC
-    QString file = QString("CrochetCharts_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
-#else
-    QString file = QString("../share/CrochetCharts/CrochetCharts_User_Guide_%1.pdf").arg(AppInfo::inst()->appVersionShort);
+    file = QString("file://%1/../docs/CrochetCharts.chm").arg(path);
+#endif
+
+#ifdef Q_WS_MAC
+    file = QString("file://%1/CrochetCharts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
+#endif
+
+#ifdef Q_WS_X11
+    file = QString("file://%1/../share/CrochetCharts/CrochetCharts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
 #endif //Q_WS_WIN
 
-    QString url = QString("file://%1").arg(file);
-    QDesktopServices::openUrl(QUrl(url, QUrl::TolerantMode));
+    qDebug() << file;
+    QDesktopServices::openUrl(QUrl(file, QUrl::TolerantMode));
     
 }
 
