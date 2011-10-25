@@ -132,6 +132,11 @@ else()
     set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
     set(CPACK_RPM_PACKAGE_REQUIRES "requires: libc6, qt >= 4.7, qt-x11 >= 4.7")
 
+    if(FORCE_32BIT)
+        set(CPACK_RPM_PACKAGE_ARCHITECTURE "i386")
+        set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
+    endif()
+    
 endif()
 
 set(CPACK_BINARY_DRAGNDROP ON)
