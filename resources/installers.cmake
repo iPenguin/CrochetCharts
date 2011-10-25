@@ -96,7 +96,8 @@ elseif(APPLE)
     set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
     set_source_files_properties("${MACOSX_BUNDLE_ICON_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-    
+
+    #FIXME: what are the implications of changing this to the correct com.stitchworkssoftware.crochetcharts?
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware.crochet")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PRJ_NAME}")
 
@@ -116,11 +117,12 @@ elseif(APPLE)
     set(crochet_mac "${CPACK_BUNDLE_ICON}")
 
 else()
+
     set(CPACK_GENERATOR "DEB;RPM;STGZ;TBZ2")
 
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Brian Milco <${PROJECT_CONTACT}>")
-    #set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4, libqtcore4, libqtnetwork4, libqtxml4, libqtsvg4")
-    set(CPACK_DEBIAN_PACKAGE_SECTION "Miscellaneous")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libqtgui4, libqtcore4, libqt4-svg, libqt4-xml, libqt4-network")
+    set(CPACK_DEBIAN_PACKAGE_SECTION "Graphics")
     set(CPACK_DEBIAN_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION})
 
 
@@ -128,10 +130,8 @@ else()
     set(CPACK_RPM_PACKAGE_GROUP "Applications/Productivity")
     set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
     set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
-    set(CPACK_RPM_PACKAGE_REQUIRES "requires: qt >= 4.7, qt-x11 >= 4.7")
+    set(CPACK_RPM_PACKAGE_REQUIRES "requires: libc6, qt >= 4.7, qt-x11 >= 4.7")
 
-
-    #TODO: finish adding the deb and rpm stuff here.
 endif()
 
 set(CPACK_BINARY_DRAGNDROP ON)
