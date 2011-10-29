@@ -17,7 +17,7 @@
 #include "stitchset.h"
 #include "stitchpalettedelegate.h"
 
-#include <QDebug>
+#include "debug.h"
 #include <QDialog>
 #include <QMessageBox>
 #include <QFileDialog>
@@ -273,7 +273,6 @@ void MainWindow::setupMenus()
     ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/images/editcopy.png")));
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/editcut.png")));
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/editpaste.png")));
-
 
     connect(ui->actionCopy, SIGNAL(triggered()), SLOT(copy()));
     connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
@@ -624,7 +623,6 @@ void MainWindow::helpCrochetHelp()
     file = QString("file://%1/../share/CrochetCharts/CrochetCharts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
 #endif //Q_WS_WIN
 
-    qDebug() << file;
     QDesktopServices::openUrl(QUrl(file, QUrl::TolerantMode));
     
 }
@@ -690,7 +688,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 bool MainWindow::safeToClose()
 {
     if(isWindowModified())
-            return promptToSave();
+        return promptToSave();
 
     return true;
 }

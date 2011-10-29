@@ -17,8 +17,11 @@
 #include "splashscreen.h"
 #include "updatefunctions.h"
 
+#include "errorhandler.h"
+
 int main(int argc, char *argv[])
 {
+    qInstallMsgHandler(myMessageOutput);
     QApplication a(argc, argv);
     
     qApp->setApplicationName(AppInfo::inst()->appName);
