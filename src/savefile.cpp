@@ -156,14 +156,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
         }
 
         foreach(QGraphicsItemGroup* g, tab->scene()->mGroups) {
-            stream->writeStartElement("group");
-
-            QPointF finalPos = tab->scene()->calcGroupPos(g, g->sceneBoundingRect().topLeft());
-            stream->writeAttribute("x", QString::number(finalPos.x()));
-            stream->writeAttribute("y", QString::number(finalPos.y()));
-            
-            stream->writeCharacters(QString::number(tab->scene()->mGroups.indexOf(g)));
-            stream->writeEndElement(); //end groups
+            stream->writeTextElement("group", QString::number(tab->scene()->mGroups.indexOf(g)));
         }
 
         foreach(QGraphicsItem* item, tab->scene()->items()) {
@@ -184,24 +177,41 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
                 stream->writeEndElement(); //grid
             }
 
-            if(c->parentItem()) {
-                QGraphicsItemGroup* g = qgraphicsitem_cast<QGraphicsItemGroup*>(c->parentItem());
+            bool isGrouped = c->parentItem() ? true : false;
+            QGraphicsItemGroup* g = 0;
+            if(isGrouped) {
+                g = qgraphicsitem_cast<QGraphicsItemGroup*>(c->parentItem());
                 int groupNum = tab->scene()->mGroups.indexOf(g);
                 stream->writeTextElement("group", QString::number(groupNum));
 
-                QPointF finalPos = tab->scene()->calcGroupPos(c, c->sceneBoundingRect().topLeft());
-                stream->writeStartElement("position");
-                stream->writeAttribute("x", QString::number(finalPos.x()));
-                stream->writeAttribute("y", QString::number(finalPos.y()));
-                stream->writeEndElement(); //position
-                
-            } else {
-
-                stream->writeStartElement("position");
-                stream->writeAttribute("x", QString::number(c->pos().x()));
-                stream->writeAttribute("y", QString::number(c->pos().y()));
-                stream->writeEndElement(); //position
+                //ungroup the items so that we can
+                //take an acurate position of each stitch.
+                g->removeFromGroup(c);
             }
+
+            stream->writeStartElement("position");
+            stream->writeAttribute("x", QString::number(c->pos().x()));
+            stream->writeAttribute("y", QString::number(c->pos().y()));
+            stream->writeEndElement(); //position
+
+            stream->writeStartElement("transformation");
+            QTransform trans = c->transform();
+
+            stream->writeAttribute("m11", QString::number(trans.m11()));
+            stream->writeAttribute("m12", QString::number(trans.m12()));
+            stream->writeAttribute("m13", QString::number(trans.m13()));
+            stream->writeAttribute("m21", QString::number(trans.m21()));
+            stream->writeAttribute("m22", QString::number(trans.m22()));
+            stream->writeAttribute("m23", QString::number(trans.m23()));
+            stream->writeAttribute("m31", QString::number(trans.m31()));
+            stream->writeAttribute("m32", QString::number(trans.m32()));
+            stream->writeAttribute("m33", QString::number(trans.m33()));
+            stream->writeEndElement(); //transformation
+
+            //in case we haven't closed the
+            //application we need to regroup the items.
+            if(isGrouped)
+                g->addToGroup(c);
             
             stream->writeTextElement("color", c->color().name());
             stream->writeTextElement("angle", QString::number(c->rotation()));
@@ -215,20 +225,6 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeAttribute("x", QString::number(c->transformOriginPoint().x()));
             stream->writeAttribute("y", QString::number(c->transformOriginPoint().y()));
             stream->writeEndElement(); //end pivotPoint
-
-            stream->writeStartElement("transformation");
-            QTransform trans = c->transform();
-     
-            stream->writeAttribute("m11", QString::number(trans.m11()));
-            stream->writeAttribute("m12", QString::number(trans.m12()));
-            stream->writeAttribute("m13", QString::number(trans.m13()));
-            stream->writeAttribute("m21", QString::number(trans.m21()));
-            stream->writeAttribute("m22", QString::number(trans.m22()));
-            stream->writeAttribute("m23", QString::number(trans.m23()));
-            stream->writeAttribute("m31", QString::number(trans.m31()));
-            stream->writeAttribute("m32", QString::number(trans.m32()));
-            stream->writeAttribute("m33", QString::number(trans.m33()));
-            stream->writeEndElement(); //transformation
             
             stream->writeEndElement(); //end cell
         }
@@ -431,13 +427,9 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
             
         } else if(tag == "group") {
             stream->readElementText().toInt();
-            qreal x = stream->attributes().value("x").toString().toDouble();
-            qreal y = stream->attributes().value("y").toString().toDouble();
-            
+            //create an empty group for future use.
             QList<QGraphicsItem*> items;
-            QGraphicsItemGroup* group = tab->scene()->group(items);
-            group->setPos(x,y);
-
+            tab->scene()->group(items);
         }
     }
 
