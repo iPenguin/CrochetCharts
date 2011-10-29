@@ -157,8 +157,11 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
 
         foreach(QGraphicsItemGroup* g, tab->scene()->mGroups) {
             stream->writeStartElement("group");
-            stream->writeAttribute("x", QString::number(g->scenePos().x()));
-            stream->writeAttribute("y", QString::number(g->scenePos().y()));
+
+            QPointF finalPos = tab->scene()->calcGroupPos(g, g->sceneBoundingRect().topLeft());
+            stream->writeAttribute("x", QString::number(finalPos.x()));
+            stream->writeAttribute("y", QString::number(finalPos.y()));
+            
             stream->writeCharacters(QString::number(tab->scene()->mGroups.indexOf(g)));
             stream->writeEndElement(); //end groups
         }
@@ -185,13 +188,21 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
                 QGraphicsItemGroup* g = qgraphicsitem_cast<QGraphicsItemGroup*>(c->parentItem());
                 int groupNum = tab->scene()->mGroups.indexOf(g);
                 stream->writeTextElement("group", QString::number(groupNum));
+
+                QPointF finalPos = tab->scene()->calcGroupPos(c, c->sceneBoundingRect().topLeft());
+                stream->writeStartElement("position");
+                stream->writeAttribute("x", QString::number(finalPos.x()));
+                stream->writeAttribute("y", QString::number(finalPos.y()));
+                stream->writeEndElement(); //position
+                
+            } else {
+
+                stream->writeStartElement("position");
+                stream->writeAttribute("x", QString::number(c->pos().x()));
+                stream->writeAttribute("y", QString::number(c->pos().y()));
+                stream->writeEndElement(); //position
             }
-
-            stream->writeStartElement("position");
-            stream->writeAttribute("x", QString::number(c->pos().x()));
-            stream->writeAttribute("y", QString::number(c->pos().y()));
-            stream->writeEndElement(); //position
-
+            
             stream->writeTextElement("color", c->color().name());
             stream->writeTextElement("angle", QString::number(c->rotation()));
 
