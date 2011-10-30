@@ -13,7 +13,8 @@
 
 #include "settings.h"
 
-Stitch::Stitch() :
+Stitch::Stitch(QObject *parent) :
+    QObject(parent),
     isBuiltIn(false),
     mSvgRenderer(new QSvgRenderer()),
     mSvgRendererAlt(new QSvgRenderer()),

@@ -20,7 +20,7 @@ public:
 
     enum StitchParts { Name = 0, Icon, Description, Category, WrongSide };
     
-    Stitch();
+    Stitch(QObject *parent = 0);
     ~Stitch();
 
     QString name() const { return mName; }

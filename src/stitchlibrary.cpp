@@ -46,7 +46,6 @@ StitchLibrary::~StitchLibrary()
         mStitchSets.removeOne(set);
         if(!set->isTemporary)
             set->saveXmlFile();
-        set->deleteLater();
     }
 }
 
@@ -316,19 +315,20 @@ void StitchLibrary::removeSet(StitchSet* set)
     if(mStitchSets.contains(set)) {
         mStitchSets.removeOne(set);
 
+        removeMasterStitches(set);
+
         set->removeDir(set->stitchSetFolder());
         QDir setsDir(Settings::inst()->userSettingsFolder());
         setsDir.remove(set->stitchSetFileName);
 
-        removeMasterStitches(set);
-        delete set;
-        set = 0;
+        set->deleteLater();
     }
 
 }
 
 void StitchLibrary::removeMasterStitches(StitchSet* set)
 {
+
     foreach(Stitch* s, set->stitches()) {
         if(mStitchList.contains(s->name())) {
             if(mStitchList.value(s->name()) == set->name()) {
@@ -390,8 +390,7 @@ StitchSet* StitchLibrary::addStitchSet(QString fileName)
             set->setName(text);
             
         } else {
-            delete set;
-            set = 0;
+            set->deleteLater();
             return 0;
         }
     }

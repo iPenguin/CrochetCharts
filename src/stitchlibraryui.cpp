@@ -223,7 +223,7 @@ void StitchLibraryUi::removeStitch()
             
             StitchLibrary::inst()->removeStitchFormMasterSet(s);
             set->removeStitch(st);
-            delete s;
+            s->deleteLater();
         }
     }
 }

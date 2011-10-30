@@ -30,10 +30,6 @@ StitchSet::StitchSet(QObject* parent, bool isMasterSet)
 
 StitchSet::~StitchSet()
 {
-    foreach(Stitch* s, mStitches) {
-        mStitches.removeOne(s);
-        delete s;
-    }
     if(isTemporary)
         removeDir(stitchSetFolder());
 }
@@ -384,11 +380,14 @@ void StitchSet::addStitch(Stitch* s)
     beginInsertRows(parent(QModelIndex()), stitchCount(), stitchCount());
     mStitches.append(s);
     endInsertRows();
+
+    if(!s->parent())
+        s->setParent(this);
 }
 
 void StitchSet::createStitch(QString name)
 {
-    Stitch* newS = new Stitch();
+    Stitch* newS = new Stitch(this);
     newS->setName(name);
     newS->setFile(":/stitches/unknown.svg");
     addStitch(newS);
