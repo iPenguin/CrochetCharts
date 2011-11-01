@@ -33,6 +33,7 @@ set(crochet_qobject_headers
     aligndock.h
     mirrordock.h
     indicator.h
+    propertiesdialog.h
     )
 
 set(crochet_resources
