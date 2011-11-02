@@ -5,16 +5,16 @@ void myMessageOutput(QtMsgType type, const char *msg)
 {
     switch (type) {
         case QtDebugMsg:
-            fprintf(stderr, "Debug: %s\n", msg);
+            fprintf(stderr, "%s\n", msg);
             break;
         case QtWarningMsg:
-            fprintf(stderr, "Warning: %s\n", msg);
+            fprintf(stderr, "\033[1;33mWarning\033[0m: %s\n", msg);
             break;
         case QtCriticalMsg:
-            fprintf(stderr, "Critical: %s\n", msg);
+            fprintf(stderr, "\033[31mCritical\033[0m: %s\n", msg);
             break;
         case QtFatalMsg:
-            fprintf(stderr, "Fatal: %s\n", msg);
+            fprintf(stderr, "\033[31mFatal\033[0m: %s\n", msg);
             abort();
     }
 }
