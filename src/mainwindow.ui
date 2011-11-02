@@ -272,7 +272,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -311,6 +311,8 @@
     </property>
     <addaction name="actionZoomIn"/>
     <addaction name="actionZoomOut"/>
+    <addaction name="separator"/>
+    <addaction name="actionShowProperties"/>
     <addaction name="separator"/>
     <addaction name="actionShowStitches"/>
     <addaction name="actionShowPatternStitches"/>
@@ -1078,6 +1080,17 @@
    </property>
    <property name="toolTip">
     <string>Show Wedge Lines</string>
+   </property>
+  </action>
+  <action name="actionShowProperties">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Properties</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
    </property>
   </action>
  </widget>
