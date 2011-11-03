@@ -2,7 +2,6 @@
 #define DEBUG_H
 
 #include <QDebug>
-#include <QString>
 
 /*
     black="\033[30m";
@@ -29,25 +28,25 @@ QString debugFunctionName(QString name);
 
 #define DEBUG(message) \
 ( \
-    (qDebug() << debugFunctionName(Q_FUNC_INFO).toStdString().c_str() << ":\033[01;30m" << QString(message).toStdString().c_str() << "\033[0m"), \
+    (qDebug() << debugFunctionName(Q_FUNC_INFO).toStdString().c_str() << ":" << QString(message).toStdString().c_str()), \
     (void)0 \
 )
 
 #define WARN(message) \
 ( \
-    (qWarning() << debugFunctionName(Q_FUNC_INFO).toStdString().c_str() << ":\033[1;33m" << QString(message).toStdString().c_str() << "\033[0m"), \
+    (qWarning() << debugFunctionName(Q_FUNC_INFO).toStdString().c_str() << ":" << QString(message).toStdString().c_str()), \
     (void)0 \
 )
 
 #define CRITICAL(message) \
 ( \
-    (qCritical() << debugFunctionName(Q_FUNC_INFO).toStdString().c_str() << ":\033[31m" << QString(message).toStdString().c_str() << "\033[0m"), \
+    (qCritical() << debugFunctionName(Q_FUNC_INFO).toStdString().c_str() << ":" << QString(message).toStdString().c_str()), \
     (void)0 \
 )
 
 #define FATAL(message) \
 ( \
-    (qFatal("%s : \033[31m%s\033[0m", debugFunctionName(Q_FUNC_INFO).toStdString().c_str(), QString(message).toStdString().c_str())), \
+    (qFatal("%s : %s", debugFunctionName(Q_FUNC_INFO).toStdString().c_str(), QString(message).toStdString().c_str())), \
     (void)0 \
 )
 

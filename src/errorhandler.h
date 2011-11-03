@@ -1,7 +1,7 @@
 #ifndef ERRORHANDLER_H
 #define ERRORHANDLER_H
 
-void myMessageOutput(QtMsgType type, const char *msg)
+void errorHandler(QtMsgType type, const char *msg)
 {
     switch (type) {
         case QtDebugMsg:
