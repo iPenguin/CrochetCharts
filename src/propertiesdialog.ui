@@ -92,8 +92,8 @@
        <item row="1" column="1">
         <widget class="QDoubleSpinBox" name="scaleX"/>
        </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="pushButton">
+       <item row="5" column="1">
+        <widget class="QPushButton" name="setPivotPointBttn">
          <property name="text">
           <string>Set Pivot Point</string>
          </property>
@@ -106,6 +106,20 @@
         <widget class="QLabel" name="label_6">
          <property name="text">
           <string>Y Scale:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QPushButton" name="setBgColorBttn">
+         <property name="text">
+          <string>Bg Color</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="stColorBttn">
+         <property name="text">
+          <string>St Color</string>
          </property>
         </widget>
        </item>

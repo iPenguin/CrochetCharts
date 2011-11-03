@@ -18,6 +18,10 @@ PropertiesDialog::PropertiesDialog(QTabWidget* tabWidget, QWidget *parent) :
 
     clearUi();
     connect(mTabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
+
+    connect(ui->angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
+    connect(ui->scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
+    connect(ui->scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
 }
 
 PropertiesDialog::~PropertiesDialog()
@@ -78,10 +82,16 @@ void PropertiesDialog::showUi(PropertiesDialog::UiSelection selection)
         ui->showGuidelines->setChecked(mScene->showGuidelines());
 
     } else if(selection == PropertiesDialog::CellUi) {
+        Cell* c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
         ui->stitchGroup->show();
+        ui->angle->setValue(c->rotation());
+        ui->scaleX->setValue(c->scale().x());
+        ui->scaleY->setValue(c->scale().y());
 
-        
     } else if(selection == PropertiesDialog::MixedUi) {
+
+        //TODO: loop through all the items, check all the
+
         ui->selectionGroup->show();
         
     } else if (selection == PropertiesDialog::CenterUi) {
