@@ -96,7 +96,7 @@ private slots:
     void menuChartAboutToShow();
     void chartEditName();
     void chartsShowChartCenter();
-    void chartsShowQuarterLines();
+    void chartsShowGuidelines();
     void chartCreateRows(bool state);
 
     void menuStitchesAboutToShow();

@@ -68,7 +68,7 @@ Scene::Scene(QObject* parent) :
     mHorizontalLine(0),
     mAngleLine1(0),
     mAngleLine2(0),
-    mShowQuarterLines(false)
+    mShowGuidelines(false)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
 
@@ -448,7 +448,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 
             QGraphicsScene::mouseMoveEvent(e);
             if(selectedItems().contains(mCenterSymbol)) {
-                updateQuarterLines();
+                updateGuidelines();
             }
         }
     }
@@ -1868,16 +1868,16 @@ void Scene::setShowChartCenter(bool state)
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsMovable);
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsSelectable);
 
-            updateQuarterLines();
+            updateGuidelines();
         } else {
 
             addItem(mCenterSymbol);
-            updateQuarterLines();
+            updateGuidelines();
         }
     } else {
 
         removeItem(mCenterSymbol);
-        updateQuarterLines();
+        updateGuidelines();
     }
 
 }
@@ -1969,11 +1969,11 @@ void Scene::highlightIndicators(bool state)
     }
 }
 
-void Scene::setShowQuarterLines(bool state)
+void Scene::setShowGuidelines(bool state)
 {
 
-    if(mShowQuarterLines != state) {
-        mShowQuarterLines = state;
+    if(mShowGuidelines != state) {
+        mShowGuidelines = state;
         if(state) {
             addItem(mVerticalLine);
             addItem(mHorizontalLine);
@@ -1987,12 +1987,12 @@ void Scene::setShowQuarterLines(bool state)
         }
     }
     
-    updateQuarterLines();
+    updateGuidelines();
 }
 
-void Scene::updateQuarterLines()
+void Scene::updateGuidelines()
 {
-    if(!showQuarterLines())
+    if(!showGuidelines())
         return;
 
     if(mCenterSymbol && mCenterSymbol->isVisible()) {

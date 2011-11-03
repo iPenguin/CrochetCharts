@@ -330,7 +330,7 @@ void MainWindow::setupMenus()
     connect(ui->actionRemoveTab, SIGNAL(triggered()), SLOT(removeCurrentTab()));
 
     connect(ui->actionShowChartCenter, SIGNAL(triggered()), SLOT(chartsShowChartCenter()));
-    connect(ui->actionShowQuarterLines, SIGNAL(triggered()), SLOT(chartsShowQuarterLines()));
+    connect(ui->actionShowGuidelines, SIGNAL(triggered()), SLOT(chartsShowGuidelines()));
     
     ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
     
@@ -1164,15 +1164,15 @@ void MainWindow::menuChartAboutToShow()
     ui->actionRemoveTab->setEnabled(state);
     ui->actionEditName->setEnabled(state);
     ui->actionShowChartCenter->setEnabled(state);
-    ui->actionShowQuarterLines->setEnabled(state);
+    ui->actionShowGuidelines->setEnabled(state);
 
     CrochetTab* tab = curCrochetTab();
     if(tab) {
         ui->actionShowChartCenter->setChecked(tab->hasChartCenter());
-        ui->actionShowQuarterLines->setChecked(tab->hasQuarterLines());
+        ui->actionShowGuidelines->setChecked(tab->hasGuidelines());
     } else {
         ui->actionShowChartCenter->setChecked(false);
-        ui->actionShowQuarterLines->setChecked(false);
+        ui->actionShowGuidelines->setChecked(false);
     }
 
 }
@@ -1187,11 +1187,11 @@ void MainWindow::chartsShowChartCenter()
 
 }
 
-void MainWindow::chartsShowQuarterLines()
+void MainWindow::chartsShowGuidelines()
 {
     CrochetTab* tab = curCrochetTab();
     if(tab) {
-        tab->setQuarterLines(ui->actionShowQuarterLines->isChecked());
+        tab->setShowGuidelines(ui->actionShowGuidelines->isChecked());
     }
 }
 

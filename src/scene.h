@@ -326,16 +326,16 @@ private:
     bool mShowChartCenter;
 
 public:
-    bool showQuarterLines() { return mShowQuarterLines; }
-    void setShowQuarterLines(bool state);
+    bool showGuidelines() { return mShowGuidelines; }
+    void setShowGuidelines(bool state);
 protected slots:
-    void updateQuarterLines();
+    void updateGuidelines();
 private:
     QGraphicsLineItem* mVerticalLine;
     QGraphicsLineItem* mHorizontalLine;
     QGraphicsLineItem* mAngleLine1;
     QGraphicsLineItem* mAngleLine2;
-    bool mShowQuarterLines;
+    bool mShowGuidelines;
 
 };
 

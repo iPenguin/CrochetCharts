@@ -75,9 +75,11 @@ void PropertiesDialog::showUi(PropertiesDialog::UiSelection selection)
     if(selection == PropertiesDialog::SceneUi) {
         ui->chartGroup->show();
         ui->showChartCenter->setChecked(mScene->showChartCenter());
+        ui->showGuidelines->setChecked(mScene->showGuidelines());
 
     } else if(selection == PropertiesDialog::CellUi) {
         ui->stitchGroup->show();
+
         
     } else if(selection == PropertiesDialog::MixedUi) {
         ui->selectionGroup->show();
