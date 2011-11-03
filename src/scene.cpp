@@ -1821,6 +1821,12 @@ QRectF Scene::itemsBoundingRect()
     itemList.removeOne(mHorizontalLine);
     itemList.removeOne(mAngleLine1);
     itemList.removeOne(mAngleLine2);
+
+    QList<QGraphicsItem*>::const_iterator dItem;
+    for (dItem = mDemoItems.begin(); dItem != mDemoItems.constEnd(); ++dItem) {
+        itemList.removeOne((*dItem));
+    }
+
     QRectF rect = selectedItemsBoundingRect(itemList);
     return rect;
     
