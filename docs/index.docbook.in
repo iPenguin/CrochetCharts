@@ -1333,6 +1333,15 @@
             </para>
         </section>
     </chapter>
+
+    <chapter id="limits-on-use">
+        <title>Limits on Use of Output</title>
+        <para>There are no limits on what you can do with the charts, or output you create in @SWS_PROJECT_NAME@.
+            However I would ask that you include a credit in any patterns, or publications where you used this software.
+            The credit should state that you used @SWS_PROJECT_NAME@ by @PROJECT_VENDOR@.
+            I really appreciate your compliance with this request.
+        </para>
+    </chapter>
     
     <chapter id="troubleshooting">
         <title>Troubleshooting</title>
