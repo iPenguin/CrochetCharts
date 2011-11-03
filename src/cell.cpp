@@ -92,6 +92,7 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
         emit stitchChanged(old, s->name());
     }
     
+    setTransformOriginPoint(s->width()/2, s->height());
     setColor(Qt::white);
 }
 
