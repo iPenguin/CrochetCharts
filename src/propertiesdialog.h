@@ -32,11 +32,14 @@ public:
 private slots:
     void tabChanged(int tabNumber);
     void updateDialogUi();
-/*
+
+    void chartUpdateChartCenter(bool state);
+    void chartUpdateGuidelines(bool state);
+    
     void cellUpdateAngle(double angle);
     void cellUpdateScaleX(double scale);
     void cellUpdateScaleY(double scale);
-*/
+    
 private:
     void showUi(UiSelection selection);
 

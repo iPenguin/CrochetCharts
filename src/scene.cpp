@@ -14,7 +14,7 @@
 
 #include <math.h>
 
-#include <QDebug>
+#include "debug.h"
 
 #include "chartview.h"
 
@@ -209,10 +209,14 @@ void Scene::addItem(QGraphicsItem* item)
             break;
         }
         default:
-            qWarning() << "Adding unknown type: " << item->type();
+            WARN("Unknown type: " + QString::number(item->type()));
+        case QGraphicsEllipseItem::Type:
+        case QGraphicsLineItem::Type: {
             QGraphicsScene::addItem(item);
             break;
+        }
     }
+    
 }
 
 void Scene::removeItem(QGraphicsItem* item)
@@ -239,12 +243,16 @@ void Scene::removeItem(QGraphicsItem* item)
             mGroups.removeOne(group);
             break;
         }
-        default:
-            qWarning() << "Removing unknown type:" << item->type();
-            QGraphicsScene::removeItem(item);
-            break;
-    }
 
+        default:
+            WARN("Unknown type: " + QString::number(item->type()));
+        case QGraphicsEllipseItem::Type:
+        case QGraphicsLineItem::Type: {
+            QGraphicsScene::removeItem(item);
+            break;   
+        }
+    }
+    
 }
 
 void Scene::removeFromRows(Cell* c)
@@ -309,10 +317,10 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 {
-    
+
     if(selectedItems().count() > 0)
         mHasSelection = true;
-    
+
     if(mHasSelection && e->modifiers() == Qt::ControlModifier)
         mSelectionPath = selectionArea();
 
@@ -328,7 +336,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     mIsRubberband = false;
     
     mCurItem = itemAt(e->scenePos());
-    
+
     if(mCurItem) {
         
         switch(mCurItem->type()) {
@@ -364,7 +372,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 break;
         }
     }
-    
+
     switch(mMode) {
         case Scene::StitchEdit:
             stitchModeMousePress(e);
@@ -403,7 +411,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
             mOldPositions.insert(item, item->pos());
         }
     }
-    
+
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)

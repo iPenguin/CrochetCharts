@@ -22,6 +22,9 @@ PropertiesDialog::PropertiesDialog(QTabWidget* tabWidget, QWidget *parent) :
     connect(ui->angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
     connect(ui->scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
     connect(ui->scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
+
+    connect(ui->showChartCenter, SIGNAL(toggled(bool)), SLOT(chartUpdateChartCenter(bool)));
+    connect(ui->showGuidelines, SIGNAL(toggled(bool)), SLOT(chartUpdateGuidelines(bool)));
 }
 
 PropertiesDialog::~PropertiesDialog()
@@ -36,9 +39,6 @@ void PropertiesDialog::tabChanged(int tabNumber)
         clearUi();
         return;
     }
-    
-    if(mScene)
-        disconnect(mScene, 0, this, 0);
         
     mScene = qobject_cast<CrochetTab*>(mTabWidget->widget(tabNumber))->scene();
     connect(mScene, SIGNAL(selectionChanged()), SLOT(updateDialogUi()));
@@ -55,32 +55,51 @@ void PropertiesDialog::clearUi()
 
 void PropertiesDialog::updateDialogUi()
 {
-
+    
     clearUi();
     
-    if(mScene->selectedItems().count() <= 0) {
+    int count = mScene->selectedItems().count();
+
+    if(count == 0) {
+    
         showUi(PropertiesDialog::SceneUi);
         return;
-    } else if(mScene->selectedItems().count() == 1) {
+    } else if(count == 1) {
 
+        if(mScene->selectedItems().first()->type() == Cell::Type) {
+            showUi(PropertiesDialog::CellUi);
+        } else {
+            WARN("another type");
+        }
+    } else if(count > 1) {
+        WARN("TODO: check if all items the same, if so show that dialog");
+        bool theSame = true;
         
-        showUi(PropertiesDialog::CellUi);
-        
-    } else if(mScene->selectedItems().count() > 1) {
+        for(int i = 1; i < count; ++i) {
+            if(mScene->selectedItems().at(i-1)->type() != mScene->selectedItems().at(i-1)->type()) {
+                theSame = false;
+                break;
+            }
+        }
 
-        showUi(PropertiesDialog::MixedUi);
+        if(theSame) {
+            showUi(PropertiesDialog::CellUi);
+        } else {
+            showUi(PropertiesDialog::MixedUi);
+        }
     }
-
+    
 }
 
 void PropertiesDialog::showUi(PropertiesDialog::UiSelection selection)
 {
-
+    
     if(selection == PropertiesDialog::SceneUi) {
         ui->chartGroup->show();
+        
         ui->showChartCenter->setChecked(mScene->showChartCenter());
         ui->showGuidelines->setChecked(mScene->showGuidelines());
-
+        
     } else if(selection == PropertiesDialog::CellUi) {
         Cell* c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
         ui->stitchGroup->show();
@@ -97,5 +116,47 @@ void PropertiesDialog::showUi(PropertiesDialog::UiSelection selection)
     } else if (selection == PropertiesDialog::CenterUi) {
         WARN("TODO: make center ui work");
     }
+    
+}
 
+/**
+ *Chart functions:
+ */
+
+void PropertiesDialog::chartUpdateChartCenter(bool state)
+{
+    mScene->setShowChartCenter(state);
+}
+
+void PropertiesDialog::chartUpdateGuidelines(bool state)
+{
+    mScene->setShowGuidelines(state);
+}
+
+
+/**
+ *Cell functions:
+ */
+
+void PropertiesDialog::cellUpdateAngle(double angle)
+{
+    foreach(QGraphicsItem* i, mScene->selectedItems()) {
+        i->setRotation(angle);
+    }
+}
+
+void PropertiesDialog::cellUpdateScaleX(double scale)
+{
+    foreach(QGraphicsItem* i, mScene->selectedItems()) {
+        Cell* c = qgraphicsitem_cast<Cell*>(i);
+        c->setScale(scale, c->scale().y());
+    }
+}
+
+void PropertiesDialog::cellUpdateScaleY(double scale)
+{
+    foreach(QGraphicsItem* i, mScene->selectedItems()) {
+        Cell* c = qgraphicsitem_cast<Cell*>(i);
+        c->setScale(c->scale().x(), scale);
+    }
 }
