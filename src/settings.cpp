@@ -163,6 +163,12 @@ void Settings::addRecentFile(QString fileName)
     setValue("recentFiles", QVariant(mRecentFiles));
 }
 
+void Settings::setRecentFiles(QStringList files)
+{
+    mRecentFiles = files;
+    setValue("recentFiles", QVariant(mRecentFiles));
+}
+
 QString Settings::userSettingsFolder()
 {
     QString folder = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
