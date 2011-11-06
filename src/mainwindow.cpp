@@ -609,6 +609,7 @@ void MainWindow::documentNewChart()
 
 void MainWindow::helpCrochetHelp()
 {
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     QString path = QFileInfo(QApplication::applicationFilePath()).path();
     QString file ="";
 #ifdef Q_WS_WIN
@@ -623,7 +624,9 @@ void MainWindow::helpCrochetHelp()
     file = QString("file://%1/../share/CrochetCharts/CrochetCharts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
 #endif //Q_WS_WIN
 
+    sws_debug(file);
     QDesktopServices::openUrl(QUrl(file, QUrl::TolerantMode));
+    QApplication::restoreOverrideCursor();
     
 }
 
