@@ -15,11 +15,12 @@ class TestStitchSet : public QObject
 {
     Q_OBJECT
 private slots:
-     void initTestCase();
-     void setupStitchSet();
-     void findStitch();
-     void findStitch_data();
-     void cleanupTestCase();
+    void initTestCase();
+    void setupStitchSet();
+    void findStitch();
+    void findStitch_data();
+    void saveLoadDataSet();
+    void cleanupTestCase();
 
 private:
     StitchSet* mSet;

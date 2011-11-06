@@ -54,10 +54,36 @@ void TestStitchSet::findStitch_data()
     QTest::addColumn<QString>("cat");
     QTest::addColumn<QString>("ws");
 
-    QTest::newRow("stitch 1") << "sl st" << true << ":/stitches/sl_st.svg" << "slip stitch" << "Basic" << "sl st";
-    QTest::newRow("stitch 2") << "ch" << true << ":/stitches/ch.svg" << "chain" << "Basic" << "ch";
+    QTest::newRow("sl st") << "sl st" << true << ":/stitches/sl_st.svg" << "slip stitch" << "Basic" << "sl st";
+    QTest::newRow("ch") << "ch" << true << ":/stitches/ch.svg" << "chain" << "Basic" << "ch";
+    QTest::newRow("hdc") << "hdc" << true << ":/stitches/hdc.svg" << "half double crochet" << "Basic" << "hdc";
+    QTest::newRow("5-dc shell") << "5-dc shell" << true << ":/stitches/5dc_shell.svg"
+                                    << "5 double crochet shell" << "Advanced" << "5-dc shell";
     QTest::newRow("stitch dne") << "bcm" << false << "" << "" << "" << "";
 
+}
+
+void TestStitchSet::saveLoadDataSet()
+{
+    QString fileName = "teststitchset-savefile.set";
+    mSet->saveDataFile(fileName);
+
+    StitchSet* testSet = new StitchSet();
+    testSet->loadDataFile(fileName, "set1.xml");
+
+    QVERIFY(testSet->stitchCount() == mSet->stitchCount());
+
+    foreach(Stitch* s, mSet->stitches()) {
+        Stitch* testSt = testSet->findStitch(s->name());
+        QVERIFY(s->name() == testSt->name());
+        QVERIFY(s->category() == testSt->category());
+        QVERIFY(s->description() == testSt->description());
+        QVERIFY(s->file() == testSt->file());
+        QVERIFY(s->height() == testSt->height());
+        QVERIFY(s->width() == testSt->width());
+        QVERIFY(s->isSvg() == testSt->isSvg());
+    }
+    
 }
 
 void TestStitchSet::cleanupTestCase()

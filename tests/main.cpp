@@ -7,6 +7,7 @@
 #include "teststitch.h"
 #include "teststitchset.h"
 #include "testcell.h"
+#include "teststitchlibrary.h"
 
 int main(int argc, char** argv) 
 {
@@ -37,6 +38,11 @@ int main(int argc, char** argv)
     delete test;
     test = 0;
 
+    test = new TestStitchLibrary();
+    retval +=QTest::qExec(test, argc, argv);
+    delete test;
+    test = 0;
+    
     test = new TestCell();
     retval +=QTest::qExec(test, argc, argv);
     delete test;
