@@ -66,8 +66,14 @@ else()
 
 endif()
 
-add_executable(${PROJECT_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_executable(${PROJECT_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
+else()
+    add_executable(${PROJECT_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+            ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
+endif()
+
 target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES})
 
 if(APPLE)
