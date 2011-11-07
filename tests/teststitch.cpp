@@ -36,6 +36,7 @@ void TestStitch::stitchSetup()
 
 void TestStitch::stitchRender()
 {
+    QFETCH(QString, stitch);
     QFETCH(QString, stitchFile);
     QFETCH(qreal, width);
     QFETCH(qreal, height);
@@ -45,8 +46,9 @@ void TestStitch::stitchRender()
 
     mS->setFile(stitchFile);
     
-    QString rasterImage = "teststitch.png";
-    QString svgImage    = "teststitch.svg";
+    QString rasterImage = "teststitch-" + stitch + ".png";
+    QString svgImage    = "teststitch-" + stitch + ".svg";
+    QString svgImageAlt = "teststitch-" + stitch + "-alt.svg";
 
     //verify all images.
     QPixmap pix = QPixmap(width, height);
@@ -98,7 +100,7 @@ void TestStitch::stitchRender()
     QPainter p2;
     QSvgGenerator gen2;
 
-    gen2.setFileName(svgImage);
+    gen2.setFileName(svgImageAlt);
     gen2.setSize(QSize(width, height));
     gen2.setViewBox(QRectF(0,0,width,height));
 
@@ -106,7 +108,7 @@ void TestStitch::stitchRender()
     mS->renderSvg(true)->render(&p2);
     p2.end();
 
-    f.setFileName(svgImage);
+    f.setFileName(svgImageAlt);
 
     if(!f.open(QIODevice::ReadOnly)) {
         QWARN("Could not compare alt svg file with expected results");
@@ -126,6 +128,7 @@ void TestStitch::stitchRender()
 
 void TestStitch::stitchRender_data()
 {
+    QTest::addColumn<QString>("stitch");
     QTest::addColumn<QString>("stitchFile");
     QTest::addColumn<qreal>("width");
     QTest::addColumn<qreal>("height");
@@ -133,12 +136,12 @@ void TestStitch::stitchRender_data()
     QTest::addColumn<QString>("svgHash");
     QTest::addColumn<QString>("svgHash2");
 
-    QTest::newRow("ch")     << "../stitches/ch.svg" << 32.0 << 16.0
+    QTest::newRow("ch")     << "ch" << "../stitches/ch.svg" << 32.0 << 16.0
                             << "504cccdf68141a71f38acdc4d12500fc1409c2f7"
                             << "2d34ba1749449edcee1709e6575cc60e1611e217"
                             << "78de9a725ebb724c4d5d7c66e6aeba520d9e4893";
                             
-    QTest::newRow("hdc")    << "../stitches/hdc.svg" << 32.0 << 64.0
+    QTest::newRow("hdc")    << "hdc" << "../stitches/hdc.svg" << 32.0 << 64.0
                             << "e66d4938ca122b90ee9a267387bd619a75fce6ff"
                             << "4ad0f54e07e0c1ad960021689707658fbe9938ca"
                             << "dc1719c340182c8d0194f832a2a3e33e855176c4";
