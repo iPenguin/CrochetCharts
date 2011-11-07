@@ -613,7 +613,7 @@ void MainWindow::helpCrochetHelp()
     QString path = QFileInfo(QApplication::applicationFilePath()).path();
     QString file ="";
 #ifdef Q_WS_WIN
-    file = QString("file://%1/../docs/CrochetCharts.chm").arg(path);
+    file = QString("file:////../docs/CrochetCharts.chm");
 #endif
 
 #ifdef Q_WS_MAC
