@@ -527,16 +527,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
 
     if(mMoving) {
         //update the size of the scene rect based on where the items are on the scene.
-        QRectF ibr = itemsBoundingRect();
-        QRectF sbr = sceneRect();
-        QRectF final;
-
-        final.setBottom((ibr.bottom() >= sbr.bottom()) ? ibr.bottom() : sbr.bottom());
-        final.setTop((ibr.top() <= sbr.top()) ? ibr.top() : sbr.top());
-        final.setLeft((ibr.left() <= sbr.left()) ? ibr.left() : sbr.left());
-        final.setRight((ibr.right() >= sbr.right()) ? ibr.right() : sbr.right());
-
-        setSceneRect(final);
+        updateSceneRect();
 
         initDemoBackground();
         mMoving = false;
@@ -1829,6 +1820,21 @@ QRectF Scene::itemsBoundingRect()
 
     QRectF rect = selectedItemsBoundingRect(itemList);
     return rect;
+    
+}
+
+void Scene::updateSceneRect()
+{
+    QRectF ibr = itemsBoundingRect();
+    QRectF sbr = sceneRect();
+    QRectF final;
+
+    final.setBottom((ibr.bottom() >= sbr.bottom()) ? ibr.bottom() : sbr.bottom());
+    final.setTop((ibr.top() <= sbr.top()) ? ibr.top() : sbr.top());
+    final.setLeft((ibr.left() <= sbr.left()) ? ibr.left() : sbr.left());
+    final.setRight((ibr.right() >= sbr.right()) ? ibr.right() : sbr.right());
+
+    setSceneRect(final);
     
 }
 

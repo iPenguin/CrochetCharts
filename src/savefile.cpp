@@ -338,7 +338,7 @@ SaveFile::FileError SaveFile::load()
 
             } else if(name == "chart") {
                 loadChart(&stream);
-
+                
             } else if(name == "stitch_set") {
                 mInternalStitchSet->loadXmlStitchSet(&stream, true);
 
@@ -438,6 +438,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
     int index = mTabWidget->indexOf(tab);
     mTabWidget->setTabText(index, tabName);
     mTabWidget->widget(mTabWidget->indexOf(tab))->show();
+    tab->scene()->updateSceneRect();
 }
 
 void SaveFile::loadGrid(QXmlStreamReader* stream, Scene* scene)

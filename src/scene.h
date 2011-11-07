@@ -111,6 +111,8 @@ protected:
      * This function removes a cell from the 'grid'. if the row is empty it removes the row too.
      */
     void removeFromRows(Cell* c);
+
+    void updateSceneRect();
     
 public slots:
     void createRow();
