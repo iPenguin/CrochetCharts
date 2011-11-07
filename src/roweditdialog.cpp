@@ -7,7 +7,7 @@
 
 #include "stitchlibrary.h"
 
-#include <QDebug>
+#include "debug.h"
 #include <QMessageBox>
 
 
@@ -87,12 +87,12 @@ void RowEditDialog::moveUp()
 {
 
     int curRow = ui->rowList->currentRow();
-
-    if(curRow == 0)
+    if(curRow <= 0 || curRow >= ui->rowList->count())
         return;
-
+    
     mScene->moveRowUp(curRow);
     updateRowList();
+
 }
 
 void RowEditDialog::moveDown()
@@ -100,7 +100,7 @@ void RowEditDialog::moveDown()
 
     int curRow = ui->rowList->currentRow();
 
-    if(curRow + 1 == ui->rowList->count())
+    if(curRow + 1 >= ui->rowList->count() || curRow < 0)
         return;
 
     mScene->moveRowDown(curRow);
