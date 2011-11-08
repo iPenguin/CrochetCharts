@@ -223,8 +223,6 @@ void SettingsUi::setupDialogWidgets()
     QString dotColor = Settings::inst()->value("chartIndicatorColor").toString();
     ui->dotColorBttn->setIcon(QIcon(drawColorBox(QColor(dotColor), QSize(32, 32))));
     mDotColor = dotColor;
-    
-    ui->placeholder->addItems(StitchLibrary::inst()->stitchList());
         
     //Legends
     QStringList list;
