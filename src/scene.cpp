@@ -813,7 +813,10 @@ void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
 
     if(selectedItems().count() <= 0)
         hideRowLines();
-        
+    else {
+        emit rowEdited(true);
+    }
+
     mStartCell = 0;
     
     if(mRowLine) {

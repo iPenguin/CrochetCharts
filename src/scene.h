@@ -136,6 +136,9 @@ signals:
     void colorChanged(QString oldColor, QString newColor);
 
     void rowSelected();
+
+    //When ever a row is edited emit this signal.
+    void rowEdited(bool state);
     
 protected:
 /*
