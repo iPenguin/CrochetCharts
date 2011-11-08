@@ -95,8 +95,10 @@ void SaveThread::run()
     if(row > -1 && column > -1) {
         c->setStitch(s, (row % 2));
         tab->scene()->grid[row].replace(column, c);
+        c->setZValue(100);
     } else {
         c->setStitch(s);
+        c->setZValue(10);
     }
 
     c->setTransform(transform);

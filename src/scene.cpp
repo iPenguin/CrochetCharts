@@ -254,6 +254,7 @@ void Scene::removeFromRows(Cell* c)
             grid[y].removeOne(c);
             if(grid[y].count() == 0)
                 grid.removeAt(y);
+            c->setZValue(10);
             break;
         }
     }
@@ -893,6 +894,7 @@ void Scene::updateRow(int row)
         Cell* c = qgraphicsitem_cast<Cell*>(i);
         removeFromRows(c);
         c->useAlternateRenderer((row % 2));
+        c->setZValue(100);
         r.append(c);
     }
 
