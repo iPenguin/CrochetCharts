@@ -1404,7 +1404,6 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
                 
                 c->useAlternateRenderer(((grd.width() - x) % 2));
                 c->setPos((c->stitch()->width() + spacing.width()) * y, spacing.height() * x);
-                c->setToolTip(QString("Row: %1, Stitch: %2").arg(grd.width() - x + 1).arg(r.indexOf(c) + 1));
             }
 
             grid.insert(0, r);
