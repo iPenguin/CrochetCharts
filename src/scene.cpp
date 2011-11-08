@@ -14,7 +14,7 @@
 
 #include <math.h>
 
-#include <QDebug>
+#include "debug.h"
 
 #include "chartview.h"
 
@@ -940,6 +940,7 @@ void Scene::moveRowDown(int row)
 
 void Scene::moveRowUp(int row)
 {
+
     QList<Cell*> r = grid.takeAt(row);
     grid.insert(row - 1, r);
     updateStitchRenderer();
@@ -959,6 +960,10 @@ void Scene::updateStitchRenderer()
 
     for(int i = 0; i < grid.count(); ++i) {
         foreach(Cell* c, grid[i]) {
+            if(!c) {
+                sws_warn("cell doesn't exist but it's in the grid");
+                continue;
+            }
             c->useAlternateRenderer((i % 2));
         }
     }
