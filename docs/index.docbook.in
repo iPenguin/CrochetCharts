@@ -663,8 +663,8 @@
             </screenshot>
             <para>From the main interface you can export the written instructions for the chart by pressing
                 the <guibutton>Copy Instructions</guibutton> button on the bottom left of the application.
-                This button will add the row numbers, remove any placeholder stitches, capitalize the first letter,
-                put a period at the end of the row, and generate repeats to make it publication ready.
+                This button will add the row numbers, capitalize the first letter,
+                put a period at the end of the row, and generate repeats among other features.
                 You can tell @SWS_PROJECT_NAME@ that you don't want it to generate text repeats in the
                 <link linkend="options-charts">Chart Options/Preferences</link>, if you'd rather have every stitch written out.
                 This cleaned up version of the written instructions will automatically be copied to the clipboard where you can
@@ -988,12 +988,6 @@
                        <para>The default stitch used when creating new <emphasis>Rows</emphasis> and <emphasis>Rounds</emphasis> chart.
                             This option can be overridden when you create a new chart.
                        </para>
-                   </listitem>
-               </varlistentry>
-               <varlistentry>
-                   <term>Default Placeholder</term>
-                   <listitem>
-                       <para>Any cells set with the placeholder stitch will not be output in the written instructions.</para>
                    </listitem>
                </varlistentry>
                <varlistentry>

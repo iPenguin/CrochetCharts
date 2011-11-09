@@ -14,7 +14,7 @@
 
 #include <math.h>
 
-#include <QDebug>
+#include "debug.h"
 
 #include "chartview.h"
 
@@ -254,6 +254,7 @@ void Scene::removeFromRows(Cell* c)
             grid[y].removeOne(c);
             if(grid[y].count() == 0)
                 grid.removeAt(y);
+            c->setZValue(10);
             break;
         }
     }
@@ -527,16 +528,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
 
     if(mMoving) {
         //update the size of the scene rect based on where the items are on the scene.
-        QRectF ibr = itemsBoundingRect();
-        QRectF sbr = sceneRect();
-        QRectF final;
-
-        final.setBottom((ibr.bottom() >= sbr.bottom()) ? ibr.bottom() : sbr.bottom());
-        final.setTop((ibr.top() <= sbr.top()) ? ibr.top() : sbr.top());
-        final.setLeft((ibr.left() <= sbr.left()) ? ibr.left() : sbr.left());
-        final.setRight((ibr.right() >= sbr.right()) ? ibr.right() : sbr.right());
-
-        setSceneRect(final);
+        updateSceneRect();
 
         initDemoBackground();
         mMoving = false;
@@ -821,7 +813,10 @@ void Scene::rowEditMouseRelease(QGraphicsSceneMouseEvent* e)
 
     if(selectedItems().count() <= 0)
         hideRowLines();
-        
+    else {
+        emit rowEdited(true);
+    }
+
     mStartCell = 0;
     
     if(mRowLine) {
@@ -902,6 +897,7 @@ void Scene::updateRow(int row)
         Cell* c = qgraphicsitem_cast<Cell*>(i);
         removeFromRows(c);
         c->useAlternateRenderer((row % 2));
+        c->setZValue(100);
         r.append(c);
     }
 
@@ -949,6 +945,7 @@ void Scene::moveRowDown(int row)
 
 void Scene::moveRowUp(int row)
 {
+
     QList<Cell*> r = grid.takeAt(row);
     grid.insert(row - 1, r);
     updateStitchRenderer();
@@ -968,6 +965,10 @@ void Scene::updateStitchRenderer()
 
     for(int i = 0; i < grid.count(); ++i) {
         foreach(Cell* c, grid[i]) {
+            if(!c) {
+                sws_warn("cell doesn't exist but it's in the grid");
+                continue;
+            }
             c->useAlternateRenderer((i % 2));
         }
     }
@@ -1406,7 +1407,6 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
                 
                 c->useAlternateRenderer(((grd.width() - x) % 2));
                 c->setPos((c->stitch()->width() + spacing.width()) * y, spacing.height() * x);
-                c->setToolTip(QString("Row: %1, Stitch: %2").arg(grd.width() - x + 1).arg(r.indexOf(c) + 1));
             }
 
             grid.insert(0, r);
@@ -1829,6 +1829,21 @@ QRectF Scene::itemsBoundingRect()
 
     QRectF rect = selectedItemsBoundingRect(itemList);
     return rect;
+    
+}
+
+void Scene::updateSceneRect()
+{
+    QRectF ibr = itemsBoundingRect();
+    QRectF sbr = sceneRect();
+    QRectF final;
+
+    final.setBottom((ibr.bottom() >= sbr.bottom()) ? ibr.bottom() : sbr.bottom());
+    final.setTop((ibr.top() <= sbr.top()) ? ibr.top() : sbr.top());
+    final.setLeft((ibr.left() <= sbr.left()) ? ibr.left() : sbr.left());
+    final.setRight((ibr.right() >= sbr.right()) ? ibr.right() : sbr.right());
+
+    setSceneRect(final);
     
 }
 

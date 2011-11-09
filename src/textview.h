@@ -24,7 +24,7 @@ public:
 
     /**
      * Generates the text for a given row of the chart without trailing \n.
-     * If cleanOutput = true remove the placeholder stitches 'x' by default.
+     * If cleanOutput = true do any special processing for the textd.
      **/
     QString generateTextRow(int row, bool cleanOutput = false, bool useRepeats = false);
     

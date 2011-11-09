@@ -124,7 +124,6 @@ void Settings::setupValueList() {
     
     //charts options
     mValueList["defaultStitch"] = QVariant("ch");
-    mValueList["placeholder"] = QVariant("x");
     mValueList["rowCount"] = QVariant(15);
     mValueList["stitchCount"] = QVariant(15);
     mValueList["chartStyle"] = QVariant(tr("Blank"));

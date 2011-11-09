@@ -20,7 +20,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -117,22 +117,6 @@
        <string>Charts</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>Default Stitch:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>defaultStitch</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QComboBox" name="defaultStitch"/>
-       </item>
        <item row="10" column="0">
         <widget class="QLabel" name="label_23">
          <property name="text">
@@ -200,48 +184,6 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="2">
-        <widget class="QSpinBox" name="rowCount">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>1000000000</number>
-         </property>
-         <property name="value">
-          <number>15</number>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Rows:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>rowCount</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Default Placeholder:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>placeholder</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="4">
-        <widget class="QComboBox" name="placeholder"/>
-       </item>
        <item row="4" column="3">
         <widget class="QLabel" name="label_4">
          <property name="text">
@@ -265,38 +207,6 @@
          </property>
          <property name="value">
           <number>15</number>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="4">
-        <widget class="QComboBox" name="chartStyle">
-         <item>
-          <property name="text">
-           <string>Blank</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Rows</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Rounds</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="5" column="3">
-        <widget class="QLabel" name="label_24">
-         <property name="text">
-          <string>Style:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>chartStyle</cstring>
          </property>
         </widget>
        </item>
@@ -450,6 +360,80 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="buddy">
           <cstring>showIndicatorOutline</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QComboBox" name="chartStyle">
+         <item>
+          <property name="text">
+           <string>Blank</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Rows</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Rounds</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string>Style:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>chartStyle</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2">
+        <widget class="QComboBox" name="defaultStitch"/>
+       </item>
+       <item row="2" column="4">
+        <widget class="QSpinBox" name="rowCount">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>1000000000</number>
+         </property>
+         <property name="value">
+          <number>15</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Rows:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>rowCount</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Default Stitch:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>defaultStitch</cstring>
          </property>
         </widget>
        </item>
@@ -768,15 +752,14 @@ p, li { white-space: pre-wrap; }
   <tabstop>fileLocation</tabstop>
   <tabstop>folderSelector</tabstop>
   <tabstop>maxRecentFiles</tabstop>
+  <tabstop>chartStyle</tabstop>
   <tabstop>defaultStitch</tabstop>
-  <tabstop>rowCount</tabstop>
   <tabstop>showChartCenter</tabstop>
   <tabstop>useAltColors</tabstop>
   <tabstop>primaryColorBttn</tabstop>
   <tabstop>alternateColorBttn</tabstop>
-  <tabstop>placeholder</tabstop>
+  <tabstop>rowCount</tabstop>
   <tabstop>stitchCount</tabstop>
-  <tabstop>chartStyle</tabstop>
   <tabstop>chartRowIndicator</tabstop>
   <tabstop>showIndicatorOutline</tabstop>
   <tabstop>dotColorBttn</tabstop>

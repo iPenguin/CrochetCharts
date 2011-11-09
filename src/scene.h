@@ -111,6 +111,8 @@ protected:
      * This function removes a cell from the 'grid'. if the row is empty it removes the row too.
      */
     void removeFromRows(Cell* c);
+
+    void updateSceneRect();
     
 public slots:
     void createRow();
@@ -134,6 +136,9 @@ signals:
     void colorChanged(QString oldColor, QString newColor);
 
     void rowSelected();
+
+    //When ever a row is edited emit this signal.
+    void rowEdited(bool state);
     
 protected:
 /*

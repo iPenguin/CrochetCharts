@@ -22,7 +22,6 @@ TextView::~TextView()
 QString TextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
 {
 
-    QString placeholder = Settings::inst()->value("placeholder").toString();
     QString rowText = "";
     QString curStitch;
 
@@ -38,9 +37,7 @@ QString TextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
 
         curStitch = cell->name();
         if(cleanOutput) {
-            //parse out any placeholder stitches before continuing.
-            if(curStitch == placeholder)
-                continue;
+            //TODO: any special preprocessing that needs to be done.
         }
         rowList.append(curStitch);
         curStitch = "";

@@ -50,6 +50,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     
     connect(mScene, SIGNAL(stitchChanged(QString,QString)), SLOT(stitchChanged(QString,QString)));
     connect(mScene, SIGNAL(colorChanged(QString,QString)), SLOT(colorChanged(QString,QString)));
+    connect(mScene, SIGNAL(rowEdited(bool)), SIGNAL(tabModified(bool)));
 
     mView->setScene(mScene);
     QPoint pt = mView->mapFromScene(centerOn);
