@@ -21,12 +21,9 @@ endif()
 message("-------------------------------------------------------")
 
 if(WIN32)
-    install(FILES "${CMAKE_BINARY_DIR}/docs/pdf/${PROJECT_NAME}_User_Guide_${SWS_VERSION_SHORT}.pdf" DESTINATION .)
+    install(FILES "${CMAKE_BINARY_DIR}/docs/pdf/${PROJECT_NAME}_User_Guide_${SWS_VERSION_SHORT}.pdf" DESTINATION bin)
     install(FILES "${CMAKE_BINARY_DIR}/docs/htmlhelp/${PROJECT_NAME}.chm" DESTINATION docs)
     install(FILES "${CMAKE_SOURCE_DIR}/docs/homepage.html" DESTINATION docs)
-
-    set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}"
-                              "${PROJECT_NAME}_User_Guide_${SWS_VERSION_SHORT}.pdf" "${SWS_PROJECT_NAME} Help")
 
 elseif(APPLE)
     install(FILES "${CMAKE_BINARY_DIR}/docs/pdf/${PROJECT_NAME}_User_Guide_${SWS_VERSION_SHORT}.pdf" DESTINATION ../MacOS)
