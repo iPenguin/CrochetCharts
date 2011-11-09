@@ -55,6 +55,14 @@
         If you have any questions that are not answered in this document please
         <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know so that I can answer your
         questions and improve this guide.</para>
+
+        <section id="videos">
+            <title>Additional Resources - Videos</title>
+            <para>There are <ulink url="http://StitchWorksSoftware/videos">videos available on my website</ulink>
+            that will walk you through using @SWS_PROJECT_NAME@.
+            </para>
+        </section>
+        
     </preface>
 
 
@@ -137,7 +145,7 @@
         </section>
         <section>
             <title>Linux</title>
-            <para>For Debian/Ubuntu based distributions you can use the .deb package, for others please use the .bin installer.
+            <para>For Debian/Ubuntu based distributions you can use the .deb package.
                 If you're having any problems please <ulink url="@ORG_CONTACT@">contact me</ulink>
             </para>
         </section>
@@ -184,7 +192,7 @@
             </screenshot>
         </section>
     </chapter>
-
+    
     <chapter id="quick-guide">
         <title>Quick Guide to Making a Chart</title>
         <para>This chapter will give a very quick overview for creating a new chart.
