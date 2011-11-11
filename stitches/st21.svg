@@ -11,11 +11,11 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="80"
-   height="80"
+   height="96"
    id="svg4099"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="st19.svg">
+   sodipodi:docname="st21.svg">
   <defs
      id="defs4101" />
   <sodipodi:namedview
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,26 +53,26 @@
      id="layer1"
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     transform="translate(0,16)">
+     transform="translate(0,32)">
     <path
-       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 40.909098,-11.515356 0,71.997491"
+       style="fill:none;stroke:#000000;stroke-width:4.42335224;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 40.909098,-27.499519 0,88.044125"
        id="path4109-8"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="M 38.72841,-11.586412 C 20.93615,5.5584378 20.738808,50.792697 40.546592,61.138352"
+       style="fill:none;stroke:#000000;stroke-width:4.42335224;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 38.72841,-27.586412 C 18.754332,-5.8930847 18.55699,48.695609 40.546592,61.34708"
        id="path4109"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 27.928069,-12.189554 25.237045,0"
+       d="m 27.928069,-28.189554 25.237045,0"
        id="path4111"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="M 4.2206252,11.342448 13.963467,21.514142"
+       d="M 6.2206252,-4.657552 15.963467,5.514142"
        id="path4113-6"
        inkscape:connector-curvature="0" />
     <use
@@ -88,7 +88,7 @@
        y="0"
        xlink:href="#path4113-6"
        id="use4620"
-       transform="translate(32.181818,0)"
+       transform="translate(30.181818,0)"
        width="48"
        height="80" />
     <use
@@ -96,12 +96,12 @@
        y="0"
        xlink:href="#path4113-6"
        id="use4622"
-       transform="translate(45.090909,0)"
+       transform="translate(44.363636,0)"
        width="48"
        height="80" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="M 38.780557,-11.271473 C -10.699814,8.4601615 6.4037784,52.282099 40.598739,61.453291"
+       style="fill:none;stroke:#000000;stroke-width:4.42335224;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 38.780557,-27.20128 C -9.2452686,-13.980996 3.8583239,53.06242 40.598739,61.732211"
        id="path4109-9"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -118,7 +118,7 @@
        y="0"
        xlink:href="#path4113-6"
        id="use4711"
-       transform="translate(18,0)"
+       transform="translate(16,0)"
        width="80"
        height="80" />
     <use
@@ -126,8 +126,48 @@
        y="0"
        xlink:href="#path4113-6"
        id="use4713"
-       transform="translate(62,0)"
+       transform="translate(60,0)"
        width="80"
        height="80" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path4113-6"
+       id="use3012"
+       transform="translate(-2.9090909,6.9090909)"
+       width="80"
+       height="96" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path4113-6"
+       id="use3014"
+       transform="translate(13.272727,7.2727273)"
+       width="80"
+       height="96" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path4113-6"
+       id="use3016"
+       transform="translate(30,8)"
+       width="80"
+       height="96" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path4113-6"
+       id="use3018"
+       transform="translate(44,8)"
+       width="80"
+       height="96" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path4113-6"
+       id="use3020"
+       transform="translate(60,8)"
+       width="80"
+       height="96" />
   </g>
 </svg>
