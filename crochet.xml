@@ -189,4 +189,701 @@
        <category>Advanced</category>
        <ws>flo</ws>
    </stitch>
+
+
+
+
+
+
+
+
+   <stitch>
+       <name>st1</name>
+       <icon>:/stitches/st1.svg</icon>
+       <description></description>
+       <category>Basic</category>
+       <ws>st1</ws>
+   </stitch>
+
+   <stitch>
+       <name>st2</name>
+       <icon>:/stitches/st2.svg</icon>
+       <description></description>
+       <category>Basic</category>
+       <ws>st2</ws>
+   </stitch>
+
+   <stitch>
+       <name>st3</name>
+       <icon>:/stitches/st3.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st3</ws>
+   </stitch>
+
+   <stitch>
+       <name>st4</name>
+       <icon>:/stitches/st4.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st4</ws>
+   </stitch>
+
+   <stitch>
+       <name>st5</name>
+       <icon>:/stitches/st5.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st5</ws>
+   </stitch>
+
+   <stitch>
+       <name>st6</name>
+       <icon>:/stitches/st6.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st6</ws>
+   </stitch>
+
+   <stitch>
+       <name>st7</name>
+       <icon>:/stitches/st7.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st7</ws>
+   </stitch>
+
+   <stitch>
+       <name>st8</name>
+       <icon>:/stitches/st8.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st8</ws>
+   </stitch>
+
+   <stitch>
+       <name>st9</name>
+       <icon>:/stitches/st9.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st9</ws>
+   </stitch>
+
+   <stitch>
+       <name>st10</name>
+       <icon>:/stitches/st10.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st10</ws>
+   </stitch>
+
+   <stitch>
+       <name>st11</name>
+       <icon>:/stitches/st11.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st11</ws>
+   </stitch>
+
+   <stitch>
+       <name>st12</name>
+       <icon>:/stitches/st12.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st12</ws>
+   </stitch>
+
+   <stitch>
+       <name>st13</name>
+       <icon>:/stitches/st13.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st13</ws>
+   </stitch>
+
+   <stitch>
+       <name>st14</name>
+       <icon>:/stitches/st14.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st14</ws>
+   </stitch>
+
+   <stitch>
+       <name>st15</name>
+       <icon>:/stitches/st15.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st15</ws>
+   </stitch>
+
+   <stitch>
+       <name>st16</name>
+       <icon>:/stitches/st16.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st16</ws>
+   </stitch>
+
+   <stitch>
+       <name>st17</name>
+       <icon>:/stitches/st17.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st17</ws>
+   </stitch>
+
+   <stitch>
+       <name>st18</name>
+       <icon>:/stitches/st18.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st18</ws>
+   </stitch>
+
+   <stitch>
+       <name>st19</name>
+       <icon>:/stitches/st19.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st19</ws>
+   </stitch>
+
+   <stitch>
+       <name>st20</name>
+       <icon>:/stitches/st20.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st20</ws>
+   </stitch>
+
+   <stitch>
+       <name>st21</name>
+       <icon>:/stitches/st21.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st21</ws>
+   </stitch>
+
+   <stitch>
+       <name>st22</name>
+       <icon>:/stitches/st22.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st22</ws>
+   </stitch>
+
+   <stitch>
+       <name>st23</name>
+       <icon>:/stitches/st23.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st23</ws>
+   </stitch>
+
+   <stitch>
+       <name>st24</name>
+       <icon>:/stitches/st24.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st24</ws>
+   </stitch>
+
+   <stitch>
+       <name>st25</name>
+       <icon>:/stitches/st25.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st25</ws>
+   </stitch>
+
+   <stitch>
+       <name>st26</name>
+       <icon>:/stitches/st26.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st26</ws>
+   </stitch>
+
+   <stitch>
+       <name>st27</name>
+       <icon>:/stitches/st27.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st27</ws>
+   </stitch>
+
+   <stitch>
+       <name>st28</name>
+       <icon>:/stitches/st28.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st28</ws>
+   </stitch>
+
+   <stitch>
+       <name>st29</name>
+       <icon>:/stitches/st29.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st29</ws>
+   </stitch>
+
+   <stitch>
+       <name>st30</name>
+       <icon>:/stitches/st30.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st30</ws>
+   </stitch>
+
+   <stitch>
+       <name>st31</name>
+       <icon>:/stitches/st31.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st31</ws>
+   </stitch>
+
+   <stitch>
+       <name>st32</name>
+       <icon>:/stitches/st32.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st32</ws>
+   </stitch>
+
+   <stitch>
+       <name>st33</name>
+       <icon>:/stitches/st33.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st33</ws>
+   </stitch>
+
+   <stitch>
+       <name>st34</name>
+       <icon>:/stitches/st34.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st34</ws>
+   </stitch>
+
+   <stitch>
+       <name>st35</name>
+       <icon>:/stitches/st35.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st35</ws>
+   </stitch>
+
+   <stitch>
+       <name>st36</name>
+       <icon>:/stitches/st36.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st36</ws>
+   </stitch>
+
+   <stitch>
+       <name>st37</name>
+       <icon>:/stitches/st37.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st37</ws>
+   </stitch>
+
+   <stitch>
+       <name>st38</name>
+       <icon>:/stitches/st38.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st38</ws>
+   </stitch>
+
+   <stitch>
+       <name>st39</name>
+       <icon>:/stitches/st39.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st39</ws>
+   </stitch>
+
+   <stitch>
+       <name>st40</name>
+       <icon>:/stitches/st40.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st40</ws>
+   </stitch>
+
+   <stitch>
+       <name>st41</name>
+       <icon>:/stitches/st41.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st41</ws>
+   </stitch>
+
+   <stitch>
+       <name>st42</name>
+       <icon>:/stitches/st42.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st42</ws>
+   </stitch>
+
+   <stitch>
+       <name>st43</name>
+       <icon>:/stitches/st43.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st43</ws>
+   </stitch>
+
+   <stitch>
+       <name>st44</name>
+       <icon>:/stitches/st44.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st44</ws>
+   </stitch>
+
+   <stitch>
+       <name>st45</name>
+       <icon>:/stitches/st45.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st45</ws>
+   </stitch>
+
+   <stitch>
+       <name>st46</name>
+       <icon>:/stitches/st46.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st46</ws>
+   </stitch>
+
+   <stitch>
+       <name>st47</name>
+       <icon>:/stitches/st47.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st47</ws>
+   </stitch>
+
+   <stitch>
+       <name>st48</name>
+       <icon>:/stitches/st48.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st48</ws>
+   </stitch>
+
+   <stitch>
+       <name>st49</name>
+       <icon>:/stitches/st49.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st49</ws>
+   </stitch>
+
+   <stitch>
+       <name>st50</name>
+       <icon>:/stitches/st50.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st50</ws>
+   </stitch>
+   <stitch>
+       <name>st51</name>
+       <icon>:/stitches/st51.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st51</ws>
+   </stitch>
+
+   <stitch>
+       <name>st52</name>
+       <icon>:/stitches/st52.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st52</ws>
+   </stitch>
+
+   <stitch>
+       <name>st53</name>
+       <icon>:/stitches/st53.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st53</ws>
+   </stitch>
+
+   <stitch>
+       <name>st54</name>
+       <icon>:/stitches/st54.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st54</ws>
+   </stitch>
+<!--
+   <stitch>
+       <name>st55</name>
+       <icon>:/stitches/st55.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st55</ws>
+   </stitch>
+-->
+   <stitch>
+       <name>st56</name>
+       <icon>:/stitches/st56.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st56</ws>
+   </stitch>
+
+   <stitch>
+       <name>st57</name>
+       <icon>:/stitches/st57.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st57</ws>
+   </stitch>
+
+   <stitch>
+       <name>st58</name>
+       <icon>:/stitches/st58.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st58</ws>
+   </stitch>
+
+   <stitch>
+       <name>st59</name>
+       <icon>:/stitches/st59.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st59</ws>
+   </stitch>
+
+   <stitch>
+       <name>st60</name>
+       <icon>:/stitches/st60.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st60</ws>
+   </stitch>
+
+   <stitch>
+       <name>st61</name>
+       <icon>:/stitches/st61.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st61</ws>
+   </stitch>
+
+   <stitch>
+       <name>st62</name>
+       <icon>:/stitches/st62.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st62</ws>
+   </stitch>
+
+   <stitch>
+       <name>st63</name>
+       <icon>:/stitches/st63.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st63</ws>
+   </stitch>
+
+   <stitch>
+       <name>st64</name>
+       <icon>:/stitches/st64.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st64</ws>
+   </stitch>
+
+   <stitch>
+       <name>st65</name>
+       <icon>:/stitches/st65.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st65</ws>
+   </stitch>
+
+   <stitch>
+       <name>st66</name>
+       <icon>:/stitches/st66.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st66</ws>
+   </stitch>
+
+   <stitch>
+       <name>st67</name>
+       <icon>:/stitches/st67.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st67</ws>
+   </stitch>
+
+   <stitch>
+       <name>st68</name>
+       <icon>:/stitches/st68.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st68</ws>
+   </stitch>
+
+   <stitch>
+       <name>st69</name>
+       <icon>:/stitches/st69.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st69</ws>
+   </stitch>
+
+   <stitch>
+       <name>st70</name>
+       <icon>:/stitches/st70.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st70</ws>
+   </stitch>
+
+   <stitch>
+       <name>st71</name>
+       <icon>:/stitches/st71.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st71</ws>
+   </stitch>
+
+   <stitch>
+       <name>st72</name>
+       <icon>:/stitches/st72.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st72</ws>
+   </stitch>
+
+   <stitch>
+       <name>st73</name>
+       <icon>:/stitches/st73.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st73</ws>
+   </stitch>
+
+   <stitch>
+       <name>st74</name>
+       <icon>:/stitches/st74.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st74</ws>
+   </stitch>
+
+   <stitch>
+       <name>st75</name>
+       <icon>:/stitches/st75.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st75</ws>
+   </stitch>
+
+   <stitch>
+       <name>st76</name>
+       <icon>:/stitches/st76.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st76</ws>
+   </stitch>
+
+   <stitch>
+       <name>st77</name>
+       <icon>:/stitches/st77.svg</icon>
+       <description>
+       </description>
+       <category>Basic</category>
+       <ws>st77</ws>
+   </stitch>
 </stitch_set>
