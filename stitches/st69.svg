@@ -7,14 +7,15 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="38"
-   height="112"
+   width="48"
+   height="64"
    id="svg4099"
    version="1.1"
    inkscape:version="0.48.1 r9760"
-   sodipodi:docname="FPdc.svg">
+   sodipodi:docname="sc.svg">
   <defs
      id="defs4101" />
   <sodipodi:namedview
@@ -25,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.75"
-     inkscape:cx="-96.566651"
-     inkscape:cy="74.13361"
+     inkscape:cx="124.67182"
+     inkscape:cy="1.6137487"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:document-units="px"
@@ -51,35 +52,44 @@
   <g
      id="layer1"
      inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     transform="translate(0,48)">
+     inkscape:groupmode="layer">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 23.455683,7.717994 0,25.783994"
+       id="path4109"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 10.83716,20.537719 25.237045,0"
+       id="path4111"
+       inkscape:connector-curvature="0" />
     <path
        sodipodi:type="arc"
-       style="fill:none;stroke:#000000;stroke-width:2.36843109;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="path3066-4"
-       sodipodi:cx="18.363636"
-       sodipodi:cy="52.363636"
-       sodipodi:rx="9.272727"
-       sodipodi:ry="9.272727"
-       d="M 26.998013,55.744612 A 9.272727,9.272727 0 1 1 18.363635,43.090909"
-       transform="matrix(1.6888818,0,0,1.6888818,-11.018317,-43.66257)"
-       sodipodi:start="0.37321942"
-       sodipodi:end="4.7123889"
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="path6304"
+       sodipodi:cx="21.454546"
+       sodipodi:cy="24.181818"
+       sodipodi:rx="20"
+       sodipodi:ry="18"
+       d="M 41.437322,23.434937 C 41.895645,33.367501 33.320596,41.753825 22.284414,42.166316 11.248232,42.578807 1.9300938,34.861263 1.4717704,24.928699 1.4514959,24.489319 1.449119,24.049418 1.4646446,23.609881"
+       transform="translate(2.1818182,17.818182)"
+       sodipodi:start="6.24168"
+       sodipodi:end="9.4565576"
        sodipodi:open="true" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 20.748471,-43.467149 0,71.997491"
-       id="path4109-7"
-       inkscape:connector-curvature="0" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 33.366993,-44.433927 -25.2370442,0"
-       id="path4111-1"
-       inkscape:connector-curvature="0" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 13.0156,-16.812972 15.017312,6.721061"
-       id="path4113-6-1"
-       inkscape:connector-curvature="0" />
+       d="m 3.6363636,41.454545 0,-38.0637738"
+       id="path6306"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path6306"
+       id="use6308"
+       transform="translate(40,0)"
+       width="48"
+       height="48"
+       style="stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none" />
   </g>
 </svg>
