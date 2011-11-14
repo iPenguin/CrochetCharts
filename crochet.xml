@@ -644,6 +644,7 @@
        <category>Basic</category>
        <ws>st50</ws>
    </stitch>
+
    <stitch>
        <name>st51</name>
        <icon>:/stitches/st51.svg</icon>
@@ -679,7 +680,7 @@
        <category>Basic</category>
        <ws>st54</ws>
    </stitch>
-<!--
+   
    <stitch>
        <name>st55</name>
        <icon>:/stitches/st55.svg</icon>
@@ -687,15 +688,6 @@
        </description>
        <category>Basic</category>
        <ws>st55</ws>
-   </stitch>
--->
-   <stitch>
-       <name>st56</name>
-       <icon>:/stitches/st56.svg</icon>
-       <description>
-       </description>
-       <category>Basic</category>
-       <ws>st56</ws>
    </stitch>
 
    <stitch>
