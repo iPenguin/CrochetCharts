@@ -21,7 +21,7 @@
 #include <QFileInfo>
 #include <QDir>
 
-#include <QDebug>
+#include "debug.h"
 #include "stitchlibrary.h"
 #include "stitchset.h"
 #include <QSvgRenderer>
@@ -72,10 +72,14 @@ void StitchLibraryDelegate::paint(QPainter* painter, const QStyleOptionViewItem 
             rect.setHeight(s->height());
 
         if(s->isSvg()) {
-            s->renderSvg(false)->render(painter, rect);
+            QSvgRenderer *r = s->renderSvg(false);
+            if(r)
+                r->render(painter, rect);
+
         } else {
             QPixmap* pix = s->renderPixmap();
-            painter->drawPixmap(rect.toRect(), *pix);
+            if(pix)
+                painter->drawPixmap(rect.toRect(), *pix);
         }
 
     //Checkbox column:
@@ -106,7 +110,7 @@ void StitchLibraryDelegate::paint(QPainter* painter, const QStyleOptionViewItem 
 QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     int padding = 0;
-    
+
     if(!index.isValid())
         return QSize(100, 32);
 
@@ -124,10 +128,19 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
         case Stitch::Icon: {
             QSize retSize;
             //TODO: should this be getting info form the *s?
-            if(s->isSvg())
-                retSize = s->renderSvg()->defaultSize();
-            else
-                retSize = s->renderPixmap()->size();
+            if(s->isSvg()) {
+                QSvgRenderer *r = s->renderSvg();
+                if(r)
+                    retSize = r->defaultSize();
+                else
+                    retSize = QSize(64, 64);
+            } else {
+                QPixmap *p = s->renderPixmap();
+                if(p)
+                    retSize = p->size();
+                else
+                    retSize = QSize(64, 64);
+            }
             return retSize;
         }
         case Stitch::Description:
@@ -150,7 +163,7 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
             text = "";
             break;
     }
-    
+
     QSize hint = option.fontMetrics.size(Qt::TextWordWrap, text);
     hint.setWidth(hint.width() + padding);
 
