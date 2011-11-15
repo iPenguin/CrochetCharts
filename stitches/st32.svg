@@ -72,14 +72,6 @@
        transform="matrix(-1,0,0,1,128.68426,0)"
        width="96"
        height="80" />
-    <use
-       x="0"
-       y="0"
-       xlink:href="#path4113-6"
-       id="use3794"
-       transform="matrix(0.98374639,-0.17956347,0.17956347,0.98374639,40.287496,8.6670959)"
-       width="96"
-       height="80" />
     <path
        style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 63.027108,-10.88394 4.5844706,61.242572"
@@ -125,6 +117,14 @@
        xlink:href="#path4113-6"
        id="use3843"
        transform="translate(30,0)"
+       width="128"
+       height="80" />
+    <use
+       x="0"
+       y="0"
+       xlink:href="#path4113-6"
+       id="use3843-4"
+       transform="matrix(0.99997322,0.00731865,-0.00731865,0.99997322,43.567581,-0.45962472)"
        width="128"
        height="80" />
   </g>
