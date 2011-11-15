@@ -318,16 +318,20 @@ void StitchLibraryUi::printStitchSet()
     for (int r = 0; r < rows; ++r) {
         totalHeight += ui->listView->rowHeight(r);
     }
-    
+
+    QSizeF size = QSize(totalWidth, totalHeight);
+    printer.setPaperSize(size, QPrinter::Point);
+  
     QPainter p;
     p.begin(&printer);
-
+/*
     // calculate proper scale factors
     const double scaleX = printer.pageRect().width() / totalWidth;
     const double scaleY = printer.pageRect().height() / totalHeight;
     double scale = qMin(scaleX, scaleY);
     p.scale(scale, scale);
-
+*/
+    
     // paint cells
     for (int r = 0; r < rows; ++r) {
         for (int c = 0; c < cols; ++c) {
