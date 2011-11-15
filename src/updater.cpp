@@ -19,7 +19,7 @@
 #include "appinfo.h"
 #include <QApplication>
 
-#include <QDebug>
+#include "debug.h"
 #include "settings.h"
 
 Updater::Updater(QWidget* parent)
@@ -71,7 +71,7 @@ void Updater::httpFinished()
         return;
     }
 
-    QString data =QString(mData);
+    QString data = QString(mData);
         
     if (reply->error()) {
         //TODO: add a warning.
@@ -100,8 +100,8 @@ void Updater::httpFinished()
             downloadInstaller(QUrl(urls.first()));
             
         } else if(!mSilent) {
-            QMessageBox::information(this, tr("Check for Updates"),
-                            tr("There are no updates for %1 at this time.").arg(AppInfo::inst()->appName), QMessageBox::Ok);
+            QMessageBox::information(this, tr("No updates available"),
+                            tr("There are no updates available for %1 at this time.").arg(AppInfo::inst()->appName), QMessageBox::Ok);
         }
     }
     
@@ -183,9 +183,8 @@ void Updater::httpFinishedInstaller()
 
     instReply->deleteLater();
     instReply = 0;
-    delete installer;
-    installer = 0;
 
+    installer->deleteLater();
 }
 
 void Updater::httpReadyReadInstaller()
@@ -197,15 +196,23 @@ void Updater::httpReadyReadInstaller()
 void Updater::launchInstaller()
 {
 
+    if(!installer) {
+        QMessageBox mbox;
+        mbox.setText("Could not load the installer. Please download it manually and run the update.");
+        mbox.setIcon(QMessageBox::Warning);
+        mbox.exec();
+        return;
+    }
+        
     QProcess* installProc = new QProcess(this);
 
     QString program;
 #if defined(Q_OS_WIN32)
     program = installer->fileName();
 #elif defined(Q_OS_LINUX)
-    program = "sh " + installer->fileName();
+    program = "gdebi -i " + installer->fileName();
 #elif defined(Q_OS_DARWIN)
-    program = installer->fileName(); //TODO: make sure this launches the dmg file correctly.
+    program = "open " + installer->fileName();
 #endif
 
     installProc->startDetached(program);
