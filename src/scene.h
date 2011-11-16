@@ -287,7 +287,9 @@ private:
     QSizeF mDefaultSize;
     QString mDefaultStitch;
     
-
+    /**
+     *Hold the list of cells we're working with to create a new row.
+     */
     QList<QGraphicsItem*> mRowSelection;
     
     QUndoStack mUndoStack;
@@ -297,7 +299,15 @@ private:
     Cell* mStartCell;
     Cell* mEndCell;
     Cell* mPreviousCell;
+
+    /**
+     *The line between the last cell and the mouse.
+     */
     QGraphicsLineItem* mRowLine;
+
+    /**
+     *All lines connecting one cell to another cell for rows.
+     */
     QList<QGraphicsLineItem*> mRowLines;
     
     QList<QGraphicsItem*> mDemoItems;

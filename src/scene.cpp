@@ -889,7 +889,7 @@ void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
             mRowSelection.clear();
             hideRowLines();
             delete mRowLine;
-            
+            mRowLine = 0;
         }
         mRowSelection.append(mStartCell);
 
