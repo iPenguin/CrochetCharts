@@ -1,7 +1,7 @@
 include(InstallRequiredSystemLibraries)
 
 
-set(PROJECT_DESCRIPTION  "Chart design software for crochet")
+set(PROJECT_DESCRIPTION  "Symbol crochet design software")
 set(PROJECT_VENDOR       "Stitch Works Software")
 set(PROJECT_LIFE         "2010-2011")
 set(ORG_BASE_URL         "StitchWorksSoftware.com")
