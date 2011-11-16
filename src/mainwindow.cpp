@@ -614,7 +614,6 @@ void MainWindow::helpCrochetHelp()
     QString file ="";
 #ifdef Q_WS_WIN
     file= QString("file://%1/CrochetCharts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
-    sws_debug(file);
     bool r = QDesktopServices::openUrl(QUrl::fromLocalFile(file));
 #endif
 
