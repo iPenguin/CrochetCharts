@@ -272,9 +272,9 @@ void Scene::updateRubberBand(int dx, int dy)
 
 void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
 {
-
+    
     QGraphicsScene::keyReleaseEvent(keyEvent);
-
+    
     if(keyEvent->isAccepted())
         return;
 
@@ -306,6 +306,142 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
         }
         undoStack()->endMacro();
     }
+
+}
+
+void Scene::keyPressEvent(QKeyEvent* keyEvent)
+{
+
+    QGraphicsScene::keyPressEvent(keyEvent);
+
+    if(keyEvent->isAccepted())
+        return;
+
+    if(selectedItems().count() <= 0)
+        return;
+    
+    switch(mMode) {
+        case Scene::StitchEdit:
+            stitchModeKeyRelease(keyEvent);
+            break;
+        case Scene::RotationEdit:
+            angleModeKeyRelease(keyEvent);
+            break;
+        case Scene::ScaleEdit:
+            scaleModeKeyRelease(keyEvent);
+            break;
+        case Scene::RowEdit:
+        default:
+            break;
+    }
+    
+}
+
+
+void Scene::stitchModeKeyRelease(QKeyEvent* keyEvent)
+{
+    int deltaX = 0, deltaY = 0;
+    
+    if(keyEvent->key() == Qt::Key_Left) {
+        deltaX = -1;
+        keyEvent->accept();
+    } else if (keyEvent->key() == Qt::Key_Right) {
+        deltaX = 1;
+        keyEvent->accept();
+    } else if (keyEvent->key() == Qt::Key_Up) {
+        deltaY = -1;
+        keyEvent->accept();
+    } else if (keyEvent->key() == Qt::Key_Down) {
+        deltaY = 1;
+        keyEvent->accept();
+    }
+
+    if(!keyEvent->isAccepted())
+        return;
+    
+    undoStack()->beginMacro(tr("adjust item positions"));
+    foreach(QGraphicsItem *i, selectedItems()) {
+        QPointF oldPos = i->pos();
+        i->setPos(i->pos().x() + deltaX, i->pos().y() + deltaY);
+        undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+    }
+    undoStack()->endMacro();
+    
+}
+
+void Scene::angleModeKeyRelease(QKeyEvent* keyEvent)
+{
+    int delta = 0;
+
+    if(keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_Down) {
+        delta = -1;
+        keyEvent->accept();
+    } else if (keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_Up) {
+        delta = 1;
+        keyEvent->accept();
+    }
+
+    if(!keyEvent->isAccepted())
+        return;
+
+    undoStack()->beginMacro(tr("adjust item rotation"));
+    foreach(QGraphicsItem *i, selectedItems()) {
+        if(i->type() != Cell::Type)
+            continue;
+        Cell* c = qgraphicsitem_cast<Cell*>(i);
+        
+        qreal oldAngle = c->rotation();
+        c->setRotation(c->rotation() + delta);
+        QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
+        undoStack()->push(new SetCellRotation(this, c, oldAngle, pvtPt));
+    }
+    undoStack()->endMacro();
+
+}
+
+void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
+{
+    QPointF delta(0.0, 0.0);
+    
+    if(keyEvent->key() == Qt::Key_Left) {
+        delta.setX(-0.1);
+        keyEvent->accept();
+    } else if (keyEvent->key() == Qt::Key_Right) {
+        delta.setX(0.1);
+        keyEvent->accept();
+    } else if (keyEvent->key() == Qt::Key_Up) {
+        delta.setY(-0.1);
+        keyEvent->accept();
+    } else if (keyEvent->key() == Qt::Key_Down) {
+        delta.setY(0.1);
+        keyEvent->accept();
+    }
+
+    if(!keyEvent->isAccepted())
+        return;
+
+    //Keep in perportion:
+    if(keyEvent->modifiers() == Qt::ControlModifier) {
+        if(delta.x() != 0)
+            delta.ry() = delta.x();
+        else
+            delta.rx() = delta.y();
+    }
+    
+    undoStack()->beginMacro(tr("adjust item scale"));
+    foreach(QGraphicsItem *i, selectedItems()) {
+        if(i->type() != Cell::Type)
+            continue;
+        Cell* c = qgraphicsitem_cast<Cell*>(i);
+        
+        QPointF oldScale = c->scale();
+        QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
+        QPointF newScale = oldScale + delta;
+        c->setScale(newScale.x(), newScale.y());
+        undoStack()->push(new SetCellScale(this, c, oldScale, pvtPt));
+    }
+    undoStack()->endMacro();
+    
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)

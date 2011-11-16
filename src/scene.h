@@ -146,10 +146,16 @@ protected:
     virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
 */
     void keyReleaseEvent(QKeyEvent* keyEvent);
+    void keyPressEvent(QKeyEvent* keyEvent);
+    
+    void stitchModeKeyRelease(QKeyEvent* keyEvent);
+    void angleModeKeyRelease(QKeyEvent* keyEvent);
+    void scaleModeKeyRelease(QKeyEvent* keyEvent);
+    
     void mouseMoveEvent(QGraphicsSceneMouseEvent* e);
     void mousePressEvent(QGraphicsSceneMouseEvent* e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* e);
-
+    
     QList<Indicator*> indicators() { return mIndicators; }
         
     void initDemoBackground();
