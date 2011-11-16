@@ -14,8 +14,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 
-#include <QProcess>
-
 #include "appinfo.h"
 #include <QApplication>
 
@@ -27,7 +25,7 @@ Updater::Updater(QWidget* parent)
 {
     QString url = Settings::inst()->value("updatePage").toString();
 
-    QString os;
+    QString os, arch = "";
 #if defined(Q_OS_WIN32)
     os = "windows";
 #elif defined(Q_OS_LINUX)
@@ -36,9 +34,15 @@ Updater::Updater(QWidget* parent)
     os = "osx";
 #endif
 
+#if defined(__x86_64)
+    arch = "amd64";
+#elif defined(__i386)
+    arch = "i386";
+#endif
+    
     QString sn = Settings::inst()->value("serialNumber").toString();
-    //software, version, os, serial number
-    mUrl = QUrl(QString(url).arg(AppInfo::inst()->appName.toLower()).arg(AppInfo::inst()->appVersion).arg(os).arg(sn));
+    //software, version, os, serial number, arch
+    mUrl = QUrl(QString(url).arg(AppInfo::inst()->appName.toLower()).arg(AppInfo::inst()->appVersion).arg(os).arg(sn).arg(arch));
 
     mProgDialog = new QProgressDialog(this);
 }
@@ -204,18 +208,7 @@ void Updater::launchInstaller()
         return;
     }
         
-    QProcess* installProc = new QProcess(this);
-
-    QString program;
-#if defined(Q_OS_WIN32)
-    program = installer->fileName();
-#elif defined(Q_OS_LINUX)
-    program = "gdebi -i " + installer->fileName();
-#elif defined(Q_OS_DARWIN)
-    program = "open " + installer->fileName();
-#endif
-
-    installProc->startDetached(program);
-    installProc->waitForStarted();
+    QDesktopServices::openUrl(installer->fileName());
+    
     qApp->quit();
 }
