@@ -1091,7 +1091,12 @@ void Scene::moveRowUp(int row)
 void Scene::removeRow(int row)
 {
 
-    grid.takeAt(row);
+    QList<Cell*> r = grid.takeAt(row);
+
+    foreach(Cell* c, r) {
+        c->useAlternateRenderer(false);
+    }
+
     updateStitchRenderer();
 
 }
