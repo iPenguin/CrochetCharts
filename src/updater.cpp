@@ -14,6 +14,8 @@
 #include <QMessageBox>
 #include <QPushButton>
 
+#include <QProcess>
+
 #include "appinfo.h"
 #include <QApplication>
 
@@ -208,7 +210,18 @@ void Updater::launchInstaller()
         return;
     }
         
+#if defined(Q_OS_WIN32)
     QDesktopServices::openUrl(installer->fileName());
+
+#elif defined(Q_OS_LINUX)
+    QDesktopServices::openUrl(installer->fileName());
+#elif defined(Q_OS_DARWIN)
+    QProcess* installProc = new QProcess(this);
+    QString program = "open " + installer->fileName();
+
+    installProc->startDetached(program);
+    installProc->waitForStarted();
+#endif
     
     qApp->quit();
 }
