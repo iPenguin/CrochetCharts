@@ -7,7 +7,7 @@
 
 #include "crochettab.h"
 
-#include <QDebug>
+#include "debug.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -439,6 +439,12 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
     mTabWidget->setTabText(index, tabName);
     mTabWidget->widget(mTabWidget->indexOf(tab))->show();
     tab->scene()->updateSceneRect();
+    
+    if(tab->scene()->hasChartCenter()) {
+        tab->view()->centerOn(tab->scene()->mCenterSymbol->sceneBoundingRect().center());
+    } else {
+        tab->view()->centerOn(tab->scene()->itemsBoundingRect().center());
+    }
 }
 
 void SaveFile::loadGrid(QXmlStreamReader* stream, Scene* scene)

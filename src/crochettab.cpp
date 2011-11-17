@@ -213,6 +213,9 @@ void CrochetTab::createChart(Scene::ChartStyle style, int rows, int cols, QStrin
     if(style == Scene::Rows) {
         mScene->createRowsChart(rows, cols, defStitch, rowSize);
 
+        mView->centerOn(mView->mapFromScene(mScene->itemsBoundingRect().bottomRight()));
+        QPointF pt = mScene->itemsBoundingRect().topLeft();
+        mView->ensureVisible(pt.x(), pt.y(), 50, 50);
     } else if(style == Scene::Rounds) {
         mScene->createRoundsChart(rows, cols, defStitch, rowSize, increaseBy);
         ui->showChartCenter->setChecked(mScene->showChartCenter());

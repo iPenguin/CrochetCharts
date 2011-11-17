@@ -111,6 +111,7 @@ private slots:
     
 protected:
     Scene* scene() { return mScene; }
+    ChartView* view() { return mView; }
     
 private:    
     QPointer<ChartView> mView;
