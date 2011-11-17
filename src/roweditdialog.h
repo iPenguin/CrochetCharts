@@ -14,6 +14,8 @@ namespace Ui {
     class RowEditDialog;
 }
 
+class QListWidgetItem;
+
 class RowEditDialog : public QWidget
 {
     Q_OBJECT
@@ -42,7 +44,8 @@ private slots:
      * row is the row in the rowList widget.
      */
     void listItemChanged(int listRow);
-
+    void listItemClicked(QListWidgetItem* item);
+    
     void updateRow();
     
 private:

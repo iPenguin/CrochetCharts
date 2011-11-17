@@ -26,6 +26,8 @@ RowEditDialog::RowEditDialog(Scene* scene, TextView* textView, QWidget* parent)
     connect(ui->moveDown, SIGNAL(clicked(bool)), SLOT(moveDown()));
 
     connect(ui->rowList, SIGNAL(currentRowChanged(int)), SLOT(listItemChanged(int)));
+    connect(ui->rowList, SIGNAL(itemClicked(QListWidgetItem*)), SLOT(listItemClicked(QListWidgetItem*)));
+    
     connect(ui->updateRow, SIGNAL(clicked(bool)), SLOT(updateRow()));
 }
 
@@ -109,14 +111,18 @@ void RowEditDialog::moveDown()
 
 void RowEditDialog::listItemChanged(int listRow)
 {
-    int r = ui->rowList->item(listRow)->text().toInt();
+    listItemClicked(ui->rowList->item(listRow));
+}
+
+void RowEditDialog::listItemClicked(QListWidgetItem* item)
+{
+    int r = item->text().toInt();
     mScene->highlightRow(r - 1);
 
-    QString rowText = mTextView->generateTextRow(listRow, true,true);
+    QString rowText = mTextView->generateTextRow(r - 1, true,true);
     ui->rowView->setText(rowText);
 
-    mScene->drawRowLines(r - 1);
-
+    mScene->drawRowLines(r - 1);    
 }
 
 void RowEditDialog::updateRowList()
@@ -139,6 +145,9 @@ void RowEditDialog::updateRowList()
 void RowEditDialog::updateRow()
 {
 
+    if(mScene->selectedItems().count() <= 0)
+        return;
+    
     int r = ui->rowList->currentItem()->text().toInt();
     if(r <= 0)
         return;
