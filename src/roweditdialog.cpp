@@ -116,13 +116,13 @@ void RowEditDialog::listItemChanged(int listRow)
 
 void RowEditDialog::listItemClicked(QListWidgetItem* item)
 {
-    int r = item->text().toInt();
-    mScene->highlightRow(r - 1);
+    int r = item->text().toInt() - 1;
+    mScene->highlightRow(r);
 
-    QString rowText = mTextView->generateTextRow(r - 1, true,true);
+    QString rowText = mTextView->generateTextRow(r, true,true);
     ui->rowView->setText(rowText);
 
-    mScene->drawRowLines(r - 1);    
+    mScene->drawRowLines(r);
 }
 
 void RowEditDialog::updateRowList()
