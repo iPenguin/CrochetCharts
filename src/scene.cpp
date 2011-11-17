@@ -393,10 +393,10 @@ void Scene::angleModeKeyRelease(QKeyEvent* keyEvent)
 {
     int delta = 0;
 
-    if(keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_Down) {
+    if(keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_Up) {
         delta = -1;
         keyEvent->accept();
-    } else if (keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_Up) {
+    } else if (keyEvent->key() == Qt::Key_Right || keyEvent->key() == Qt::Key_Down) {
         delta = 1;
         keyEvent->accept();
     }
