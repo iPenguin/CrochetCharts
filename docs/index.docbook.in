@@ -910,11 +910,14 @@
                     <ulink url="http://docs.google.com">Google Docs</ulink>, and
                     <ulink url="http://www.adobe.com/products/illustrator/">Adobe Illustrator</ulink>.
             </para>
-            <para>I recommend a canvas size of 32x32 px as the default size.
+            <para>I recommend starting with a canvas size of 32x32 px.
                 If you need to use a different size I recommend changing the size in increments of 16 or 32.
                 So a single crochet is 32x32, a half double crochet is 32x64, and a double crochet is 32x80.
+                Once you have the basic size you can modify it from there as needed.
             </para>
             <para>If you want your stitches to match the default stitches I'm using a stroke width of 4.0 and rounded caps and joints.
+                Also if you want the software to change the color of the stitches for alternate rows then the stitch you create should
+                be black (#000000) any other colors in the stitch will not be modified.
             </para>
             <para>If you use one of the other file types (png, gif) that support transparent background you should be aware that most
                 drawing applications do not turn on transparency by default. You should consult the documentation for your application
