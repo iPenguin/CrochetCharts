@@ -2038,14 +2038,14 @@ void Scene::setShowChartCenter(bool state)
 
 }
 
-void Scene::createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize)
+void Scene::createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize, int increaseBy)
 {
 
     mDefaultSize = rowSize;
 
     for(int i = 0; i < rows; ++i) {
         //FIXME: this padding should be dependant on the height of the sts.
-        int pad = i * 12;
+        int pad = i * increaseBy;
 
         createRow(i, cols + pad, stitch);
     }

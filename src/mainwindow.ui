@@ -43,7 +43,7 @@
           <number>0</number>
          </property>
          <item row="1" column="2">
-          <widget class="QLabel" name="label_2">
+          <widget class="QLabel" name="stitchesLbl">
            <property name="text">
             <string>Stitches:</string>
            </property>
@@ -166,7 +166,7 @@
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="rowsLbl">
            <property name="text">
             <string>Rows:</string>
            </property>
@@ -243,6 +243,29 @@
            </property>
           </widget>
          </item>
+         <item row="1" column="5">
+          <widget class="QSpinBox" name="increaseBy">
+           <property name="minimum">
+            <number>0</number>
+           </property>
+           <property name="value">
+            <number>12</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Increase By:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+           <property name="buddy">
+            <cstring>increaseBy</cstring>
+           </property>
+          </widget>
+         </item>
         </layout>
        </widget>
       </item>
@@ -272,7 +295,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1084,10 +1107,11 @@
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>chartStyle</tabstop>
-  <tabstop>rows</tabstop>
-  <tabstop>rowSpacing</tabstop>
   <tabstop>chartTitle</tabstop>
+  <tabstop>rows</tabstop>
   <tabstop>stitches</tabstop>
+  <tabstop>increaseBy</tabstop>
+  <tabstop>rowSpacing</tabstop>
   <tabstop>defaultStitch</tabstop>
   <tabstop>newDocBttnBox</tabstop>
   <tabstop>tabWidget</tabstop>

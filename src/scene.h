@@ -325,7 +325,7 @@ public:
      */
     bool showChartCenter();
 
-    void createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize);
+    void createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize, int increaseBy);
     void createRow(int row, int columns, QString stitch);
 
     /**

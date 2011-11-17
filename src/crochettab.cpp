@@ -208,13 +208,13 @@ QUndoStack* CrochetTab::undoStack()
     return mScene->undoStack();
 }
 
-void CrochetTab::createChart(Scene::ChartStyle style, int rows, int cols, QString defStitch, QSizeF rowSize)
+void CrochetTab::createChart(Scene::ChartStyle style, int rows, int cols, QString defStitch, QSizeF rowSize, int increaseBy)
 {
     if(style == Scene::Rows) {
         mScene->createRowsChart(rows, cols, defStitch, rowSize);
 
     } else if(style == Scene::Rounds) {
-        mScene->createRoundsChart(rows, cols, defStitch, rowSize);
+        mScene->createRoundsChart(rows, cols, defStitch, rowSize, increaseBy);
         ui->showChartCenter->setChecked(mScene->showChartCenter());
     } else if(style == Scene::Blank) {
         mScene->createBlankChart();

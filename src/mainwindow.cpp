@@ -138,10 +138,12 @@ void MainWindow::setupNewTabDialog()
     int stitches = Settings::inst()->value("stitchCount").toInt();
     QString defSt = Settings::inst()->value("defaultStitch").toString();
     QString defStyle = Settings::inst()->value("chartStyle").toString();
+    int incBy = Settings::inst()->value("increaseBy").toInt();
     
     ui->rows->setValue(rows);
     ui->stitches->setValue(stitches);
-
+    ui->increaseBy->setValue(incBy);
+    
     ui->defaultStitch->addItems(StitchLibrary::inst()->stitchList());
     ui->defaultStitch->setCurrentIndex(ui->defaultStitch->findText(defSt));
 
@@ -162,11 +164,23 @@ void MainWindow::newChartUpdateStyle(QString style)
         ui->stitches->setEnabled(false);
         ui->rowSpacing->setEnabled(false);
         ui->defaultStitch->setEnabled(false);
-    } else if(style == tr("Rounds") || style == tr("Rows")) {
+        ui->increaseBy->setEnabled(false);
+    } else if(style == tr("Rounds")){
         ui->rows->setEnabled(true);
         ui->stitches->setEnabled(true);
         ui->rowSpacing->setEnabled(true);
         ui->defaultStitch->setEnabled(true);
+        ui->rowsLbl->setText(tr("Rounds:"));
+        ui->stitchesLbl->setText(tr("Starting Stitches:"));
+        ui->increaseBy->setEnabled(true);
+    } else if (style == tr("Rows")) {
+        ui->rows->setEnabled(true);
+        ui->stitches->setEnabled(true);
+        ui->rowSpacing->setEnabled(true);
+        ui->defaultStitch->setEnabled(true);
+        ui->rowsLbl->setText(tr("Rows:"));
+        ui->stitchesLbl->setText(tr("Stitches:"));
+        ui->increaseBy->setEnabled(false);
     }
 }
 
@@ -591,9 +605,11 @@ void MainWindow::documentNewChart()
 {
     int rows = Settings::inst()->value("rowCount").toInt();
     int stitches = Settings::inst()->value("stitchCount").toInt();
+    int incBy = Settings::inst()->value("increaseBy").toInt();
     
     ui->rows->setValue(rows);
     ui->stitches->setValue(stitches);
+    ui->increaseBy->setValue(incBy);
     
     ui->chartTitle->setText(nextChartName());
 
@@ -926,6 +942,7 @@ void MainWindow::newChart()
     int cols = ui->stitches->text().toInt();
     QString defStitch = ui->defaultStitch->currentText();
     QString name = ui->chartTitle->text();
+    int incBy = ui->increaseBy->text().toInt();
     
     QString style = ui->chartStyle->currentText();
 
@@ -965,7 +982,7 @@ void MainWindow::newChart()
     else if (ddValue == tr("6 Chains"))
         rowHeight = 182;
 
-    tab->createChart(st, rows, cols, defStitch, QSizeF(32, rowHeight));
+    tab->createChart(st, rows, cols, defStitch, QSizeF(32, rowHeight), incBy);
 
     updateMenuItems();
     documentIsModified(true);
