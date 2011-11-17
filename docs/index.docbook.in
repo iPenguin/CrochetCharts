@@ -309,8 +309,9 @@
         <para>
             If you select a <emphasis>Rounds</emphasis> chart style you will get all the functionality
             of a Blank chart with the addition that the software will create rounds of stitches starting
-            in the center of the chart and working out, increasing by 12 stitches every row.
-            The software will add those stitches to the <link linkend="tools-row-edit">defined Rows</link>.
+            in the center of the chart and working out, increasing by the number of stitches you select
+            for each additional row. The software will add those stitches to the
+            <link linkend="tools-row-edit">defined Rows</link>.
         </para>
 
         <screenshot>
@@ -396,7 +397,8 @@
         <section id="tools-stitch-edit">
             <title>Stitch Edit</title>
             <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Stitch Edit</guimenuitem></menuchoice></para>
-            <para>This mode allows you to add, edit and move stitches on the chart.
+            <para>This mode allows you to add, edit and move stitches on the chart. For minor adjustments
+                to the positioning of a stitch or selection of stitches you can use the arrow keys.
             </para>
         </section>
 
@@ -413,7 +415,9 @@
             <title>Rotation Edit</title>
             <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Rotation Edit</guimenuitem></menuchoice></para>
             <para>In this mode you can edit the angle that the stitch is tilted at.
-                You can rotate the stitch 360&#0176; relative to the bottom of the stitch.
+                You can rotate the stitch 360&#0176; relative to the bottom of the stitch. For minor adjustments to
+                the angle of a stitch or selection of stitches you can use the arrow keys.
+                Right or Down are clock-wise and Left or Up are counter-clockwise.
             </para>
         </section>
 
@@ -422,7 +426,10 @@
             <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Scale Edit</guimenuitem></menuchoice></para>
             <para>This mode allows you to scale the size of the stitch height and width independently of each other.
                 If you would like to scale the stitch in a 1:1 ratio you can hold the <keycap>Ctrl</keycap>
-                (or <keycap>Apple</keycap>) key while you scale it.
+                (or <keycap>Apple</keycap>) key while you scale it. For minor adjustments to the scale you can
+                use the arrow keys. Up and Right increase the height and width respectively,
+                and Down and Left decrease the scale. If you hold down <keycap>Ctrl</keycap> (or <keycap>Apple</keycap>)
+                the scale will increase both height and width in relation to each other.
             </para>
         </section>
 
