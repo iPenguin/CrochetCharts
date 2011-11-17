@@ -28,6 +28,8 @@
 #include "stitchlibrary.h"
 
 #include <QTextCursor>
+#include <QAction>
+#include <QMenu>
 
 static void qNormalizeAngle(qreal &angle)
 {
@@ -270,6 +272,24 @@ void Scene::updateRubberBand(int dx, int dy)
     mRubberBandStart.setY(mRubberBandStart.y() - dy);
 }
 
+void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent* e)
+{
+    QMenu menu;
+    QAction* copyAction = new QAction(tr("Copy"), 0);
+    QAction* cutAction = new QAction(tr("Cut"), 0);
+    QAction* pasteAction = new QAction(tr("Paste"), 0);
+
+    connect(copyAction, SIGNAL(triggered()), SLOT(copy()));
+    connect(cutAction, SIGNAL(triggered()), SLOT(cut()));
+    connect(pasteAction, SIGNAL(triggered()), SLOT(paste()));
+    
+    menu.addAction(copyAction);
+    menu.addAction(cutAction);
+    menu.addAction(pasteAction);
+    menu.exec(e->screenPos());
+    e->accept();
+}
+
 void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
 {
     
@@ -446,6 +466,8 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 {
+    if(e->buttons() & Qt::RightButton)
+        return;
     
     if(selectedItems().count() > 0)
         mHasSelection = true;
@@ -711,8 +733,9 @@ void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
+    //FIXME: find a better way other then using ctrl.
     //if right click or ctrl-click remove the indicator.
-    if(e->button() == Qt::RightButton || (e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {
+    if((e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {
         if(mCurIndicator) {
             undoStack()->push(new RemoveIndicator(this, mCurIndicator));
         }

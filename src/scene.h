@@ -90,10 +90,6 @@ public:
     void mirror(int direction);
     void rotate(qreal degrees);
 
-    void copy();
-    void cut();
-    void paste();
-
     void group();
     void ungroup();
 
@@ -102,6 +98,11 @@ public:
 
     void addItem(QGraphicsItem* item);
     void removeItem(QGraphicsItem* item);
+
+public slots:    
+    void copy();
+    void cut();
+    void paste();
     
 protected:
     void copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items);
@@ -141,10 +142,9 @@ signals:
     void rowEdited(bool state);
     
 protected:
-/*
-    virtual void    contextMenuEvent ( QGraphicsSceneContextMenuEvent * contextMenuEvent )
-    virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
-*/
+//    virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent* e);
+
     void keyReleaseEvent(QKeyEvent* keyEvent);
     void keyPressEvent(QKeyEvent* keyEvent);
     
