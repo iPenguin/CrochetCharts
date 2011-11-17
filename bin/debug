@@ -1,0 +1,26 @@
+#!/bin/bash
+
+PLATFORM=`uname -a | awk '{ print $1 }'`
+
+if [ $PLATFORM == "Darwin" ]; then
+    export CC=/usr/bin/gcc-4.0
+    export CXX=/usr/bin/g++-4.0
+
+    export SDKROOT=/Developer/SDKs/MacOSX10.5.sdk
+    export MACOSX_DEPLOYMENT_TARGET=10.5
+
+    mkdir -p ~/crochet.git/build
+    cd ~/crochet.git/build
+
+    cmake .. -DSWS_DOCS=OFF -DCMAKE_BUILD_TYPE=Debug && make
+elif [ $PLATFORM == "Linux" ]; then
+    
+    mkdir -p ~/crochet.git/build
+    cd ~/crochet.git/build
+
+    cmake .. -DSWS_DOCS=OFF -DCMAKE_BUILD_TYPE=Debug && make
+elif [ $PLATFORM == "Cygwin" ]; then
+    print "TODO: windows"
+else
+    print "Warning unknown platform"
+fi
