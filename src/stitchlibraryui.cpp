@@ -8,7 +8,7 @@
 #include "stitchset.h"
 #include "stitchlibrarydelegate.h"
 
-#include <QDebug>
+#include "debug.h"
 #include <QMessageBox>
 #include <QInputDialog>
 
@@ -180,48 +180,54 @@ void StitchLibraryUi::removeStitch()
 {
     StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
 
-    for(int i = 0; i < set->stitchCount(); ++i) {
+    for(int i = set->stitchCount() - 1; i >= 0; --i) {
         bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
-        if(selected) {
-            if(set->stitchCount() == 1) {
-                //FIXME: make this a question, if yes remove set.
-                QMessageBox msgbox(this);
-                msgbox.setText(tr("A set must have at least one stitch."));
-                msgbox.setInformativeText(tr("If you wish to remove this stich you must remove the set."));
-                msgbox.setIcon(QMessageBox::Information);
-                QPushButton* removeSet = msgbox.addButton(tr("Remove the stitch set"), QMessageBox::AcceptRole);
-                /*QPushButton* keepStitch =*/ msgbox.addButton(tr("Keep the last stitch"), QMessageBox::RejectRole);
-                
-                msgbox.exec();
 
-                if(msgbox.clickedButton() == removeSet) {
-                    StitchLibrary::inst()->removeSet(set->name());
-                    
-                    //switch to the master set.
-                    updateSourceDropDown(StitchLibrary::inst()->masterStitchSet()->name());
-                }
-                
-                return;
+        if(!selected)
+            continue;
+        
+        if(set->stitchCount() == 1) {
+            //FIXME: make this a question, if yes remove set.
+            QMessageBox msgbox(this);
+            msgbox.setText(tr("A set must have at least one stitch."));
+            msgbox.setInformativeText(tr("If you wish to remove this stitch you must remove the set."));
+            msgbox.setIcon(QMessageBox::Information);
+            QPushButton* removeSet = msgbox.addButton(tr("Remove the stitch set too"), QMessageBox::AcceptRole);
+            /*QPushButton* keepStitch =*/ msgbox.addButton(tr("Keep this stitch"), QMessageBox::RejectRole);
+
+            msgbox.exec();
+
+            if(msgbox.clickedButton() == removeSet) {
+                StitchLibrary::inst()->removeSet(set->name());
+
+                //switch to the master set.
+                updateSourceDropDown(StitchLibrary::inst()->masterStitchSet()->name());
             }
-            QString st = set->data(set->index(i, 0), Qt::EditRole).toString();
-            Stitch* s = set->findStitch(st);
 
-            if(!set->isMasterSet && StitchLibrary::inst()->masterHasStitch(s)) {
-                QMessageBox msgbox(this);
-                msgbox.setText(tr("This stitch is linked to the master set. "
-                                "If you remove this stitch it will be removed from the master list too."));
-                msgbox.setInformativeText(tr("Are you sure you want to remove the stitch?"));
-                msgbox.setIcon(QMessageBox::Question);
-                QPushButton* confirm = msgbox.addButton(tr("Remove stitch from both lists"), QMessageBox::AcceptRole);
-                /*QPushButton* cancel =*/ msgbox.addButton(tr("Don't remove the stitch"), QMessageBox::RejectRole);
+            return;
+        }
+        
+        QString st = set->data(set->index(i, 0), Qt::EditRole).toString();
+        Stitch* s = set->findStitch(st);
 
-                msgbox.exec();
+        if(!set->isMasterSet && StitchLibrary::inst()->masterHasStitch(s)) {
+            QMessageBox msgbox(this);
+            msgbox.setText(tr("This stitch is linked to the master set. "
+                            "If you remove this stitch it will be removed from the master list too."));
+            msgbox.setInformativeText(tr("Are you sure you want to remove the stitch?"));
+            msgbox.setIcon(QMessageBox::Question);
+            QPushButton* confirm = msgbox.addButton(tr("Remove stitch from both lists"), QMessageBox::AcceptRole);
+            /*QPushButton* cancel =*/ msgbox.addButton(tr("Don't remove the stitch"), QMessageBox::RejectRole);
 
-                if(msgbox.clickedButton() != confirm)
-                    continue;
-            }
-            
-            StitchLibrary::inst()->removeStitchFormMasterSet(s);
+            msgbox.exec();
+
+            if(msgbox.clickedButton() != confirm)
+                continue;
+        }
+
+        StitchLibrary::inst()->removeStitchFormMasterSet(s);
+
+        if(!set->isMasterSet) {
             set->removeStitch(st);
             s->deleteLater();
         }
