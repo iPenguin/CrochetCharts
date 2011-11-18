@@ -47,6 +47,10 @@ private:
     Ui::StitchLibraryDialog* ui;
 
     void setDialogSize();
+
+    /**
+     *Set the author, set name, email, url, etc.
+     */
     void setupPropertiesBox();
     void setButtonStates(StitchSet* set);
 
