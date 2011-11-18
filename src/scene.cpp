@@ -1726,27 +1726,30 @@ void Scene::copy()
 void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
 {
     foreach(QGraphicsItem* item, items) {
+
+        stream << item->type();
+        
         switch(item->type()) {
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(item);
-                stream << c->type() << c->name() << c->color()
+                stream << c->name() << c->color()
                     << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos()
                     << c->transform();
                 break;
             }
             case Indicator::Type: {
                 Indicator* i = qgraphicsitem_cast<Indicator*>(item);
-                stream << i->type() << i->scenePos() << i->text();
+                stream << i->scenePos() << i->text();
                 break;
             }
             case QGraphicsItemGroup::Type: {
                 QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
-                stream << group->type() << group->childItems().count();
+                stream << group->childItems().count();
                 copyRecursively(stream, group->childItems());
                 break;
             }
             default:
-                qWarning() << "Copy - Unknown data type: " << item->type();
+                sws_warn("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }
@@ -1840,7 +1843,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             break;
         }
         default: {
-            qWarning() << "Paste - Unknown data type:" << type;
+            sws_warn("Unknown data type: " + QString::number(type));
             break;
         }
     }
@@ -1869,6 +1872,7 @@ void Scene::cut()
                 break;
             }
             default:
+                sws_warn("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }
