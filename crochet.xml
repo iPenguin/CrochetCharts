@@ -10,7 +10,7 @@
         <name>sl st</name>
         <icon>:/stitches/sl_st.svg</icon>
         <description>slip stitch</description>
-        <category>Basic</category>
+        <category>Default</category>
         <ws>ss</ws>
     </stitch>
 
@@ -18,7 +18,7 @@
         <name>ch</name>
         <icon>:/stitches/ch.svg</icon>
         <description>chain</description>
-        <category>Basic</category>
+        <category>Default</category>
         <ws>ch</ws>
     </stitch>
 
@@ -26,7 +26,7 @@
         <name>sc</name>
         <icon>:/stitches/sc.svg</icon>
         <description>single crochet</description>
-        <category>Basic</category>
+        <category>Default</category>
         <ws>sc</ws>
     </stitch>
 
@@ -34,7 +34,7 @@
         <name>hdc</name>
         <icon>:/stitches/hdc.svg</icon>
         <description>half double crochet</description>
-        <category>Basic</category>
+        <category>Default</category>
         <ws>hdc</ws>
     </stitch>
 
@@ -42,7 +42,7 @@
         <name>dc</name>
         <icon>:/stitches/dc.svg</icon>
         <description>double crochet</description>
-        <category>Basic</category>
+        <category>Default</category>
         <ws>dc</ws>
     </stitch>
 
@@ -50,7 +50,7 @@
         <name>tr</name>
         <icon>:/stitches/tr.svg</icon>
         <description>treble crochet</description>
-        <category>Basic</category>
+        <category>Default</category>
         <ws>tr</ws>
     </stitch>
 
@@ -58,7 +58,7 @@
         <name>dtr</name>
         <icon>:/stitches/dtr.svg</icon>
         <description>double treble crochet</description>
-        <category>Basic</category>
+        <category>Default</category>
         <ws>dtr</ws>
     </stitch>
 
@@ -66,7 +66,7 @@
         <name>ttr</name>
         <icon>:/stitches/ttr.svg</icon>
         <description>triple treble crochet</description>
-        <category>Basic</category>
+        <category>Default</category>
         <ws>ttr</ws>
     </stitch>
 
@@ -74,7 +74,7 @@
         <name>FPdc</name>
         <icon>:/stitches/FPdc.svg</icon>
         <description>front post double crochet</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>FPdc</ws>
     </stitch>
 
@@ -82,7 +82,7 @@
         <name>BPdc</name>
         <icon>:/stitches/BPdc.svg</icon>
         <description>back post double crochet</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>BPdc</ws>
     </stitch>
 
@@ -90,7 +90,7 @@
         <name>FPtr</name>
         <icon>:/stitches/FPtr.svg</icon>
         <description>front post treble crochet</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>FPtr</ws>
     </stitch>
 
@@ -98,7 +98,7 @@
         <name>BPtr</name>
         <icon>:/stitches/BPtr.svg</icon>
         <description>back post treble crochet</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>BPtr</ws>
     </stitch>
     
@@ -106,7 +106,7 @@
         <name>ch-3 picot</name>
         <icon>:/stitches/ch3_picot.svg</icon>
         <description>chain 3 picot</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>ch-3 picot</ws>
     </stitch>
 
@@ -114,7 +114,7 @@
         <name>sc2tog</name>
         <icon>:/stitches/sc2tog.svg</icon>
         <description>single crochet 2 together</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>sc2tog</ws>
     </stitch>
 
@@ -122,7 +122,7 @@
         <name>sc3tog</name>
         <icon>:/stitches/sc3tog.svg</icon>
         <description>single crochet 3 together</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>sc3tog</ws>
     </stitch>
 
@@ -130,7 +130,7 @@
         <name>dc2tog</name>
         <icon>:/stitches/dc2tog.svg</icon>
         <description>double crochet 2 together</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>dc2tog</ws>
     </stitch>
 
@@ -138,7 +138,7 @@
         <name>dc3tog</name>
         <icon>:/stitches/dc3tog.svg</icon>
         <description>double crochet 3 together</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>dc3tog</ws>
     </stitch>
 
@@ -146,7 +146,7 @@
         <name>3-dc cluster</name>
         <icon>:/stitches/3dc_cluster.svg</icon>
         <description>double crochet 3 cluster</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>3-dc cluster</ws>
     </stitch>
 
@@ -154,7 +154,7 @@
         <name>3-hdc cluster</name>
         <icon>:/stitches/3hdc_cluster.svg</icon>
         <description>bobble</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>3-hdc cluster</ws>
     </stitch>
 
@@ -162,7 +162,7 @@
         <name>5-dc popcorn</name>
         <icon>:/stitches/5dc_popcorn.svg</icon>
         <description>double crochet 5 popcorn</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>5-dc popcorn</ws>
     </stitch>
 
@@ -170,7 +170,7 @@
         <name>5-dc shell</name>
         <icon>:/stitches/5dc_shell.svg</icon>
         <description>5 double crochet shell</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>5-dc shell</ws>
     </stitch>
     
@@ -178,7 +178,7 @@
         <name>blo</name>
         <icon>:/stitches/blo.svg</icon>
         <description>worked in back loop</description>
-        <category>Advanced</category>
+        <category>Default</category>
         <ws>blo</ws>
     </stitch>
 
@@ -186,7 +186,7 @@
        <name>flo</name>
        <icon>:/stitches/flo.svg</icon>
        <description>worked in front loop</description>
-       <category>Advanced</category>
+       <category>Default</category>
        <ws>flo</ws>
    </stitch>
 
@@ -201,7 +201,7 @@
        <name>st1</name>
        <icon>:/stitches/st1.svg</icon>
        <description></description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st1</ws>
    </stitch>
 
@@ -209,7 +209,7 @@
        <name>st2</name>
        <icon>:/stitches/st2.svg</icon>
        <description></description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st2</ws>
    </stitch>
 
@@ -218,7 +218,7 @@
        <icon>:/stitches/st3.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st3</ws>
    </stitch>
 
@@ -227,7 +227,7 @@
        <icon>:/stitches/st4.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st4</ws>
    </stitch>
 
@@ -236,7 +236,7 @@
        <icon>:/stitches/st5.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st5</ws>
    </stitch>
 
@@ -245,7 +245,7 @@
        <icon>:/stitches/st6.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st6</ws>
    </stitch>
 
@@ -254,7 +254,7 @@
        <icon>:/stitches/st7.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st7</ws>
    </stitch>
 
@@ -263,7 +263,7 @@
        <icon>:/stitches/st8.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st8</ws>
    </stitch>
 
@@ -272,7 +272,7 @@
        <icon>:/stitches/st9.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st9</ws>
    </stitch>
 
@@ -281,7 +281,7 @@
        <icon>:/stitches/st10.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st10</ws>
    </stitch>
 
@@ -290,7 +290,7 @@
        <icon>:/stitches/st11.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st11</ws>
    </stitch>
 
@@ -299,7 +299,7 @@
        <icon>:/stitches/st12.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st12</ws>
    </stitch>
 
@@ -308,7 +308,7 @@
        <icon>:/stitches/st13.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st13</ws>
    </stitch>
 
@@ -317,7 +317,7 @@
        <icon>:/stitches/st14.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st14</ws>
    </stitch>
 
@@ -326,7 +326,7 @@
        <icon>:/stitches/st15.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st15</ws>
    </stitch>
 
@@ -335,7 +335,7 @@
        <icon>:/stitches/st16.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st16</ws>
    </stitch>
 
@@ -344,7 +344,7 @@
        <icon>:/stitches/st17.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st17</ws>
    </stitch>
 
@@ -353,7 +353,7 @@
        <icon>:/stitches/st18.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st18</ws>
    </stitch>
 
@@ -362,7 +362,7 @@
        <icon>:/stitches/st19.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st19</ws>
    </stitch>
 
@@ -371,7 +371,7 @@
        <icon>:/stitches/st20.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st20</ws>
    </stitch>
 
@@ -380,7 +380,7 @@
        <icon>:/stitches/st21.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st21</ws>
    </stitch>
 
@@ -389,7 +389,7 @@
        <icon>:/stitches/st22.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st22</ws>
    </stitch>
 
@@ -398,7 +398,7 @@
        <icon>:/stitches/st23.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st23</ws>
    </stitch>
 
@@ -407,7 +407,7 @@
        <icon>:/stitches/st24.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st24</ws>
    </stitch>
 
@@ -416,7 +416,7 @@
        <icon>:/stitches/st25.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st25</ws>
    </stitch>
 
@@ -425,7 +425,7 @@
        <icon>:/stitches/st26.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st26</ws>
    </stitch>
 
@@ -434,7 +434,7 @@
        <icon>:/stitches/st27.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st27</ws>
    </stitch>
 
@@ -443,7 +443,7 @@
        <icon>:/stitches/st28.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st28</ws>
    </stitch>
 
@@ -452,7 +452,7 @@
        <icon>:/stitches/st29.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st29</ws>
    </stitch>
 
@@ -461,7 +461,7 @@
        <icon>:/stitches/st30.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st30</ws>
    </stitch>
 
@@ -470,7 +470,7 @@
        <icon>:/stitches/st31.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st31</ws>
    </stitch>
 
@@ -479,7 +479,7 @@
        <icon>:/stitches/st32.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st32</ws>
    </stitch>
 
@@ -488,7 +488,7 @@
        <icon>:/stitches/st33.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st33</ws>
    </stitch>
 
@@ -497,7 +497,7 @@
        <icon>:/stitches/st34.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st34</ws>
    </stitch>
 
@@ -506,7 +506,7 @@
        <icon>:/stitches/st35.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st35</ws>
    </stitch>
 
@@ -515,7 +515,7 @@
        <icon>:/stitches/st36.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st36</ws>
    </stitch>
 
@@ -524,7 +524,7 @@
        <icon>:/stitches/st37.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st37</ws>
    </stitch>
 
@@ -533,7 +533,7 @@
        <icon>:/stitches/st38.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st38</ws>
    </stitch>
 
@@ -542,7 +542,7 @@
        <icon>:/stitches/st39.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st39</ws>
    </stitch>
 
@@ -551,7 +551,7 @@
        <icon>:/stitches/st40.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st40</ws>
    </stitch>
 
@@ -560,7 +560,7 @@
        <icon>:/stitches/st41.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st41</ws>
    </stitch>
 
@@ -569,7 +569,7 @@
        <icon>:/stitches/st42.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st42</ws>
    </stitch>
 
@@ -578,7 +578,7 @@
        <icon>:/stitches/st43.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st43</ws>
    </stitch>
 
@@ -587,7 +587,7 @@
        <icon>:/stitches/st44.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st44</ws>
    </stitch>
 
@@ -596,7 +596,7 @@
        <icon>:/stitches/st45.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st45</ws>
    </stitch>
 
@@ -605,7 +605,7 @@
        <icon>:/stitches/st46.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st46</ws>
    </stitch>
 
@@ -614,7 +614,7 @@
        <icon>:/stitches/st47.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st47</ws>
    </stitch>
 
@@ -623,7 +623,7 @@
        <icon>:/stitches/st48.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st48</ws>
    </stitch>
 
@@ -632,7 +632,7 @@
        <icon>:/stitches/st49.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st49</ws>
    </stitch>
 
@@ -641,7 +641,7 @@
        <icon>:/stitches/st50.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st50</ws>
    </stitch>
 
@@ -650,7 +650,7 @@
        <icon>:/stitches/st51.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st51</ws>
    </stitch>
 
@@ -659,7 +659,7 @@
        <icon>:/stitches/st52.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st52</ws>
    </stitch>
 
@@ -668,7 +668,7 @@
        <icon>:/stitches/st53.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st53</ws>
    </stitch>
 
@@ -677,7 +677,7 @@
        <icon>:/stitches/st54.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st54</ws>
    </stitch>
    
@@ -686,7 +686,7 @@
        <icon>:/stitches/st55.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st55</ws>
    </stitch>
 
@@ -695,7 +695,7 @@
        <icon>:/stitches/st57.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st57</ws>
    </stitch>
 
@@ -704,7 +704,7 @@
        <icon>:/stitches/st58.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st58</ws>
    </stitch>
 
@@ -713,7 +713,7 @@
        <icon>:/stitches/st59.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st59</ws>
    </stitch>
 
@@ -722,7 +722,7 @@
        <icon>:/stitches/st60.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st60</ws>
    </stitch>
 
@@ -731,7 +731,7 @@
        <icon>:/stitches/st61.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st61</ws>
    </stitch>
 
@@ -740,7 +740,7 @@
        <icon>:/stitches/st62.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st62</ws>
    </stitch>
 
@@ -749,7 +749,7 @@
        <icon>:/stitches/st63.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st63</ws>
    </stitch>
 
@@ -758,7 +758,7 @@
        <icon>:/stitches/st64.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st64</ws>
    </stitch>
 
@@ -767,7 +767,7 @@
        <icon>:/stitches/st65.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st65</ws>
    </stitch>
 
@@ -776,7 +776,7 @@
        <icon>:/stitches/st66.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st66</ws>
    </stitch>
 
@@ -785,7 +785,7 @@
        <icon>:/stitches/st67.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st67</ws>
    </stitch>
 
@@ -794,7 +794,7 @@
        <icon>:/stitches/st68.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st68</ws>
    </stitch>
 
@@ -803,7 +803,7 @@
        <icon>:/stitches/st69.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st69</ws>
    </stitch>
 
@@ -812,7 +812,7 @@
        <icon>:/stitches/st70.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st70</ws>
    </stitch>
 
@@ -821,7 +821,7 @@
        <icon>:/stitches/st71.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st71</ws>
    </stitch>
 
@@ -830,7 +830,7 @@
        <icon>:/stitches/st72.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st72</ws>
    </stitch>
 
@@ -839,7 +839,7 @@
        <icon>:/stitches/st73.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st73</ws>
    </stitch>
 
@@ -848,7 +848,7 @@
        <icon>:/stitches/st74.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st74</ws>
    </stitch>
 
@@ -857,7 +857,7 @@
        <icon>:/stitches/st75.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st75</ws>
    </stitch>
 
@@ -866,7 +866,7 @@
        <icon>:/stitches/st76.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st76</ws>
    </stitch>
 
@@ -875,7 +875,95 @@
        <icon>:/stitches/st77.svg</icon>
        <description>
        </description>
-       <category>Basic</category>
+       <category>Default</category>
        <ws>st77</ws>
+   </stitch>
+
+   <stitch>
+       <name>t-ch1</name>
+       <icon>:/stitches/t-ch1.svg</icon>
+       <description>single turning chain</description>
+       <category>Default</category>
+       <ws>t-ch1</ws>
+   </stitch>
+
+   <stitch>
+       <name>t-ch2</name>
+       <icon>:/stitches/t-ch2.svg</icon>
+       <description>double turning chain</description>
+       <category>Default</category>
+       <ws>t-ch2</ws>
+   </stitch>
+
+   <stitch>
+       <name>t-ch3</name>
+       <icon>:/stitches/t-ch3.svg</icon>
+       <description>triple turning chain</description>
+       <category>Default</category>
+       <ws>t-ch3</ws>
+   </stitch>
+
+   <stitch>
+       <name>t-ch4</name>
+       <icon>:/stitches/t-ch4.svg</icon>
+       <description>quadruple turning chain</description>
+       <category>Default</category>
+       <ws>t-ch4</ws>
+   </stitch>
+
+   <stitch>
+       <name>t-ch5</name>
+       <icon>:/stitches/t-ch5.svg</icon>
+       <description>quintuple turning chain</description>
+       <category>Default</category>
+       <ws>t-ch5</ws>
+   </stitch>
+
+   <stitch>
+       <name>t-ch6</name>
+       <icon>:/stitches/t-ch6.svg</icon>
+       <description>sextuple turning chain</description>
+       <category>Default</category>
+       <ws>t-ch6</ws>
+   </stitch>
+
+   <stitch>
+       <name>start</name>
+       <icon>:/stitches/start.svg</icon>
+       <description></description>
+       <category>Default</category>
+       <ws>start</ws>
+   </stitch>
+
+   <stitch>
+       <name>end</name>
+       <icon>:/stitches/end.svg</icon>
+       <description></description>
+       <category>Default</category>
+       <ws>end</ws>
+   </stitch>
+
+   <stitch>
+       <name>loops</name>
+       <icon>:/stitches/loops.svg</icon>
+       <description></description>
+       <category>Default</category>
+       <ws>loops</ws>
+   </stitch>
+
+   <stitch>
+       <name>adjustable ring</name>
+       <icon>:/stitches/adjustable_ring.svg</icon>
+       <description></description>
+       <category>Default</category>
+       <ws>adjustable ring</ws>
+   </stitch>
+
+    <stitch>
+       <name>ring</name>
+       <icon>:/stitches/ring.svg</icon>
+       <description></description>
+       <category>Default</category>
+       <ws>ring</ws>
    </stitch>
 </stitch_set>

@@ -101,5 +101,16 @@
         <file>st75.svg</file>
         <file>st76.svg</file>
         <file>st77.svg</file>
+        <file>t-ch1.svg</file>
+        <file>t-ch2.svg</file>
+        <file>t-ch3.svg</file>
+        <file>t-ch4.svg</file>
+        <file>t-ch5.svg</file>
+        <file>t-ch6.svg</file>
+        <file>adjustable_ring.svg</file>
+        <file>end.svg</file>
+        <file>loops.svg</file>
+        <file>start.svg</file>
+        <file>ring.svg</file>
     </qresource>
 </RCC>
