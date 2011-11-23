@@ -205,13 +205,13 @@
        <ws>st1</ws>
    </stitch>
 
-   <stitch>
-       <name>st2</name>
-       <icon>:/stitches/st2.svg</icon>
-       <description></description>
-       <category>Default</category>
-       <ws>st2</ws>
-   </stitch>
+    <stitch>
+        <name>open pic</name>
+        <icon>:/stitches/st2.svg</icon>
+        <description>open picot</description>
+        <category>Default</category>
+        <ws>open pic</ws>
+    </stitch>
 
    <stitch>
        <name>st3</name>
@@ -231,14 +231,13 @@
        <ws>st4</ws>
    </stitch>
 
-   <stitch>
-       <name>st5</name>
-       <icon>:/stitches/st5.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st5</ws>
-   </stitch>
+    <stitch>
+        <name>ext sc</name>
+        <icon>:/stitches/st5.svg</icon>
+        <description>extended sc</description>
+        <category>Default</category>
+        <ws>ext sc</ws>
+    </stitch>
 
    <stitch>
        <name>st6</name>
@@ -258,32 +257,29 @@
        <ws>st7</ws>
    </stitch>
 
-   <stitch>
-       <name>st8</name>
-       <icon>:/stitches/st8.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st8</ws>
-   </stitch>
+    <stitch>
+        <name>sc blo</name>
+        <icon>:/stitches/st8.svg</icon>
+        <description>sc in back loop only</description>
+        <category>Default</category>
+        <ws>sc blo</ws>
+    </stitch>
 
-   <stitch>
-       <name>st9</name>
-       <icon>:/stitches/st9.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st9</ws>
-   </stitch>
+    <stitch>
+        <name>hdc blo</name>
+        <icon>:/stitches/st9.svg</icon>
+        <description>hdc in back loop only</description>
+        <category>Default</category>
+        <ws>hdc blo</ws>
+    </stitch>
 
-   <stitch>
-       <name>st10</name>
-       <icon>:/stitches/st10.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st10</ws>
-   </stitch>
+    <stitch>
+        <name>dc blo</name>
+        <icon>:/stitches/st10.svg</icon>
+        <description>dc in back loop only</description>
+        <category>Default</category>
+        <ws>dc blo</ws>
+    </stitch>
 
    <stitch>
        <name>st11</name>
@@ -384,14 +380,13 @@
        <ws>st21</ws>
    </stitch>
 
-   <stitch>
-       <name>st22</name>
-       <icon>:/stitches/st22.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st22</ws>
-   </stitch>
+    <stitch>
+        <name>5 hdc popcorn</name>
+        <icon>:/stitches/st22.svg</icon>
+        <description>5 st hdc popcorn</description>
+        <category>Default</category>
+        <ws>5 hdc popcorn</ws>
+    </stitch>
 
    <stitch>
        <name>st23</name>
@@ -438,23 +433,21 @@
        <ws>st27</ws>
    </stitch>
 
-   <stitch>
-       <name>st28</name>
-       <icon>:/stitches/st28.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st28</ws>
-   </stitch>
+    <stitch>
+        <name>hdc2tog</name>
+        <icon>:/stitches/st28.svg</icon>
+        <description>hdc 2 together</description>
+        <category>Default</category>
+        <ws>hdc2tog</ws>
+    </stitch>
 
-   <stitch>
-       <name>st29</name>
-       <icon>:/stitches/st29.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st29</ws>
-   </stitch>
+    <stitch>
+        <name>hdc3tog</name>
+        <icon>:/stitches/st29.svg</icon>
+        <description>hdc 3 together</description>
+        <category>Default</category>
+        <ws>hdc3tog</ws>
+    </stitch>
 
    <stitch>
        <name>st30</name>
@@ -465,23 +458,21 @@
        <ws>st30</ws>
    </stitch>
 
-   <stitch>
-       <name>st31</name>
-       <icon>:/stitches/st31.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st31</ws>
-   </stitch>
+    <stitch>
+        <name>dc4tog</name>
+        <icon>:/stitches/st31.svg</icon>
+        <description>dc 4 together</description>
+        <category>Default</category>
+        <ws>dc4tog</ws>
+    </stitch>
 
-   <stitch>
-       <name>st32</name>
-       <icon>:/stitches/st32.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st32</ws>
-   </stitch>
+    <stitch>
+        <name>dc5tog</name>
+        <icon>:/stitches/st32.svg</icon>
+        <description>dc 5 together</description>
+        <category>Default</category>
+        <ws>dc5tog</ws>
+    </stitch>
 
    <stitch>
        <name>st33</name>
@@ -501,59 +492,53 @@
        <ws>st34</ws>
    </stitch>
 
-   <stitch>
-       <name>st35</name>
-       <icon>:/stitches/st35.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st35</ws>
-   </stitch>
+    <stitch>
+        <name>sc inc</name>
+        <icon>:/stitches/st35.svg</icon>
+        <description>sc increase by 1 st</description>
+        <category>Default</category>
+        <ws>sc inc</ws>
+    </stitch>
 
-   <stitch>
-       <name>st36</name>
-       <icon>:/stitches/st36.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st36</ws>
-   </stitch>
+    <stitch>
+        <name>sc inc 2</name>
+        <icon>:/stitches/st36.svg</icon>
+        <description>sc increase by 2 sts</description>
+        <category>Default</category>
+        <ws>sc inc 2</ws>
+    </stitch>
 
-   <stitch>
-       <name>st37</name>
-       <icon>:/stitches/st37.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st37</ws>
-   </stitch>
+    <stitch>
+        <name>hdc inc</name>
+        <icon>:/stitches/st37.svg</icon>
+        <description>hdc increase by 1 st</description>
+        <category>Default</category>
+        <ws>hdc inc</ws>
+    </stitch>
 
-   <stitch>
-       <name>st38</name>
-       <icon>:/stitches/st38.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st38</ws>
-   </stitch>
+    <stitch>
+        <name>hdc inc 2</name>
+        <icon>:/stitches/st38.svg</icon>
+        <description>hdc increase by 2 sts</description>
+        <category>Default</category>
+        <ws>hdc inc 2</ws>
+    </stitch>
 
-   <stitch>
-       <name>st39</name>
-       <icon>:/stitches/st39.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st39</ws>
-   </stitch>
+    <stitch>
+        <name>dc inc</name>
+        <icon>:/stitches/st39.svg</icon>
+        <description>dc increase by 1 st</description>
+        <category>Default</category>
+        <ws>dc inc</ws>
+    </stitch>
 
-   <stitch>
-       <name>st40</name>
-       <icon>:/stitches/st40.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st40</ws>
-   </stitch>
+    <stitch>
+        <name>dc inc 2</name>
+        <icon>:/stitches/st40.svg</icon>
+        <description>dc increase by 2 sts</description>
+        <category>Default</category>
+        <ws>dc inc 2</ws>
+    </stitch>
 
    <stitch>
        <name>st41</name>
@@ -672,14 +657,13 @@
        <ws>st53</ws>
    </stitch>
 
-   <stitch>
-       <name>st54</name>
-       <icon>:/stitches/st54.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st54</ws>
-   </stitch>
+    <stitch>
+        <name>tc xover</name>
+        <icon>:/stitches/st54.svg</icon>
+        <description>tc crossover st</description>
+        <category>Default</category>
+        <ws>tc xover</ws>
+    </stitch>
    
    <stitch>
        <name>st55</name>
@@ -726,40 +710,36 @@
        <ws>st60</ws>
    </stitch>
 
-   <stitch>
-       <name>st61</name>
-       <icon>:/stitches/st61.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st61</ws>
-   </stitch>
+    <stitch>
+        <name>FPsc</name>
+        <icon>:/stitches/st61.svg</icon>
+        <description>front post sc</description>
+        <category>Default</category>
+        <ws>FPsc</ws>
+    </stitch>
+
+    <stitch>
+        <name>BPsc</name>
+        <icon>:/stitches/st62.svg</icon>
+        <description>back post sc</description>
+        <category>Default</category>
+        <ws>BPsc</ws>
+    </stitch>
+
+    <stitch>
+        <name>FPhdc</name>
+        <icon>:/stitches/st63.svg</icon>
+        <description>front post hdc</description>
+        <category>Default</category>
+        <ws>FPhdc</ws>
+    </stitch>
 
    <stitch>
-       <name>st62</name>
-       <icon>:/stitches/st62.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st62</ws>
-   </stitch>
-
-   <stitch>
-       <name>st63</name>
-       <icon>:/stitches/st63.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st63</ws>
-   </stitch>
-
-   <stitch>
-       <name>st64</name>
-       <icon>:/stitches/st64.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st64</ws>
+        <name>BPhdc</name>
+        <icon>:/stitches/st64.svg</icon>
+        <description>back post hdc</description>
+        <category>Default</category>
+        <ws>BPhdc</ws>
    </stitch>
 
    <stitch>
@@ -798,50 +778,45 @@
        <ws>st68</ws>
    </stitch>
 
-   <stitch>
-       <name>st69</name>
-       <icon>:/stitches/st69.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st69</ws>
-   </stitch>
+    <stitch>
+        <name>sc loop</name>
+        <icon>:/stitches/st69.svg</icon>
+        <description>sc loop st</description>
+        <category>Default</category>
+        <ws>sc loop</ws>
+    </stitch>
 
-   <stitch>
-       <name>st70</name>
-       <icon>:/stitches/st70.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st70</ws>
-   </stitch>
+    <stitch>
+        <name>dc loop</name>
+        <icon>:/stitches/st70.svg</icon>
+        <description>dc loop st</description>
+        <category>Default</category>
+        <ws>dc loop</ws>
+    </stitch>
 
-   <stitch>
-       <name>st71</name>
-       <icon>:/stitches/st71.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st71</ws>
-   </stitch>
+    <stitch>
+        <name>y st</name>
+        <icon>:/stitches/st71.svg</icon>
+        <description>y stitch</description>
+        <category>Default</category>
+        <ws>y st</ws>
+    </stitch>
 
-   <stitch>
-       <name>st72</name>
-       <icon>:/stitches/st72.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st72</ws>
-   </stitch>
+    <stitch>
+        <name>inverted y</name>
+        <icon>:/stitches/st72.svg</icon>
+        <description>inverted y st</description>
+        <category>Default</category>
+        <ws>inverted y</ws>
+    </stitch>
 
-   <stitch>
-       <name>st73</name>
-       <icon>:/stitches/st73.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st73</ws>
-   </stitch>
+    <stitch>
+        <name>bouillon</name>
+        <icon>:/stitches/st73.svg</icon>
+        <description>bouillon st</description>
+        <category>Default</category>
+        <ws>bouillon</ws>
+    </stitch>
 
    <stitch>
        <name>st74</name>
@@ -946,7 +921,7 @@
    <stitch>
        <name>loops</name>
        <icon>:/stitches/loops.svg</icon>
-       <description></description>
+       <description>make 2 loops</description>
        <category>Default</category>
        <ws>loops</ws>
    </stitch>
