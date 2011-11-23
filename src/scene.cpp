@@ -1370,17 +1370,21 @@ void Scene::distribute(int vertical, int horizontal)
     qreal top = sceneRect().bottom();
     qreal bottom = sceneRect().top();
 
+    //sort the cells from left to right, from top to bottom as needed.
     foreach(QGraphicsItem* i, unsorted) {
+
+        QRectF rect;
+        rect = i->sceneBoundingRect();
         
         if(horizontal != 0) {
             qreal width = 0; //left, center
 
             if(horizontal == 3)
-                width = i->boundingRect().width(); //right
+                width = rect.width(); //right
 
-            qreal ptX = i->scenePos().x() + width;
+            qreal ptX = rect.x() + width;
             if(i->type() != Cell::Type)
-                ptX = i->boundingRect().left() + width;
+                ptX = rect.left() + width;
             
             if(ptX > right)
                 right = ptX;
@@ -1393,10 +1397,12 @@ void Scene::distribute(int vertical, int horizontal)
                 bool added = false;
                 for(int s = 0; s < sortedH.count(); ++s) {
                     qreal curX;
-                    if(sortedH[s]->type() != Cell::Type)
+                    if(sortedH[s]->type() != Cell::Type) {
+                        //FIXME: if group sort by sceneBoundingRect
                         curX = sortedH[s]->boundingRect().left() + sortedH[s]->boundingRect().width();
-                    else
+                    } else {
                         curX = sortedH[s]->scenePos().x() + sortedH[s]->boundingRect().width();
+                    }
                     
                     if(ptX < curX) {
                         sortedH.insert(s, i);
@@ -1414,11 +1420,11 @@ void Scene::distribute(int vertical, int horizontal)
             qreal height = 0; //left, center
 
             if(vertical == 3)
-                height = i->boundingRect().height(); //right
+                height = rect.height(); //right
 
-            qreal ptY = i->scenePos().y() + height;
+            qreal ptY = rect.y() + height;
             if(i->type() != Cell::Type)
-                ptY = i->boundingRect().y() + height;
+                ptY = rect.y() + height;
             
             if(ptY < top)
                 top = ptY;
@@ -1466,19 +1472,23 @@ void Scene::distribute(int vertical, int horizontal)
 
     undoStack()->beginMacro("distribute selection");
 
+    //go through all cells and adjust them based on the sorting done above.
     foreach(QGraphicsItem* i, unsorted) {
         qreal adjustH = 0; //left
         qreal adjustV = 0; //top
 
+        QRectF rect;
+        rect = i->sceneBoundingRect();
+
         if(horizontal == 2)
-            adjustH = i->boundingRect().width() / 2; //center h
+            adjustH = rect.width() / 2; //center h
         else if(horizontal == 3)
-            adjustH = i->boundingRect().width(); //right
+            adjustH = rect.width(); //right
             
         if(vertical == 2)
-            adjustV = i->boundingRect().height() / 2; //center v
+            adjustV = rect.height() / 2; //center v
         else if(vertical == 3)
-            adjustV = i->boundingRect().height(); //bottom
+            adjustV = rect.height(); //bottom
 
         int idxX = sortedH.indexOf(i);
         int idxY = sortedV.indexOf(i);
@@ -1487,27 +1497,28 @@ void Scene::distribute(int vertical, int horizontal)
         qreal newY = 0;
         
         if(horizontal == 0)
-            newX = i->scenePos().x();
+            newX = rect.x();
         else
             newX = left - adjustH + (idxX * spaceH);
 
         if(vertical == 0)
-            newY = i->scenePos().y();
+            newY = rect.y();
         else
             newY = top - adjustV + (idxY * spaceV);
 
+
         if(i->type() != Cell::Type) {
-            QPointF newPos = calcGroupPos(i, QPointF(newX, newY));
-            newX = newPos.x();
-            newY = newPos.y();
+            QPointF delta = calcGroupPos(i, QPointF(newX, newY));
+
+            newX = i->scenePos().x() + delta.x();
+            newY = i->scenePos().y() + delta.y();
 
             if(horizontal == 0)
                 newX = i->scenePos().x();
-
             if(vertical == 0)
                 newY = i->scenePos().y();
         }
-        
+
         QPointF oldPos = i->scenePos();
         i->setPos(newX, newY);
         undoStack()->push(new SetItemCoordinates(this, i, oldPos));
