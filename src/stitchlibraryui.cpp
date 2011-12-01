@@ -325,8 +325,8 @@ void StitchLibraryUi::printStitchSet()
         totalHeight += ui->listView->rowHeight(r);
     }
 
-    QSizeF size = QSize(totalWidth, totalHeight);
-    printer.setPaperSize(size, QPrinter::Point);
+    //QSizeF size = QSize(totalWidth, totalHeight);
+    //printer.setPaperSize(size, QPrinter::Point);
   
     QPainter p;
     p.begin(&printer);
@@ -337,16 +337,26 @@ void StitchLibraryUi::printStitchSet()
     double scale = qMin(scaleX, scaleY);
     p.scale(scale, scale);
 */
-    
+    int rowHeight = 35;
     // paint cells
     for (int r = 0; r < rows; ++r) {
-        for (int c = 0; c < cols; ++c) {
+
+        if(rowHeight + ui->listView->rowHeight(r) > (printer.pageRect().height() - 35)) {
+            printer.newPage();
+            rowHeight = 35;
+        }
+
+        for (int c = 0; c < 3; ++c) {
             QModelIndex idx = ui->listView->model()->index(r, c);
             QStyleOptionViewItem option;// = ui->listView->viewOptions();
             option.palette.setColor(QPalette::Text, QColor(Qt::black));
             option.rect = ui->listView->visualRect(idx);
+            option.rect.setTop(rowHeight);
+            option.rect.setLeft(option.rect.x() + 35);
             ui->listView->itemDelegate()->paint(&p, option, idx);
         }
+
+        rowHeight += ui->listView->rowHeight(r);
     }
     
     p.end();
