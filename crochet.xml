@@ -145,7 +145,7 @@
     <stitch>
         <name>3-dc cluster</name>
         <icon>:/stitches/3dc_cluster.svg</icon>
-        <description>double crochet 3 cluster</description>
+        <description>3 double crochet cluster</description>
         <category>Default</category>
         <ws>3-dc cluster</ws>
     </stitch>
@@ -153,7 +153,7 @@
     <stitch>
         <name>3-hdc cluster</name>
         <icon>:/stitches/3hdc_cluster.svg</icon>
-        <description>bobble</description>
+        <description>3 half double crochet cluster</description>
         <category>Default</category>
         <ws>3-hdc cluster</ws>
     </stitch>
@@ -161,7 +161,7 @@
     <stitch>
         <name>5-dc popcorn</name>
         <icon>:/stitches/5dc_popcorn.svg</icon>
-        <description>double crochet 5 popcorn</description>
+        <description>5 double crochet popcorn</description>
         <category>Default</category>
         <ws>5-dc popcorn</ws>
     </stitch>
@@ -190,21 +190,6 @@
        <ws>flo</ws>
    </stitch>
 
-
-
-
-
-
-
-
-   <stitch>
-       <name>st1</name>
-       <icon>:/stitches/st1.svg</icon>
-       <description></description>
-       <category>Default</category>
-       <ws>st1</ws>
-   </stitch>
-
     <stitch>
         <name>open pic</name>
         <icon>:/stitches/st2.svg</icon>
@@ -213,54 +198,50 @@
         <ws>open pic</ws>
     </stitch>
 
-   <stitch>
-       <name>st3</name>
-       <icon>:/stitches/st3.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st3</ws>
-   </stitch>
+    <stitch>
+        <name>ch-3 pic</name>
+        <icon>:/stitches/st3.svg</icon>
+        <description>chain 3 picot</description>
+        <category>Default</category>
+        <ws>ch-3 pic</ws>
+    </stitch>
 
-   <stitch>
-       <name>st4</name>
-       <icon>:/stitches/st4.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st4</ws>
-   </stitch>
+    <stitch>
+        <name>ch-3 sc pic</name>
+        <icon>:/stitches/st4.svg</icon>
+        <description>chain 3 single crochet picot</description>
+        <category>Default</category>
+        <ws>ch-3 sc pic</ws>
+    </stitch>
 
     <stitch>
         <name>ext sc</name>
         <icon>:/stitches/st5.svg</icon>
-        <description>extended sc</description>
+        <description>extended single crochet</description>
         <category>Default</category>
         <ws>ext sc</ws>
     </stitch>
 
-   <stitch>
-       <name>st6</name>
-       <icon>:/stitches/st6.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st6</ws>
-   </stitch>
+    <stitch>
+        <name>twisted sc</name>
+        <icon>:/stitches/st6.svg</icon>
+        <description>twisted single crochet</description>
+        <category>Default</category>
+        <ws>twisted sc</ws>
+    </stitch>
 
-   <stitch>
-       <name>st7</name>
-       <icon>:/stitches/st7.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st7</ws>
-   </stitch>
+    <stitch>
+        <name>reverse sc</name>
+        <icon>:/stitches/st7.svg</icon>
+        <description>reverse single crochet</description>
+        <category>Default</category>
+        <ws>reverse sc</ws>
+    </stitch>
 
     <stitch>
         <name>sc blo</name>
         <icon>:/stitches/st8.svg</icon>
-        <description>sc in back loop only</description>
+        <description>single crochet in the back loop only</description>
         <category>Default</category>
         <ws>sc blo</ws>
     </stitch>
@@ -268,7 +249,7 @@
     <stitch>
         <name>hdc blo</name>
         <icon>:/stitches/st9.svg</icon>
-        <description>hdc in back loop only</description>
+        <description>half double crochet in the back loop only</description>
         <category>Default</category>
         <ws>hdc blo</ws>
     </stitch>
@@ -276,167 +257,135 @@
     <stitch>
         <name>dc blo</name>
         <icon>:/stitches/st10.svg</icon>
-        <description>dc in back loop only</description>
+        <description>double crochet in the back loop only</description>
         <category>Default</category>
         <ws>dc blo</ws>
     </stitch>
 
    <stitch>
-       <name>st11</name>
-       <icon>:/stitches/st11.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st11</ws>
+        <name>3 hdc cluster</name>
+        <icon>:/stitches/st11.svg</icon>
+        <description>3 half double crochet cluster</description>
+        <category>Default</category>
+        <ws>3 hdc cluster</ws>
    </stitch>
 
-   <stitch>
-       <name>st12</name>
-       <icon>:/stitches/st12.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st12</ws>
-   </stitch>
+    <stitch>
+        <name>3 hdc cluster v</name>
+        <icon>:/stitches/st12.svg</icon>
+        <description>3 half double crochet cluster variation</description>
+        <category>Default</category>
+        <ws>3 hdc cluster v</ws>
+    </stitch>
 
-   <stitch>
-       <name>st13</name>
-       <icon>:/stitches/st13.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st13</ws>
-   </stitch>
+    <stitch>
+        <name>3 hdc cluster ch1</name>
+        <icon>:/stitches/st13.svg</icon>
+        <description>3 half double crochet cluster with chain</description>
+        <category>Default</category>
+        <ws>st13</ws>
+    </stitch>
 
-   <stitch>
-       <name>st14</name>
-       <icon>:/stitches/st14.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st14</ws>
-   </stitch>
+    <stitch>
+        <name>3 hdc cluster ch1 v</name>
+        <icon>:/stitches/st14.svg</icon>
+        <description>3 half double crochet cluster with chain variation</description>
+        <category>Default</category>
+        <ws>3 hdc cluster ch1 v</ws>
+    </stitch>
 
-   <stitch>
-       <name>st15</name>
-       <icon>:/stitches/st15.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st15</ws>
-   </stitch>
+    <stitch>
+        <name>hdc cluster slanted</name>
+        <icon>:/stitches/st15.svg</icon>
+        <description>hdc cluster slanted</description>
+        <category>Default</category>
+        <ws>hdc cluster slanted</ws>
+    </stitch>
 
-   <stitch>
-       <name>st16</name>
-       <icon>:/stitches/st16.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st16</ws>
-   </stitch>
+    <stitch>
+        <name>2 dc cluster</name>
+        <icon>:/stitches/st16.svg</icon>
+        <description>2 dobule crochet cluster</description>
+        <category>Default</category>
+        <ws>2 dc cluster</ws>
+    </stitch>
 
-   <stitch>
-       <name>st17</name>
-       <icon>:/stitches/st17.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st17</ws>
-   </stitch>
+    <stitch>
+        <name>3-dc cluster v</name>
+        <icon>:/stitches/st17.svg</icon>
+        <description>3 double crochet cluster variation</description>
+        <category>Default</category>
+        <ws>3-dc cluster v</ws>
+    </stitch>
 
-   <stitch>
-       <name>st18</name>
-       <icon>:/stitches/st18.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st18</ws>
-   </stitch>
+    <stitch>
+        <name>3-dc cluster v2</name>
+        <icon>:/stitches/st18.svg</icon>
+        <description>3 double crochet cluster variation 2</description>
+        <category>Default</category>
+        <ws>3-dc cluster v2</ws>
+    </stitch>
 
-   <stitch>
-       <name>st19</name>
-       <icon>:/stitches/st19.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st19</ws>
-   </stitch>
+    <stitch>
+        <name>5-dc cluster</name>
+        <icon>:/stitches/st19.svg</icon>
+        <description>5 double crochet cluster</description>
+        <category>Default</category>
+        <ws>5-dc cluster</ws>
+    </stitch>
 
-   <stitch>
-       <name>st20</name>
-       <icon>:/stitches/st20.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st20</ws>
-   </stitch>
+    <stitch>
+        <name>5-dc cluster v</name>
+        <icon>:/stitches/st20.svg</icon>
+        <description>5 double crochet cluster variation</description>
+        <category>Default</category>
+        <ws>5-dc cluster v</ws>
+    </stitch>
 
-   <stitch>
-       <name>st21</name>
-       <icon>:/stitches/st21.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st21</ws>
-   </stitch>
+    <stitch>
+        <name>5-tr cluster</name>
+        <icon>:/stitches/st21.svg</icon>
+        <description>5 treble crochet cluster</description>
+        <category>Default</category>
+        <ws>5-tr cluster</ws>
+    </stitch>
 
     <stitch>
         <name>5 hdc popcorn</name>
         <icon>:/stitches/st22.svg</icon>
-        <description>5 st hdc popcorn</description>
+        <description>5 stitch half double crochet popcorn</description>
         <category>Default</category>
         <ws>5 hdc popcorn</ws>
     </stitch>
 
-   <stitch>
-       <name>st23</name>
-       <icon>:/stitches/st23.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st23</ws>
-   </stitch>
+    <stitch>
+        <name>5 dc popcorn v</name>
+        <icon>:/stitches/st23.svg</icon>
+        <description>5 double crochet popcorn variation</description>
+        <category>Default</category>
+        <ws>5 dc popcorn v</ws>
+    </stitch>
 
-   <stitch>
-       <name>st24</name>
-       <icon>:/stitches/st24.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st24</ws>
-   </stitch>
+    <stitch>
+        <name>5 dc popcorn v2</name>
+        <icon>:/stitches/st24.svg</icon>
+        <description>5 double crechet popcorn variation 2</description>
+        <category>Default</category>
+        <ws>5 dc popcorn v2</ws>
+    </stitch>
 
-   <stitch>
-       <name>st25</name>
-       <icon>:/stitches/st25.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st25</ws>
-   </stitch>
-
-   <stitch>
-       <name>st26</name>
-       <icon>:/stitches/st26.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st26</ws>
-   </stitch>
-
-   <stitch>
-       <name>st27</name>
-       <icon>:/stitches/st27.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st27</ws>
-   </stitch>
+    <stitch>
+        <name>5 tr popcorn</name>
+        <icon>:/stitches/st25.svg</icon>
+        <description>5 treble crochet popcorn</description>
+        <category>Default</category>
+        <ws>5 tr popcorn</ws>
+    </stitch>
 
     <stitch>
         <name>hdc2tog</name>
         <icon>:/stitches/st28.svg</icon>
-        <description>hdc 2 together</description>
+        <description>half double crochet 2 together</description>
         <category>Default</category>
         <ws>hdc2tog</ws>
     </stitch>
@@ -444,24 +393,23 @@
     <stitch>
         <name>hdc3tog</name>
         <icon>:/stitches/st29.svg</icon>
-        <description>hdc 3 together</description>
+        <description>half double crochet 3 together</description>
         <category>Default</category>
         <ws>hdc3tog</ws>
     </stitch>
 
-   <stitch>
-       <name>st30</name>
-       <icon>:/stitches/st30.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st30</ws>
-   </stitch>
+    <stitch>
+        <name>2 dc wide</name>
+        <icon>:/stitches/st30.svg</icon>
+        <description>2 double crochet wide</description>
+        <category>Default</category>
+        <ws>2 dc wide</ws>
+    </stitch>
 
     <stitch>
         <name>dc4tog</name>
         <icon>:/stitches/st31.svg</icon>
-        <description>dc 4 together</description>
+        <description>double crochet 4 together</description>
         <category>Default</category>
         <ws>dc4tog</ws>
     </stitch>
@@ -469,251 +417,231 @@
     <stitch>
         <name>dc5tog</name>
         <icon>:/stitches/st32.svg</icon>
-        <description>dc 5 together</description>
+        <description>double crochet 5 together</description>
         <category>Default</category>
         <ws>dc5tog</ws>
     </stitch>
 
-   <stitch>
-       <name>st33</name>
-       <icon>:/stitches/st33.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st33</ws>
-   </stitch>
-
-   <stitch>
-       <name>st34</name>
-       <icon>:/stitches/st34.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st34</ws>
-   </stitch>
+    <stitch>
+        <name>2x2-dc clusters</name>
+        <icon>:/stitches/st33.svg</icon>
+        <description>2x2 double crochet clusters</description>
+        <category>Default</category>
+        <ws>2x2-dc clusters</ws>
+    </stitch>
 
     <stitch>
-        <name>sc inc</name>
+        <name>2x3-dc clusters</name>
+        <icon>:/stitches/st34.svg</icon>
+        <description>2x3 double crochet clusters</description>
+        <category>Default</category>
+        <ws>2x3-dc clusters</ws>
+    </stitch>
+
+    <stitch>
+        <name>2 sc in 1 st</name>
         <icon>:/stitches/st35.svg</icon>
-        <description>sc increase by 1 st</description>
+        <description>2 single crochet in 1 stitch</description>
         <category>Default</category>
-        <ws>sc inc</ws>
+        <ws>2 sc in 1 st</ws>
     </stitch>
 
     <stitch>
-        <name>sc inc 2</name>
+        <name>3 sc in 1 st</name>
         <icon>:/stitches/st36.svg</icon>
-        <description>sc increase by 2 sts</description>
+        <description>3 single crochet in 1 stitch</description>
         <category>Default</category>
-        <ws>sc inc 2</ws>
+        <ws>3 sc in 1 st</ws>
     </stitch>
 
     <stitch>
-        <name>hdc inc</name>
+        <name>2 hdc in 1 st</name>
         <icon>:/stitches/st37.svg</icon>
-        <description>hdc increase by 1 st</description>
+        <description>2 half double crochet in 1 st</description>
         <category>Default</category>
-        <ws>hdc inc</ws>
+        <ws>2 hdc in 1 st</ws>
     </stitch>
 
     <stitch>
-        <name>hdc inc 2</name>
+        <name>3 hdc in 1 st</name>
         <icon>:/stitches/st38.svg</icon>
-        <description>hdc increase by 2 sts</description>
+        <description>3 half double crochet in 1 stitch</description>
         <category>Default</category>
-        <ws>hdc inc 2</ws>
+        <ws>3 hdc in 1 st</ws>
     </stitch>
 
     <stitch>
-        <name>dc inc</name>
+        <name>2 dc in 1 st</name>
         <icon>:/stitches/st39.svg</icon>
-        <description>dc increase by 1 st</description>
+        <description>2 double crochet in 1 stitch</description>
         <category>Default</category>
-        <ws>dc inc</ws>
+        <ws>2 dc in 1 st</ws>
     </stitch>
 
     <stitch>
-        <name>dc inc 2</name>
+        <name>3 dc in 1 st</name>
         <icon>:/stitches/st40.svg</icon>
-        <description>dc increase by 2 sts</description>
+        <description>3 double crochet in 1 stitch</description>
         <category>Default</category>
-        <ws>dc inc 2</ws>
+        <ws>3 dc in 1 st</ws>
     </stitch>
 
-   <stitch>
-       <name>st41</name>
-       <icon>:/stitches/st41.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st41</ws>
-   </stitch>
-
-   <stitch>
-       <name>st42</name>
-       <icon>:/stitches/st42.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st42</ws>
-   </stitch>
-
-   <stitch>
-       <name>st43</name>
-       <icon>:/stitches/st43.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st43</ws>
-   </stitch>
-
-   <stitch>
-       <name>st44</name>
-       <icon>:/stitches/st44.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st44</ws>
-   </stitch>
-
-   <stitch>
-       <name>st45</name>
-       <icon>:/stitches/st45.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st45</ws>
-   </stitch>
-
-   <stitch>
-       <name>st46</name>
-       <icon>:/stitches/st46.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st46</ws>
-   </stitch>
-
-   <stitch>
-       <name>st47</name>
-       <icon>:/stitches/st47.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st47</ws>
-   </stitch>
-
-   <stitch>
-       <name>st48</name>
-       <icon>:/stitches/st48.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st48</ws>
-   </stitch>
-
-   <stitch>
-       <name>st49</name>
-       <icon>:/stitches/st49.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st49</ws>
-   </stitch>
-
-   <stitch>
-       <name>st50</name>
-       <icon>:/stitches/st50.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st50</ws>
-   </stitch>
-
-   <stitch>
-       <name>st51</name>
-       <icon>:/stitches/st51.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st51</ws>
-   </stitch>
-
-   <stitch>
-       <name>st52</name>
-       <icon>:/stitches/st52.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st52</ws>
-   </stitch>
-
-   <stitch>
-       <name>st53</name>
-       <icon>:/stitches/st53.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st53</ws>
-   </stitch>
+    <stitch>
+        <name>3dc v</name>
+        <icon>:/stitches/st41.svg</icon>
+        <description>3 double crochet variation</description>
+        <category>Default</category>
+        <ws>3dc v</ws>
+    </stitch>
 
     <stitch>
-        <name>tc xover</name>
-        <icon>:/stitches/st54.svg</icon>
-        <description>tc crossover st</description>
+        <name>dc v st ch1</name>
+        <icon>:/stitches/st42.svg</icon>
+        <description>v stitch (dc, ch1, dc)</description>
         <category>Default</category>
-        <ws>tc xover</ws>
+        <ws>dc v st ch1</ws>
+    </stitch>
+
+    <stitch>
+        <name>dc v st ch3</name>
+        <icon>:/stitches/st43.svg</icon>
+        <description>v stitch (dc, ch3, dc)</description>
+        <category>Default</category>
+        <ws>dc v st ch3</ws>
+    </stitch>
+
+    <stitch>
+        <name>4dc in st</name>
+        <icon>:/stitches/st44.svg</icon>
+        <description>4 double crochet in 1 stitch</description>
+        <category>Default</category>
+        <ws>4dc in st</ws>
+    </stitch>
+
+    <stitch>
+        <name>ch3 3dc in st</name>
+        <icon>:/stitches/st45.svg</icon>
+        <description>chain 3, 3 double crochet in the same stitch</description>
+        <category>Default</category>
+        <ws>ch3 3dc in st</ws>
+    </stitch>
+
+    <stitch>
+        <name>2-1-2-dc shell</name>
+        <icon>:/stitches/st46.svg</icon>
+        <description>2 double crochet, chain 1, 2 double crochet shell</description>
+        <category>Default</category>
+        <ws>2-1-2-dc shell</ws>
+    </stitch>
+
+    <stitch>
+        <name>3-2-3-dc shell</name>
+        <icon>:/stitches/st47.svg</icon>
+        <description>3 double crochet, chain 2, 3 double crochet shell</description>
+        <category>Default</category>
+        <ws>3-2-3-dc shell</ws>
+    </stitch>
+
+    <stitch>
+        <name>1/1 hdc cross</name>
+        <icon>:/stitches/st48.svg</icon>
+        <description>1-over-1 half double crochet cross</description>
+        <category>Default</category>
+        <ws>1/1 hdc cross</ws>
+    </stitch>
+
+    <stitch>
+        <name>1/1 dc cross</name>
+        <icon>:/stitches/st49.svg</icon>
+        <description>1-over-1 double crochet cross</description>
+        <category>Default</category>
+        <ws>1/1 dc cross</ws>
+    </stitch>
+
+    <stitch>
+        <name>1/1 tr cross</name>
+        <icon>:/stitches/st50.svg</icon>
+        <description>1-over-1 treble crochet cross</description>
+        <category>Default</category>
+        <ws>1/1 tr cross</ws>
+    </stitch>
+
+    <stitch>
+        <name>crossed dc</name>
+        <icon>:/stitches/st51.svg</icon>
+        <description>crossed (dc, ch1, dc)</description>
+        <category>Default</category>
+        <ws>crossed dc</ws>
+    </stitch>
+
+    <stitch>
+        <name>1/2 dc cross</name>
+        <icon>:/stitches/st52.svg</icon>
+        <description>1-over-2 dc cross</description>
+        <category>Default</category>
+        <ws>1/2 dc cross</ws>
+    </stitch>
+
+    <stitch>
+        <name>2/1 dc cross</name>
+        <icon>:/stitches/st53.svg</icon>
+        <description>2-over-1 dc cross</description>
+        <category>Default</category>
+        <ws>2/1 dc cross</ws>
+    </stitch>
+
+    <stitch>
+        <name>dc dc crossed</name>
+        <icon>:/stitches/st54.svg</icon>
+        <description>crossed (dc, dc, ch2, dc, dc)</description>
+        <category>Default</category>
+        <ws>dc dc crossed</ws>
     </stitch>
    
    <stitch>
-       <name>st55</name>
+       <name>tr tr crossed</name>
        <icon>:/stitches/st55.svg</icon>
-       <description>
-       </description>
+       <description>crossed (tr tr, ch3, tr tr)</description>
        <category>Default</category>
-       <ws>st55</ws>
+       <ws>tr tr crossed</ws>
    </stitch>
 
-   <stitch>
-       <name>st57</name>
-       <icon>:/stitches/st57.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st57</ws>
-   </stitch>
+    <stitch>
+        <name>1/1 dc left cross</name>
+        <icon>:/stitches/st57.svg</icon>
+        <description>1-over-1 double crochet left cross</description>
+        <category>Default</category>
+        <ws>1/1 dc left cross</ws>
+    </stitch>
 
-   <stitch>
-       <name>st58</name>
-       <icon>:/stitches/st58.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st58</ws>
-   </stitch>
+    <stitch>
+        <name>1/1 dc right cross</name>
+        <icon>:/stitches/st58.svg</icon>
+        <description>1-over-1 double crochet right cross</description>
+        <category>Default</category>
+        <ws>1/1 dc right cross</ws>
+    </stitch>
 
-   <stitch>
-       <name>st59</name>
-       <icon>:/stitches/st59.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st59</ws>
-   </stitch>
+    <stitch>
+        <name>1/3 dc left cross</name>
+        <icon>:/stitches/st59.svg</icon>
+        <description>1-over-3 double crochet left cross</description>
+        <category>Default</category>
+        <ws>1/3 dc left cross</ws>
+    </stitch>
 
-   <stitch>
-       <name>st60</name>
-       <icon>:/stitches/st60.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st60</ws>
-   </stitch>
+    <stitch>
+        <name>1/3 dc right cross</name>
+        <icon>:/stitches/st60.svg</icon>
+        <description>1-over-3 double crochet right cross</description>
+        <category>Default</category>
+        <ws>1/3 dc right cross</ws>
+    </stitch>
 
     <stitch>
         <name>FPsc</name>
         <icon>:/stitches/st61.svg</icon>
-        <description>front post sc</description>
+        <description>front post single crochet</description>
         <category>Default</category>
         <ws>FPsc</ws>
     </stitch>
@@ -721,7 +649,7 @@
     <stitch>
         <name>BPsc</name>
         <icon>:/stitches/st62.svg</icon>
-        <description>back post sc</description>
+        <description>back post single crochet</description>
         <category>Default</category>
         <ws>BPsc</ws>
     </stitch>
@@ -729,7 +657,7 @@
     <stitch>
         <name>FPhdc</name>
         <icon>:/stitches/st63.svg</icon>
-        <description>front post hdc</description>
+        <description>front post half double crochet</description>
         <category>Default</category>
         <ws>FPhdc</ws>
     </stitch>
@@ -737,51 +665,47 @@
    <stitch>
         <name>BPhdc</name>
         <icon>:/stitches/st64.svg</icon>
-        <description>back post hdc</description>
+        <description>back post half double crochet</description>
         <category>Default</category>
         <ws>BPhdc</ws>
    </stitch>
 
    <stitch>
-       <name>st65</name>
+       <name>crossed FPdc</name>
        <icon>:/stitches/st65.svg</icon>
-       <description>
-       </description>
+       <description>crossed (FPdc, ch1, FPdc)</description>
        <category>Default</category>
        <ws>st65</ws>
    </stitch>
 
-   <stitch>
-       <name>st66</name>
-       <icon>:/stitches/st66.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st66</ws>
-   </stitch>
+    <stitch>
+        <name>2 FPdc</name>
+        <icon>:/stitches/st66.svg</icon>
+        <description>2 front posted double crochet</description>
+        <category>Default</category>
+        <ws>2 FPdc</ws>
+    </stitch>
 
    <stitch>
-       <name>st67</name>
+       <name>FPdc2tog</name>
        <icon>:/stitches/st67.svg</icon>
-       <description>
-       </description>
+       <description>front post double crochet 2 together</description>
        <category>Default</category>
-       <ws>st67</ws>
+       <ws>FPdc2tog</ws>
    </stitch>
 
    <stitch>
-       <name>st68</name>
+       <name>FPtr2tog</name>
        <icon>:/stitches/st68.svg</icon>
-       <description>
-       </description>
+       <description>front post treble crochet 2 together</description>
        <category>Default</category>
-       <ws>st68</ws>
+       <ws>FPtr2tog</ws>
    </stitch>
 
     <stitch>
         <name>sc loop</name>
         <icon>:/stitches/st69.svg</icon>
-        <description>sc loop st</description>
+        <description>single crochet loop stitch</description>
         <category>Default</category>
         <ws>sc loop</ws>
     </stitch>
@@ -789,7 +713,7 @@
     <stitch>
         <name>dc loop</name>
         <icon>:/stitches/st70.svg</icon>
-        <description>dc loop st</description>
+        <description>double crochet loop stitch</description>
         <category>Default</category>
         <ws>dc loop</ws>
     </stitch>
@@ -805,7 +729,7 @@
     <stitch>
         <name>inverted y</name>
         <icon>:/stitches/st72.svg</icon>
-        <description>inverted y st</description>
+        <description>inverted y stitch</description>
         <category>Default</category>
         <ws>inverted y</ws>
     </stitch>
@@ -813,46 +737,42 @@
     <stitch>
         <name>bouillon</name>
         <icon>:/stitches/st73.svg</icon>
-        <description>bouillon st</description>
+        <description>bouillon stitch</description>
         <category>Default</category>
         <ws>bouillon</ws>
     </stitch>
 
-   <stitch>
-       <name>st74</name>
-       <icon>:/stitches/st74.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st74</ws>
-   </stitch>
+    <stitch>
+        <name>filet inc v</name>
+        <icon>:/stitches/st74.svg</icon>
+        <description>filet crochet increase variation</description>
+        <category>Default</category>
+        <ws>filet inc v</ws>
+    </stitch>
 
-   <stitch>
-       <name>st75</name>
-       <icon>:/stitches/st75.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st75</ws>
-   </stitch>
+    <stitch>
+        <name>filet inc v2</name>
+        <icon>:/stitches/st75.svg</icon>
+        <description>filet crochet increase variation 2</description>
+        <category>Default</category>
+        <ws>filet inc v2</ws>
+    </stitch>
 
-   <stitch>
-       <name>st76</name>
-       <icon>:/stitches/st76.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st76</ws>
-   </stitch>
+    <stitch>
+        <name>filet dec v</name>
+        <icon>:/stitches/st76.svg</icon>
+        <description>filet crochet decrease variation</description>
+        <category>Default</category>
+        <ws>filet dec v</ws>
+    </stitch>
 
-   <stitch>
-       <name>st77</name>
-       <icon>:/stitches/st77.svg</icon>
-       <description>
-       </description>
-       <category>Default</category>
-       <ws>st77</ws>
-   </stitch>
+    <stitch>
+        <name>fielt dec v2</name>
+        <icon>:/stitches/st77.svg</icon>
+        <description>fielt crochet decrease variation 2</description>
+        <category>Default</category>
+        <ws>fielt dec v2</ws>
+    </stitch>
 
    <stitch>
        <name>t-ch1</name>
