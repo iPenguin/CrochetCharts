@@ -127,6 +127,22 @@
     </stitch>
 
     <stitch>
+        <name>sc2tog v</name>
+        <icon>:/stitches/st26.svg</icon>
+        <description>single crochet 2 together variation</description>
+        <category>Default</category>
+        <ws>sc2tog v</ws>
+    </stitch>
+
+    <stitch>
+        <name>sc3tog v</name>
+        <icon>:/stitches/st27.svg</icon>
+        <description>single crochet 3 together variation</description>
+        <category>Default</category>
+        <ws>sc3tog v</ws>
+    </stitch>
+    
+    <stitch>
         <name>dc2tog</name>
         <icon>:/stitches/dc2tog.svg</icon>
         <description>double crochet 2 together</description>
