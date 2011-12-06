@@ -310,33 +310,36 @@ void StitchLibraryUi::printStitchSet()
     QPrintDialog dialog(&printer, this);
     if(dialog.exec() != QDialog::Accepted)
         return;
-    
+
+    ui->listView->setWordWrap(true);
+    ui->listView->setTextElideMode(Qt::ElideNone);
     const int rows = ui->listView->model()->rowCount();
-    const int cols = ui->listView->model()->columnCount();
 
     // calculate the total width/height table would need without scaling
-    double totalWidth = 0.0;
-    for (int c = 0; c < cols; ++c) {
-        totalWidth += ui->listView->columnWidth(c);
-    }
-    
+    double totalWidth = 0.0;   
     double totalHeight = 0.0;
+    QList<int> widths;
+    widths << 0 << 0 << 0;
+
     for (int r = 0; r < rows; ++r) {
         totalHeight += ui->listView->rowHeight(r);
+        for (int c = 0; c < 3; ++c) {
+            int temp = ui->listView->columnWidth(c);
+            if(temp > widths.at(c))
+                widths[c] = temp;
+        }
     }
+
+    foreach(int w, widths)
+        totalWidth += w;
+
 
     //QSizeF size = QSize(totalWidth, totalHeight);
     //printer.setPaperSize(size, QPrinter::Point);
   
     QPainter p;
     p.begin(&printer);
-/*
-    // calculate proper scale factors
-    const double scaleX = printer.pageRect().width() / totalWidth;
-    const double scaleY = printer.pageRect().height() / totalHeight;
-    double scale = qMin(scaleX, scaleY);
-    p.scale(scale, scale);
-*/
+
     int rowHeight = 35;
     // paint cells
     for (int r = 0; r < rows; ++r) {
@@ -346,14 +349,18 @@ void StitchLibraryUi::printStitchSet()
             rowHeight = 35;
         }
 
+        int startX = 0;
         for (int c = 0; c < 3; ++c) {
             QModelIndex idx = ui->listView->model()->index(r, c);
             QStyleOptionViewItem option;// = ui->listView->viewOptions();
             option.palette.setColor(QPalette::Text, QColor(Qt::black));
-            option.rect = ui->listView->visualRect(idx);
             option.rect.setTop(rowHeight);
-            option.rect.setLeft(option.rect.x() + 35);
+            option.rect.setLeft(startX + 35);
+            option.rect.setHeight(ui->listView->visualRect(idx).height());
+            //FIXME: this shouldn't be hard coded but oh well
+            option.rect.setWidth(widths[c] +100);
             ui->listView->itemDelegate()->paint(&p, option, idx);
+            startX += widths[c];
         }
 
         rowHeight += ui->listView->rowHeight(r);
