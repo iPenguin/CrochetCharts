@@ -456,13 +456,13 @@ void MainWindow::filePrint()
     }
     
     //TODO: page count isn't working...
-    QPrinter* printer = new QPrinter();
-    QPrintDialog* dialog = new QPrintDialog(printer, this);
+    QPrinter printer;
+    QPrintDialog* dialog = new QPrintDialog(&printer, this);
 
     if(dialog->exec() != QDialog::Accepted)
         return;
 
-    print(printer);
+    print(&printer);
 }
 
 void MainWindow::print(QPrinter* printer)
@@ -473,7 +473,7 @@ void MainWindow::print(QPrinter* printer)
     QPainter* p = new QPainter();
     
     p->begin(printer);
-    
+    sws_debug(QString::number(tabCount));
     bool firstPass = true;
     for(int i = 0; i < tabCount; ++i) {
         if(!firstPass)

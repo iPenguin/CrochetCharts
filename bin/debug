@@ -1,7 +1,6 @@
 #!/bin/bash
-
-PLATFORM=`uname -a | awk '{ print $1 }'`
-
+PLATFORM=`uname`
+#
 if [ $PLATFORM == "Darwin" ]; then
     export CC=/usr/bin/gcc-4.0
     export CXX=/usr/bin/g++-4.0
@@ -19,7 +18,7 @@ elif [ $PLATFORM == "Linux" ]; then
     cd ~/crochet.git/build
 
     cmake .. -DSWS_DOCS=OFF -DCMAKE_BUILD_TYPE=Debug && make
-elif [ $PLATFORM == "Cygwin" ]; then
+elif [ $PLATFORM == "CYGWIN_NT-5.1" ]; then
     print "TODO: windows"
 else
     print "Warning unknown platform"
