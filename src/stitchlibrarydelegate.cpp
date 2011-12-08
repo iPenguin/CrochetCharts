@@ -373,7 +373,6 @@ void StitchLibraryDelegate::loadIcons(QComboBox* cb) const
     QString userFolder = Settings::inst()->userSettingsFolder();
     
     dirs << ":/stitches";
-    dirs << userFolder + "icons";
     
     QDir dir;
     dir.setPath(userFolder);
@@ -383,7 +382,7 @@ void StitchLibraryDelegate::loadIcons(QComboBox* cb) const
         if(folder != "." && folder != "..")
             dirs << userFolder + folder;
     }
-    
+    qDebug() << dirs;
     //get all files from all set folders.
     foreach(QString folder, dirs) {
         dir.setPath(folder);
