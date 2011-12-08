@@ -382,7 +382,7 @@ void StitchLibraryDelegate::loadIcons(QComboBox* cb) const
         if(folder != "." && folder != "..")
             dirs << userFolder + folder;
     }
-    qDebug() << dirs;
+
     //get all files from all set folders.
     foreach(QString folder, dirs) {
         dir.setPath(folder);
