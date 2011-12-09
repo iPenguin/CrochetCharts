@@ -321,7 +321,7 @@
     <stitch>
         <name>2 dc cluster</name>
         <icon>:/stitches/st16.svg</icon>
-        <description>2 dobule crochet cluster</description>
+        <description>2 double crochet cluster</description>
         <category>Default</category>
         <ws>2 dc cluster</ws>
     </stitch>
@@ -385,7 +385,7 @@
     <stitch>
         <name>5 dc popcorn v2</name>
         <icon>:/stitches/st24.svg</icon>
-        <description>5 double crechet popcorn variation 2</description>
+        <description>5 double crochet popcorn variation 2</description>
         <category>Default</category>
         <ws>5 dc popcorn v2</ws>
     </stitch>
