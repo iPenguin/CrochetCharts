@@ -8,7 +8,7 @@
 #include <QPixmap>
 #include <QtSvg/QSvgRenderer>
 
-#include <QDebug>
+#include "debug.h"
 #include <QFile>
 
 #include "settings.h"
@@ -34,6 +34,9 @@ void Stitch::setFile ( QString f )
 {
     if(mFile != f) {
         mFile = f;
+
+        delete mPixmap;
+        mPixmap = 0;
         
         if(isSvg())
             setupSvgFiles();
@@ -47,8 +50,11 @@ void Stitch::setFile ( QString f )
 void Stitch::setupSvgFiles()
 {
     QFile file(mFile);
-    file.open(QIODevice::ReadOnly);
-
+    if(!file.open(QIODevice::ReadOnly)) {
+        WARN("cannot open file for svg setup");
+        return;
+    }
+    
     QByteArray data = file.readAll();
     QByteArray priData, secData;
     
@@ -93,16 +99,19 @@ QPixmap* Stitch::renderPixmap()
 
 QSvgRenderer* Stitch::renderSvg(bool useAltRenderer)
 {
+    
     if(!isSvg())
         return 0;
-
+    
     if(!mSvgRenderer->isValid())
         return 0;
+    
     bool useAltColors = Settings::inst()->value("useAltColors").toBool();
     if(useAltRenderer && useAltColors)
         return mSvgRendererAlt;
     else
         return mSvgRenderer;
+    
 }
 
 void Stitch::reloadIcon()

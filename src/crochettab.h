@@ -29,6 +29,7 @@ class CrochetTab : public QWidget
     friend class SaveFile;
     friend class SaveThread;
     friend class ExportUi;
+    friend class PropertiesDialog;
 public:
 
     explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget* parent = 0);
@@ -71,8 +72,8 @@ public:
     bool hasChartCenter();
     void setChartCenter(bool state);
 
-    void setQuarterLines(bool state);
-    bool hasQuarterLines();
+    void setShowGuidelines(bool state);
+    bool hasGuidelines();
     
 signals:
     void chartStitchChanged();

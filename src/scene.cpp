@@ -70,7 +70,7 @@ Scene::Scene(QObject* parent) :
     mHorizontalLine(0),
     mAngleLine1(0),
     mAngleLine2(0),
-    mShowQuarterLines(false)
+    mShowGuidelines(false)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
 
@@ -211,10 +211,14 @@ void Scene::addItem(QGraphicsItem* item)
             break;
         }
         default:
-            qWarning() << "Adding unknown type: " << item->type();
+            WARN("Unknown type: " + QString::number(item->type()));
+        case QGraphicsEllipseItem::Type:
+        case QGraphicsLineItem::Type: {
             QGraphicsScene::addItem(item);
             break;
+        }
     }
+    
 }
 
 void Scene::removeItem(QGraphicsItem* item)
@@ -241,12 +245,16 @@ void Scene::removeItem(QGraphicsItem* item)
             mGroups.removeOne(group);
             break;
         }
-        default:
-            qWarning() << "Removing unknown type:" << item->type();
-            QGraphicsScene::removeItem(item);
-            break;
-    }
 
+        default:
+            WARN("Unknown type: " + QString::number(item->type()));
+        case QGraphicsEllipseItem::Type:
+        case QGraphicsLineItem::Type: {
+            QGraphicsScene::removeItem(item);
+            break;   
+        }
+    }
+    
 }
 
 void Scene::removeFromRows(Cell* c)
@@ -471,7 +479,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     
     if(selectedItems().count() > 0)
         mHasSelection = true;
-    
+
     if(mHasSelection && e->modifiers() == Qt::ControlModifier)
         mSelectionPath = selectionArea();
 
@@ -487,7 +495,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     mIsRubberband = false;
     
     mCurItem = itemAt(e->scenePos());
-    
+
     if(mCurItem) {
         
         switch(mCurItem->type()) {
@@ -523,7 +531,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 break;
         }
     }
-    
+
     switch(mMode) {
         case Scene::StitchEdit:
             stitchModeMousePress(e);
@@ -562,7 +570,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
             mOldPositions.insert(item, item->pos());
         }
     }
-    
+
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
@@ -607,7 +615,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 
             QGraphicsScene::mouseMoveEvent(e);
             if(selectedItems().contains(mCenterSymbol)) {
-                updateQuarterLines();
+                updateGuidelines();
             }
         }
     }
@@ -2062,16 +2070,16 @@ void Scene::setShowChartCenter(bool state)
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsMovable);
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsSelectable);
 
-            updateQuarterLines();
+            updateGuidelines();
         } else {
 
             addItem(mCenterSymbol);
-            updateQuarterLines();
+            updateGuidelines();
         }
     } else {
 
         removeItem(mCenterSymbol);
-        updateQuarterLines();
+        updateGuidelines();
     }
 
 }
@@ -2163,11 +2171,11 @@ void Scene::highlightIndicators(bool state)
     }
 }
 
-void Scene::setShowQuarterLines(bool state)
+void Scene::setShowGuidelines(bool state)
 {
 
-    if(mShowQuarterLines != state) {
-        mShowQuarterLines = state;
+    if(mShowGuidelines != state) {
+        mShowGuidelines = state;
         if(state) {
             addItem(mVerticalLine);
             addItem(mHorizontalLine);
@@ -2181,12 +2189,12 @@ void Scene::setShowQuarterLines(bool state)
         }
     }
     
-    updateQuarterLines();
+    updateGuidelines();
 }
 
-void Scene::updateQuarterLines()
+void Scene::updateGuidelines()
 {
-    if(!showQuarterLines())
+    if(!showGuidelines())
         return;
 
     if(mCenterSymbol && mCenterSymbol->isVisible()) {

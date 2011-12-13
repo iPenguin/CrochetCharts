@@ -14,6 +14,7 @@
 #include "aligndock.h"
 #include "rowsdock.h"
 #include "mirrordock.h"
+#include "propertiesdialog.h"
 
 #include <QModelIndex>
 
@@ -83,6 +84,7 @@ private slots:
     void viewShowRowsDock();
     void viewShowAlignDock();
     void viewShowMirrorDock();
+    void viewShowProperties();
 
     void menuModesAboutToShow();
     
@@ -94,9 +96,11 @@ private slots:
     void menuChartAboutToShow();
     void chartEditName();
     void chartsShowChartCenter();
-    void chartsShowQuarterLines();
+    void chartsShowGuidelines();
     void chartCreateRows(bool state);
 
+    void menuStitchesAboutToShow();
+    
     void menuToolsAboutToShow();
     void toolsOptions();
     void toolsRegisterSoftware();
@@ -195,6 +199,8 @@ private:
     AlignDock* mAlignDock;
     RowsDock* mRowsDock;
     MirrorDock* mMirrorDock;
+
+    PropertiesDialog* mPropertiesDock;
     
     int mEditMode;
     QString mStitch;

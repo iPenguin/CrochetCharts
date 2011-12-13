@@ -16,6 +16,8 @@ set(crochet_app_h
     ../src/stitchset.h
     ../src/settings.h
     ../src/stitchlibrary.h
+    ../src/appinfo.h
+    ../src/debug.h
     )
 
 set(crochet_app_cpp
@@ -26,11 +28,14 @@ set(crochet_app_cpp
     ../src/settings.cpp
     ../src/stitchlibrary.cpp
     ../src/version.h
+    ../src/appinfo.cpp
+    ../src/debug.cpp
     ${CMAKE_BINARY_DIR}/version.cpp
     )
 
 set(crochet_app_resources
     ../crochet.qrc
+    ../stitches/stitches.qrc
     )
 
 qt4_add_resources(crochet_app_rcc_srcs ${crochet_app_resources})

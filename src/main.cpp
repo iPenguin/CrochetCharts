@@ -21,7 +21,7 @@
 
 int main(int argc, char *argv[])
 {
-    qInstallMsgHandler(myMessageOutput);
+    qInstallMsgHandler(errorHandler);
     QApplication a(argc, argv);
     
     qApp->setApplicationName(AppInfo::inst()->appName);

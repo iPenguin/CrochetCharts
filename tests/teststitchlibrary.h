@@ -5,15 +5,20 @@
 #ifndef TESTSTITCHLIBRARY_H
 #define TESTSTITCHLIBRARY_H
 
+#include <QtTest/QTest>
 #include <QObject>
+#include "../src/stitchlibrary.h"
 
 class TestStitchLibrary : public QObject
 {
     Q_OBJECT
-public:
+private slots:
+    void initTestCase();
+    void findStitch();
+    void findStitch_data();
+    void cleanupTestCase();
 
 private:
-
 };
 
 #endif //TESTSTITCHLIBRARY_H

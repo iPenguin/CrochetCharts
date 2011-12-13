@@ -359,13 +359,13 @@ void CrochetTab::setChartCenter(bool state)
     mScene->setShowChartCenter(state);
 }
 
-bool CrochetTab::hasQuarterLines()
+bool CrochetTab::hasGuidelines()
 {
-    return mScene->showQuarterLines();
+    return mScene->showGuidelines();
 }
 
-void CrochetTab::setQuarterLines(bool state)
+void CrochetTab::setShowGuidelines(bool state)
 {
-    mScene->setShowQuarterLines(state);
+    mScene->setShowGuidelines(state);
 }
 
