@@ -44,6 +44,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     mAlignDock(0),
     mRowsDock(0),
     mMirrorDock(0),
+    mPropertiesDock(0),
     mEditMode(10),
     mStitch("ch"),
     mFgColor(QColor(Qt::black)),
@@ -238,6 +239,10 @@ void MainWindow::setupDocks()
     connect(mMirrorDock, SIGNAL(mirror(int)), SLOT(mirror(int)));
     connect(mMirrorDock, SIGNAL(rotate(qreal)), SLOT(rotate(qreal)));
     connect(mMirrorDock, SIGNAL(visibilityChanged(bool)), ui->actionShowMirrorDock, SLOT(setChecked(bool)));
+
+    mPropertiesDock = new PropertiesDialog(ui->tabWidget, this);
+    connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
+    
 }
 
 void MainWindow::setupMenus()
@@ -322,6 +327,8 @@ void MainWindow::setupMenus()
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out", QIcon(":/images/zoomout.png")));
     ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
+
+    connect(ui->actionShowProperties, SIGNAL(triggered()), SLOT(viewShowProperties()));
     
     //Modes menu
     connect(ui->menuModes, SIGNAL(aboutToShow()), SLOT(menuModesAboutToShow()));
@@ -341,7 +348,7 @@ void MainWindow::setupMenus()
     connect(ui->actionRemoveTab, SIGNAL(triggered()), SLOT(removeCurrentTab()));
 
     connect(ui->actionShowChartCenter, SIGNAL(triggered()), SLOT(chartsShowChartCenter()));
-    connect(ui->actionShowQuarterLines, SIGNAL(triggered()), SLOT(chartsShowQuarterLines()));
+    connect(ui->actionShowGuidelines, SIGNAL(triggered()), SLOT(chartsShowGuidelines()));
     
     ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
     
@@ -360,6 +367,9 @@ void MainWindow::setupMenus()
     connect(ui->actionGroup, SIGNAL(triggered()), SLOT(group()));
     connect(ui->actionUngroup, SIGNAL(triggered()), SLOT(ungroup()));
 
+    //stitches menu
+    connect(ui->menuStitches, SIGNAL(aboutToShow()), SLOT(menuStitchesAboutToShow()));
+    
     //Tools Menu
     connect(ui->menuTools, SIGNAL(aboutToShow()), SLOT(menuToolsAboutToShow()));
     connect(ui->actionOptions, SIGNAL(triggered()), SLOT(toolsOptions()));
@@ -454,6 +464,7 @@ void MainWindow::updateMenuItems()
     menuViewAboutToShow();
     menuModesAboutToShow();
     menuChartAboutToShow();
+    menuStitchesAboutToShow();
 }
 
 void MainWindow::filePrint()
@@ -481,7 +492,7 @@ void MainWindow::print(QPrinter* printer)
     QPainter* p = new QPainter();
     
     p->begin(printer);
-    sws_debug(QString::number(tabCount));
+    DEBUG(QString::number(tabCount));
     bool firstPass = true;
     for(int i = 0; i < tabCount; ++i) {
         if(!firstPass)
@@ -948,10 +959,18 @@ void MainWindow::menuViewAboutToShow()
     bool state = hasTab();
     ui->actionZoomIn->setEnabled(state);
     ui->actionZoomOut->setEnabled(state);
+    
+    ui->actionShowRowsDock->setChecked(mRowsDock->isVisible());
+    ui->actionShowProperties->setChecked(mPropertiesDock->isVisible());
+    
+}
+
+void MainWindow::menuStitchesAboutToShow()
+{
 
     ui->actionShowAlignDock->setChecked(mAlignDock->isVisible());
-    ui->actionShowRowsDock->setChecked(mRowsDock->isVisible());
     ui->actionShowMirrorDock->setChecked(mMirrorDock->isVisible());
+    
 }
 
 void MainWindow::fileNew()
@@ -1101,6 +1120,11 @@ void MainWindow::viewShowUndoHistory()
     mUndoDock->setVisible(ui->actionShowUndoHistory->isChecked());
 }
 
+void MainWindow::viewShowProperties()
+{
+    mPropertiesDock->setVisible(ui->actionShowProperties->isChecked());
+}
+
 void MainWindow::viewShowEditModeToolbar()
 {
     ui->editModeToolBar->setVisible(ui->actionShowEditModeToolbar->isChecked());
@@ -1209,15 +1233,15 @@ void MainWindow::menuChartAboutToShow()
     ui->actionRemoveTab->setEnabled(state);
     ui->actionEditName->setEnabled(state);
     ui->actionShowChartCenter->setEnabled(state);
-    ui->actionShowQuarterLines->setEnabled(state);
+    ui->actionShowGuidelines->setEnabled(state);
 
     CrochetTab* tab = curCrochetTab();
     if(tab) {
         ui->actionShowChartCenter->setChecked(tab->hasChartCenter());
-        ui->actionShowQuarterLines->setChecked(tab->hasQuarterLines());
+        ui->actionShowGuidelines->setChecked(tab->hasGuidelines());
     } else {
         ui->actionShowChartCenter->setChecked(false);
-        ui->actionShowQuarterLines->setChecked(false);
+        ui->actionShowGuidelines->setChecked(false);
     }
 
 }
@@ -1232,11 +1256,11 @@ void MainWindow::chartsShowChartCenter()
 
 }
 
-void MainWindow::chartsShowQuarterLines()
+void MainWindow::chartsShowGuidelines()
 {
     CrochetTab* tab = curCrochetTab();
     if(tab) {
-        tab->setQuarterLines(ui->actionShowQuarterLines->isChecked());
+        tab->setShowGuidelines(ui->actionShowGuidelines->isChecked());
     }
 }
 

@@ -335,6 +335,8 @@
     <addaction name="actionZoomIn"/>
     <addaction name="actionZoomOut"/>
     <addaction name="separator"/>
+    <addaction name="actionShowProperties"/>
+    <addaction name="separator"/>
     <addaction name="actionShowStitches"/>
     <addaction name="actionShowPatternStitches"/>
     <addaction name="actionShowPatternColors"/>
@@ -356,7 +358,7 @@
     <addaction name="actionEditName"/>
     <addaction name="separator"/>
     <addaction name="actionShowChartCenter"/>
-    <addaction name="actionShowQuarterLines"/>
+    <addaction name="actionShowGuidelines"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -1092,7 +1094,7 @@
     <string>Show Chart Center</string>
    </property>
   </action>
-  <action name="actionShowQuarterLines">
+  <action name="actionShowGuidelines">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -1101,6 +1103,17 @@
    </property>
    <property name="toolTip">
     <string>Show Wedge Lines</string>
+   </property>
+  </action>
+  <action name="actionShowProperties">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Properties</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
    </property>
   </action>
  </widget>

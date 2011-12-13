@@ -40,6 +40,9 @@ public:
     //reload the svg with new colors.
     void reloadIcon();
 
+    /**
+     *used to track individual stitches as they are moved to the overlay.
+     */
     bool isBuiltIn;
     
 protected:

@@ -16,8 +16,9 @@ class TestCell : public QObject
     Q_OBJECT
 private slots:
      void initTestCase();
-     void setupCell();
+
      void setCellValues();
+     void setCellValues_data();
      void cleanupTestCase();
 
 private:
