@@ -1138,7 +1138,7 @@ void Scene::updateStitchRenderer()
     for(int i = 0; i < grid.count(); ++i) {
         foreach(Cell* c, grid[i]) {
             if(!c) {
-                sws_warn("cell doesn't exist but it's in the grid");
+                WARN("cell doesn't exist but it's in the grid");
                 continue;
             }
             c->useAlternateRenderer((i % 2));
@@ -1768,7 +1768,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
                 break;
             }
             default:
-                sws_warn("Unknown data type: " + QString::number(item->type()));
+                WARN("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }
@@ -1862,7 +1862,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             break;
         }
         default: {
-            sws_warn("Unknown data type: " + QString::number(type));
+            WARN("Unknown data type: " + QString::number(type));
             break;
         }
     }
@@ -1891,7 +1891,7 @@ void Scene::cut()
                 break;
             }
             default:
-                sws_warn("Unknown data type: " + QString::number(item->type()));
+                WARN("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }

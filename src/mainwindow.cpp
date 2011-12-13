@@ -484,7 +484,7 @@ void MainWindow::print(QPrinter* printer)
     QPainter* p = new QPainter();
     
     p->begin(printer);
-    sws_debug(QString::number(tabCount));
+    DEBUG(QString::number(tabCount));
     bool firstPass = true;
     for(int i = 0; i < tabCount; ++i) {
         if(!firstPass)
