@@ -3,39 +3,6 @@ include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_S
 file(GLOB crochet_srcs "*.cpp")
 file(GLOB crochet_uis "*.ui")
 
-set(crochet_qobject_headers
-    settings.h
-    mainwindow.h
-    cell.h
-    crochettab.h
-    mainwindow.h
-    stitchset.h
-    licensewizard.h
-    licensevalidator.h
-    settingsui.h
-    splashscreen.h
-    licensehttp.h
-    exportui.h
-    stitchlibrary.h
-    stitchlibraryui.h
-    stitchlibrarydelegate.h
-    stitchpalettedelegate.h
-    chartview.h
-    textview.h
-    updater.h
-    stitchiconui.h
-    undogroup.h
-    tabinterface.h
-    legends.h
-    scene.h
-    roweditdialog.h
-    rowsdock.h
-    aligndock.h
-    mirrordock.h
-    indicator.h
-    propertiesdialog.h
-    )
-
 set(crochet_resources
     ../crochet.qrc
     ../stitches/stitches.qrc
@@ -43,7 +10,6 @@ set(crochet_resources
 
 qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
 qt4_wrap_ui(crochet_ui_h ${crochet_uis})
-qt4_wrap_cpp(crochet_moc_srcs ${crochet_qobject_headers})
 
 if(WIN32)
     #generate the embeded icon for the exe file.
@@ -68,7 +34,7 @@ else()
 endif()
 
 if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_executable(${PROJECT_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+    add_executable(${PROJECT_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 else()
     add_executable(${PROJECT_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
