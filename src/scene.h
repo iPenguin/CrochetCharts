@@ -242,6 +242,7 @@ private:
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
     QGraphicsItem* mCurItem;
+    Item* mSclItem;
     QPointF mCellStartPos;
     QPointF mLeftButtonDownPos;
 

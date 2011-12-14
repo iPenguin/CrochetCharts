@@ -8,14 +8,19 @@
 #include "debug.h"
 
 ItemGroup::ItemGroup(QGraphicsItem* parent, QGraphicsScene* scene)
-    : QGraphicsItemGroup::QGraphicsItemGroup( parent, scene)
+    : QGraphicsItemGroup::QGraphicsItemGroup( parent, scene),
+    mScale(QPointF(1.0, 1.0))
 {
+
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
+    origHeight = boundingRect().height();
+    origWidth = boundingRect().width();
 }
 
 ItemGroup::~ItemGroup()
 {
 }
-
 
 QRectF ItemGroup::boundingRect() const
 {
@@ -34,3 +39,14 @@ void ItemGroup::setScale(qreal sx, qreal sy)
     QGraphicsItemGroup::scale(newScale.x(), newScale.y());
     mScale = QPointF(sx, sy);
 }
+
+void ItemGroup::addToGroup(QGraphicsItem* item)
+{
+
+    QGraphicsItemGroup::addToGroup(item);
+
+    origWidth = sceneBoundingRect().width();
+    origHeight = sceneBoundingRect().height();
+
+}
+

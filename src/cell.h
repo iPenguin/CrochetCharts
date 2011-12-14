@@ -8,8 +8,9 @@
 #include <QtSvg/QGraphicsSvgItem>
 #include "stitch.h"
 #include <QPointer>
+#include "item.h"
 
-class Cell : public QGraphicsSvgItem
+class Cell : public QGraphicsSvgItem, public Item
 {
     Q_OBJECT
     friend class SaveFile;
@@ -44,9 +45,6 @@ public:
 
     QPointF scale() {return mScale; }
     void setScale(qreal sx, qreal sy);
-
-    qreal origWidth;
-    qreal origHeight;
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);
