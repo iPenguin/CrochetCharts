@@ -26,6 +26,8 @@
 #include "savethread.h"
 #include "mainwindow.h"
 
+#include "itemgroup.h"
+
 SaveFile::SaveFile(QWidget* parent) :
     isSaved(false),
     fileName(""),
@@ -155,7 +157,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeEndElement(); //end grid.
         }
 
-        foreach(QGraphicsItemGroup* g, tab->scene()->mGroups) {
+        foreach(ItemGroup* g, tab->scene()->mGroups) {
             stream->writeTextElement("group", QString::number(tab->scene()->mGroups.indexOf(g)));
         }
 
@@ -178,9 +180,9 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             }
 
             bool isGrouped = c->parentItem() ? true : false;
-            QGraphicsItemGroup* g = 0;
+            ItemGroup* g = 0;
             if(isGrouped) {
-                g = qgraphicsitem_cast<QGraphicsItemGroup*>(c->parentItem());
+                g = qgraphicsitem_cast<ItemGroup*>(c->parentItem());
                 int groupNum = tab->scene()->mGroups.indexOf(g);
                 stream->writeTextElement("group", QString::number(groupNum));
 

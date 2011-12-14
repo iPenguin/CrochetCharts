@@ -1,0 +1,30 @@
+/*************************************************\
+| Copyright (c) 2011 Stitch Works Software        |
+| Brian C. Milco <brian@stitchworkssoftware.com>  |
+\*************************************************/
+#ifndef ITEMGROUP_H
+#define ITEMGROUP_H
+
+#include <QGraphicsItemGroup>
+
+class ItemGroup : public QGraphicsItemGroup
+{
+    
+public:
+
+    enum { Type = UserType + 10 };
+    
+    ItemGroup(QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
+    ~ItemGroup();
+
+    int type () const { return ItemGroup::Type; }
+    QRectF boundingRect() const;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+
+    QPointF scale() {return mScale; }
+    void setScale(qreal sx, qreal sy);
+    
+private:
+    QPointF mScale;
+};
+#endif //ITEMGROUP_H

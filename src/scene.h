@@ -13,6 +13,7 @@
 #include <QRubberBand>
 
 #include "indicator.h"
+#include "itemgroup.h"
 
 class QKeyEvent;
 
@@ -193,8 +194,8 @@ protected:
     QPointF calcGroupPos(QGraphicsItem* group, QPointF newScenePos);
 
 public:
-    QGraphicsItemGroup* group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g = 0);
-    void ungroup(QGraphicsItemGroup* group);
+    ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup* g = 0);
+    void ungroup(ItemGroup* group);
 
     QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
 
@@ -241,7 +242,6 @@ private:
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
     QGraphicsItem* mCurItem;
-    Cell* mCurCell;
     QPointF mCellStartPos;
     QPointF mLeftButtonDownPos;
 
@@ -312,7 +312,7 @@ private:
     
     QList<QGraphicsItem*> mDemoItems;
 
-    QList<QGraphicsItemGroup*> mGroups;
+    QList<ItemGroup*> mGroups;
 
 
 /***

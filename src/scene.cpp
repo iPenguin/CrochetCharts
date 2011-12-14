@@ -42,7 +42,6 @@ static void qNormalizeAngle(qreal &angle)
 Scene::Scene(QObject* parent) :
     QGraphicsScene(parent),
     mCurItem(0),
-    mCurCell(0),
     mCellStartPos(QPointF(0,0)),
     mLeftButtonDownPos(QPointF(0,0)),
     mCurIndicator(0),
@@ -204,9 +203,9 @@ void Scene::addItem(QGraphicsItem* item)
             i->setText(QString::number(mIndicators.count()));
             break;
         }
-        case QGraphicsItemGroup::Type: {
+        case ItemGroup::Type: {
             QGraphicsScene::addItem(item);
-            QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
             mGroups.append(group);
             break;
         }
@@ -239,9 +238,9 @@ void Scene::removeItem(QGraphicsItem* item)
             mIndicators.removeOne(i);
             break;
         }
-        case QGraphicsItemGroup::Type: {
+        case ItemGroup::Type: {
             QGraphicsScene::removeItem(item);
-            QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
             mGroups.removeOne(group);
             break;
         }
@@ -322,8 +321,8 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
                     undoStack()->push(new RemoveIndicator(this, i));
                     break;
                 }
-                case QGraphicsItemGroup::Type: {
-                    QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+                case ItemGroup::Type: {
+                    ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
                     undoStack()->push(new RemoveGroup(this, group));
                     break;
                 }
@@ -421,7 +420,7 @@ void Scene::angleModeKeyRelease(QKeyEvent* keyEvent)
         qreal oldAngle = c->rotation();
         c->setRotation(c->rotation() + delta);
         QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
-        undoStack()->push(new SetCellRotation(this, c, oldAngle, pvtPt));
+        undoStack()->push(new SetItemRotation(this, c, oldAngle, pvtPt));
     }
     undoStack()->endMacro();
 
@@ -501,8 +500,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
         switch(mCurItem->type()) {
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(mCurItem);
-                mCurCell = c;
-                mCellStartPos = mCurCell->scenePos();
+                mCellStartPos = mCurItem->scenePos();
                 mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
                 break;
             }
@@ -517,7 +515,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 mMoving = true;
                 break;
             }
-            case QGraphicsItemGroup::Type: {
+            case ItemGroup::Type: {
                 mMoving = true;
                 break;
             }
@@ -677,16 +675,13 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
         mOldPositions.clear();
     }
 
-    if(mCurCell) {
-        mDiff = QSizeF(0,0);
-        mCellStartPos = QPointF(0,0);
-        mCurCell = 0;
-    }
+    mDiff = QSizeF(0,0);
+    mCellStartPos = QPointF(0,0);
 
     if(mCurIndicator) {
-        mCellStartPos = QPoint(0,0);
         mCurIndicator = 0;
     }
+    
     mLeftButtonDownPos = QPointF(0,0);
     
     delete mRubberBand;
@@ -708,7 +703,7 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
 
-    if(!mCurCell)
+    if(mCurItem->type() != Cell::Type)
         return;
 
     mMoving = false;
@@ -722,11 +717,12 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(mCurItem->type() != Cell::Type)
         return;
-
-    if(mCurCell->color() != mEditBgColor)
-        undoStack()->push(new SetCellColor(this, mCurCell, mEditBgColor));
+    
+    Cell* curCell = static_cast<Cell*>(mCurItem);
+    if(curCell->color() != mEditBgColor)
+        undoStack()->push(new SetCellColor(this, curCell, mEditBgColor));
 }
 
 void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -734,7 +730,7 @@ void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
 
-    if(mCurCell || mCurIndicator)
+    if(mCurItem->type() == Cell::Type || mCurItem->type() == Indicator::Type)
         mMoving = true;
 
 }
@@ -782,12 +778,12 @@ qreal Scene::scenePosToAngle(QPointF pt)
 void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(!mCurItem)
         return;
 
-    mOldAngle = mCurCell->rotation();
-    mPivotPt = QPointF(mCurCell->boundingRect().width()/2, mCurCell->boundingRect().bottom());
-    mOrigin = mCurCell->mapToScene(mPivotPt);
+    mOldAngle = mCurItem->rotation();
+    mPivotPt = QPointF(mCurItem->boundingRect().width()/2, mCurItem->boundingRect().bottom());
+    mOrigin = mCurItem->mapToScene(mPivotPt);
 }
 
 void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -795,7 +791,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurItem)
         return;
 
-    if(selectedItems().count() > 1 || !mCurCell) {
+    if(selectedItems().count() > 1 || !mCurItem) {
         mMoving = true;
         return;
     }
@@ -827,33 +823,34 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     
     qNormalizeAngle(mAngle);
 
-    mCurCell->setTransformOriginPoint(mPivotPt);
-    mCurCell->setRotation(mAngle);
+    mCurItem->setTransformOriginPoint(mPivotPt);
+    mCurItem->setRotation(mAngle);
 
 }
 
 void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(!mCurItem)
         return;
 
     if(mMoving)
         return;
     
 //FIXME: use a constant pviot point.
-    undoStack()->push(new SetCellRotation(this, mCurCell, mOldAngle, mPivotPt));
+    undoStack()->push(new SetItemRotation(this, mCurItem, mOldAngle, mPivotPt));
     mOldAngle = 0;
 }
 
 void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(mCurItem->type() != Cell::Type)
         return;
-    
-    mOldScale = mCurCell->scale();
-    mPivotPt = QPointF(mCurCell->stitch()->width()/2, mCurCell->stitch()->height());
+
+    Cell* curCell = static_cast<Cell*>(mCurItem);
+    mOldScale = curCell->scale();
+    mPivotPt = QPointF(curCell->stitch()->width()/2, curCell->stitch()->height());
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -862,42 +859,45 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurItem)
         return;
 
-    if(selectedItems().count() > 1 || !mCurCell) {
+    if(selectedItems().count() > 1 || mCurItem->type() != Cell::Type) {
         mMoving = true;
         return;
     }
+
+    Cell* curCell = static_cast<Cell*>(mCurItem);
     
     mMoving = false;
     
     QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
 
-    QSize oldSize = QSize(mCurCell->origWidth * mOldScale.x(), mCurCell->origHeight * mOldScale.y());
+    QSize oldSize = QSize(curCell->origWidth * mOldScale.x(), curCell->origHeight * mOldScale.y());
     QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
 
     if((newSize.width() < 1 && newSize.width() > -1) || (newSize.height() < 1 && newSize.height() > -1))
         return;
 
-    QPointF baseScale = QPointF(newSize.width() / mCurCell->origWidth,
-                               newSize.height() / mCurCell->origHeight);
+    QPointF baseScale = QPointF(newSize.width() / curCell->origWidth,
+                               newSize.height() / curCell->origHeight);
 
     if(e->modifiers() == Qt::ControlModifier) {
         baseScale.ry() = baseScale.rx();
     }
 
-    mCurCell->setScale(baseScale.x(), baseScale.y());
+    curCell->setScale(baseScale.x(), baseScale.y());
 }
 
 void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(mCurItem->type() != Cell::Type)
         return;
 
     if(mMoving)
         return;
-    
-    undoStack()->push(new SetCellScale(this, mCurCell, mOldScale, mPivotPt));
+
+    Cell* curCell = static_cast<Cell*>(mCurItem);
+    undoStack()->push(new SetCellScale(this, curCell, mOldScale, mPivotPt));
     
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
@@ -1012,14 +1012,8 @@ void Scene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     //FIXME: foreach(stitch in selection()) create an undo group event.
-    if(mCurCell && e->modifiers() != Qt::ControlModifier) {
 
-        if(mCurCell->name() != mEditStitch && !mMoving)
-            undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
-
-        mCurCell = 0;
-
-    } else if(!mIsRubberband && !mMoving && !mHasSelection) {
+    if(!mIsRubberband && !mMoving && !mHasSelection) {
 
         if(mCurItem)
             return;
@@ -1709,7 +1703,7 @@ void Scene::rotate(qreal degrees)
     if(selectedItems().count() <= 0)
         return;
 
-    undoStack()->push(new SetItemRotation(this, selectedItems(), degrees));
+    undoStack()->push(new SetItemsRotation(this, selectedItems(), degrees));
 }
 
 void Scene::rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint)
@@ -1761,8 +1755,8 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
                 stream << i->scenePos() << i->text();
                 break;
             }
-            case QGraphicsItemGroup::Type: {
-                QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            case ItemGroup::Type: {
+                ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
                 stream << group->childItems().count();
                 copyRecursively(stream, group->childItems());
                 break;
@@ -1845,7 +1839,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             group->append(i);
             break;
         }
-        case QGraphicsItemGroup::Type: {
+        case ItemGroup::Type: {
             int childCount;
             stream >> childCount;
             QList<QGraphicsItem*> items;
@@ -1855,7 +1849,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 
             GroupItems* grpItems = new GroupItems(this, items);
             undoStack()->push(grpItems);
-            QGraphicsItemGroup* g = grpItems->group();
+            ItemGroup* g = grpItems->group();
 
             g->setSelected(false);
             group->append(g);
@@ -1935,27 +1929,32 @@ void Scene::group()
     undoStack()->push(new GroupItems(this, selectedItems()));
 }
 
-QGraphicsItemGroup* Scene::group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g)
+ItemGroup* Scene::group(QList<QGraphicsItem*> items, ItemGroup* g)
 {
 
     //clear selection because we're going to create a new selection.
     clearSelection();
 
     if(!g) {
-        g = createItemGroup(items);
+        g = new ItemGroup(0, this);
+        foreach(QGraphicsItem *i, items) {
+            i->setSelected(false);
+            g->addToGroup(i);
+        }
     } else {
         foreach(QGraphicsItem* i, items) {
             i->setSelected(false);
             g->addToGroup(i);
         }
     }
-
+    
+    debug("use group");
     g->setFlag(QGraphicsItem::ItemIsMovable);
     g->setFlag(QGraphicsItem::ItemIsSelectable);
     mGroups.append(g);
-
+    debug("group used");
     g->setSelected(true);
-
+    debug("return group");
     return g;
 }
 
@@ -1965,14 +1964,14 @@ void Scene::ungroup()
         return;
 
     foreach(QGraphicsItem* item, selectedItems()) {
-        if(item->type() == QGraphicsItemGroup::Type) {
-            QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+        if(item->type() == ItemGroup::Type) {
+            ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
             undoStack()->push(new UngroupItems(this, group));
         }
     }
 }
 
-void Scene::ungroup(QGraphicsItemGroup* group)
+void Scene::ungroup(ItemGroup* group)
 {
 
     mGroups.removeOne(group);

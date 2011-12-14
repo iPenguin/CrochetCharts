@@ -62,34 +62,34 @@ void SetCellColor::undo()
 }
 
 /*************************************************\
-| SetCellRotation                                 |
+| SetItemRotation                                 |
 \*************************************************/
-SetCellRotation::SetCellRotation(Scene* s, Cell* cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent)
+SetItemRotation::SetItemRotation(Scene* s, QGraphicsItem* item, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
-    c = cell;
+    i = item;
     oldAngle = oldAngl;
-    newAngle = cell->rotation();
+    newAngle = item->rotation();
     pvtPt = pivotPt;
     setText(QObject::tr("change angle"));
 }
 
-void SetCellRotation::redo()
+void SetItemRotation::redo()
 {
-    c->setTransformOriginPoint(pvtPt);
-    c->setRotation(newAngle);
+    i->setTransformOriginPoint(pvtPt);
+    i->setRotation(newAngle);
 }
 
-void SetCellRotation::undo()
+void SetItemRotation::undo()
 {
-    c->setRotation(oldAngle);
+    i->setRotation(oldAngle);
 }
 
 /*************************************************\
-| SetItemRotation                                 |
+| SetItemsRotation                                |
 \*************************************************/
-SetItemRotation::SetItemRotation(Scene* s, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand* parent)
+SetItemsRotation::SetItemsRotation(Scene* s, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -105,13 +105,13 @@ SetItemRotation::SetItemRotation(Scene* s, QList<QGraphicsItem*> itms, qreal deg
     setText(QObject::tr("rotate selection"));
 }
 
-void SetItemRotation::redo()
+void SetItemsRotation::redo()
 {
     scene->rotateSelection(newAngle, items, pivotPoint);
 
 }
 
-void SetItemRotation::undo()
+void SetItemsRotation::undo()
 {
     scene->rotateSelection(-newAngle, items, pivotPoint);
 }
@@ -240,7 +240,7 @@ void GroupItems::undo()
 /*************************************************\
 | UngroupItems                                    |
 \*************************************************/
-UngroupItems::UngroupItems(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* parent)
+UngroupItems::UngroupItems(Scene* s, ItemGroup* grp, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
@@ -263,7 +263,7 @@ void UngroupItems::undo()
 /*************************************************\
 | RemoveGroup                                     |
 \*************************************************/
-RemoveGroup::RemoveGroup(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* parent)
+RemoveGroup::RemoveGroup(Scene* s, ItemGroup* grp, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
