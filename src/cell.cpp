@@ -14,8 +14,6 @@
 
 Cell::Cell(QGraphicsItem* parent)
     : QGraphicsSvgItem(parent),
-    origWidth(64.0),
-    origHeight(64.0),
     mStitch(0),
     mScale(QPointF(1.0, 1.0)),
     mHighlight(false)
@@ -24,6 +22,9 @@ Cell::Cell(QGraphicsItem* parent)
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
+
+    origHeight = boundingRect().height();
+    origWidth = boundingRect().width();
 }
 
 Cell::~Cell()
@@ -136,6 +137,16 @@ void Cell::useAlternateRenderer(bool useAlt)
 
 void Cell::setScale(qreal sx, qreal sy)
 {
+    /*
+     * scale(sx, sy) is obsolete in 4.7
+     * replace in future version as follows:
+     * 
+    // Scale an item by 3x2 from its origin
+    item->scale(3, 2);
+
+    // Scale an item by 3x2 from (x, y)
+    item->setTransform(QTransform().translate(x, y).scale(3, 2).translate(-x, -y));
+    */
     QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
 
     QGraphicsSvgItem::scale(newScale.x(), newScale.y());

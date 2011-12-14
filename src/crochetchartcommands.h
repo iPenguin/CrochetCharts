@@ -9,6 +9,7 @@
 
 #include "cell.h"
 #include "scene.h"
+#include "item.h"
 
 class SetCellStitch : public QUndoCommand
 {
@@ -110,12 +111,12 @@ private:
     Scene* scene;
 };
 
-class SetCellScale : public QUndoCommand
+class SetItemScale : public QUndoCommand
 {
 public:
     enum { Id = 1140 };
 
-    SetCellScale(Scene* s, Cell* cell, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent = 0);
+    SetItemScale(Scene* s, Item* item, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent = 0);
     
     void undo();
     void redo();
@@ -128,7 +129,7 @@ private:
 
     QPointF pivotPt;
     
-    Cell* c;
+    Item* i;
     Scene* scene;
     
 };

@@ -42,6 +42,7 @@ static void qNormalizeAngle(qreal &angle)
 Scene::Scene(QObject* parent) :
     QGraphicsScene(parent),
     mCurItem(0),
+    mSclItem(0),
     mCellStartPos(QPointF(0,0)),
     mLeftButtonDownPos(QPointF(0,0)),
     mCurIndicator(0),
@@ -468,7 +469,7 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
         QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
         QPointF newScale = oldScale + delta;
         c->setScale(newScale.x(), newScale.y());
-        undoStack()->push(new SetCellScale(this, c, oldScale, pvtPt));
+        undoStack()->push(new SetItemScale(this, c, oldScale, pvtPt));
     }
     undoStack()->endMacro();
     
@@ -500,9 +501,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
         
         switch(mCurItem->type()) {
             case Cell::Type: {
-                Cell* c = qgraphicsitem_cast<Cell*>(mCurItem);
                 mCellStartPos = mCurItem->scenePos();
                 mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
+                mSclItem = dynamic_cast<Item*>(mCurItem);
                 break;
             }
             case Indicator::Type: {
@@ -518,6 +519,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
             }
             case ItemGroup::Type: {
                 mMoving = true;
+                mSclItem = dynamic_cast<Item*>(mCurItem);
                 break;
             }
             case QGraphicsSimpleTextItem::Type: {
@@ -695,6 +697,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
         initDemoBackground();
         mMoving = false;
     }
+    mSclItem = 0;
     mCurItem = 0;
     mHasSelection = false;
 }
@@ -704,7 +707,7 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
 
-    if(mCurItem->type() != Cell::Type)
+    if(!mCurItem || mCurItem->type() != Cell::Type)
         return;
 
     mMoving = false;
@@ -718,7 +721,7 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(mCurItem->type() != Cell::Type)
+    if(!mCurItem || mCurItem->type() != Cell::Type)
         return;
     
     Cell* curCell = static_cast<Cell*>(mCurItem);
@@ -731,6 +734,9 @@ void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
 
+    if(!mCurItem)
+        return;
+    
     if(mCurItem->type() == Cell::Type || mCurItem->type() == Indicator::Type)
         mMoving = true;
 
@@ -845,13 +851,14 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
 void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
 {
+
     Q_UNUSED(e);
-    if(mCurItem->type() != Cell::Type)
+    if(!mCurItem && !mSclItem)
         return;
 
-    Cell* curCell = static_cast<Cell*>(mCurItem);
-    mOldScale = curCell->scale();
-    mPivotPt = QPointF(curCell->stitch()->width()/2, curCell->stitch()->height());
+    mOldScale = mSclItem->scale();
+    mPivotPt = QPointF(mCurItem->sceneBoundingRect().width()/2, mCurItem->sceneBoundingRect().height());
+    qDebug() << mPivotPt;
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -860,45 +867,42 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurItem)
         return;
 
-    if(selectedItems().count() > 1 || mCurItem->type() != Cell::Type) {
+    if(selectedItems().count() > 1 || !mSclItem) {
         mMoving = true;
         return;
     }
 
-    Cell* curCell = static_cast<Cell*>(mCurItem);
-    
     mMoving = false;
-    
+
     QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
 
-    QSize oldSize = QSize(curCell->origWidth * mOldScale.x(), curCell->origHeight * mOldScale.y());
+    QSize oldSize = QSize(mSclItem->origWidth * mOldScale.x(), mSclItem->origHeight * mOldScale.y());
     QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
-
+qDebug() << oldSize << newSize;
     if((newSize.width() < 1 && newSize.width() > -1) || (newSize.height() < 1 && newSize.height() > -1))
         return;
 
-    QPointF baseScale = QPointF(newSize.width() / curCell->origWidth,
-                               newSize.height() / curCell->origHeight);
+    QPointF baseScale = QPointF(newSize.width() / mSclItem->origWidth,
+                               newSize.height() / mSclItem->origHeight);
 
     if(e->modifiers() == Qt::ControlModifier) {
         baseScale.ry() = baseScale.rx();
     }
 
-    curCell->setScale(baseScale.x(), baseScale.y());
+    mSclItem->setScale(baseScale.x(), baseScale.y());
 }
 
 void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     
     Q_UNUSED(e);
-    if(mCurItem->type() != Cell::Type)
+    if(!mSclItem)
         return;
 
     if(mMoving)
         return;
 
-    Cell* curCell = static_cast<Cell*>(mCurItem);
-    undoStack()->push(new SetCellScale(this, curCell, mOldScale, mPivotPt));
+    undoStack()->push(new SetItemScale(this, mSclItem, mOldScale, mPivotPt));
     
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
@@ -2058,14 +2062,13 @@ ItemGroup* Scene::group(QList<QGraphicsItem*> items, ItemGroup* g)
             g->addToGroup(i);
         }
     }
-    
-    debug("use group");
+
     g->setFlag(QGraphicsItem::ItemIsMovable);
     g->setFlag(QGraphicsItem::ItemIsSelectable);
     mGroups.append(g);
-    debug("group used");
+
     g->setSelected(true);
-    debug("return group");
+
     return g;
 }
 

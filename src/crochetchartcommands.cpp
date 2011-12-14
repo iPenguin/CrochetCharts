@@ -141,27 +141,27 @@ void SetItemCoordinates::redo()
 }
  
 /*************************************************\
- | SetCellScale                                   |
+ | SetItemScale                                   |
 \*************************************************/
-SetCellScale::SetCellScale(Scene* s, Cell* cell, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent)
+SetItemScale::SetItemScale(Scene* s, Item* item, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
-    c = cell;
+    i = item;
     pivotPt = pvtPt;
-    newScale = cell->scale();
+    newScale = i->scale();
     oldScale = oldScle;
     setText(QObject::tr("change scale"));
 }
 
-void SetCellScale::undo()
+void SetItemScale::undo()
 {
-    c->setScale(oldScale.x(), oldScale.y());
+    i->setScale(oldScale.x(), oldScale.y());
 }
 
-void SetCellScale::redo()
+void SetItemScale::redo()
 {
-    c->setScale(newScale.x(), newScale.y());
+    i->setScale(newScale.x(), newScale.y());
 }
 
 /*************************************************\

@@ -5,13 +5,14 @@
 #ifndef ITEMGROUP_H
 #define ITEMGROUP_H
 
+#include "item.h"
 #include <QGraphicsItemGroup>
 
-class ItemGroup : public QGraphicsItemGroup
+class ItemGroup : public QGraphicsItemGroup, public Item
 {
-    
-public:
 
+public:
+    
     enum { Type = UserType + 10 };
     
     ItemGroup(QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
@@ -23,7 +24,8 @@ public:
 
     QPointF scale() {return mScale; }
     void setScale(qreal sx, qreal sy);
-    
+
+    void addToGroup(QGraphicsItem* item);
 private:
     QPointF mScale;
 };
