@@ -69,10 +69,10 @@ void PropertiesDialog::updateDialogUi()
         if(mScene->selectedItems().first()->type() == Cell::Type) {
             showUi(PropertiesDialog::CellUi);
         } else {
-            WARN("another type");
+            warn("another type");
         }
     } else if(count > 1) {
-        WARN("TODO: check if all items the same, if so show that dialog");
+        warn("TODO: check if all items the same, if so show that dialog");
         bool theSame = true;
         
         for(int i = 1; i < count; ++i) {
@@ -114,7 +114,7 @@ void PropertiesDialog::showUi(PropertiesDialog::UiSelection selection)
         ui->selectionGroup->show();
         
     } else if (selection == PropertiesDialog::CenterUi) {
-        WARN("TODO: make center ui work");
+        warn("TODO: make center ui work");
     }
     
 }

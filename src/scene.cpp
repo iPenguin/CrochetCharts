@@ -211,7 +211,7 @@ void Scene::addItem(QGraphicsItem* item)
             break;
         }
         default:
-            WARN("Unknown type: " + QString::number(item->type()));
+            warn("Unknown type: " + QString::number(item->type()));
         case QGraphicsEllipseItem::Type:
         case QGraphicsLineItem::Type: {
             QGraphicsScene::addItem(item);
@@ -247,7 +247,7 @@ void Scene::removeItem(QGraphicsItem* item)
         }
 
         default:
-            WARN("Unknown type: " + QString::number(item->type()));
+            warn("Unknown type: " + QString::number(item->type()));
         case QGraphicsEllipseItem::Type:
         case QGraphicsLineItem::Type: {
             QGraphicsScene::removeItem(item);
@@ -1138,7 +1138,7 @@ void Scene::updateStitchRenderer()
     for(int i = 0; i < grid.count(); ++i) {
         foreach(Cell* c, grid[i]) {
             if(!c) {
-                WARN("cell doesn't exist but it's in the grid");
+                warn("cell doesn't exist but it's in the grid");
                 continue;
             }
             c->useAlternateRenderer((i % 2));
@@ -1768,7 +1768,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
                 break;
             }
             default:
-                WARN("Unknown data type: " + QString::number(item->type()));
+                warn("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }
@@ -1862,7 +1862,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             break;
         }
         default: {
-            WARN("Unknown data type: " + QString::number(type));
+            warn("Unknown data type: " + QString::number(type));
             break;
         }
     }
@@ -1891,7 +1891,7 @@ void Scene::cut()
                 break;
             }
             default:
-                WARN("Unknown data type: " + QString::number(item->type()));
+                warn("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }

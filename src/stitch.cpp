@@ -51,7 +51,7 @@ void Stitch::setupSvgFiles()
 {
     QFile file(mFile);
     if(!file.open(QIODevice::ReadOnly)) {
-        WARN("cannot open file for svg setup");
+        warn("cannot open file for svg setup");
         return;
     }
     

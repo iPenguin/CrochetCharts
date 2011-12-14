@@ -26,25 +26,19 @@
 
 QString debugFunctionName(QString name);
 
-#define DEBUG(message) \
+#define debug(message) \
 ( \
     (qDebug() << debugFunctionName(Q_FUNC_INFO).toStdString().c_str() << ":" << QString(message).toStdString().c_str()), \
     (void)0 \
 )
 
-#define WARN(message) \
+#define warn(message) \
 ( \
     (qWarning() << debugFunctionName(Q_FUNC_INFO).toStdString().c_str() << ":" << QString(message).toStdString().c_str()), \
     (void)0 \
 )
 
-#define CRITICAL(message) \
-( \
-    (qCritical() << debugFunctionName(Q_FUNC_INFO).toStdString().c_str() << ":" << QString(message).toStdString().c_str()), \
-    (void)0 \
-)
-
-#define FATAL(message) \
+#define fatal(message) \
 ( \
     (qFatal("%s : %s", debugFunctionName(Q_FUNC_INFO).toStdString().c_str(), QString(message).toStdString().c_str())), \
     (void)0 \
