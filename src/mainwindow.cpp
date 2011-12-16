@@ -857,6 +857,10 @@ void MainWindow::fileSaveAs()
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+    if(!fileName.endsWith(".pattern", Qt::CaseInsensitive)) {
+        fileName += ".pattern";
+    }
+    
     //update the list of open files.
     if(Settings::inst()->files.contains(mFile->fileName.toLower()))
         Settings::inst()->files.remove(mFile->fileName.toLower());
