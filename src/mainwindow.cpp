@@ -778,7 +778,7 @@ void MainWindow::fileOpen()
 {
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
     QString fileName = QFileDialog::getOpenFileName(this,
-         tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern)"));
+         tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern);; All files (*.*)"));
 
     if(fileName.isEmpty() || fileName.isNull())
         return;
