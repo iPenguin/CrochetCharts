@@ -9,6 +9,8 @@
 #include "testcell.h"
 #include "teststitchlibrary.h"
 
+#include "../src/debug.h"
+
 int main(int argc, char** argv) 
 {
     
@@ -16,7 +18,7 @@ int main(int argc, char** argv)
     int retval(0);
 
     QObject* test;
-    qDebug() << "All output files are in the build directory";
+    debug("All output files are in the build directory");
     test = new TestLicense();
     retval +=QTest::qExec(test, argc, argv);
     delete test;

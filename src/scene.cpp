@@ -877,7 +877,7 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
 
     QSize oldSize = QSize(mSclItem->origWidth * mOldScale.x(), mSclItem->origHeight * mOldScale.y());
     QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
-qDebug() << oldSize << newSize;
+
     if((newSize.width() < 1 && newSize.width() > -1) || (newSize.height() < 1 && newSize.height() > -1))
         return;
 
