@@ -783,11 +783,11 @@
     </stitch>
 
     <stitch>
-        <name>fielt dec v2</name>
+        <name>filet dec v2</name>
         <icon>:/stitches/st77.svg</icon>
-        <description>fielt crochet decrease variation 2</description>
+        <description>filet crochet decrease variation 2</description>
         <category>Default</category>
-        <ws>fielt dec v2</ws>
+        <ws>filet dec v2</ws>
     </stitch>
 
    <stitch>
