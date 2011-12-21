@@ -1798,6 +1798,19 @@ void Scene::paste()
 
 void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 {
+    QPointF offSet;
+    QString pasteOS = Settings::inst()->value("pasteOffset").toString();
+    if(pasteOS == tr("Up and Left"))
+        offSet = QPointF(-10, -10);
+    else if (pasteOS == tr("Up and Right"))
+        offSet = QPointF(10, -10);
+    else if (pasteOS == tr("Down and Left"))
+        offSet = QPointF(-10, 10);
+    else if (pasteOS == tr("Down and Right"))
+        offSet = QPointF(10, 10);
+    else
+        offSet = QPointF(0,0);
+    
     int type;
     stream >> type;
     switch(type) {
@@ -1811,7 +1824,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             QTransform trans;
 
             stream >> name >> color >> angle >> scale >> transPoint >> pos >> trans;
-
+            pos += offSet;
             AddCell* addCmd = new AddCell(this, pos);
             undoStack()->push(addCmd);
             Cell* c = addCmd->cell();
@@ -1834,7 +1847,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             QString text;
 
             stream >> pos >> text;
-
+            pos += offSet;
             i->setText(text);
             addItem(i);
             i->setPos(pos);
