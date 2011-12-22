@@ -477,6 +477,8 @@
                 If you are adding stitches to the end of a row just click on the last stitch drag the red line to the next stitches in order.
                 If you want to add stitches into the middle of the row you will have to start from the first stitch of the row.
             </para>
+            <para>Once you have finished editing the rows, you can close the Row Edit dialog by clicking on any of the other edit modes.
+            </para>
         </section>
 
         <section id="tools-indicator-edit">
