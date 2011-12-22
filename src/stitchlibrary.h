@@ -66,8 +66,6 @@ public:
 
     void removeMasterStitches(StitchSet* set);
 
-    //add a stitch set from a file, and return a pointer to it.
-    StitchSet* addStitchSet(QString fileName);
     void addStitchSet(StitchSet* set);
 
     bool masterHasStitch(Stitch* s);
@@ -90,7 +88,6 @@ public:
     //find the name of a stitch set based on the storage location of the set.
     QString findStitchSetName(QString folderName);
 
-protected:
     //generates the next file name that can be used for a stitch set.
     QString nextSetSaveFile();
 
