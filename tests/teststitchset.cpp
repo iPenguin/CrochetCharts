@@ -15,11 +15,7 @@ void TestStitchSet::setupStitchSet()
     QVERIFY(mSet->stitchCount() == 0);
     mSet->loadXmlFile("../crochet.xml");
 
-<<<<<<< HEAD
     QVERIFY(mSet->stitchCount() == 109);
-=======
-    QVERIFY(mSet->stitchCount() == 24);
->>>>>>> b6e37e0... Merge branch 'properties' into 1.2
 }
 
 void TestStitchSet::findStitch()
@@ -32,10 +28,6 @@ void TestStitchSet::findStitch()
     QFETCH(QString, ws);
 
     Stitch* s = mSet->findStitch(name);
-<<<<<<< HEAD
-    if(!s)
-        qWarning() << "Couldn't find stitch in set: " << name;
-=======
 
     if(!s) {
         if(exists) {
@@ -46,7 +38,6 @@ void TestStitchSet::findStitch()
         }
     }
         
->>>>>>> b6e37e0... Merge branch 'properties' into 1.2
     QVERIFY(s->name() == name);
     QVERIFY(s->file() == file);
     QVERIFY(s->description() == desc);
@@ -65,7 +56,6 @@ void TestStitchSet::findStitch_data()
 
     QTest::newRow("sl st") << "sl st" << "stitches/slip.svg" << "slip stitch" << "Basic" << "sl st";
     QTest::newRow("ch") << "ch" << "stitches/chain.svg" << "chain" << "Basic" << "ch";
-
 }
 
 void TestStitchSet::saveLoadDataSet()
