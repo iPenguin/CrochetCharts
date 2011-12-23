@@ -15,7 +15,7 @@ void TestStitchSet::setupStitchSet()
     QVERIFY(mSet->stitchCount() == 0);
     mSet->loadXmlFile("../crochet.xml");
 
-    QVERIFY(mSet->stitchCount() == 24);
+    QVERIFY(mSet->stitchCount() == 109);
 }
 
 void TestStitchSet::findStitch()
@@ -54,11 +54,11 @@ void TestStitchSet::findStitch_data()
     QTest::addColumn<QString>("cat");
     QTest::addColumn<QString>("ws");
 
-    QTest::newRow("sl st") << "sl st" << true << ":/stitches/sl_st.svg" << "slip stitch" << "Basic" << "sl st";
-    QTest::newRow("ch") << "ch" << true << ":/stitches/ch.svg" << "chain" << "Basic" << "ch";
-    QTest::newRow("hdc") << "hdc" << true << ":/stitches/hdc.svg" << "half double crochet" << "Basic" << "hdc";
+    QTest::newRow("sl st") << "sl st" << true << ":/stitches/sl_st.svg" << "slip stitch" << "Default" << "sl st";
+    QTest::newRow("ch") << "ch" << true << ":/stitches/ch.svg" << "chain" << "Default" << "ch";
+    QTest::newRow("hdc") << "hdc" << true << ":/stitches/hdc.svg" << "half double crochet" << "Default" << "hdc";
     QTest::newRow("5-dc shell") << "5-dc shell" << true << ":/stitches/5dc_shell.svg"
-                                    << "5 double crochet shell" << "Advanced" << "5-dc shell";
+                                    << "5 double crochet shell" << "Default" << "5-dc shell";
     QTest::newRow("stitch dne") << "bcm" << false << "" << "" << "" << "";
 
 }

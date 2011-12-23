@@ -9,6 +9,9 @@
 #include <QDebug>
 #include <QObject>
 
+#include <QGraphicsView>
+#include <QGraphicsScene>
+
 #include "../src/cell.h"
 
 class TestCell : public QObject
@@ -19,10 +22,17 @@ private slots:
 
      void setCellValues();
      void setCellValues_data();
+
+     void setRotation();
+     void setRotation_data();
+
      void cleanupTestCase();
 
 private:
      Cell* mCell;
+
+     QGraphicsView* view;
+     QGraphicsScene* scene;
 };
 
 #endif // TESTCELL_H
