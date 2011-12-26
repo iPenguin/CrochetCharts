@@ -26,13 +26,23 @@ private slots:
      void setRotation();
      void setRotation_data();
 
+     void setScale();
+     void setScale_data();
+
+     void setBgColor();
+     void setBgColor_data();
+
      void cleanupTestCase();
 
 private:
+     int i;
      Cell* mCell;
 
      QGraphicsView* view;
      QGraphicsScene* scene;
+
+     void saveScene(QSizeF size, QString fileName);
+     QString hashFile(QString fileName);
 };
 
 #endif // TESTCELL_H
