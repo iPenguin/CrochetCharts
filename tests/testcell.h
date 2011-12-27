@@ -32,16 +32,18 @@ private slots:
      void setBgColor();
      void setBgColor_data();
 
+     void setAllProperties();
+     void setAllProperties_data();
+
      void cleanupTestCase();
 
 private:
      int i;
-     Cell* mCell;
+     //Cell* mCell;
 
-     QGraphicsView* view;
-     QGraphicsScene* scene;
+     //QGraphicsScene* scene;
 
-     void saveScene(QSizeF size, QString fileName);
+     void saveScene(QGraphicsScene *scene, QSizeF size, QString fileName);
      QString hashFile(QString fileName);
 };
 
