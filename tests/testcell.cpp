@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QFile>
 #include <QCryptographicHash>
+#include <QSvgGenerator>
 
 void TestCell::initTestCase()
 {
@@ -69,7 +70,7 @@ void TestCell::setRotation()
 
     QString rasterImage = "TestCell-SetRotation-" + QString::number(i) + "-" + name + ".png";
 
-    saveScene(scene, QSizeF(width, height), rasterImage);
+    saveSceneSvg(scene, QSizeF(width, height), rasterImage);
 
     QString hexHash = hashFile(rasterImage);
 
@@ -89,9 +90,9 @@ void TestCell::setRotation_data()
     QTest::addColumn<qreal>("angle");
     QTest::addColumn<QString>("rasterHash");
 
-    QTest::newRow("ch")    << "ch" << 32.0 << 16.0 << 45.0 << "3acb54f2d0d610851417e9a15fa5bcf56c5ca934";
-    QTest::newRow("hdc")   << "hdc" << 32.0 << 64.0 << 45.0 << "a1d58264e09bfe2583a4053ebb9753332c1be217";
-    QTest::newRow("dc")    << "dc" << 32.0 << 80.0 << 45.0 << "b76157343c5e9b71b519bfba0d013275edfa8d98";
+    QTest::newRow("ch")    << "ch" << 32.0 << 16.0 << 45.0 << "8bc84f266a6b29c060e99e80cc60f5a4dd1c0db9";
+    QTest::newRow("hdc")   << "hdc" << 32.0 << 64.0 << 45.0 << "4a7eac0d444a5d98f80ed44cd03be3c85ea8f2c1";
+    QTest::newRow("dc")    << "dc" << 32.0 << 80.0 << 45.0 << "26fcac78640d8b5dfe7a350dcfa51f00948e80bb";
 
 }
 
@@ -265,6 +266,22 @@ void TestCell::saveScene(QGraphicsScene* scene, QSizeF size, QString fileName)
     scene->render(&p);
     p.end();
     pix.save(fileName, "PNG", 100);
+
+}
+
+void TestCell::saveSceneSvg(QGraphicsScene* scene, QSizeF size, QString fileName)
+{
+    scene->setSceneRect(scene->itemsBoundingRect());
+    
+    QPainter p;
+    QSvgGenerator gen;
+    gen.setFileName(fileName);
+    gen.setSize(size.toSize());
+    gen.setViewBox(QRectF(0,0,size.width(),size.height()));
+
+    p.begin(&gen);
+    scene->render(&p);
+    p.end();
 
 }
 
