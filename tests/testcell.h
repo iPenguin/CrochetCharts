@@ -44,6 +44,7 @@ private:
      //QGraphicsScene* scene;
 
      void saveScene(QGraphicsScene *scene, QSizeF size, QString fileName);
+     void saveSceneSvg(QGraphicsScene *scene, QSizeF size, QString fileName);
      QString hashFile(QString fileName);
 };
 
