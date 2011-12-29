@@ -29,8 +29,8 @@ public:
     void setHighlight(bool state) { mHighlight = state; update(); }
     Cell* copy(Cell* cell = 0);
     
-    void setColor(QColor c = QColor(Qt::white));
-    QColor color() const { return mColor; }
+    void setBgColor(QColor c = QColor(Qt::white));
+    QColor bgColor() const { return mColor; }
     
     void setStitch(Stitch* s, bool useAltRenderer = false);
     void setStitch(QString s, bool useAltRenderer = false);

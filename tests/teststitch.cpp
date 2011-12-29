@@ -105,7 +105,7 @@ void TestStitch::stitchRender()
     gen2.setViewBox(QRectF(0,0,width,height));
 
     p2.begin(&gen2);
-    mS->renderSvg(true)->render(&p2);
+    mS->renderSvg()->render(&p2);
     p2.end();
 
     f.setFileName(svgImageAlt);
