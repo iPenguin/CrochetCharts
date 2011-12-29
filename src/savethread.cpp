@@ -29,7 +29,7 @@ void SaveThread::run()
     Stitch* s = 0;
     int row = -1, column = -1;
     int group = -1;
-    QString color;
+    QString bgColor;
     QPointF position(0.0,0.0);
     QPointF pivotPoint;
     qreal angle = 0.0;
@@ -52,7 +52,7 @@ void SaveThread::run()
             column = stream->attributes().value("column").toString().toDouble();
             stream->readElementText();
         } else if(tag == "color") {
-            color = stream->readElementText();
+            bgColor = stream->readElementText();
 
         } else if(tag == "position") {
             position.rx() = stream->attributes().value("x").toString().toDouble();
@@ -103,7 +103,7 @@ void SaveThread::run()
 
     c->setTransform(transform);
     c->setPos(position);
-    c->setColor(QColor(color));
+    c->setBgColor(QColor(bgColor));
     c->setTransformOriginPoint(pivotPoint);
     c->setRotation(angle);
     

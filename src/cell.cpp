@@ -48,7 +48,7 @@ void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     if(!stitch())
         return;
 
-    QColor clr = color();
+    QColor clr = bgColor();
     if(!clr.isValid())
         clr = QColor(Qt::white);
 
@@ -81,8 +81,12 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
             doUpdate = (mStitch->isSvg() != s->isSvg());
         }
         mStitch = s;
-        if(s->isSvg() && s->renderSvg()->isValid())
-            setSharedRenderer(s->renderSvg(useAltRenderer));
+        if(s->isSvg()) {
+            QString color = "#000000";
+            if(useAltRenderer)
+                color = Settings::inst()->value("stitchAlternateColor").toString();
+            setSharedRenderer(s->renderSvg(color));
+        }
 
         if(doUpdate)
             update();
@@ -94,10 +98,10 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
     }
     
     setTransformOriginPoint(s->width()/2, s->height());
-    setColor(Qt::white);
+    setBgColor(Qt::white);
 }
 
-void Cell::setColor(QColor c)
+void Cell::setBgColor(QColor c)
 {
     if (mColor != c) {
         QString old = "";
@@ -131,8 +135,13 @@ QString Cell::name()
 
 void Cell::useAlternateRenderer(bool useAlt)
 {
-    if(mStitch->isSvg() && mStitch->renderSvg()->isValid())
-        setSharedRenderer(mStitch->renderSvg(useAlt));
+    if(mStitch->isSvg() && mStitch->renderSvg()->isValid()) {
+        QString color = "#000000";
+        if(useAlt) {
+            color = Settings::inst()->value("stitchAlternateColor").toString();
+        }
+        setSharedRenderer(mStitch->renderSvg(color));
+    }
 }
 
 void Cell::setScale(qreal sx, qreal sy)
@@ -162,7 +171,7 @@ Cell* Cell::copy(Cell* cell)
         c = cell;
 
     c->setStitch(stitch());
-    c->setColor(color());
+    c->setBgColor(bgColor());
     c->setTransformOriginPoint(transformOriginPoint());
     c->setRotation(rotation());
     c->setScale(scale().x(), scale().y());

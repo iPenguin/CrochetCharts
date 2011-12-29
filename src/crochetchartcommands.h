@@ -30,12 +30,12 @@ private:
     Scene* scene;
 };
 
-class SetCellColor : public QUndoCommand
+class SetCellBgColor : public QUndoCommand
 {
 public:
     enum { Id = 1110 };
     
-    SetCellColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent = 0);
+    SetCellBgColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent = 0);
     
     void undo();
     void redo();

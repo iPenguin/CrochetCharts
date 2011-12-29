@@ -39,26 +39,26 @@ void SetCellStitch::undo()
 }
 
 /*************************************************\
-| SetCellColor                                    |
+| SetCellBgColor                                    |
 \*************************************************/
-SetCellColor::SetCellColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent)
+SetCellBgColor::SetCellBgColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
     c = cell;
-    oldColor = c->color();
+    oldColor = c->bgColor();
     newColor = newCl;
     setText(QObject::tr("change color"));
 }
 
-void SetCellColor::redo()
+void SetCellBgColor::redo()
 {
-    c->setColor(newColor);
+    c->setBgColor(newColor);
 }
 
-void SetCellColor::undo()
+void SetCellBgColor::undo()
 {
-    c->setColor(oldColor);
+    c->setBgColor(oldColor);
 }
 
 /*************************************************\

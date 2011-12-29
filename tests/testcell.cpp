@@ -166,7 +166,7 @@ void TestCell::setBgColor()
 
     QPointF origin = QPointF(c->boundingRect().width()/2, c->boundingRect().height());
     c->setTransformOriginPoint(origin);
-    c->setColor(QColor(color));
+    c->setBgColor(QColor(color));
 
     QString rasterImage = "TestCell-BgColor-" + QString::number(i) + "-" + name + ".png";
 
@@ -218,7 +218,7 @@ void TestCell::setAllProperties()
 
     QPointF origin = QPointF(c->boundingRect().width()/2, c->boundingRect().height());
     c->setTransformOriginPoint(origin);
-    c->setColor(QColor(color));
+    c->setBgColor(QColor(color));
     c->setRotation(angle);
     c->setScale(scaleX, scaleY);
 

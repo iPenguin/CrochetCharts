@@ -714,7 +714,7 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 /*
  *FIXME: if the user isn't dragging a stitch we should be painting with color.
     if(mCurCell->color() != mEditBgColor)
-        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
+        mUndoStack.push(new SetCellBgColor(this, mCurCell, mEditBgColor));
 */
 }
 
@@ -725,8 +725,8 @@ void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
         return;
     
     Cell* curCell = static_cast<Cell*>(mCurItem);
-    if(curCell->color() != mEditBgColor)
-        undoStack()->push(new SetCellColor(this, curCell, mEditBgColor));
+    if(curCell->bgColor() != mEditBgColor)
+        undoStack()->push(new SetCellBgColor(this, curCell, mEditBgColor));
 }
 
 void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -1847,7 +1847,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
         switch(item->type()) {
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(item);
-                stream << c->name() << c->color()
+                stream << c->name() << c->bgColor()
                     << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos()
                     << c->transform();
                 break;
@@ -1915,20 +1915,20 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 
         case Cell::Type: {
             QString name;
-            QColor color;
+            QColor bgColor;
             qreal angle;
             QPointF scale;
             QPointF pos, transPoint;
             QTransform trans;
 
-            stream >> name >> color >> angle >> scale >> transPoint >> pos >> trans;
+            stream >> name >> bgColor >> angle >> scale >> transPoint >> pos >> trans;
             pos += offSet;
             AddCell* addCmd = new AddCell(this, pos);
             undoStack()->push(addCmd);
             Cell* c = addCmd->cell();
 
             c->setStitch(name);
-            c->setColor(color);
+            c->setBgColor(bgColor);
 
             c->setTransformOriginPoint(transPoint);
             c->setRotation(angle);
