@@ -72,7 +72,7 @@ void StitchLibraryDelegate::paint(QPainter* painter, const QStyleOptionViewItem 
             rect.setHeight(s->height());
 
         if(s->isSvg()) {
-            QSvgRenderer *r = s->renderSvg(false);
+            QSvgRenderer *r = s->renderSvg();
             if(r)
                 r->render(painter, rect);
 

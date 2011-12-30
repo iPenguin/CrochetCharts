@@ -125,19 +125,21 @@ QPixmap* Stitch::renderPixmap()
     return mPixmap;
 }
 
-QSvgRenderer* Stitch::renderSvg(QString color)
+QSvgRenderer* Stitch::renderSvg(QColor color)
 {
     
     if(!isSvg())
         return 0;
-    
-    if(mRenderers.contains(color)) {
-        if(!mRenderers.value(color)->isValid())
-            return 0;
-        return mRenderers.value(color);
+
+    if(!mRenderers.contains(color.name())) {
+        addStitchColor(color.name());
     }
 
-    return 0;
+    if(!mRenderers.value(color.name())->isValid())
+        return 0;
+
+    return mRenderers.value(color.name());
+
 }
 
 void Stitch::reloadIcon()

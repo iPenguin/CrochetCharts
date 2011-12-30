@@ -9,6 +9,7 @@
 #include <QList>
 #include <QObject>
 #include <QMap>
+#include <QColor>
 
 class QSvgRenderer;
 class QPixmap;
@@ -36,9 +37,7 @@ public:
     bool isSvg();
 
     QPixmap* renderPixmap();
-    QSvgRenderer* renderSvg(QString color = "#000000");
-
-    void addStitchColor(QString color);
+    QSvgRenderer* renderSvg(QColor color = QColor(Qt::black));
 
     //reload the svg with new colors.
     void reloadIcon();
@@ -54,6 +53,8 @@ protected:
     void setDescription(QString desc) { mDescription = desc; }
     void setCategory(QString cat) { mCategory = cat; }
     void setWrongSide(QString ws) { mWrongSide = ws; }
+
+    void addStitchColor(QString color);
     
 private:
     void setupSvgFiles();

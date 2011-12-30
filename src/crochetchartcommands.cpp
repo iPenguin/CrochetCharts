@@ -62,6 +62,29 @@ void SetCellBgColor::undo()
 }
 
 /*************************************************\
+| SetCellColor                                    |
+\*************************************************/
+SetCellColor::SetCellColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    scene = s;
+    c = cell;
+    oldColor = c->bgColor();
+    newColor = newCl;
+    setText(QObject::tr("change color"));
+}
+
+void SetCellColor::redo()
+{
+    c->setColor(newColor);
+}
+
+void SetCellColor::undo()
+{
+    c->setColor(oldColor);
+}
+
+/*************************************************\
 | SetItemRotation                                 |
 \*************************************************/
 SetItemRotation::SetItemRotation(Scene* s, QGraphicsItem* item, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent)
