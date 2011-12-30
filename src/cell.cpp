@@ -103,11 +103,26 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
 
 void Cell::setBgColor(QColor c)
 {
-    if (mColor != c) {
+    if (mBgColor != c) {
         QString old = "";
-        if (mColor.isValid())
+        if (mBgColor.isValid())
+            old = mBgColor.name();
+        mBgColor = c;
+        emit colorChanged(old, c.name());
+        update();
+    }
+}
+
+void Cell::setColor(QColor c)
+{
+
+    if(mColor != c) {
+        QString old = "";
+        if(mColor.isValid())
             old = mColor.name();
         mColor = c;
+        setSharedRenderer(stitch()->renderSvg(c));
+
         emit colorChanged(old, c.name());
         update();
     }

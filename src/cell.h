@@ -30,8 +30,11 @@ public:
     Cell* copy(Cell* cell = 0);
     
     void setBgColor(QColor c = QColor(Qt::white));
-    QColor bgColor() const { return mColor; }
+    QColor bgColor() const { return mBgColor; }
     
+    void setColor(QColor c = QColor(Qt::white));
+    QColor color() const { return mColor; }
+
     void setStitch(Stitch* s, bool useAltRenderer = false);
     void setStitch(QString s, bool useAltRenderer = false);
     Stitch* stitch() const { return mStitch; }
@@ -51,6 +54,7 @@ signals:
     void colorChanged(QString oldColor, QString newColor);
     
 private:
+    QColor mBgColor;
     QColor mColor;
     QPointer<Stitch> mStitch;
 

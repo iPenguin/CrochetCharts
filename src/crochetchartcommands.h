@@ -49,6 +49,25 @@ private:
     Scene* scene;
 };
 
+class SetCellColor : public QUndoCommand
+{
+public:
+    enum { Id = 1110 };
+
+    SetCellColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    int id() const { return Id; }
+
+private:
+    QColor oldColor;
+    QColor newColor;
+    Cell* c;
+    Scene* scene;
+};
+
 class SetItemRotation : public QUndoCommand
 {
 public:
