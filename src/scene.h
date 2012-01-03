@@ -394,17 +394,15 @@ private:
     bool mShowChartCenter;
 
 public:
-    bool showGuidelines() { return mShowGuidelines; }
-    void setShowGuidelines(bool state);
+    QString showGuidelines() { return mShowGuidelines; }
+    void setShowGuidelines(QString guides);
+    QString guidelines() { return "None"; }
 protected slots:
     void updateGuidelines();
 
 private:
-    QGraphicsLineItem* mVerticalLine;
-    QGraphicsLineItem* mHorizontalLine;
-    QGraphicsLineItem* mAngleLine1;
-    QGraphicsLineItem* mAngleLine2;
-    bool mShowGuidelines;
+    QList<QGraphicsLineItem*> mGuidelines;
+    QString mShowGuidelines;
 
 };
 

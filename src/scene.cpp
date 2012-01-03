@@ -66,18 +66,9 @@ Scene::Scene(QObject* parent) :
     mRowLine(0),
     mCenterSymbol(0),
     mShowChartCenter(false),
-    mVerticalLine(0),
-    mHorizontalLine(0),
-    mAngleLine1(0),
-    mAngleLine2(0),
-    mShowGuidelines(false)
+    mShowGuidelines("")
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
-
-    mVerticalLine = new QGraphicsLineItem();
-    mHorizontalLine = new QGraphicsLineItem();
-    mAngleLine1 = new QGraphicsLineItem();
-    mAngleLine2 = new QGraphicsLineItem();
 
 }
 
@@ -2117,10 +2108,6 @@ void Scene::editorGotFocus(Indicator* item)
 QRectF Scene::itemsBoundingRect()
 {
     QList<QGraphicsItem*> itemList = items();
-    itemList.removeOne(mVerticalLine);
-    itemList.removeOne(mHorizontalLine);
-    itemList.removeOne(mAngleLine1);
-    itemList.removeOne(mAngleLine2);
 
     QList<QGraphicsItem*>::const_iterator dItem;
     for (dItem = mDemoItems.begin(); dItem != mDemoItems.constEnd(); ++dItem) {
@@ -2291,21 +2278,17 @@ void Scene::highlightIndicators(bool state)
     }
 }
 
-void Scene::setShowGuidelines(bool state)
+void Scene::setShowGuidelines(QString guides)
 {
 
-    if(mShowGuidelines != state) {
-        mShowGuidelines = state;
-        if(state) {
-            addItem(mVerticalLine);
-            addItem(mHorizontalLine);
-            addItem(mAngleLine1);
-            addItem(mAngleLine2);
+    if(mShowGuidelines != guides) {
+        mShowGuidelines = guides;
+        if(guides == tr("Round")) {
+            debug("TODO: show guidelines round");
+        } else if(guides == tr("Grid")) {
+            debug("TODO: show guidelines grid");
         } else {
-            removeItem(mVerticalLine);
-            removeItem(mHorizontalLine);
-            removeItem(mAngleLine1);
-            removeItem(mAngleLine2);
+            debug("TODO: hide guidelines");
         }
     }
     
@@ -2314,38 +2297,13 @@ void Scene::setShowGuidelines(bool state)
 
 void Scene::updateGuidelines()
 {
-    if(!showGuidelines())
+    if(showGuidelines() == tr("None"))
         return;
 
     if(mCenterSymbol && mCenterSymbol->isVisible()) {
-
-        QLineF line = QLineF(mCenterSymbol->sceneBoundingRect().center().x(), sceneRect().top(),
-                            mCenterSymbol->sceneBoundingRect().center().x(), sceneRect().bottom());
-        mVerticalLine->setLine(line);
-
-        line = QLineF(sceneRect().left(), mCenterSymbol->sceneBoundingRect().center().y(),
-                    sceneRect().right(), mCenterSymbol->sceneBoundingRect().center().y());
-        mHorizontalLine->setLine(line);
-
-        QPointF diff = sceneRect().center() - mCenterSymbol->sceneBoundingRect().center();
-        line = QLineF(sceneRect().left() - diff.x(), sceneRect().top() - diff.y(),
-                    sceneRect().right() - diff.x(), sceneRect().bottom() - diff.y());
-        mAngleLine1->setLine(line);
-        
-        line = QLineF(sceneRect().right() - diff.x(), sceneRect().top() - diff.y(),
-                    sceneRect().left() - diff.x(), sceneRect().bottom() - diff.y());
-        mAngleLine2->setLine(line);
+        debug("TODO: Create guidelines from the center symbol");
         
     } else {
-
-        mVerticalLine->setLine(QLineF(sceneRect().center().x(), sceneRect().top(),
-                                    sceneRect().center().x(), sceneRect().bottom()));
-        mHorizontalLine->setLine(QLineF(sceneRect().left(), sceneRect().center().y(),
-                                    sceneRect().right(), sceneRect().center().y()));
-
-        mAngleLine1->setLine(QLineF(sceneRect().left(), sceneRect().top(),
-                                    sceneRect().right(), sceneRect().bottom()));
-        mAngleLine2->setLine(QLineF(sceneRect().right(), sceneRect().top(),
-                                    sceneRect().left(), sceneRect().bottom()));
+        debug("TODO: Create guidelines from the center of the chart");
     }
 }

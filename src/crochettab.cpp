@@ -361,11 +361,13 @@ void CrochetTab::setChartCenter(bool state)
 
 bool CrochetTab::hasGuidelines()
 {
-    return mScene->showGuidelines();
+    if(mScene->showGuidelines() != tr("None"))
+        return true;
+    return false;
 }
 
-void CrochetTab::setShowGuidelines(bool state)
+void CrochetTab::setShowGuidelines(QString guide)
 {
-    mScene->setShowGuidelines(state);
+    mScene->setShowGuidelines(guide);
 }
 

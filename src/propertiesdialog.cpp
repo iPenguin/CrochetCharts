@@ -24,7 +24,7 @@ PropertiesDialog::PropertiesDialog(QTabWidget* tabWidget, QWidget *parent) :
     connect(ui->scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
 
     connect(ui->showChartCenter, SIGNAL(toggled(bool)), SLOT(chartUpdateChartCenter(bool)));
-    connect(ui->showGuidelines, SIGNAL(toggled(bool)), SLOT(chartUpdateGuidelines(bool)));
+    connect(ui->showGuidelines, SIGNAL(currentIndexChanged(QString)), SLOT(chartUpdateGuidelines(QString)));
 }
 
 PropertiesDialog::~PropertiesDialog()
@@ -98,7 +98,9 @@ void PropertiesDialog::showUi(PropertiesDialog::UiSelection selection)
         ui->chartGroup->show();
         
         ui->showChartCenter->setChecked(mScene->showChartCenter());
-        ui->showGuidelines->setChecked(mScene->showGuidelines());
+
+        QString guidelines = mScene->guidelines();
+        ui->showGuidelines->setCurrentIndex(ui->showGuidelines->findText(guidelines));
         
     } else if(selection == PropertiesDialog::CellUi) {
         Cell* c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
@@ -128,9 +130,9 @@ void PropertiesDialog::chartUpdateChartCenter(bool state)
     mScene->setShowChartCenter(state);
 }
 
-void PropertiesDialog::chartUpdateGuidelines(bool state)
+void PropertiesDialog::chartUpdateGuidelines(QString guides)
 {
-    mScene->setShowGuidelines(state);
+    mScene->setShowGuidelines(guides);
 }
 
 

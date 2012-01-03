@@ -73,7 +73,7 @@ public:
     bool hasChartCenter();
     void setChartCenter(bool state);
 
-    void setShowGuidelines(bool state);
+    void setShowGuidelines(QString guides);
     bool hasGuidelines();
     
 signals:
