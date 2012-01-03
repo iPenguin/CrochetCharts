@@ -2,10 +2,11 @@
 | Copyright (c) 2011 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#include "savefile.h"
-#include "appinfo.h"
+#include "filefactory.h"
+#include "file_v1.h"
+#include "file_v2.h"
 
-#include "crochettab.h"
+#include <QObject>
 
 #include "debug.h"
 
@@ -16,45 +17,108 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
-#include <QStringList>
+#include "crochettab.h"
 
 #include "scene.h"
 #include "stitchlibrary.h"
 #include "stitchset.h"
+#include "appinfo.h"
 
-#include "indicator.h"
-#include "savethread.h"
 #include "mainwindow.h"
 
-#include "itemgroup.h"
-
-SaveFile::SaveFile(QWidget* parent) :
+FileFactory::FileFactory(QWidget* parent) :
     isSaved(false),
     fileName(""),
-    mFileVersion(SaveFile::Version_1_0),
+    mFileVersion(FileFactory::Version_1_2),
     mParent(parent),
     mInternalStitchSet(0)
 {
     mTabWidget = static_cast<MainWindow*>(mParent)->tabWidget();
 }
 
-SaveFile::~SaveFile()
+FileFactory::FileError FileFactory::load()
 {
+    File *fileLoad;
+    QFile file(fileName);
+
+    if(!file.open(QIODevice::ReadOnly)) {
+        //TODO: some nice dialog to warn the user.
+        WARN("Couldn't open file for reading..." + fileName);
+        return FileFactory::Err_OpeningFile;
+    }
+
+    QDataStream in(&file);
+
+    quint32 magicNumber;
+    qint32 version;
+    in >> magicNumber;
+
+    if(magicNumber != AppInfo::inst()->magicNumber) {
+        //TODO: nice error message. not a set file.
+        qWarning() << "This is not a pattern file";
+        file.close();
+        return FileFactory::Err_WrongFileType;
+    }
+
+    in >> version;
+
+    if(version < FileFactory::Version_1_0) {
+        //TODO: unknown version.
+        qWarning() << "Unknown file version";
+        file.close();
+        return FileFactory::Err_UnknownFileVersion;
+    }
+
+    if(version > mFileVersion) {
+        //TODO: unknown file version
+        qWarning() << "This file was created with a newer version of the software.";
+        file.close();
+        return FileFactory::Err_UnknownFileVersion;
+    }
+
+    if(version == FileFactory::Version_1_0) {
+        in.setVersion(QDataStream::Qt_4_7);
+        fileLoad = new FileLoad_v1(this);
+    } else if(version == FileFactory::Version_1_2) {
+        in.setVersion(QDataStream::Qt_4_7);
+        fileLoad = new FileLoad_v2(this);
+    }
+
+    mInternalStitchSet = new StitchSet();
+    mInternalStitchSet->isTemporary = true;
+    mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
+    QString dest = mInternalStitchSet->stitchSetFileName;
+    QFileInfo info(dest);
+    QDir(info.path()).mkpath(info.path() + "/" + info.baseName());
+
+    mInternalStitchSet->loadIcons(&in);
+
+    QByteArray docData;
+    in >> docData;
+
+    QXmlStreamReader stream(docData);
+
+    if(stream.hasError()) {
+        qWarning() << "Error loading saved file: " << stream.errorString();
+        return FileFactory::Err_GettingFileContents;
+    }
+
+    return fileLoad->load(&stream);
 }
 
-SaveFile::FileError SaveFile::save()
+FileFactory::FileError FileFactory::save()
 {
     //Don't save a file without at least 1 tab.
     if(mTabWidget->count() <= 0)
-        return SaveFile::Err_NoTabsToSave;
+        return FileFactory::Err_NoTabsToSave;
     
     QFile file(fileName + ".tmp");
     if(!file.open(QIODevice::WriteOnly)) {
         //TODO: some nice dialog to warn the user.
         qWarning() << "Couldn't open file for writing..." << fileName;
-        return SaveFile::Err_OpeningFile;
+        return FileFactory::Err_OpeningFile;
     }
-    
+
     QDataStream out(&file);
     // Write a header with a "magic number" and a version
     out << AppInfo::inst()->magicNumber;
@@ -68,7 +132,7 @@ SaveFile::FileError SaveFile::save()
         mInternalStitchSet->isTemporary = true;
         mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
         StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
-        
+
     } else {
         mInternalStitchSet->clearStitches();
     }
@@ -81,7 +145,7 @@ SaveFile::FileError SaveFile::save()
 
     stream.writeStartElement("pattern"); //start pattern
     //TODO: dont need to set the version when saving into a binary file.
-    stream.writeAttribute("version", QString::number(SaveFile::Version_1_0));
+    stream.writeAttribute("version", QString::number(FileFactory::Version_1_2));
 
     //create the StitchSet then save the icons.
     saveCustomStitches(&stream);
@@ -91,7 +155,7 @@ SaveFile::FileError SaveFile::save()
 
     saveCharts(&stream);
     stream.writeEndElement();
-    
+
     stream.writeEndDocument();
 
     //put xml into binary file.
@@ -104,16 +168,17 @@ SaveFile::FileError SaveFile::save()
     //only try to delete the file if it exists.
     if(d.exists(fileName)) {
         if(!d.remove(fileName))
-            return SaveFile::Err_RemovingOrigFile;
+            return FileFactory::Err_RemovingOrigFile;
     }
     
     if(!d.rename(fileName +".tmp", fileName))
-        return SaveFile::Err_RenamingTempFile;
+        return FileFactory::Err_RenamingTempFile;
 
-    return SaveFile::No_Error;
+    return FileFactory::No_Error;
+
 }
 
-void SaveFile::saveCustomStitches(QXmlStreamWriter* stream)
+void FileFactory::saveCustomStitches(QXmlStreamWriter* stream)
 {
     CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(0));
 
@@ -130,10 +195,10 @@ void SaveFile::saveCustomStitches(QXmlStreamWriter* stream)
     mInternalStitchSet->saveXmlStitchSet(stream, true);
 }
 
-bool SaveFile::saveCharts(QXmlStreamWriter* stream)
+bool FileFactory::saveCharts(QXmlStreamWriter* stream)
 {
     int tabCount = mTabWidget->count();
-    
+
     for(int i = 0; i < tabCount; ++i) {
         CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
         if(!tab)
@@ -152,7 +217,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeAttribute("x", QString::number(tab->scene()->mCenterSymbol->scenePos().x()));
             stream->writeAttribute("y", QString::number(tab->scene()->mCenterSymbol->scenePos().y()));
             stream->writeEndElement(); //end chart center
-            
+
         }
 
         stream->writeStartElement("rowSpacing");
@@ -175,11 +240,11 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
         }
 
         foreach(QGraphicsItem* item, tab->scene()->items()) {
-            
+
             Cell* c = qgraphicsitem_cast<Cell*>(item);
             if(!c)
                 continue;
-            
+
             stream->writeStartElement("cell"); //start cell
             stream->writeTextElement("stitch", c->stitch()->name());
 
@@ -227,7 +292,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             //application we need to regroup the items.
             if(isGrouped)
                 g->addToGroup(c);
-            
+
             stream->writeTextElement("color", c->bgColor().name());
             stream->writeTextElement("angle", QString::number(c->rotation()));
 
@@ -240,7 +305,7 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
             stream->writeAttribute("x", QString::number(c->transformOriginPoint().x()));
             stream->writeAttribute("y", QString::number(c->transformOriginPoint().y()));
             stream->writeEndElement(); //end pivotPoint
-            
+
             stream->writeEndElement(); //end cell
         }
 
@@ -262,35 +327,22 @@ bool SaveFile::saveCharts(QXmlStreamWriter* stream)
     return true;
 }
 
-void SaveFile::saveColors(QXmlStreamWriter* stream)
+void FileFactory::saveColors(QXmlStreamWriter* stream)
 {
     stream->writeStartElement("colors"); //start colors
     MainWindow* mw = static_cast<MainWindow*>(mParent);
 
     QStringList keys = mw->patternColors().keys();
-    
+
     foreach(QString key, keys) {
         stream->writeStartElement("color");
         stream->writeAttribute("added", QString::number(mw->patternColors().value(key).value("added")));
         stream->writeCharacters(key);
         stream->writeEndElement(); //end color
     }
+
+/****************************************************
     
-    stream->writeEndElement(); // end colors
-}
-
-
-SaveFile::FileError SaveFile::load()
-{
-
-    QFile file(fileName);
-
-    if(!file.open(QIODevice::ReadOnly)) {
-        //TODO: some nice dialog to warn the user.
-        qWarning() << "Couldn't open file for reading..." << fileName;
-        return SaveFile::Err_OpeningFile;
-    }
-
     QDataStream in(&file);
 
     quint32 magicNumber;
@@ -301,26 +353,26 @@ SaveFile::FileError SaveFile::load()
         //TODO: nice error message. not a set file.
         qWarning() << "This is not a pattern file";
         file.close();
-        return SaveFile::Err_WrongFileType;
+        return FileFactory::Err_WrongFileType;
     }
 
     in >> version;
 
-    if(version < SaveFile::Version_1_0) {
+    if(version < FileFactory::Version_1_0) {
         //TODO: unknown version.
         qWarning() << "Unknown file version";
         file.close();
-        return SaveFile::Err_UnknownFileVersion;
+        return FileFactorye::Err_UnknownFileVersion;
     }
 
     if(version > mFileVersion) {
         //TODO: unknown file version
         qWarning() << "This file was created with a newer version of the software.";
         file.close();
-        return SaveFile::Err_UnknownFileVersion;
+        return FileFactory::Err_UnknownFileVersion;
     }
 
-    if(version == SaveFile::Version_1_0)
+    if(version == FileFactory::Version_1_0)
         in.setVersion(QDataStream::Qt_4_7);
 
     mInternalStitchSet = new StitchSet();
@@ -339,7 +391,7 @@ SaveFile::FileError SaveFile::load()
 
     if(stream.hasError()) {
         qWarning() << "Error loading saved file" << file.fileName() << ":" << stream.errorString();
-        return SaveFile::Err_GettingFileContents;
+        return FileFactory::Err_GettingFileContents;
     }
 
     while (!stream.atEnd() && !stream.hasError()) {
@@ -363,10 +415,10 @@ SaveFile::FileError SaveFile::load()
 
     StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
 
-    return SaveFile::No_Error;
+    return FileFactory::No_Error;
 }
 
-void SaveFile::loadColors(QXmlStreamReader* stream)
+void FileFactory::loadColors(QXmlStreamReader* stream)
 {
     MainWindow* mw = qobject_cast<MainWindow*>(mParent);
 
@@ -386,7 +438,7 @@ void SaveFile::loadColors(QXmlStreamReader* stream)
 
 }
 
-void SaveFile::loadChart(QXmlStreamReader* stream)
+void FileFactory::loadChart(QXmlStreamReader* stream)
 {
     MainWindow* mw = qobject_cast<MainWindow*>(mParent);
     CrochetTab* tab = 0;
@@ -462,7 +514,7 @@ void SaveFile::loadChart(QXmlStreamReader* stream)
     }
 }
 
-void SaveFile::loadGrid(QXmlStreamReader* stream, Scene* scene)
+void FileFactory::loadGrid(QXmlStreamReader* stream, Scene* scene)
 {
     while(!(stream->isEndElement() && stream->name() == "grid")) {
         stream->readNext();
@@ -479,7 +531,7 @@ void SaveFile::loadGrid(QXmlStreamReader* stream, Scene* scene)
     }
 }
 
-void SaveFile::loadIndicator(CrochetTab* tab, QXmlStreamReader* stream)
+void FileFactory::loadIndicator(CrochetTab* tab, QXmlStreamReader* stream)
 {
     Indicator* i = new Indicator();
 
@@ -509,9 +561,15 @@ void SaveFile::loadIndicator(CrochetTab* tab, QXmlStreamReader* stream)
     i->setText(text);
     i->setTextColor(textColor);
     i->setBgColor(bgColor);
+
+
+    ********************************************************************/
+
+
+    stream->writeEndElement(); // end colors
 }
 
-void SaveFile::cleanUp()
+void FileFactory::cleanUp()
 {
     if(mInternalStitchSet)
         StitchLibrary::inst()->removeSet(mInternalStitchSet);

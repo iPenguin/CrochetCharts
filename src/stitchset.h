@@ -23,7 +23,9 @@ class StitchSet : public QAbstractItemModel
     Q_OBJECT
     friend class StitchLibrary;
     friend class StitchLibraryUi;
-    friend class SaveFile;
+    friend class FileFactory;
+    friend class FileLoad_v1;
+    friend class FileLoad_v2;
 public:
 
     enum SaveVersion { Version_1_0_0 = 100 };

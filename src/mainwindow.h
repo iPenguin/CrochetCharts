@@ -7,7 +7,7 @@
 
 #include <QMainWindow>
 
-#include "savefile.h"
+#include "filefactory.h"
 #include "updater.h"
 #include "undogroup.h"
 
@@ -32,7 +32,9 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    friend class SaveFile;
+    friend class FileFactory;
+    friend class FileLoad_v1;
+    friend class FileLoad_v2;
 public:
     explicit MainWindow(QStringList fileNames = QStringList(), QWidget* parent = 0);
     ~MainWindow();
@@ -160,7 +162,7 @@ private:
    
     Ui::MainWindow* ui;
 
-    SaveFile* mFile;
+    FileFactory* mFile;
     Updater* mUpdater;
 
 //for the savefile class:

@@ -88,7 +88,7 @@ void Stitch::addStitchColor(QString color)
 
     QFile file(mFile);
     if(!file.open(QIODevice::ReadOnly)) {
-        warn("cannot open file for svg setup");
+        WARN("cannot open file for svg setup");
         return;
     }
 

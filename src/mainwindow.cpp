@@ -72,7 +72,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     setupStitchPalette();
     setupDocks();
     
-    mFile = new SaveFile(this);
+    mFile = new FileFactory(this);
     loadFiles(fileNames);
 
     setApplicationTitle();
@@ -857,8 +857,8 @@ void MainWindow::fileSave()
         fileSaveAs();
     else {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-        SaveFile::FileError err = mFile->save();
-        if(err != SaveFile::No_Error)
+        FileFactory::FileError err = mFile->save();
+        if(err != FileFactory::No_Error)
             qWarning() << "There was an error saving the file: " << err;
         QApplication::restoreOverrideCursor();
     }

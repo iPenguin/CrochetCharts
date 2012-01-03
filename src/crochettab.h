@@ -26,8 +26,9 @@ namespace Ui {
 class CrochetTab : public QWidget
 {
     Q_OBJECT
-    friend class SaveFile;
-    friend class SaveThread;
+    friend class FileFactory;
+    friend class FileLoad_v1;
+    friend class FileLoad_v2;
     friend class ExportUi;
     friend class PropertiesDialog;
 public:
