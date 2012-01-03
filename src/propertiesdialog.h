@@ -34,7 +34,7 @@ private slots:
     void updateDialogUi();
 
     void chartUpdateChartCenter(bool state);
-    void chartUpdateGuidelines(bool state);
+    void chartUpdateGuidelines(QString guides);
     
     void cellUpdateAngle(double angle);
     void cellUpdateScaleX(double scale);
