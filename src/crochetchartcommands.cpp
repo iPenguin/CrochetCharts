@@ -10,13 +10,13 @@
 /*************************************************\
 | SetCellStitch                                   |
 \*************************************************/
-SetCellStitch::SetCellStitch(Scene* s, Cell* cell, QString newSt, QUndoCommand* parent)
+SetCellStitch::SetCellStitch(Scene* s, Cell* cell, QString newUid, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
     c = cell;
-    oldStitch = c->name();
-    newStitch = newSt;
+    oldStitchUid = c->uid();
+    newStitchUid = newUid;
     setText(QObject::tr("change stitch"));
 }
 
@@ -26,7 +26,7 @@ void SetCellStitch::redo()
     bool useAlt = false;
     if(pos.y() != -1)
        useAlt = (pos.y() % 2);
-    c->setStitch(newStitch, useAlt);
+    c->setStitch(newStitchUid, useAlt);
 }
 
 void SetCellStitch::undo()
@@ -35,7 +35,7 @@ void SetCellStitch::undo()
     bool useAlt = false;
     if(pos.y() != -1)
        useAlt = (pos.y() % 2);
-    c->setStitch(oldStitch, useAlt);
+    c->setStitch(oldStitchUid, useAlt);
 }
 
 /*************************************************\

@@ -47,7 +47,8 @@ public:
      */
     void loadStitchSets();
     
-    Stitch* findStitch(QString name);
+    Stitch* findStitch(QString uid);
+    Stitch* findStitchByName(QString name);
     StitchSet* findStitchSet(QString setName);
 
     //fill in a dropdown list for selecting a stitch set.

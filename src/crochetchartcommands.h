@@ -16,7 +16,7 @@ class SetCellStitch : public QUndoCommand
 public:
     enum { Id = 1100 };
     
-    SetCellStitch(Scene* s, Cell* cell, QString newSt, QUndoCommand* parent = 0);
+    SetCellStitch(Scene* s, Cell* cell, QString newUid, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
@@ -24,8 +24,8 @@ public:
     int id() const { return Id; }
     
 private:
-    QString oldStitch;
-    QString newStitch;
+    QString oldStitchUid;
+    QString newStitchUid;
     Cell* c;
     Scene* scene;
 };

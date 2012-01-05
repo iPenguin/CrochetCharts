@@ -89,7 +89,8 @@ void FileLoad_v1::loadChart(QXmlStreamReader* stream)
             mParent->mTabWidget->widget(mParent->mTabWidget->indexOf(tab))->hide();
         } else if(tag == "defaultSt") {
             defaultSt = stream->readElementText();
-            tab->scene()->mDefaultStitch = defaultSt;
+            Stitch *s = StitchLibrary::inst()->findStitchByName(defaultSt);
+            tab->scene()->mDefaultStitchUid = s->uid();
 
         } else if(tag == "chartCenter") {
             qreal x = stream->attributes().value("x").toString().toDouble();

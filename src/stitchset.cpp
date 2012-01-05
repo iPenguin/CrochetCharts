@@ -4,19 +4,18 @@
 \*************************************************/
 #include "stitchset.h"
 
-#include <QFile>
-#include <QDir>
-
 #include <QXmlStreamWriter> //write the xml file
 #include <QXmlStreamReader>
-
 #include <QDataStream> //read/write the set file w/icon data.
 
-#include "settings.h"
+#include <QCryptographicHash>
+#include <QDateTime>
 
+#include "settings.h"
 #include <QDebug>
 #include <QFileInfo>
-
+#include <QFile>
+#include <QDir>
 #include <QMap>
 #include "appinfo.h"
 
@@ -24,7 +23,7 @@ StitchSet::StitchSet(QObject* parent, bool isMasterSet)
     : QAbstractItemModel(parent),
     isMasterSet(isMasterSet),
     isTemporary(false),
-    mSaveFileVersion(StitchSet::Version_1_0_0)
+    mSaveFileVersion(StitchSet::Version_1_2_0)
 {
 }
 
@@ -141,8 +140,12 @@ void StitchSet::loadDataFile(QString fileName, QString dest)
     }
 
 
-    if(version == StitchSet::Version_1_0_0)
+    if(version == StitchSet::Version_1_0_0) {
         in.setVersion(QDataStream::Qt_4_7);
+    } else if(version == StitchSet::Version_1_2_0) {
+        in.setVersion(QDataStream::Qt_4_7);
+
+    }
 
     stitchSetFileName = dest;
     
@@ -218,24 +221,37 @@ void StitchSet::loadXmlStitch(QXmlStreamReader* stream, bool loadIcon)
         stream->readNext();
         if (stream->isStartElement()) {
             QString name = stream->name().toString();
-            if(name == "name")
+            if(name == "uid") {
+                s->setUid(stream->readElementText());
+            } else if(name == "name") {
                 s->setName(stream->readElementText());
-            else if(name == "icon") {
+            } else if(name == "icon") {
                 QString filePath = stream->readElementText();
                 if(loadIcon && !filePath.startsWith(":/"))
                     s->setFile(stitchSetFolder() + filePath);
                 else
                     s->setFile(filePath);
-            } else if(name == "description")
+            } else if(name == "description") {
                 s->setDescription(stream->readElementText());
-            else if(name == "category")
+            } else if(name == "category") {
                 s->setCategory(stream->readElementText());
-            else if(name == "ws")
+            } else if(name == "ws") {
                 s->setWrongSide(stream->readElementText());
-            else
+            } else {
                 qWarning() << "Cannot load unknown stitch property:" << name << stream->readElementText();
+            }
         }
     }
+
+    //create a uid for stitches that don't have one.
+    if(s->uid() == "") {
+        QString sn = Settings::inst()->value("serialNumber").toString();
+        QByteArray data = sn.toLatin1() + QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()).toLatin1();
+        QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
+        QString hashString = hash.toHex();
+        s->setUid(hashString);
+    }
+
     addStitch(s);
 }
 
@@ -287,7 +303,7 @@ void StitchSet::saveDataFile(QString fileName)
     QDataStream out(&file);
 
     out << AppInfo::inst()->magicNumberSet;
-    out << (qint32)StitchSet::Version_1_0_0;
+    out << (qint32)StitchSet::Version_1_2_0;
     out.setVersion(QDataStream::Qt_4_7);
 
     saveIcons(&out);
@@ -343,6 +359,7 @@ void StitchSet::saveXmlStitchSet(QXmlStreamWriter* stream, bool saveIcons)
         
         stream->writeStartElement("stitch");
         
+        stream->writeTextElement("uid", s->uid());
         stream->writeTextElement("name", s->name());
         stream->writeTextElement("icon", file);
         stream->writeTextElement("description", s->description());
@@ -356,7 +373,17 @@ void StitchSet::saveXmlStitchSet(QXmlStreamWriter* stream, bool saveIcons)
     
 }
 
-Stitch* StitchSet::findStitch(QString name)
+Stitch* StitchSet::findStitch(QString uid)
+{
+    foreach(Stitch* s, mStitches) {
+        if(s->uid() == uid)
+            return s;
+    }
+
+    return 0;
+}
+
+Stitch* StitchSet::findStitchByName(QString name)
 {
     foreach(Stitch* s, mStitches) {
         if(s->name() == name)
@@ -432,7 +459,7 @@ QVariant StitchSet::headerData(int section, Qt::Orientation orientation, int rol
                     return QVariant(tr("Category"));
                 case Stitch::WrongSide:
                     return QVariant(tr("Wrong Side"));
-                case 5:
+                case Stitch::Checkbox:
                     return QVariant(tr("Selected"));
                 default:
                     return QVariant();
@@ -462,8 +489,10 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
                 return QVariant(s->category());
             case Stitch::WrongSide:
                 return QVariant(s->wrongSide());
-            case 5:
+            case Stitch::Checkbox:
                 return QVariant(mSelected.contains(s));
+            case Stitch::Uid:
+                return QVariant(s->uid());
             default:
                 return QVariant();
         }

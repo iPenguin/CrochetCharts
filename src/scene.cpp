@@ -54,7 +54,7 @@ Scene::Scene(QObject* parent) :
     mHasSelection(false),
     mSnapTo(false),
     mMode(Scene::StitchEdit),
-    mEditStitch("ch"),
+    mEditStitchUid("d3d95f053d5c54f93f466ef1fd98c8941754b37b"),
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
     mOldScale(QPointF(1.0, 1.0)),
@@ -62,7 +62,7 @@ Scene::Scene(QObject* parent) :
     mOrigin(0,0),
     mRowSpacing(9),
     mDefaultSize(QSizeF(32.0, 96.0)),
-    mDefaultStitch("ch"),
+    mDefaultStitchUid("d3d95f053d5c54f93f466ef1fd98c8941754b37b"),
     mRowLine(0),
     mCenterSymbol(0),
     mShowChartCenter(false),
@@ -848,7 +848,6 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
 
     mOldScale = mSclItem->scale();
     mPivotPt = QPointF(mCurItem->sceneBoundingRect().width()/2, mCurItem->sceneBoundingRect().height());
-    qDebug() << mPivotPt;
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -1017,7 +1016,7 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
             AddCell* addCell = new AddCell(this, e->scenePos());
             undoStack()->push(addCell);
-            addCell->cell()->setStitch(mEditStitch);
+            addCell->cell()->setStitch(mEditStitchUid);
 
         }
     }
@@ -1533,11 +1532,11 @@ void Scene::distributeToPath()
 
 }
 
-void Scene::createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize)
+void Scene::createRowsChart(int rows, int cols, QString defStitchUid, QSizeF rowSize)
 {
     
     mDefaultSize = rowSize;
-    mDefaultStitch = defStitch;
+    mDefaultStitchUid = defStitchUid;
     arrangeGrid(QSize(rows, cols), QSize(1, 1), rowSize.toSize(), false);
 
     initDemoBackground();
@@ -1573,7 +1572,7 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
             for(int y = grd.height(); y > 0; --y) {
                 Cell* c = new Cell();
                 //FIXME: use the user selected stitch
-                c->setStitch(mDefaultStitch);
+                c->setStitch(mDefaultStitchUid);
                 addItem(c);
                 r.append(c);
                 
@@ -1740,7 +1739,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
         switch(item->type()) {
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(item);
-                stream << c->name() << c->bgColor()
+                stream << c->uid() << c->bgColor()
                     << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos()
                     << c->transform();
                 break;
@@ -1807,20 +1806,20 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
     switch(type) {
 
         case Cell::Type: {
-            QString name;
+            QString uid;
             QColor bgColor;
             qreal angle;
             QPointF scale;
             QPointF pos, transPoint;
             QTransform trans;
 
-            stream >> name >> bgColor >> angle >> scale >> transPoint >> pos >> trans;
+            stream >> uid >> bgColor >> angle >> scale >> transPoint >> pos >> trans;
             pos += offSet;
             AddCell* addCmd = new AddCell(this, pos);
             undoStack()->push(addCmd);
             Cell* c = addCmd->cell();
 
-            c->setStitch(name);
+            c->setStitch(uid);
             c->setBgColor(bgColor);
 
             c->setTransformOriginPoint(transPoint);

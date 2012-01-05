@@ -46,7 +46,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     mMirrorDock(0),
     mPropertiesDock(0),
     mEditMode(10),
-    mStitch("ch"),
+    mStitchUid("d3d95f053d5c54f93f466ef1fd98c8941754b37b"), //ch = d3d95f053d5c54f93f466ef1fd98c8941754b37b
     mFgColor(QColor(Qt::black)),
     mBgColor(QColor(Qt::white))
 {
@@ -590,11 +590,18 @@ void MainWindow::selectStitch(QModelIndex index)
 
     if(stitch.isEmpty())
         return;
+
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
         CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-        if(tab)
-            tab->setEditStitch(stitch);
+        if(tab) {
+            Stitch* s = StitchLibrary::inst()->findStitchByName(stitch);
+            if(!s)
+                return;
+
+            QString uid = s->uid();
+            tab->setEditStitchUid(uid);
+        }
     }
     setEditMode(10);
 }
@@ -1015,7 +1022,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    CrochetTab* tab = new CrochetTab(style, mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
+    CrochetTab* tab = new CrochetTab(style, mEditMode, mStitchUid, mFgColor, mBgColor, ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
     tab->setPatternColors(&mPatternColors);
 
@@ -1346,7 +1353,7 @@ void MainWindow::updatePatternStitches()
         i.next();
         QList<QListWidgetItem*> items = ui->patternStitches->findItems(i.key(), Qt::MatchExactly);
         if(items.count() == 0) {
-            Stitch* s = StitchLibrary::inst()->findStitch(i.key());
+            Stitch* s = StitchLibrary::inst()->findStitchByName(i.key());
             QPixmap pix = QPixmap(QSize(32, 32));
             pix.load(s->file());
             QIcon icon = QIcon(pix);

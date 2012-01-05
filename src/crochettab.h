@@ -33,7 +33,7 @@ class CrochetTab : public QWidget
     friend class PropertiesDialog;
 public:
 
-    explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget* parent = 0);
+    explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitchUid, QColor defFgColor, QColor defBgColor, QWidget* parent = 0);
     ~CrochetTab();
 
     void renderChart(QPainter* painter, QRectF rect = QRectF());
@@ -50,7 +50,7 @@ public:
     void setEditFgColor(QColor color);
     void setEditBgColor(QColor color);
 
-    void setEditStitch(QString stitch);
+    void setEditStitchUid(QString uid);
 
     void sceneUpdate();
 

@@ -196,7 +196,7 @@ bool FileFactory::saveCharts(QXmlStreamWriter* stream)
         stream->writeTextElement("name", mTabWidget->tabText(i));
 
         stream->writeTextElement("style", QString::number(tab->mChartStyle));
-        stream->writeTextElement("defaultSt", tab->scene()->mDefaultStitch);
+        stream->writeTextElement("defaultSt", tab->scene()->mDefaultStitchUid);
 
         bool showCenter = tab->scene()->showChartCenter();
         if(showCenter) {
@@ -233,7 +233,7 @@ bool FileFactory::saveCharts(QXmlStreamWriter* stream)
                 continue;
 
             stream->writeStartElement("cell"); //start cell
-            stream->writeTextElement("stitch", c->stitch()->name());
+            stream->writeTextElement("stitch", c->stitch()->uid());
 
             //if the stitch is on the grid save the grid position.
             QPoint pt = tab->scene()->indexOf(c);

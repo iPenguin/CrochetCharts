@@ -204,7 +204,7 @@ private:
     PropertiesDialog* mPropertiesDock;
     
     int mEditMode;
-    QString mStitch;
+    QString mStitchUid;
     QColor mFgColor;
     QColor mBgColor;
 };

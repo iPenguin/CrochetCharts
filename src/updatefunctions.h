@@ -6,6 +6,7 @@
 #define UPDATEFUNCTION_H
 
 #include <QString>
+#include "debug.h"
 
 /**
  * This function contains snippets of code that should be run before a new version of the software is
@@ -14,8 +15,8 @@
 void updateFunction(QString lastUsed)
 {
 
-    if(lastUsed < "0.9.91-63-gb088c70") {
-
+    if(lastUsed < "1.2.0") {
+        warn("convert default stitches -> default uid");
     }
 
 }

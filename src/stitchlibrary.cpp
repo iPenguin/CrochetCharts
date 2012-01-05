@@ -194,9 +194,14 @@ bool StitchLibrary::masterHasStitch(Stitch* s)
     return mMasterSet->stitches().contains(s);
 }
 
-Stitch* StitchLibrary::findStitch(QString name)
+Stitch* StitchLibrary::findStitch(QString uid)
 {
-    return mMasterSet->findStitch(name);
+    return mMasterSet->findStitch(uid);
+}
+
+Stitch* StitchLibrary::findStitchByName(QString name)
+{
+    return mMasterSet->findStitchByName(name);
 }
 
 StitchSet* StitchLibrary::findStitchSet(QString setName)

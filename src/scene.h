@@ -65,7 +65,7 @@ public:
     void setEditMode(EditMode mode);
     EditMode editMode() { return mMode; }
 
-    void setEditStitch(QString stitch) { mEditStitch = stitch; }
+    void setEditStitchUid(QString sUid) { mEditStitchUid = sUid; }
 
     void setEditFgColor(QColor color) { mEditFgColor = color; }
     void setEditBgColor(QColor color) { mEditBgColor = color; }
@@ -95,7 +95,7 @@ public:
     void group();
     void ungroup();
 
-    void createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize);
+    void createRowsChart(int rows, int cols, QString defStitchUid, QSizeF rowSize);
     void createBlankChart();
 
     void addItem(QGraphicsItem* item);
@@ -270,7 +270,7 @@ private:
     
     EditMode mMode;
     
-    QString mEditStitch;
+    QString mEditStitchUid;
     QColor mEditFgColor;
     QColor mEditBgColor;
 
@@ -287,7 +287,7 @@ private:
 
     int mRowSpacing;
     QSizeF mDefaultSize;
-    QString mDefaultStitch;
+    QString mDefaultStitchUid;
     
     /**
      *Hold the list of cells we're working with to create a new row.

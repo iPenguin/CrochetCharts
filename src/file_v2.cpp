@@ -72,7 +72,7 @@ void FileLoad_v2::loadChart(QXmlStreamReader* stream)
 {
     MainWindow* mw = qobject_cast<MainWindow*>(mParent->mParent);
     CrochetTab* tab = 0;
-    QString tabName = "", defaultSt = "";
+    QString tabName = "", defaultStUid = "";
 
     while(!(stream->isEndElement() && stream->name() == "chart")) {
         stream->readNext();
@@ -88,8 +88,8 @@ void FileLoad_v2::loadChart(QXmlStreamReader* stream)
             mParent->mTabWidget->addTab(tab, "");
             mParent->mTabWidget->widget(mParent->mTabWidget->indexOf(tab))->hide();
         } else if(tag == "defaultSt") {
-            defaultSt = stream->readElementText();
-            tab->scene()->mDefaultStitch = defaultSt;
+            defaultStUid = stream->readElementText();
+            tab->scene()->mDefaultStitchUid = defaultStUid;
 
         } else if(tag == "chartCenter") {
             qreal x = stream->attributes().value("x").toString().toDouble();

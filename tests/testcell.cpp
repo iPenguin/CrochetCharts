@@ -42,9 +42,9 @@ void TestCell::setCellValues_data()
     QTest::addColumn<qreal>("width");
     QTest::addColumn<qreal>("height");
 
-    QTest::newRow("ch")    << "ch" << 32.0 << 16.0;
-    QTest::newRow("hdc")   << "hdc" << 32.0 << 64.0;
-    QTest::newRow("dc")    << "dc" << 32.0 << 80.0;
+    QTest::newRow("ch")    << "d3d95f053d5c54f93f466ef1fd98c8941754b37b" << 32.0 << 16.0;
+    QTest::newRow("hdc")   << "3035fcf8576ec18a9c4087e1a5d6e744c8d1b92a" << 32.0 << 64.0;
+    QTest::newRow("dc")    << "1121027ebc87fff2949075563a1c9009d28786b6" << 32.0 << 80.0;
 
 }
 
@@ -90,9 +90,12 @@ void TestCell::setRotation_data()
     QTest::addColumn<qreal>("angle");
     QTest::addColumn<QString>("rasterHash");
 
-    QTest::newRow("ch")    << "ch" << 32.0 << 16.0 << 45.0 << "8bc84f266a6b29c060e99e80cc60f5a4dd1c0db9";
-    QTest::newRow("hdc")   << "hdc" << 32.0 << 64.0 << 45.0 << "4a7eac0d444a5d98f80ed44cd03be3c85ea8f2c1";
-    QTest::newRow("dc")    << "dc" << 32.0 << 80.0 << 45.0 << "26fcac78640d8b5dfe7a350dcfa51f00948e80bb";
+    QTest::newRow("ch")    << "d3d95f053d5c54f93f466ef1fd98c8941754b37b" << 32.0 << 16.0
+                           << 45.0 << "5705f38583bcf06d60fdbe68b629564b0fb1d1bc";
+    QTest::newRow("hdc")   << "3035fcf8576ec18a9c4087e1a5d6e744c8d1b92a" << 32.0 << 64.0
+                           << 45.0 << "1d23928fd85beb213b07fc4066f9329eb074b3dc";
+    QTest::newRow("dc")    << "1121027ebc87fff2949075563a1c9009d28786b6" << 32.0 << 80.0
+                           << 45.0 << "a2536df7060fa7c0572ec0aab5f4a0839af2ea15";
 
 }
 
@@ -142,9 +145,12 @@ void TestCell::setScale_data()
     QTest::addColumn<qreal>("scaleY");
     QTest::addColumn<QString>("rasterHash");
 
-    QTest::newRow("ch")    << "ch" << 32.0 << 16.0 << 1.0 << 1.0 << "0be6578d22717ba56082a408e8ed128e8114a30c";
-    QTest::newRow("hdc")   << "hdc" << 32.0 << 64.0 << 2.5 << 2.5 << "090bf8ac828e1d2ad0da3ec240539276148bc134";
-    QTest::newRow("dc")    << "dc" << 32.0 << 80.0 << 2.5 << 2.5 << "bdb70eea2145b79c7cb4e50a6148f5ec4d09f708";
+    QTest::newRow("ch")    << "d3d95f053d5c54f93f466ef1fd98c8941754b37b" << 32.0 << 16.0
+                           << 1.0 << 1.0 << "0be6578d22717ba56082a408e8ed128e8114a30c";
+    QTest::newRow("hdc")   << "3035fcf8576ec18a9c4087e1a5d6e744c8d1b92a" << 32.0 << 64.0
+                           << 2.5 << 2.5 << "090bf8ac828e1d2ad0da3ec240539276148bc134";
+    QTest::newRow("dc")    << "1121027ebc87fff2949075563a1c9009d28786b6" << 32.0 << 80.0
+                           << 2.5 << 2.5 << "bdb70eea2145b79c7cb4e50a6148f5ec4d09f708";
 }
 
 void TestCell::setBgColor()
@@ -190,9 +196,12 @@ void TestCell::setBgColor_data()
     QTest::addColumn<QString>("color");
     QTest::addColumn<QString>("rasterHash");
 
-    QTest::newRow("ch")    << "ch" << 32.0 << 16.0 << "#0000FF" << "9d6c0ac6e51809f662573c9432c0b5c7064c2021";
-    QTest::newRow("hdc")   << "hdc" << 32.0 << 64.0 << "#FF0000" << "c3105395f5d7e6ad8269208d25e8be76ab7a9455";
-    QTest::newRow("dc")    << "dc" << 32.0 << 80.0 << "#00FF00" << "0a4fedb0079e244671ab5a376984f40df3394b94";
+    QTest::newRow("ch")    << "d3d95f053d5c54f93f466ef1fd98c8941754b37b" << 32.0 << 16.0
+                           << "#0000FF" << "9d6c0ac6e51809f662573c9432c0b5c7064c2021";
+    QTest::newRow("hdc")   << "3035fcf8576ec18a9c4087e1a5d6e744c8d1b92a" << 32.0 << 64.0
+                           << "#FF0000" << "c3105395f5d7e6ad8269208d25e8be76ab7a9455";
+    QTest::newRow("dc")    << "1121027ebc87fff2949075563a1c9009d28786b6" << 32.0 << 80.0
+                           << "#00FF00" << "0a4fedb0079e244671ab5a376984f40df3394b94";
 
 }
 
@@ -248,9 +257,12 @@ void TestCell::setAllProperties_data()
     QTest::addColumn<QString>("color");
     QTest::addColumn<QString>("rasterHash");
 
-    QTest::newRow("ch")    << "ch" << 32.0 << 16.0 << 45.0 << 1.5 << 2.0 << "#0000FF" << "2d56f4703b3f29f1163bdd6197597e3018a004e6";
-    QTest::newRow("hdc")   << "hdc" << 32.0 << 64.0 << 45.0 << 1.5 << 2.0 << "#FF0000" << "2bffe89a7dad96f18eae2ded0dc08f7f207ceb30";
-    QTest::newRow("dc")    << "dc" << 32.0 << 80.0 << 45.0 << 1.5 << 2.0 << "#00FF00" << "0c151d2b0aee5157a59e1ac769bb26644365ced9";
+    QTest::newRow("ch")    << "d3d95f053d5c54f93f466ef1fd98c8941754b37b" << 32.0 << 16.0 << 45.0
+                           << 1.5 << 2.0 << "#0000FF" << "2d56f4703b3f29f1163bdd6197597e3018a004e6";
+    QTest::newRow("hdc")   << "3035fcf8576ec18a9c4087e1a5d6e744c8d1b92a" << 32.0 << 64.0 << 45.0
+                           << 1.5 << 2.0 << "#FF0000" << "2bffe89a7dad96f18eae2ded0dc08f7f207ceb30";
+    QTest::newRow("dc")    << "1121027ebc87fff2949075563a1c9009d28786b6" << 32.0 << 80.0 << 45.0
+                           << 1.5 << 2.0 << "#00FF00" << "0c151d2b0aee5157a59e1ac769bb26644365ced9";
 
 }
 

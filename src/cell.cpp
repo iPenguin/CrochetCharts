@@ -4,7 +4,7 @@
 \*************************************************/
 #include "cell.h"
 
-#include <QDebug>
+#include "debug.h"
 #include <qpainter.h>
 #include <qsvgrenderer.h>
 #include "stitchlibrary.h"
@@ -128,9 +128,9 @@ void Cell::setColor(QColor c)
     }
 }
 
-void Cell::setStitch(QString s, bool useAltRenderer)
+void Cell::setStitch(QString uid, bool useAltRenderer)
 {
-    Stitch* stitch = StitchLibrary::inst()->findStitch(s);
+    Stitch* stitch = StitchLibrary::inst()->findStitch(uid);
 
     if (!stitch) {
         QString st = Settings::inst()->value("defaultStitch").toString();
@@ -140,10 +140,10 @@ void Cell::setStitch(QString s, bool useAltRenderer)
     setStitch(stitch, useAltRenderer);
 }
 
-QString Cell::name()
+QString Cell::uid()
 {
     if(mStitch)
-        return mStitch->name();
+        return mStitch->uid();
     else
         return QString();
 }

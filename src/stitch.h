@@ -20,11 +20,12 @@ class Stitch : public QObject
     friend class TestStitch;
 public:
 
-    enum StitchParts { Name = 0, Icon, Description, Category, WrongSide };
+    enum StitchParts { Name = 0, Icon, Description, Category, WrongSide, Checkbox, Uid };
     
     Stitch(QObject *parent = 0);
     ~Stitch();
 
+    QString uid() const { return mUid; }
     QString name() const { return mName; }
     QString file() const { return mFile; }
     QString description() const { return mDescription; }
@@ -48,6 +49,7 @@ public:
     bool isBuiltIn;
     
 protected:
+    void setUid(QString id) { mUid = id; }
     void setName(QString n) { mName = n; }
     void setFile(QString f);
     void setDescription(QString desc) { mDescription = desc; }
@@ -59,6 +61,7 @@ protected:
 private:
     void setupSvgFiles();
     
+    QString mUid;
     QString mName;
     QString mFile;
     QString mDescription;

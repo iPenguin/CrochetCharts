@@ -37,13 +37,13 @@ public:
     QColor color() const { return mColor; }
 
     void setStitch(Stitch* s, bool useAltRenderer = false);
-    void setStitch(QString s, bool useAltRenderer = false);
+    void setStitch(QString uid, bool useAltRenderer = false);
     Stitch* stitch() const { return mStitch; }
 
     /**
-     * The stitch name.
+     * The stitch uid.
      */
-    QString name();
+    QString uid();
 
     void useAlternateRenderer(bool useAlt);
 

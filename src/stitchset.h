@@ -28,7 +28,7 @@ class StitchSet : public QAbstractItemModel
     friend class FileLoad_v2;
 public:
 
-    enum SaveVersion { Version_1_0_0 = 100 };
+    enum SaveVersion { Version_1_0_0 = 100, Version_1_2_0 = 101 };
     
     StitchSet(QObject* parent = 0, bool isMasterSet = false);
     ~StitchSet();
@@ -70,7 +70,8 @@ public:
     const QString url() { return mUrl; }
     void setUrl(QString u) { mUrl = u; }
 
-    Stitch* findStitch(QString name);
+    Stitch* findStitch(QString uid);
+    Stitch* findStitchByName(QString name);
 
     bool hasStitch(QString name);
     void addStitch(Stitch* s);
