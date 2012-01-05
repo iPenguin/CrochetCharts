@@ -280,7 +280,8 @@ bool FileFactory::saveCharts(QXmlStreamWriter* stream)
             if(isGrouped)
                 g->addToGroup(c);
 
-            stream->writeTextElement("color", c->bgColor().name());
+            stream->writeTextElement("color", c->color().name());
+            stream->writeTextElement("bgColor", c->bgColor().name());
             stream->writeTextElement("angle", QString::number(c->rotation()));
 
             stream->writeStartElement("scale");

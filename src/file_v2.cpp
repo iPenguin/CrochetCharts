@@ -194,7 +194,7 @@ void FileLoad_v2::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
     Stitch* s = 0;
     int row = -1, column = -1;
     int group = -1;
-    QString bgColor;
+    QString bgColor, color;
     QPointF position(0.0,0.0);
     QPointF pivotPoint;
     qreal angle = 0.0;
@@ -217,6 +217,9 @@ void FileLoad_v2::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
             column = stream->attributes().value("column").toString().toDouble();
             stream->readElementText();
         } else if(tag == "color") {
+            color = stream->readElementText();
+
+        } else if(tag == "bgColor") {
             bgColor = stream->readElementText();
 
         } else if(tag == "position") {
@@ -268,6 +271,7 @@ void FileLoad_v2::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
 
     c->setTransform(transform);
     c->setPos(position);
+    c->setColor(QColor(color));
     c->setBgColor(QColor(bgColor));
     c->setTransformOriginPoint(pivotPoint);
     c->setRotation(angle);
