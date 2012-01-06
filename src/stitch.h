@@ -21,9 +21,12 @@ class Stitch : public QObject
 public:
 
     enum StitchParts { Name = 0, Icon, Description, Category, WrongSide, Checkbox, Uid };
-    
+
     Stitch(QObject *parent = 0);
     ~Stitch();
+
+    enum { Type = 1000 };
+    int type () const { return Stitch::Type; }
 
     QString uid() const { return mUid; }
     QString name() const { return mName; }

@@ -3,6 +3,7 @@
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
 #include "stitchset.h"
+#include "center.h"
 
 #include <QXmlStreamWriter> //write the xml file
 #include <QXmlStreamReader>
@@ -214,45 +215,61 @@ void StitchSet::loadXmlStitchSet(QXmlStreamReader* stream, bool loadIcons)
 
 void StitchSet::loadXmlStitch(QXmlStreamReader* stream, bool loadIcon)
 {
-    Stitch* s = new Stitch();
+
+    QString uid, stName, filePath, desc, cat, ws;
 
     while (!(stream->isEndElement() && stream->name() == "stitch"))
     {
+
         stream->readNext();
         if (stream->isStartElement()) {
             QString name = stream->name().toString();
             if(name == "uid") {
-                s->setUid(stream->readElementText());
+                uid = stream->readElementText();
             } else if(name == "name") {
-                s->setName(stream->readElementText());
+                stName = stream->readElementText();
             } else if(name == "icon") {
-                QString filePath = stream->readElementText();
-                if(loadIcon && !filePath.startsWith(":/"))
-                    s->setFile(stitchSetFolder() + filePath);
-                else
-                    s->setFile(filePath);
+                filePath = stream->readElementText();
             } else if(name == "description") {
-                s->setDescription(stream->readElementText());
+                desc = stream->readElementText();
             } else if(name == "category") {
-                s->setCategory(stream->readElementText());
+                cat = stream->readElementText();
             } else if(name == "ws") {
-                s->setWrongSide(stream->readElementText());
+                ws = stream->readElementText();
             } else {
                 qWarning() << "Cannot load unknown stitch property:" << name << stream->readElementText();
             }
         }
     }
 
+    Stitch* i;
+
+    if(cat == "Centers")
+        i = new Center();
+    else
+        i = new Stitch();
+
+    if(loadIcon && !filePath.startsWith(":/"))
+        i->setFile(stitchSetFolder() + filePath);
+    else
+        i->setFile(filePath);
+
+    i->setUid(uid);
+    i->setName(stName);
+    i->setDescription(desc);
+    i->setCategory(cat);
+    i->setWrongSide(ws);
+
     //create a uid for stitches that don't have one.
-    if(s->uid() == "") {
+    if(i->uid() == "") {
         QString sn = Settings::inst()->value("serialNumber").toString();
         QByteArray data = sn.toLatin1() + QString::number(QDateTime::currentDateTime().toMSecsSinceEpoch()).toLatin1();
         QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
         QString hashString = hash.toHex();
-        s->setUid(hashString);
+        i->setUid(hashString);
     }
 
-    addStitch(s);
+    addStitch(i);
 }
 
 void StitchSet::saveXmlFile(QString fileName)

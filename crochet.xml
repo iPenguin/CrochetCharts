@@ -859,7 +859,7 @@
         <name>loops</name>
         <icon>:/stitches/loops.svg</icon>
         <description>make 2 loops</description>
-        <category>Default</category>
+        <category>Centers</category>
         <ws>c7c2b416a291bc9786316c309a703e0b4cef88eb</ws>
     </stitch>
     <stitch>
@@ -867,7 +867,7 @@
         <name>adjustable ring</name>
         <icon>:/stitches/adjustable_ring.svg</icon>
         <description></description>
-        <category>Default</category>
+        <category>Centers</category>
         <ws>3ace19d213e1e17aa726446714ca351ba75eb93c</ws>
     </stitch>
     <stitch>
@@ -875,7 +875,7 @@
         <name>ring</name>
         <icon>:/stitches/ring.svg</icon>
         <description></description>
-        <category>Default</category>
+        <category>Centers</category>
         <ws>33ee737a6422d32997bb774e40937b0e560018b0</ws>
     </stitch>
 </stitch_set>

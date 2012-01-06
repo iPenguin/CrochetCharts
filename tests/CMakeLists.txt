@@ -12,6 +12,7 @@ file(GLOB crochet_test_qobject_headers "test*.h")
 set(crochet_app_h
     ../src/license.h
     ../src/cell.h
+    ../src/center.h
     ../src/stitch.h
     ../src/stitchset.h
     ../src/settings.h
@@ -23,6 +24,7 @@ set(crochet_app_h
 set(crochet_app_cpp
     ../src/license.cpp
     ../src/cell.cpp
+    ../src/center.cpp
     ../src/stitch.cpp
     ../src/stitchset.cpp
     ../src/settings.cpp
