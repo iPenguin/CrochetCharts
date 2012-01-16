@@ -1309,7 +1309,7 @@ void MainWindow::removeTab(int tabIndex)
     QMessageBox msgbox;
     
     if(ui->tabWidget->count() == 1) {
-        msgbox.setText(tr("A document must have at least 1 chart."));
+        msgbox.setText(tr("A document must have at least one (1) chart."));
         msgbox.setIcon(QMessageBox::Information);
         msgbox.exec();
         return;
