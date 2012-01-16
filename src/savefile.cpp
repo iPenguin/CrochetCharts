@@ -42,7 +42,10 @@ SaveFile::~SaveFile()
 
 SaveFile::FileError SaveFile::save()
 {
-
+    //Don't save a file without at least 1 tab.
+    if(mTabWidget->count() <= 0)
+        return SaveFile::Err_NoTabsToSave;
+    
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly)) {
         //TODO: some nice dialog to warn the user.

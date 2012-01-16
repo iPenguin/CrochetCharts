@@ -707,9 +707,12 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 bool MainWindow::safeToClose()
 {
-    if(isWindowModified())
-        return promptToSave();
-
+    //only prompt to save the file if it has tabs.
+    if(ui->tabWidget->count() > 0) {
+        if(isWindowModified())
+            return promptToSave();
+    }
+    
     return true;
 }
 
@@ -808,6 +811,13 @@ void MainWindow::fileSave()
         return;
     }
 
+    if(ui->tabWidget->count() <= 0) {
+        QMessageBox msgbox;
+        msgbox.setText(tr("%1 cannot save a document without at least one (1) chart.").arg(qAppName()));
+        msgbox.exec();
+        return;
+    }
+    
     if(mFile->fileName.isEmpty())
         fileSaveAs();
     else {
@@ -1297,10 +1307,19 @@ void MainWindow::removeTab(int tabIndex)
         return;
 
     QMessageBox msgbox;
-    msgbox.setWindowTitle(tr("Remove Chart"));
-    msgbox.setText(tr("Are you sure you want to remove this chart from the document?"));
+    
+    if(ui->tabWidget->count() == 1) {
+        msgbox.setText(tr("A document must have at least 1 chart."));
+        msgbox.setIcon(QMessageBox::Information);
+        msgbox.exec();
+        return;
+    }
+    
+    msgbox.setWindowTitle(tr("Delete Chart"));
+    msgbox.setText(tr("Are you sure you want to delete this chart from the document?"));
+    msgbox.setInformativeText(tr("Deleting a chart from the document is a permanent procedure."));
     msgbox.setIcon(QMessageBox::Question);
-    /*QPushButton* removeChart =*/ msgbox.addButton(tr("Remove the chart"), QMessageBox::AcceptRole);
+    /*QPushButton* removeChart =*/ msgbox.addButton(tr("Delete the chart"), QMessageBox::AcceptRole);
     QPushButton* keepChart = msgbox.addButton(tr("Keep the chart"), QMessageBox::RejectRole);
 
     msgbox.exec();
