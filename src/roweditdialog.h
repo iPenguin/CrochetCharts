@@ -50,6 +50,8 @@ private slots:
     
 private:
 
+    void removeEmptyRows();
+    
     Scene* mScene;
     TextView *mTextView;
     

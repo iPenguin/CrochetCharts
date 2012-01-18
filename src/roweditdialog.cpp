@@ -131,6 +131,8 @@ void RowEditDialog::updateRowList()
     ui->rowList->reset();
     ui->rowList->clear();
 
+    removeEmptyRows();
+    
     int rows = mScene->grid.count();
 
     for(int i = 0; i < rows; ++i) {
@@ -140,6 +142,22 @@ void RowEditDialog::updateRowList()
         ui->rowList->addItem(item);
     }
 
+}
+
+void RowEditDialog::removeEmptyRows()
+{
+    int rows = mScene->grid.count();
+    
+    for(int i = rows - 1 ; i >= 0; i--) {
+        int cols = mScene->grid.at(i).count();
+        for(int j = cols - 1; j >= 0; j--) {
+            if(mScene->grid[i][j] == 0)
+                mScene->grid[i].removeAt(j);
+        }
+        if(mScene->grid[i].count() == 0)
+            mScene->grid.removeAt(i);
+    }
+    
 }
 
 void RowEditDialog::updateRow()
