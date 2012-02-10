@@ -664,11 +664,12 @@ void MainWindow::helpAbout()
     QString email = Settings::inst()->value("email").toString();
     QString sn = Settings::inst()->value("serialNumber").toString();
 
-    QString dedication = tr("<p>This version is dedicated to my Nana (Apr 28, 1927 - Feb 21, 2011)</p>");
+    QString dedication = tr("<p></p>");
     aboutInfo.append(dedication);
     
     QString licenseInfo;
 
+#ifndef APPLE_APP_STORE
     if(Settings::inst()->isDemoVersion()) {
         licenseInfo = QString(tr("<p>This is a demo license granted to:<br />"
                               "Name: %1 %2<br />"
@@ -681,6 +682,9 @@ void MainWindow::helpAbout()
                               "Serial #: %4</p>")
                               .arg(fName).arg(lName).arg(email).arg(sn));
     }
+#else
+    licenseInfo = QString(tr("<p>This version is from the Apple App Store</p>"));
+#endif
 
     aboutInfo.append(licenseInfo);
     QMessageBox::about(this, tr("About Crochet Charts"), aboutInfo);

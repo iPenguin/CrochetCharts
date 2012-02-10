@@ -40,6 +40,7 @@ Settings::~Settings()
 
 void Settings::initDemoVersion()
 {
+#ifndef APPLE_APP_STORE
     QString license = value("license").toString();
     QString sn      = value("serialNumber").toString();
     QString email   = value("email").toString();
@@ -52,8 +53,9 @@ void Settings::initDemoVersion()
         mIsDemoVersion = true;
         return;
     }
-
+#endif
     mIsDemoVersion = false;
+
 }
 
 void Settings::trialVersionMessage(QWidget* parent)

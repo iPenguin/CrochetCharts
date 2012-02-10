@@ -87,6 +87,10 @@ if(APPLE)
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
 
+    if(SWS_APP)
+        set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS "APPLE_APP_STORE=1")
+    endif()
+
 else()
     install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
 endif()
