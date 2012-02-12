@@ -60,10 +60,12 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
+#ifndef APPLE_APP_STORE
     bool checkForUpdates = Settings::inst()->value("checkForUpdates").toBool();
     if(checkForUpdates)
         checkUpdates();
-    
+#endif
+
     setupStitchPalette();
     setupDocks();
     
@@ -363,6 +365,10 @@ void MainWindow::setupMenus()
     connect(ui->actionStitchLibrary, SIGNAL(triggered()), SLOT(toolsStitchLibrary()));
     connect(ui->actionCheckForUpdates, SIGNAL(triggered()), SLOT(toolsCheckForUpdates()));
     
+#ifdef APPLE_APP_STORE
+    ui->actionCheckForUpdates->setVisible(false);
+#endif
+
     //Help Menu
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(helpAbout()));
     connect(ui->actionCrochetHelp, SIGNAL(triggered()), SLOT(helpCrochetHelp()));
