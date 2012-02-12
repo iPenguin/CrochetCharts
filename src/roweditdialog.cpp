@@ -162,8 +162,12 @@ void RowEditDialog::removeEmptyRows()
 
 void RowEditDialog::updateRow()
 {
-
+    //if there aren't items selected on scene don't continue
     if(mScene->selectedItems().count() <= 0)
+        return;
+
+    //if there isn't a selected row to update don't continue
+    if(ui->rowList->selectedItems().count() <= 0)
         return;
     
     int r = ui->rowList->currentItem()->text().toInt();
