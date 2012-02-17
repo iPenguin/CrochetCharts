@@ -51,7 +51,7 @@ if(WIN32)
     set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
     set(crochet_win "${CMAKE_SOURCE_DIR}/crochet.rc")
 
-    set(QT_WIN_LIBS "C://Qt//4.7.3//bin")
+    set(QT_WIN_LIBS "C://Qt//4.7.4//bin")
     
     set(QT_LIBS_WINDOWS "${QT_WIN_LIBS}//QtSvg4.dll" "${QT_WIN_LIBS}//QtCore4.dll" "${QT_WIN_LIBS}//QtGui4.dll"
                         "${QT_WIN_LIBS}//QtNetwork4.dll" "${QT_WIN_LIBS}//QtXml4.dll")
