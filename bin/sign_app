@@ -1,0 +1,61 @@
+#!/usr/bin/python
+#
+#This script will run rsync and keep SaveLastXDays
+#worth of incremental backups.
+import datetime
+import time
+import os
+import sys
+import getopt
+
+########## Configuration Info ##################
+
+application = "CrochetCharts.app"
+
+fileList = [ "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore",
+            "/Contents/Frameworks/QtDeclarative.framework/Versions/4/QtDeclarative",
+            "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui",
+            "/Contents/Frameworks/QtNetwork.framework/Versions/4/QtNetwork",
+            "/Contents/Frameworks/QtScript.framework/Versions/4/QtScript",
+            "/Contents/Frameworks/QtSql.framework/Versions/4/QtSql",
+            "/Contents/Frameworks/QtWebkit.framework/Versions/4/QtWebkit",
+            "/Contents/Plugins/accessible/libqtaccessiblewidgets.dylib",
+            "/Contents/Plugins/bearer/libqcorewlanbearer.dylib",
+            "/Contents/Plugins/bearer/libqgenericbearer.dylib",
+            "/Contents/Plugins/codecs/libqcncodecs.dylib",
+            "/Contents/Plugins/codecs/libqjpcodecs.dylib",
+            "/Contents/Plugins/codecs/libqkrcodecs.dylib",
+            "/Contents/Plugins/codecs/libqtwcodecs.dylib",
+            "/Contents/Plugins/imageformats/libqgif.dylib",
+            "/Contents/Plugins/imageformats/libqico.dylib",
+            "/Contents/Plugins/imageformats/libqjpeg.dylib",
+            "/Contents/Plugins/imageformats/libqmng.dylib",
+            "/Contents/Plugins/imageformats/libqtiff.dylib",
+            "/Contents/Plugins/qmltooling/libqmldbg_tcp.dylib",
+            "/Contents/Plugins/graphicssystems/libqtracegraphicssystem.dylib",
+            "/Contents/MacOS/CrochetCharts"]
+
+dateFormat = "%Y%m%d"
+
+certName = "3rd Party Mac Developer Application: Brian Milco"
+codeSign = "/usr/bin/codesign"
+
+################################################
+
+opts, args = getopt.getopt(sys.argv[1:], "f:")
+
+for o, a in opts:
+    if o == "-f":
+        output = a
+
+print "Sign application files: ",
+for file in fileList:
+
+    today = datetime.date.today()
+
+    os.system(codeSign + " -f -s " + certName + " " + output + "/" + file)
+
+
+os.system(codeSign + " -f -s " + certName + " " + output)
+
+print "Done"
