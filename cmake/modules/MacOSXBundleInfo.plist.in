@@ -8,10 +8,10 @@
 	<string>${PROJECT_NAME}</string>
 	<key>CFBundleGetInfoString</key>
 	<string>${PROJECT_DESCRIPTION}</string>
-	<key>CFBundleIconFile</key>
+        <key>CFBundleIconFile</key>
         <string>${PROJECT_MACOSX_ICON}</string>
 	<key>CFBundleIdentifier</key>
-	<string>${MACOSX_BUNGLE_GUI_IDENTIFIER}</string>
+	<string>${MACOSX_BUNDLE_GUI_IDENTIFIER}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
@@ -28,8 +28,10 @@
 	<string>${MACOSX_BUNDLE_BUNDLE_VERSION}</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
-	<key>LSRequiresCarbon</key>
-	<true/>
+        <key>LSApplicationCategoryType</key>
+        <string>public.app-category.graphics-design</string>
+        <key>LSMinimumSystemVersion</key>
+        <string>10.5.0</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>
 	<key>CFBundleDocumentTypes</key>

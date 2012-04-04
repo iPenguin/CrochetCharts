@@ -689,7 +689,7 @@ void MainWindow::helpAbout()
                               .arg(fName).arg(lName).arg(email).arg(sn));
     }
 #else
-    licenseInfo = QString(tr("<p>This version is from the Apple App Store</p>"));
+    licenseInfo = QString(tr("<p>This version was downloaded from the Apple App Store</p>"));
 #endif
 
     aboutInfo.append(licenseInfo);

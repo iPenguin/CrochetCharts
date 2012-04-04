@@ -1,5 +1,19 @@
 #!/bin/bash
 
+FLAG="-DSWS_APP=OFF"
+
+while getopts ":a" opt; do
+  case $opt in
+    a)
+      echo "Apple Mac app store release"
+      FLAG="-DSWS_APP=ON"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+
 PLATFORM=`uname -a | awk '{ print $1 }'`
 
 if [ $PLATFORM == "Darwin" ]; then
@@ -12,7 +26,8 @@ if [ $PLATFORM == "Darwin" ]; then
     mkdir -p ~/crochet.git/build
     cd ~/crochet.git/build
 
-    cmake .. -DSWS_DOCS=ON -DCMAKE_BUILD_TYPE=Release && make && cpack
+    cmake .. -DSWS_DOCS=ON -DCMAKE_BUILD_TYPE=Release $FLAG && make && cpack
+
 elif [ $PLATFORM == "Linux" ]; then
     
     mkdir -p ~/crochet.git/build
