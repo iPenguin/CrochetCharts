@@ -123,6 +123,8 @@ void Settings::setupValueList() {
     
     mValueList["generateTextRepeats"] = QVariant(true);
     mValueList["showChartCenter"] = QVariant(false);
+
+    mValueList["pasteOffset"] = QVariant(tr("Down and Right"));
     
     //charts options
     mValueList["defaultStitch"] = QVariant("ch");
@@ -162,6 +164,12 @@ void Settings::addRecentFile(QString fileName)
     if(mRecentFiles.contains(fileName))
         mRecentFiles.removeAll(fileName);
     mRecentFiles.prepend(fileName);
+    setValue("recentFiles", QVariant(mRecentFiles));
+}
+
+void Settings::setRecentFiles(QStringList files)
+{
+    mRecentFiles = files;
     setValue("recentFiles", QVariant(mRecentFiles));
 }
 

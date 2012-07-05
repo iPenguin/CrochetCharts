@@ -8,6 +8,8 @@
 #include <QString>
 #include <QList>
 #include <QObject>
+#include <QMap>
+#include <QColor>
 
 class QSvgRenderer;
 class QPixmap;
@@ -18,11 +20,15 @@ class Stitch : public QObject
     friend class TestStitch;
 public:
 
-    enum StitchParts { Name = 0, Icon, Description, Category, WrongSide };
-    
+    enum StitchParts { Name = 0, Icon, Description, Category, WrongSide, Checkbox, Uid };
+
     Stitch(QObject *parent = 0);
     ~Stitch();
 
+    enum { Type = 1000 };
+    int type () const { return Stitch::Type; }
+
+    QString uid() const { return mUid; }
     QString name() const { return mName; }
     QString file() const { return mFile; }
     QString description() const { return mDescription; }
@@ -35,31 +41,38 @@ public:
     bool isSvg();
 
     QPixmap* renderPixmap();
-    QSvgRenderer* renderSvg(bool useAltRenderer = false);
+    QSvgRenderer* renderSvg(QColor color = QColor(Qt::black));
 
     //reload the svg with new colors.
     void reloadIcon();
 
+    /**
+     *used to track individual stitches as they are moved to the overlay.
+     */
     bool isBuiltIn;
     
 protected:
+    void setUid(QString id) { mUid = id; }
     void setName(QString n) { mName = n; }
     void setFile(QString f);
     void setDescription(QString desc) { mDescription = desc; }
     void setCategory(QString cat) { mCategory = cat; }
     void setWrongSide(QString ws) { mWrongSide = ws; }
+
+    void addStitchColor(QString color);
     
 private:
     void setupSvgFiles();
     
+    QString mUid;
     QString mName;
     QString mFile;
     QString mDescription;
     QString mCategory;
     QString mWrongSide;
 
-    QSvgRenderer* mSvgRenderer;
-    QSvgRenderer* mSvgRendererAlt;
+    QMap<QString, QSvgRenderer*> mRenderers;
+
     QPixmap* mPixmap;
 };
 

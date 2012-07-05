@@ -44,8 +44,9 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     mAlignDock(0),
     mRowsDock(0),
     mMirrorDock(0),
+    mPropertiesDock(0),
     mEditMode(10),
-    mStitch("ch"),
+    mStitchUid("d3d95f053d5c54f93f466ef1fd98c8941754b37b"), //ch = d3d95f053d5c54f93f466ef1fd98c8941754b37b
     mFgColor(QColor(Qt::black)),
     mBgColor(QColor(Qt::white))
 {
@@ -69,7 +70,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     setupStitchPalette();
     setupDocks();
     
-    mFile = new SaveFile(this);
+    mFile = new FileFactory(this);
     loadFiles(fileNames);
 
     setApplicationTitle();
@@ -236,6 +237,10 @@ void MainWindow::setupDocks()
     connect(mMirrorDock, SIGNAL(mirror(int)), SLOT(mirror(int)));
     connect(mMirrorDock, SIGNAL(rotate(qreal)), SLOT(rotate(qreal)));
     connect(mMirrorDock, SIGNAL(visibilityChanged(bool)), ui->actionShowMirrorDock, SLOT(setChecked(bool)));
+
+    mPropertiesDock = new PropertiesDialog(ui->tabWidget, this);
+    connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
+    
 }
 
 void MainWindow::setupMenus()
@@ -320,6 +325,8 @@ void MainWindow::setupMenus()
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out", QIcon(":/images/zoomout.png")));
     ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
+
+    connect(ui->actionShowProperties, SIGNAL(triggered()), SLOT(viewShowProperties()));
     
     //Modes menu
     connect(ui->menuModes, SIGNAL(aboutToShow()), SLOT(menuModesAboutToShow()));
@@ -339,7 +346,6 @@ void MainWindow::setupMenus()
     connect(ui->actionRemoveTab, SIGNAL(triggered()), SLOT(removeCurrentTab()));
 
     connect(ui->actionShowChartCenter, SIGNAL(triggered()), SLOT(chartsShowChartCenter()));
-    connect(ui->actionShowQuarterLines, SIGNAL(triggered()), SLOT(chartsShowQuarterLines()));
     
     ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
     
@@ -358,6 +364,9 @@ void MainWindow::setupMenus()
     connect(ui->actionGroup, SIGNAL(triggered()), SLOT(group()));
     connect(ui->actionUngroup, SIGNAL(triggered()), SLOT(ungroup()));
 
+    //stitches menu
+    connect(ui->menuStitches, SIGNAL(aboutToShow()), SLOT(menuStitchesAboutToShow()));
+    
     //Tools Menu
     connect(ui->menuTools, SIGNAL(aboutToShow()), SLOT(menuToolsAboutToShow()));
     connect(ui->actionOptions, SIGNAL(triggered()), SLOT(toolsOptions()));
@@ -452,6 +461,7 @@ void MainWindow::updateMenuItems()
     menuViewAboutToShow();
     menuModesAboutToShow();
     menuChartAboutToShow();
+    menuStitchesAboutToShow();
 }
 
 void MainWindow::filePrint()
@@ -479,7 +489,7 @@ void MainWindow::print(QPrinter* printer)
     QPainter* p = new QPainter();
     
     p->begin(printer);
-    sws_debug(QString::number(tabCount));
+
     bool firstPass = true;
     for(int i = 0; i < tabCount; ++i) {
         if(!firstPass)
@@ -586,11 +596,18 @@ void MainWindow::selectStitch(QModelIndex index)
 
     if(stitch.isEmpty())
         return;
+
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
         CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-        if(tab)
-            tab->setEditStitch(stitch);
+        if(tab) {
+            Stitch* s = StitchLibrary::inst()->findStitchByName(stitch);
+            if(!s)
+                return;
+
+            QString uid = s->uid();
+            tab->setEditStitchUid(uid);
+        }
     }
     setEditMode(10);
 }
@@ -645,7 +662,7 @@ void MainWindow::helpCrochetHelp()
 #endif
 
 #ifdef Q_WS_X11
-    file = QString("file://%1/../share/CrochetCharts/CrochetCharts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
+    file = QString("%1/../share/CrochetCharts/CrochetCharts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
     QDesktopServices::openUrl(QUrl::fromLocalFile(file));
 #endif //Q_WS_WIN
 
@@ -780,7 +797,7 @@ void MainWindow::fileOpen()
 {
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
     QString fileName = QFileDialog::getOpenFileName(this,
-         tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern)"));
+         tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern);; All files (*.*)"));
 
     if(fileName.isEmpty() || fileName.isNull())
         return;
@@ -832,8 +849,8 @@ void MainWindow::fileSave()
         fileSaveAs();
     else {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-        SaveFile::FileError err = mFile->save();
-        if(err != SaveFile::No_Error)
+        FileFactory::FileError err = mFile->save();
+        if(err != FileFactory::No_Error)
             qWarning() << "There was an error saving the file: " << err;
         QApplication::restoreOverrideCursor();
     }
@@ -857,6 +874,10 @@ void MainWindow::fileSaveAs()
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+    if(!fileName.endsWith(".pattern", Qt::CaseInsensitive)) {
+        fileName += ".pattern";
+    }
+    
     //update the list of open files.
     if(Settings::inst()->files.contains(mFile->fileName.toLower()))
         Settings::inst()->files.remove(mFile->fileName.toLower());
@@ -920,10 +941,18 @@ void MainWindow::menuViewAboutToShow()
     bool state = hasTab();
     ui->actionZoomIn->setEnabled(state);
     ui->actionZoomOut->setEnabled(state);
+    
+    ui->actionShowRowsDock->setChecked(mRowsDock->isVisible());
+    ui->actionShowProperties->setChecked(mPropertiesDock->isVisible());
+    
+}
+
+void MainWindow::menuStitchesAboutToShow()
+{
 
     ui->actionShowAlignDock->setChecked(mAlignDock->isVisible());
-    ui->actionShowRowsDock->setChecked(mRowsDock->isVisible());
     ui->actionShowMirrorDock->setChecked(mMirrorDock->isVisible());
+    
 }
 
 void MainWindow::fileNew()
@@ -1013,7 +1042,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    CrochetTab* tab = new CrochetTab(style, mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
+    CrochetTab* tab = new CrochetTab(style, mEditMode, mStitchUid, mFgColor, mBgColor, ui->tabWidget);
     tab->setPatternStitches(&mPatternStitches);
     tab->setPatternColors(&mPatternColors);
 
@@ -1071,6 +1100,11 @@ void MainWindow::viewShowPatternStitches()
 void MainWindow::viewShowUndoHistory()
 {
     mUndoDock->setVisible(ui->actionShowUndoHistory->isChecked());
+}
+
+void MainWindow::viewShowProperties()
+{
+    mPropertiesDock->setVisible(ui->actionShowProperties->isChecked());
 }
 
 void MainWindow::viewShowEditModeToolbar()
@@ -1181,15 +1215,12 @@ void MainWindow::menuChartAboutToShow()
     ui->actionRemoveTab->setEnabled(state);
     ui->actionEditName->setEnabled(state);
     ui->actionShowChartCenter->setEnabled(state);
-    ui->actionShowQuarterLines->setEnabled(state);
 
     CrochetTab* tab = curCrochetTab();
     if(tab) {
         ui->actionShowChartCenter->setChecked(tab->hasChartCenter());
-        ui->actionShowQuarterLines->setChecked(tab->hasQuarterLines());
     } else {
         ui->actionShowChartCenter->setChecked(false);
-        ui->actionShowQuarterLines->setChecked(false);
     }
 
 }
@@ -1202,14 +1233,6 @@ void MainWindow::chartsShowChartCenter()
         tab->setChartCenter(ui->actionShowChartCenter->isChecked());
     }
 
-}
-
-void MainWindow::chartsShowQuarterLines()
-{
-    CrochetTab* tab = curCrochetTab();
-    if(tab) {
-        tab->setQuarterLines(ui->actionShowQuarterLines->isChecked());
-    }
 }
 
 void MainWindow::chartEditName()
@@ -1359,7 +1382,7 @@ void MainWindow::updatePatternStitches()
         i.next();
         QList<QListWidgetItem*> items = ui->patternStitches->findItems(i.key(), Qt::MatchExactly);
         if(items.count() == 0) {
-            Stitch* s = StitchLibrary::inst()->findStitch(i.key());
+            Stitch* s = StitchLibrary::inst()->findStitchByName(i.key());
             QPixmap pix = QPixmap(QSize(32, 32));
             pix.load(s->file());
             QIcon icon = QIcon(pix);

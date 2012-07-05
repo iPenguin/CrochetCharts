@@ -22,7 +22,7 @@
 #include <QLayout>
 #include <QClipboard>
 
-CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch,
+CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitchUid,
                        QColor defFgColor, QColor defBgColor, QWidget* parent)
         : QWidget(parent),
         ui(new Ui::OptionsBar),
@@ -57,7 +57,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     mView->centerOn(pt.x(), pt.y());
 
     mScene->setEditMode((Scene::EditMode)defEditMode);
-    mScene->setEditStitch(defStitch);
+    mScene->setEditStitchUid(defStitchUid);
     mScene->setEditFgColor(defFgColor);
     mScene->setEditBgColor(defBgColor);
     
@@ -236,9 +236,9 @@ void CrochetTab::setEditFgColor(QColor color)
     mScene->setEditFgColor(color);
 }
 
-void CrochetTab::setEditStitch(QString stitch)
+void CrochetTab::setEditStitchUid(QString uid)
 {
-    mScene->setEditStitch(stitch);
+    mScene->setEditStitchUid(uid);
 }
 
 void CrochetTab::copyInstructions()
@@ -359,13 +359,15 @@ void CrochetTab::setChartCenter(bool state)
     mScene->setShowChartCenter(state);
 }
 
-bool CrochetTab::hasQuarterLines()
+bool CrochetTab::hasGuidelines()
 {
-    return mScene->showQuarterLines();
+    if(mScene->showGuidelines() != tr("None"))
+        return true;
+    return false;
 }
 
-void CrochetTab::setQuarterLines(bool state)
+void CrochetTab::setShowGuidelines(QString guide)
 {
-    mScene->setShowQuarterLines(state);
+    mScene->setShowGuidelines(guide);
 }
 
