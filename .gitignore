@@ -6,3 +6,4 @@ CMakeLists.txt.user*
 .swp.*
 *.log
 core
+.DS_Store
