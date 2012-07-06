@@ -274,6 +274,7 @@ void Scene::updateRubberBand(int dx, int dy)
 
 void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent* e)
 {
+
     QMenu menu;
     QAction* copyAction = new QAction(tr("Copy"), 0);
     QAction* cutAction = new QAction(tr("Cut"), 0);
@@ -286,7 +287,9 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent* e)
     menu.addAction(copyAction);
     menu.addAction(cutAction);
     menu.addAction(pasteAction);
+
     menu.exec(e->screenPos());
+
     e->accept();
 }
 
@@ -466,16 +469,14 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 {
-    if(e->buttons() & Qt::RightButton)
-        return;
-    
+
     if(selectedItems().count() > 0)
         mHasSelection = true;
     
     if(mHasSelection && e->modifiers() == Qt::ControlModifier)
         mSelectionPath = selectionArea();
-
-    QGraphicsScene::mousePressEvent(e);
+    if(e->buttons() & Qt::LeftButton)
+        QGraphicsScene::mousePressEvent(e);
 
     //FIXME: there has to be a better way to keep the current selection.
     if(mHasSelection && e->modifiers() == Qt::ControlModifier)
