@@ -10,6 +10,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_P
 include(MacroOutOfSourceBuild)
 macro_ensure_out_of_source_build("${SWS_PROJECT_NAME} requires an out of source build.")
 
+if(APPLE)
+    set(QT_QMAKE_EXECUTABLE "/Users/brian/QtSDK/Desktop/Qt/4.8.0/gcc/bin/qmake")
+endif()
+
 set(CMAKE_CONFIGURATION_TYPES Debug Release Profile CACHE TYPE INTERNAL FORCE)
 if(CMAKE_BUILD_TYPE STREQUAL "")
     set(CMAKE_BUILD_TYPE "Debug")
@@ -38,7 +42,7 @@ option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed
 option(SWS_DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
 option(SWS_APP "Create an apple app store version" OFF)
-set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
+set(CMAKE_OSX_ARCHITECTURES "x86_64") #"i386;x86_64")
 
 message("-------------------------------------------------------")
 message(STATUS ${SWS_PROJECT_NAME} " Version: " ${SWS_VERSION})
