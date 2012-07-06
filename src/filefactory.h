@@ -27,7 +27,7 @@ public:
 
     enum FileVersion { Version_1_0 = 100, Version_1_2 = 102 };
     enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion,
-                     Err_OpeningFile, Err_GettingFileContents };
+                     Err_OpeningFile, Err_GettingFileContents, Err_NoTabsToSave };
 
     FileFactory(QWidget* parent);
 

@@ -110,7 +110,7 @@ FileFactory::FileError FileFactory::save()
 {
     //Don't save a file without at least 1 tab.
     if(mTabWidget->count() <= 0)
-        return SaveFile::Err_NoTabsToSave;
+        return FileFactory::Err_NoTabsToSave;
     
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly)) {
