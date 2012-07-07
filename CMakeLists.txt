@@ -1,14 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
-project(CrochetCharts)
-
-set(SWS_PROJECT_NAME "Crochet Charts")
+project("Crochet Charts")
 
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable...
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 #Forces out of source builds just in case.
 include(MacroOutOfSourceBuild)
-macro_ensure_out_of_source_build("${SWS_PROJECT_NAME} requires an out of source build.")
+macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build.")
 
 if(APPLE)
     set(QT_QMAKE_EXECUTABLE "/Users/brian/QtSDK/Desktop/Qt/4.8.0/gcc/bin/qmake")
@@ -45,7 +43,7 @@ option(SWS_APP "Create an apple app store version" OFF)
 set(CMAKE_OSX_ARCHITECTURES "x86_64") #"i386;x86_64")
 
 message("-------------------------------------------------------")
-message(STATUS ${SWS_PROJECT_NAME} " Version: " ${SWS_VERSION})
+message(STATUS ${PROJECT_NAME} " Version: " ${SWS_VERSION})
 message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
 message(STATUS "Create Documentation: " ${SWS_DOCS})
 message(STATUS "Force 32bit: " ${FORCE_32BIT})
@@ -60,19 +58,19 @@ if(FORCE_32BIT)
     set(extra_link_flags "-m elf_i386")
 endif()
 
-set(CMAKE_C_FLAGS "${extra_build_flags} -g -ggdb -W -Wall") #-ansi -pedantic
+set(CMAKE_C_FLAGS "${extra_build_flags} -g -gdwarf-2 -W -Wall -Qunused-arguments -fcolor-diagnostics") #-ansi -pedantic
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 set(CMAKE_EXE_LINKER_FLAGS " ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -ggdb -W -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
+set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -gdwarf-2 -W -Wall -Qunused-arguments -fcolor-diagnostics")
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -W -Wall -O2 -s")
+set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -gdwarf-2 -W -Wall -O2 -s -Qunused-arguments -fcolor-diagnostics")
 set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_PROFILE "${extra_build_flags} -g -ggdb -pg -W -Wall")
+set(CMAKE_C_FLAGS_PROFILE "${extra_build_flags} -g -gdwarf-2 -pg -W -Wall -Qunused-arguments -fcolor-diagnostics")
 set(CMAKE_CXX_FLAGS_PROFILE ${CMAKE_C_FLAGS_PROFILE})
 set(CMAKE_EXE_LINKER_FLAGS_PROFILE "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
@@ -92,7 +90,6 @@ include(${QT_USE_FILE})
 
 add_definitions(${QT_DEFINITIONS})
 
-set(PRJ_NAME "CrochetCharts")
 ###################################################################################
 #CPack includes to create installers
 ###################################################################################
