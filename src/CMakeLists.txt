@@ -52,10 +52,11 @@ if(WIN32)
     set(crochet_win "${CMAKE_SOURCE_DIR}/crochet.rc")
 
     set(QT_WIN_LIBS "C://qtsdk//Desktop//Qt//4.8.1//mingw//bin")
+    set(MINGW_LIBS "C://QtSDK//mingw//bin")
     
     set(QT_LIBS_WINDOWS "${QT_WIN_LIBS}//QtSvg4.dll" "${QT_WIN_LIBS}//QtCore4.dll" "${QT_WIN_LIBS}//QtGui4.dll"
                         "${QT_WIN_LIBS}//QtNetwork4.dll" "${QT_WIN_LIBS}//QtXml4.dll")
-    set(QT_DEPS_WINDOWS "${QT_WIN_LIBS}//libgcc_s_dw2-1.dll" "${QT_WIN_LIBS}//mingwm10.dll"
+    set(QT_DEPS_WINDOWS "${MINGW_LIBS}//libgcc_s_dw2-1.dll" "${MINGW_LIBS}//mingwm10.dll"
                         "${CMAKE_SOURCE_DIR}/resources/qt.conf")
 
     set(QT_PLUGINS_WINDOWS "${QT_PLUGINS_DIR}/imageformats" "${QT_PLUGINS_DIR}/accessible" "${QT_PLUGINS_DIR}/iconengines")
