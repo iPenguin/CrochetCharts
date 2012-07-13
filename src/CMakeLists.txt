@@ -68,14 +68,14 @@ else()
 endif()
 
 if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_executable(${PROJECT_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+    add_executable(${EXE_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 else()
-    add_executable(${PROJECT_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+    add_executable(${EXE_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 endif()
 
-target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES})
+target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})
 
 if(APPLE)
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
@@ -99,7 +99,11 @@ if(APPLE)
     endif()
 
 else()
-    install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
+
+    install(TARGETS ${EXE_NAME} BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
+    if(WIN32)
+        set_property(TARGET ${EXE_NAME} PROPERTY OUTPUT_NAME "${PROJECT_NAME}")
+    endif()
 endif()
 
 if(WIN32)
