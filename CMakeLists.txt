@@ -40,7 +40,7 @@ option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed
 option(SWS_DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
 option(SWS_APP "Create an apple app store version" OFF)
-set(CMAKE_OSX_ARCHITECTURES "x86_64") #"i386;x86_64")
+set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
 
 message("-------------------------------------------------------")
 message(STATUS ${PROJECT_NAME} " Version: " ${SWS_VERSION})
