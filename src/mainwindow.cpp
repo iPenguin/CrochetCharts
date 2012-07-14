@@ -640,7 +640,7 @@ void MainWindow::helpCrochetHelp()
 #endif
 
 #ifdef Q_WS_MAC
-    file = QString("file://%1/Crochet_Charts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
+    file = QString("file://%1/Crochet Charts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
     QDesktopServices::openUrl(QUrl::fromLocalFile(file));
 #endif
 
