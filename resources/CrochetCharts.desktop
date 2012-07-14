@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Crochet Charts
-Version=1.0
+Version=1.1.3
 Comment=Design software for crochet charts
 TryExec=CrochetCharts
 Exec=CrochetCharts %F
@@ -9,3 +9,4 @@ Icon=CrochetCharts
 Type=Application
 Categories=Graphics;
 MimeType=application/x-crochetcharts-pattern;
+

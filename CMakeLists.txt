@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 2.8)
-project("Crochet Charts")
+if(APPLE OR WIN32)
+    project("Crochet Charts")
+else()
+    project("CrochetCharts")
+endif()
 
-if(WIN32)
+if(APPLE)
+    set(EXE_NAME ${PROJECT_NAME})
+elseif(WIN32)
     set(EXE_NAME "Crochet_Charts")
 else()
-    set(EXE_NAME ${PROJECT_NAME})
+    set(EXE_NAME "CrochetCharts")
 endif()
 
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable...
