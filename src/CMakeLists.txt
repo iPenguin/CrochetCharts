@@ -19,10 +19,11 @@ if(WIN32)
     set(crochet_win "${CMAKE_SOURCE_DIR}/crochet.rc")
 
     set(QT_WIN_LIBS "C://qtsdk//Desktop//Qt//4.8.1//mingw//bin")
+    set(MINGW_LIBS "C://QtSDK//mingw//bin")
     
     set(QT_LIBS_WINDOWS "${QT_WIN_LIBS}//QtSvg4.dll" "${QT_WIN_LIBS}//QtCore4.dll" "${QT_WIN_LIBS}//QtGui4.dll"
                         "${QT_WIN_LIBS}//QtNetwork4.dll" "${QT_WIN_LIBS}//QtXml4.dll")
-    set(QT_DEPS_WINDOWS "${QT_WIN_LIBS}//libgcc_s_dw2-1.dll" "${QT_WIN_LIBS}//mingwm10.dll"
+    set(QT_DEPS_WINDOWS "${MINGW_LIBS}//libgcc_s_dw2-1.dll" "${MINGW_LIBS}//mingwm10.dll"
                         "${CMAKE_SOURCE_DIR}/resources/qt.conf")
 
     set(QT_PLUGINS_WINDOWS "${QT_PLUGINS_DIR}/imageformats" "${QT_PLUGINS_DIR}/accessible" "${QT_PLUGINS_DIR}/iconengines")
@@ -34,14 +35,14 @@ else()
 endif()
 
 if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_executable(${PROJECT_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_rcc_srcs}
+    add_executable(${EXE_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 else()
-    add_executable(${PROJECT_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+    add_executable(${EXE_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 endif()
 
-target_link_libraries(${PROJECT_NAME} ${QT_LIBRARIES})
+target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})
 
 if(APPLE)
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
@@ -56,7 +57,7 @@ if(APPLE)
     
     install(CODE "
         execute_process(
-            COMMAND \"@CMAKE_SOURCE_DIR@/bin/sign_app @CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@SWS_VERSION_SHORT@/@SWS_PROJECT_NAME@.app/\"
+            COMMAND \"@CMAKE_SOURCE_DIR@/bin/sign_app @CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@SWS_VERSION_SHORT@/@PROJECT_NAME@.app/\"
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
 
@@ -65,7 +66,11 @@ if(APPLE)
     endif()
 
 else()
-    install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
+
+    install(TARGETS ${EXE_NAME} BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)
+    if(WIN32)
+        set_property(TARGET ${EXE_NAME} PROPERTY OUTPUT_NAME "${PROJECT_NAME}")
+    endif()
 endif()
 
 if(WIN32)

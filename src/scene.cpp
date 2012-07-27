@@ -1814,6 +1814,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             QTransform trans;
 
             stream >> uid >> bgColor >> angle >> scale >> transPoint >> pos >> trans;
+            
             pos += offSet;
             AddCell* addCmd = new AddCell(this, pos);
             undoStack()->push(addCmd);

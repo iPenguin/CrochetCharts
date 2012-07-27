@@ -21,8 +21,8 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${SWS_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${SWS_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${SWS_VERSION_PATCH})
 set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
-set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${SWS_PROJECT_NAME}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "${SWS_PROJECT_NAME}")
+set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${PROJECT_NAME}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 
 #FIXME: use the FindDoxygen.cmake module.
 if(DOXYGEN)
@@ -39,8 +39,8 @@ SET(plugin_dest_dir bin)
 SET(qtconf_dest_dir bin)
 SET(APPS "@CMAKE_INSTALL_PREFIX@/bin/${PROJECT_NAME}")
 IF(APPLE)
-  SET(plugin_dest_dir "${PRJ_NAME}.app/Contents/PlugIns")
-  SET(qtconf_dest_dir "${PRJ_NAME}.app/Contents/Resources")
+  SET(plugin_dest_dir "${PROJECT_NAME}.app/Contents/PlugIns")
+  SET(qtconf_dest_dir "${PROJECT_NAME}.app/Contents/Resources")
   SET(APPS "@CMAKE_CURRENT_BINARY_DIR@/${PROJECT_NAME}")
 ENDIF(APPLE)
 IF(WIN32)
@@ -52,20 +52,20 @@ if(WIN32)
 
     set(CPACK_PACKAGE_ICON "C:\\\\Documents and Settings\\\\Brian Milco\\\\My Documents\\\\crochet.git\\\\images\\\\installer.bmp")
     set(CPACK_GENERATOR "NSIS")
-    set(CPACK_NSIS_PACKAGE_NAME "${SWS_PROJECT_NAME}")
-    set(CPACK_NSIS_DISPLAY_NAME "${SWS_PROJECT_NAME}")
+    set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
+    set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_CONTACT "${CPACK_PACKAGE_CONTACT}")
     set(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "${PROJECT_NAME}-${SWS_VERSION_MAJOR}.${SWS_VERSION_MINOR}")
 
     set(CPACK_CMAKE_MODULES_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/")
 
     set(CPACK_NSIS_MENU_LINKS "docs/homepage.html" "Homepage for ${PROJECT_VENDOR}"
-                              "bin/${PROJECT_NAME}_User_Guide_${SWS_VERSION_SHORT}.pdf" "${SWS_PROJECT_NAME} Help")
+                              "bin/${PROJECT_NAME}_User_Guide_${SWS_VERSION_SHORT}.pdf" "${PROJECT_NAME} Help")
     # this doesn't work for the NSIS installer
     set(CPACK_CREATE_DESKTOP_LINKS "${PROJECT_NAME}.exe")
 
-    #set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${SWS_PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'"
-    #                                  "CreateShortCut '\$DESKTOP\\\\${SWS_PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
+    #set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut '\$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'"
+    #                                  "CreateShortCut '\$DESKTOP\\\\${PROJECT_NAME}.lnk' '\$INSTDIR\\\\${PROJECT_NAME}.exe'")
     # Icon in the add/remove control panel. Must be an .exe file
     set(CPACK_NSIS_INSTALLED_ICON_NAME "${PROJECT_NAME}.exe")
 
@@ -82,13 +82,13 @@ elseif(APPLE)
     set(CPACK_BUNDLE_PLIST "${CMAKE_BINARY_DIR}/Info.plist")
     set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
     
-    set(CPACK_DMG_VOLUME_NAME "${SWS_PROJECT_NAME}")
+    set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
     set(CPACK_DMG_DS_STORE "${CMAKE_SOURCE_DIR}/resources/mac/MacDmgDsStore")
     set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.png")
 
     set(CPACK_OSX_PACKAGE_VERSION "10.5") #min package version
     
-    set(MACOSX_BUNDLE_LONG_VERSION_STRING "${SWS_PROJECT_NAME} version ${SWS_VERSION}")
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${SWS_VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
 
@@ -96,7 +96,7 @@ elseif(APPLE)
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
 #plutil command line utility to edit plist files.
 #http://rixstep.com/2/20060901,00.shtml
-    set(MACOSX_BUNDLE_INFO_STRING "${SWS_PROJECT_NAME} - version ${PROJECT_VERSION}")
+    set(MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME} - version ${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
     set_source_files_properties("${MACOSX_BUNDLE_ICON_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)

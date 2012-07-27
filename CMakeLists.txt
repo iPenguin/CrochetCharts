@@ -1,17 +1,27 @@
 cmake_minimum_required(VERSION 2.8.6)
-project(CrochetCharts)
+if(APPLE OR WIN32)
+    project("Crochet Charts")
+else()
+    project("CrochetCharts")
+endif()
 
-set(SWS_PROJECT_NAME "Crochet Charts")
+if(APPLE)
+    set(EXE_NAME ${PROJECT_NAME})
+elseif(WIN32)
+    set(EXE_NAME "Crochet_Charts")
+else()
+    set(EXE_NAME "CrochetCharts")
+endif()
 
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable...
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 #Forces out of source builds just in case.
 include(MacroOutOfSourceBuild)
-macro_ensure_out_of_source_build("${SWS_PROJECT_NAME} requires an out of source build.")
+macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source build.")
 
 if(APPLE)
-    set(QT_QMAKE_EXECUTABLE "/Users/brian/QtSDK/Desktop/Qt/4.8.0/gcc/bin/qmake")
+    set(QT_QMAKE_EXECUTABLE "/Users/brian/QtSDK/Desktop/Qt/4.8.1/gcc/bin/qmake")
 endif()
 
 set(CMAKE_CONFIGURATION_TYPES Debug Release Profile CACHE TYPE INTERNAL FORCE)
@@ -42,10 +52,10 @@ option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed
 option(SWS_DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
 option(SWS_APP "Create an apple app store version" OFF)
-set(CMAKE_OSX_ARCHITECTURES "x86_64") #"i386;x86_64")
+set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
 
 message("-------------------------------------------------------")
-message(STATUS ${SWS_PROJECT_NAME} " Version: " ${SWS_VERSION})
+message(STATUS ${PROJECT_NAME} " Version: " ${SWS_VERSION})
 message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
 message(STATUS "Create Documentation: " ${SWS_DOCS})
 message(STATUS "Force 32bit: " ${FORCE_32BIT})
@@ -60,11 +70,11 @@ if(FORCE_32BIT)
     set(extra_link_flags "-m elf_i386")
 endif()
 
-set(CMAKE_C_FLAGS "${extra_build_flags} -g -ggdb -W -Wall") #-ansi -pedantic
+set(CMAKE_C_FLAGS "${extra_build_flags} -g -ggdb -W -Wall")  #-g -gdwarf-2 -W -Wall -Qunused-arguments -fcolor-diagnostics") #-ansi -pedantic
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 set(CMAKE_EXE_LINKER_FLAGS " ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -ggdb -W -Wall") #-march=athlon64 -march=atom, core2, i686, (-mtune=generic, native)
+set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -ggdb -W -Wall")
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
@@ -93,7 +103,6 @@ set(CMAKE_AUTOMOC TRUE)
 
 add_definitions(${QT_DEFINITIONS})
 
-set(PRJ_NAME "CrochetCharts")
 ###################################################################################
 #CPack includes to create installers
 ###################################################################################
