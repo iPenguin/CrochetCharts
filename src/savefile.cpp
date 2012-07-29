@@ -46,7 +46,7 @@ SaveFile::FileError SaveFile::save()
     if(mTabWidget->count() <= 0)
         return SaveFile::Err_NoTabsToSave;
     
-    QFile file(fileName);
+    QFile file(fileName + ".tmp");
     if(!file.open(QIODevice::WriteOnly)) {
         //TODO: some nice dialog to warn the user.
         qWarning() << "Couldn't open file for writing..." << fileName;
@@ -97,6 +97,13 @@ SaveFile::FileError SaveFile::save()
     file.close();
     delete data;
     data = 0;
+
+    QDir d(QFileInfo(fileName).path());
+    if(!d.remove(fileName))
+        return SaveFile::Err_RemovingOrigFile;
+
+    if(!d.rename(fileName +".tmp", fileName))
+        return SaveFile::Err_RenamingTempFile;
 
     return SaveFile::No_Error;
 }
