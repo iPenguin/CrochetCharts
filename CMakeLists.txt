@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.9)
+
 if(APPLE OR WIN32)
     project("Crochet Charts")
 else()
@@ -45,7 +46,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
 set(crochet_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
 
-find_package(Qt4 REQUIRED)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 option(UNIT_TESTING  "Build the test libraries for this software" OFF)
 option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed for 64-bit compile nodes)" OFF)
@@ -86,19 +88,21 @@ set(CMAKE_C_FLAGS_PROFILE "${extra_build_flags} -g -ggdb -pg -W -Wall")
 set(CMAKE_CXX_FLAGS_PROFILE ${CMAKE_C_FLAGS_PROFILE})
 set(CMAKE_EXE_LINKER_FLAGS_PROFILE "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
-include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-
 #More info see: http://cmake.org/cmake/help/cmake2.6docs.html#module:FindQt4
 if(WIN32)
     set(QT_USE_QTMAIN true)
 endif()
 
-set(QT_USE_QTSVG true)
-set(QT_USE_QTNETWORK true)
-include(${QT_USE_FILE})
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Svg REQUIRED)
+find_package(Qt5Network REQUIRED)
+find_package(Qt5PrintSupport REQUIRED)
+find_package(Qt5Gui REQUIRED)
+find_package(Qt5Concurrent REQUIRED)
 
-#QT4_CREATE_TRANSLATION( qm_files directories ... sources ... ts_files ... OPTIONS ...)
-#QT4_ADD_TRANSLATION( qm_files ts_files ... )
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 add_definitions(${QT_DEFINITIONS})
 

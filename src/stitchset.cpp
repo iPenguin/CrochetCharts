@@ -592,7 +592,7 @@ void StitchSet::reset()
 {
     if(!isMasterSet)
         return;
-    
+    beginResetModel();
     QFile::remove(stitchSetFileName);
 
     clearStitches();
@@ -601,7 +601,9 @@ void StitchSet::reset()
     foreach(Stitch* s, mStitches)
         s->isBuiltIn = true;
 
-    QAbstractItemModel::reset();
+    endResetModel();
+    //FIXME: PORT to qt5
+    //QAbstractItemModel::reset();
 }
 
 void StitchSet::reloadStitchIcons()

@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QStringList>
 
+#include <QStandardPaths>
 class MainWindow;
 
 class Settings : public QObject

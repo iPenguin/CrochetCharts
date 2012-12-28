@@ -1,30 +1,49 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#include <QString>
 #include <QDebug>
 
-#define sws_debug(message) \
+QString debugFunctionName(QString name);
+
+/*!
+ * \def DEBUG(message)
+ * Outputs a debug message showing the calling function and \a message.
+ */
+#define DEBUG(message) \
 ( \
-    (qDebug() << Q_FUNC_INFO << ":" << message), \
-    (void)0 \
+(qDebug() << debugFunctionName(Q_FUNC_INFO) << ":" << message), \
+(void)0 \
 )
 
-#define sws_warn(message) \
+/*!
+ * \def WARN(message)
+ * Outputs a warning message showing the calling function and \a message.
+ */
+#define WARN(message) \
 ( \
-    (qWarning() << Q_FUNC_INFO << ":" << message), \
-    (void)0 \
+(qWarning() << debugFunctionName(Q_FUNC_INFO) << ":" << message), \
+(void)0 \
 )
 
-#define sws_critical(message) \
+/*!
+ * \def CRITICAL(message)
+ * Outputs a critical message showing the calling function and \a message.
+ */
+#define CRITICAL(message) \
 ( \
-    (qCritical() << Q_FUNC_INFO << ":" << message), \
-    (void)0 \
+(qCritical() << debugFunctionName(Q_FUNC_INFO) << ":" << message), \
+(void)0 \
 )
 
-#define sws_fatal(message) \
+/*!
+ * \def FATAL(message)
+ * Outputs a fatal message showing the calling function and \a message and then core dump.
+ */
+#define FATAL(message) \
 ( \
-    (qFatal() << Q_FUNC_INFO << ":" << message), \
-    (void)0 \
+(qFatal("%s : %s", debugFunctionName(Q_FUNC_INFO).toStdString().c_str(), QString(message).toStdString().c_str())), \
+(void)0 \
 )
 
 #endif // DEBUG_H

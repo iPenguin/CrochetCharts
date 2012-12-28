@@ -4,7 +4,6 @@
 \*************************************************/
 #include "licensehttp.h"
 
-#include <QtNetwork/QHttp>
 #include <QtNetwork/QNetworkRequest>
 
 #include <QMessageBox>

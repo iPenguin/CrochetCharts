@@ -6,7 +6,6 @@
 #define SAVETHREAD_H
 
 #include <QThread>
-#include <QtConcurrentRun>
 
 #include "crochettab.h"
 #include <QXmlStreamReader>

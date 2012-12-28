@@ -24,6 +24,8 @@
 #include "crochetchartcommands.h"
 #include "indicatorundo.h"
 
+#include <QMimeData>
+
 #include <QKeyEvent>
 #include "stitchlibrary.h"
 
@@ -487,7 +489,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     mMoving = false;
     mIsRubberband = false;
     
-    mCurItem = itemAt(e->scenePos());
+    //FIXME: PORT to qt5
+    mCurItem = itemAt(e->scenePos(), QTransform());
     
     if(mCurItem) {
         
@@ -902,8 +905,8 @@ void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
     if(!e->buttons() == Qt::LeftButton)
         return;
 
-
-    QGraphicsItem* gi = itemAt(e->scenePos());
+    //FIXME: PORT to qt5
+    QGraphicsItem* gi = itemAt(e->scenePos(), QTransform());
     mStartCell = qgraphicsitem_cast<Cell*>(gi);
     if(mStartCell) {
 
@@ -938,7 +941,8 @@ void Scene::rowEditMouseMove(QGraphicsSceneMouseEvent* e)
 
     QPointF startPt = mRowLine->line().p1();
     
-    QGraphicsItem* gi = itemAt(e->scenePos());
+    //FIXME: PORT to qt5
+    QGraphicsItem* gi = itemAt(e->scenePos(), QTransform());
     if(gi) {
         Cell* c = qgraphicsitem_cast<Cell*>(gi);
         if(!c)
@@ -1131,7 +1135,7 @@ void Scene::updateStitchRenderer()
     for(int i = 0; i < grid.count(); ++i) {
         foreach(Cell* c, grid[i]) {
             if(!c) {
-                sws_warn("cell doesn't exist but it's in the grid");
+                WARN("cell doesn't exist but it's in the grid");
                 continue;
             }
             c->useAlternateRenderer((i % 2));
@@ -1761,7 +1765,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
                 break;
             }
             default:
-                sws_warn("Unknown data type: " + QString::number(item->type()));
+                WARN("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }
@@ -1868,7 +1872,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             break;
         }
         default: {
-            sws_warn("Unknown data type: " + QString::number(type));
+            WARN("Unknown data type: " + QString::number(type));
             break;
         }
     }
@@ -1897,7 +1901,7 @@ void Scene::cut()
                 break;
             }
             default:
-                sws_warn("Unknown data type: " + QString::number(item->type()));
+                WARN("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }

@@ -13,13 +13,13 @@
 
 #include "stitchset.h"
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #else
 class QXmlStreamReader;
 class QXmlStreamWriter;
-#endif //Q_WS_MAC
+#endif //Q_OS_MAC
 
 class QDataStream;
 class CrochetTab;

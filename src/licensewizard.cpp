@@ -45,7 +45,7 @@ LicenseWizard::LicenseWizard(bool regOnly, QWidget* parent)
 
     setStartId(Page_Intro);
 
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
     setWizardStyle(ModernStyle);
 #endif
     setOption(HaveHelpButton, true);

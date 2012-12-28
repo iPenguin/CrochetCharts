@@ -479,7 +479,7 @@ void MainWindow::print(QPrinter* printer)
     QPainter* p = new QPainter();
     
     p->begin(printer);
-    sws_debug(QString::number(tabCount));
+    DEBUG(QString::number(tabCount));
     bool firstPass = true;
     for(int i = 0; i < tabCount; ++i) {
         if(!firstPass)
@@ -634,20 +634,20 @@ void MainWindow::helpCrochetHelp()
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     QString path = QApplication::applicationDirPath();
     QString file ="";
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     file= QString("file://%1/Crochet_Charts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
     bool r = QDesktopServices::openUrl(QUrl::fromLocalFile(file));
 #endif
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     file = QString("file://%1/Crochet Charts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
     QDesktopServices::openUrl(QUrl::fromLocalFile(file));
 #endif
 
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     file = QString("%1/../share/CrochetCharts/CrochetCharts_User_Guide_%2.pdf").arg(path).arg(AppInfo::inst()->appVersionShort);
     QDesktopServices::openUrl(QUrl::fromLocalFile(file));
-#endif //Q_WS_WIN
+#endif //Q_OS_LINUX
 
     QApplication::restoreOverrideCursor();
 

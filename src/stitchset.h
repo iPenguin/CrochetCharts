@@ -10,13 +10,13 @@
 #include "stitch.h"
 
 class QDomElement;
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 #include <QXmlStreamWriter>
 #include <QXmlStreamReader>
 #else
 class QXmlStreamWriter;
 class QXmlStreamReader;
-#endif //Q_WS_MAC
+#endif //Q_OS_MAC
     
 class StitchSet : public QAbstractItemModel
 {

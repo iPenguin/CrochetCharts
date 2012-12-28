@@ -11,6 +11,7 @@
 #include <QStyleOption>
 #include <QKeyEvent>
 #include <QGraphicsSceneEvent>
+#include <QGraphicsScene>
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextBlock>
@@ -18,9 +19,10 @@
 #include <QTextLayout>
 
 Indicator::Indicator(QGraphicsItem* parent, QGraphicsScene* scene)
-    : QGraphicsTextItem(parent, scene),
+    : QGraphicsTextItem(parent),
       highlight(false)
 {
+    scene->addItem(this);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsFocusable);

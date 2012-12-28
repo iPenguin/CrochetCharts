@@ -11,6 +11,7 @@
 #include "stitchset.h"
 #include "settings.h"
 #include <QStyleOption>
+#include <QTransform>
 
 Cell::Cell(QGraphicsItem* parent)
     : QGraphicsSvgItem(parent),
@@ -137,7 +138,9 @@ void Cell::setScale(qreal sx, qreal sy)
 {
     QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
 
-    QGraphicsSvgItem::scale(newScale.x(), newScale.y());
+    QTransform tx = transform();
+    tx.fromScale(newScale.x(), newScale.y());
+    setTransform(tx);
     mScale = QPointF(sx, sy);
 }
 

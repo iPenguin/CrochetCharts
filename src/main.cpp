@@ -2,7 +2,7 @@
 | Copyright (c) 2010 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "mainwindow.h"
 #include "appinfo.h"
 
@@ -18,10 +18,12 @@
 #include "updatefunctions.h"
 
 #include "errorhandler.h"
+#include "debug.h"
 
 int main(int argc, char *argv[])
 {
-    qInstallMsgHandler(myMessageOutput);
+    
+    qInstallMessageHandler(myMessageOutput);
     QApplication a(argc, argv);
     
     qApp->setApplicationName(AppInfo::inst()->appName);

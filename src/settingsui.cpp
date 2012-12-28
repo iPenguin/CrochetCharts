@@ -22,11 +22,11 @@ SettingsUi::SettingsUi(QWidget* parent)
     //in case the form gets saved on the wrong tab.
     ui->tabWidget->setCurrentIndex(0);
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     this->setWindowTitle(tr("Preferences"));
 #else
     this->setWindowTitle(tr("Options"));
-#endif //Q_WS_MAC
+#endif //Q_OS_MAC
 
     connect(ui->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(buttonClicked(QAbstractButton*)));
 
