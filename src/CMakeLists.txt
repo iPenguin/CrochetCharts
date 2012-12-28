@@ -53,18 +53,18 @@ if(APPLE)
     install(CODE "
         execute_process(
             COMMAND \"/usr/bin/macdeployqt\"
-            \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@SWS_VERSION_SHORT@/@PROJECT_NAME@.app/\"
+            \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@.app/\"
             WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
     
     install(CODE "
         execute_process(
-            COMMAND \"@CMAKE_SOURCE_DIR@/bin/sign_app @CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@SWS_VERSION_SHORT@/@PROJECT_NAME@.app/\"
+            COMMAND \"@CMAKE_SOURCE_DIR@/bin/sign_app @CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@.app/\"
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
 
-    if(SWS_APP)
+    if(APP_STORE)
         set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS "APPLE_APP_STORE=1")
     endif()
 
