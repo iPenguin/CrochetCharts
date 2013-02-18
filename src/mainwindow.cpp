@@ -780,7 +780,7 @@ void MainWindow::fileOpen()
 {
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
     QString fileName = QFileDialog::getOpenFileName(this,
-         tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern)"));
+         tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern);; All files (*.*)"));
 
     if(fileName.isEmpty() || fileName.isNull())
         return;
@@ -857,6 +857,10 @@ void MainWindow::fileSaveAs()
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+    if(!fileName.endsWith(".pattern", Qt::CaseInsensitive)) {
+        fileName += ".pattern";
+    }
+    
     //update the list of open files.
     if(Settings::inst()->files.contains(mFile->fileName.toLower()))
         Settings::inst()->files.remove(mFile->fileName.toLower());

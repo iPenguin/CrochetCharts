@@ -1005,14 +1005,7 @@ void Scene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     //FIXME: foreach(stitch in selection()) create an undo group event.
-    if(mCurCell && e->modifiers() != Qt::ControlModifier) {
-
-        if(mCurCell->name() != mEditStitch && !mMoving)
-            undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
-
-        mCurCell = 0;
-
-    } else if(!mIsRubberband && !mMoving && !mHasSelection) {
+    if(!mIsRubberband && !mMoving && !mHasSelection) {
 
         if(mCurItem)
             return;
