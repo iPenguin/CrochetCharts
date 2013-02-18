@@ -10,6 +10,7 @@
 class StitchPaletteDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
+    
 public:
     StitchPaletteDelegate(QWidget* parent = 0);
 

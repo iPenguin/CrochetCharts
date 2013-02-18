@@ -5,6 +5,8 @@
 #include "cell.h"
 
 #include <QDebug>
+#include "debug.h"
+
 #include <qpainter.h>
 #include <qsvgrenderer.h>
 #include "stitchlibrary.h"
@@ -33,6 +35,7 @@ Cell::~Cell()
 
 QRectF Cell::boundingRect() const
 {
+    DEBUG("start");
     if(!stitch())
         return QRectF(0,0,0,0);
 
@@ -44,7 +47,7 @@ QRectF Cell::boundingRect() const
 
 void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-
+    DEBUG("start");
     if(!stitch())
         return;
 
@@ -68,6 +71,7 @@ void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
             painter->setPen(Qt::SolidLine);
         }
     }
+    DEBUG("end");
 }
 
 void Cell::setStitch(Stitch* s, bool useAltRenderer)

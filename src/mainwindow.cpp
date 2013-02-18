@@ -49,6 +49,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     mFgColor(QColor(Qt::black)),
     mBgColor(QColor(Qt::white))
 {
+    DEBUG("start");
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
     ui->setupUi(this);
 
@@ -79,6 +80,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     readSettings();
 
     QApplication::restoreOverrideCursor();
+    DEBUG("end");
 }
 
 MainWindow::~MainWindow()
@@ -112,6 +114,7 @@ void MainWindow::loadFiles(QStringList fileNames)
 
 void MainWindow::checkUpdates(bool silent)
 {
+    DEBUG("start");
     if(mUpdater) {
         delete mUpdater;
         mUpdater = 0;
@@ -123,6 +126,7 @@ void MainWindow::checkUpdates(bool silent)
     ui->centralWidget->layout()->addWidget(mUpdater); 
         
     mUpdater->checkForUpdates(silent); //check at startup is always silent.
+    DEBUG("end");
 }
 
 void MainWindow::setApplicationTitle()
@@ -188,7 +192,7 @@ void MainWindow::newChartUpdateStyle(QString style)
 
 void MainWindow::setupStitchPalette()
 {
-
+    DEBUG("start");
     StitchSet* set = StitchLibrary::inst()->masterStitchSet();
     QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
 
@@ -206,6 +210,7 @@ void MainWindow::setupStitchPalette()
     connect(ui->allStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
     connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
     connect(ui->patternColors, SIGNAL(clicked(QModelIndex)), this, SLOT(selectColor(QModelIndex)));
+    DEBUG("end");
 }
 
 void MainWindow::setupDocks()
@@ -253,7 +258,7 @@ void MainWindow::setupMenus()
     connect(ui->actionExport, SIGNAL(triggered()), SLOT(fileExport()));
 
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(close()));
-  
+  /*
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open", QIcon(":/images/fileopen.png")));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new", QIcon(":/images/filenew.png")));
     ui->actionSave->setIcon(QIcon::fromTheme("document-save", QIcon(":/images/filesave.png")));
@@ -262,9 +267,9 @@ void MainWindow::setupMenus()
     ui->actionPrint->setIcon(QIcon::fromTheme("document-print", QIcon(":/images/fileprint.png")));
     ui->actionPrintPreview->setIcon(QIcon::fromTheme("document-print-preview", QIcon(":/images/document-print-preview.png")));
 
-    /*document-export*/
+   
     ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
-
+*/
     setupRecentFiles();
     
     //Edit Menu
@@ -280,7 +285,7 @@ void MainWindow::setupMenus()
     ui->mainToolBar->insertAction(0, mActionUndo);
     ui->mainToolBar->insertAction(0, mActionRedo);
     ui->mainToolBar->insertSeparator(mActionUndo);
-    
+ /*   
     mActionUndo->setIcon(QIcon::fromTheme("edit-undo", QIcon(":/images/editundo.png")));
     mActionRedo->setIcon(QIcon::fromTheme("edit-redo", QIcon(":/images/editredo.png")));
     mActionUndo->setShortcut(QKeySequence::Undo);
@@ -289,7 +294,7 @@ void MainWindow::setupMenus()
     ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/images/editcopy.png")));
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/editcut.png")));
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/editpaste.png")));
-
+*/
     connect(ui->actionCopy, SIGNAL(triggered()), SLOT(copy()));
     connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
@@ -298,7 +303,7 @@ void MainWindow::setupMenus()
     //connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
     
     //ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
-    ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(mBgColor, QSize(32, 32))));
+    //ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(mBgColor, QSize(32, 32))));
     
     //View Menu
     connect(ui->menuView, SIGNAL(aboutToShow()), SLOT(menuViewAboutToShow()));
@@ -315,12 +320,12 @@ void MainWindow::setupMenus()
 
     connect(ui->actionZoomIn, SIGNAL(triggered()), SLOT(viewZoomIn()));
     connect(ui->actionZoomOut, SIGNAL(triggered()), SLOT(viewZoomOut()));
-    
+/*    
     ui->actionZoomIn->setIcon(QIcon::fromTheme("zoom-in", QIcon(":/images/zoomin.png")));
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out", QIcon(":/images/zoomout.png")));
     ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
-    
+*/    
     //Modes menu
     connect(ui->menuModes, SIGNAL(aboutToShow()), SLOT(menuModesAboutToShow()));
 
@@ -341,7 +346,8 @@ void MainWindow::setupMenus()
     connect(ui->actionShowChartCenter, SIGNAL(triggered()), SLOT(chartsShowChartCenter()));
     connect(ui->actionShowQuarterLines, SIGNAL(triggered()), SLOT(chartsShowQuarterLines()));
     
-    ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
+    QIcon icon = QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png"));
+    ui->actionRemoveTab->setIcon(icon);
     
     connect(ui->menuChart, SIGNAL(aboutToShow()), SLOT(menuChartAboutToShow()));
     connect(ui->actionEditName, SIGNAL(triggered()), SLOT(chartEditName()));
@@ -520,13 +526,14 @@ void MainWindow::fileExport()
 
 QPixmap MainWindow::drawColorBox(QColor color, QSize size)
 {
+    DEBUG("start");
     QPixmap pix = QPixmap(size);
     QPainter p;
     p.begin(&pix);
     p.fillRect(QRect(QPoint(0, 0), size), QColor(color));
     p.drawRect(0, 0, size.width() - 1, size.height() - 1);
     p.end();
-
+    DEBUG("end");
     return pix;
 }
 
@@ -956,6 +963,7 @@ void MainWindow::flashNewDocDialog()
 
 void MainWindow::newChart()
 {
+    DEBUG("start");
     ui->newDocument->hide();
 
     int rows = ui->rows->text().toInt();
@@ -1006,11 +1014,12 @@ void MainWindow::newChart()
 
     updateMenuItems();
     documentIsModified(true);
+    DEBUG("start");
 }
 
 CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
 {
-
+    DEBUG("start");
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     CrochetTab* tab = new CrochetTab(style, mEditMode, mStitch, mFgColor, mBgColor, ui->tabWidget);
@@ -1025,6 +1034,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
     
     QApplication::restoreOverrideCursor();
 
+    DEBUG("start");
     return tab;
 }
 
@@ -1349,6 +1359,7 @@ void MainWindow::removeTab(int tabIndex)
 
 void MainWindow::updatePatternStitches()
 {
+    DEBUG("start");
     if(ui->tabWidget->count() <= 0)
         return;
 
@@ -1367,10 +1378,12 @@ void MainWindow::updatePatternStitches()
             ui->patternStitches->addItem(item);
         }
     }
+    DEBUG("end");
 }
 
 void MainWindow::updatePatternColors()
 {
+    DEBUG("start");
     if(ui->tabWidget->count() <= 0)
         return;
 
@@ -1401,6 +1414,7 @@ void MainWindow::updatePatternColors()
             ++i;
         }
     }
+    DEBUG("end");
 }
 
 void MainWindow::documentIsModified(bool isModified)

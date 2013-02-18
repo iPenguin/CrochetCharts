@@ -9,6 +9,7 @@
 #include <QPixmap>
 
 #include <QDebug>
+#include "debug.h"
 #include <QSvgRenderer>
 
 #include <QSortFilterProxyModel>
@@ -21,7 +22,7 @@ StitchPaletteDelegate::StitchPaletteDelegate(QWidget* parent)
 void StitchPaletteDelegate::paint(QPainter* painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     int pad = 5;
-
+    DEBUG("start");
     const QSortFilterProxyModel* model =  static_cast<const QSortFilterProxyModel*>(index.model());
     QModelIndex idx = model->mapToSource(index);
     
@@ -45,6 +46,7 @@ void StitchPaletteDelegate::paint(QPainter* painter, const QStyleOptionViewItem 
         QPixmap pix = (s->renderPixmap()->scaled(size, size, Qt::KeepAspectRatio,Qt::SmoothTransformation));
         painter->drawPixmap(rect.left() + pad, rect.top() + pad, pix);      
     }
+    DEBUG("end");
 }
 
 QSize StitchPaletteDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const

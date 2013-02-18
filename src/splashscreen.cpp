@@ -8,6 +8,7 @@
 #include <QBitmap>
 #include "appinfo.h"
 
+#include "debug.h"
 #include <QDebug>
 
 SplashScreen::SplashScreen()
@@ -19,6 +20,7 @@ SplashScreen::SplashScreen()
 
 void SplashScreen::drawContents (QPainter* painter)
 {
+    DEBUG("start");
     QRect rect = QRect(QPoint(0,0), this->pixmap().size());
     painter->drawPixmap(rect, this->pixmap());
 
@@ -39,6 +41,7 @@ void SplashScreen::drawContents (QPainter* painter)
     QString version = QString("Version: %1").arg(AppInfo::inst()->appVersionShort);
     painter->drawText(QRectF(75, 280, 250, 50), version);
     painter->drawText(QRectF(75, 295, 250, 50), mMessage);
+    DEBUG("end");
 }
 
 void SplashScreen::showMessage (const QString &message)

@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QtSvg/QSvgRenderer>
 
+#include "debug.h"
 #include <QDebug>
 #include <QFile>
 
@@ -32,6 +33,7 @@ Stitch::~Stitch()
 
 void Stitch::setFile ( QString f )
 {
+    DEBUG("start");
     if(mFile != f) {
         mFile = f;
         
@@ -42,6 +44,7 @@ void Stitch::setFile ( QString f )
             mPixmap = new QPixmap(mFile);
         }
     }
+    DEBUG("end");
 }
 
 void Stitch::setupSvgFiles()
@@ -83,11 +86,13 @@ bool Stitch::isSvg()
 QPixmap* Stitch::renderPixmap()
 {
 
+    DEBUG("start");
     if(mPixmap && !mPixmap->isNull())
         return mPixmap;
 
     mPixmap = new QPixmap(mFile);
 
+    DEBUG("end");
     return mPixmap;
 }
 

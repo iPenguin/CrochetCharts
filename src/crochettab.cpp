@@ -13,6 +13,7 @@
 #include <QXmlStreamWriter>
 
 #include <QDebug>
+#include "debug.h"
 
 #include "scene.h"
 #include "textview.h"
@@ -28,6 +29,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
         ui(new Ui::OptionsBar),
         mChartStyle(style)
 {
+    DEBUG("start");
     QVBoxLayout* l = new QVBoxLayout(this);
     QWidget* top = new QWidget(this);
     l->addWidget(top);
@@ -94,7 +96,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     connect(mView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
 
     connect(ui->showChartCenter, SIGNAL(clicked(bool)), SLOT(setShowChartCenter(bool)));
-
+    DEBUG("end");
 }
 
 CrochetTab::~CrochetTab()
