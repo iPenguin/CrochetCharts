@@ -26,12 +26,14 @@ namespace Ui {
 class CrochetTab : public QWidget
 {
     Q_OBJECT
-    friend class SaveFile;
-    friend class SaveThread;
+    friend class FileFactory;
+    friend class FileLoad_v1;
+    friend class FileLoad_v2;
     friend class ExportUi;
+    friend class PropertiesDialog;
 public:
 
-    explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget* parent = 0);
+    explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitchUid, QColor defFgColor, QColor defBgColor, QWidget* parent = 0);
     ~CrochetTab();
 
     void renderChart(QPainter* painter, QRectF rect = QRectF());
@@ -48,7 +50,7 @@ public:
     void setEditFgColor(QColor color);
     void setEditBgColor(QColor color);
 
-    void setEditStitch(QString stitch);
+    void setEditStitchUid(QString uid);
 
     void sceneUpdate();
 
@@ -71,8 +73,8 @@ public:
     bool hasChartCenter();
     void setChartCenter(bool state);
 
-    void setQuarterLines(bool state);
-    bool hasQuarterLines();
+    void setShowGuidelines(QString guides);
+    bool hasGuidelines();
     
 signals:
     void chartStitchChanged();

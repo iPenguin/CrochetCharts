@@ -7,13 +7,14 @@
 
 #include <QMainWindow>
 
-#include "savefile.h"
+#include "filefactory.h"
 #include "updater.h"
 #include "undogroup.h"
 
 #include "aligndock.h"
 #include "rowsdock.h"
 #include "mirrordock.h"
+#include "propertiesdialog.h"
 
 #include <QModelIndex>
 
@@ -31,7 +32,9 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    friend class SaveFile;
+    friend class FileFactory;
+    friend class FileLoad_v1;
+    friend class FileLoad_v2;
 public:
     explicit MainWindow(QStringList fileNames = QStringList(), QWidget* parent = 0);
     ~MainWindow();
@@ -83,6 +86,7 @@ private slots:
     void viewShowRowsDock();
     void viewShowAlignDock();
     void viewShowMirrorDock();
+    void viewShowProperties();
 
     void menuModesAboutToShow();
     
@@ -94,9 +98,10 @@ private slots:
     void menuChartAboutToShow();
     void chartEditName();
     void chartsShowChartCenter();
-    void chartsShowQuarterLines();
     void chartCreateRows(bool state);
 
+    void menuStitchesAboutToShow();
+    
     void menuToolsAboutToShow();
     void toolsOptions();
     void toolsRegisterSoftware();
@@ -154,7 +159,7 @@ private:
    
     Ui::MainWindow* ui;
 
-    SaveFile* mFile;
+    FileFactory* mFile;
     Updater* mUpdater;
 
 //for the savefile class:
@@ -195,9 +200,11 @@ private:
     AlignDock* mAlignDock;
     RowsDock* mRowsDock;
     MirrorDock* mMirrorDock;
+
+    PropertiesDialog* mPropertiesDock;
     
     int mEditMode;
-    QString mStitch;
+    QString mStitchUid;
     QColor mFgColor;
     QColor mBgColor;
 };

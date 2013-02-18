@@ -35,7 +35,7 @@ QString TextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
         if(!cell)
             continue;
 
-        curStitch = cell->name();
+        curStitch = cell->stitch()->name();
         if(cleanOutput) {
             //TODO: any special preprocessing that needs to be done.
         }

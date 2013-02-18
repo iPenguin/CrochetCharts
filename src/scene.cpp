@@ -42,7 +42,7 @@ static void qNormalizeAngle(qreal &angle)
 Scene::Scene(QObject* parent) :
     QGraphicsScene(parent),
     mCurItem(0),
-    mCurCell(0),
+    mSclItem(0),
     mCellStartPos(QPointF(0,0)),
     mLeftButtonDownPos(QPointF(0,0)),
     mCurIndicator(0),
@@ -54,7 +54,7 @@ Scene::Scene(QObject* parent) :
     mHasSelection(false),
     mSnapTo(false),
     mMode(Scene::StitchEdit),
-    mEditStitch("ch"),
+    mEditStitchUid("d3d95f053d5c54f93f466ef1fd98c8941754b37b"),
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
     mOldScale(QPointF(1.0, 1.0)),
@@ -62,22 +62,13 @@ Scene::Scene(QObject* parent) :
     mOrigin(0,0),
     mRowSpacing(9),
     mDefaultSize(QSizeF(32.0, 96.0)),
-    mDefaultStitch("ch"),
+    mDefaultStitchUid("d3d95f053d5c54f93f466ef1fd98c8941754b37b"),
     mRowLine(0),
     mCenterSymbol(0),
     mShowChartCenter(false),
-    mVerticalLine(0),
-    mHorizontalLine(0),
-    mAngleLine1(0),
-    mAngleLine2(0),
-    mShowQuarterLines(false)
+    mShowGuidelines("")
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
-
-    mVerticalLine = new QGraphicsLineItem();
-    mHorizontalLine = new QGraphicsLineItem();
-    mAngleLine1 = new QGraphicsLineItem();
-    mAngleLine2 = new QGraphicsLineItem();
 
 }
 
@@ -204,17 +195,21 @@ void Scene::addItem(QGraphicsItem* item)
             i->setText(QString::number(mIndicators.count()));
             break;
         }
-        case QGraphicsItemGroup::Type: {
+        case ItemGroup::Type: {
             QGraphicsScene::addItem(item);
-            QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
             mGroups.append(group);
             break;
         }
         default:
-            qWarning() << "Adding unknown type: " << item->type();
+            warn("Unknown type: " + QString::number(item->type()));
+        case QGraphicsEllipseItem::Type:
+        case QGraphicsLineItem::Type: {
             QGraphicsScene::addItem(item);
             break;
+        }
     }
+    
 }
 
 void Scene::removeItem(QGraphicsItem* item)
@@ -235,18 +230,22 @@ void Scene::removeItem(QGraphicsItem* item)
             mIndicators.removeOne(i);
             break;
         }
-        case QGraphicsItemGroup::Type: {
+        case ItemGroup::Type: {
             QGraphicsScene::removeItem(item);
-            QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
             mGroups.removeOne(group);
             break;
         }
-        default:
-            qWarning() << "Removing unknown type:" << item->type();
-            QGraphicsScene::removeItem(item);
-            break;
-    }
 
+        default:
+            warn("Unknown type: " + QString::number(item->type()));
+        case QGraphicsEllipseItem::Type:
+        case QGraphicsLineItem::Type: {
+            QGraphicsScene::removeItem(item);
+            break;   
+        }
+    }
+    
 }
 
 void Scene::removeFromRows(Cell* c)
@@ -317,8 +316,8 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
                     undoStack()->push(new RemoveIndicator(this, i));
                     break;
                 }
-                case QGraphicsItemGroup::Type: {
-                    QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+                case ItemGroup::Type: {
+                    ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
                     undoStack()->push(new RemoveGroup(this, group));
                     break;
                 }
@@ -416,7 +415,7 @@ void Scene::angleModeKeyRelease(QKeyEvent* keyEvent)
         qreal oldAngle = c->rotation();
         c->setRotation(c->rotation() + delta);
         QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
-        undoStack()->push(new SetCellRotation(this, c, oldAngle, pvtPt));
+        undoStack()->push(new SetItemRotation(this, c, oldAngle, pvtPt));
     }
     undoStack()->endMacro();
 
@@ -461,7 +460,7 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
         QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
         QPointF newScale = oldScale + delta;
         c->setScale(newScale.x(), newScale.y());
-        undoStack()->push(new SetCellScale(this, c, oldScale, pvtPt));
+        undoStack()->push(new SetItemScale(this, c, oldScale, pvtPt));
     }
     undoStack()->endMacro();
     
@@ -472,7 +471,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 
     if(selectedItems().count() > 0)
         mHasSelection = true;
-    
+
     if(mHasSelection && e->modifiers() == Qt::ControlModifier)
         mSelectionPath = selectionArea();
     if(e->buttons() & Qt::LeftButton)
@@ -488,15 +487,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     mIsRubberband = false;
     
     mCurItem = itemAt(e->scenePos());
-    
+
     if(mCurItem) {
         
         switch(mCurItem->type()) {
             case Cell::Type: {
-                Cell* c = qgraphicsitem_cast<Cell*>(mCurItem);
-                mCurCell = c;
-                mCellStartPos = mCurCell->scenePos();
+                mCellStartPos = mCurItem->scenePos();
                 mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
+                mSclItem = dynamic_cast<Item*>(mCurItem);
                 break;
             }
             case Indicator::Type: {
@@ -510,8 +508,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 mMoving = true;
                 break;
             }
-            case QGraphicsItemGroup::Type: {
+            case ItemGroup::Type: {
                 mMoving = true;
+                mSclItem = dynamic_cast<Item*>(mCurItem);
                 break;
             }
             case QGraphicsSimpleTextItem::Type: {
@@ -524,7 +523,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
                 break;
         }
     }
-    
+
     switch(mMode) {
         case Scene::StitchEdit:
             stitchModeMousePress(e);
@@ -563,7 +562,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
             mOldPositions.insert(item, item->pos());
         }
     }
-    
+
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
@@ -608,7 +607,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 
             QGraphicsScene::mouseMoveEvent(e);
             if(selectedItems().contains(mCenterSymbol)) {
-                updateQuarterLines();
+                updateGuidelines();
             }
         }
     }
@@ -670,16 +669,13 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
         mOldPositions.clear();
     }
 
-    if(mCurCell) {
-        mDiff = QSizeF(0,0);
-        mCellStartPos = QPointF(0,0);
-        mCurCell = 0;
-    }
+    mDiff = QSizeF(0,0);
+    mCellStartPos = QPointF(0,0);
 
     if(mCurIndicator) {
-        mCellStartPos = QPoint(0,0);
         mCurIndicator = 0;
     }
+    
     mLeftButtonDownPos = QPointF(0,0);
     
     delete mRubberBand;
@@ -692,6 +688,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
         initDemoBackground();
         mMoving = false;
     }
+    mSclItem = 0;
     mCurItem = 0;
     mHasSelection = false;
 }
@@ -701,25 +698,26 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
 
-    if(!mCurCell)
+    if(!mCurItem || mCurItem->type() != Cell::Type)
         return;
 
     mMoving = false;
 /*
  *FIXME: if the user isn't dragging a stitch we should be painting with color.
     if(mCurCell->color() != mEditBgColor)
-        mUndoStack.push(new SetCellColor(this, mCurCell, mEditBgColor));
+        mUndoStack.push(new SetCellBgColor(this, mCurCell, mEditBgColor));
 */
 }
 
 void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(!mCurItem || mCurItem->type() != Cell::Type)
         return;
-
-    if(mCurCell->color() != mEditBgColor)
-        undoStack()->push(new SetCellColor(this, mCurCell, mEditBgColor));
+    
+    Cell* curCell = static_cast<Cell*>(mCurItem);
+    if(curCell->color() != mEditBgColor)
+        undoStack()->push(new SetCellColor(this, curCell, mEditBgColor));
 }
 
 void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -727,7 +725,10 @@ void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(e->buttons() != Qt::LeftButton)
         return;
 
-    if(mCurCell || mCurIndicator)
+    if(!mCurItem)
+        return;
+    
+    if(mCurItem->type() == Cell::Type || mCurItem->type() == Indicator::Type)
         mMoving = true;
 
 }
@@ -775,12 +776,12 @@ qreal Scene::scenePosToAngle(QPointF pt)
 void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(!mCurItem)
         return;
 
-    mOldAngle = mCurCell->rotation();
-    mPivotPt = QPointF(mCurCell->boundingRect().width()/2, mCurCell->boundingRect().bottom());
-    mOrigin = mCurCell->mapToScene(mPivotPt);
+    mOldAngle = mCurItem->rotation();
+    mPivotPt = QPointF(mCurItem->boundingRect().width()/2, mCurItem->boundingRect().bottom());
+    mOrigin = mCurItem->mapToScene(mPivotPt);
 }
 
 void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -788,7 +789,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurItem)
         return;
 
-    if(selectedItems().count() > 1 || !mCurCell) {
+    if(selectedItems().count() > 1 || !mCurItem) {
         mMoving = true;
         return;
     }
@@ -820,33 +821,33 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     
     qNormalizeAngle(mAngle);
 
-    mCurCell->setTransformOriginPoint(mPivotPt);
-    mCurCell->setRotation(mAngle);
+    mCurItem->setTransformOriginPoint(mPivotPt);
+    mCurItem->setRotation(mAngle);
 
 }
 
 void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(!mCurItem)
         return;
 
     if(mMoving)
         return;
-    
-//FIXME: use a constant pviot point.
-    undoStack()->push(new SetCellRotation(this, mCurCell, mOldAngle, mPivotPt));
+
+    undoStack()->push(new SetItemRotation(this, mCurItem, mOldAngle, mPivotPt));
     mOldAngle = 0;
 }
 
 void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
 {
+
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(!mCurItem && !mSclItem)
         return;
-    
-    mOldScale = mCurCell->scale();
-    mPivotPt = QPointF(mCurCell->stitch()->width()/2, mCurCell->stitch()->height());
+
+    mOldScale = mSclItem->scale();
+    mPivotPt = QPointF(mCurItem->sceneBoundingRect().width()/2, mCurItem->sceneBoundingRect().height());
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -855,42 +856,42 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurItem)
         return;
 
-    if(selectedItems().count() > 1 || !mCurCell) {
+    if(selectedItems().count() > 1 || !mSclItem) {
         mMoving = true;
         return;
     }
-    
+
     mMoving = false;
-    
+
     QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
 
-    QSize oldSize = QSize(mCurCell->origWidth * mOldScale.x(), mCurCell->origHeight * mOldScale.y());
+    QSize oldSize = QSize(mSclItem->origWidth * mOldScale.x(), mSclItem->origHeight * mOldScale.y());
     QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
 
     if((newSize.width() < 1 && newSize.width() > -1) || (newSize.height() < 1 && newSize.height() > -1))
         return;
 
-    QPointF baseScale = QPointF(newSize.width() / mCurCell->origWidth,
-                               newSize.height() / mCurCell->origHeight);
+    QPointF baseScale = QPointF(newSize.width() / mSclItem->origWidth,
+                               newSize.height() / mSclItem->origHeight);
 
     if(e->modifiers() == Qt::ControlModifier) {
         baseScale.ry() = baseScale.rx();
     }
 
-    mCurCell->setScale(baseScale.x(), baseScale.y());
+    mSclItem->setScale(baseScale.x(), baseScale.y());
 }
 
 void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     
     Q_UNUSED(e);
-    if(!mCurCell)
+    if(!mSclItem)
         return;
 
     if(mMoving)
         return;
-    
-    undoStack()->push(new SetCellScale(this, mCurCell, mOldScale, mPivotPt));
+
+    undoStack()->push(new SetItemScale(this, mSclItem, mOldScale, mPivotPt));
     
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
@@ -1005,14 +1006,8 @@ void Scene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
     //FIXME: foreach(stitch in selection()) create an undo group event.
-    if(mCurCell && e->modifiers() != Qt::ControlModifier) {
 
-        if(mCurCell->name() != mEditStitch && !mMoving)
-            undoStack()->push(new SetCellStitch(this, mCurCell, mEditStitch));
-
-        mCurCell = 0;
-
-    } else if(!mIsRubberband && !mMoving && !mHasSelection) {
+    if(!mIsRubberband && !mMoving && !mHasSelection) {
 
         if(mCurItem)
             return;
@@ -1021,7 +1016,7 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
             AddCell* addCell = new AddCell(this, e->scenePos());
             undoStack()->push(addCell);
-            addCell->cell()->setStitch(mEditStitch);
+            addCell->cell()->setStitch(mEditStitchUid);
 
         }
     }
@@ -1131,7 +1126,7 @@ void Scene::updateStitchRenderer()
     for(int i = 0; i < grid.count(); ++i) {
         foreach(Cell* c, grid[i]) {
             if(!c) {
-                sws_warn("cell doesn't exist but it's in the grid");
+                warn("cell doesn't exist but it's in the grid");
                 continue;
             }
             c->useAlternateRenderer((i % 2));
@@ -1537,11 +1532,11 @@ void Scene::distributeToPath()
 
 }
 
-void Scene::createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize)
+void Scene::createRowsChart(int rows, int cols, QString defStitchUid, QSizeF rowSize)
 {
     
     mDefaultSize = rowSize;
-    mDefaultStitch = defStitch;
+    mDefaultStitchUid = defStitchUid;
     arrangeGrid(QSize(rows, cols), QSize(1, 1), rowSize.toSize(), false);
 
     initDemoBackground();
@@ -1577,7 +1572,7 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
             for(int y = grd.height(); y > 0; --y) {
                 Cell* c = new Cell();
                 //FIXME: use the user selected stitch
-                c->setStitch(mDefaultStitch);
+                c->setStitch(mDefaultStitchUid);
                 addItem(c);
                 r.append(c);
                 
@@ -1702,7 +1697,7 @@ void Scene::rotate(qreal degrees)
     if(selectedItems().count() <= 0)
         return;
 
-    undoStack()->push(new SetItemRotation(this, selectedItems(), degrees));
+    undoStack()->push(new SetItemsRotation(this, selectedItems(), degrees));
 }
 
 void Scene::rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint)
@@ -1744,7 +1739,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
         switch(item->type()) {
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(item);
-                stream << c->name() << c->color()
+                stream << c->uid() << c->bgColor()
                     << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos()
                     << c->transform();
                 break;
@@ -1754,14 +1749,14 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
                 stream << i->scenePos() << i->text();
                 break;
             }
-            case QGraphicsItemGroup::Type: {
-                QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+            case ItemGroup::Type: {
+                ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
                 stream << group->childItems().count();
                 copyRecursively(stream, group->childItems());
                 break;
             }
             default:
-                sws_warn("Unknown data type: " + QString::number(item->type()));
+                warn("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }
@@ -1811,21 +1806,22 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
     switch(type) {
 
         case Cell::Type: {
-            QString name;
-            QColor color;
+            QString uid;
+            QColor bgColor;
             qreal angle;
             QPointF scale;
             QPointF pos, transPoint;
             QTransform trans;
 
-            stream >> name >> color >> angle >> scale >> transPoint >> pos >> trans;
+            stream >> uid >> bgColor >> angle >> scale >> transPoint >> pos >> trans;
+            
             pos += offSet;
             AddCell* addCmd = new AddCell(this, pos);
             undoStack()->push(addCmd);
             Cell* c = addCmd->cell();
 
-            c->setStitch(name);
-            c->setColor(color);
+            c->setStitch(uid);
+            c->setBgColor(bgColor);
 
             c->setTransformOriginPoint(transPoint);
             c->setRotation(angle);
@@ -1851,7 +1847,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             group->append(i);
             break;
         }
-        case QGraphicsItemGroup::Type: {
+        case ItemGroup::Type: {
             int childCount;
             stream >> childCount;
             QList<QGraphicsItem*> items;
@@ -1861,14 +1857,14 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 
             GroupItems* grpItems = new GroupItems(this, items);
             undoStack()->push(grpItems);
-            QGraphicsItemGroup* g = grpItems->group();
+            ItemGroup* g = grpItems->group();
 
             g->setSelected(false);
             group->append(g);
             break;
         }
         default: {
-            sws_warn("Unknown data type: " + QString::number(type));
+            warn("Unknown data type: " + QString::number(type));
             break;
         }
     }
@@ -1897,7 +1893,7 @@ void Scene::cut()
                 break;
             }
             default:
-                sws_warn("Unknown data type: " + QString::number(item->type()));
+                warn("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }
@@ -1941,14 +1937,18 @@ void Scene::group()
     undoStack()->push(new GroupItems(this, selectedItems()));
 }
 
-QGraphicsItemGroup* Scene::group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g)
+ItemGroup* Scene::group(QList<QGraphicsItem*> items, ItemGroup* g)
 {
 
     //clear selection because we're going to create a new selection.
     clearSelection();
 
     if(!g) {
-        g = createItemGroup(items);
+        g = new ItemGroup(0, this);
+        foreach(QGraphicsItem *i, items) {
+            i->setSelected(false);
+            g->addToGroup(i);
+        }
     } else {
         foreach(QGraphicsItem* i, items) {
             i->setSelected(false);
@@ -1971,14 +1971,14 @@ void Scene::ungroup()
         return;
 
     foreach(QGraphicsItem* item, selectedItems()) {
-        if(item->type() == QGraphicsItemGroup::Type) {
-            QGraphicsItemGroup* group = qgraphicsitem_cast<QGraphicsItemGroup*>(item);
+        if(item->type() == ItemGroup::Type) {
+            ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
             undoStack()->push(new UngroupItems(this, group));
         }
     }
 }
 
-void Scene::ungroup(QGraphicsItemGroup* group)
+void Scene::ungroup(ItemGroup* group)
 {
 
     mGroups.removeOne(group);
@@ -2010,10 +2010,6 @@ void Scene::editorGotFocus(Indicator* item)
 QRectF Scene::itemsBoundingRect()
 {
     QList<QGraphicsItem*> itemList = items();
-    itemList.removeOne(mVerticalLine);
-    itemList.removeOne(mHorizontalLine);
-    itemList.removeOne(mAngleLine1);
-    itemList.removeOne(mAngleLine2);
 
     QList<QGraphicsItem*>::const_iterator dItem;
     for (dItem = mDemoItems.begin(); dItem != mDemoItems.constEnd(); ++dItem) {
@@ -2076,16 +2072,16 @@ void Scene::setShowChartCenter(bool state)
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsMovable);
             mCenterSymbol->setFlag(QGraphicsItem::ItemIsSelectable);
 
-            updateQuarterLines();
+            updateGuidelines();
         } else {
 
             addItem(mCenterSymbol);
-            updateQuarterLines();
+            updateGuidelines();
         }
     } else {
 
         removeItem(mCenterSymbol);
-        updateQuarterLines();
+        updateGuidelines();
     }
 
 }
@@ -2177,61 +2173,32 @@ void Scene::highlightIndicators(bool state)
     }
 }
 
-void Scene::setShowQuarterLines(bool state)
+void Scene::setShowGuidelines(QString guides)
 {
 
-    if(mShowQuarterLines != state) {
-        mShowQuarterLines = state;
-        if(state) {
-            addItem(mVerticalLine);
-            addItem(mHorizontalLine);
-            addItem(mAngleLine1);
-            addItem(mAngleLine2);
+    if(mShowGuidelines != guides) {
+        mShowGuidelines = guides;
+        if(guides == tr("Round")) {
+            debug("TODO: show guidelines round");
+        } else if(guides == tr("Grid")) {
+            debug("TODO: show guidelines grid");
         } else {
-            removeItem(mVerticalLine);
-            removeItem(mHorizontalLine);
-            removeItem(mAngleLine1);
-            removeItem(mAngleLine2);
+            debug("TODO: hide guidelines");
         }
     }
     
-    updateQuarterLines();
+    updateGuidelines();
 }
 
-void Scene::updateQuarterLines()
+void Scene::updateGuidelines()
 {
-    if(!showQuarterLines())
+    if(showGuidelines() == tr("None"))
         return;
 
     if(mCenterSymbol && mCenterSymbol->isVisible()) {
-
-        QLineF line = QLineF(mCenterSymbol->sceneBoundingRect().center().x(), sceneRect().top(),
-                            mCenterSymbol->sceneBoundingRect().center().x(), sceneRect().bottom());
-        mVerticalLine->setLine(line);
-
-        line = QLineF(sceneRect().left(), mCenterSymbol->sceneBoundingRect().center().y(),
-                    sceneRect().right(), mCenterSymbol->sceneBoundingRect().center().y());
-        mHorizontalLine->setLine(line);
-
-        QPointF diff = sceneRect().center() - mCenterSymbol->sceneBoundingRect().center();
-        line = QLineF(sceneRect().left() - diff.x(), sceneRect().top() - diff.y(),
-                    sceneRect().right() - diff.x(), sceneRect().bottom() - diff.y());
-        mAngleLine1->setLine(line);
-        
-        line = QLineF(sceneRect().right() - diff.x(), sceneRect().top() - diff.y(),
-                    sceneRect().left() - diff.x(), sceneRect().bottom() - diff.y());
-        mAngleLine2->setLine(line);
+        debug("TODO: Create guidelines from the center symbol");
         
     } else {
-
-        mVerticalLine->setLine(QLineF(sceneRect().center().x(), sceneRect().top(),
-                                    sceneRect().center().x(), sceneRect().bottom()));
-        mHorizontalLine->setLine(QLineF(sceneRect().left(), sceneRect().center().y(),
-                                    sceneRect().right(), sceneRect().center().y()));
-
-        mAngleLine1->setLine(QLineF(sceneRect().left(), sceneRect().top(),
-                                    sceneRect().right(), sceneRect().bottom()));
-        mAngleLine2->setLine(QLineF(sceneRect().right(), sceneRect().top(),
-                                    sceneRect().left(), sceneRect().bottom()));
+        debug("TODO: Create guidelines from the center of the chart");
     }
 }

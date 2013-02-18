@@ -4,7 +4,7 @@
 \*************************************************/
 #include "cell.h"
 
-#include <QDebug>
+#include "debug.h"
 #include <qpainter.h>
 #include <qsvgrenderer.h>
 #include "stitchlibrary.h"
@@ -14,8 +14,6 @@
 
 Cell::Cell(QGraphicsItem* parent)
     : QGraphicsSvgItem(parent),
-    origWidth(64.0),
-    origHeight(64.0),
     mStitch(0),
     mScale(QPointF(1.0, 1.0)),
     mHighlight(false)
@@ -24,6 +22,9 @@ Cell::Cell(QGraphicsItem* parent)
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
+
+    origHeight = boundingRect().height();
+    origWidth = boundingRect().width();
 }
 
 Cell::~Cell()
@@ -47,7 +48,7 @@ void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     if(!stitch())
         return;
 
-    QColor clr = color();
+    QColor clr = bgColor();
     if(!clr.isValid())
         clr = QColor(Qt::white);
 
@@ -80,8 +81,12 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
             doUpdate = (mStitch->isSvg() != s->isSvg());
         }
         mStitch = s;
-        if(s->isSvg() && s->renderSvg()->isValid())
-            setSharedRenderer(s->renderSvg(useAltRenderer));
+        if(s->isSvg()) {
+            QString color = "#000000";
+            if(useAltRenderer)
+                color = Settings::inst()->value("stitchAlternateColor").toString();
+            setSharedRenderer(s->renderSvg(color));
+        }
 
         if(doUpdate)
             update();
@@ -92,24 +97,40 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
         emit stitchChanged(old, s->name());
     }
     
-    setColor(Qt::white);
+    setTransformOriginPoint(s->width()/2, s->height());
+    setBgColor(Qt::white);
 }
 
-void Cell::setColor(QColor c)
+void Cell::setBgColor(QColor c)
 {
-    if (mColor != c) {
+    if (mBgColor != c) {
         QString old = "";
-        if (mColor.isValid())
-            old = mColor.name();
-        mColor = c;
+        if (mBgColor.isValid())
+            old = mBgColor.name();
+        mBgColor = c;
         emit colorChanged(old, c.name());
         update();
     }
 }
 
-void Cell::setStitch(QString s, bool useAltRenderer)
+void Cell::setColor(QColor c)
 {
-    Stitch* stitch = StitchLibrary::inst()->findStitch(s);
+
+    if(mColor != c) {
+        QString old = "";
+        if(mColor.isValid())
+            old = mColor.name();
+        mColor = c;
+        setSharedRenderer(stitch()->renderSvg(c));
+
+        emit colorChanged(old, c.name());
+        update();
+    }
+}
+
+void Cell::setStitch(QString uid, bool useAltRenderer)
+{
+    Stitch* stitch = StitchLibrary::inst()->findStitch(uid);
 
     if (!stitch) {
         QString st = Settings::inst()->value("defaultStitch").toString();
@@ -119,22 +140,37 @@ void Cell::setStitch(QString s, bool useAltRenderer)
     setStitch(stitch, useAltRenderer);
 }
 
-QString Cell::name()
+QString Cell::uid()
 {
     if(mStitch)
-        return mStitch->name();
+        return mStitch->uid();
     else
         return QString();
 }
 
 void Cell::useAlternateRenderer(bool useAlt)
 {
-    if(mStitch->isSvg() && mStitch->renderSvg()->isValid())
-        setSharedRenderer(mStitch->renderSvg(useAlt));
+    if(mStitch->isSvg() && mStitch->renderSvg()->isValid()) {
+        QString color = "#000000";
+        if(useAlt) {
+            color = Settings::inst()->value("stitchAlternateColor").toString();
+        }
+        setSharedRenderer(mStitch->renderSvg(color));
+    }
 }
 
 void Cell::setScale(qreal sx, qreal sy)
 {
+    /*
+     * scale(sx, sy) is obsolete in 4.7
+     * replace in future version as follows:
+     * 
+    // Scale an item by 3x2 from its origin
+    item->scale(3, 2);
+
+    // Scale an item by 3x2 from (x, y)
+    item->setTransform(QTransform().translate(x, y).scale(3, 2).translate(-x, -y));
+    */
     QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
 
     QGraphicsSvgItem::scale(newScale.x(), newScale.y());
@@ -150,7 +186,7 @@ Cell* Cell::copy(Cell* cell)
         c = cell;
 
     c->setStitch(stitch());
-    c->setColor(color());
+    c->setBgColor(bgColor());
     c->setTransformOriginPoint(transformOriginPoint());
     c->setRotation(rotation());
     c->setScale(scale().x(), scale().y());

@@ -13,14 +13,16 @@
 #include <QRubberBand>
 
 #include "indicator.h"
+#include "itemgroup.h"
 
 class QKeyEvent;
 
 class Scene : public QGraphicsScene
 {
     Q_OBJECT
-    friend class SaveFile;
-    friend class SaveThread;
+    friend class FileFactory;
+    friend class FileLoad_v1;
+    friend class FileLoad_v2;
     friend class RowEditDialog;
     friend class TextView;
 
@@ -63,7 +65,7 @@ public:
     void setEditMode(EditMode mode);
     EditMode editMode() { return mMode; }
 
-    void setEditStitch(QString stitch) { mEditStitch = stitch; }
+    void setEditStitchUid(QString sUid) { mEditStitchUid = sUid; }
 
     void setEditFgColor(QColor color) { mEditFgColor = color; }
     void setEditBgColor(QColor color) { mEditBgColor = color; }
@@ -93,7 +95,7 @@ public:
     void group();
     void ungroup();
 
-    void createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize);
+    void createRowsChart(int rows, int cols, QString defStitchUid, QSizeF rowSize);
     void createBlankChart();
 
     void addItem(QGraphicsItem* item);
@@ -193,8 +195,8 @@ protected:
     QPointF calcGroupPos(QGraphicsItem* group, QPointF newScenePos);
 
 public:
-    QGraphicsItemGroup* group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g = 0);
-    void ungroup(QGraphicsItemGroup* group);
+    ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup* g = 0);
+    void ungroup(ItemGroup* group);
 
     QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
 
@@ -241,7 +243,7 @@ private:
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
     QGraphicsItem* mCurItem;
-    Cell* mCurCell;
+    Item* mSclItem;
     QPointF mCellStartPos;
     QPointF mLeftButtonDownPos;
 
@@ -268,7 +270,7 @@ private:
     
     EditMode mMode;
     
-    QString mEditStitch;
+    QString mEditStitchUid;
     QColor mEditFgColor;
     QColor mEditBgColor;
 
@@ -285,7 +287,7 @@ private:
 
     int mRowSpacing;
     QSizeF mDefaultSize;
-    QString mDefaultStitch;
+    QString mDefaultStitchUid;
     
     /**
      *Hold the list of cells we're working with to create a new row.
@@ -312,7 +314,7 @@ private:
     
     QList<QGraphicsItem*> mDemoItems;
 
-    QList<QGraphicsItemGroup*> mGroups;
+    QList<ItemGroup*> mGroups;
 
 
 /***
@@ -347,16 +349,14 @@ private:
     bool mShowChartCenter;
 
 public:
-    bool showQuarterLines() { return mShowQuarterLines; }
-    void setShowQuarterLines(bool state);
+    QString showGuidelines() { return mShowGuidelines; }
+    void setShowGuidelines(QString guides);
+    QString guidelines() { return "None"; }
 protected slots:
-    void updateQuarterLines();
+    void updateGuidelines();
 private:
-    QGraphicsLineItem* mVerticalLine;
-    QGraphicsLineItem* mHorizontalLine;
-    QGraphicsLineItem* mAngleLine1;
-    QGraphicsLineItem* mAngleLine2;
-    bool mShowQuarterLines;
+    QList<QGraphicsLineItem*> mGuidelines;
+    QString mShowGuidelines;
 
 };
 

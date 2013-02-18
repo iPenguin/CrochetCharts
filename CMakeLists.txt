@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.6)
 if(APPLE OR WIN32)
     project("Crochet Charts")
 else()
@@ -94,6 +94,7 @@ endif()
 set(QT_USE_QTSVG true)
 set(QT_USE_QTNETWORK true)
 include(${QT_USE_FILE})
+set(CMAKE_AUTOMOC TRUE)
 
 #QT4_CREATE_TRANSLATION( qm_files directories ... sources ... ts_files ... OPTIONS ...)
 #QT4_ADD_TRANSLATION( qm_files ts_files ... )
