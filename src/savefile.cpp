@@ -99,9 +99,12 @@ SaveFile::FileError SaveFile::save()
     data = 0;
 
     QDir d(QFileInfo(fileName).path());
-    if(!d.remove(fileName))
-        return SaveFile::Err_RemovingOrigFile;
-
+    //only try to delete the file if it exists.
+    if(d.exists(fileName)) {
+        if(!d.remove(fileName))
+            return SaveFile::Err_RemovingOrigFile;
+    }
+    
     if(!d.rename(fileName +".tmp", fileName))
         return SaveFile::Err_RenamingTempFile;
 
