@@ -93,7 +93,7 @@ SaveFile::FileError SaveFile::save()
     stream.writeEndDocument();
 
     //put xml into binary file.
-    out << data->toLatin1();
+    out << data->toUtf8();
     file.close();
     delete data;
     data = 0;
