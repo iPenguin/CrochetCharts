@@ -477,6 +477,16 @@
                 If you are adding stitches to the end of a row just click on the last stitch drag the red line to the next stitches in order.
                 If you want to add stitches into the middle of the row you will have to start from the first stitch of the row.
             </para>
+            <para>
+                If you want to add stitches to a row select the row from the Row List, the stitches in the row will be selected and the connections
+                between the stitches will be shown as lines joining the stitches. Select the last stitch that is joined and connect it to the new 
+                stitches you wish to add to the row.
+            </para>
+            <para>
+                If you wish to redraw the entire row select the row from the Row List, click on the canvas, which will un-select all of the stitches 
+                in the row. Then select all the stitches you would like in the updated row, in order. Once you've finished selecting the stitches
+                click the "Update Row" button.
+            </para>
             <para>Once you have finished editing the rows, you can close the Row Edit dialog by clicking on any of the other edit modes.
             </para>
         </section>
