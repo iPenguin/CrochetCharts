@@ -533,7 +533,9 @@
             </screenshot>
             <para>A set of tools that allows you to mirror and rotate groups of stitches on the chart.
             </para>
-            <para>Mirroring can be done up, down, left, and right.
+            <para>Mirroring can be done up, down, left, and right. Mirroring is done across vertical or horizontal lines.
+                For example if you mirror left, the left most point of the left most selected stitch is used as the mirroring line.
+                Mirroring will automatically make copies of the stitches that are to be mirrored.
             </para>
             <para>Rotating stitches using this tool will be done from bottom left corner of the group of stitches selected,
                 unless you have a chart center on the chart (<menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Chart Center</guimenuitem></menuchoice>)
@@ -541,6 +543,8 @@
             </para>
             <para>There are 3 buttons that represent 90&#0176; (on the right), 180&#0176; (on the bottom), 270&#0176; (on the left),
                 and a fourth button (on the top) representing a custom option that allows you to select exactly how many degrees you want to rotate the selection.
+            </para>
+            <para>Rotating operates on the selected stitches, unlike mirroring.
             </para>
         </section>
 
