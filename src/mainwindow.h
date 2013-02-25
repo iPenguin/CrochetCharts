@@ -125,6 +125,8 @@ private slots:
     void selectColor(QModelIndex index);
 
     void openRecentFile();
+    void loadFile(QString fileName);
+    void saveFileAs(QString fileName);
     
 private:
     void loadFiles(QStringList fileNames);
