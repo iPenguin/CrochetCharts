@@ -551,6 +551,10 @@
         <section id="tools-color-selector">
             <title>Color Selector</title>
             <para>Select the color that will be used in Color Edit.</para>
+            <para>To use the color edit mode, Select <menuchoice><guimenu>Modes</guimenu><guimenuitem>Color Edit</guimenuitem></menuchoice>.
+            In the tool bar click on the white color box, with the tool tip reading "Select a color for the background".
+            This tool will allow you to change the color behind each stitch by clicking on them.
+            </para>
         </section>
 
         <section id="charts-show-chart-center">
