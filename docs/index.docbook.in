@@ -497,6 +497,9 @@
             <para>Indicators can be used as row indicators, or to point out pieces of the chart that need special notes.
                 The indicators on the chart can show the dot and/or text based on the <link linkend="options-charts">Chart Options/Preferences</link>.
             </para>
+            <para>Once you're in the Indicator Edit mode you can click on the chart to add a new indicator. If you've setup the indicators with text
+                you can edit the text by clicking on the selected indicator.
+            </para>
         </section>
 
         <section id="tools-align-distribute">
