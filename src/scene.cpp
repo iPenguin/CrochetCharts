@@ -1583,6 +1583,16 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
     }
 }
 
+void Scene::gridAddRow(QList< Cell*> row, bool append, int before)
+{
+    if(append) {
+        grid.append(row);
+    } else {
+        if(grid.length() >= before)
+            grid.insert(before, row);
+    }
+}
+
 void Scene::mirror(int direction)
 {
     if(selectedItems().count() <= 0)

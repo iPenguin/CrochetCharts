@@ -112,12 +112,20 @@ QMap< QString, QStringList > TextView::generateRepeats(QStringList stitches, QSt
     QStringList row;
     int count = stitches.count();
 
+    //loop through each stitch in the row.
     for(int i = 0; i < count; ++i) {
         QString value = stitches.value(i);
+        
+        //Attempt to find potential repeats by looking for the 
+        //first stitch (j) that matches the current stitch (i).
+        //Use a gap (i + 2) because we 1 stitch cannot be a repeat.
         for(int j = i + 2; j < count; ++j) {
             if(stitches.value(i) == stitches.value(j)) {
                 int diff = j - i;
                 int diffSts = false;
+                
+                //If we've found a potential repeate (j == i) then see if the 
+                //stitches that follow also match and this really is a repeat.
                 for(int l = 0; l < diff; ++l) {
                     if(stitches.value(i + l) != stitches.value(i))
                         diffSts = true;

@@ -99,6 +99,12 @@ public:
     void addItem(QGraphicsItem* item);
     void removeItem(QGraphicsItem* item);
 
+    /**
+     * Add a row of stitches to the grid.
+     * If append == false, use the rowPos to insert the row into the grid.
+     */
+    void gridAddRow(QList< Cell* > row, bool append = true, int before = 0);
+
 public slots:    
     void copy();
     void cut();
