@@ -170,6 +170,8 @@ void RowEditDialog::updateRow()
     if(ui->rowList->selectedItems().count() <= 0)
         return;
     
+    //adjust the value of the selected row to match the zero-index
+    //of the row in the scene/grid.
     int r = ui->rowList->currentItem()->text().toInt();
     if(r <= 0)
         return;

@@ -908,7 +908,9 @@ void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)
     if(mStartCell) {
 
         if(mRowSelection.contains(gi) && mRowSelection.last() == gi) {
-
+            // remove the last stitch when updating the row list, 
+            //because we're going to add it again below
+            mRowSelection.removeLast();
         } else {
             mRowSelection.clear();
             hideRowLines();
@@ -1040,7 +1042,6 @@ void Scene::createRow()
 
 void Scene::updateRow(int row)
 {
-    //FIXME: this overlaps the createRow code.
     if(selectedItems().count() <= 0)
         return;
 
@@ -1283,6 +1284,7 @@ void Scene::align(int vertical, int horizontal)
             top = tmpTop;
         if(i->sceneBoundingRect().bottom() > bottom)
             bottom = i->sceneBoundingRect().bottom();
+        
     }
 
     qreal diff = right - left;
