@@ -96,7 +96,7 @@ bool StitchSet::loadXmlFile(QString fileName)
     }
 
     if(stream.hasError()) {
-        qWarning() << "Error loading saved file: " << stream.errorString();
+        qWarning() << "Error loading saved file: " << fileName << stream.errorString();
         return false;
     }
 

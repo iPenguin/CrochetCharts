@@ -336,7 +336,7 @@ SaveFile::FileError SaveFile::load()
     QXmlStreamReader stream(docData);
 
     if(stream.hasError()) {
-        qWarning() << "Error loading saved file: " << stream.errorString();
+        qWarning() << "Error loading saved file" << file.fileName() << ":" << stream.errorString();
         return SaveFile::Err_GettingFileContents;
     }
 
