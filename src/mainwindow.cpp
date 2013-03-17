@@ -79,11 +79,6 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
 
     setupMenus();
     readSettings();
-
-#ifdef Q_OS_MACX
-    setAttribute(Qt::WA_DeleteOnClose);
-    QApplication::setQuitOnLastWindowClosed(false);
-#endif
     
     QApplication::restoreOverrideCursor();
 }
