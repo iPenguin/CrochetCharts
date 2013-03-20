@@ -1260,7 +1260,9 @@ void Scene::distributeSelection(int distributionStyle)
 
 void Scene::align(int vertical, int horizontal)
 {
-
+    //TODO: break up function into manageable pieces.
+    
+    //Use the opposite extremes and walk over to the correct placement.
     qreal left = sceneRect().right();
     qreal right = sceneRect().left();
     qreal top = sceneRect().bottom();
@@ -1269,6 +1271,7 @@ void Scene::align(int vertical, int horizontal)
     foreach(QGraphicsItem* i, selectedItems()) {
         qreal tmpLeft, tmpTop;
         if(i->type() != Cell::Type) {
+            //for grouped stitches.
             tmpLeft = i->sceneBoundingRect().left();
             tmpTop = i->sceneBoundingRect().top();
         } else {
@@ -1276,14 +1279,21 @@ void Scene::align(int vertical, int horizontal)
             tmpTop = i->scenePos().y();
         }
 
-        if(tmpLeft < left)
+        if(tmpLeft < left) {
             left = tmpLeft;
-        if(i->sceneBoundingRect().right() > right)
-            right = i->sceneBoundingRect().right();
-        if(tmpTop < top)
+        }
+        
+        if(i->sceneBoundingRect().right() > right) {
+            right = i->sceneBoundingRect().right();    
+        }
+        
+        if(tmpTop < top) {
             top = tmpTop;
-        if(i->sceneBoundingRect().bottom() > bottom)
+        }
+        
+        if(i->sceneBoundingRect().bottom() > bottom) {
             bottom = i->sceneBoundingRect().bottom();
+        }
         
     }
 
@@ -1308,15 +1318,15 @@ void Scene::align(int vertical, int horizontal)
         baseY = centerV;
     else if(vertical == 3)
         baseY = bottom;
-
+    
     undoStack()->beginMacro("align selection");
     foreach(QGraphicsItem* i, selectedItems()) {
-        QPointF oldPos = i->scenePos();
+        QPointF oldPos = i->pos();
         qreal newX = baseX;
         qreal newY = baseY;
         
         if(horizontal == 0) {
-            newX = i->scenePos().x();
+            newX = oldPos.x();
         } else if(horizontal == 2) {
             newX -= (i->sceneBoundingRect().width()/2);
         } else if(horizontal == 3) {
@@ -1324,7 +1334,9 @@ void Scene::align(int vertical, int horizontal)
         }
 
         if(vertical == 0) {
-            newY = i->scenePos().y();
+            newY = oldPos.y();
+        } else if (vertical == 1) {
+            newY = i->pos().y() + (newY - i->sceneBoundingRect().y());
         } else if(vertical == 2) {
             newY -= (i->sceneBoundingRect().height()/2);
         } else if(vertical == 3) {
@@ -1340,9 +1352,10 @@ void Scene::align(int vertical, int horizontal)
             if(vertical == 0)
                 newY = i->scenePos().y();
         }
-
+        
         i->setPos(newX, newY);
         undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        
     }
     undoStack()->endMacro();
     
