@@ -1270,14 +1270,9 @@ void Scene::align(int vertical, int horizontal)
     
     foreach(QGraphicsItem* i, selectedItems()) {
         qreal tmpLeft, tmpTop;
-        if(i->type() != Cell::Type) {
-            //for grouped stitches.
-            tmpLeft = i->sceneBoundingRect().left();
-            tmpTop = i->sceneBoundingRect().top();
-        } else {
-            tmpLeft = i->scenePos().x();
-            tmpTop = i->scenePos().y();
-        }
+
+        tmpLeft = i->sceneBoundingRect().left();
+        tmpTop = i->sceneBoundingRect().top();
 
         if(tmpLeft < left) {
             left = tmpLeft;
@@ -1327,10 +1322,12 @@ void Scene::align(int vertical, int horizontal)
         
         if(horizontal == 0) {
             newX = oldPos.x();
+        } else if (horizontal == 1) {
+            newX = i->pos().x() + (newX - i->sceneBoundingRect().x());
         } else if(horizontal == 2) {
-            newX -= (i->sceneBoundingRect().width()/2);
+            newX = i->pos().x() + ((newX - i->sceneBoundingRect().x()) - i->sceneBoundingRect().width()/2);
         } else if(horizontal == 3) {
-            newX -= i->sceneBoundingRect().width();
+            newX = i->pos().x() + ((newX - i->sceneBoundingRect().x()) - i->sceneBoundingRect().width());
         }
 
         if(vertical == 0) {
@@ -1338,9 +1335,9 @@ void Scene::align(int vertical, int horizontal)
         } else if (vertical == 1) {
             newY = i->pos().y() + (newY - i->sceneBoundingRect().y());
         } else if(vertical == 2) {
-            newY -= (i->sceneBoundingRect().height()/2);
+            newY = i->pos().y() + ((newY - i->sceneBoundingRect().y()) - i->sceneBoundingRect().height()/2);
         } else if(vertical == 3) {
-            newY -= i->sceneBoundingRect().height();
+            newY = i->pos().y() + ((newY - i->sceneBoundingRect().y()) - i->sceneBoundingRect().height());
         }
 
         if(i->type() != Cell::Type) {
