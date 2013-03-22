@@ -1339,16 +1339,6 @@ void Scene::align(int vertical, int horizontal)
         } else if(vertical == 3) {
             newY = i->pos().y() + ((newY - i->sceneBoundingRect().y()) - i->sceneBoundingRect().height());
         }
-
-        if(i->type() != Cell::Type) {
-            QPointF newPos = calcGroupPos(i, QPointF(newX, newY));
-            newX = newPos.x();
-            newY = newPos.y();
-            if(horizontal == 0)
-                newX = i->scenePos().x();
-            if(vertical == 0)
-                newY = i->scenePos().y();
-        }
         
         i->setPos(newX, newY);
         undoStack()->push(new SetItemCoordinates(this, i, oldPos));
