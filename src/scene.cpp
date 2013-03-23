@@ -1623,6 +1623,8 @@ void Scene::createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSiz
     mDefaultStitch = defStitch;
     arrangeGrid(QSize(rows, cols), QSize(1, 1), rowSize.toSize(), false);
 
+    updateSceneRect();
+    
     initDemoBackground();
     
 }
@@ -2120,6 +2122,11 @@ void Scene::updateSceneRect()
     QRectF sbr = sceneRect();
     QRectF final;
 
+    ibr.setTop(ibr.top() + 50);
+    ibr.setBottom(ibr.bottom() + 50);
+    ibr.setLeft(ibr.left() + 50);
+    ibr.setRight(ibr.right() + 50);
+    
     final.setBottom((ibr.bottom() >= sbr.bottom()) ? ibr.bottom() : sbr.bottom());
     final.setTop((ibr.top() <= sbr.top()) ? ibr.top() : sbr.top());
     final.setLeft((ibr.left() <= sbr.left()) ? ibr.left() : sbr.left());
@@ -2193,6 +2200,8 @@ void Scene::createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize
 
     setShowChartCenter(Settings::inst()->value("showChartCenter").toBool());
 
+    updateSceneRect();
+    
     initDemoBackground();
 
 }
