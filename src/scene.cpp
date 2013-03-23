@@ -1355,168 +1355,252 @@ QPointF Scene::calcGroupPos(QGraphicsItem* group, QPointF newScenePos)
     return delta;
 }
 
+QList<QGraphicsItem*> Scene::sortItemsHorizontally(QList<QGraphicsItem*> unsortedItems, int sortEdge)
+{
+    QList<QGraphicsItem*> sorted;
+    
+    foreach(QGraphicsItem *item, unsortedItems) {
+        qreal edge = 0;
+        if (sortEdge == 2) {
+            edge = item->sceneBoundingRect().center().x();
+        } else if (sortEdge == 3) {
+            edge = item->sceneBoundingRect().right();
+        } else { //sortEdge == 1 or any other un-acceptable value.
+            edge = item->sceneBoundingRect().left();
+        }
+
+        //append the first item without question and move on to the second item.
+        if(sorted.count() <= 0) {
+            sorted.append(item);
+            continue;
+        }
+            
+        int sortedCount = sorted.count();
+        for(int i = 0; i < sortedCount; ++i) {
+            qreal curSortedEdge = 0;
+            
+            if(sortEdge == 2) {
+                curSortedEdge = sorted.at(i)->sceneBoundingRect().center().x();
+            } else if (sortEdge == 3) {
+                curSortedEdge = sorted.at(i)->sceneBoundingRect().right();
+            } else { //sortEdge == 1 or any other un-acceptable value.
+                curSortedEdge = sorted.at(i)->sceneBoundingRect().left();
+            }
+            
+            if(edge < curSortedEdge) {
+                sorted.insert(i, item);
+                break;
+            } else if(i + 1 == sortedCount) {
+                sorted.append(item);
+            }
+        }
+    }
+    
+    return sorted;
+}
+
+QList< QGraphicsItem* > Scene::sortItemsVertically(QList< QGraphicsItem* > unsortedItems, int sortEdge)
+{
+    QList<QGraphicsItem*> sorted;
+    
+    foreach(QGraphicsItem *item, unsortedItems) {
+        qreal edge = 0;
+        if (sortEdge == 2) {
+            edge = item->sceneBoundingRect().center().y();
+        } else if (sortEdge == 3) {
+            edge = item->sceneBoundingRect().bottom();
+        } else { //sortEdge == 1 or any other un-acceptable value.
+            edge = item->sceneBoundingRect().top();
+        }
+        
+        //append the first item without question and move on to the second item.
+        if(sorted.count() <= 0) {
+            sorted.append(item);
+            continue;
+        }
+        
+        int sortedCount = sorted.count();
+        for(int i = 0; i < sortedCount; ++i) {
+            qreal curSortedEdge = 0;
+            
+            if(sortEdge == 2) {
+                curSortedEdge = sorted.at(i)->sceneBoundingRect().center().y();
+            } else if (sortEdge == 3) {
+                curSortedEdge = sorted.at(i)->sceneBoundingRect().bottom();
+            } else { //sortEdge == 1 or any other un-acceptable value.
+                curSortedEdge = sorted.at(i)->sceneBoundingRect().top();
+            }
+            
+            if(edge < curSortedEdge) {
+                sorted.insert(i, item);
+                break;
+            } else if(i + 1 == sortedCount) {
+                sorted.append(item);
+            }
+        }
+    }
+    
+    return sorted;
+}
+
+QRectF Scene::selectionBoundingRect(QList< QGraphicsItem* > items, int vertical, int horizontal) 
+{
+    qreal left = sceneRect().right();
+    qreal right = sceneRect().left();
+    qreal top = sceneRect().bottom();
+    qreal bottom = sceneRect().top();
+    
+    QRectF topLeft(QPointF(left, top), QPointF(right, bottom)), 
+           center(QPointF(left, top), QPointF(right, bottom)), 
+           bottomRight(QPointF(left, top), QPointF(right, bottom)),
+           final;
+    
+    foreach(QGraphicsItem *i, items) {
+        //Set the left edges of the 3 possible Rects.
+        if(i->sceneBoundingRect().left() < topLeft.left())
+            topLeft.setLeft(i->sceneBoundingRect().left());
+        if(i->sceneBoundingRect().center().x() < center.left())
+            center.setLeft(i->sceneBoundingRect().center().x());
+        if(i->sceneBoundingRect().right() < bottomRight.left())
+            bottomRight.setLeft(i->sceneBoundingRect().right());
+        
+        //Set the right edges of the 3 possible Rects.
+        if(i->sceneBoundingRect().left() > topLeft.right())
+            topLeft.setRight(i->sceneBoundingRect().left());
+        if(i->sceneBoundingRect().center().x() > center.right())
+            center.setRight(i->sceneBoundingRect().center().x());
+        if(i->sceneBoundingRect().right() > bottomRight.right())
+            bottomRight.setRight(i->sceneBoundingRect().right());
+        
+        //Set the top edges of the 3 possible Rects.
+        if(i->sceneBoundingRect().top() < topLeft.top())
+            topLeft.setTop(i->sceneBoundingRect().top());
+        if(i->sceneBoundingRect().center().y() < center.top())
+            center.setTop(i->sceneBoundingRect().center().y());
+        if(i->sceneBoundingRect().bottom() < bottomRight.top())
+            bottomRight.setTop(i->sceneBoundingRect().bottom());
+        
+        //Set the bottom edges of the 3 possible Rects.
+        if(i->sceneBoundingRect().top() > topLeft.bottom())
+            topLeft.setBottom(i->sceneBoundingRect().top());
+        if(i->sceneBoundingRect().center().y() > center.bottom())
+            center.setBottom(i->sceneBoundingRect().center().y());
+        if(i->sceneBoundingRect().bottom() > bottomRight.bottom())
+            bottomRight.setBottom(i->sceneBoundingRect().bottom());
+        
+        
+    }
+
+    switch(horizontal) {
+        case 0:
+            final.setLeft(topLeft.left());
+            final.setRight(bottomRight.right());
+            break;
+            
+        case 1:
+            final.setLeft(topLeft.left());
+            final.setRight(topLeft.right());
+            break;
+            
+        case 2:
+            final.setLeft(center.left());
+            final.setRight(center.right());
+            break;
+            
+        case 3:
+            final.setLeft(bottomRight.left());
+            final.setRight(bottomRight.right());
+            break;
+    }
+
+    switch(vertical) {
+        case 0:
+            final.setTop(topLeft.top());
+            final.setBottom(bottomRight.bottom());
+            break;
+            
+        case 1:
+            final.setTop(topLeft.top());
+            final.setBottom(topLeft.bottom());
+            break;
+            
+        case 2:
+            final.setTop(center.top());
+            final.setBottom(center.bottom());
+            break;
+            
+        case 3:
+            final.setTop(bottomRight.top());
+            final.setBottom(bottomRight.bottom());
+            break;
+    }
+    
+    //For Debugging:
+    //addRect(topLeft, QPen(QColor(Qt::red)));
+    //addRect(center, QPen(QColor(Qt::green)));
+    //addRect(bottomRight, QPen(QColor(Qt::blue)));
+    //addRect(final, QPen(QColor(Qt::black)));
+    
+    return final;
+    
+}
+
 void Scene::distribute(int vertical, int horizontal)
 {
     QList<QGraphicsItem*> unsorted = selectedItems();
     QList<QGraphicsItem*> sortedH;
     QList<QGraphicsItem*> sortedV;
-    
-    qreal left = sceneRect().right();
-    qreal right = sceneRect().left();
-    qreal top = sceneRect().bottom();
-    qreal bottom = sceneRect().top();
 
-    //sort the cells from left to right, from top to bottom as needed.
-    foreach(QGraphicsItem* i, unsorted) {
-
-        QRectF rect;
-        rect = i->sceneBoundingRect();
-        
-        if(horizontal != 0) {
-            qreal width = 0; //left, center
-
-            if(horizontal == 3)
-                width = rect.width(); //right
-
-            qreal ptX = rect.x() + width;
-            if(i->type() != Cell::Type)
-                ptX = rect.left() + width;
-            
-            if(ptX > right)
-                right = ptX;
-            if(ptX < left)
-                left = ptX;
-
-            if(sortedH.count() <= 0) {
-                sortedH.append(i);
-            } else {
-                bool added = false;
-                for(int s = 0; s < sortedH.count(); ++s) {
-                    qreal curX;
-                    if(sortedH[s]->type() != Cell::Type) {
-                        //FIXME: if group sort by sceneBoundingRect
-                        curX = sortedH[s]->boundingRect().left() + sortedH[s]->boundingRect().width();
-                    } else {
-                        curX = sortedH[s]->scenePos().x() + sortedH[s]->boundingRect().width();
-                    }
-                    
-                    if(ptX < curX) {
-                        sortedH.insert(s, i);
-                        added = true;
-                        break;
-                    }
-                }
-
-                if(!added)
-                    sortedH.append(i);
-            }
-        }
-
-        if(vertical != 0) {
-            qreal height = 0; //left, center
-
-            if(vertical == 3)
-                height = rect.height(); //right
-
-            qreal ptY = rect.y() + height;
-            if(i->type() != Cell::Type)
-                ptY = rect.y() + height;
-            
-            if(ptY < top)
-                top = ptY;
-            if(ptY > bottom)
-                bottom = ptY;
-
-            if(sortedV.count() <= 0) {
-                sortedV.append(i);
-            } else {
-                bool added = false;
-                for(int s = 0; s < sortedV.count(); ++s) {
-                    qreal curY;
-                    if(sortedV[s]->type() != Cell::Type)
-                        curY = sortedV[s]->boundingRect().top() + sortedV[s]->boundingRect().height();
-                    else
-                        curY = sortedV[s]->scenePos().y() + sortedV[s]->boundingRect().height();
-                    
-                    if(ptY < curY) {
-                        sortedV.insert(s, i);
-                        added = true;
-                        break;
-                    }
-                }
-
-                if(!added)
-                    sortedV.append(i);
-            }
-        }
-    }
-    if(horizontal == 2) {
-        //get the centers of the cells.
-        left += (sortedH.first()->boundingRect().width() / 2);
-        right += (sortedH.last()->boundingRect().width() / 2);
-    }
-    if(vertical == 2) {
-        //get the centers of the cells.
-        top += (sortedV.first()->boundingRect().height() / 2);
-        bottom += (sortedV.last()->boundingRect().height() / 2);
-    }
-
-    qreal diff = right - left;
-    qreal spaceH = diff / (sortedH.count() - 1);
-    diff = bottom - top;
-    qreal spaceV = diff / (sortedV.count() - 1);
+    sortedH = sortItemsHorizontally(unsorted, horizontal);
+    sortedV = sortItemsVertically(unsorted, vertical);
+/*    
+    qDebug() << unsorted;
+    qDebug() << "\n\n============================================================\n\n";
+    qDebug() << sortedH;
+    qDebug() << "\n\n============================================================\n\n";
+    qDebug() << sortedV;
+*/    
+    QRectF selectionRect = selectionBoundingRect(unsorted, vertical, horizontal);
+    qreal spaceH = selectionRect.width() / (sortedH.count() - 1);
+    qreal spaceV = selectionRect.height() / (sortedV.count() - 1);
 
     undoStack()->beginMacro("distribute selection");
-
+    
     //go through all cells and adjust them based on the sorting done above.
     foreach(QGraphicsItem* i, unsorted) {
-        qreal adjustH = 0; //left
-        qreal adjustV = 0; //top
-
-        QRectF rect;
-        rect = i->sceneBoundingRect();
-
-        if(horizontal == 2)
-            adjustH = rect.width() / 2; //center h
-        else if(horizontal == 3)
-            adjustH = rect.width(); //right
-            
-        if(vertical == 2)
-            adjustV = rect.height() / 2; //center v
-        else if(vertical == 3)
-            adjustV = rect.height(); //bottom
+        QPointF oldPos = i->pos();
+        qreal newX = 0, newY = 0;
+        qreal offsetX = 0, offsetY = 0;
+        
+        if(vertical == 2) {
+            offsetY = i->sceneBoundingRect().height()/2;
+        } else if (vertical == 3) {
+            offsetY = i->sceneBoundingRect().height();
+        }
+        
+        if(horizontal == 2) {
+            offsetX = i->sceneBoundingRect().width()/2;
+        } else if (horizontal == 3) {
+            offsetX = i->sceneBoundingRect().width();
+        }
 
         int idxX = sortedH.indexOf(i);
         int idxY = sortedV.indexOf(i);
-
-        qreal newX = 0;
-        qreal newY = 0;
         
-        if(horizontal == 0)
-            newX = rect.x();
-        else
-            newX = left - adjustH + (idxX * spaceH);
-
-        if(vertical == 0)
-            newY = rect.y();
-        else
-            newY = top - adjustV + (idxY * spaceV);
-
-
-        if(i->type() != Cell::Type) {
-            QPointF delta = calcGroupPos(i, QPointF(newX, newY));
-
-            newX = i->scenePos().x() + delta.x();
-            newY = i->scenePos().y() + delta.y();
-
-            if(horizontal == 0)
-                newX = i->scenePos().x();
-            if(vertical == 0)
-                newY = i->scenePos().y();
+        if(horizontal == 0) {
+            newX = oldPos.x();
+        } else {
+            newX = i->pos().x() + ((selectionRect.left() + (idxX * spaceH)) - offsetX - i->sceneBoundingRect().x());
+        }
+        
+        if(vertical == 0) {
+            newY = oldPos.y();
+        } else {
+            newY = i->pos().y() + ((selectionRect.top() + (idxY * spaceV)) - offsetY - i->sceneBoundingRect().y());
         }
 
-        QPointF oldPos = i->scenePos();
         i->setPos(newX, newY);
+        addRect(newX, newY, 10, 10);
         undoStack()->push(new SetItemCoordinates(this, i, oldPos));
     }
     undoStack()->endMacro();

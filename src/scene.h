@@ -167,22 +167,26 @@ protected:
     void initDemoBackground();
 
     /**
-     * vertial:    0 - don't change alignment
+     * vertical:   
+     *             0 - don't change alignment
      *             1 - align top
      *             2 - align center v
      *             3 - align bottom
-     * horizontal: 0 - don't change alignment
+     * horizontal: 
+     *             0 - don't change alignment
      *             1 - align left
      *             2 - align center h
      *             3 - align right
      */
     void align(int vertical, int horizontal);
     /**
-     * vertial:    0 - don't change distribution
+     * vertical:   
+     *             0 - don't change distribution
      *             1 - distribute top
      *             2 - distribute center v
      *             3 - distribute bottom
-     * horizontal: 0 - don't change distribution
+     * horizontal: 
+     *             0 - don't change distribution
      *             1 - distribute left
      *             2 - distribute center h
      *             3 - distribute right
@@ -192,6 +196,41 @@ protected:
     void alignToPath();
     void distributeToPath();
 
+    /**
+     * To distribute the stitches evenly we first need to know the sort order of the stitches
+     * we're about to work on, based on which edge we're looking at.
+     * 
+     * sortEdge: 1 = left; 2 = center; 3 = right
+     * bad values for sortEdge will result in a left align sort.
+     */
+    QList<QGraphicsItem*> sortItemsHorizontally(QList<QGraphicsItem*> unsortedItems, int sortEdge = 0);
+    
+    /**
+     * To distribute the stitches evenly we first need to know the sort order of the stitches
+     * we're about to work on, based on which edge we're looking at.
+     * 
+     * @sortEdge: 1 = top; 2 = center; 3 = bottom
+     * bad values for @sortEdge will result in a top align sort.
+     */
+    QList< QGraphicsItem* > sortItemsVertically(QList< QGraphicsItem* > unsortedItems, int sortEdge = 0);
+    
+    /**
+     * Return a sceneBoundingRect for the selected items.
+     * @vertical and @horizontal determine what kind of bounding rect will be returned.
+     * 
+     * vertical:   
+     *             0 - use extremes for top and bottom
+     *             1 - use the tops of all stitches
+     *             2 - use the centers of all stitches
+     *             3 - use the bottoms of all stitches
+     * horizontal: 
+     *             0 - use extremes for left and right
+     *             1 - use the left edges of all stitches
+     *             2 - use the centers of all stitches
+     *             3 - use the right edges of all stitches
+     */
+    QRectF selectionBoundingRect(QList< QGraphicsItem* > items, int vertical, int horizontal);
+    
     /**
      * Because of the fact that the group doesn't return the correct scene co-ordinates
      * this function will correct them.
@@ -357,6 +396,7 @@ public:
     void setShowQuarterLines(bool state);
 protected slots:
     void updateQuarterLines();
+    
 private:
     QGraphicsLineItem* mVerticalLine;
     QGraphicsLineItem* mHorizontalLine;
