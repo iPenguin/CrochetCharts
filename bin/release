@@ -1,12 +1,12 @@
 #!/bin/bash
 
-FLAG="-DSWS_APP=OFF"
+FLAG="-DAPP_STORE=OFF"
 
 while getopts ":a" opt; do
   case $opt in
     a)
       echo "Apple Mac app store release"
-      FLAG="-DSWS_APP=ON"
+      FLAG="-DAPP_STORE=ON"
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -17,21 +17,27 @@ done
 PLATFORM=`uname -a | awk '{ print $1 }'`
 
 if [ $PLATFORM == "Darwin" ]; then
+    echo "================"
+    echo "Make sure that Java is installed or fop wont run and the docs wont install."
+    echo ""
+    echo "================"
+
     export CC=/usr/bin/gcc-4.0
     export CXX=/usr/bin/g++-4.0
 
     export SDKROOT=/Developer/SDKs/MacOSX10.5.sdk
     export MACOSX_DEPLOYMENT_TARGET=10.5
 
-    mkdir -p ~/crochet.git/build
-    cd ~/crochet.git/build
-
-    cmake .. -DSWS_DOCS=ON -DCMAKE_BUILD_TYPE=Release $FLAG && make && cpack -G Bundle
+    mkdir -p ~/crochet/build
+    cd ~/crochet/build
+    
+    QMAKE=`which qmake`
+    cmake ../ -DDOCS=ON -DQT_QMAKE_EXECUTABLE=$QMAKE -DCMAKE_BUILD_TYPE=Release $FLAG && make && cpack -G Bundle
 
 elif [ $PLATFORM == "Linux" ]; then
     
-    mkdir -p ~/crochet.git/build
-    cd ~/crochet.git/build
+    mkdir -p ~/crochet/build
+    cd ~/crochet/build
 
     cmake .. -DSWS_DOCS=ON -DCMAKE_BUILD_TYPE=Release && make && cpack
 elif [ $PLATFORM == "Cygwin" ]; then
