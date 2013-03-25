@@ -1600,7 +1600,7 @@ void Scene::distribute(int vertical, int horizontal)
         }
 
         i->setPos(newX, newY);
-        addRect(newX, newY, 10, 10);
+
         undoStack()->push(new SetItemCoordinates(this, i, oldPos));
     }
     undoStack()->endMacro();
