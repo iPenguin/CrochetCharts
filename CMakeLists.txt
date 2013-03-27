@@ -96,6 +96,7 @@ set(CMAKE_C_FLAGS_PROFILE "${extra_build_flags} -pg -W -Wall")
 set(CMAKE_CXX_FLAGS_PROFILE ${CMAKE_C_FLAGS_PROFILE})
 set(CMAKE_EXE_LINKER_FLAGS_PROFILE "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
+message(STATUS "Build flags: ${CMAKE_CXX_FLAGS}")
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 #More info see: http://cmake.org/cmake/help/cmake2.6docs.html#module:FindQt4
@@ -117,12 +118,12 @@ add_definitions(${QT_DEFINITIONS})
 ###################################################################################
 include("${CMAKE_CURRENT_SOURCE_DIR}/resources/installers.cmake")
 
-add_subdirectory(src)
-
 if(DOCS)
-	add_subdirectory(docs)
+    add_subdirectory(docs)
 endif()
 
 if(UNIT_TESTING)
     add_subdirectory(tests)
 endif()
+
+add_subdirectory(src)

@@ -1,7 +1,9 @@
 #!/usr/bin/python
 #
-#This script will run rsync and keep SaveLastXDays
-#worth of incremental backups.
+#This script will code sign the libraries and application
+#so it can be included in the Mac App Store.
+#
+
 import datetime
 import time
 import os
@@ -10,15 +12,13 @@ import getopt
 
 ########## Configuration Info ##################
 
-application = "CrochetCharts.app"
+app_name = "Crochet Charts"
+app = app_name + ".app"
+app_exe = "/Contents/MacOS/Crochet Charts"
 
 fileList = [ "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore",
-            "/Contents/Frameworks/QtDeclarative.framework/Versions/4/QtDeclarative",
             "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui",
             "/Contents/Frameworks/QtNetwork.framework/Versions/4/QtNetwork",
-            "/Contents/Frameworks/QtScript.framework/Versions/4/QtScript",
-            "/Contents/Frameworks/QtSql.framework/Versions/4/QtSql",
-            "/Contents/Frameworks/QtWebkit.framework/Versions/4/QtWebkit",
             "/Contents/Plugins/accessible/libqtaccessiblewidgets.dylib",
             "/Contents/Plugins/bearer/libqcorewlanbearer.dylib",
             "/Contents/Plugins/bearer/libqgenericbearer.dylib",
@@ -31,31 +31,59 @@ fileList = [ "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore",
             "/Contents/Plugins/imageformats/libqjpeg.dylib",
             "/Contents/Plugins/imageformats/libqmng.dylib",
             "/Contents/Plugins/imageformats/libqtiff.dylib",
-            "/Contents/Plugins/qmltooling/libqmldbg_tcp.dylib",
-            "/Contents/Plugins/graphicssystems/libqtracegraphicssystem.dylib",
-            "/Contents/MacOS/CrochetCharts"]
+	    app_exe]
 
-dateFormat = "%Y%m%d"
+app_store_cert = "3rd Party Mac Developer Application: Brian Milco"
+app_store_installer = "3rd Party Mac Developer Installer: Brian Milco"
 
-certName = "3rd Party Mac Developer Application: Brian Milco"
+devel_cert = "Developer ID Application: Brian Milco"
+devel_installer = "Developer ID Installer: Brian Milco"
+
 codeSign = "/usr/bin/codesign"
+dsymutil = "/usr/bin/dsymutil"
+productbuild = "/usr/bin/productbuild"
 
 ################################################
 
-opts, args = getopt.getopt(sys.argv[1:], "f:")
+opts, args = getopt.getopt(sys.argv[1:], "af:")
+
+certName = devel_cert
+certInstaller = devel_installer
+appDir = "./"
+forAppStore = False
 
 for o, a in opts:
     if o == "-f":
-        output = a
+        appDir = a
+    elif o == "-a":
+        forAppStore = True
+
+if forAppStore:
+    print "-- Signing for the App Store --"
+    certName = app_store_cert
+    certInstaller = app_store_installer
+else:
+    print "-- Signing for the Website --"
+
+print "Generate symbols: ",
+os.system(dsymutil + " \"" + appDir + "/" + app + app_exe + "\"")
+print "Done"
 
 print "Sign application files: ",
 for file in fileList:
-
-    today = datetime.date.today()
-
-    os.system(codeSign + " -f -s " + certName + " " + output + "/" + file)
-
-
-os.system(codeSign + " -f -s " + certName + " " + output)
-
+    os.system(codeSign + " -f -s \"" + certName + "\" \"" + appDir + "/" + app + file + "\"")
 print "Done"
+
+print "Sign Bundle: ",
+os.system(codeSign + " -f -s \"" + certName + "\" \"" + appDir + "/" + app + "\"")
+print "Done"
+
+if forAppStore:
+    print "Package for the App Store: ",
+    os.system(productbuild + " --component \"" + appDir + "/" + app + "\" /Applications --sign \"" + certInstaller + "\" --product \"" + appDir + "/" + app + "/Contents/Info.plist\" \"" + app_name + ".pkg\"")
+    print "Done"
+
+    print "-- Testing Application Installation --",
+    os.system("installer -store -pkg " + appDir + "/" + app_name + ".pkg\" -target /")
+    print "Done"
+

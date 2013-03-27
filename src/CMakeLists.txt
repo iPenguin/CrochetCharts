@@ -80,6 +80,10 @@ target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})
 if(APPLE)
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
 
+    if(APP_STORE)
+        set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS "APPLE_APP_STORE=1")
+    endif()
+
     install(CODE "
         execute_process(
             COMMAND \"/usr/bin/macdeployqt\"
@@ -87,16 +91,17 @@ if(APPLE)
             WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
-    
+
+    if(${APP_STORE})
+        set(sign_app_flag " -a")
+    endif()
+
     install(CODE "
         execute_process(
-            COMMAND \"@CMAKE_SOURCE_DIR@/bin/sign_app @CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@.app/\"
+            COMMAND \"${CMAKE_SOURCE_DIR}/bin/sign_app\" @sign_app_flag@ -f \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@\"
+            WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@\"
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
-
-    if(APP_STORE)
-        set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS "APPLE_APP_STORE=1")
-    endif()
 
 else()
 

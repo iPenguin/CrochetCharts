@@ -1,12 +1,14 @@
 #!/bin/bash
 
 FLAG="-DAPP_STORE=OFF"
+APP_STORE=0
 
 while getopts ":a" opt; do
   case $opt in
     a)
       echo "Apple Mac app store release"
       FLAG="-DAPP_STORE=ON"
+      APP_STORE=1
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -18,21 +20,24 @@ PLATFORM=`uname -a | awk '{ print $1 }'`
 
 if [ $PLATFORM == "Darwin" ]; then
     echo "================"
-    echo "Make sure that Java is installed or fop wont run and the docs wont install."
-    echo ""
+    echo "#"
+    echo "# Make sure that Java is installed or fop wont run and the docs wont install."
+    echo "#"
     echo "================"
 
-    export CC=/usr/bin/gcc-4.0
-    export CXX=/usr/bin/g++-4.0
-
-    export SDKROOT=/Developer/SDKs/MacOSX10.5.sdk
-    export MACOSX_DEPLOYMENT_TARGET=10.5
+    export CC=/usr/bin/clang
+    export CXX=/usr/bin/clang++
 
     mkdir -p ~/crochet/build
     cd ~/crochet/build
     
     QMAKE=`which qmake`
-    cmake ../ -DDOCS=ON -DQT_QMAKE_EXECUTABLE=$QMAKE -DCMAKE_BUILD_TYPE=Release $FLAG && make && cpack -G Bundle
+    
+    cmake ../ -DDOCS=ON -DQT_QMAKE_EXECUTABLE=$QMAKE -DCMAKE_BUILD_TYPE=Release $FLAG && make 
+
+    if [ $APP_STORE != 1 ]; then
+        cpack -G Bundle
+    fi
 
 elif [ $PLATFORM == "Linux" ]; then
     
