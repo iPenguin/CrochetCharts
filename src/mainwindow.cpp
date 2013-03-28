@@ -782,7 +782,7 @@ void MainWindow::fileOpen()
 {
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
     
-    QFileDialog* fd = new QFileDialog(this, tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern);; All files (*.*)"));
+    QFileDialog* fd = new QFileDialog(this, tr("Open Pattern File"), fileLoc, tr("Pattern File (*.pattern);; All files (*.*)"));
     fd->setWindowFlags(Qt::Sheet);
     fd->setObjectName("fileopendialog");
     fd->setViewMode(QFileDialog::List);
@@ -863,12 +863,13 @@ void MainWindow::fileSaveAs()
 
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
 
-    QFileDialog* fd = new QFileDialog(this, tr("Save Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern)"));
+    QFileDialog* fd = new QFileDialog(this, tr("Save Pattern File"), fileLoc, tr("Pattern File (*.pattern)"));
     fd->setWindowFlags(Qt::Sheet);
     fd->setObjectName("filesavedialog");
     fd->setViewMode(QFileDialog::List);
     fd->setFileMode( QFileDialog::AnyFile );
     fd->setAcceptMode(QFileDialog::AcceptSave);
+    fd->selectFile("my design.pattern");
     fd->open(this, SLOT(saveFileAs(QString)));
 }
 

@@ -52,13 +52,8 @@ option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed
 option(DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
 option(APP_STORE "Create an apple app store version" OFF)
-set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
+set(CMAKE_OSX_ARCHITECTURES "x86_64")
 
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
-else()
-    set(CMAKE_OSX_ARCHITECTURES "x86_64")
-endif()
 message("-------------------------------------------------------")
 message(STATUS ${PROJECT_NAME} " Version: " ${VERSION})
 message(STATUS "CMake Build Type: " ${CMAKE_BUILD_TYPE})
@@ -75,22 +70,33 @@ if(FORCE_32BIT)
     set(extra_link_flags "-m elf_i386")
 endif()
 
-set(CMAKE_C_FLAGS "${extra_build_flags} -g -ggdb -W -Wall")  #-g -gdwarf-2 -W -Wall -Qunused-arguments -fcolor-diagnostics") #-ansi -pedantic
+if(APPLE)
+    set(extra_build_flags "${extra_build_flags} -g -gdwarf-2 -Qunused-arguments -fcolor-diagnostics")
+else()
+    set(extra_build_flags "${extra_build_flags} -g -ggdb")
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(extra_build_flags "${extra_build_flags} -O2 -s")
+endif()
+
+set(CMAKE_C_FLAGS "${extra_build_flags} -W -Wall")  #") #-ansi -pedantic
 set(CMAKE_CXX_FLAGS ${CMAKE_C_FLAGS})
 set(CMAKE_EXE_LINKER_FLAGS " ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -g -ggdb -W -Wall")
+set(CMAKE_C_FLAGS_DEBUG "${extra_build_flags} -W -Wall")
 set(CMAKE_CXX_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
 set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -W -Wall -O2 -s")
+set(CMAKE_C_FLAGS_RELEASE "${extra_build_flags} -W -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${extra_link_flags} ${CMAKE_EXE_LINKER_FLAGS}")
 
-set(CMAKE_C_FLAGS_PROFILE "${extra_build_flags} -g -ggdb -pg -W -Wall")
+set(CMAKE_C_FLAGS_PROFILE "${extra_build_flags} -pg -W -Wall")
 set(CMAKE_CXX_FLAGS_PROFILE ${CMAKE_C_FLAGS_PROFILE})
 set(CMAKE_EXE_LINKER_FLAGS_PROFILE "-pg " ${CMAKE_EXE_LINKER_FLAGS})
 
+message(STATUS "Build flags: ${CMAKE_CXX_FLAGS}")
 include_directories(${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 #More info see: http://cmake.org/cmake/help/cmake2.6docs.html#module:FindQt4
@@ -112,12 +118,12 @@ add_definitions(${QT_DEFINITIONS})
 ###################################################################################
 include("${CMAKE_CURRENT_SOURCE_DIR}/resources/installers.cmake")
 
-add_subdirectory(src)
-
 if(DOCS)
-	add_subdirectory(docs)
+    add_subdirectory(docs)
 endif()
 
 if(UNIT_TESTING)
     add_subdirectory(tests)
 endif()
+
+add_subdirectory(src)

@@ -62,5 +62,7 @@
 			<string>Owner</string>
 		</dict>
 	</array>
+    <key>ForAppStore</key>
+    <string>yes</string>
 </dict>
 </plist>
