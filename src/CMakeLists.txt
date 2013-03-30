@@ -92,6 +92,8 @@ if(APPLE)
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
 
+    set(sign_app_flag "")
+
     if(${APP_STORE})
         set(sign_app_flag " -a")
     endif()
