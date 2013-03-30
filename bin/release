@@ -44,9 +44,7 @@ elif [ $PLATFORM == "Linux" ]; then
     mkdir -p ~/crochet/build
     cd ~/crochet/build
 
-    cmake .. -DSWS_DOCS=ON -DCMAKE_BUILD_TYPE=Release && make && cpack
-elif [ $PLATFORM == "Cygwin" ]; then
-    print "TODO: windows"
+    cmake .. -DDOCS=ON -DCMAKE_BUILD_TYPE=Release && make && cpack
 else
     print "Warning unknown platform"
 fi

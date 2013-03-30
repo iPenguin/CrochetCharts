@@ -70,7 +70,7 @@ if(FORCE_32BIT)
     set(extra_link_flags "-m elf_i386")
 endif()
 
-if(APPLE)
+if(APPLE OR UNIX)
     set(extra_build_flags "${extra_build_flags} -g -gdwarf-2 -Qunused-arguments -fcolor-diagnostics")
 else()
     set(extra_build_flags "${extra_build_flags} -g -ggdb")
