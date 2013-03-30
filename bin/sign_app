@@ -16,6 +16,8 @@ app_name = "Crochet Charts"
 app = app_name + ".app"
 app_exe = "/Contents/MacOS/Crochet Charts"
 
+bundle_id="com.stitchworkssoftware.crochetcharts"
+
 fileList = [ "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore",
             "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui",
             "/Contents/Frameworks/QtNetwork.framework/Versions/4/QtNetwork",
@@ -30,8 +32,8 @@ fileList = [ "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore",
             "/Contents/Plugins/imageformats/libqico.dylib",
             "/Contents/Plugins/imageformats/libqjpeg.dylib",
             "/Contents/Plugins/imageformats/libqmng.dylib",
-            "/Contents/Plugins/imageformats/libqtiff.dylib",
-	    app_exe]
+            "/Contents/Plugins/imageformats/libqtiff.dylib"
+	    ]
 
 app_store_cert = "3rd Party Mac Developer Application: Brian Milco"
 app_store_installer = "3rd Party Mac Developer Installer: Brian Milco"
@@ -71,7 +73,7 @@ print "Done"
 
 print "Sign application files: ",
 for file in fileList:
-    os.system(codeSign + " -f -s \"" + certName + "\" \"" + appDir + "/" + app + file + "\"")
+    os.system(codeSign + " -f -s \"" + certName + "\" -i " + bundle_id + " \"" + appDir + "/" + app + file + "\"")
 print "Done"
 
 print "Sign Bundle: ",
