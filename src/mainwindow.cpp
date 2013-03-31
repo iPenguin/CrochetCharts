@@ -659,12 +659,13 @@ void MainWindow::helpAbout()
 {
     QString aboutInfo = QString(tr("<h1>%1</h1>"
                                    "<p>Version: %2 (built on %3)</p>"
-                                   "<p>Copyright (c) 2010-2011 %4</p>"
+                                   "<p>Copyright (c) %4 %5</p>"
                                    "<p>This software is for creating crochet charts that"
                                    " can be exported in many differnet file types.</p>")
                                 .arg(qApp->applicationName())
                                 .arg(qApp->applicationVersion())
                                 .arg(AppInfo::inst()->appBuildInfo)
+                                .arg(AppInfo::inst()->projectLife)
                                 .arg(qApp->organizationName())
                                 );
     QString fName = Settings::inst()->value("firstName").toString();

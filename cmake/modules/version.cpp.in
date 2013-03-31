@@ -2,3 +2,5 @@
 
 const QString gGIT_VERSION = "@VERSION@";
 const QString gGIT_VERSION_SHORT = "@VERSION_SHORT@";
+
+const QString gPROJECT_LIFE = "@PROJECT_LIFE@";

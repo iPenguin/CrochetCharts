@@ -3,7 +3,6 @@ include(InstallRequiredSystemLibraries)
 
 set(PROJECT_DESCRIPTION  "Symbol crochet design software")
 set(PROJECT_VENDOR       "Stitch Works Software")
-set(PROJECT_LIFE         "2010-2012")
 set(ORG_BASE_URL         "StitchWorksSoftware.com")
 set(PROJECT_CONTACT      "support@${ORG_BASE_URL}")
 set(ORG_CONTACT          "http://${ORG_BASE_URL}/contact")
