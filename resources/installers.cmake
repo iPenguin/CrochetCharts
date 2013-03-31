@@ -84,7 +84,7 @@ elseif(APPLE)
     
     set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
     set(CPACK_DMG_DS_STORE "${CMAKE_SOURCE_DIR}/resources/mac/MacDmgDsStore")
-    set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.png")
+    set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.pdf")
 
     set(CPACK_OSX_PACKAGE_VERSION "10.5") #min package version
     
