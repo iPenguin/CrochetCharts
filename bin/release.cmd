@@ -15,6 +15,7 @@ set appExt="-win32.exe"
 set /p curVersion="Enter Current Version string (ie 1.1.4): " %=%
 set /p csPassword="Enter Code Signing Password: " %=%
 
+set PATH=C:\MinGW-4.4\bin;%PATH%
 cd "C:\Documents and Settings\Brian Milco\My Documents\build"
 cmake -G "MinGW Makefiles" ..\crochet.git -DDOCS=ON -DCMAKE_BUILD_TYPE=Release -DQT_QMAKE_EXECUTABLE="C:\Qt\4.8.4\bin\qmake.exe"
 cpack -G NSIS
