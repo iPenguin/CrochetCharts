@@ -51,8 +51,8 @@ if(WIN32)
     set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>")
     set(crochet_win "${CMAKE_SOURCE_DIR}/crochet.rc")
 
-    set(QT_WIN_LIBS "C://qtsdk//Desktop//Qt//4.8.1//mingw//bin")
-    set(MINGW_LIBS "C://QtSDK//mingw//bin")
+    set(QT_WIN_LIBS "C://qt//4.8.4//bin")
+    set(MINGW_LIBS "C://MinGW-4.4//bin")
     
     set(QT_LIBS_WINDOWS "${QT_WIN_LIBS}//QtSvg4.dll" "${QT_WIN_LIBS}//QtCore4.dll" "${QT_WIN_LIBS}//QtGui4.dll"
                         "${QT_WIN_LIBS}//QtNetwork4.dll" "${QT_WIN_LIBS}//QtXml4.dll")
@@ -80,6 +80,10 @@ target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})
 if(APPLE)
     install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
 
+    if(APP_STORE)
+        set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS "APPLE_APP_STORE=1")
+    endif()
+
     install(CODE "
         execute_process(
             COMMAND \"/usr/bin/macdeployqt\"
@@ -87,16 +91,19 @@ if(APPLE)
             WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
-    
+
+    set(sign_app_flag "")
+
+    if(${APP_STORE})
+        set(sign_app_flag " -a")
+    endif()
+
     install(CODE "
         execute_process(
-            COMMAND \"@CMAKE_SOURCE_DIR@/bin/sign_app @CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@.app/\"
+            COMMAND \"${CMAKE_SOURCE_DIR}/bin/sign_app\" @sign_app_flag@ -f \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@\"
+            WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@\"
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
-
-    if(APP_STORE)
-        set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS "APPLE_APP_STORE=1")
-    endif()
 
 else()
 

@@ -57,6 +57,7 @@ private:
     //update the source dropdown list and switch to setName
     void updateSourceDropDown(QString setName = "");
 
+    StitchSet* addStitchSet(QString fileName);
 };
 
 #endif //STITCHLIBRARYUI_H

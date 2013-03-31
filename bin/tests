@@ -7,12 +7,13 @@
 # The final output of this script is clean color-ified
 # total lines for all the tests in the test suite.
 #
-PATH="~/crochet.git/bin:$PATH"
-base_dir="${HOME}/crochet.git"
+PATH="~/crochet/bin:$PATH"
+base_dir="${HOME}/crochet"
+build_dir="${base_dir}/build"
 
-cd ${base_dir}/build
-tests/tests > tests.log
-cat tests.log | grep -e Start -e Totals | awk -f ${base_dir}/bin/tests_overview.awk
+cd ${build_dir}
+${build_dir}/tests/tests > ${build_dir}/tests.log
+cat ${build_dir}/tests.log | grep -e Start -e Totals | awk -f ${base_dir}/bin/tests_overview.awk
 
 if [[ "$1" != "-d" && "$1" != "--details" ]]; then
     echo "Do you want to see the details? (y/N)"
@@ -22,6 +23,6 @@ else
 fi
 
 if [ "$answer" == "y" ]; then
-    cat ${base_dir}/build/tests.log | awk -f ${base_dir}/bin/tests_output.awk
+    cat ${build_dir}/tests.log | awk -f ${base_dir}/bin/tests_output.awk
 fi
 

@@ -60,6 +60,8 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
     setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
 
+    setUnifiedTitleAndToolBarOnMac(true);
+    
 #ifndef APPLE_APP_STORE
     bool checkForUpdates = Settings::inst()->value("checkForUpdates").toBool();
     if(checkForUpdates)
@@ -77,7 +79,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
 
     setupMenus();
     readSettings();
-
+    
     QApplication::restoreOverrideCursor();
 }
 
@@ -779,14 +781,25 @@ void MainWindow::toolsOptions()
 void MainWindow::fileOpen()
 {
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
-    QString fileName = QFileDialog::getOpenFileName(this,
-         tr("Open Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern)"));
+    
+    QFileDialog* fd = new QFileDialog(this, tr("Open Pattern File"), fileLoc, tr("Pattern File (*.pattern);; All files (*.*)"));
+    fd->setWindowFlags(Qt::Sheet);
+    fd->setObjectName("fileopendialog");
+    fd->setViewMode(QFileDialog::List);
+    fd->setFileMode( QFileDialog::ExistingFile );
+    fd->setAcceptMode(QFileDialog::AcceptOpen);
+    fd->open(this, SLOT(loadFile(QString)));
+   
+}
 
+void MainWindow::loadFile(QString fileName)
+{
+    
     if(fileName.isEmpty() || fileName.isNull())
         return;
-
+    
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
+    
     if(!Settings::inst()->files.contains(fileName.toLower())) {
         if(ui->tabWidget->count() > 0) {
             QStringList files;
@@ -803,7 +816,7 @@ void MainWindow::fileOpen()
         }
         
         addToRecentFiles(fileName);
-
+        
         setApplicationTitle();
         updateMenuItems();
     } else {
@@ -811,7 +824,7 @@ void MainWindow::fileOpen()
         MainWindow* win = Settings::inst()->files.find(fileName.toLower()).value();
         win->raise();
     }
-    QApplication::restoreOverrideCursor();
+    QApplication::restoreOverrideCursor();   
 }
 
 void MainWindow::fileSave()
@@ -849,14 +862,28 @@ void MainWindow::fileSaveAs()
     }
 
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
-    QString fileName = QFileDialog::getSaveFileName(this,
-            tr("Save Crochet Pattern"), fileLoc, tr("Crochet Pattern (*.pattern)"));
 
+    QFileDialog* fd = new QFileDialog(this, tr("Save Pattern File"), fileLoc, tr("Pattern File (*.pattern)"));
+    fd->setWindowFlags(Qt::Sheet);
+    fd->setObjectName("filesavedialog");
+    fd->setViewMode(QFileDialog::List);
+    fd->setFileMode( QFileDialog::AnyFile );
+    fd->setAcceptMode(QFileDialog::AcceptSave);
+    fd->selectFile("my design.pattern");
+    fd->open(this, SLOT(saveFileAs(QString)));
+}
+
+void MainWindow::saveFileAs(QString fileName)
+{    
     if(fileName.isEmpty())
         return;
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+    if(!fileName.endsWith(".pattern", Qt::CaseInsensitive)) {
+        fileName += ".pattern";
+    }
+    
     //update the list of open files.
     if(Settings::inst()->files.contains(mFile->fileName.toLower()))
         Settings::inst()->files.remove(mFile->fileName.toLower());

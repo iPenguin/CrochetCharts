@@ -24,14 +24,14 @@ public:
 
     /**
      * Generates the text for a given row of the chart without trailing \n.
-     * If cleanOutput = true do any special processing for the textd.
+     * If cleanOutput = true do any special processing for the text.
      **/
     QString generateTextRow(int row, bool cleanOutput = false, bool useRepeats = false);
     
 private:
     /**
      * This function strips off any incomplete repeat indicators or other
-     * special text input from the user that might be incomplete.
+     * special text input from the user input that might be incomplete.
      */
     QString cleanToken(QString token);
 
@@ -43,6 +43,9 @@ private:
      */
     QString generateText(QStringList row, bool useRepeats = false);
     
+    /**
+     * Returns the number of repeat matches occurring in stitches
+     */
     int matchCount(QStringList stitches, int startPos, int length);
 
 private:

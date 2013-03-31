@@ -11,7 +11,7 @@
         <icon>:/stitches/sl_st.svg</icon>
         <description>slip stitch</description>
         <category>Default</category>
-        <ws>ss</ws>
+        <ws>sl st</ws>
     </stitch>
 
     <stitch>
