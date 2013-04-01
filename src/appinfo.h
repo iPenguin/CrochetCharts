@@ -49,10 +49,10 @@ public:
 
     const QString demoString;
     
+    const QString projectLife;
+
     const quint32 magicNumber;
     const quint32 magicNumberSet;
-
-    const QString projectLife;
     
 private:
     static AppInfo* mInstance;
