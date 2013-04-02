@@ -48,11 +48,18 @@ if [ $PLATFORM == "Darwin" ]; then
     fi
 
 elif [ $PLATFORM == "Linux" ]; then
+
+    ARCH=`uname -i`
     
     mkdir -p ~/crochet/build
     cd ~/crochet/build
 
-    cmake .. -DDOCS=ON -DCMAKE_BUILD_TYPE=Release && make && cpack
+    if [ $ARCH == "i386" ]; then
+        cmake ../ -DDOCS=ON -DCMAKE_BUILD_TYPE=Release -DFORCE_32BIT=ON && make && cpack 
+    else
+        cmake .. -DDOCS=ON -DCMAKE_BUILD_TYPE=Release && make && cpack
+    fi
+
 else
     print "Warning unknown platform"
 fi
