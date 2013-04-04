@@ -16,13 +16,12 @@ app_name = "Crochet Charts"
 app = app_name + ".app"
 app_exe = "/Contents/MacOS/Crochet Charts"
 
-bundle_id="com.stitchworkssoftware.CrochetCharts"
+bundle_id="com.stitchworkssoftware.Crochet Charts"
 
 fileList = [ "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore",
             "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui",
             "/Contents/Frameworks/QtNetwork.framework/Versions/4/QtNetwork",
             "/Contents/Plugins/accessible/libqtaccessiblewidgets.dylib",
-            "/Contents/Plugins/bearer/libqcorewlanbearer.dylib",
             "/Contents/Plugins/bearer/libqgenericbearer.dylib",
             "/Contents/Plugins/codecs/libqcncodecs.dylib",
             "/Contents/Plugins/codecs/libqjpcodecs.dylib",
@@ -64,12 +63,13 @@ if forAppStore:
     print "-- Signing for the App Store --"
     certName = app_store_cert
     certInstaller = app_store_installer
+    bundle_id = "com.stitchworkssoftware.CrochetCharts"
 else:
     print "-- Signing for the Website --"
 
-print "Generate symbols: ",
-os.system(dsymutil + " \"" + appDir + "/" + app + app_exe + "\"")
-print "Done"
+#print "Generate symbols: ",
+#os.system(dsymutil + " \"" + appDir + "/" + app + app_exe + "\"")
+#print "Done"
 
 print "Sign application files: ",
 for file in fileList:
@@ -83,9 +83,5 @@ print "Done"
 if forAppStore:
     print "Package for the App Store: ",
     os.system(productbuild + " --component \"" + appDir + "/" + app + "\" /Applications --sign \"" + certInstaller + "\" --product \"" + appDir + "/" + app + "/Contents/Info.plist\" \"" + app_name + ".pkg\"")
-    print "Done"
-
-    print "-- Testing Application Installation --",
-    os.system("installer -store -pkg " + appDir + "/" + app_name + ".pkg\" -target /")
     print "Done"
 

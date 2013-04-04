@@ -6,6 +6,7 @@
 
 FLAG="-DAPP_STORE=OFF"
 APP_STORE=0
+BUNDLE_ID="com.stitchworkssoftware.Crochet Charts"
 
 while getopts ":a" opt; do
   case $opt in
@@ -13,6 +14,7 @@ while getopts ":a" opt; do
       echo "Apple Mac app store release"
       FLAG="-DAPP_STORE=ON"
       APP_STORE=1
+      BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -40,12 +42,12 @@ if [ $PLATFORM == "Darwin" ]; then
     #QMAKE=`which qmake`
     #Custom Qt build:
     QMAKE="/usr/local/Trolltech/Qt-4.8.4/bin/qmake"
+    echo "-- Bundle_ID: $BUNDLE_ID"
+    cmake ../ -DDOCS=ON -DQT_QMAKE_EXECUTABLE=$QMAKE -DCMAKE_BUILD_TYPE=Release $FLAG -DCMAKE_OSX_SYSROOT=/Developer/SDKs/MacOSX10.6.sdk/ -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 -DBUNDLE_ID="\"$BUNDLE_ID\""  && make
     
-    cmake ../ -DDOCS=ON -DQT_QMAKE_EXECUTABLE=$QMAKE -DCMAKE_BUILD_TYPE=Release $FLAG -DCMAKE_OSX_SYSROOT=/Developer/SDKs/MacOSX10.6.sdk/ -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 -DBUNDLE_ID="com.stitchworkssoftware.CrochetCharts" && make
-
-    if [ $APP_STORE != 1 ]; then
-        cpack -G Bundle
-    else
+    cpack -G Bundle
+    
+    if [ $APP_STORE == 1 ]; then
         ../bin/sign_app -a -f _CPack_Packages/Darwin/Bundle/Crochet\ Charts-1.1.4
     fi
 
