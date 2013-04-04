@@ -92,19 +92,6 @@ if(APPLE)
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
 
-    set(sign_app_flag "")
-
-    if(${APP_STORE})
-        set(sign_app_flag " -a")
-    endif()
-
-    install(CODE "
-        execute_process(
-            COMMAND \"${CMAKE_SOURCE_DIR}/bin/sign_app\" @sign_app_flag@ -f \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@\"
-            WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@\"
-            OUTPUT_VARIABLE _output)
-    " COMPONENT Runtime)
-
 else()
 
     install(TARGETS ${EXE_NAME} BUNDLE DESTINATION . COMPONENT Runtime RUNTIME DESTINATION bin COMPONENT Runtime)

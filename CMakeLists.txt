@@ -74,7 +74,7 @@ else()
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(extra_build_flags "${extra_build_flags} -O2 -s")
+    set(extra_build_flags "${extra_build_flags} -O2")
 endif()
 
 set(CMAKE_C_FLAGS "${extra_build_flags} -W -Wall")  #") #-ansi -pedantic
