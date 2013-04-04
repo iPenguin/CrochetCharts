@@ -41,10 +41,12 @@ if [ $PLATFORM == "Darwin" ]; then
     #Custom Qt build:
     QMAKE="/usr/local/Trolltech/Qt-4.8.4/bin/qmake"
     
-    cmake ../ -DDOCS=ON -DQT_QMAKE_EXECUTABLE=$QMAKE -DCMAKE_BUILD_TYPE=Release $FLAG -DCMAKE_OSX_SYSROOT=/Developer/SDKs/MacOSX10.6.sdk/ -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 && make
+    cmake ../ -DDOCS=ON -DQT_QMAKE_EXECUTABLE=$QMAKE -DCMAKE_BUILD_TYPE=Release $FLAG -DCMAKE_OSX_SYSROOT=/Developer/SDKs/MacOSX10.6.sdk/ -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 -DBUNDLE_ID="com.stitchworkssoftware.CrochetCharts" && make
 
     if [ $APP_STORE != 1 ]; then
         cpack -G Bundle
+    else
+        ../bin/sign_app -a -f _CPack_Packages/Darwin/Bundle/Crochet\ Charts-1.1.4
     fi
 
 elif [ $PLATFORM == "Linux" ]; then

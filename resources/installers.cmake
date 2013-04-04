@@ -102,8 +102,7 @@ elseif(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
     set_source_files_properties("${MACOSX_BUNDLE_ICON_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    #FIXME: what are the implications of changing this to the correct com.stitchworkssoftware.crochetcharts?
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware.Crochet Charts")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "${BUNDLE_ID}")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
 
     configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
