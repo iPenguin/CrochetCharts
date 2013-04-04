@@ -51,6 +51,9 @@ if(WIN32)
 
     set(CPACK_PACKAGE_ICON "C:\\\\Documents and Settings\\\\Brian Milco\\\\My Documents\\\\crochet.git\\\\images\\\\installer.bmp")
     set(CPACK_GENERATOR "NSIS")
+    #
+    #set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL "ON")
+    #
     set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_CONTACT "${CPACK_PACKAGE_CONTACT}")
@@ -85,7 +88,6 @@ elseif(APPLE)
     set(CPACK_DMG_DS_STORE "${CMAKE_SOURCE_DIR}/resources/mac/MacDmgDsStore")
     set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.pdf")
 
-    set(CPACK_OSX_PACKAGE_VERSION "10.5") #min package version
     
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")

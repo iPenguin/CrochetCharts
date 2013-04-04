@@ -27,7 +27,7 @@ set (HUNSPELL_FIND_QUIETLY TRUE)
 include(FindHunSpell)
 
 include(GetGitRevisionDescription)
-git_describe(VERSION --tags --dirty=-working)
+git_describe(VERSION --tags --dirty=-w)
 
 string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
 string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
