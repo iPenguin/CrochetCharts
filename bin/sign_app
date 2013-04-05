@@ -21,13 +21,13 @@ bundle_id="com.stitchworkssoftware.Crochet Charts"
 fileList = [ "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore",
             "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui",
             "/Contents/Frameworks/QtNetwork.framework/Versions/4/QtNetwork",
-            "/Contents/Frameworks/QtSvg.framwork/Versions/4/QtSvg",
+            "/Contents/Frameworks/QtSvg.framework/Versions/4/QtSvg",
             "/Contents/Frameworks/QtXml.framework/Versions/4/QtXml",
-            "/Contents/Plugins/accessible/*",
-            "/Contents/Plugins/bearer/*",
-            "/Contents/Plugins/codecs/*",
-            "/Contents/Plugins/iconengines/*",
-            "/Contents/Plugins/imageformats/*"
+            "/Contents/PlugIns/accessible/*",
+            "/Contents/PlugIns/bearer/*",
+            "/Contents/PlugIns/codecs/*",
+            "/Contents/PlugIns/iconengines/*",
+            "/Contents/PlugIns/imageformats/*"
 	    ]
 
 app_store_cert = "3rd Party Mac Developer Application: Brian Milco"
@@ -70,11 +70,11 @@ else:
 
 print "Sign " + bundle_id + " app",
 for file in fileList:
-    os.system(codeSign + " -f -s \"" + certName + "\" -i \"" + bundle_id + "\" \"" + appDir + "/" + app + file + "\"")
+    os.system(codeSign + " -f -s \"" + certName + "\" -i \"" + bundle_id + "\" \"" + appDir + "/" + app + "\"" +  file + "")
 print "Done"
 
 print "Sign Bundle: ",
-os.system(codeSign + " -f -s \"" + certName + "\" \"" + appDir + "/" + app + "\"")
+os.system(codeSign + " -f -s \"" + certName + "\" --entitlements /Users/brian/crochet/resources/Entitlements.plist  \"" + appDir + "/" + app + "\"")
 print "Done"
 
 if forAppStore:
