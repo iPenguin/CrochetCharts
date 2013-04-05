@@ -32,10 +32,10 @@ PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 CMAKE_FLAGS="-DDOCS=ON -DCMAKE_BUILD_TYPE=Release"
 CPACK_FLAGS=""
 
-CMAKE=`readlink -f \`which cmake\``
-QMAKE=`readlink -f \`which qmake\``
-CC=`readlink -f \`which cc\``
-CXX=`readlink -f \`which c++\``
+CMAKE=`which cmake`
+QMAKE=`readlink \`which qmake\``
+CC=`readlink \`which cc\``
+CXX=`readlink \`which c++\``
 
 APP_STORE="OFF"
 BUNDLE_ID="com.stitchworkssoftware.Crochet Charts"
@@ -72,12 +72,12 @@ if [ $PLATFORM == "Darwin" ]; then
     CMAKE_FLAGS="$CMAKE_FLAGS -DAPP_STORE=$APP_STORE"
     CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6"
     CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_SYSROOT=$MACOSX_SDK"
-    CMAKE_FLAGS="$CMAKE_FLAGS -DBUNDLE_ID=\"$BUNDLE_ID\""
+    CMAKE_FLAGS="$CMAKE_FLAGS -DBUNDLE_ID=$BUNDLE_ID"
     
     CPACK_FLAGS="-G Bundle"
 
 elif [ $PLATFORM == "Linux" ]; then
-    if [ $ARCH == "i386" ]; then
+    if [ $ARCH == "i686" ]; then
       CMAKE_FLAGS="$CMAKE_FLAGS -DFORCE_32BIT=ON"
     fi
 
@@ -93,5 +93,5 @@ make
 cpack ${CPACK_FLAGS}
 
 if [ $APP_STORE == "ON" ]; then
-    ${PROJECT_DIR}/bin/sign_app -a -b "$BUNDLE_ID" -f _CPack_Packages/Darwin/Bundle/Crochet\ Charts-1.1.4
+    ${PROJECT_DIR}/bin/sign_app -a -f _CPack_Packages/Darwin/Bundle/Crochet\ Charts-1.1.4
 fi

@@ -16,7 +16,7 @@ app_name = "Crochet Charts"
 app = app_name + ".app"
 app_exe = "/Contents/MacOS/Crochet Charts"
 
-bundle_id="com.stitchworkssoftware.Crochet Charts"
+bundle_id = "com.stitchworkssoftware.CrochetCharts"
 
 fileList = [ "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore",
             "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui",
@@ -54,8 +54,6 @@ for o, a in opts:
         appDir = a
     elif o == "-a":
         forAppStore = True
-    elif o == "-b":
-        bundle_id = a
 
 if forAppStore:
     print "-- Signing for the App Store --"
@@ -68,7 +66,7 @@ else:
 #os.system(dsymutil + " \"" + appDir + "/" + app + app_exe + "\"")
 #print "Done"
 
-print "Sign " + bundle_id + " app",
+print "Sign " + bundle_id + " app:",
 for file in fileList:
     os.system(codeSign + " -f -s \"" + certName + "\" -i \"" + bundle_id + "\" \"" + appDir + "/" + app + "\"" +  file + "")
 print "Done"
