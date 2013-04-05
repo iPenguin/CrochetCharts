@@ -4,16 +4,47 @@
 # the software for each supported platform.
 #############################################
 
-FLAG="-DAPP_STORE=OFF"
-APP_STORE=0
+function display_vairiables {
+    echo "-------------------------------------------------------"
+    echo ""
+    echo "NOTE: Java must be installed or fop will fail and the pdf will not build."
+    echo ""
+    echo "Building: $PROJECT_DIR"
+    echo ""
+    echo "Using the following tools:"
+    echo "-- CMake:       $CMAKE"
+    echo "-- QMake:       $QMAKE"
+    echo "-- CC:          $CC"
+    echo "-- CXX:         $CXX"
+    echo "-- Platform:    $PLATFORM"
+    echo "-- Arch:        $ARCH"
+    if [ $PLATFORM == "Darwin" ]; then
+        echo "-- App Store:   $APP_STORE"
+        echo "-- Bundle ID:   $BUNDLE_ID"
+    fi
+    echo "-- CMake Flags: $CMAKE_FLAGS"
+    echo "-- CPack Flags: $CPACK_FLAGS"
+    echo "-------------------------------------------------------"
+}
+
+PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+CMAKE_FLAGS="-DDOCS=ON -DCMAKE_BUILD_TYPE=Release"
+CPACK_FLAGS=""
+
+CMAKE=`readlink -f \`which cmake\``
+QMAKE=`readlink -f \`which qmake\``
+CC=`readlink -f \`which cc\``
+CXX=`readlink -f \`which c++\``
+
+APP_STORE="OFF"
 BUNDLE_ID="com.stitchworkssoftware.Crochet Charts"
 
 while getopts ":a" opt; do
   case $opt in
     a)
-      echo "Apple Mac app store release"
-      FLAG="-DAPP_STORE=ON"
-      APP_STORE=1
+      #-a is for Apple App Store
+      APP_STORE="ON"
       BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
       ;;
     \?)
@@ -22,48 +53,45 @@ while getopts ":a" opt; do
   esac
 done
 
-PLATFORM=`uname -a | awk '{ print $1 }'`
-
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+    
+PLATFORM=`uname -s`
+ARCH=`uname -i`
+    
+mkdir -p ${PROJECT_DIR}/build
+cd ${PROJECT_DIR}/build 
+    
 if [ $PLATFORM == "Darwin" ]; then
-    echo "================"
-    echo "#"
-    echo "# NOTE: Make sure that Java is installed or fop wont run and the docs wont install."
-    echo "#"
-    echo "================"
-
-    export CC=/usr/bin/clang
-    export CXX=/usr/bin/clang++
-
-    mkdir -p ~/crochet/build
-    cd ~/crochet/build
 
     MACOSX_DEPLOYMENT_TARGET=10.6
-    
-    #QMAKE=`which qmake`
-    #Custom Qt build:
+    MACOSX_SDK="/Developer/SDKs/MacOSX10.6.sdk/"
     QMAKE="/usr/local/Trolltech/Qt-4.8.4/bin/qmake"
-    echo "-- Bundle_ID: $BUNDLE_ID"
-    cmake ../ -DDOCS=ON -DQT_QMAKE_EXECUTABLE=$QMAKE -DCMAKE_BUILD_TYPE=Release $FLAG -DCMAKE_OSX_SYSROOT=/Developer/SDKs/MacOSX10.6.sdk/ -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6 -DBUNDLE_ID="\"$BUNDLE_ID\""  && make
     
-    cpack -G Bundle
+    CMAKE_FLAGS="$CMAKE_FLAGS -DQT_QMAKE_EXECUTABLE=$QMAKE"
+    CMAKE_FLAGS="$CMAKE_FLAGS -DAPP_STORE=$APP_STORE"
+    CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6"
+    CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_SYSROOT=$MACOSX_SDK"
+    CMAKE_FLAGS="$CMAKE_FLAGS -DBUNDLE_ID=\"$BUNDLE_ID\""
     
-    if [ $APP_STORE == 1 ]; then
-        ../bin/sign_app -a -f _CPack_Packages/Darwin/Bundle/Crochet\ Charts-1.1.4
-    fi
+    CPACK_FLAGS="-G Bundle"
 
 elif [ $PLATFORM == "Linux" ]; then
-
-    ARCH=`uname -i`
-    
-    mkdir -p ~/crochet/build
-    cd ~/crochet/build
-
     if [ $ARCH == "i386" ]; then
-        cmake ../ -DDOCS=ON -DCMAKE_BUILD_TYPE=Release -DFORCE_32BIT=ON && make && cpack 
-    else
-        cmake .. -DDOCS=ON -DCMAKE_BUILD_TYPE=Release && make && cpack
+      CMAKE_FLAGS="$CMAKE_FLAGS -DFORCE_32BIT=ON"
     fi
 
 else
-    print "Warning unknown platform"
+    echo "-- ERROR: unknown platform"
+    exit 0
+fi
+
+display_vairiables
+
+cmake ${PROJECT_DIR} ${CMAKE_FLAGS}
+make
+cpack ${CPACK_FLAGS}
+
+if [ $APP_STORE == "ON" ]; then
+    ${PROJECT_DIR}/bin/sign_app -a -b "$BUNDLE_ID" -f _CPack_Packages/Darwin/Bundle/Crochet\ Charts-1.1.4
 fi
