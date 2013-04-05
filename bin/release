@@ -57,7 +57,7 @@ export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
     
 PLATFORM=`uname -s`
-ARCH=`uname -i`
+ARCH=`uname -m`
     
 mkdir -p ${PROJECT_DIR}/build
 cd ${PROJECT_DIR}/build 
