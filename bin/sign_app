@@ -16,22 +16,18 @@ app_name = "Crochet Charts"
 app = app_name + ".app"
 app_exe = "/Contents/MacOS/Crochet Charts"
 
-bundle_id="com.stitchworkssoftware.Crochet Charts"
+bundle_id = "com.stitchworkssoftware.CrochetCharts"
 
 fileList = [ "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore",
             "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui",
             "/Contents/Frameworks/QtNetwork.framework/Versions/4/QtNetwork",
-            "/Contents/Plugins/accessible/libqtaccessiblewidgets.dylib",
-            "/Contents/Plugins/bearer/libqgenericbearer.dylib",
-            "/Contents/Plugins/codecs/libqcncodecs.dylib",
-            "/Contents/Plugins/codecs/libqjpcodecs.dylib",
-            "/Contents/Plugins/codecs/libqkrcodecs.dylib",
-            "/Contents/Plugins/codecs/libqtwcodecs.dylib",
-            "/Contents/Plugins/imageformats/libqgif.dylib",
-            "/Contents/Plugins/imageformats/libqico.dylib",
-            "/Contents/Plugins/imageformats/libqjpeg.dylib",
-            "/Contents/Plugins/imageformats/libqmng.dylib",
-            "/Contents/Plugins/imageformats/libqtiff.dylib"
+            "/Contents/Frameworks/QtSvg.framework/Versions/4/QtSvg",
+            "/Contents/Frameworks/QtXml.framework/Versions/4/QtXml",
+            "/Contents/PlugIns/accessible/*",
+            "/Contents/PlugIns/bearer/*",
+            "/Contents/PlugIns/codecs/*",
+            "/Contents/PlugIns/iconengines/*",
+            "/Contents/PlugIns/imageformats/*"
 	    ]
 
 app_store_cert = "3rd Party Mac Developer Application: Brian Milco"
@@ -46,7 +42,7 @@ productbuild = "/usr/bin/productbuild"
 
 ################################################
 
-opts, args = getopt.getopt(sys.argv[1:], "af:")
+opts, args = getopt.getopt(sys.argv[1:], "ab:f:")
 
 certName = devel_cert
 certInstaller = devel_installer
@@ -63,7 +59,6 @@ if forAppStore:
     print "-- Signing for the App Store --"
     certName = app_store_cert
     certInstaller = app_store_installer
-    bundle_id = "com.stitchworkssoftware.CrochetCharts"
 else:
     print "-- Signing for the Website --"
 
@@ -71,13 +66,13 @@ else:
 #os.system(dsymutil + " \"" + appDir + "/" + app + app_exe + "\"")
 #print "Done"
 
-print "Sign application files: ",
+print "Sign " + bundle_id + " app:",
 for file in fileList:
-    os.system(codeSign + " -f -s \"" + certName + "\" -i \"" + bundle_id + "\" \"" + appDir + "/" + app + file + "\"")
+    os.system(codeSign + " -f -s \"" + certName + "\" -i \"" + bundle_id + "\" \"" + appDir + "/" + app + "\"" +  file + "")
 print "Done"
 
 print "Sign Bundle: ",
-os.system(codeSign + " -f -s \"" + certName + "\" \"" + appDir + "/" + app + "\"")
+os.system(codeSign + " -f -s \"" + certName + "\" --entitlements /Users/brian/crochet/resources/Entitlements.plist  \"" + appDir + "/" + app + "\"")
 print "Done"
 
 if forAppStore:
