@@ -19,6 +19,13 @@ set(crochet_app_h
     ../src/stitchlibrary.h
     ../src/appinfo.h
     ../src/debug.h
+    ../src/textview.h
+    ../src/appinfo.h
+    ../src/scene.h
+    ../src/crochetchartcommands.h
+    ../src/indicatorundo.h
+    ../src/indicator.h
+    ../src/chartview.h
     )
 
 set(crochet_app_cpp
@@ -32,6 +39,13 @@ set(crochet_app_cpp
     ../src/version.h
     ../src/appinfo.cpp
     ../src/debug.cpp
+    ../src/textview.cpp
+    ../src/appinfo.cpp
+    ../src/scene.cpp
+    ../src/crochetchartcommands.cpp
+    ../src/indicatorundo.cpp
+    ../src/indicator.cpp
+    ../src/chartview.cpp
     ${CMAKE_BINARY_DIR}/version.cpp
     )
 

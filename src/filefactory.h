@@ -26,13 +26,13 @@ public:
     friend class FileLoad_v2;
 
     enum FileVersion { Version_1_0 = 100, Version_1_2 = 102 };
-    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion,
-                     Err_OpeningFile, Err_GettingFileContents, Err_NoTabsToSave };
+    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, Err_GettingFileContents,
+                     Err_NoTabsToSave, Err_RemovingOrigFile, Err_RenamingTempFile };
 
     FileFactory(QWidget* parent);
-
-    FileFactory::FileError load();
+    
     FileFactory::FileError save();
+    FileFactory::FileError load();
 
     bool isOldFileVersion() { return false; }
 

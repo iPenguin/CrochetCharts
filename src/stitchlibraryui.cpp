@@ -532,7 +532,7 @@ StitchSet* StitchLibraryUi::addStitchSet(QString fileName)
 
             //FIXME: this is going to cause crashes when removing sets with sts in the master list!
         } else if(msgbox.clickedButton() == rename) {
-            bool ok;
+            bool ok = false;
             QString text;
 
             while(!ok || text.isEmpty() || text == set->name() ){

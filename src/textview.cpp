@@ -86,14 +86,14 @@ QString TextView::generateText(QStringList row, bool useRepeats)
             if(!firstPass) text += ", ";
 
             if(curStitch.startsWith(prefix)) {
-                text += "[" + generateText(data.value(curStitch)) + "] ";
+                text += "[" + generateText(data.value(curStitch)) + "]";
             } else
                 text += curStitch;
         }
         if(curStitch == previousStitch)
             count++;
         if(curStitch != nextStitch) {
-            text += QString::number(count);
+            text += " " + QString::number(count);
             count = 1;
             if(curStitch.startsWith(prefix))
                 text += " times";
@@ -111,13 +111,20 @@ QMap< QString, QStringList > TextView::generateRepeats(QStringList stitches, QSt
     QMap<QString, QStringList> data;
     QStringList row;
     int count = stitches.count();
-
+    
+    //loop through each stitch in the row.
     for(int i = 0; i < count; ++i) {
-        QString value = stitches.value(i);
+        
+        //Attempt to find potential repeats by looking for the 
+        //first stitch (j) that matches the current stitch (i).
+        //Use a gap (i + 2) because we 1 stitch cannot be a repeat.
         for(int j = i + 2; j < count; ++j) {
             if(stitches.value(i) == stitches.value(j)) {
                 int diff = j - i;
                 int diffSts = false;
+                
+                //If we've found a potential repeat (j == i) then see if the 
+                //stitches that follow also match and this really is a repeat.
                 for(int l = 0; l < diff; ++l) {
                     if(stitches.value(i + l) != stitches.value(i))
                         diffSts = true;
@@ -125,22 +132,23 @@ QMap< QString, QStringList > TextView::generateRepeats(QStringList stitches, QSt
                 if(!diffSts)
                     continue;
 
-                int count = matchCount(stitches, i, diff);
+                int mtchCnt = matchCount(stitches, i, diff);
 
-                if(count > 1) {
+                if(mtchCnt > 1) {
                     QStringList sub;
                     for(int k = 0; k < diff; ++k)
                         sub.append(stitches.value(k));
-                    for(int k = 0; k < count; ++k)
+                    for(int k = 0; k < mtchCnt; ++k)
                         row.append(prefix + QString::number(i));
                     data.insert(prefix + QString::number(i), sub);
-                    j += (diff * count);
-                    i += (diff * count);
+                    j += (diff * mtchCnt);
+                    i += (diff * mtchCnt);
+                    qDebug() << j << i;
                 }
             }
         }
         if(i < count)
-            row.append(value);
+            row.append(stitches.value(i));
     }
 
     data.insert("row", row);

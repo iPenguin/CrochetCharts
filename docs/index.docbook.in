@@ -477,6 +477,16 @@
                 If you are adding stitches to the end of a row just click on the last stitch drag the red line to the next stitches in order.
                 If you want to add stitches into the middle of the row you will have to start from the first stitch of the row.
             </para>
+            <para>
+                If you want to add stitches to a row select the row from the Row List, the stitches in the row will be selected and the connections
+                between the stitches will be shown as lines joining the stitches. Select the last stitch that is joined and connect it to the new 
+                stitches you wish to add to the row.
+            </para>
+            <para>
+                If you wish to redraw the entire row select the row from the Row List, click on the canvas, which will un-select all of the stitches 
+                in the row. Then select all the stitches you would like in the updated row, in order. Once you've finished selecting the stitches
+                click the "Update Row" button.
+            </para>
             <para>Once you have finished editing the rows, you can close the Row Edit dialog by clicking on any of the other edit modes.
             </para>
         </section>
@@ -486,6 +496,9 @@
             <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Indicator Edit</guimenuitem></menuchoice></para>
             <para>Indicators can be used as row indicators, or to point out pieces of the chart that need special notes.
                 The indicators on the chart can show the dot and/or text based on the <link linkend="options-charts">Chart Options/Preferences</link>.
+            </para>
+            <para>Once you're in the Indicator Edit mode you can click on the chart to add a new indicator. If you've setup the indicators with text
+                you can edit the text by clicking on the selected indicator.
             </para>
         </section>
 
@@ -523,7 +536,9 @@
             </screenshot>
             <para>A set of tools that allows you to mirror and rotate groups of stitches on the chart.
             </para>
-            <para>Mirroring can be done up, down, left, and right.
+            <para>Mirroring can be done up, down, left, and right. Mirroring is done across vertical or horizontal lines.
+                For example if you mirror left, the left most point of the left most selected stitch is used as the mirroring line.
+                Mirroring will automatically make copies of the stitches that are to be mirrored.
             </para>
             <para>Rotating stitches using this tool will be done from bottom left corner of the group of stitches selected,
                 unless you have a chart center on the chart (<menuchoice><guimenu>Charts</guimenu><guimenuitem>Show Chart Center</guimenuitem></menuchoice>)
@@ -532,11 +547,17 @@
             <para>There are 3 buttons that represent 90&#0176; (on the right), 180&#0176; (on the bottom), 270&#0176; (on the left),
                 and a fourth button (on the top) representing a custom option that allows you to select exactly how many degrees you want to rotate the selection.
             </para>
+            <para>Rotating operates on the selected stitches, unlike mirroring.
+            </para>
         </section>
 
         <section id="tools-color-selector">
             <title>Color Selector</title>
             <para>Select the color that will be used in Color Edit.</para>
+            <para>To use the color edit mode, Select <menuchoice><guimenu>Modes</guimenu><guimenuitem>Color Edit</guimenuitem></menuchoice>.
+            In the tool bar click on the white color box, with the tool tip reading "Select a color for the background".
+            This tool will allow you to change the color behind each stitch by clicking on them.
+            </para>
         </section>
 
         <section id="charts-show-chart-center">

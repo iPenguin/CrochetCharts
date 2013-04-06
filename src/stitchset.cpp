@@ -96,7 +96,7 @@ bool StitchSet::loadXmlFile(QString fileName)
     }
 
     if(stream.hasError()) {
-        qWarning() << "Error loading saved file: " << stream.errorString();
+        qWarning() << "Error loading saved file: " << fileName << stream.errorString();
         return false;
     }
 
@@ -302,7 +302,7 @@ void StitchSet::saveXmlFile(QString fileName)
         return;
     }
     
-    file.write(data->toLatin1());
+    file.write(data->toUtf8());
     file.close();
     
     delete data;
@@ -335,7 +335,7 @@ void StitchSet::saveDataFile(QString fileName)
     
     stream.writeEndDocument();
 
-    out << data->toLatin1();
+    out << data->toUtf8();
     
     file.close();
     delete data;

@@ -50,5 +50,10 @@ int main(int argc, char** argv)
     delete test;
     test = 0;
 
+    test = new TestTextView();
+    retval +=QTest::qExec(test, argc, argv);
+    delete test;
+    test = 0;
+    
     return (retval ? 1 : 0);
 }

@@ -3,7 +3,6 @@ include(InstallRequiredSystemLibraries)
 
 set(PROJECT_DESCRIPTION  "Symbol crochet design software")
 set(PROJECT_VENDOR       "Stitch Works Software")
-set(PROJECT_LIFE         "2010-2012")
 set(ORG_BASE_URL         "StitchWorksSoftware.com")
 set(PROJECT_CONTACT      "support@${ORG_BASE_URL}")
 set(ORG_CONTACT          "http://${ORG_BASE_URL}/contact")
@@ -52,6 +51,9 @@ if(WIN32)
 
     set(CPACK_PACKAGE_ICON "C:\\\\Documents and Settings\\\\Brian Milco\\\\My Documents\\\\crochet.git\\\\images\\\\installer.bmp")
     set(CPACK_GENERATOR "NSIS")
+    #
+    #set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL "ON")
+    #
     set(CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_DISPLAY_NAME "${PROJECT_NAME}")
     set(CPACK_NSIS_CONTACT "${CPACK_PACKAGE_CONTACT}")
@@ -84,9 +86,8 @@ elseif(APPLE)
     
     set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
     set(CPACK_DMG_DS_STORE "${CMAKE_SOURCE_DIR}/resources/mac/MacDmgDsStore")
-    set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.png")
+    set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.pdf")
 
-    set(CPACK_OSX_PACKAGE_VERSION "10.5") #min package version
     
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
@@ -101,8 +102,7 @@ elseif(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
     set_source_files_properties("${MACOSX_BUNDLE_ICON_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    #FIXME: what are the implications of changing this to the correct com.stitchworkssoftware.crochetcharts?
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.stitchworkssoftware.crochetcharts")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "${BUNDLE_ID}")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
 
     configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
@@ -121,7 +121,7 @@ elseif(APPLE)
 
 else()
 
-    set(CPACK_GENERATOR "DEB") #;RPM;STGZ;TBZ2")
+    set(CPACK_GENERATOR "DEB;RPM") #;RPM;STGZ;TBZ2")
 
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Brian Milco <${PROJECT_CONTACT}>")
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libqtgui4 (>= 4.7.0), libqtcore4 (>= 4.7.0), libqt4-svg (>= 4.7.0), libqt4-xml (>= 4.7.0), libqt4-network (>= 4.7.0)")
@@ -132,7 +132,7 @@ else()
     set(CPACK_RPM_PACKAGE_LICENSE "Commercial")
     set(CPACK_RPM_PACKAGE_GROUP "Applications/Productivity")
     set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
-    set(CPACK_RPM_PACKAGE_REQUIRES "requires: libc6, qt >= 4.7, qt-x11 >= 4.7")
+    set(CPACK_RPM_PACKAGE_REQUIRES "libqt4 >= 4.7, libqt4-x11 >= 4.7")
 
     if(FORCE_32BIT)
         set(CPACK_RPM_PACKAGE_ARCHITECTURE "i386")

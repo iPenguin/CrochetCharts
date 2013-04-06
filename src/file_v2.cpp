@@ -7,6 +7,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QFile>
+#include <QXmlStreamReader>
 
 #include "stitchlibrary.h"
 #include "mainwindow.h"
