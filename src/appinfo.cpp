@@ -23,6 +23,8 @@ AppInfo::AppInfo() :
 
     demoString(QObject::tr("Stitch Works Software - Demo Version  -  ")),
 
+    projectLife(gPROJECT_LIFE),
+
     magicNumber(0x95973530),
     magicNumberSet(0x53095973)
 {

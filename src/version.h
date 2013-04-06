@@ -10,4 +10,6 @@
 extern const QString gGIT_VERSION;
 extern const QString gGIT_VERSION_SHORT;
 
+extern const QString gPROJECT_LIFE;
+
 #endif //VERSION_H

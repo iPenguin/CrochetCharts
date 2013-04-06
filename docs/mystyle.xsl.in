@@ -5,8 +5,10 @@
                               xmlns:fo="http://www.w3.org/1999/XSL/Format"
                               xmlns:d="http://docbook.org/ns/docbook">
 
-    <xsl:import href="/usr/share/xml/docbook/stylesheet/docbook-xsl-ns/fo/docbook.xsl" />
+    <!-- docbooks cannot do conditional imports so we're using cmake to conditionally set the path -->
+    <xsl:import href="@DOCBOOK_XSL_NS_PATH@/fo/docbook.xsl" />
 
+    <!-- create a cover with an image -->
     <xsl:template name="book.titlepage.recto">
 
         <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="d:bookinfo/d:title"/>
@@ -20,6 +22,7 @@
     
     </xsl:template>
 
+    <!-- create a block that says "by [orgname]" for the cover -->
     <xsl:template match="d:orgname" mode="book.titlepage.recto.auto.mode">
         <fo:block xsl:use-attribute-sets="book.titlepage.recto.style">
             <xsl:text>by </xsl:text>
@@ -27,7 +30,7 @@
         </fo:block>
     </xsl:template>
 
-
+    <!-- create a text block that says "[author], [jobtitle] \n [orgname]" -->
     <xsl:template match="d:author" mode="titlepage.mode">
         <fo:block linefeed-treatment="preserve">
             <xsl:call-template name="anchor"/>
@@ -37,7 +40,7 @@
                 <xsl:apply-templates select="(d:affiliation/d:jobtitle)[1]"/>
             </xsl:if>
             <xsl:if test="d:affiliation/d:orgname">
-                <xsl:text>&#xA;</xsl:text>
+                <xsl:text>&#xA;</xsl:text> <!-- new line -->
                 <xsl:apply-templates select="d:affiliation/d:orgname" mode="titlepage.mode"/>
             </xsl:if>
             <xsl:if test="d:email|d:affiliation/d:address/d:email">
@@ -48,7 +51,7 @@
     </xsl:template>
 
 
-<!-- Tell ulink to use the href.properties properties for styling the link -->
+    <!-- Tell ulink to use the href.properties properties for styling the link -->
     <xsl:template match="d:ulink" name="ulink">
         <xsl:param name="url" select="@url"/>
 

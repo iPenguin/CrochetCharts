@@ -34,7 +34,8 @@ public:
     ~SaveFile();
 
     enum FileVersion { Version_1_0 = 100 };
-    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, Err_GettingFileContents, Err_NoTabsToSave };
+    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, Err_GettingFileContents,
+                     Err_NoTabsToSave, Err_RemovingOrigFile, Err_RenamingTempFile };
     
     SaveFile::FileError save();
     SaveFile::FileError load();

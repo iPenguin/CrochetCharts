@@ -46,7 +46,7 @@ SaveFile::FileError SaveFile::save()
     if(mTabWidget->count() <= 0)
         return SaveFile::Err_NoTabsToSave;
     
-    QFile file(fileName);
+    QFile file(fileName + ".tmp");
     if(!file.open(QIODevice::WriteOnly)) {
         //TODO: some nice dialog to warn the user.
         qWarning() << "Couldn't open file for writing..." << fileName;
@@ -93,10 +93,20 @@ SaveFile::FileError SaveFile::save()
     stream.writeEndDocument();
 
     //put xml into binary file.
-    out << data->toLatin1();
+    out << data->toUtf8();
     file.close();
     delete data;
     data = 0;
+
+    QDir d(QFileInfo(fileName).path());
+    //only try to delete the file if it exists.
+    if(d.exists(fileName)) {
+        if(!d.remove(fileName))
+            return SaveFile::Err_RemovingOrigFile;
+    }
+    
+    if(!d.rename(fileName +".tmp", fileName))
+        return SaveFile::Err_RenamingTempFile;
 
     return SaveFile::No_Error;
 }
@@ -326,7 +336,7 @@ SaveFile::FileError SaveFile::load()
     QXmlStreamReader stream(docData);
 
     if(stream.hasError()) {
-        qWarning() << "Error loading saved file: " << stream.errorString();
+        qWarning() << "Error loading saved file" << file.fileName() << ":" << stream.errorString();
         return SaveFile::Err_GettingFileContents;
     }
 
