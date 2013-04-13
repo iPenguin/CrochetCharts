@@ -124,3 +124,6 @@ if(UNIT_TESTING)
 endif()
 
 add_subdirectory(src)
+
+set(CPACK_BINARY_DRAGNDROP ON)
+include(CPack)

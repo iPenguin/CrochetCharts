@@ -29,7 +29,7 @@ function display_vairiables {
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
-CMAKE_FLAGS="-DDOCS=ON -DCMAKE_BUILD_TYPE=Release"
+CMAKE_FLAGS="-DDOCS=OFF -DCMAKE_BUILD_TYPE=Release"
 CPACK_FLAGS=""
 
 CMAKE=`which cmake`
@@ -38,15 +38,14 @@ CC=`readlink \`which cc\``
 CXX=`readlink \`which c++\``
 
 APP_STORE="OFF"
-BUNDLE_ID="com.stitchworkssoftware.Crochet Charts"
+BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
 
 while getopts ":a" opt; do
   case $opt in
     a)
       #-a is for Apple App Store
       APP_STORE="ON"
-      BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
-      ;;
+	  ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       ;;
@@ -73,8 +72,6 @@ if [ $PLATFORM == "Darwin" ]; then
     CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6"
     CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_SYSROOT=$MACOSX_SDK"
     CMAKE_FLAGS="$CMAKE_FLAGS -DBUNDLE_ID=$BUNDLE_ID"
-    
-    CPACK_FLAGS="-G Bundle"
 
 elif [ $PLATFORM == "Linux" ]; then
     if [ $ARCH == "i686" ]; then
@@ -92,6 +89,3 @@ cmake ${PROJECT_DIR} ${CMAKE_FLAGS}
 make
 cpack ${CPACK_FLAGS}
 
-if [ $APP_STORE == "ON" ]; then
-    ${PROJECT_DIR}/bin/sign_app -a -f _CPack_Packages/Darwin/Bundle/Crochet\ Charts-1.1.4
-fi
