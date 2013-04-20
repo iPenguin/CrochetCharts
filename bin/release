@@ -78,16 +78,10 @@ if [ $PLATFORM == "Darwin" ]; then
 
 elif [ $PLATFORM == "Linux" ]; then
 
-    CMAKE_MODULE_PATH="/opt/Qt/5.1.0-alpha/lib/cmake"
-    QMAKE="/opt/Qt/5.1.0-alpha/bin/qmake"
-    CMAKE_PREFIX_PATH="/opt/Qt/5.1.0-alpha/" 
-
     if [ $ARCH == "i686" ]; then
       CMAKE_FLAGS="$CMAKE_FLAGS -DFORCE_32BIT=ON"
     fi
 
-    export CMAKE_MODULE_PATH CMAKE_PREFIX_PATH
-    CMAKE_FLAGS="$CMAKE_FLAGS -DQT_QMAKE_EXECUTABLE=$QMAKE"
 else
     echo "-- ERROR: unknown platform"
     exit 0
