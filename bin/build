@@ -23,19 +23,18 @@ function display_vairiables {
         echo "-- Bundle ID:   $BUNDLE_ID"
     fi
     echo "-- CMake Flags: $CMAKE_FLAGS"
-    echo "-- CPack Flags: $CPACK_FLAGS"
-    echo "-------------------------------------------------------"
 }
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
-CMAKE_FLAGS="-DDOCS=ON -DCMAKE_BUILD_TYPE=Release"
+CMAKE_FLAGS="-DDOCS=OFF -DCMAKE_BUILD_TYPE=Debug"
 CPACK_FLAGS=""
 
 CMAKE=`which cmake`
 QMAKE=`readlink \`which qmake\``
 CC=`readlink \`which cc\``
 CXX=`readlink \`which c++\``
+#CMAKE_C_LINK_EXECUTABLE=
 
 APP_STORE="OFF"
 BUNDLE_ID="com.stitchworkssoftware.Crochet Charts"
@@ -74,8 +73,6 @@ if [ $PLATFORM == "Darwin" ]; then
     CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_SYSROOT=$MACOSX_SDK"
     CMAKE_FLAGS="$CMAKE_FLAGS -DBUNDLE_ID=$BUNDLE_ID"
     
-    CPACK_FLAGS="-G Bundle"
-
 elif [ $PLATFORM == "Linux" ]; then
 
     CMAKE_MODULE_PATH="/opt/Qt/5.1.0-alpha/lib/cmake"
@@ -86,8 +83,10 @@ elif [ $PLATFORM == "Linux" ]; then
       CMAKE_FLAGS="$CMAKE_FLAGS -DFORCE_32BIT=ON"
     fi
 
-    export CMAKE_MODULE_PATH CMAKE_PREFIX_PATH
+    #export CMAKE_MODULE_PATH CMAKE_PREFIX_PATH
     CMAKE_FLAGS="$CMAKE_FLAGS -DQT_QMAKE_EXECUTABLE=$QMAKE"
+    CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_MODULE_PATH=$CMAKE_MODULE_PATH"
+    CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH"
 else
     echo "-- ERROR: unknown platform"
     exit 0
@@ -97,8 +96,4 @@ display_vairiables
 
 cmake ${PROJECT_DIR} ${CMAKE_FLAGS}
 make
-cpack ${CPACK_FLAGS}
 
-if [ $APP_STORE == "ON" ]; then
-    ${PROJECT_DIR}/bin/sign_app -a -f _CPack_Packages/Darwin/Bundle/Crochet\ Charts-1.1.4
-fi
