@@ -115,15 +115,12 @@ add_definitions(${QT_DEFINITIONS})
 ###################################################################################
 include("${CMAKE_CURRENT_SOURCE_DIR}/resources/installers.cmake")
 
-if(DOCS)
-    add_subdirectory(docs)
-endif()
+add_subdirectory(docs)
+add_subdirectory(src)
 
 if(UNIT_TESTING)
     add_subdirectory(tests)
 endif()
-
-add_subdirectory(src)
 
 set(CPACK_BINARY_DRAGNDROP ON)
 include(CPack)

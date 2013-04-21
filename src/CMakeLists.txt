@@ -71,14 +71,14 @@ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_executable(${EXE_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 else()
-    add_executable(${EXE_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+    add_executable(${EXE_NAME} WIN32 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 endif()
 
 target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})
 
 if(APPLE)
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
+    #install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
 
     if(APP_STORE)
         set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS "APPLE_APP_STORE=1")
@@ -87,9 +87,13 @@ if(APPLE)
     install(CODE "
         execute_process(
             COMMAND \"/usr/bin/macdeployqt\"
-            \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@.app/\"
+            \"@CMAKE_CURRENT_BINARY_DIR@/@PROJECT_NAME@.app/\"
             WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
             OUTPUT_VARIABLE _output)
+        file(COPY \"@CMAKE_SOURCE_DIR@/images/@PROJECT_MACOSX_ICON@\"
+            DESTINATION \"@CMAKE_CURRENT_BINARY_DIR@/@PROJECT_NAME@.app/Contents/Resources\") 
+        file(COPY \"@CMAKE_CURRENT_BINARY_DIR@/@PROJECT_NAME@.app\" 
+            DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@\")
     " COMPONENT Runtime)
 
 else()
