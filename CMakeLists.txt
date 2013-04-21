@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.6)
 if(APPLE OR WIN32)
     project("Crochet Charts")
 else()
@@ -113,6 +113,8 @@ include(${QT_USE_FILE})
 #QT4_ADD_TRANSLATION( qm_files ts_files ... )
 
 add_definitions(${QT_DEFINITIONS})
+
+set(CMAKE_AUTOMOC TRUE)
 
 ###################################################################################
 #CPack includes to create installers
