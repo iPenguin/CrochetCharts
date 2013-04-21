@@ -1,6 +1,5 @@
 include(InstallRequiredSystemLibraries)
 
-
 set(PROJECT_DESCRIPTION  "Symbol crochet design software")
 set(PROJECT_VENDOR       "Stitch Works Software")
 set(ORG_BASE_URL         "StitchWorksSoftware.com")
@@ -79,19 +78,33 @@ if(WIN32)
 elseif(APPLE)
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
     set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
-    set(CPACK_GENERATOR "Bundle")
+
     set(CPACK_BUNDLE_NAME "${PROJECT_NAME}")
     set(CPACK_BUNDLE_PLIST "${CMAKE_BINARY_DIR}/Info.plist")
     set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
-    
+
     set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
     set(CPACK_DMG_DS_STORE "${CMAKE_SOURCE_DIR}/resources/mac/MacDmgDsStore")
     set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.pdf")
-
     
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
+
+    set(CPACK_APPLE_CODESIGN_FILES "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore" 
+                                   "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui")
+
+    set(CPACK_APPLE_ENTITLEMENTS "${CMAKE_SOURCE_DIR}/resources/Entitlements.plist")
+
+    if(${APP_STORE})
+        set(CPACK_GENERATOR "MacAppStore")
+        set(CPACK_APPLE_CERT_APP "3rd Party Mac Developer Application: Brian Milco")
+        set(CPACK_APPLE_CERT_INSTALLER "3rd Party Mac Developer Installer: Brian Milco")
+    else()
+        set(CPACK_GENERATOR "Bundle")
+        set(CPACK_APPLE_CERT_APP "Developer ID Application: Brian Milco")
+        set(CPACK_APPLE_CERT_INSTALLER "Developer ID Installer: Brian Milco")
+    endif()
 
 #for more see: http://www.mail-archive.com/cmake@cmake.org/msg05498.html
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
@@ -103,21 +116,22 @@ elseif(APPLE)
     set_source_files_properties("${MACOSX_BUNDLE_ICON_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "${BUNDLE_ID}")
+    set(CPACK_APPLE_BUNDLE_ID "${MACOSX_BUNDLE_GUI_IDENTIFIER}")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
 
     configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
                 ${CMAKE_BINARY_DIR}/Info.plist)
 
-    install(CODE "
-        file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\" 
-             DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@\")
-        file(RENAME \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\" 
-        \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/User Guide.pdf\")
-        " COMPONENT Runtime)
-
     set(DIRS ${QT_LIBRARY_DIRS})
 
     set(crochet_mac "${CPACK_BUNDLE_ICON}")
+
+    install(CODE "
+        file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\" 
+             DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@\")
+        file(RENAME \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\" 
+        \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@/User Guide.pdf\")
+        " COMPONENT Runtime)
 
 else()
 
@@ -143,6 +157,3 @@ else()
     endif()
     
 endif()
-
-set(CPACK_BINARY_DRAGNDROP ON)
-include(CPack)

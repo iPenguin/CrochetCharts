@@ -88,7 +88,7 @@ if(APPLE)
     install(CODE "
         execute_process(
             COMMAND \"/usr/bin/macdeployqt\"
-            \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@.app/\"
+            \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@.app/\"
             WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
             OUTPUT_VARIABLE _output)
     " COMPONENT Runtime)
