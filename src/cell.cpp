@@ -162,7 +162,7 @@ void Cell::useAlternateRenderer(bool useAlt)
 void Cell::setScale(qreal sx, qreal sy)
 {
     /*
-     * scale(sx, sy) is obsolete in 4.7
+     * FIXME: scale(sx, sy) is obsolete in 4.7
      * replace in future version as follows:
      * 
     // Scale an item by 3x2 from its origin
@@ -187,6 +187,7 @@ Cell* Cell::copy(Cell* cell)
 
     c->setStitch(stitch());
     c->setBgColor(bgColor());
+    c->setColor(c->color());
     c->setTransformOriginPoint(transformOriginPoint());
     c->setRotation(rotation());
     c->setScale(scale().x(), scale().y());

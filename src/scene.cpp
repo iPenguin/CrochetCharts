@@ -74,10 +74,6 @@ Scene::Scene(QObject* parent) :
 
 Scene::~Scene()
 {
-    foreach(QGraphicsItem* i, items()) {
-        delete i;
-    }
-    items().clear();
 
 }
 
@@ -834,8 +830,7 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
     if(mMoving)
         return;
-    
-//FIXME: use a constant pviot point.
+
     undoStack()->push(new SetItemRotation(this, mCurItem, mOldAngle, mPivotPt));
     mOldAngle = 0;
 }
