@@ -70,6 +70,17 @@ void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
     }
 }
 
+bool Cell::isGrouped()
+{
+
+    if(parentItem()) {
+        qDebug() << parentItem()->Type;
+        return true;
+    }
+
+    return false;
+}
+
 void Cell::setStitch(Stitch* s, bool useAltRenderer)
 {
     if (mStitch != s) {

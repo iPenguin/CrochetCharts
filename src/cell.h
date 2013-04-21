@@ -27,6 +27,8 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     int type () const { return Cell::Type; }
 
+    bool isGrouped();
+
     void setHighlight(bool state) { mHighlight = state; update(); }
     Cell* copy(Cell* cell = 0);
     

@@ -32,6 +32,17 @@ void ItemGroup::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     QGraphicsItemGroup::paint(painter, option, widget);
 }
 
+bool ItemGroup::isGrouped()
+{
+    if(parentItem()) {
+        if(parentItem()->Type == ItemGroup::Type) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void ItemGroup::setScale(qreal sx, qreal sy)
 {
     QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());

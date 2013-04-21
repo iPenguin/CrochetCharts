@@ -22,6 +22,8 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
 
+    bool isGrouped();
+
     QPointF scale() {return mScale; }
     void setScale(qreal sx, qreal sy);
 
