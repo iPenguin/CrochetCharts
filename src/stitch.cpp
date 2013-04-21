@@ -152,6 +152,8 @@ qreal Stitch::width()
     qreal w = 32.0;
     if(isSvg()) {
         QSvgRenderer* r = mRenderers.value("#000000");
+        if(!r)
+            return w;
         w = r->viewBoxF().width();
     } else {
         if(mPixmap)
@@ -167,6 +169,8 @@ qreal Stitch::height()
     qreal h = 32.0;
     if(isSvg()) {
         QSvgRenderer* r = mRenderers.value("#000000");
+        if(!r)
+            return h;
         h = r->viewBoxF().height();
     } else {
         if(mPixmap)
