@@ -2284,11 +2284,11 @@ void Scene::setShowGuidelines(QString guides)
     if(mShowGuidelines != guides) {
         mShowGuidelines = guides;
         if(guides == tr("Round")) {
-            debug("TODO: show guidelines round");
+            DEBUG("TODO: show guidelines round");
         } else if(guides == tr("Grid")) {
-            debug("TODO: show guidelines grid");
+            DEBUG("TODO: show guidelines grid");
         } else {
-            debug("TODO: hide guidelines");
+            DEBUG("TODO: hide guidelines");
         }
     }
     
@@ -2301,9 +2301,9 @@ void Scene::updateGuidelines()
         return;
 
     if(mCenterSymbol && mCenterSymbol->isVisible()) {
-        debug("TODO: Create guidelines from the center symbol");
+        DEBUG("TODO: Create guidelines from the center symbol");
         
     } else {
-        debug("TODO: Create guidelines from the center of the chart");
+        DEBUG("TODO: Create guidelines from the center of the chart");
     }
 }
