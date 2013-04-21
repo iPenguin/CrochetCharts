@@ -456,6 +456,9 @@
                 or select <menuchoice><guimenu>Modes</guimenu><guimenuitem>Row Edit</guimenuitem></menuchoice>.
                 The Row Edit interface will open as in the screenshot above.
             </para>
+            <para>Selecting a row from the row list on the far left hand side will show you the row text as it currently stands.
+                It will also highlight all of the stitches in that row, and connect them with black lines.
+            </para>
             <para>
                 To create your first row go ahead and select the first stitch of the new row.
                 Without releasing the mouse button click and drag to to the next stitch in the row.
