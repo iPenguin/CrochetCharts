@@ -122,7 +122,8 @@ SetItemsRotation::SetItemsRotation(Scene* s, QList<QGraphicsItem*> itms, qreal d
     if(scene->hasChartCenter()) {
         pivotPoint = scene->chartCenter()->sceneBoundingRect().center();
     } else {
-        pivotPoint = scene->selectedItemsBoundingRect(items).bottomLeft();
+        QRectF itemsRect = scene->selectedItemsBoundingRect(scene->selectedItems());
+        pivotPoint = QPointF(itemsRect.center().x(), itemsRect.bottom());
     }
 
     setText(QObject::tr("rotate selection"));

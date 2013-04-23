@@ -776,8 +776,28 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
         return;
 
     mOldAngle = mCurItem->rotation();
-    mPivotPt = QPointF(mCurItem->boundingRect().width()/2, mCurItem->boundingRect().bottom());
-    mOrigin = mCurItem->mapToScene(mPivotPt);
+
+    QGraphicsItem *wrkItem = 0;
+
+    //If the item is group we want to rotate the group object
+    //otherwise we want to rotate this object.
+    if (mSclItem && mSclItem->isGrouped())
+        wrkItem = mCurItem->parentItem();
+    else
+        wrkItem = mCurItem;
+
+    if(!wrkItem) {
+        qWarning() << "This isn't right, there should be an item here!";
+        return;
+    }
+
+    mPivotPt = QPointF(wrkItem->boundingRect().center().x(),
+                       wrkItem->boundingRect().bottom());
+
+    mOrigin = wrkItem->mapToScene(mPivotPt);
+
+    //update the CurItem based on what we're actually working with.
+    mCurItem = wrkItem;
 }
 
 void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
@@ -785,11 +805,11 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurItem)
         return;
 
+    //FIXME: don't 'move' stitches if multple are selected. rotate them.
     if(selectedItems().count() > 1 || !mCurItem) {
         mMoving = true;
         return;
     }
-
 
     mMoving = false;
     
