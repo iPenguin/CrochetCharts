@@ -787,7 +787,7 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
         wrkItem = mCurItem;
 
     if(!wrkItem) {
-        qWarning() << "This isn't right, there should be an item here!";
+        qWarning() << "This isn't right, there should be an item to rotate here!";
         return;
     }
 
@@ -796,7 +796,7 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
 
     mOrigin = wrkItem->mapToScene(mPivotPt);
 
-    //update the CurItem based on what we're actually working with.
+    //update the mCurItem based on what we're actually working with.
     mCurItem = wrkItem;
 }
 
@@ -884,7 +884,7 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
 
     QSize oldSize = QSize(mSclItem->origWidth * mOldScale.x(), mSclItem->origHeight * mOldScale.y());
     QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
-qDebug() << oldSize << newSize;
+    
     if((newSize.width() < 1 && newSize.width() > -1) || (newSize.height() < 1 && newSize.height() > -1))
         return;
 
@@ -895,6 +895,11 @@ qDebug() << oldSize << newSize;
         baseScale.ry() = baseScale.rx();
     }
 
+    if(!mSclItem) {
+        qWarning() << "There is no item here!";
+        return;
+    }
+    
     mSclItem->setScale(baseScale.x(), baseScale.y());
 }
 

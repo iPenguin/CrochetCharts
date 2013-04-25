@@ -74,7 +74,7 @@ bool Cell::isGrouped()
 {
 
     if(parentItem()) {
-        qDebug() << parentItem()->Type;
+        qDebug() << "isGrouped parent type:" << parentItem()->Type;
         return true;
     }
 

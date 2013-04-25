@@ -7,13 +7,8 @@
 
 #include "file.h"
 
-#ifdef Q_WS_MAC
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
-#else
-class QXmlStreamReader;
-class QXmlStreamWriter;
-#endif //Q_WS_MAC
 
 class QDataStream;
 class CrochetTab;
