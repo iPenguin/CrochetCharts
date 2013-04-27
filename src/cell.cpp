@@ -96,7 +96,7 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
             QString color = "#000000";
             if(useAltRenderer)
                 color = Settings::inst()->value("stitchAlternateColor").toString();
-            setSharedRenderer(s->renderSvg(color));
+            setColor(QColor(color));
         }
 
         if(doUpdate)
