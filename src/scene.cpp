@@ -2327,3 +2327,26 @@ void Scene::updateGuidelines()
         DEBUG("TODO: Create guidelines from the center of the chart");
     }
 }
+
+void Scene::replaceStitches(QString original, QString replacement)
+{
+
+    undoStack()->beginMacro(tr("replace stitches"));
+    foreach(QGraphicsItem *i, items()) {
+        if(!i)
+            continue;
+        if(i->type() != Cell::Type)
+            continue;
+
+        Cell *c = qgraphicsitem_cast<Cell*>(i);
+        if(!c)
+            continue;
+
+        if(c->stitch()->name() == original) {
+            undoStack()->push(new SetCellStitch(this, c, replacement));
+        }
+
+    }
+    undoStack()->endMacro();
+
+}

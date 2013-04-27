@@ -101,6 +101,7 @@ private slots:
     void chartCreateRows(bool state);
 
     void menuStitchesAboutToShow();
+    void stitchesReplaceStitch();
     
     void menuToolsAboutToShow();
     void toolsOptions();

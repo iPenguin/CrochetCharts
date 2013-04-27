@@ -17,6 +17,8 @@
 #include "stitchset.h"
 #include "stitchpalettedelegate.h"
 
+#include "stitchreplacerui.h"
+
 #include "debug.h"
 #include <QDialog>
 #include <QMessageBox>
@@ -366,6 +368,8 @@ void MainWindow::setupMenus()
     connect(ui->actionGroup, SIGNAL(triggered()), SLOT(group()));
     connect(ui->actionUngroup, SIGNAL(triggered()), SLOT(ungroup()));
 
+    connect(ui->actionReplaceStitch, SIGNAL(triggered()), SLOT(stitchesReplaceStitch()));
+    
     //stitches menu
     connect(ui->menuStitches, SIGNAL(aboutToShow()), SLOT(menuStitchesAboutToShow()));
     
@@ -969,7 +973,26 @@ void MainWindow::menuStitchesAboutToShow()
 
     ui->actionShowAlignDock->setChecked(mAlignDock->isVisible());
     ui->actionShowMirrorDock->setChecked(mMirrorDock->isVisible());
+    ui->actionReplaceStitch->setEnabled(hasTab() && curCrochetTab());
+
+    ui->actionGroup->setEnabled(hasTab() && curCrochetTab());
+    ui->actionUngroup->setEnabled(hasTab() && curCrochetTab());
     
+}
+
+void MainWindow::stitchesReplaceStitch()
+{
+
+    CrochetTab *tab = curCrochetTab();
+    if(!tab)
+        return;
+
+    StitchReplacerUi *sr = new StitchReplacerUi(this);
+
+    if(sr->exec() == QDialog::Accepted) {
+        tab->replaceStitches(sr->original, sr->replacement);
+    }
+
 }
 
 void MainWindow::fileNew()

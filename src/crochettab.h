@@ -100,6 +100,8 @@ public slots:
     void clearSelection();
 
     void showRowEditor(bool state);
+
+    void replaceStitches(QString original, QString replacement);
     
 protected:
     QMap<QString, int>* patternStitches() { return mPatternStitches; }

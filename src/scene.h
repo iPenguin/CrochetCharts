@@ -397,6 +397,9 @@ public:
     QString showGuidelines() { return mShowGuidelines; }
     void setShowGuidelines(QString guides);
     QString guidelines() { return "None"; }
+
+    void replaceStitches(QString original, QString replacement);
+
 protected slots:
     void updateGuidelines();
 

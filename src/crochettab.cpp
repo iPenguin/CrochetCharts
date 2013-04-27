@@ -294,6 +294,11 @@ void CrochetTab::showRowEditor(bool state)
     mScene->clearSelection();
 }
 
+void CrochetTab::replaceStitches(QString original, QString replacement)
+{
+    mScene->replaceStitches(original, replacement);
+}
+
 void CrochetTab::updateRows()
 {
     mRowEditDialog->updateRowList();
