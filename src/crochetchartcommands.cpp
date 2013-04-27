@@ -69,7 +69,7 @@ SetCellColor::SetCellColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* par
 {
     scene = s;
     c = cell;
-    oldColor = c->bgColor();
+    oldColor = c->color();
     newColor = newCl;
     setText(QObject::tr("change color"));
 }
