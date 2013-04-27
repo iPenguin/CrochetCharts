@@ -304,9 +304,9 @@ void MainWindow::setupMenus()
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
 
     connect(ui->actionColorSelectorBg, SIGNAL(triggered()), SLOT(selectColor()));
-    //connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
+    connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
     
-    //ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
+    ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
     ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(mBgColor, QSize(32, 32))));
     
     //View Menu
@@ -560,7 +560,7 @@ void MainWindow::selectColor()
         QColor color = QColorDialog::getColor(mFgColor, this, tr("Foreground Color"));
         
         if (color.isValid()) {
-            //ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
             mFgColor = color;
             updateFgColor();
         }

@@ -25,6 +25,9 @@ Cell::Cell(QGraphicsItem* parent)
 
     origHeight = boundingRect().height();
     origWidth = boundingRect().width();
+
+    //if we don't set the bgColor it'll end up black.
+    setBgColor();
 }
 
 Cell::~Cell()

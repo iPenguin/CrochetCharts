@@ -712,8 +712,14 @@ void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
         return;
     
     Cell* curCell = static_cast<Cell*>(mCurItem);
-    if(curCell->color() != mEditBgColor)
-        undoStack()->push(new SetCellColor(this, curCell, mEditBgColor));
+    undoStack()->beginMacro("set cell color");
+    if(curCell->color() != mEditFgColor) {
+        undoStack()->push(new SetCellColor(this, curCell, mEditFgColor));
+    }
+    if(curCell->bgColor() != mEditBgColor) {
+        undoStack()->push(new SetCellBgColor(this, curCell, mEditBgColor));
+    }
+    undoStack()->endMacro();
 }
 
 void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)

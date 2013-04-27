@@ -615,6 +615,7 @@
    <addaction name="separator"/>
    <addaction name="actionShowAlignDock"/>
    <addaction name="actionShowMirrorDock"/>
+   <addaction name="actionColorSelectorFg"/>
    <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">
@@ -924,12 +925,12 @@
     <string>Show Edit Mode Toolbar</string>
    </property>
   </action>
-  <action name="actionColorSelectorBg">
+  <action name="actionColorSelectorFg">
    <property name="text">
-    <string>Background Color</string>
+    <string>Color Selector</string>
    </property>
    <property name="toolTip">
-    <string>Select a color for the background</string>
+    <string>Select a color for the stitch</string>
    </property>
    <property name="shortcut">
     <string>,</string>
@@ -1109,6 +1110,17 @@
   <action name="actionReplaceStitch">
    <property name="text">
     <string>Replace a stitch...</string>
+   </property>
+  </action>
+  <action name="actionColorSelectorBg">
+   <property name="text">
+    <string>Background Color Selector</string>
+   </property>
+   <property name="toolTip">
+    <string>Select a color for the background of the stitch</string>
+   </property>
+   <property name="shortcut">
+    <string>,</string>
    </property>
   </action>
  </widget>

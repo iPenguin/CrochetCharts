@@ -35,7 +35,7 @@ public:
     void setBgColor(QColor c = QColor(Qt::white));
     QColor bgColor() const { return mBgColor; }
     
-    void setColor(QColor c = QColor(Qt::white));
+    void setColor(QColor c = QColor(Qt::black));
     QColor color() const { return mColor; }
 
     void setStitch(Stitch* s, bool useAltRenderer = false);
