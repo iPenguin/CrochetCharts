@@ -1,17 +1,21 @@
 #include "stitchreplacerui.h"
 #include "ui_stitchreplacerui.h"
 
-#include "settings.h"
 #include "stitch.h"
-
+#include <QPushButton>
 #include "stitchlibrary.h"
 
-StitchReplacerUi::StitchReplacerUi(QWidget *parent) :
+StitchReplacerUi::StitchReplacerUi(QList<QString> patternStitches, QWidget *parent) :
     QDialog(parent),
+    mOriginalStitchList(patternStitches),
     ui(new Ui::StitchReplacerUi)
-{
-
+{   
     ui->setupUi(this);
+
+    if(mOriginalStitchList.isEmpty()) {
+        QPushButton *ok = ui->buttonBox->button(QDialogButtonBox::Ok);
+        ok->setEnabled(false);
+    }
 
     connect(ui->buttonBox, SIGNAL(accepted()), SLOT(accept()));
 
@@ -39,15 +43,11 @@ void StitchReplacerUi::updateStitches(QString newStitch)
 void StitchReplacerUi::populateStitchLists()
 {
 
-    QString name = Settings::inst()->value("defaultStitch").toString();
-
-    foreach(QString stitch, StitchLibrary::inst()->stitchList()) {
+    foreach(QString stitch, mOriginalStitchList) {
         Stitch *s = StitchLibrary::inst()->findStitch(stitch);
 
         ui->originalStitch->addItem(QIcon(s->file()), stitch);
     }
-
-    ui->originalStitch->setCurrentIndex(ui->originalStitch->findText(name));
 
     foreach(QString stitch, StitchLibrary::inst()->stitchList()) {
         Stitch *s = StitchLibrary::inst()->findStitch(stitch);

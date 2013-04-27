@@ -987,10 +987,11 @@ void MainWindow::stitchesReplaceStitch()
     if(!tab)
         return;
 
-    StitchReplacerUi *sr = new StitchReplacerUi(this);
+    StitchReplacerUi *sr = new StitchReplacerUi(mPatternStitches.keys(), this);
 
     if(sr->exec() == QDialog::Accepted) {
-        tab->replaceStitches(sr->original, sr->replacement);
+        if(!sr->original.isEmpty())
+            tab->replaceStitches(sr->original, sr->replacement);
     }
 
 }

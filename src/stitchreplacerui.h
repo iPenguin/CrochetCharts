@@ -14,7 +14,7 @@ class StitchReplacerUi : public QDialog
     Q_OBJECT
     
 public:
-    explicit StitchReplacerUi(QWidget *parent = 0);
+    explicit StitchReplacerUi(QList<QString> patternStitches, QWidget *parent = 0);
     ~StitchReplacerUi();
 
     QString original;
@@ -24,6 +24,8 @@ private slots:
     void updateStitches(QString newStitch);
 
 private:
+    //Hold the list of stitches used in this pattern.
+    QList<QString> mOriginalStitchList;
     Ui::StitchReplacerUi *ui;
 
     void populateStitchLists();
