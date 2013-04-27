@@ -109,7 +109,6 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
     }
     
     setTransformOriginPoint(s->width()/2, s->height());
-    setBgColor(Qt::white);
 }
 
 void Cell::setBgColor(QColor c)
