@@ -1046,6 +1046,8 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
             AddCell* addCell = new AddCell(this, e->scenePos());
             undoStack()->push(addCell);
             addCell->cell()->setStitch(mEditStitch);
+            addCell->cell()->setColor(mEditFgColor);
+            addCell->cell()->setBgColor(mEditBgColor);
 
         }
     }
