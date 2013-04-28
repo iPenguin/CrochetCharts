@@ -29,6 +29,8 @@ PropertiesDock::PropertiesDock(QTabWidget* tabWidget, QWidget *parent) :
 
     connect(ui->stitch, SIGNAL(currentIndexChanged(QString)), SLOT(cellUpdateStitch(QString)));
 
+    connect(ui->deleteItems, SIGNAL(clicked()), SLOT(cellDeleteItems()));
+
 }
 
 PropertiesDock::~PropertiesDock()
@@ -209,4 +211,9 @@ void PropertiesDock::cellUpdateScaleY(double scale)
 void PropertiesDock::cellUpdateStitch(QString stitch)
 {
     emit propertiesUpdate("Stitch", QVariant(stitch));
+}
+
+void PropertiesDock::cellDeleteItems()
+{
+    emit propertiesUpdate("Delete", QVariant(true));
 }

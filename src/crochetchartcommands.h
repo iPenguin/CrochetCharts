@@ -103,7 +103,6 @@ public:
 
 private:
     QList<QGraphicsItem*> items;
-    qreal oldAngle;
     qreal newAngle;
 
     QPointF pivotPoint;
@@ -174,12 +173,12 @@ private:
     Scene* scene;
 };
 
-class RemoveCell : public QUndoCommand
+class RemoveItem : public QUndoCommand
 {
 public:
     enum { Id = 1160 };
 
-    RemoveCell(Scene* s, Cell* c, QUndoCommand* parent = 0);
+    RemoveItem(Scene* s, QGraphicsItem *i, QUndoCommand* parent = 0);
 
     void redo();
     void undo();
@@ -187,7 +186,7 @@ public:
     int id() const { return Id; }
 
 private:
-    Cell* c;
+    QGraphicsItem* gi;
     QPointF position;
 
     Scene* scene;

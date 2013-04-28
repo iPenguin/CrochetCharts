@@ -216,26 +216,26 @@ void AddCell::undo()
 }
 
 /*************************************************\
-| RemoveCell                                      |
+| RemoveItem                                      |
 \*************************************************/
-RemoveCell::RemoveCell(Scene* s, Cell* cell, QUndoCommand* parent)
+RemoveItem::RemoveItem(Scene* s, QGraphicsItem *i, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
-    c = cell;
+    gi = i;
     scene = s;
-    position = c->pos();
-    setText(QObject::tr("remove stitch"));
+    position = gi->pos();
+    setText(QObject::tr("remove items"));
 }
 
-void RemoveCell::redo()
+void RemoveItem::redo()
 {
-    scene->removeItem(c);
+    scene->removeItem(gi);
 }
 
-void RemoveCell::undo()
+void RemoveItem::undo()
 {
-    scene->addItem(c);
-    c->setPos(position);
+    scene->addItem(gi);
+    gi->setPos(position);
 }
 
 /*************************************************\

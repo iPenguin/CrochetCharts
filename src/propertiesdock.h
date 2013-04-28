@@ -42,6 +42,7 @@ private slots:
     void cellUpdateScaleX(double scale);
     void cellUpdateScaleY(double scale);
     void cellUpdateStitch(QString stitch);
+    void cellDeleteItems();
     
 private:
     void showUi(UiSelection selection);

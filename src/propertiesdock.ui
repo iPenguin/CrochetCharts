@@ -55,7 +55,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QSpinBox" name="spinBox">
+        <widget class="QSpinBox" name="rows">
          <property name="minimum">
           <number>1</number>
          </property>
@@ -65,7 +65,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QSpinBox" name="spinBox_2">
+        <widget class="QSpinBox" name="columns">
          <property name="minimum">
           <number>1</number>
          </property>
@@ -83,7 +83,7 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>spinBox</cstring>
+          <cstring>rows</cstring>
          </property>
         </widget>
        </item>
@@ -96,7 +96,7 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>spinBox_2</cstring>
+          <cstring>columns</cstring>
          </property>
         </widget>
        </item>
@@ -128,49 +128,39 @@
        <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Angle:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>angle</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>X Scale:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>scaleX</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QPushButton" name="setBgColorBttn">
-         <property name="text">
-          <string>Background Color</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="angle"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="scaleX"/>
-       </item>
        <item row="5" column="1">
         <widget class="QPushButton" name="stColorBttn">
          <property name="text">
           <string>Stitch Color</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QDoubleSpinBox" name="scaleY"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="angle"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="stitch"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="scaleX"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Stitch:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QPushButton" name="setPivotPointBttn">
+         <property name="text">
+          <string>Set Pivot Point</string>
          </property>
         </widget>
        </item>
@@ -187,26 +177,43 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
-        <widget class="QPushButton" name="setPivotPointBttn">
+       <item row="6" column="1">
+        <widget class="QPushButton" name="setBgColorBttn">
          <property name="text">
-          <string>Set Pivot Point</string>
+          <string>Background Color</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="scaleY"/>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="stitch"/>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_3">
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>Stitch:</string>
+          <string>X Scale:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>scaleX</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Angle:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>angle</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QPushButton" name="deleteItems">
+         <property name="text">
+          <string>Delete</string>
          </property>
         </widget>
        </item>
@@ -220,7 +227,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0">
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="pivotPoint">
          <property name="text">
           <string>Set Pivot Point</string>
          </property>
@@ -235,15 +242,15 @@
  <tabstops>
   <tabstop>showChartCenter</tabstop>
   <tabstop>showGuidelines</tabstop>
-  <tabstop>spinBox</tabstop>
-  <tabstop>spinBox_2</tabstop>
+  <tabstop>rows</tabstop>
+  <tabstop>columns</tabstop>
   <tabstop>angle</tabstop>
   <tabstop>scaleX</tabstop>
   <tabstop>scaleY</tabstop>
   <tabstop>stColorBttn</tabstop>
   <tabstop>setBgColorBttn</tabstop>
   <tabstop>setPivotPointBttn</tabstop>
-  <tabstop>pushButton_2</tabstop>
+  <tabstop>pivotPoint</tabstop>
  </tabstops>
  <resources/>
  <connections/>

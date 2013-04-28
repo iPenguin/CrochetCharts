@@ -112,7 +112,7 @@ public:
      * @param property - name of the property to update
      * @param newValue - new value to set.
      *
-     * Values for property include: Angle, ScaleX, ScaleY, Stitch, ChartCenter, Guidelines
+     * Values for property include: Angle, ScaleX, ScaleY, Stitch, ChartCenter, Guidelines, Deletes
      */
     void propertiesUpdate(QString property, QVariant newValue);
 

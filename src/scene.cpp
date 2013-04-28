@@ -304,7 +304,7 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
             switch(item->type()) {
                 case Cell::Type: {
                     Cell* c = qgraphicsitem_cast<Cell*>(item);
-                    undoStack()->push(new RemoveCell(this, c));
+                    undoStack()->push(new RemoveItem(this, c));
                     break;
                 }
                 case Indicator::Type: {
@@ -1742,6 +1742,8 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
                                                QPointF(c->origWidth/2, c->origHeight)));
         } else if(property == "Stitch") {
             undoStack()->push(new SetCellStitch(this, c, newValue.toString()));
+        } else if(property == "Delete") {
+            undoStack()->push(new RemoveItem(this, i));
         } else if(property == "ChartCenter") {
 
         } else if(property == "Guidelines") {
@@ -2051,7 +2053,7 @@ void Scene::cut()
         switch(item->type()) {
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(item);
-                undoStack()->push(new RemoveCell(this, c));
+                undoStack()->push(new RemoveItem(this, c));
                 break;
             }
             case Indicator::Type: {
