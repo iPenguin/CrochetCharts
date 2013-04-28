@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PropertiesDialog</class>
- <widget class="QDockWidget" name="PropertiesDialog">
+ <class>PropertiesDock</class>
+ <widget class="QDockWidget" name="PropertiesDock">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -125,10 +125,10 @@
     <item row="1" column="0">
      <widget class="QGroupBox" name="stitchGroup">
       <property name="title">
-       <string>Stitch</string>
+       <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
+       <item row="1" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
           <string>Angle:</string>
@@ -141,10 +141,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QDoubleSpinBox" name="angle"/>
-       </item>
-       <item row="1" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
           <string>X Scale:</string>
@@ -157,20 +154,27 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="scaleX"/>
-       </item>
-       <item row="5" column="1">
-        <widget class="QPushButton" name="setPivotPointBttn">
+       <item row="6" column="1">
+        <widget class="QPushButton" name="setBgColorBttn">
          <property name="text">
-          <string>Set Pivot Point</string>
+          <string>Background Color</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="scaleY"/>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="angle"/>
        </item>
-       <item row="2" column="0">
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="scaleX"/>
+       </item>
+       <item row="5" column="1">
+        <widget class="QPushButton" name="stColorBttn">
+         <property name="text">
+          <string>Stitch Color</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
           <string>Y Scale:</string>
@@ -183,17 +187,26 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QPushButton" name="setBgColorBttn">
+       <item row="7" column="1">
+        <widget class="QPushButton" name="setPivotPointBttn">
          <property name="text">
-          <string>Bg Color</string>
+          <string>Set Pivot Point</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="stColorBttn">
+       <item row="4" column="1">
+        <widget class="QDoubleSpinBox" name="scaleY"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="stitch"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>St Color</string>
+          <string>Stitch:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>

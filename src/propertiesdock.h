@@ -1,5 +1,5 @@
-#ifndef PROPERTIESDIALOG_H
-#define PROPERTIESDIALOG_H
+#ifndef PROPERTIESDOCK_H
+#define PROPERTIESDOCK_H
 
 #include <QDockWidget>
 #include <QTabWidget>
@@ -8,10 +8,10 @@
 #include "debug.h"
 
 namespace Ui {
-    class PropertiesDialog;
+    class PropertiesDock;
 }
 
-class PropertiesDialog : public QDockWidget
+class PropertiesDock : public QDockWidget
 {
     Q_OBJECT
 
@@ -25,9 +25,11 @@ public:
         MixedUi = 100
     };
     
-    PropertiesDialog(QTabWidget* tabWidget, QWidget *parent = 0);
-    ~PropertiesDialog();
+    PropertiesDock(QTabWidget* tabWidget, QWidget *parent = 0);
+    ~PropertiesDock();
 
+signals:
+    void propertiesUpdate(QString property, QVariant newValue);
     
 private slots:
     void tabChanged(int tabNumber);
@@ -39,17 +41,20 @@ private slots:
     void cellUpdateAngle(double angle);
     void cellUpdateScaleX(double scale);
     void cellUpdateScaleY(double scale);
+    void cellUpdateStitch(QString stitch);
     
 private:
     void showUi(UiSelection selection);
 
     void clearUi();
-    
+
+    void setupStitchCombo();
+
 private:
-    Ui::PropertiesDialog *ui;
+    Ui::PropertiesDock *ui;
 
     QTabWidget* mTabWidget;
     Scene* mScene;
 };
 
-#endif // PROPERTIESDIALOG_H
+#endif // PROPERTIESDOCK_H

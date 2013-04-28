@@ -191,6 +191,16 @@ void MainWindow::newChartUpdateStyle(QString style)
     }
 }
 
+void MainWindow::propertiesUpdate(QString property, QVariant newValue)
+{
+
+    if(!curCrochetTab())
+        return;
+
+    curCrochetTab()->propertiesUpdate(property, newValue);
+
+}
+
 void MainWindow::setupStitchPalette()
 {
 
@@ -242,9 +252,9 @@ void MainWindow::setupDocks()
     connect(mMirrorDock, SIGNAL(rotate(qreal)), SLOT(rotate(qreal)));
     connect(mMirrorDock, SIGNAL(visibilityChanged(bool)), ui->actionShowMirrorDock, SLOT(setChecked(bool)));
 
-    mPropertiesDock = new PropertiesDialog(ui->tabWidget, this);
+    mPropertiesDock = new PropertiesDock(ui->tabWidget, this);
     connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
-    
+    connect(mPropertiesDock, SIGNAL(propertiesUpdate(QString,QVariant)), SLOT(propertiesUpdate(QString,QVariant)));
 }
 
 void MainWindow::setupMenus()

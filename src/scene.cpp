@@ -1712,6 +1712,47 @@ void Scene::gridAddRow(QList< Cell*> row, bool append, int before)
     }
 }
 
+void Scene::propertiesUpdate(QString property, QVariant newValue)
+{
+    if(selectedItems().count() <= 0)
+        return;
+
+    undoStack()->beginMacro(property);
+    foreach(QGraphicsItem *i, selectedItems()) {
+        Cell *c = 0;
+        Indicator *ind = 0;
+
+        if(i->type() == Cell::Type) {
+            c = qgraphicsitem_cast<Cell*>(i);
+        } else if(i->type() == Indicator::Type) {
+            ind = qgraphicsitem_cast<Indicator*>(i);
+        } else {
+
+        }
+
+        if(property == "Angle") {
+            qDebug() << "setitemrotation";
+            undoStack()->push(new SetItemRotation(this, i, i->rotation(),
+                                                  QPointF(c->origWidth/2, c->origHeight)));
+        } else if(property == "ScaleX") {
+            undoStack()->push(new SetItemScale(this, c, QPointF(newValue.toDouble(), c->scale().y()),
+                                               QPointF(c->origWidth/2, c->origHeight)));
+        } else if(property == "ScaleY") {
+            undoStack()->push(new SetItemScale(this, c, QPointF(c->scale().x(), newValue.toDouble()),
+                                               QPointF(c->origWidth/2, c->origHeight)));
+        } else if(property == "Stitch") {
+            undoStack()->push(new SetCellStitch(this, c, newValue.toString()));
+        } else if(property == "ChartCenter") {
+
+        } else if(property == "Guidelines") {
+
+        } else {
+            qWarning() << "Unknown property, changing nothing.";
+        }
+    }
+    undoStack()->endMacro();
+}
+
 void Scene::mirror(int direction)
 {
     if(selectedItems().count() <= 0)

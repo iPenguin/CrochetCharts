@@ -30,7 +30,7 @@ class CrochetTab : public QWidget
     friend class FileLoad_v1;
     friend class FileLoad_v2;
     friend class ExportUi;
-    friend class PropertiesDialog;
+    friend class PropertiesDock;
 public:
 
     explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget* parent = 0);
@@ -76,6 +76,8 @@ public:
     void setShowGuidelines(QString guides);
     bool hasGuidelines();
     
+    void propertiesUpdate(QString property, QVariant newValue);
+
 signals:
     void chartStitchChanged();
     void chartColorChanged();

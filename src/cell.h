@@ -55,6 +55,7 @@ public:
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
+    void bgColorChanged(QString oldColor, QString newColor);
     
 private:
     QColor mBgColor;
