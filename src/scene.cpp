@@ -69,7 +69,7 @@ Scene::Scene(QObject* parent) :
     mShowGuidelines("")
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
-
+    addGuidelines();
 }
 
 Scene::~Scene()
@@ -1363,6 +1363,39 @@ QPointF Scene::calcGroupPos(QGraphicsItem* group, QPointF newScenePos)
     QPointF origin = group->sceneBoundingRect().topLeft() - group->scenePos();
     QPointF delta = newScenePos - origin;
     return delta;
+}
+
+void Scene::addGuidelines(/*QSize grid, QSize size*/)
+{
+
+    int rows = 16;
+    int columns = 20;
+
+    qreal spacingH = 64; //gridSize.height() / rows;
+    qreal spacingW = 64; //gridSize.width() / columns;
+
+    for(int c = 0; c <= columns; c++) {
+
+        addLine(c*spacingW,0,c*spacingW,spacingH*rows);//gridSize.height());
+        //result.Y = (int)Math.Round( centerPoint.Y + distance * Math.Sin( angle ) );
+        //result.X = (int)Math.Round( centerPoint.X + distance * Math.Cos( angle ) );
+        qreal radians = (360.0 / columns * c) * M_PI / 180;
+        qreal outterX = 0/*center point*/ + (spacingH * (rows + 1)) /*distance*/ * sin(radians);
+        qreal outterY = 0/*center point*/ + (spacingH * (rows + 1)) /*distance*/ * cos(radians);
+
+        qreal innerX = 0 + spacingH * sin(radians);
+        qreal innerY = 0 + spacingH * cos(radians);
+
+        addLine(innerX,innerY,outterX,outterY);
+    }
+
+    for(int r = 0; r <= rows; r++) {
+
+        addLine(0,r*spacingH,/*gridSize.width()*/spacingW*columns,r*spacingH);
+        addEllipse(-(r+1)*spacingH,-(r+1)*spacingH,2*(r+1)*spacingH,2*(r+1)*spacingH);
+    }
+
+
 }
 
 QList<QGraphicsItem*> Scene::sortItemsHorizontally(QList<QGraphicsItem*> unsortedItems, int sortEdge)

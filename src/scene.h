@@ -132,6 +132,11 @@ public slots:
      * highlight (select) all the stitches in row @param row.
      */
     void highlightRow(int row);
+
+    /**
+     * @brief drawRowLines - draw the lines between stitches that make up a row.
+     * @param row - the row to draw the lines for.
+     */
     void drawRowLines(int row);
 
     void highlightIndicators(bool state);
@@ -239,6 +244,8 @@ protected:
      * this function will correct them.
      */
     QPointF calcGroupPos(QGraphicsItem* group, QPointF newScenePos);
+
+    void addGuidelines();
 
 public:
     ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup* g = 0);
