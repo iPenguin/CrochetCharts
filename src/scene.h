@@ -111,6 +111,7 @@ public slots:
     void copy();
     void cut();
     void paste();
+    void deleteSelection();
     
 protected:
     void copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items);

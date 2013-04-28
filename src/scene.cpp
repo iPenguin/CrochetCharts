@@ -274,7 +274,9 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent* e)
     QAction* copyAction = new QAction(tr("Copy"), 0);
     QAction* cutAction = new QAction(tr("Cut"), 0);
     QAction* pasteAction = new QAction(tr("Paste"), 0);
+    QAction *deleteAction = new QAction(tr("Delete"), 0);
 
+    connect(deleteAction, SIGNAL(triggered()), SLOT(deleteSelection()));
     connect(copyAction, SIGNAL(triggered()), SLOT(copy()));
     connect(cutAction, SIGNAL(triggered()), SLOT(cut()));
     connect(pasteAction, SIGNAL(triggered()), SLOT(paste()));
@@ -282,6 +284,8 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent* e)
     menu.addAction(copyAction);
     menu.addAction(cutAction);
     menu.addAction(pasteAction);
+    menu.addSeparator();
+    menu.addAction(deleteAction);
 
     menu.exec(e->screenPos());
 
@@ -297,32 +301,7 @@ void Scene::keyReleaseEvent(QKeyEvent* keyEvent)
         return;
 
     if(keyEvent->key() == Qt::Key_Delete || keyEvent->key() == Qt::Key_Backspace) {
-        QList<QGraphicsItem*> items = selectedItems();
-        undoStack()->beginMacro("remove items");
-        foreach(QGraphicsItem* item, items) {
-
-            switch(item->type()) {
-                case Cell::Type: {
-                    Cell* c = qgraphicsitem_cast<Cell*>(item);
-                    undoStack()->push(new RemoveCell(this, c));
-                    break;
-                }
-                case Indicator::Type: {
-                    Indicator* i = qgraphicsitem_cast<Indicator*>(item);
-                    undoStack()->push(new RemoveIndicator(this, i));
-                    break;
-                }
-                case ItemGroup::Type: {
-                    ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
-                    undoStack()->push(new RemoveGroup(this, group));
-                    break;
-                }
-                default:
-                    qWarning() << "keyReleaseEvent - unknown type: " << item->type();
-                    break;
-            }
-        }
-        undoStack()->endMacro();
+        deleteSelection();
     }
 
 }
@@ -1912,6 +1891,35 @@ void Scene::paste()
     undoStack()->endMacro();
 }
 
+void Scene::deleteSelection()
+{
+    QList<QGraphicsItem*> items = selectedItems();
+    undoStack()->beginMacro("remove items");
+    foreach(QGraphicsItem* item, items) {
+
+        switch(item->type()) {
+            case Cell::Type: {
+                Cell *c = qgraphicsitem_cast<Cell*>(item);
+                undoStack()->push(new RemoveCell(this, c));
+                break;
+            }
+            case Indicator::Type: {
+                Indicator *i = qgraphicsitem_cast<Indicator*>(item);
+                undoStack()->push(new RemoveIndicator(this, i));
+                break;
+            }
+            case ItemGroup::Type: {
+                ItemGroup *group = qgraphicsitem_cast<ItemGroup*>(item);
+                undoStack()->push(new RemoveGroup(this, group));
+                break;
+            }
+            default:
+                qWarning() << "keyReleaseEvent - unknown type: " << item->type();
+                break;
+        }
+    }
+    undoStack()->endMacro();
+}
 
 void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 {
