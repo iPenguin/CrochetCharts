@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>147</width>
+    <width>151</width>
     <height>356</height>
    </rect>
   </property>
@@ -214,22 +214,15 @@ p, li { white-space: pre-wrap; }
     <item>
      <widget class="QWidget" name="rotateCustomWidgets" native="true">
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QSpinBox" name="degrees">
-         <property name="suffix">
-          <string/>
-         </property>
-         <property name="maximum">
-          <number>359</number>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1">
         <widget class="QPushButton" name="rotateBttn">
          <property name="text">
           <string>Rotate</string>
          </property>
         </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QDoubleSpinBox" name="degrees"/>
        </item>
       </layout>
      </widget>

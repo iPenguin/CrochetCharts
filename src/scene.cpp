@@ -1376,7 +1376,7 @@ void Scene::addGuidelines(/*QSize grid, QSize size*/)
 
     for(int c = 0; c <= columns; c++) {
 
-        addLine(c*spacingW,0,c*spacingW,spacingH*rows);//gridSize.height());
+        addLine(c*spacingW,0,c*spacingW,spacingH*rows);
         //result.Y = (int)Math.Round( centerPoint.Y + distance * Math.Sin( angle ) );
         //result.X = (int)Math.Round( centerPoint.X + distance * Math.Cos( angle ) );
         qreal radians = (360.0 / columns * c) * M_PI / 180;
@@ -1394,7 +1394,6 @@ void Scene::addGuidelines(/*QSize grid, QSize size*/)
         addLine(0,r*spacingH,/*gridSize.width()*/spacingW*columns,r*spacingH);
         addEllipse(-(r+1)*spacingH,-(r+1)*spacingH,2*(r+1)*spacingH,2*(r+1)*spacingH);
     }
-
 
 }
 
@@ -1724,6 +1723,51 @@ void Scene::gridAddRow(QList< Cell*> row, bool append, int before)
     }
 }
 
+void Scene::propertiesUpdate(QString property, QVariant newValue)
+{
+    if(selectedItems().count() <= 0)
+        return;
+
+    undoStack()->beginMacro(property);
+    foreach(QGraphicsItem *i, selectedItems()) {
+        Cell *c = 0;
+        Indicator *ind = 0;
+
+        if(i->type() == Cell::Type) {
+            c = qgraphicsitem_cast<Cell*>(i);
+        } else if(i->type() == Indicator::Type) {
+            ind = qgraphicsitem_cast<Indicator*>(i);
+        } else {
+
+        }
+
+        if(property == "Angle") {
+            qDebug() << "setitemrotation";
+            undoStack()->push(new SetItemRotation(this, i, i->rotation(),
+                                                  QPointF(c->origWidth/2, c->origHeight)));
+        } else if(property == "ScaleX") {
+            undoStack()->push(new SetItemScale(this, c, QPointF(newValue.toDouble(), c->scale().y()),
+                                               QPointF(c->origWidth/2, c->origHeight)));
+        } else if(property == "ScaleY") {
+            undoStack()->push(new SetItemScale(this, c, QPointF(c->scale().x(), newValue.toDouble()),
+                                               QPointF(c->origWidth/2, c->origHeight)));
+        } else if(property == "Stitch") {
+            undoStack()->push(new SetCellStitch(this, c, newValue.toString()));
+        } else if(property == "Delete") {
+            undoStack()->push(new RemoveItem(this, i));
+        } else if(property == "") {
+
+        } else if(property == "ChartCenter") {
+
+        } else if(property == "Guidelines") {
+
+        } else {
+            qWarning() << "Unknown property, changing nothing.";
+        }
+    }
+    undoStack()->endMacro();
+}
+
 void Scene::mirror(int direction)
 {
     if(selectedItems().count() <= 0)
@@ -1933,7 +1977,7 @@ void Scene::deleteSelection()
         switch(item->type()) {
             case Cell::Type: {
                 Cell *c = qgraphicsitem_cast<Cell*>(item);
-                undoStack()->push(new RemoveCell(this, c));
+                undoStack()->push(new RemoveItem(this, c));
                 break;
             }
             case Indicator::Type: {
@@ -2051,7 +2095,7 @@ void Scene::cut()
         switch(item->type()) {
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(item);
-                undoStack()->push(new RemoveCell(this, c));
+                undoStack()->push(new RemoveItem(this, c));
                 break;
             }
             case Indicator::Type: {

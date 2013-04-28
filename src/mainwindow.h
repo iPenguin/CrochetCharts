@@ -14,7 +14,7 @@
 #include "aligndock.h"
 #include "rowsdock.h"
 #include "mirrordock.h"
-#include "propertiesdialog.h"
+#include "propertiesdock.h"
 
 #include <QModelIndex>
 
@@ -58,6 +58,8 @@ protected slots:
     void tabChanged(int newTab);
     
     void newChartUpdateStyle(QString style);
+
+    void propertiesUpdate(QString property, QVariant newValue);
     
 //menu functions/slots:
 private slots:
@@ -204,7 +206,7 @@ private:
     RowsDock* mRowsDock;
     MirrorDock* mMirrorDock;
 
-    PropertiesDialog* mPropertiesDock;
+    PropertiesDock* mPropertiesDock;
     
     int mEditMode;
     QString mStitch;

@@ -107,6 +107,15 @@ public:
      */
     void gridAddRow(QList< Cell* > row, bool append = true, int before = 0);
 
+    /**
+     * @brief propertiesUpdate - updates the properties of all selected items.
+     * @param property - name of the property to update
+     * @param newValue - new value to set.
+     *
+     * Values for property include: Angle, ScaleX, ScaleY, Stitch, ChartCenter, Guidelines, Deletes
+     */
+    void propertiesUpdate(QString property, QVariant newValue);
+
 public slots:    
     void copy();
     void cut();

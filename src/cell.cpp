@@ -96,7 +96,7 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
         }
         mStitch = s;
         if(s->isSvg()) {
-            QString color = "#000000";
+            QString color = mColor.name();
             if(useAltRenderer)
                 color = Settings::inst()->value("stitchAlternateColor").toString();
 
@@ -123,7 +123,7 @@ void Cell::setBgColor(QColor c)
         if (mBgColor.isValid())
             old = mBgColor.name();
         mBgColor = c;
-        emit colorChanged(old, c.name());
+        emit bgColorChanged(old, c.name());
         update();
     }
 }
