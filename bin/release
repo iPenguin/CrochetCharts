@@ -38,7 +38,6 @@ CC=`readlink \`which cc\``
 CXX=`readlink \`which c++\``
 
 APP_STORE="OFF"
-BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
 
 while getopts ":a" opt; do
   case $opt in
@@ -51,6 +50,12 @@ while getopts ":a" opt; do
       ;;
   esac
 done
+
+if [ $APP_STORE == "ON" ]; then
+    BUNDLE_ID="com.stitchworkssoftware.crochet-charts"
+else
+    BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
+fi
 
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
