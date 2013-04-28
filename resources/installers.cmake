@@ -92,7 +92,25 @@ elseif(APPLE)
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
 
     set(CPACK_APPLE_CODESIGN_FILES "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore" 
-                                   "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui")
+                                   "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui"
+                                   "/Contents/Frameworks/QtNetwork.framework/Versions/4/QtNetwork"
+                                   "/Contents/Frameworks/QtXml.framework/Versions/4/QtXml"
+                                   "/Contents/Frameworks/QtSvg.framework/Versions/4/QtSvg"
+                                   "/Contents/PlugIns/accessible/libqtaccessiblewidgets.dylib"
+                                   "/Contents/PlugIns/bearer/libqgenericbearer.dylib"
+                                   "/Contents/PlugIns/codecs/libqcncodecs.dylib"
+                                   "/Contents/PlugIns/codecs/libqjpcodecs.dylib"
+                                   "/Contents/PlugIns/codecs/libqkrcodecs.dylib"
+                                   "/Contents/PlugIns/codecs/libqtwcodecs.dylib"
+                                   "/Contents/PlugIns/iconengines/libqsvgicon.dylib"
+                                   "/Contents/PlugIns/imageformats/libqgif.dylib"
+                                   "/Contents/PlugIns/imageformats/libqico.dylib"
+                                   "/Contents/PlugIns/imageformats/libqjpeg.dylib"
+                                   "/Contents/PlugIns/imageformats/libqmng.dylib"
+                                   "/Contents/PlugIns/imageformats/libqsvg.dylib"
+                                   "/Contents/PlugIns/imageformats/libqtga.dylib"
+                                   "/Contents/PlugIns/imageformats/libqtiff.dylib"
+    )
 
     set(CPACK_APPLE_ENTITLEMENTS "${CMAKE_SOURCE_DIR}/resources/Entitlements.plist")
 
