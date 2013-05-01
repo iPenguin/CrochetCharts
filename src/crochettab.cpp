@@ -294,6 +294,11 @@ void CrochetTab::showRowEditor(bool state)
     mScene->clearSelection();
 }
 
+void CrochetTab::replaceStitches(QString original, QString replacement)
+{
+    mScene->replaceStitches(original, replacement);
+}
+
 void CrochetTab::updateRows()
 {
     mRowEditDialog->updateRowList();
@@ -359,13 +364,20 @@ void CrochetTab::setChartCenter(bool state)
     mScene->setShowChartCenter(state);
 }
 
-bool CrochetTab::hasQuarterLines()
+bool CrochetTab::hasGuidelines()
 {
-    return mScene->showQuarterLines();
+    if(mScene->guidelines().type != tr("None"))
+        return true;
+    return false;
 }
 
-void CrochetTab::setQuarterLines(bool state)
+void CrochetTab::propertiesUpdate(QString property, QVariant newValue)
 {
-    mScene->setShowQuarterLines(state);
+    mScene->propertiesUpdate(property, newValue);
+}
+
+void CrochetTab::setShowGuidelines(QString guide)
+{
+    mScene->setShowGuidelines(guide);
 }
 

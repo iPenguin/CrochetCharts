@@ -13,14 +13,27 @@
 #include <QRubberBand>
 
 #include "indicator.h"
+#include "itemgroup.h"
+
+struct Grid {
+    QString type;
+
+    int rows;
+    int columns;
+    int cellHeight;
+    int cellWidth;
+
+};
+Q_DECLARE_METATYPE(Grid)
 
 class QKeyEvent;
 
 class Scene : public QGraphicsScene
 {
     Q_OBJECT
-    friend class SaveFile;
-    friend class SaveThread;
+    friend class FileFactory;
+    friend class FileLoad_v1;
+    friend class FileLoad_v2;
     friend class RowEditDialog;
     friend class TextView;
 
@@ -105,10 +118,20 @@ public:
      */
     void gridAddRow(QList< Cell* > row, bool append = true, int before = 0);
 
+    /**
+     * @brief propertiesUpdate - updates the properties of all selected items.
+     * @param property - name of the property to update
+     * @param newValue - new value to set.
+     *
+     * Values for property include: Angle, ScaleX, ScaleY, Stitch, ChartCenter, Guidelines, Deletes
+     */
+    void propertiesUpdate(QString property, QVariant newValue);
+
 public slots:    
     void copy();
     void cut();
     void paste();
+    void deleteSelection();
     
 protected:
     void copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items);
@@ -129,6 +152,11 @@ public slots:
      * highlight (select) all the stitches in row @param row.
      */
     void highlightRow(int row);
+
+    /**
+     * @brief drawRowLines - draw the lines between stitches that make up a row.
+     * @param row - the row to draw the lines for.
+     */
     void drawRowLines(int row);
 
     void highlightIndicators(bool state);
@@ -237,9 +265,17 @@ protected:
      */
     QPointF calcGroupPos(QGraphicsItem* group, QPointF newScenePos);
 
+    /**
+     * @brief addGuidelines - setup the guidelines on the chart
+     * @param gridType - None, Rows, Rounds
+     * @param grid - rows and columns in the chart
+     * @param size - size of each cell on the grid
+     */
+    void addGuidelines(QString gridType, QSize grid, QSize size);
+
 public:
-    QGraphicsItemGroup* group(QList<QGraphicsItem*> items, QGraphicsItemGroup* g = 0);
-    void ungroup(QGraphicsItemGroup* group);
+    ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup* g = 0);
+    void ungroup(ItemGroup* group);
 
     QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
 
@@ -286,7 +322,7 @@ private:
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
     QGraphicsItem* mCurItem;
-    Cell* mCurCell;
+    Item* mSclItem;
     QPointF mCellStartPos;
     QPointF mLeftButtonDownPos;
 
@@ -357,7 +393,7 @@ private:
     
     QList<QGraphicsItem*> mDemoItems;
 
-    QList<QGraphicsItemGroup*> mGroups;
+    QList<ItemGroup*> mGroups;
 
 
 /***
@@ -392,18 +428,18 @@ private:
     bool mShowChartCenter;
 
 public:
-    bool showQuarterLines() { return mShowQuarterLines; }
-    void setShowQuarterLines(bool state);
-protected slots:
-    void updateQuarterLines();
-    
-private:
-    QGraphicsLineItem* mVerticalLine;
-    QGraphicsLineItem* mHorizontalLine;
-    QGraphicsLineItem* mAngleLine1;
-    QGraphicsLineItem* mAngleLine2;
-    bool mShowQuarterLines;
+    void setShowGuidelines(QString guides);
+    Grid guidelines() { return mGuidelines; }
 
+    void replaceStitches(QString original, QString replacement);
+
+protected slots:
+    void updateGuidelines();
+
+private:
+    QMap<int, QGraphicsItem*> mGuidelinesLines;
+
+    Grid mGuidelines;
 };
 
 #endif //SCENE_H

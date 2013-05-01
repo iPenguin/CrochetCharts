@@ -295,7 +295,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -335,6 +335,8 @@
     <addaction name="actionZoomIn"/>
     <addaction name="actionZoomOut"/>
     <addaction name="separator"/>
+    <addaction name="actionShowProperties"/>
+    <addaction name="separator"/>
     <addaction name="actionShowStitches"/>
     <addaction name="actionShowPatternStitches"/>
     <addaction name="actionShowPatternColors"/>
@@ -356,7 +358,6 @@
     <addaction name="actionEditName"/>
     <addaction name="separator"/>
     <addaction name="actionShowChartCenter"/>
-    <addaction name="actionShowQuarterLines"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -396,6 +397,8 @@
     <addaction name="separator"/>
     <addaction name="actionShowAlignDock"/>
     <addaction name="actionShowMirrorDock"/>
+    <addaction name="separator"/>
+    <addaction name="actionReplaceStitch"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -612,6 +615,7 @@
    <addaction name="separator"/>
    <addaction name="actionShowAlignDock"/>
    <addaction name="actionShowMirrorDock"/>
+   <addaction name="actionColorSelectorFg"/>
    <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">
@@ -921,12 +925,12 @@
     <string>Show Edit Mode Toolbar</string>
    </property>
   </action>
-  <action name="actionColorSelectorBg">
+  <action name="actionColorSelectorFg">
    <property name="text">
-    <string>Background Color</string>
+    <string>Color Selector</string>
    </property>
    <property name="toolTip">
-    <string>Select a color for the background</string>
+    <string>Select a color for the stitch</string>
    </property>
    <property name="shortcut">
     <string>,</string>
@@ -1092,15 +1096,31 @@
     <string>Show Chart Center</string>
    </property>
   </action>
-  <action name="actionShowQuarterLines">
+  <action name="actionShowProperties">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Wedge Lines</string>
+    <string>Show Properties</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
+   </property>
+  </action>
+  <action name="actionReplaceStitch">
+   <property name="text">
+    <string>Replace a stitch...</string>
+   </property>
+  </action>
+  <action name="actionColorSelectorBg">
+   <property name="text">
+    <string>Background Color Selector</string>
    </property>
    <property name="toolTip">
-    <string>Show Wedge Lines</string>
+    <string>Select a color for the background of the stitch</string>
+   </property>
+   <property name="shortcut">
+    <string>,</string>
    </property>
   </action>
  </widget>

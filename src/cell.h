@@ -8,12 +8,14 @@
 #include <QtSvg/QGraphicsSvgItem>
 #include "stitch.h"
 #include <QPointer>
+#include "item.h"
 
-class Cell : public QGraphicsSvgItem
+class Cell : public QGraphicsSvgItem, public Item
 {
     Q_OBJECT
     friend class SaveFile;
-    friend class SaveThread;
+    friend class FileLoad_v1;
+    friend class FileLoad_v2;
 public:
 
     enum { Type = UserType + 1 };
@@ -25,12 +27,17 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
     int type () const { return Cell::Type; }
 
+    bool isGrouped();
+
     void setHighlight(bool state) { mHighlight = state; update(); }
     Cell* copy(Cell* cell = 0);
     
-    void setColor(QColor c = QColor(Qt::white));
-    QColor color() const { return mColor; }
+    void setBgColor(QColor c = QColor(Qt::white));
+    QColor bgColor() const { return mBgColor; }
     
+    void setColor(QColor c = QColor(Qt::black));
+    QColor color() const { return mColor; }
+
     void setStitch(Stitch* s, bool useAltRenderer = false);
     void setStitch(QString s, bool useAltRenderer = false);
     Stitch* stitch() const { return mStitch; }
@@ -44,15 +51,14 @@ public:
 
     QPointF scale() {return mScale; }
     void setScale(qreal sx, qreal sy);
-
-    qreal origWidth;
-    qreal origHeight;
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
+    void bgColorChanged(QString oldColor, QString newColor);
     
 private:
+    QColor mBgColor;
     QColor mColor;
     QPointer<Stitch> mStitch;
 

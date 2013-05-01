@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# This script prepares the repository for a user to work on it.
+#
+
+PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+echo -n "Installing hooks... "
+cp $PROJECT_DIR/utils/hooks/* $PROJECT_DIR/.git/hooks/
+echo "Done"

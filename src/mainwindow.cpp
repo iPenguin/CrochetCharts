@@ -17,6 +17,8 @@
 #include "stitchset.h"
 #include "stitchpalettedelegate.h"
 
+#include "stitchreplacerui.h"
+
 #include "debug.h"
 #include <QDialog>
 #include <QMessageBox>
@@ -44,6 +46,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     mAlignDock(0),
     mRowsDock(0),
     mMirrorDock(0),
+    mPropertiesDock(0),
     mEditMode(10),
     mStitch("ch"),
     mFgColor(QColor(Qt::black)),
@@ -71,7 +74,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     setupStitchPalette();
     setupDocks();
     
-    mFile = new SaveFile(this);
+    mFile = new FileFactory(this);
     loadFiles(fileNames);
 
     setApplicationTitle();
@@ -188,6 +191,16 @@ void MainWindow::newChartUpdateStyle(QString style)
     }
 }
 
+void MainWindow::propertiesUpdate(QString property, QVariant newValue)
+{
+
+    if(!curCrochetTab())
+        return;
+
+    curCrochetTab()->propertiesUpdate(property, newValue);
+
+}
+
 void MainWindow::setupStitchPalette()
 {
 
@@ -238,6 +251,10 @@ void MainWindow::setupDocks()
     connect(mMirrorDock, SIGNAL(mirror(int)), SLOT(mirror(int)));
     connect(mMirrorDock, SIGNAL(rotate(qreal)), SLOT(rotate(qreal)));
     connect(mMirrorDock, SIGNAL(visibilityChanged(bool)), ui->actionShowMirrorDock, SLOT(setChecked(bool)));
+
+    mPropertiesDock = new PropertiesDock(ui->tabWidget, this);
+    connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
+    connect(mPropertiesDock, SIGNAL(propertiesUpdated(QString,QVariant)), SLOT(propertiesUpdate(QString,QVariant)));
 }
 
 void MainWindow::setupMenus()
@@ -297,9 +314,9 @@ void MainWindow::setupMenus()
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
 
     connect(ui->actionColorSelectorBg, SIGNAL(triggered()), SLOT(selectColor()));
-    //connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
+    connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
     
-    //ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
+    ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
     ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(mBgColor, QSize(32, 32))));
     
     //View Menu
@@ -322,6 +339,8 @@ void MainWindow::setupMenus()
     ui->actionZoomOut->setIcon(QIcon::fromTheme("zoom-out", QIcon(":/images/zoomout.png")));
     ui->actionZoomIn->setShortcut(QKeySequence::ZoomIn);
     ui->actionZoomOut->setShortcut(QKeySequence::ZoomOut);
+
+    connect(ui->actionShowProperties, SIGNAL(triggered()), SLOT(viewShowProperties()));
     
     //Modes menu
     connect(ui->menuModes, SIGNAL(aboutToShow()), SLOT(menuModesAboutToShow()));
@@ -341,7 +360,6 @@ void MainWindow::setupMenus()
     connect(ui->actionRemoveTab, SIGNAL(triggered()), SLOT(removeCurrentTab()));
 
     connect(ui->actionShowChartCenter, SIGNAL(triggered()), SLOT(chartsShowChartCenter()));
-    connect(ui->actionShowQuarterLines, SIGNAL(triggered()), SLOT(chartsShowQuarterLines()));
     
     ui->actionRemoveTab->setIcon(QIcon::fromTheme("tab-close", QIcon(":/images/tabclose.png")));
     
@@ -359,6 +377,11 @@ void MainWindow::setupMenus()
 
     connect(ui->actionGroup, SIGNAL(triggered()), SLOT(group()));
     connect(ui->actionUngroup, SIGNAL(triggered()), SLOT(ungroup()));
+
+    connect(ui->actionReplaceStitch, SIGNAL(triggered()), SLOT(stitchesReplaceStitch()));
+
+    //stitches menu
+    connect(ui->menuStitches, SIGNAL(aboutToShow()), SLOT(menuStitchesAboutToShow()));
 
     //Tools Menu
     connect(ui->menuTools, SIGNAL(aboutToShow()), SLOT(menuToolsAboutToShow()));
@@ -454,6 +477,7 @@ void MainWindow::updateMenuItems()
     menuViewAboutToShow();
     menuModesAboutToShow();
     menuChartAboutToShow();
+    menuStitchesAboutToShow();
 }
 
 void MainWindow::filePrint()
@@ -481,7 +505,7 @@ void MainWindow::print(QPrinter* printer)
     QPainter* p = new QPainter();
     
     p->begin(printer);
-    sws_debug(QString::number(tabCount));
+
     bool firstPass = true;
     for(int i = 0; i < tabCount; ++i) {
         if(!firstPass)
@@ -546,7 +570,7 @@ void MainWindow::selectColor()
         QColor color = QColorDialog::getColor(mFgColor, this, tr("Foreground Color"));
         
         if (color.isValid()) {
-            //ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
             mFgColor = color;
             updateFgColor();
         }
@@ -846,8 +870,8 @@ void MainWindow::fileSave()
         fileSaveAs();
     else {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-        SaveFile::FileError err = mFile->save();
-        if(err != SaveFile::No_Error)
+        FileFactory::FileError err = mFile->save();
+        if(err != FileFactory::No_Error)
             qWarning() << "There was an error saving the file: " << err;
         QApplication::restoreOverrideCursor();
     }
@@ -949,9 +973,37 @@ void MainWindow::menuViewAboutToShow()
     ui->actionZoomIn->setEnabled(state);
     ui->actionZoomOut->setEnabled(state);
 
-    ui->actionShowAlignDock->setChecked(mAlignDock->isVisible());
     ui->actionShowRowsDock->setChecked(mRowsDock->isVisible());
+    ui->actionShowProperties->setChecked(mPropertiesDock->isVisible());
+
+}
+
+void MainWindow::menuStitchesAboutToShow()
+{
+
+    ui->actionShowAlignDock->setChecked(mAlignDock->isVisible());
     ui->actionShowMirrorDock->setChecked(mMirrorDock->isVisible());
+    ui->actionReplaceStitch->setEnabled(hasTab() && curCrochetTab());
+
+    ui->actionGroup->setEnabled(hasTab() && curCrochetTab());
+    ui->actionUngroup->setEnabled(hasTab() && curCrochetTab());
+
+}
+
+void MainWindow::stitchesReplaceStitch()
+{
+
+    CrochetTab *tab = curCrochetTab();
+    if(!tab)
+        return;
+
+    StitchReplacerUi *sr = new StitchReplacerUi(mPatternStitches.keys(), this);
+
+    if(sr->exec() == QDialog::Accepted) {
+        if(!sr->original.isEmpty())
+            tab->replaceStitches(sr->original, sr->replacement);
+    }
+
 }
 
 void MainWindow::fileNew()
@@ -1101,6 +1153,11 @@ void MainWindow::viewShowUndoHistory()
     mUndoDock->setVisible(ui->actionShowUndoHistory->isChecked());
 }
 
+void MainWindow::viewShowProperties()
+{
+    mPropertiesDock->setVisible(ui->actionShowProperties->isChecked());
+}
+
 void MainWindow::viewShowEditModeToolbar()
 {
     ui->editModeToolBar->setVisible(ui->actionShowEditModeToolbar->isChecked());
@@ -1209,15 +1266,12 @@ void MainWindow::menuChartAboutToShow()
     ui->actionRemoveTab->setEnabled(state);
     ui->actionEditName->setEnabled(state);
     ui->actionShowChartCenter->setEnabled(state);
-    ui->actionShowQuarterLines->setEnabled(state);
 
     CrochetTab* tab = curCrochetTab();
     if(tab) {
         ui->actionShowChartCenter->setChecked(tab->hasChartCenter());
-        ui->actionShowQuarterLines->setChecked(tab->hasQuarterLines());
     } else {
         ui->actionShowChartCenter->setChecked(false);
-        ui->actionShowQuarterLines->setChecked(false);
     }
 
 }
@@ -1230,14 +1284,6 @@ void MainWindow::chartsShowChartCenter()
         tab->setChartCenter(ui->actionShowChartCenter->isChecked());
     }
 
-}
-
-void MainWindow::chartsShowQuarterLines()
-{
-    CrochetTab* tab = curCrochetTab();
-    if(tab) {
-        tab->setQuarterLines(ui->actionShowQuarterLines->isChecked());
-    }
 }
 
 void MainWindow::chartEditName()

@@ -79,6 +79,7 @@ if [ $PLATFORM == "Darwin" ]; then
     CMAKE_FLAGS="$CMAKE_FLAGS -DBUNDLE_ID=$BUNDLE_ID"
 
 elif [ $PLATFORM == "Linux" ]; then
+
     if [ $ARCH == "i686" ]; then
       CMAKE_FLAGS="$CMAKE_FLAGS -DFORCE_32BIT=ON"
     fi
