@@ -15,6 +15,17 @@
 #include "indicator.h"
 #include "itemgroup.h"
 
+struct Grid {
+    QString type;
+
+    int rows;
+    int columns;
+    int cellHeight;
+    int cellWidth;
+
+};
+Q_DECLARE_METATYPE(Grid)
+
 class QKeyEvent;
 
 class Scene : public QGraphicsScene
@@ -254,7 +265,13 @@ protected:
      */
     QPointF calcGroupPos(QGraphicsItem* group, QPointF newScenePos);
 
-    void addGuidelines();
+    /**
+     * @brief addGuidelines - setup the guidelines on the chart
+     * @param gridType - None, Rows, Rounds
+     * @param grid - rows and columns in the chart
+     * @param size - size of each cell on the grid
+     */
+    void addGuidelines(QString gridType, QSize grid, QSize size);
 
 public:
     ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup* g = 0);
@@ -411,9 +428,8 @@ private:
     bool mShowChartCenter;
 
 public:
-    QString showGuidelines() { return mShowGuidelines; }
     void setShowGuidelines(QString guides);
-    QString guidelines() { return "None"; }
+    Grid guidelines() { return mGuidelines; }
 
     void replaceStitches(QString original, QString replacement);
 
@@ -421,9 +437,9 @@ protected slots:
     void updateGuidelines();
 
 private:
-    QList<QGraphicsLineItem*> mGuidelines;
-    QString mShowGuidelines;
+    QMap<int, QGraphicsItem*> mGuidelinesLines;
 
+    Grid mGuidelines;
 };
 
 #endif //SCENE_H

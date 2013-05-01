@@ -31,6 +31,8 @@
 #include <QAction>
 #include <QMenu>
 
+#include "guideline.h"
+
 static void qNormalizeAngle(qreal &angle)
 {
     while (angle < 0.0)
@@ -65,11 +67,9 @@ Scene::Scene(QObject* parent) :
     mDefaultStitch("ch"),
     mRowLine(0),
     mCenterSymbol(0),
-    mShowChartCenter(false),
-    mShowGuidelines("")
+    mShowChartCenter(false)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
-    addGuidelines();
 }
 
 Scene::~Scene()
@@ -464,7 +464,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
     mCurItem = itemAt(e->scenePos());
 
     if(mCurItem) {
-        
         switch(mCurItem->type()) {
             case Cell::Type: {
                 mCellStartPos = mCurItem->scenePos();
@@ -490,6 +489,12 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
             }
             case QGraphicsSimpleTextItem::Type: {
                 //If we've selected the background text pretend we didn't select it.
+                mCurItem = 0;
+                break;
+            }
+            case Guideline::Type: {
+                //We don't want to select the guidelines when we're manipulating the chart or stitches.
+                clearSelection();
                 mCurItem = 0;
                 break;
             }
@@ -520,7 +525,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
         return;
 
     if(selectedItems().count() <= 0 || e->modifiers() == Qt::ControlModifier) {
-        
         ChartView* view = qobject_cast<ChartView*>(parent());
 
         if(!mRubberBand)
@@ -1365,34 +1369,53 @@ QPointF Scene::calcGroupPos(QGraphicsItem* group, QPointF newScenePos)
     return delta;
 }
 
-void Scene::addGuidelines(/*QSize grid, QSize size*/)
+void Scene::addGuidelines(QString gridType, QSize grid, QSize size)
 {
+    if(gridType == "None")
+        return;
 
-    int rows = 16;
-    int columns = 20;
+    int columns = grid.width();
+    int rows = grid.height();
 
-    qreal spacingH = 64; //gridSize.height() / rows;
-    qreal spacingW = 64; //gridSize.width() / columns;
+    int spacingW = size.width();
+    int spacingH = size.height();
+
+    mGuidelines.type = gridType;
+    mGuidelines.columns = columns;
+    mGuidelines.rows = rows;
+    mGuidelines.cellHeight = spacingH;
+    mGuidelines.cellWidth = spacingW;
+
+    QGraphicsItem *i = 0;
 
     for(int c = 0; c <= columns; c++) {
+        if(gridType == "Rows") {
+            i = addLine(c*spacingW,0,c*spacingW,spacingH*rows);
+            mGuidelinesLines.insert(mGuidelinesLines.count(), i);
+        } else { //gridType == "Rounds"
 
-        addLine(c*spacingW,0,c*spacingW,spacingH*rows);
-        //result.Y = (int)Math.Round( centerPoint.Y + distance * Math.Sin( angle ) );
-        //result.X = (int)Math.Round( centerPoint.X + distance * Math.Cos( angle ) );
-        qreal radians = (360.0 / columns * c) * M_PI / 180;
-        qreal outterX = 0/*center point*/ + (spacingH * (rows + 1)) /*distance*/ * sin(radians);
-        qreal outterY = 0/*center point*/ + (spacingH * (rows + 1)) /*distance*/ * cos(radians);
+            //result.Y = (int)Math.Round( centerPoint.Y + distance * Math.Sin( angle ) );
+            //result.X = (int)Math.Round( centerPoint.X + distance * Math.Cos( angle ) );
+            qreal radians = (360.0 / columns * c) * M_PI / 180;
+            qreal outterX = 0/*center point*/ + (spacingH * (rows + 1)) /*distance*/ * sin(radians);
+            qreal outterY = 0/*center point*/ + (spacingH * (rows + 1)) /*distance*/ * cos(radians);
 
-        qreal innerX = 0 + spacingH * sin(radians);
-        qreal innerY = 0 + spacingH * cos(radians);
+            qreal innerX = 0 + spacingH * sin(radians);
+            qreal innerY = 0 + spacingH * cos(radians);
 
-        addLine(innerX,innerY,outterX,outterY);
+            i = addLine(innerX,innerY,outterX,outterY);
+            mGuidelinesLines.insert(mGuidelinesLines.count(), i);
+        }
     }
 
     for(int r = 0; r <= rows; r++) {
-
-        addLine(0,r*spacingH,/*gridSize.width()*/spacingW*columns,r*spacingH);
-        addEllipse(-(r+1)*spacingH,-(r+1)*spacingH,2*(r+1)*spacingH,2*(r+1)*spacingH);
+        if(gridType == "Rows") {
+            i = addLine(0,r*spacingH,/*gridSize.width()n*/spacingW*columns,r*spacingH);
+            mGuidelinesLines.insert(mGuidelinesLines.count(), i);
+        } else { //gridType == "Rounds"
+            Guideline *g = new Guideline(QRectF(-(r+1)*spacingH,-(r+1)*spacingH,2*(r+1)*spacingH,2*(r+1)*spacingH), 0, this);
+            mGuidelinesLines.insert(mGuidelinesLines.count(), g);
+        }
     }
 
 }
@@ -1529,8 +1552,6 @@ QRectF Scene::selectionBoundingRect(QList< QGraphicsItem* > items, int vertical,
             center.setBottom(i->sceneBoundingRect().center().y());
         if(i->sceneBoundingRect().bottom() > bottomRight.bottom())
             bottomRight.setBottom(i->sceneBoundingRect().bottom());
-        
-        
     }
 
     switch(horizontal) {
@@ -1725,47 +1746,63 @@ void Scene::gridAddRow(QList< Cell*> row, bool append, int before)
 
 void Scene::propertiesUpdate(QString property, QVariant newValue)
 {
-    if(selectedItems().count() <= 0)
-        return;
 
-    undoStack()->beginMacro(property);
-    foreach(QGraphicsItem *i, selectedItems()) {
-        Cell *c = 0;
-        Indicator *ind = 0;
 
-        if(i->type() == Cell::Type) {
-            c = qgraphicsitem_cast<Cell*>(i);
-        } else if(i->type() == Indicator::Type) {
-            ind = qgraphicsitem_cast<Indicator*>(i);
-        } else {
+    if(property == "ChartCenter") {
+        setShowChartCenter(newValue.toBool());
+    } else if(property == "Rows") {
 
+    } else if(property == "Columns") {
+
+    } else if(property == "CellWidth") {
+
+    } else if(property == "CellHeight") {
+
+    } else if(property == "ChartCenter") {
+
+    } else if(property == "Guidelines") {
+
+        mGuidelines = newValue.value<Grid>();
+        qDebug() << "scene guidelines update" << mGuidelines.type << mGuidelines.rows << mGuidelines.columns;
+        updateGuidelines();
+    } else { // all options that require operations on a per stitch level.
+
+        if(selectedItems().count() <= 0)
+            return;
+
+        undoStack()->beginMacro(property);
+        foreach(QGraphicsItem *i, selectedItems()) {
+            Cell *c = 0;
+            Indicator *ind = 0;
+
+            if(i->type() == Cell::Type) {
+                c = qgraphicsitem_cast<Cell*>(i);
+            } else if(i->type() == Indicator::Type) {
+                ind = qgraphicsitem_cast<Indicator*>(i);
+            } else {
+
+            }
+
+            if(property == "Angle") {
+                undoStack()->push(new SetItemRotation(this, i, i->rotation(),
+                                                      QPointF(c->origWidth/2, c->origHeight)));
+            } else if(property == "ScaleX") {
+                undoStack()->push(new SetItemScale(this, c, QPointF(newValue.toDouble(), c->scale().y()),
+                                                   QPointF(c->origWidth/2, c->origHeight)));
+            } else if(property == "ScaleY") {
+                undoStack()->push(new SetItemScale(this, c, QPointF(c->scale().x(), newValue.toDouble()),
+                                                   QPointF(c->origWidth/2, c->origHeight)));
+            } else if(property == "Stitch") {
+                undoStack()->push(new SetCellStitch(this, c, newValue.toString()));
+            } else if(property == "Delete") {
+                undoStack()->push(new RemoveItem(this, i));
+            } else {
+                qWarning() << "Unknown property: " << property;
+            }
         }
-
-        if(property == "Angle") {
-            qDebug() << "setitemrotation";
-            undoStack()->push(new SetItemRotation(this, i, i->rotation(),
-                                                  QPointF(c->origWidth/2, c->origHeight)));
-        } else if(property == "ScaleX") {
-            undoStack()->push(new SetItemScale(this, c, QPointF(newValue.toDouble(), c->scale().y()),
-                                               QPointF(c->origWidth/2, c->origHeight)));
-        } else if(property == "ScaleY") {
-            undoStack()->push(new SetItemScale(this, c, QPointF(c->scale().x(), newValue.toDouble()),
-                                               QPointF(c->origWidth/2, c->origHeight)));
-        } else if(property == "Stitch") {
-            undoStack()->push(new SetCellStitch(this, c, newValue.toString()));
-        } else if(property == "Delete") {
-            undoStack()->push(new RemoveItem(this, i));
-        } else if(property == "") {
-
-        } else if(property == "ChartCenter") {
-
-        } else if(property == "Guidelines") {
-
-        } else {
-            qWarning() << "Unknown property, changing nothing.";
-        }
+        undoStack()->endMacro();
     }
-    undoStack()->endMacro();
+
 }
 
 void Scene::mirror(int direction)
@@ -2394,8 +2431,8 @@ void Scene::highlightIndicators(bool state)
 void Scene::setShowGuidelines(QString guides)
 {
 
-    if(mShowGuidelines != guides) {
-        mShowGuidelines = guides;
+    if(mGuidelines.type != guides) {
+        mGuidelines.type = guides;
         if(guides == tr("Round")) {
             DEBUG("TODO: show guidelines round");
         } else if(guides == tr("Grid")) {
@@ -2410,7 +2447,7 @@ void Scene::setShowGuidelines(QString guides)
 
 void Scene::updateGuidelines()
 {
-    if(showGuidelines() == tr("None"))
+    if(mGuidelines.type == tr("None"))
         return;
 
     if(mCenterSymbol && mCenterSymbol->isVisible()) {

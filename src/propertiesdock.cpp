@@ -31,6 +31,14 @@ PropertiesDock::PropertiesDock(QTabWidget* tabWidget, QWidget *parent) :
 
     connect(ui->deleteItems, SIGNAL(clicked()), SLOT(cellDeleteItems()));
 
+    connect(ui->showGuidelines, SIGNAL(currentIndexChanged(int)), SLOT(updateGuidelinesUi()));
+    updateGuidelinesUi();
+
+    connect(ui->rows, SIGNAL(valueChanged(int)), SLOT(updateRows(int)));
+    connect(ui->cellWidth, SIGNAL(valueChanged(int)), SLOT(updateCellWidth(int)));
+    connect(ui->columns, SIGNAL(valueChanged(int)), SLOT(updateColumns(int)));
+    connect(ui->cellHeight, SIGNAL(valueChanged(int)), SLOT(updateCellHeight(int)));
+
 }
 
 PropertiesDock::~PropertiesDock()
@@ -56,7 +64,6 @@ void PropertiesDock::clearUi()
 {
     ui->chartGroup->hide();
     ui->stitchGroup->hide();
-    ui->selectionGroup->hide();
 }
 
 void PropertiesDock::setupStitchCombo()
@@ -91,6 +98,15 @@ void PropertiesDock::setupStitchCombo()
 
     ui->stitch->blockSignals(false);
 
+}
+
+void PropertiesDock::updateGuidelines()
+{
+    mGuidelines.type = ui->showGuidelines->currentText();
+    mGuidelines.rows = ui->rows->value();
+    mGuidelines.columns = ui->columns->value();
+    mGuidelines.cellHeight = ui->cellHeight->value();
+    mGuidelines.cellWidth = ui->cellWidth->value();
 }
 
 void PropertiesDock::updateDialogUi()
@@ -140,9 +156,10 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
         
         ui->showChartCenter->setChecked(mScene->showChartCenter());
 
-        QString guidelines = mScene->guidelines();
+        QString guidelines = mScene->guidelines().type;
         ui->showGuidelines->setCurrentIndex(ui->showGuidelines->findText(guidelines));
-        
+        updateGuidelinesUi();
+
     } else if(selection == PropertiesDock::CellUi) {
 
         Cell* c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
@@ -165,13 +182,59 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
     } else if(selection == PropertiesDock::MixedUi) {
 
         //TODO: loop through all the items, check all the
-        qDebug() << "mixed ui";
-        ui->selectionGroup->show();
         
     } else if (selection == PropertiesDock::CenterUi) {
         WARN("TODO: make center ui work");
     }
     
+}
+
+void PropertiesDock::updateGuidelinesUi()
+{
+    if(ui->showGuidelines->currentText() == "None") {
+        ui->rows->setEnabled(false);
+        ui->columns->setEnabled(false);
+        ui->cellWidth->setEnabled(false);
+        ui->cellHeight->setEnabled(false);
+
+    } else {
+        ui->rows->setEnabled(true);
+        ui->columns->setEnabled(true);
+        ui->cellWidth->setEnabled(true);
+        ui->cellHeight->setEnabled(true);
+
+        if( ui->showGuidelines->currentText() == "Rows") {
+            ui->rowsLbl->setText(tr("Rows:"));
+            ui->cellWidthLbl->setText((tr("Row width:")));
+        } else { //rounds
+            ui->rowsLbl->setText(tr("Rounds:"));
+            ui->cellWidthLbl->setText((tr("Round width:")));
+        }
+    }
+}
+
+void PropertiesDock::updateRows(int rows)
+{
+    updateGuidelines();
+    emit propertiesUpdated("Rows", QVariant::fromValue(mGuidelines));
+}
+
+void PropertiesDock::updateColumns(int columns)
+{
+    updateGuidelines();
+    emit propertiesUpdated("Columns", QVariant(columns));
+}
+
+void PropertiesDock::updateCellWidth(int width)
+{
+    updateGuidelines();
+    emit propertiesUpdated("CellWidth", QVariant(width));
+}
+
+void PropertiesDock::updateCellHeight(int height)
+{
+    updateGuidelines();
+    emit propertiesUpdated("CellHeight", QVariant(height));
 }
 
 /**
@@ -180,12 +243,13 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
 
 void PropertiesDock::chartUpdateChartCenter(bool state)
 {
-    emit propertiesUpdate("ChartCenter", QVariant(state));
+    emit propertiesUpdated("ChartCenter", QVariant(state));
 }
 
 void PropertiesDock::chartUpdateGuidelines(QString guides)
 {
-    emit propertiesUpdate("Guidelines", QVariant(guides));
+
+    emit propertiesUpdated("Guidelines", QVariant(guides));
 }
 
 
@@ -195,25 +259,25 @@ void PropertiesDock::chartUpdateGuidelines(QString guides)
 
 void PropertiesDock::cellUpdateAngle(double angle)
 {
-    emit propertiesUpdate("Angle", QVariant(angle));
+    emit propertiesUpdated("Angle", QVariant(angle));
 }
 
 void PropertiesDock::cellUpdateScaleX(double scale)
 {
-    emit propertiesUpdate("ScaleX", QVariant(scale));
+    emit propertiesUpdated("ScaleX", QVariant(scale));
 }
 
 void PropertiesDock::cellUpdateScaleY(double scale)
 {
-    emit propertiesUpdate("ScaleY", QVariant(scale));
+    emit propertiesUpdated("ScaleY", QVariant(scale));
 }
 
 void PropertiesDock::cellUpdateStitch(QString stitch)
 {
-    emit propertiesUpdate("Stitch", QVariant(stitch));
+    emit propertiesUpdated("Stitch", QVariant(stitch));
 }
 
 void PropertiesDock::cellDeleteItems()
 {
-    emit propertiesUpdate("Delete", QVariant(true));
+    emit propertiesUpdated("Delete", QVariant(true));
 }

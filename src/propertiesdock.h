@@ -29,7 +29,7 @@ public:
     ~PropertiesDock();
 
 signals:
-    void propertiesUpdate(QString property, QVariant newValue);
+    void propertiesUpdated(QString property, QVariant newValue);
     
 private slots:
     void tabChanged(int tabNumber);
@@ -37,25 +37,34 @@ private slots:
 
     void chartUpdateChartCenter(bool state);
     void chartUpdateGuidelines(QString guides);
-    
+
     void cellUpdateAngle(double angle);
     void cellUpdateScaleX(double scale);
     void cellUpdateScaleY(double scale);
     void cellUpdateStitch(QString stitch);
     void cellDeleteItems();
-    
+
+    void updateGuidelinesUi();
+
+    void updateRows(int rows);
+    void updateColumns(int columns);
+    void updateCellWidth(int width);
+    void updateCellHeight(int height);
+
 private:
     void showUi(UiSelection selection);
-
     void clearUi();
 
     void setupStitchCombo();
+
+    void updateGuidelines();
 
 private:
     Ui::PropertiesDock *ui;
 
     QTabWidget* mTabWidget;
     Scene* mScene;
+    Grid mGuidelines;
 };
 
 #endif // PROPERTIESDOCK_H

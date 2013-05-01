@@ -366,7 +366,7 @@ void CrochetTab::setChartCenter(bool state)
 
 bool CrochetTab::hasGuidelines()
 {
-    if(mScene->showGuidelines() != tr("None"))
+    if(mScene->guidelines().type != tr("None"))
         return true;
     return false;
 }

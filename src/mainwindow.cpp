@@ -254,7 +254,7 @@ void MainWindow::setupDocks()
 
     mPropertiesDock = new PropertiesDock(ui->tabWidget, this);
     connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
-    connect(mPropertiesDock, SIGNAL(propertiesUpdate(QString,QVariant)), SLOT(propertiesUpdate(QString,QVariant)));
+    connect(mPropertiesDock, SIGNAL(propertiesUpdated(QString,QVariant)), SLOT(propertiesUpdate(QString,QVariant)));
 }
 
 void MainWindow::setupMenus()
