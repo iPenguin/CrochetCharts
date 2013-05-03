@@ -2276,9 +2276,9 @@ void Scene::updateSceneRect()
     QRectF sbr = sceneRect();
     QRectF final;
 
-    ibr.setTop(ibr.top() + 50);
+    ibr.setTop(ibr.top() - 50);
     ibr.setBottom(ibr.bottom() + 50);
-    ibr.setLeft(ibr.left() + 50);
+    ibr.setLeft(ibr.left() - 50);
     ibr.setRight(ibr.right() + 50);
     
     final.setBottom((ibr.bottom() >= sbr.bottom()) ? ibr.bottom() : sbr.bottom());
