@@ -24,7 +24,7 @@
 
  */
 
-QString debugFunctionName(QString name);
+QString colorizeFunc(QString name);
 
 #define DEBUG(message) \
 ( \
