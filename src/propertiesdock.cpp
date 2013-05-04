@@ -25,25 +25,50 @@ PropertiesDock::PropertiesDock(QTabWidget* tabWidget, QWidget *parent) :
     connect(ui->scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
 
     connect(ui->showChartCenter, SIGNAL(toggled(bool)), SLOT(chartUpdateChartCenter(bool)));
-    connect(ui->showGuidelines, SIGNAL(currentIndexChanged(QString)), SLOT(chartUpdateGuidelines(QString)));
+    connect(ui->guidelinesType, SIGNAL(currentIndexChanged(QString)), SLOT(chartUpdateGuidelines()));
 
     connect(ui->stitch, SIGNAL(currentIndexChanged(QString)), SLOT(cellUpdateStitch(QString)));
 
     connect(ui->deleteItems, SIGNAL(clicked()), SLOT(cellDeleteItems()));
 
-    connect(ui->showGuidelines, SIGNAL(currentIndexChanged(int)), SLOT(updateGuidelinesUi()));
+    connect(ui->guidelinesType, SIGNAL(currentIndexChanged(int)), SLOT(updateGuidelinesUi()));
     updateGuidelinesUi();
 
-    connect(ui->rows, SIGNAL(valueChanged(int)), SLOT(updateRows(int)));
-    connect(ui->cellWidth, SIGNAL(valueChanged(int)), SLOT(updateCellWidth(int)));
-    connect(ui->columns, SIGNAL(valueChanged(int)), SLOT(updateColumns(int)));
-    connect(ui->cellHeight, SIGNAL(valueChanged(int)), SLOT(updateCellHeight(int)));
-
+    connect(ui->rows, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
+    connect(ui->cellWidth, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
+    connect(ui->columns, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
+    connect(ui->cellHeight, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
 }
 
 PropertiesDock::~PropertiesDock()
 {
     delete ui;
+}
+
+void PropertiesDock::loadProperties(Guidelines guidelines)
+{
+    mGuidelines = guidelines;
+
+    //QUESTION: is this the best way to prevent overwritting the properties when "loading" them.
+    ui->guidelinesType->blockSignals(true);
+    ui->guidelinesType->setCurrentIndex(ui->guidelinesType->findText(mGuidelines.type()));
+    ui->guidelinesType->blockSignals(false);
+
+    ui->rows->blockSignals(true);
+    ui->rows->setValue(mGuidelines.rows());
+    ui->rows->blockSignals(false);
+
+    ui->columns->blockSignals(true);
+    ui->columns->setValue(mGuidelines.columns());
+    ui->columns->blockSignals(false);
+
+    ui->cellHeight->blockSignals(true);
+    ui->cellHeight->setValue(mGuidelines.cellHeight());
+    ui->cellHeight->blockSignals(false);
+
+    ui->cellWidth->blockSignals(true);
+    ui->cellWidth->setValue(mGuidelines.cellWidth());
+    ui->cellWidth->blockSignals(false);
 }
 
 void PropertiesDock::tabChanged(int tabNumber)
@@ -100,13 +125,36 @@ void PropertiesDock::setupStitchCombo()
 
 }
 
-void PropertiesDock::updateGuidelines()
+bool PropertiesDock::updateGuidelines()
 {
-    mGuidelines.type = ui->showGuidelines->currentText();
-    mGuidelines.rows = ui->rows->value();
-    mGuidelines.columns = ui->columns->value();
-    mGuidelines.cellHeight = ui->cellHeight->value();
-    mGuidelines.cellWidth = ui->cellWidth->value();
+    bool changed = false;
+
+    if(mGuidelines.type() != ui->guidelinesType->currentText()) {
+        mGuidelines.setType(ui->guidelinesType->currentText());
+        changed = true;
+    }
+
+    if(mGuidelines.rows() != ui->rows->value()) {
+        mGuidelines.setRows(ui->rows->value());
+        changed = true;
+    }
+
+    if(mGuidelines.columns() != ui->columns->value()) {
+        mGuidelines.setColumns(ui->columns->value());
+        changed = true;
+    }
+
+    if(mGuidelines.cellHeight() != ui->cellHeight->value()) {
+        mGuidelines.setCellHeight(ui->cellHeight->value());
+        changed = true;
+    }
+
+    if(mGuidelines.cellWidth() != ui->cellWidth->value()) {
+        mGuidelines.setCellWidth(ui->cellWidth->value());
+        changed = true;
+    }
+
+    return changed;
 }
 
 void PropertiesDock::updateDialogUi()
@@ -156,8 +204,11 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
 
         ui->showChartCenter->setChecked(mScene->showChartCenter());
 
-        QString guidelines = mScene->guidelines().type;
-        ui->showGuidelines->setCurrentIndex(ui->showGuidelines->findText(guidelines));
+        QString guidelines = mScene->guidelines().type();
+        if(guidelines.isEmpty())
+            guidelines = "None";
+
+        ui->guidelinesType->setCurrentIndex(ui->guidelinesType->findText(guidelines));
         updateGuidelinesUi();
 
     } else if(selection == PropertiesDock::CellUi) {
@@ -191,7 +242,7 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
 
 void PropertiesDock::updateGuidelinesUi()
 {
-    if(ui->showGuidelines->currentText() == "None") {
+    if(ui->guidelinesType->currentText() == "None") {
         ui->rows->setEnabled(false);
         ui->columns->setEnabled(false);
         ui->cellWidth->setEnabled(false);
@@ -203,38 +254,17 @@ void PropertiesDock::updateGuidelinesUi()
         ui->cellWidth->setEnabled(true);
         ui->cellHeight->setEnabled(true);
 
-        if( ui->showGuidelines->currentText() == "Rows") {
+        if( ui->guidelinesType->currentText() == "Rows") {
             ui->rowsLbl->setText(tr("Rows:"));
-            ui->cellWidthLbl->setText((tr("Row width:")));
+            ui->cellWidthLbl->show();
+            ui->cellWidth->show();
         } else { //rounds
             ui->rowsLbl->setText(tr("Rounds:"));
-            ui->cellWidthLbl->setText((tr("Round width:")));
+            ui->cellWidthLbl->hide();
+            ui->cellWidth->hide();
         }
     }
-}
 
-void PropertiesDock::updateRows(int rows)
-{
-    updateGuidelines();
-    emit propertiesUpdated("Rows", QVariant::fromValue(mGuidelines));
-}
-
-void PropertiesDock::updateColumns(int columns)
-{
-    updateGuidelines();
-    emit propertiesUpdated("Columns", QVariant(columns));
-}
-
-void PropertiesDock::updateCellWidth(int width)
-{
-    updateGuidelines();
-    emit propertiesUpdated("CellWidth", QVariant(width));
-}
-
-void PropertiesDock::updateCellHeight(int height)
-{
-    updateGuidelines();
-    emit propertiesUpdated("CellHeight", QVariant(height));
 }
 
 /**
@@ -246,10 +276,14 @@ void PropertiesDock::chartUpdateChartCenter(bool state)
     emit propertiesUpdated("ChartCenter", QVariant(state));
 }
 
-void PropertiesDock::chartUpdateGuidelines(QString guides)
+void PropertiesDock::chartUpdateGuidelines()
 {
 
-    emit propertiesUpdated("Guidelines", QVariant(guides));
+    if (updateGuidelines()) {
+        QVariant value;
+        value.setValue(mGuidelines);
+        emit propertiesUpdated("Guidelines", value);
+    }
 }
 
 

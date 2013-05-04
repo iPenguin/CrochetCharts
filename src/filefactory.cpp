@@ -220,16 +220,16 @@ bool FileFactory::saveCharts(QXmlStreamWriter* stream)
 
         }
 
-        Grid guidelines = tab->scene()->guidelines();
-        if(guidelines.type != "None") {
+        Guidelines guidelines = tab->scene()->guidelines();
+        if(guidelines.type() != "None") {
             stream->writeStartElement("guidelines");
-            stream->writeAttribute("type", guidelines.type);
+            stream->writeAttribute("type", guidelines.type());
 
-            stream->writeAttribute("rows", QString::number(guidelines.rows));
-            stream->writeAttribute("columns", QString::number(guidelines.columns));
-            stream->writeAttribute("cellWidth", QString::number(guidelines.cellWidth));
-            stream->writeAttribute("cellHeight", QString::number(guidelines.cellHeight));
-
+            stream->writeAttribute("rows", QString::number(guidelines.rows()));
+            stream->writeAttribute("columns", QString::number(guidelines.columns()));
+            stream->writeAttribute("cellWidth", QString::number(guidelines.cellWidth()));
+            stream->writeAttribute("cellHeight", QString::number(guidelines.cellHeight()));
+            stream->writeEndElement();
         }
 
         stream->writeStartElement("rowSpacing");

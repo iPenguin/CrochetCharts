@@ -255,6 +255,7 @@ void MainWindow::setupDocks()
     mPropertiesDock = new PropertiesDock(ui->tabWidget, this);
     connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
     connect(mPropertiesDock, SIGNAL(propertiesUpdated(QString,QVariant)), SLOT(propertiesUpdate(QString,QVariant)));
+
 }
 
 void MainWindow::setupMenus()
@@ -1100,6 +1101,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
     connect(tab, SIGNAL(chartStitchChanged()), SLOT(updatePatternStitches()));
     connect(tab, SIGNAL(chartColorChanged()), SLOT(updatePatternColors()));
     connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
+    connect(tab, SIGNAL(guidelinesUpdated(Guidelines)), SLOT(updateGuidelines(Guidelines)));
 
     mUndoGroup.addStack(tab->undoStack());
     
@@ -1517,6 +1519,11 @@ void MainWindow::rotate(qreal degrees)
 {
     CrochetTab* tab = curCrochetTab();
     if(tab) tab->rotate(degrees);
+}
+
+void MainWindow::updateGuidelines(Guidelines guidelines)
+{
+    mPropertiesDock->loadProperties(guidelines);
 }
 
 void MainWindow::copy()

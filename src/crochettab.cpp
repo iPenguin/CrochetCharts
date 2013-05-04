@@ -51,6 +51,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     connect(mScene, SIGNAL(stitchChanged(QString,QString)), SLOT(stitchChanged(QString,QString)));
     connect(mScene, SIGNAL(colorChanged(QString,QString)), SLOT(colorChanged(QString,QString)));
     connect(mScene, SIGNAL(rowEdited(bool)), SIGNAL(tabModified(bool)));
+    connect(mScene, SIGNAL(guidelinesUpdated(Guidelines)), SIGNAL(guidelinesUpdated(Guidelines)));
 
     mView->setScene(mScene);
     QPoint pt = mView->mapFromScene(centerOn);
@@ -366,7 +367,7 @@ void CrochetTab::setChartCenter(bool state)
 
 bool CrochetTab::hasGuidelines()
 {
-    if(mScene->guidelines().type != tr("None"))
+    if(mScene->guidelines().type() != tr("None"))
         return true;
     return false;
 }
@@ -376,8 +377,8 @@ void CrochetTab::propertiesUpdate(QString property, QVariant newValue)
     mScene->propertiesUpdate(property, newValue);
 }
 
-void CrochetTab::setShowGuidelines(QString guide)
+void CrochetTab::setGuidelinesType(QString guide)
 {
-    mScene->setShowGuidelines(guide);
+    mScene->setGuidelinesType(guide);
 }
 

@@ -110,6 +110,7 @@ void FileLoad_v2::loadChart(QXmlStreamReader* stream)
             tab->scene()->mDefaultSize.setHeight(height);
             tab->scene()->mDefaultSize.setWidth(width);
 
+            stream->readElementText(); //move to the next tag.
         } else if(tag == "cell") {
             loadCell(tab, stream);
 
@@ -121,13 +122,24 @@ void FileLoad_v2::loadChart(QXmlStreamReader* stream)
             //create an empty group for future use.
             QList<QGraphicsItem*> items;
             tab->scene()->group(items);
+
         } else if(tag == "guidelines") {
             QString type = stream->attributes().value("type").toString();
             int rows = stream->attributes().value("rows").toString().toInt();
             int columns = stream->attributes().value("columns").toString().toInt();
             int cellHeight = stream->attributes().value("cellHeight").toString().toInt();
             int cellWidth = stream->attributes().value("cellWidth").toString().toInt();
-            tab->scene()->addGuidelines(type, QSize(columns,rows), QSize(cellWidth, cellHeight));
+
+            tab->scene()->mGuidelines.setType(type);
+            tab->scene()->mGuidelines.setColumns(columns);
+            tab->scene()->mGuidelines.setRows(rows);
+            tab->scene()->mGuidelines.setCellWidth(cellWidth);
+            tab->scene()->mGuidelines.setCellHeight(cellHeight);
+
+            stream->readElementText(); //move to the next tag
+            tab->scene()->updateGuidelines();
+            emit tab->updateGuidelines(tab->scene()->guidelines());
+
         } else {
             qWarning() << "loadChart Unknown tag:" << tag;
         }

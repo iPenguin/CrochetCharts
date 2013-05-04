@@ -28,6 +28,8 @@ public:
     PropertiesDock(QTabWidget* tabWidget, QWidget *parent = 0);
     ~PropertiesDock();
 
+    void loadProperties(Guidelines guidelines);
+
 signals:
     void propertiesUpdated(QString property, QVariant newValue);
 
@@ -36,7 +38,7 @@ private slots:
     void updateDialogUi();
 
     void chartUpdateChartCenter(bool state);
-    void chartUpdateGuidelines(QString guides);
+    void chartUpdateGuidelines();
 
     void cellUpdateAngle(double angle);
     void cellUpdateScaleX(double scale);
@@ -46,25 +48,20 @@ private slots:
 
     void updateGuidelinesUi();
 
-    void updateRows(int rows);
-    void updateColumns(int columns);
-    void updateCellWidth(int width);
-    void updateCellHeight(int height);
-
 private:
     void showUi(UiSelection selection);
     void clearUi();
 
     void setupStitchCombo();
 
-    void updateGuidelines();
+    bool updateGuidelines();
 
 private:
     Ui::PropertiesDock *ui;
 
     QTabWidget* mTabWidget;
     Scene* mScene;
-    Grid mGuidelines;
+    Guidelines mGuidelines;
 };
 
 #endif // PROPERTIESDOCK_H

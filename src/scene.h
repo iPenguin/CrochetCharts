@@ -15,16 +15,48 @@
 #include "indicator.h"
 #include "itemgroup.h"
 
-struct Grid {
-    QString type;
+class Guidelines {
+public:
+    explicit Guidelines()
+        : mType("None"),
+          mRows(20),
+          mColumns(20),
+          mCellHeight(64),
+          mCellWidth(64)
+    {
 
-    int rows;
-    int columns;
-    int cellHeight;
-    int cellWidth;
+    }
 
+    QString type() const { return mType; }
+    void setType(QString type) { mType = type; }
+
+    int rows() const { return mRows; }
+    void setRows(int rows) { mRows = rows; }
+    int columns() const { return mColumns; }
+    void setColumns(int columns) { mColumns = columns; }
+
+    int cellHeight() const { return mCellHeight; }
+    void setCellHeight(int cellHeight) { mCellHeight = cellHeight; }
+    int cellWidth() const { return mCellWidth; }
+    void setCellWidth(int cellWidth) { mCellWidth = cellWidth; }
+
+    bool operator==(const Guidelines &other) const;
+    bool operator!=(const Guidelines &other) const;
+
+private:
+    QString mType;
+
+    int mRows;
+    int mColumns;
+
+    int mCellHeight;
+    int mCellWidth;
 };
-Q_DECLARE_METATYPE(Grid)
+
+Q_CORE_EXPORT QDataStream & operator<< ( QDataStream & stream, Guidelines & guidelines );
+QDebug operator<< (QDebug d, Guidelines & guidelines);
+
+Q_DECLARE_METATYPE(Guidelines)
 
 class QKeyEvent;
 
@@ -174,6 +206,8 @@ signals:
 
     //When ever a row is edited emit this signal.
     void rowEdited(bool state);
+
+    void guidelinesUpdated(Guidelines guidelines);
     
 protected:
 //    virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
@@ -264,14 +298,6 @@ protected:
      * this function will correct them.
      */
     QPointF calcGroupPos(QGraphicsItem* group, QPointF newScenePos);
-
-    /**
-     * @brief addGuidelines - setup the guidelines on the chart
-     * @param gridType - None, Rows, Rounds
-     * @param grid - rows and columns in the chart
-     * @param size - size of each cell on the grid
-     */
-    void addGuidelines(QString gridType, QSize grid, QSize size);
 
 public:
     ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup* g = 0);
@@ -428,18 +454,27 @@ private:
     bool mShowChartCenter;
 
 public:
-    void setShowGuidelines(QString guides);
-    Grid guidelines() { return mGuidelines; }
+    void setGuidelinesType(QString guides);
+    Guidelines guidelines() { return mGuidelines; }
 
     void replaceStitches(QString original, QString replacement);
 
 protected slots:
+    /**
+     * @brief updateGuidelines - draw the guidelines
+     */
     void updateGuidelines();
 
 private:
-    QMap<int, QGraphicsItem*> mGuidelinesLines;
+    /**
+     * @brief mGuidelinesLines - Hold all the lines that make up the grid
+     */
+    QList<QGraphicsItem*> mGuidelinesLines;
 
-    Grid mGuidelines;
+    /**
+     * @brief mGuidelines - Hold the settings that are used to generate a grid background
+     */
+    Guidelines mGuidelines;
 };
 
 #endif //SCENE_H

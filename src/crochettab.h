@@ -73,7 +73,7 @@ public:
     bool hasChartCenter();
     void setChartCenter(bool state);
 
-    void setShowGuidelines(QString guides);
+    void setGuidelinesType(QString guides);
     bool hasGuidelines();
     
     void propertiesUpdate(QString property, QVariant newValue);
@@ -83,6 +83,12 @@ signals:
     void chartColorChanged();
     void tabModified(bool state);
     
+    void guidelinesUpdated(Guidelines guidelines);
+public:
+    void updateGuidelines(Guidelines guidelines) {
+        emit guidelinesUpdated(guidelines);
+    }
+
 public slots:
     void zoomIn();
     void zoomOut();

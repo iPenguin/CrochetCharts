@@ -183,6 +183,8 @@ private slots:
 
     void mirror(int direction);
     void rotate(qreal degrees);
+
+    void updateGuidelines(Guidelines guidelines);
     
 private:
     QColor mNewDocWidgetColor;

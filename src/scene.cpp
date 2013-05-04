@@ -33,6 +33,61 @@
 
 #include "guideline.h"
 
+QDataStream & operator<< ( QDataStream & stream, Guidelines & guidelines )
+{
+
+    stream << guidelines.type() << guidelines.rows() << guidelines.columns()
+           << guidelines.cellHeight() << guidelines.cellWidth();
+    return stream;
+}
+
+QDebug operator<< (QDebug d, Guidelines & guidelines)
+{
+   d << "Guidelines(" << guidelines.type() << guidelines.rows() << guidelines.columns()
+     << guidelines.cellHeight() << guidelines.cellWidth() << ")";
+   return d;
+}
+
+bool Guidelines::operator==(const Guidelines &other) const
+{
+    bool isEqual = true;
+
+    if(type() != other.type())
+        isEqual = false;
+
+    if(rows() != other.rows())
+        isEqual = false;
+    if(columns() != other.columns())
+        isEqual = false;
+
+    if(cellHeight() != other.cellHeight())
+        isEqual = false;
+    if(cellWidth() != other.cellWidth())
+        isEqual = false;
+
+    return isEqual;
+}
+
+bool Guidelines::operator!=(const Guidelines &other) const
+{
+    bool isEqual = true;
+
+    if(type() != other.type())
+        isEqual = false;
+
+    if(rows() != other.rows())
+        isEqual = false;
+    if(columns() != other.columns())
+        isEqual = false;
+
+    if(cellHeight() != other.cellHeight())
+        isEqual = false;
+    if(cellWidth() != other.cellWidth())
+        isEqual = false;
+
+    return !isEqual;
+}
+
 static void qNormalizeAngle(qreal &angle)
 {
     while (angle < 0.0)
@@ -199,6 +254,7 @@ void Scene::addItem(QGraphicsItem* item)
         }
         default:
             WARN("Unknown type: " + QString::number(item->type()));
+        case Guideline::Type:
         case QGraphicsEllipseItem::Type:
         case QGraphicsLineItem::Type: {
             QGraphicsScene::addItem(item);
@@ -235,6 +291,7 @@ void Scene::removeItem(QGraphicsItem* item)
 
         default:
             WARN("Unknown type: " + QString::number(item->type()));
+        case Guideline::Type:
         case QGraphicsEllipseItem::Type:
         case QGraphicsLineItem::Type: {
             QGraphicsScene::removeItem(item);
@@ -1369,31 +1426,35 @@ QPointF Scene::calcGroupPos(QGraphicsItem* group, QPointF newScenePos)
     return delta;
 }
 
-void Scene::addGuidelines(QString gridType, QSize grid, QSize size)
+void Scene::updateGuidelines()
 {
-    if(gridType == "None")
-        return;
 
-    int columns = grid.width();
-    int rows = grid.height();
+    int columns = mGuidelines.columns();
+    int rows = mGuidelines.rows();
 
-    int spacingW = size.width();
-    int spacingH = size.height();
-
-    mGuidelines.type = gridType;
-    mGuidelines.columns = columns;
-    mGuidelines.rows = rows;
-    mGuidelines.cellHeight = spacingH;
-    mGuidelines.cellWidth = spacingW;
+    int spacingW = mGuidelines.cellWidth();
+    int spacingH = mGuidelines.cellHeight();
 
     QGraphicsItem *i = 0;
 
-    for(int c = 0; c <= columns; c++) {
-        if(gridType == "Rows") {
-            i = addLine(c*spacingW,0,c*spacingW,spacingH*rows);
-            mGuidelinesLines.insert(mGuidelinesLines.count(), i);
-        } else { //gridType == "Rounds"
+    if(mGuidelinesLines.count() > 0) {
+        foreach(QGraphicsItem *item, mGuidelinesLines) {
+            removeItem(item);
+            mGuidelinesLines.removeOne(item);
+            delete item;
+        }
+    }
 
+    if(mGuidelines.type() == "None")
+        return;
+
+    for(int c = 0; c <= columns; c++) {
+        if(mGuidelines.type() == "Rows") {
+            i = addLine(c*spacingW,0,c*spacingW,spacingH*rows);
+            i->setZValue(-1);
+            mGuidelinesLines.append(i);
+
+        } else { //gridType == "Rounds"
             //result.Y = (int)Math.Round( centerPoint.Y + distance * Math.Sin( angle ) );
             //result.X = (int)Math.Round( centerPoint.X + distance * Math.Cos( angle ) );
             qreal radians = (360.0 / columns * c) * M_PI / 180;
@@ -1404,21 +1465,25 @@ void Scene::addGuidelines(QString gridType, QSize grid, QSize size)
             qreal innerY = 0 + spacingH * cos(radians);
 
             i = addLine(innerX,innerY,outterX,outterY);
-            mGuidelinesLines.insert(mGuidelinesLines.count(), i);
+            i->setZValue(-1);
+            mGuidelinesLines.append(i);
         }
     }
 
     for(int r = 0; r <= rows; r++) {
-        if(gridType == "Rows") {
+        if(mGuidelines.type() == "Rows") {
             i = addLine(0,r*spacingH,/*gridSize.width()n*/spacingW*columns,r*spacingH);
-            mGuidelinesLines.insert(mGuidelinesLines.count(), i);
+            i->setZValue(-1);
+            mGuidelinesLines.append(i);
         } else { //gridType == "Rounds"
             Guideline *g = new Guideline(QRectF(-(r+1)*spacingH,-(r+1)*spacingH,2*(r+1)*spacingH,
                                                 2*(r+1)*spacingH), 0, this);
-            mGuidelinesLines.insert(mGuidelinesLines.count(), g);
+            g->setZValue(-1);
+            mGuidelinesLines.append(g);
         }
     }
 
+    updateSceneRect();
 }
 
 QList<QGraphicsItem*> Scene::sortItemsHorizontally(QList<QGraphicsItem*> unsortedItems, int sortEdge)
@@ -1748,24 +1813,16 @@ void Scene::gridAddRow(QList< Cell*> row, bool append, int before)
 void Scene::propertiesUpdate(QString property, QVariant newValue)
 {
 
-
     if(property == "ChartCenter") {
         setShowChartCenter(newValue.toBool());
-    } else if(property == "Rows") {
-
-    } else if(property == "Columns") {
-
-    } else if(property == "CellWidth") {
-
-    } else if(property == "CellHeight") {
-
-    } else if(property == "ChartCenter") {
 
     } else if(property == "Guidelines") {
+        Guidelines g = newValue.value<Guidelines>();
+        if(mGuidelines != g) {
+            mGuidelines = g;
+            updateGuidelines();
+        }
 
-        mGuidelines = newValue.value<Grid>();
-        qDebug() << "scene guidelines update" << mGuidelines.type << mGuidelines.rows << mGuidelines.columns;
-        updateGuidelines();
     } else { // all options that require operations on a per stitch level.
 
         if(selectedItems().count() <= 0)
@@ -2429,11 +2486,11 @@ void Scene::highlightIndicators(bool state)
     }
 }
 
-void Scene::setShowGuidelines(QString guides)
+void Scene::setGuidelinesType(QString guides)
 {
 
-    if(mGuidelines.type != guides) {
-        mGuidelines.type = guides;
+    if(mGuidelines.type() != guides) {
+        mGuidelines.setType(guides);
         if(guides == tr("Round")) {
             DEBUG("TODO: show guidelines round");
         } else if(guides == tr("Grid")) {
@@ -2444,19 +2501,6 @@ void Scene::setShowGuidelines(QString guides)
     }
     
     updateGuidelines();
-}
-
-void Scene::updateGuidelines()
-{
-    if(mGuidelines.type == tr("None"))
-        return;
-
-    if(mCenterSymbol && mCenterSymbol->isVisible()) {
-        DEBUG("TODO: Create guidelines from the center symbol");
-
-    } else {
-        DEBUG("TODO: Create guidelines from the center of the chart");
-    }
 }
 
 void Scene::replaceStitches(QString original, QString replacement)
