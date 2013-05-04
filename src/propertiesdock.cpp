@@ -1,6 +1,7 @@
 #include "propertiesdock.h"
 #include "ui_propertiesdock.h"
 
+#include "settings.h"
 #include "cell.h"
 #include "crochettab.h"
 #include "stitchlibrary.h"
@@ -16,6 +17,11 @@ PropertiesDock::PropertiesDock(QTabWidget* tabWidget, QWidget *parent) :
     setVisible(false);
     setFloating(true);
     setObjectName("propertiesDock");
+
+    ui->rows->setValue(Settings::inst()->value("rowCount").toInt());
+    ui->columns->setValue(Settings::inst()->value("stitchCount").toInt());
+    ui->cellHeight->setValue(Settings::inst()->value("cellHeight").toInt());
+    ui->cellWidth->setValue(Settings::inst()->value("cellWidth").toInt());
 
     clearUi();
     connect(mTabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));

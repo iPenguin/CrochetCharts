@@ -130,6 +130,8 @@ void Settings::setupValueList() {
     mValueList["defaultStitch"] = QVariant("ch");
     mValueList["rowCount"] = QVariant(15);
     mValueList["stitchCount"] = QVariant(15);
+    mValueList["cellHeight"] = QVariant(64);
+    mValueList["cellWidth"] = QVariant(64);
     mValueList["chartStyle"] = QVariant(tr("Blank"));
     mValueList["increaseBy"] = QVariant(12);
     

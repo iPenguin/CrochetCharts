@@ -17,15 +17,7 @@
 
 class Guidelines {
 public:
-    explicit Guidelines()
-        : mType("None"),
-          mRows(20),
-          mColumns(20),
-          mCellHeight(64),
-          mCellWidth(64)
-    {
-
-    }
+    explicit Guidelines();
 
     QString type() const { return mType; }
     void setType(QString type) { mType = type; }
