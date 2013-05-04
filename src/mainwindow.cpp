@@ -895,7 +895,11 @@ void MainWindow::fileSaveAs()
     fd->setViewMode(QFileDialog::List);
     fd->setFileMode( QFileDialog::AnyFile );
     fd->setAcceptMode(QFileDialog::AcceptSave);
-    fd->selectFile("my design.pattern");
+    if(mFile->fileName.isEmpty())
+        fd->selectFile("my design.pattern");
+    else
+        fd->selectFile(mFile->fileName);
+
     fd->open(this, SLOT(saveFileAs(QString)));
 }
 
