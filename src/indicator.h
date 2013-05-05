@@ -39,6 +39,9 @@ public:
     QColor textColor() { return mTextColor; }
     void setTextColor(QColor c) { mTextColor = c; }
 
+    QString style() { return mStyle; }
+    void setStyle(QString style) { mStyle = style; }
+
     QPainterPath shape() const;
     
     bool highlight;
@@ -57,6 +60,8 @@ private:
 
     QColor mBgColor;
     QColor mTextColor;
+
+    QString mStyle;
 
 };
 #endif //INDICATOR_H

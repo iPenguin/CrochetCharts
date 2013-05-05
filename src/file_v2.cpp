@@ -11,6 +11,7 @@
 #include "stitchlibrary.h"
 #include "mainwindow.h"
 #include "scene.h"
+#include "settings.h"
 
 #include "crochettab.h"
 
@@ -248,7 +249,7 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 
     qreal x = 0, y = 0;
     QString textColor, bgColor;
-    QString text;
+    QString text, style;
 
     while(!(stream->isEndElement() && stream->name() == "indicator")) {
         stream->readNext();
@@ -264,6 +265,8 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
             textColor = stream->readElementText();
         } else if(tag == "bgColor") {
             bgColor = stream->readElementText();
+        } else if(tag == "style") {
+            style = stream->readElementText();
         }
     }
 
@@ -272,6 +275,10 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
     i->setText(text);
     i->setTextColor(textColor);
     i->setBgColor(bgColor);
+
+    if(style.isEmpty())
+        style = Settings::inst()->value("chartRowIndicator").toString();
+    i->setStyle(style);
 }
 
 void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
@@ -521,6 +528,7 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
                 stream->writeTextElement("text", i->text());
                 stream->writeTextElement("textColor", i->textColor().name());
                 stream->writeTextElement("bgColor", i->bgColor().name());
+                stream->writeTextElement("style", i->style());
 
             stream->writeEndElement(); //end indicator
         }

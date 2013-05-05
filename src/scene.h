@@ -50,6 +50,27 @@ QDebug operator<< (QDebug d, Guidelines & guidelines);
 
 Q_DECLARE_METATYPE(Guidelines)
 
+class IndicatorProperties
+{
+public:
+    explicit IndicatorProperties()
+    {
+    }
+
+    QString style() { return mStyle; }
+    void setStyle(QString style) { mStyle = style; }
+
+    QString html() { return mHtml; }
+    void setHtml(QString html) { mHtml = html; }
+
+private:
+    QString mHtml;
+    QString mStyle;
+};
+
+QDebug operator<<(QDebug d, IndicatorProperties & properties);
+Q_DECLARE_METATYPE(IndicatorProperties)
+
 class QKeyEvent;
 
 class Scene : public QGraphicsScene

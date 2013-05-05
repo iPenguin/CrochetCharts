@@ -21,7 +21,7 @@ public:
         SceneUi = 10,
         CellUi = 15,
         CenterUi = 20,
-
+        IndicatorUi = 25,
         MixedUi = 100
     };
 
@@ -47,6 +47,7 @@ private slots:
     void cellDeleteItems();
 
     void updateGuidelinesUi();
+    void indicatorUpdate();
 
 private:
     void showUi(UiSelection selection);

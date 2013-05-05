@@ -98,6 +98,12 @@ bool Guidelines::operator!=(const Guidelines &other) const
     return !isEqual;
 }
 
+QDebug operator<<(QDebug d, IndicatorProperties & properties)
+{
+    d << "IndicatorProperties(" << properties.style() << properties.html() << ")";
+    return d;
+}
+
 static void qNormalizeAngle(qreal &angle)
 {
     while (angle < 0.0)
@@ -1838,15 +1844,20 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
         if(selectedItems().count() <= 0)
             return;
 
+        IndicatorProperties ip;
+        ip = newValue.value<IndicatorProperties>();
+
         undoStack()->beginMacro(property);
         foreach(QGraphicsItem *i, selectedItems()) {
             Cell *c = 0;
             Indicator *ind = 0;
 
+
             if(i->type() == Cell::Type) {
                 c = qgraphicsitem_cast<Cell*>(i);
             } else if(i->type() == Indicator::Type) {
                 ind = qgraphicsitem_cast<Indicator*>(i);
+
             } else {
 
             }
@@ -1864,6 +1875,12 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
                 undoStack()->push(new SetCellStitch(this, c, newValue.toString()));
             } else if(property == "Delete") {
                 undoStack()->push(new RemoveItem(this, i));
+            } else if(property == "Indicator") {
+
+                qDebug() << "indicator" << ip;
+
+                ind->setStyle(ip.style());
+
             } else {
                 qWarning() << "Unknown property: " << property;
             }

@@ -25,6 +25,8 @@ Indicator::Indicator(QGraphicsItem* parent, QGraphicsScene* scene)
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsFocusable);
     setZValue(150);
+
+    mStyle = Settings::inst()->value("chartRowIndicator").toString();
 }
 
 Indicator::~Indicator()
@@ -46,7 +48,6 @@ QPainterPath Indicator::shape() const
 void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
 
-    QString style = Settings::inst()->value("chartRowIndicator").toString();
     QString color = Settings::inst()->value("chartIndicatorColor").toString();
     bool showOutline = Settings::inst()->value("showIndicatorOutline").toBool();
 

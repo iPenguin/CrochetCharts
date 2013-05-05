@@ -23,6 +23,8 @@ PropertiesDock::PropertiesDock(QTabWidget* tabWidget, QWidget *parent) :
     ui->cellHeight->setValue(Settings::inst()->value("cellHeight").toInt());
     ui->cellWidth->setValue(Settings::inst()->value("cellWidth").toInt());
 
+    int styleIdx = ui->indicatorStyle->findText(Settings::inst()->value("chartRowIndicator").toString());
+    ui->indicatorStyle->setCurrentIndex(styleIdx);
     clearUi();
     connect(mTabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
 
@@ -44,6 +46,8 @@ PropertiesDock::PropertiesDock(QTabWidget* tabWidget, QWidget *parent) :
     connect(ui->cellWidth, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
     connect(ui->columns, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
     connect(ui->cellHeight, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
+
+    connect(ui->indicatorStyle, SIGNAL(currentIndexChanged(int)), SLOT(indicatorUpdate()));
 }
 
 PropertiesDock::~PropertiesDock()
@@ -95,6 +99,7 @@ void PropertiesDock::clearUi()
 {
     ui->chartGroup->hide();
     ui->stitchGroup->hide();
+    ui->indicatorGroup->hide();
 }
 
 void PropertiesDock::setupStitchCombo()
@@ -174,15 +179,7 @@ void PropertiesDock::updateDialogUi()
 
         showUi(PropertiesDock::SceneUi);
         return;
-    } else if(count == 1) {
-
-        if(mScene->selectedItems().first()->type() == Cell::Type) {
-            showUi(PropertiesDock::CellUi);
-        } else {
-            WARN("another type");
-        }
-    } else if(count > 1) {
-        WARN("TODO: check if all items the same, if so show that dialog");
+    } else if(count >= 1) {
         bool theSame = true;
 
         int firstType = mScene->selectedItems().first()->type();
@@ -192,12 +189,15 @@ void PropertiesDock::updateDialogUi()
                 break;
             }
         }
-        qDebug() << "the same" << theSame;
-        if(theSame) {
-            showUi(PropertiesDock::CellUi);
-        } else {
+
+        if(!theSame) {
             showUi(PropertiesDock::MixedUi);
+        } else if(firstType == Cell::Type) {
+            showUi(PropertiesDock::CellUi);
+        } else if(firstType == Indicator::Type) {
+            showUi(PropertiesDock::IndicatorUi);
         }
+
     }
 
 }
@@ -240,6 +240,13 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
 
         //TODO: loop through all the items, check all the
 
+
+    } else if(selection == PropertiesDock::IndicatorUi) {
+        ui->indicatorGroup->show();
+        Indicator *i = qgraphicsitem_cast<Indicator*>(mScene->selectedItems().first());
+
+        ui->indicatorStyle->setCurrentIndex(ui->indicatorStyle->findText(i->style()));
+
     } else if (selection == PropertiesDock::CenterUi) {
         WARN("TODO: make center ui work");
     }
@@ -271,6 +278,21 @@ void PropertiesDock::updateGuidelinesUi()
         }
     }
 
+}
+
+void PropertiesDock::indicatorUpdate()
+{
+    QString html = "ui";
+    QString style = ui->indicatorStyle->currentText();
+
+    IndicatorProperties ip;
+    ip.setHtml(html);
+    ip.setStyle(style);
+
+    QVariant value;
+    value.setValue(ip);
+
+    emit propertiesUpdated("Indicator", value);
 }
 
 /**
