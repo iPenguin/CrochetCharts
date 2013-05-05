@@ -4,7 +4,11 @@
 \*************************************************/
 #include "file.h"
 
-File::File(FileFactory* parent) :
-    mParent(parent)
+File::File(MainWindow *mw, FileFactory *parent) :
+    mMainWindow(mw),
+    mParent(parent),
+    mInternalStitchSet(0)
 {
+    mTabWidget = mMainWindow->tabWidget();
+
 }

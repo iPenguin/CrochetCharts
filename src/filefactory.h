@@ -7,10 +7,6 @@
 
 #include <qglobal.h>
 
-#include "stitchset.h"
-
-#include <QTabWidget>
-
 #ifdef Q_WS_MAC
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -19,21 +15,38 @@ class QXmlStreamReader;
 class QXmlStreamWriter;
 #endif //Q_WS_MAC
 
+#include <QTableWidget>
+class MainWindow;
+
 class FileFactory
 {
 public:
-    friend class FileLoad_v1;
-    friend class FileLoad_v2;
+    friend class File_v1;
+    friend class File_v2;
 
-    enum FileVersion { Version_1_0 = 100, Version_1_2 = 102 };
+    enum FileVersion { Version_1_0 = 100, Version_1_2 = 102, Version_Auto = 255 };
     enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, Err_GettingFileContents,
                      Err_NoTabsToSave, Err_RemovingOrigFile, Err_RenamingTempFile };
 
-    FileFactory(QWidget* parent);
+    FileFactory(QWidget *parent);
 
     FileFactory::FileError load();
-    FileFactory::FileError save();
 
+    /**
+     * @brief save - save the file.
+     * @param saveVersion - the default is 255 or auto save
+     * @return
+     */
+    FileFactory::FileError save(FileVersion saveVersion = FileFactory::Version_Auto);
+
+    /**
+     * @brief isOldFileVersion - tells the software that the file loaded was from a previous savefile version.
+     *
+     * If the save file is old we want to offer a choice to the user of updating the save file version.
+     * And also to remember to save to the correct file version.
+     *
+     * @return true if it's an old file version.
+     */
     bool isOldFileVersion() { return false; }
 
     void cleanUp();
@@ -42,20 +55,17 @@ public:
     QString fileName;
 
 private:
-    void saveCustomStitches(QXmlStreamWriter* stream);
-    void saveColors(QXmlStreamWriter* stream);
-    bool saveCharts(QXmlStreamWriter* stream);
 
-private:
-
-    //fileVersion of the file we're working with.
+    //mCurrentFileVersion is the fileVersion of the save file we're working with.
     qint32 mCurrentFileVersion;
-    //fileVersion of the current version of the software.
+    //mFileVersion is the native fileVersion of this version of the software.
     qint32 mFileVersion;
 
-    QTabWidget* mTabWidget;
-    QWidget* mParent;
-    StitchSet* mInternalStitchSet;
+    QWidget *mParent;
+    MainWindow *mMainWindow;
+    QTabWidget *mTabWidget;
+
+
 };
 
 #endif // FILEFACTORY_H

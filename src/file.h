@@ -6,16 +6,23 @@
 #define FILE_H
 
 #include "filefactory.h"
+#include "mainwindow.h"
+#include "stitchset.h"
+#include <QTabWidget>
 
 class File
 {
 public:
-    File(FileFactory* parent);
+    File(MainWindow *mw, FileFactory *parent);
 
-    virtual FileFactory::FileError load(QXmlStreamReader *stream) = 0;
+    virtual FileFactory::FileError load(QDataStream *stream) = 0;
+    virtual FileFactory::FileError save(QDataStream *stream) = 0;
 
 protected:
-    FileFactory* mParent;
+    MainWindow *mMainWindow;
+    FileFactory *mParent;
+    QTabWidget *mTabWidget;
+    StitchSet *mInternalStitchSet;
 };
 
 #endif // FILE_H

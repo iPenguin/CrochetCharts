@@ -889,7 +889,8 @@ void MainWindow::fileSaveAs()
 
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
 
-    QFileDialog* fd = new QFileDialog(this, tr("Save Pattern File"), fileLoc, tr("Pattern File (*.pattern)"));
+    QFileDialog* fd = new QFileDialog(this, tr("Save Pattern File"), fileLoc,
+                                      tr("Pattern v1.2 (*.pattern);;Pattern v1.0/v1.1 (*.pattern)"));
     fd->setWindowFlags(Qt::Sheet);
     fd->setObjectName("filesavedialog");
     fd->setViewMode(QFileDialog::List);
@@ -910,6 +911,12 @@ void MainWindow::saveFileAs(QString fileName)
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+    QFileDialog *fd = qobject_cast<QFileDialog*>(sender());
+
+    FileFactory::FileVersion fver = FileFactory::Version_1_2;
+    if(fd->selectedNameFilter() == "Pattern v1.0/v1.1 (*.pattern)")
+        fver = FileFactory::Version_1_0;
+
     if(!fileName.endsWith(".pattern", Qt::CaseInsensitive)) {
         fileName += ".pattern";
     }
@@ -920,7 +927,7 @@ void MainWindow::saveFileAs(QString fileName)
     Settings::inst()->files.insert(fileName.toLower(), this);
 
     mFile->fileName = fileName;
-    mFile->save();
+    mFile->save(fver);
 
     setApplicationTitle();
     setWindowModified(false);

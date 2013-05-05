@@ -27,8 +27,8 @@ class CrochetTab : public QWidget
 {
     Q_OBJECT
     friend class FileFactory;
-    friend class FileLoad_v1;
-    friend class FileLoad_v2;
+    friend class File_v1;
+    friend class File_v2;
     friend class ExportUi;
     friend class PropertiesDock;
 public:

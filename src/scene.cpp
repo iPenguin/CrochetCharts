@@ -38,7 +38,7 @@ Guidelines::Guidelines()
       mRows(Settings::inst()->value("rowCount").toInt()),
       mColumns(Settings::inst()->value("stitchCount").toInt()),
       mCellHeight(Settings::inst()->value("cellHeight").toInt()),
-      mCellWidth(Settings::inst()->value("cellWdith").toInt())
+      mCellWidth(Settings::inst()->value("cellWidth").toInt())
 {
 
 }

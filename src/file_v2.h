@@ -14,14 +14,16 @@ class QDataStream;
 class CrochetTab;
 class Scene;
 
-class FileLoad_v2 : public File
+class File_v2 : public File
 {
 public:
-    FileLoad_v2(FileFactory* parent);
+    File_v2(MainWindow *mw, FileFactory* parent);
 
-    FileFactory::FileError load(QXmlStreamReader *stream);
+    FileFactory::FileError load(QDataStream *stream);
+    FileFactory::FileError save(QDataStream *stream);
 
 protected:
+    void cleanUp();
 
 private:
     void loadColors(QXmlStreamReader* stream);
@@ -30,6 +32,10 @@ private:
     void loadCell(CrochetTab* tab, QXmlStreamReader* stream);
     void loadGrid(QXmlStreamReader* stream, Scene* scene);
     void loadIndicator(CrochetTab* tab, QXmlStreamReader* stream);
+
+    void saveCustomStitches(QXmlStreamWriter* stream);
+    void saveColors(QXmlStreamWriter* stream);
+    bool saveCharts(QXmlStreamWriter* stream);
 
 };
 #endif // FINE_V2_H

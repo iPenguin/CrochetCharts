@@ -14,43 +14,109 @@
 
 #include "crochettab.h"
 
-FileLoad_v2::FileLoad_v2(FileFactory *parent)
-    : File(parent)
+File_v2::File_v2(MainWindow *mw, FileFactory *parent)
+    : File(mw, parent)
 {
 
 }
 
-FileFactory::FileError FileLoad_v2::load(QXmlStreamReader *stream)
+FileFactory::FileError File_v2::load(QDataStream *stream)
 {
 
-    while (!stream->atEnd() && !stream->hasError()) {
+    mInternalStitchSet = new StitchSet();
+    mInternalStitchSet->isTemporary = true;
+    mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
+    QString dest = mInternalStitchSet->stitchSetFileName;
+    QFileInfo info(dest);
+    QDir(info.path()).mkpath(info.path() + "/" + info.baseName());
 
-        stream->readNext();
-        if (stream->isStartElement()) {
-            QString name = stream->name().toString();
+    mInternalStitchSet->loadIcons(stream);
+
+    QByteArray docData;
+    *stream >> docData;
+
+    QXmlStreamReader xmlStream(docData);
+
+    if(xmlStream.hasError()) {
+        qWarning() << "Error loading saved file: " << xmlStream.errorString();
+        return FileFactory::Err_GettingFileContents;
+    }
+
+    while (!xmlStream.atEnd() && !xmlStream.hasError()) {
+
+        xmlStream.readNext();
+        if (xmlStream.isStartElement()) {
+            QString name = xmlStream.name().toString();
 
             if(name == "colors") {
-                loadColors(stream);
+                loadColors(&xmlStream);
 
             } else if(name == "chart") {
-                loadChart(stream);
+                loadChart(&xmlStream);
 
             } else if(name == "stitch_set") {
-                mParent->mInternalStitchSet->loadXmlStitchSet(stream, true);
+                mInternalStitchSet->loadXmlStitchSet(&xmlStream, true);
 
             }
         }
     }
 
-    StitchLibrary::inst()->addStitchSet(mParent->mInternalStitchSet);
+    StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
 
     return FileFactory::No_Error;
 }
 
-void FileLoad_v2::loadColors(QXmlStreamReader* stream)
+FileFactory::FileError File_v2::save(QDataStream *stream)
 {
 
-    MainWindow* mw = qobject_cast<MainWindow*>(mParent->mParent);
+    *stream << (qint32)FileFactory::Version_1_2;
+    stream->setVersion(QDataStream::Qt_4_7);
+
+    if(!mInternalStitchSet) {
+
+        mInternalStitchSet = new StitchSet();
+        mInternalStitchSet->isTemporary = true;
+        mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
+        StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
+
+    } else {
+        mInternalStitchSet->clearStitches();
+    }
+
+    //start xml save...
+    QString *data = new QString();
+    QXmlStreamWriter xmlStream(data);
+    xmlStream.setAutoFormatting(true);
+    xmlStream.writeStartDocument();
+
+    xmlStream.writeStartElement("pattern"); //start pattern
+    //TODO: dont need to set the version when saving into a binary file.
+    xmlStream.writeAttribute("version", QString::number(FileFactory::Version_1_2));
+
+    //create the StitchSet then save the icons.
+    saveCustomStitches(&xmlStream);
+    mInternalStitchSet->saveIcons(stream);
+
+    saveColors(&xmlStream);
+
+    saveCharts(&xmlStream);
+    xmlStream.writeEndElement();
+
+    xmlStream.writeEndDocument();
+
+    //put xml into binary file.
+    *stream << data->toUtf8();
+
+    delete data;
+    data = 0;
+
+    return FileFactory::No_Error;
+}
+
+void File_v2::loadColors(QXmlStreamReader *stream)
+{
+
+    MainWindow *mw = mMainWindow;
 
     mw->patternColors().clear();
 
@@ -68,10 +134,10 @@ void FileLoad_v2::loadColors(QXmlStreamReader* stream)
 
 }
 
-void FileLoad_v2::loadChart(QXmlStreamReader* stream)
+void File_v2::loadChart(QXmlStreamReader *stream)
 {
-    MainWindow* mw = qobject_cast<MainWindow*>(mParent->mParent);
-    CrochetTab* tab = 0;
+    MainWindow *mw = mMainWindow;
+    CrochetTab *tab = 0;
     QString tabName = "", defaultSt = "";
 
     while(!(stream->isEndElement() && stream->name() == "chart")) {
@@ -159,7 +225,7 @@ void FileLoad_v2::loadChart(QXmlStreamReader* stream)
     }
 }
 
-void FileLoad_v2::loadGrid(QXmlStreamReader* stream, Scene* scene)
+void File_v2::loadGrid(QXmlStreamReader *stream, Scene *scene)
 {
     while(!(stream->isEndElement() && stream->name() == "grid")) {
         stream->readNext();
@@ -176,9 +242,9 @@ void FileLoad_v2::loadGrid(QXmlStreamReader* stream, Scene* scene)
     }
 }
 
-void FileLoad_v2::loadIndicator(CrochetTab* tab, QXmlStreamReader* stream)
+void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 {
-    Indicator* i = new Indicator();
+    Indicator *i = new Indicator();
 
     qreal x = 0, y = 0;
     QString textColor, bgColor;
@@ -208,11 +274,11 @@ void FileLoad_v2::loadIndicator(CrochetTab* tab, QXmlStreamReader* stream)
     i->setBgColor(bgColor);
 }
 
-void FileLoad_v2::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
+void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
 {
 
-    Cell* c = new Cell();
-    Stitch* s = 0;
+    Cell *c = new Cell();
+    Stitch *s = 0;
     int row = -1, column = -1;
     int group = -1;
     QString bgColor, color;
@@ -300,4 +366,191 @@ void FileLoad_v2::loadCell(CrochetTab* tab, QXmlStreamReader* stream)
 
     if(group != -1)
         tab->scene()->mGroups[group]->addToGroup(c);
+}
+
+
+void File_v2::saveCustomStitches(QXmlStreamWriter *stream)
+{
+    CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(0));
+
+    //FIXME: fileName includes the whole path.
+    mInternalStitchSet->setName(QString("[%1]").arg(QFileInfo(mParent->fileName).fileName()));
+    QStringList stitches = tab->patternStitches()->keys();
+
+    foreach(QString st, stitches) {
+        Stitch *s = StitchLibrary::inst()->findStitch(st);
+        if(s)
+            mInternalStitchSet->addStitch(s);
+    }
+
+    mInternalStitchSet->saveXmlStitchSet(stream, true);
+}
+
+bool File_v2::saveCharts(QXmlStreamWriter *stream)
+{
+    int tabCount = mTabWidget->count();
+
+    for(int i = 0; i < tabCount; ++i) {
+        CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+        if(!tab)
+            continue;
+
+        stream->writeStartElement("chart"); //start chart
+
+        stream->writeTextElement("name", mTabWidget->tabText(i));
+
+        stream->writeTextElement("style", QString::number(tab->mChartStyle));
+        stream->writeTextElement("defaultSt", tab->scene()->mDefaultStitch);
+
+        bool showCenter = tab->scene()->showChartCenter();
+        if(showCenter) {
+            stream->writeStartElement("chartCenter");
+            stream->writeAttribute("x", QString::number(tab->scene()->mCenterSymbol->scenePos().x()));
+            stream->writeAttribute("y", QString::number(tab->scene()->mCenterSymbol->scenePos().y()));
+            stream->writeEndElement(); //end chart center
+
+        }
+
+        Guidelines guidelines = tab->scene()->guidelines();
+        if(guidelines.type() != "None") {
+            stream->writeStartElement("guidelines");
+            stream->writeAttribute("type", guidelines.type());
+
+            stream->writeAttribute("rows", QString::number(guidelines.rows()));
+            stream->writeAttribute("columns", QString::number(guidelines.columns()));
+            stream->writeAttribute("cellWidth", QString::number(guidelines.cellWidth()));
+            stream->writeAttribute("cellHeight", QString::number(guidelines.cellHeight()));
+            stream->writeEndElement();
+        }
+
+        stream->writeStartElement("rowSpacing");
+        stream->writeAttribute("width", QString::number(tab->scene()->mDefaultSize.width()));
+        stream->writeAttribute("height", QString::number(tab->scene()->mDefaultSize.height()));
+        stream->writeEndElement(); //row spacing
+
+        if(tab->scene()->rowCount() >= 1 && tab->scene()->maxColumnCount() >= 1) {
+            stream->writeStartElement("grid");
+            int rowCount = tab->scene()->rowCount();
+            for(int i = 0; i < rowCount; ++i) {
+                int colCount = tab->scene()->columnCount(i);
+                stream->writeTextElement("row", QString::number(colCount)); //row, columns.
+            }
+            stream->writeEndElement(); //end grid.
+        }
+
+        foreach(ItemGroup *g, tab->scene()->mGroups) {
+            stream->writeTextElement("group", QString::number(tab->scene()->mGroups.indexOf(g)));
+        }
+
+        foreach(QGraphicsItem *item, tab->scene()->items()) {
+
+            Cell *c = qgraphicsitem_cast<Cell*>(item);
+            if(!c)
+                continue;
+
+            stream->writeStartElement("cell"); //start cell
+            stream->writeTextElement("stitch", c->stitch()->name());
+
+            //if the stitch is on the grid save the grid position.
+            QPoint pt = tab->scene()->indexOf(c);
+            if(pt != QPoint(-1, -1)) {
+                stream->writeStartElement("grid");
+                stream->writeAttribute("row", QString::number(pt.y()));
+                stream->writeAttribute("column", QString::number(pt.x()));
+                stream->writeEndElement(); //grid
+            }
+
+            bool isGrouped = c->parentItem() ? true : false;
+            ItemGroup *g = 0;
+            if(isGrouped) {
+                g = qgraphicsitem_cast<ItemGroup*>(c->parentItem());
+                int groupNum = tab->scene()->mGroups.indexOf(g);
+                stream->writeTextElement("group", QString::number(groupNum));
+
+                //ungroup the items so that we can
+                //take an acurate position of each stitch.
+                g->removeFromGroup(c);
+            }
+
+            stream->writeStartElement("position");
+            stream->writeAttribute("x", QString::number(c->pos().x()));
+            stream->writeAttribute("y", QString::number(c->pos().y()));
+            stream->writeEndElement(); //position
+
+            stream->writeStartElement("transformation");
+            QTransform trans = c->transform();
+
+            stream->writeAttribute("m11", QString::number(trans.m11()));
+            stream->writeAttribute("m12", QString::number(trans.m12()));
+            stream->writeAttribute("m13", QString::number(trans.m13()));
+            stream->writeAttribute("m21", QString::number(trans.m21()));
+            stream->writeAttribute("m22", QString::number(trans.m22()));
+            stream->writeAttribute("m23", QString::number(trans.m23()));
+            stream->writeAttribute("m31", QString::number(trans.m31()));
+            stream->writeAttribute("m32", QString::number(trans.m32()));
+            stream->writeAttribute("m33", QString::number(trans.m33()));
+            stream->writeEndElement(); //transformation
+
+            //in case we haven't closed the
+            //application we need to regroup the items.
+            if(isGrouped)
+                g->addToGroup(c);
+
+            stream->writeTextElement("color", c->color().name());
+            stream->writeTextElement("bgColor", c->bgColor().name());
+            stream->writeTextElement("angle", QString::number(c->rotation()));
+
+            stream->writeStartElement("scale");
+            stream->writeAttribute("x", QString::number(c->scale().x()));
+            stream->writeAttribute("y", QString::number(c->scale().y()));
+            stream->writeEndElement(); //end scale
+
+            stream->writeStartElement("pivotPoint");
+            stream->writeAttribute("x", QString::number(c->transformOriginPoint().x()));
+            stream->writeAttribute("y", QString::number(c->transformOriginPoint().y()));
+            stream->writeEndElement(); //end pivotPoint
+
+            stream->writeEndElement(); //end cell
+        }
+
+        foreach(Indicator *i, tab->scene()->indicators()) {
+            stream->writeStartElement("indicator");
+
+                stream->writeTextElement("x", QString::number(i->scenePos().x()));
+                stream->writeTextElement("y", QString::number(i->scenePos().y()));
+                stream->writeTextElement("text", i->text());
+                stream->writeTextElement("textColor", i->textColor().name());
+                stream->writeTextElement("bgColor", i->bgColor().name());
+
+            stream->writeEndElement(); //end indicator
+        }
+
+        stream->writeEndElement(); // end chart
+    }
+
+    return true;
+}
+
+void File_v2::saveColors(QXmlStreamWriter *stream)
+{
+    stream->writeStartElement("colors"); //start colors
+    MainWindow *mw = static_cast<MainWindow*>(mParent->mParent);
+
+    QStringList keys = mw->patternColors().keys();
+
+    foreach(QString key, keys) {
+        stream->writeStartElement("color");
+        stream->writeAttribute("added", QString::number(mw->patternColors().value(key).value("added")));
+        stream->writeCharacters(key);
+        stream->writeEndElement(); //end color
+    }
+
+    stream->writeEndElement(); // end colors
+}
+
+
+void File_v2::cleanUp()
+{
+    if(mInternalStitchSet)
+        StitchLibrary::inst()->removeSet(mInternalStitchSet);
 }

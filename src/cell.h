@@ -14,8 +14,8 @@ class Cell : public QGraphicsSvgItem, public Item
 {
     Q_OBJECT
     friend class SaveFile;
-    friend class FileLoad_v1;
-    friend class FileLoad_v2;
+    friend class File_v1;
+    friend class File_v2;
 public:
 
     enum { Type = UserType + 1 };
