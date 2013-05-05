@@ -581,15 +581,21 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
         case Scene::StitchEdit:
             stitchModeMousePress(e);
             break;
+
         case Scene::RotationEdit:
             angleModeMousePress(e);
             break;
+
         case Scene::ScaleEdit:
             scaleModeMousePress(e);
             break;
+
         case Scene::RowEdit:
             rowEditMousePress(e);
+            //This is a special case. We don't want to
+            //do any of the usual object editin/moving.
             return;
+
         default:
             break;
     }
@@ -669,6 +675,11 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
 {
     QGraphicsScene::mouseReleaseEvent(e);
     
+    //Don't work on events that have been accepted.
+    //ie. double click events.
+    if(e->isAccepted())
+        return;
+
     switch(mMode) {
         case Scene::StitchEdit:
             stitchModeMouseRelease(e);
@@ -743,6 +754,22 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
     mSclItem = 0;
     mCurItem = 0;
     mHasSelection = false;
+}
+
+void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
+{
+    QGraphicsItem *i = itemAt(e->scenePos());
+
+    if(!i)
+        return;
+
+    if(i->type() == Indicator::Type) {
+        Indicator *ind = qgraphicsitem_cast<Indicator*>(i);
+        ind->setTextInteractionFlags(Qt::TextEditorInteraction);
+    }
+
+    //accept the event so that no one else tries to use it.
+    e->accept();
 }
 
 void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)

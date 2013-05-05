@@ -46,7 +46,7 @@ private:
 };
 
 Q_CORE_EXPORT QDataStream & operator<< ( QDataStream & stream, Guidelines & guidelines );
-QDebug operator<< (QDebug d, Guidelines & guidelines);
+QDebug operator<<(QDebug d, Guidelines & guidelines);
 
 Q_DECLARE_METATYPE(Guidelines)
 
@@ -236,6 +236,8 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent* e);
     void mousePressEvent(QGraphicsSceneMouseEvent* e);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* e);
+
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
     
     QList<Indicator*> indicators() { return mIndicators; }
         

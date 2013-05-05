@@ -59,6 +59,7 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
     if(option->state & QStyle::State_HasFocus) {
         QGraphicsTextItem::paint(painter, option, widget);
     } else {
+        /*
         if(option->state & (QStyle::State_Selected | QStyle::State_HasFocus)) {
             QPen pen = QPen(QColor(Qt::black));
             pen.setStyle(Qt::DashLine);
@@ -68,8 +69,8 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
             painter->setPen(QColor(Qt::gray));
             painter->drawRect(rect);
         }
-
-        if(style == "Dots" || style == "Dots and Text") {
+*/
+        if(mStyle == "Dots" || mStyle == "Dots and Text") {
             painter->setRenderHint(QPainter::Antialiasing);
             painter->setPen(QColor(color));
             painter->setBackgroundMode(Qt::OpaqueMode);
@@ -78,9 +79,8 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
             painter->setBackgroundMode(Qt::TransparentMode);
         }
 
-        if(style == "Text" || style == "Dots and Text") {
-            painter->setPen(QColor(Qt::black));
-            painter->drawText(rect, text());
+        if(mStyle == "Text" || mStyle == "Dots and Text") {
+            QGraphicsTextItem::paint(painter, option, widget);
         }
     }
 }
@@ -100,6 +100,9 @@ void Indicator::focusOutEvent(QFocusEvent* event)
 
 void Indicator::keyReleaseEvent(QKeyEvent *event)
 {
+    if(event->key() == Qt::Key_Escape)
+        setTextInteractionFlags(Qt::NoTextInteraction);
+
     //eat delete and other keys so they don't delete this object by mistake.
     event->accept();
     QGraphicsTextItem::keyReleaseEvent(event);
@@ -107,10 +110,6 @@ void Indicator::keyReleaseEvent(QKeyEvent *event)
 
 void Indicator::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    if(isSelected()) {
-        if(textInteractionFlags() == Qt::NoTextInteraction) {
-            setTextInteractionFlags(Qt::TextEditorInteraction);
-        }
-    }
+
     QGraphicsTextItem::mouseReleaseEvent(event);
 }

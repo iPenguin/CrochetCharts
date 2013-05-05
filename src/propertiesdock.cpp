@@ -219,7 +219,7 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
 
     } else if(selection == PropertiesDock::CellUi) {
 
-        Cell* c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
+        Cell *c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
         ui->stitchGroup->show();
 
         ui->angle->blockSignals(true);
