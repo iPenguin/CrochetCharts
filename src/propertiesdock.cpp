@@ -2,6 +2,7 @@
 #include "ui_propertiesdock.h"
 
 #include "settings.h"
+
 #include "cell.h"
 #include "crochettab.h"
 #include "stitchlibrary.h"
@@ -25,6 +26,7 @@ PropertiesDock::PropertiesDock(QTabWidget* tabWidget, QWidget *parent) :
 
     int styleIdx = ui->indicatorStyle->findText(Settings::inst()->value("chartRowIndicator").toString());
     ui->indicatorStyle->setCurrentIndex(styleIdx);
+    
     clearUi();
     connect(mTabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
 
@@ -88,7 +90,7 @@ void PropertiesDock::tabChanged(int tabNumber)
         clearUi();
         return;
     }
-
+    
     mScene = qobject_cast<CrochetTab*>(mTabWidget->widget(tabNumber))->scene();
     connect(mScene, SIGNAL(selectionChanged()), SLOT(updateDialogUi()));
     updateDialogUi();
@@ -220,6 +222,7 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
     } else if(selection == PropertiesDock::CellUi) {
 
         Cell *c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
+    
         ui->stitchGroup->show();
 
         ui->angle->blockSignals(true);
@@ -239,7 +242,6 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
     } else if(selection == PropertiesDock::MixedUi) {
 
         //TODO: loop through all the items, check all the
-
 
     } else if(selection == PropertiesDock::IndicatorUi) {
         ui->indicatorGroup->show();
@@ -294,6 +296,7 @@ void PropertiesDock::indicatorUpdate()
     value.setValue(ip);
 
     emit propertiesUpdated("Indicator", value);
+
 }
 
 /**
