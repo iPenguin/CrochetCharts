@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>335</width>
-    <height>549</height>
+    <width>248</width>
+    <height>735</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,16 +15,19 @@
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout_2">
+    <property name="margin">
+     <number>0</number>
+    </property>
     <item row="0" column="0">
      <widget class="QGroupBox" name="chartGroup">
       <property name="title">
-       <string>Chart</string>
+       <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Show chart center:</string>
+          <string>Chart center:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -44,38 +47,37 @@
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Show guidelines:</string>
+          <string>Guidelines:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>showGuidelines</cstring>
+          <cstring>guidelinesType</cstring>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QSpinBox" name="rows">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>99999</number>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QSpinBox" name="columns">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>99999</number>
-         </property>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="guidelinesType">
+         <item>
+          <property name="text">
+           <string>None</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Rows</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Rounds</string>
+          </property>
+         </item>
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="rowsLbl">
          <property name="text">
           <string>Rows:</string>
          </property>
@@ -87,8 +89,21 @@
          </property>
         </widget>
        </item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="rows">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>999999999</number>
+         </property>
+         <property name="value">
+          <number>20</number>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="columnsLbl">
          <property name="text">
           <string>Columns:</string>
          </property>
@@ -100,23 +115,150 @@
          </property>
         </widget>
        </item>
+       <item row="3" column="1">
+        <widget class="QSpinBox" name="columns">
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>999999999</number>
+         </property>
+         <property name="value">
+          <number>20</number>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="cellWidthLbl">
+         <property name="text">
+          <string>Width:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>cellWidth</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QSpinBox" name="cellWidth">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>999999999</number>
+         </property>
+         <property name="value">
+          <number>64</number>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="cellHeightLbl">
+         <property name="text">
+          <string>Height:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>cellHeight</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QSpinBox" name="cellHeight">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>999999999</number>
+         </property>
+         <property name="value">
+          <number>64</number>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="2">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QGroupBox" name="indicatorGroup">
+      <property name="title">
+       <string/>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <property name="margin">
+        <number>2</number>
+       </property>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="indicatorStyle">
+         <item>
+          <property name="text">
+           <string>Dots and Text</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Dots</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Text</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Style:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="1">
-        <widget class="QComboBox" name="showGuidelines">
-         <item>
-          <property name="text">
-           <string>None</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Round</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Grid</string>
-          </property>
-         </item>
+        <widget class="QPushButton" name="IndicatorEditText">
+         <property name="text">
+          <string>Edit Text</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QLabel" name="indicatorTextEdit">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
         </widget>
        </item>
       </layout>
@@ -128,43 +270,14 @@
        <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="5" column="1">
-        <widget class="QPushButton" name="stColorBttn">
+       <item row="6" column="1">
+        <widget class="QPushButton" name="deleteItems">
          <property name="text">
-          <string>Stitch Color</string>
+          <string>Delete Selection</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="scaleY"/>
-       </item>
-       <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="angle"/>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="stitch"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="scaleX"/>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Stitch:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QPushButton" name="setPivotPointBttn">
-         <property name="text">
-          <string>Set Pivot Point</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
           <string>Y Scale:</string>
@@ -177,23 +290,39 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
-        <widget class="QPushButton" name="setBgColorBttn">
-         <property name="text">
-          <string>Background Color</string>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="stitch">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_5">
+       <item row="7" column="0" colspan="2">
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="5" column="1">
+        <widget class="QPushButton" name="setBgColorBttn">
          <property name="text">
-          <string>X Scale:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>scaleX</cstring>
+          <string>Bg Color</string>
          </property>
         </widget>
        </item>
@@ -210,26 +339,45 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
-        <widget class="QPushButton" name="deleteItems">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Delete</string>
+          <string>Stitch:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>stitch</cstring>
          </property>
         </widget>
        </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QGroupBox" name="selectionGroup">
-      <property name="title">
-       <string>Selection</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="pivotPoint">
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="angle"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="scaleY"/>
+       </item>
+       <item row="4" column="1">
+        <widget class="QPushButton" name="stColorBttn">
          <property name="text">
-          <string>Set Pivot Point</string>
+          <string>St Color</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="scaleX"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>X Scale:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>scaleX</cstring>
          </property>
         </widget>
        </item>
@@ -241,16 +389,18 @@
  </widget>
  <tabstops>
   <tabstop>showChartCenter</tabstop>
-  <tabstop>showGuidelines</tabstop>
+  <tabstop>guidelinesType</tabstop>
   <tabstop>rows</tabstop>
   <tabstop>columns</tabstop>
+  <tabstop>cellWidth</tabstop>
+  <tabstop>cellHeight</tabstop>
+  <tabstop>stitch</tabstop>
   <tabstop>angle</tabstop>
   <tabstop>scaleX</tabstop>
   <tabstop>scaleY</tabstop>
   <tabstop>stColorBttn</tabstop>
   <tabstop>setBgColorBttn</tabstop>
-  <tabstop>setPivotPointBttn</tabstop>
-  <tabstop>pivotPoint</tabstop>
+  <tabstop>deleteItems</tabstop>
  </tabstops>
  <resources/>
  <connections/>
