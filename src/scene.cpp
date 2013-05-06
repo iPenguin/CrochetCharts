@@ -1892,21 +1892,24 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
             if(property == "Angle") {
                 undoStack()->push(new SetItemRotation(this, i, i->rotation(),
                                                       QPointF(c->origWidth/2, c->origHeight)));
+
             } else if(property == "ScaleX") {
                 undoStack()->push(new SetItemScale(this, c, QPointF(newValue.toDouble(), c->scale().y()),
                                                    QPointF(c->origWidth/2, c->origHeight)));
+
             } else if(property == "ScaleY") {
                 undoStack()->push(new SetItemScale(this, c, QPointF(c->scale().x(), newValue.toDouble()),
                                                    QPointF(c->origWidth/2, c->origHeight)));
+
             } else if(property == "Stitch") {
                 undoStack()->push(new SetCellStitch(this, c, newValue.toString()));
+
             } else if(property == "Delete") {
                 undoStack()->push(new RemoveItem(this, i));
+
             } else if(property == "Indicator") {
-
-                qDebug() << "indicator" << ip;
-
                 ind->setStyle(ip.style());
+                //ind->setText(ip.html());
 
             } else {
                 qWarning() << "Unknown property: " << property;

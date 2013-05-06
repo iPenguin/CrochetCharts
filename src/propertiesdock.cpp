@@ -245,6 +245,7 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
         ui->indicatorGroup->show();
         Indicator *i = qgraphicsitem_cast<Indicator*>(mScene->selectedItems().first());
 
+        ui->indicatorTextEdit->setText(i->text());
         ui->indicatorStyle->setCurrentIndex(ui->indicatorStyle->findText(i->style()));
 
     } else if (selection == PropertiesDock::CenterUi) {
@@ -282,7 +283,7 @@ void PropertiesDock::updateGuidelinesUi()
 
 void PropertiesDock::indicatorUpdate()
 {
-    QString html = "ui";
+    QString html = ui->indicatorTextEdit->text();
     QString style = ui->indicatorStyle->currentText();
 
     IndicatorProperties ip;

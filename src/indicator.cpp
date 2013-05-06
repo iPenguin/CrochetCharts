@@ -49,27 +49,13 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
 {
 
     QString color = Settings::inst()->value("chartIndicatorColor").toString();
-    bool showOutline = Settings::inst()->value("showIndicatorOutline").toBool();
-
-
-    QRect rect = option->rect;
-    rect.setTop(7);
-    rect.setLeft(7);
 
     if(option->state & QStyle::State_HasFocus) {
         QGraphicsTextItem::paint(painter, option, widget);
     } else {
-        /*
-        if(option->state & (QStyle::State_Selected | QStyle::State_HasFocus)) {
-            QPen pen = QPen(QColor(Qt::black));
-            pen.setStyle(Qt::DashLine);
-            painter->setPen(pen);
-            painter->drawRect(rect);
-        } else if(highlight || showOutline) {
-            painter->setPen(QColor(Qt::gray));
-            painter->drawRect(rect);
-        }
-*/
+
+        document()->setDocumentMargin(10);
+
         if(mStyle == "Dots" || mStyle == "Dots and Text") {
             painter->setRenderHint(QPainter::Antialiasing);
             painter->setPen(QColor(color));
@@ -77,6 +63,15 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
             painter->setBrush(QBrush(QColor(color)));
             painter->drawEllipse(0,0, 10,10);
             painter->setBackgroundMode(Qt::TransparentMode);
+        }
+
+        if(mStyle == "Dots" && (option->state & (QStyle::State_Selected | QStyle::State_HasFocus))) {
+            QPen pen = QPen(QColor(Qt::black));
+            pen.setStyle(Qt::DashLine);
+            painter->setPen(pen);
+            QRect r = option->rect;
+            r.setBottomRight(QPoint(10,10));
+            painter->drawRect(r);
         }
 
         if(mStyle == "Text" || mStyle == "Dots and Text") {
