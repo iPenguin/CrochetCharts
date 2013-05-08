@@ -17,6 +17,7 @@
 #include <QXmlStreamWriter>
 
 #include <QStringList>
+#include <QTemporaryFile>
 
 #include "scene.h"
 #include "stitchlibrary.h"
@@ -45,15 +46,16 @@ SaveFile::FileError SaveFile::save()
     //Don't save a file without at least 1 tab.
     if(mTabWidget->count() <= 0)
         return SaveFile::Err_NoTabsToSave;
-    
-    QFile file(fileName + ".tmp");
-    if(!file.open(QIODevice::WriteOnly)) {
+
+    QTemporaryFile f;
+
+    if(!f.open()) {
         //TODO: some nice dialog to warn the user.
-        qWarning() << "Couldn't open file for writing..." << fileName;
+        qWarning() << "Couldn't open file for writing..." << f.fileName();
         return SaveFile::Err_OpeningFile;
     }
     
-    QDataStream out(&file);
+    QDataStream out(&f);
     // Write a header with a "magic number" and a version
     out << AppInfo::inst()->magicNumber;
     out << (qint32)mFileVersion;
@@ -94,7 +96,8 @@ SaveFile::FileError SaveFile::save()
 
     //put xml into binary file.
     out << data->toUtf8();
-    file.close();
+
+    f.close();
     delete data;
     data = 0;
 
@@ -105,7 +108,7 @@ SaveFile::FileError SaveFile::save()
             return SaveFile::Err_RemovingOrigFile;
     }
     
-    if(!d.rename(fileName +".tmp", fileName))
+    if(!d.rename(f.fileName(), fileName))
         return SaveFile::Err_RenamingTempFile;
 
     return SaveFile::No_Error;
