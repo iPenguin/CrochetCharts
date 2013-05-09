@@ -151,7 +151,7 @@ qreal Stitch::width()
 {
     qreal w = 32.0;
     if(isSvg()) {
-        QSvgRenderer* r = mRenderers.value("#000000");
+        QSvgRenderer *r = mRenderers.value("#000000");
         if(!r)
             return w;
         w = r->viewBoxF().width();

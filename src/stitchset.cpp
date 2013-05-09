@@ -604,6 +604,11 @@ void StitchSet::reset()
     QAbstractItemModel::reset();
 }
 
+void StitchSet::sort(int column, Qt::SortOrder order)
+{
+
+}
+
 void StitchSet::reloadStitchIcons()
 {
     foreach(Stitch* s, mStitches) {

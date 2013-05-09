@@ -7,6 +7,7 @@
 
 #include <QDialog>
 #include "ui_stitchlibrary.h"
+#include <QSortFilterProxyModel>
 
 class StitchSet;
 
@@ -18,7 +19,7 @@ class StitchLibraryUi : public QDialog
 {
     Q_OBJECT
 public:
-    explicit StitchLibraryUi(QWidget* parent = 0);
+    explicit StitchLibraryUi(QWidget *parent = 0);
     ~StitchLibraryUi();
 
 private slots:
@@ -44,7 +45,8 @@ private slots:
     void iconDialog();
     
 private:
-    Ui::StitchLibraryDialog* ui;
+    Ui::StitchLibraryDialog *ui;
+    QSortFilterProxyModel *mProxyModel;
 
     void setDialogSize();
 
@@ -52,7 +54,7 @@ private:
      *Set the author, set name, email, url, etc.
      */
     void setupPropertiesBox();
-    void setButtonStates(StitchSet* set);
+    void setButtonStates(StitchSet *set);
 
     //update the source dropdown list and switch to setName
     void updateSourceDropDown(QString setName = "");

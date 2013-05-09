@@ -12,6 +12,8 @@
 
 #include <QStyleOption>
 #include <QStyleOptionViewItem>
+#include <QSortFilterProxyModel>
+#include <QModelIndex>
 
 #include <math.h>
 
@@ -50,7 +52,8 @@ void StitchLibraryDelegate::paint(QPainter* painter, const QStyleOptionViewItem 
     if(!index.isValid())
         return;
 
-    QStyleOption opt = option;
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+    QModelIndex idx = model->mapToSource(model->index(index.row(), 0));
 
     //Icon column:
     if (index.column() == 1) {
@@ -62,7 +65,7 @@ void StitchLibraryDelegate::paint(QPainter* painter, const QStyleOptionViewItem 
         QRectF rect = QRectF((qreal)option.rect.x(), (qreal)option.rect.y(),
                              (qreal)option.rect.width(), (qreal)option.rect.height());
 
-        Stitch* s = static_cast<Stitch*>(index.internalPointer());
+        Stitch *s = static_cast<Stitch*>(idx.internalPointer());
         if(!s)
             return;
 
@@ -87,7 +90,7 @@ void StitchLibraryDelegate::paint(QPainter* painter, const QStyleOptionViewItem 
         if(option.state & QStyle::State_MouseOver)
             painter->fillRect(option.rect, option.palette.highlight().color().light(190));
 
-        bool checked = index.model()->data(index, Qt::DisplayRole).toBool();
+        bool checked = idx.model()->data(idx, Qt::DisplayRole).toBool();
         
         QStyleOptionButton styleOptions;
         styleOptions.state |= QStyle::State_Enabled;
@@ -103,7 +106,7 @@ void StitchLibraryDelegate::paint(QPainter* painter, const QStyleOptionViewItem 
     //Everything else:
     } else {
         //fall back to the basic painter.
-        QStyledItemDelegate::paint(painter, option, index);
+        QStyledItemDelegate::paint(painter, option, idx);
     }
 }
 
@@ -114,20 +117,23 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     if(!index.isValid())
         return QSize(100, 32);
 
-    Stitch* s = static_cast<Stitch*>(index.internalPointer());
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+    QModelIndex idx = model->mapToSource(model->index(index.row(), 0));
+
+    Stitch* s = static_cast<Stitch*>(idx.internalPointer());
     if(!s)
         return QSize(100, 32);
 
     QString text;
 
-    switch(index.column()) {
+    switch(idx.column()) {
         case Stitch::Name:
             text = s->name();
             padding += 50;
             break;
         case Stitch::Icon: {
             QSize retSize;
-            //TODO: should this be getting info form the *s?
+
             if(s->isSvg()) {
                 QSvgRenderer *r = s->renderSvg();
                 if(r)
@@ -168,8 +174,8 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     hint.setWidth(hint.width() + padding);
 
     //HACK: make the height of the icon the height of the whole row.
-    StitchSet* set = static_cast<StitchSet*>((QAbstractItemModel*)index.model());
-    QSize sizeH = sizeHint(option, set->index(index.row(), Stitch::Icon));
+    StitchSet *set = static_cast<StitchSet*>((QAbstractItemModel*)idx.model());
+    QSize sizeH = sizeHint(option, set->index(idx.row(), Stitch::Icon));
     hint.setHeight(sizeH.height());
 
     return hint;
@@ -178,9 +184,10 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
 QWidget* StitchLibraryDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(option);
+
     if(!index.isValid())
         return new QWidget(parent);
-    
+
     switch(index.column()) {
         case Stitch::Name:{
             QLineEdit* editor = new QLineEdit(parent);
@@ -226,35 +233,38 @@ void StitchLibraryDelegate::setEditorData(QWidget* editor, const QModelIndex &in
     if(!index.isValid())
         return;
 
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+    QModelIndex idx = model->mapToSource(model->index(index.row(), 0));
+
     switch(index.column()) {
         case Stitch::Name: {
             QLineEdit* le = static_cast<QLineEdit*>(editor);
-            le->setText(index.data(Qt::EditRole).toString());
+            le->setText(idx.data(Qt::EditRole).toString());
             break;
         }
         case Stitch::Icon: {
             IconComboBox* cb = static_cast<IconComboBox*>(editor);
-            cb->setCurrentIndex(cb->findData(index.data(Qt::EditRole), Qt::UserRole));
+            cb->setCurrentIndex(cb->findData(idx.data(Qt::EditRole), Qt::UserRole));
             break;
         }
         case Stitch::Description: {
             QLineEdit* le = static_cast<QLineEdit*>(editor);
-            le->setText(index.data(Qt::EditRole).toString());
+            le->setText(idx.data(Qt::EditRole).toString());
             break;
         }
         case Stitch::Category: {
             QComboBox* cb = static_cast<QComboBox*>(editor);
-            cb->setCurrentIndex(cb->findText(index.data(Qt::EditRole).toString()));
+            cb->setCurrentIndex(cb->findText(idx.data(Qt::EditRole).toString()));
             break;
         }
         case Stitch::WrongSide: {
             QComboBox* cb = static_cast<QComboBox*>(editor);
-            cb->setCurrentIndex(cb->findText(index.data(Qt::EditRole).toString()));
+            cb->setCurrentIndex(cb->findText(idx.data(Qt::EditRole).toString()));
             break;
         }
         case 5: {
             QCheckBox* cb = static_cast<QCheckBox*>(editor);
-            cb->setChecked(index.data(Qt::EditRole).toBool());
+            cb->setChecked(idx.data(Qt::EditRole).toBool());
             break;
         }
         default:
@@ -262,14 +272,22 @@ void StitchLibraryDelegate::setEditorData(QWidget* editor, const QModelIndex &in
     }
 }
 
-void StitchLibraryDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex &index) const
+void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-    StitchSet* set = static_cast<StitchSet*>(model);
-    
+    QSortFilterProxyModel *m = static_cast<QSortFilterProxyModel*>(model);
+    QModelIndex idx = m->mapToSource(m->index(index.row(), 0));
+
+    StitchSet *set = static_cast<StitchSet*>(m->sourceModel());
+
+    if(!set) {
+        qWarning() << "setModelData: no set found";
+        return;
+    }
+
     switch(index.column()) {
         case Stitch::Icon: {
             IconComboBox* cb = static_cast<IconComboBox*>(editor);
-            model->setData(index, cb->itemData(cb->currentIndex(), Qt::UserRole), Qt::EditRole);
+            m->setData(idx, cb->itemData(cb->currentIndex(), Qt::UserRole), Qt::EditRole);
             break;
         }
         case Stitch::Name: {
@@ -293,9 +311,9 @@ void StitchLibraryDelegate::setModelData(QWidget* editor, QAbstractItemModel* mo
             found = 0;
             found = StitchLibrary::inst()->masterStitchSet()->findStitch(s->name());
             if(found && found == s) {
-                Stitch* m = 0;
-                m = StitchLibrary::inst()->masterStitchSet()->findStitch(le->text());
-                if(m && m != s) {
+                Stitch *match = 0;
+                match = StitchLibrary::inst()->masterStitchSet()->findStitch(le->text());
+                if(match && match != s) {
                     QMessageBox msgbox;
                     msgbox.setText("There is already a stitch with this name in the master list");
                     msgbox.setIcon(QMessageBox::Warning);
@@ -306,24 +324,24 @@ void StitchLibraryDelegate::setModelData(QWidget* editor, QAbstractItemModel* mo
                 }
             }
                 
-            model->setData(index, le->text(), Qt::EditRole);
+            m->setData(idx, le->text(), Qt::EditRole);
             
             break;
         }
         case Stitch::Description: {
             QLineEdit* le = static_cast<QLineEdit*>(editor);
-            model->setData(index, le->text(), Qt::EditRole);
+            m->setData(idx, le->text(), Qt::EditRole);
             break;
         }
         case Stitch::WrongSide:
         case Stitch::Category: {
             QComboBox* cb = static_cast<QComboBox*>(editor);
-            model->setData(index, cb->currentText(), Qt::EditRole);
+            m->setData(idx, cb->currentText(), Qt::EditRole);
             break;
         }
         case 5: {
             QCheckBox* cb = static_cast<QCheckBox*>(editor);
-            model->setData(index, cb->isChecked(), Qt::EditRole);
+            m->setData(idx, cb->isChecked(), Qt::EditRole);
             break;
         }
         default:
@@ -340,6 +358,9 @@ void StitchLibraryDelegate::updateEditorGeometry(QWidget* editor, const QStyleOp
 
 bool StitchLibraryDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+    QSortFilterProxyModel *m = static_cast<QSortFilterProxyModel*>(model);
+    QModelIndex idx = m->mapToSource(m->index(index.row(), 0));
+
     if(index.column() == 5) {
         if ((event->type() == QEvent::MouseButtonRelease) || (event->type() == QEvent::MouseButtonDblClick)) {
             QMouseEvent* mouse_event = static_cast<QMouseEvent*>(event);
@@ -359,11 +380,11 @@ bool StitchLibraryDelegate::editorEvent(QEvent* event, QAbstractItemModel* model
             return false;
         }
             
-        bool checked = index.model()->data(index, Qt::DisplayRole).toBool();
-        return model->setData(index, !checked, Qt::EditRole);
+        bool checked = idx.model()->data(idx, Qt::DisplayRole).toBool();
+        return m->setData(idx, !checked, Qt::EditRole);
 
     } else 
-        return QStyledItemDelegate::editorEvent(event, model, option, index);
+        return QStyledItemDelegate::editorEvent(event, m, option, idx);
 }
 
 

@@ -110,7 +110,14 @@ public:
      * reset the master stitch set to the original state as defined by the software.
      */
     void reset();
-    
+
+    /**
+     * @brief sort - sort the stitches.
+     * @param column
+     * @param order
+     */
+    void sort(int column, Qt::SortOrder order);
+
     /**
      * reload the svgs from file -- update the colors used.
      */

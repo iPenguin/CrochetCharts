@@ -15,13 +15,13 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QPainter>
+#include <QSortFilterProxyModel>
 
 #include "settings.h"
 
 #include "stitchiconui.h"
 #include <QFileDialog>
 
-//TODO: add a hash based on the sn to the stitch set to grant write access to a stitch set.
 //TODO: add a check box in the 'add stitch' header that allows to select all stitches.
 //TODO: make the msgboxes reusbale functions.
 
@@ -31,14 +31,23 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     ui->setupUi(this);
 
     ui->stitchSource->addItems(StitchLibrary::inst()->stitchSetList());
-    
-    StitchSet* master = StitchLibrary::inst()->masterStitchSet();
-    ui->listView->setModel(master);
 
-    StitchLibraryDelegate* delegate = new StitchLibraryDelegate(ui->listView);
+    StitchSet* master = StitchLibrary::inst()->masterStitchSet();
+
+    mProxyModel = new QSortFilterProxyModel(this);
+
+    mProxyModel->setSourceModel(master);
+    mProxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+
+    ui->listView->setModel(mProxyModel);
+    ui->listView->setSortingEnabled(true);
+
+    StitchLibraryDelegate *delegate = new StitchLibraryDelegate(ui->listView);
     ui->listView->setItemDelegate(delegate);
 
     setDialogSize();
+    ui->listView->horizontalHeader()->setClickable(true);
+    ui->listView->horizontalHeader()->setSortIndicatorShown(true);
 
     //TODO: Wrong Side.
     ui->listView->hideColumn(4);
@@ -46,14 +55,14 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     ui->propertiesBox->setVisible(false);
     connect(ui->moreBttn, SIGNAL(clicked()), SLOT(hideProperties()));
     connect(ui->printSet, SIGNAL(clicked()), SLOT(printStitchSet()));
-    
+
     connect(ui->addStitch, SIGNAL(clicked()), SLOT(addStitch()));
     connect(ui->removeStitch, SIGNAL(clicked()), SLOT(removeStitch()));
     connect(ui->addSelected, SIGNAL(clicked()), SLOT(addSelected()));
 
     connect(ui->createSet, SIGNAL(clicked()), SLOT(createSet()));
     connect(ui->removeSet, SIGNAL(clicked()), SLOT(removeSet()));
-    
+
     connect(ui->importSet, SIGNAL(clicked()), SLOT(importSet()));
     connect(ui->exportSet, SIGNAL(clicked()), SLOT(exportSet()));
 
@@ -62,7 +71,7 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     connect(ui->email,   SIGNAL(editingFinished()), SLOT(updateStitchSetProperties()));
     connect(ui->org,     SIGNAL(editingFinished()), SLOT(updateStitchSetProperties()));
     connect(ui->url,     SIGNAL(editingFinished()), SLOT(updateStitchSetProperties()));
-    
+
     setupPropertiesBox();
     
     connect(ui->stitchSource, SIGNAL(currentIndexChanged(QString)), SLOT(changeStitchSet(QString)));
@@ -80,9 +89,10 @@ StitchLibraryUi::~StitchLibraryUi()
 
 void StitchLibraryUi::setDialogSize()
 {
+
     ui->listView->resizeColumnsToContents();
     ui->listView->resizeRowsToContents();
-    
+
     int width = 0;
     int height = ui->listView->height();
     for(int i = 0; i < 5; ++i)
@@ -98,11 +108,13 @@ void StitchLibraryUi::changeStitchSet(QString setName)
     if(!set)
         return;
 
-    StitchSet* curSet = qobject_cast<StitchSet*>(ui->listView->model());
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(ui->listView->model());
+
+    StitchSet* curSet = qobject_cast<StitchSet*>(model->sourceModel());
     if(curSet)
         curSet->clearSelection();
 
-    ui->listView->setModel(set);
+    mProxyModel->setSourceModel(set);
     ui->listView->update();
 
     ui->listView->resizeColumnsToContents();
@@ -113,7 +125,7 @@ void StitchLibraryUi::changeStitchSet(QString setName)
 
 }
 
-void StitchLibraryUi::setButtonStates(StitchSet* set)
+void StitchLibraryUi::setButtonStates(StitchSet *set)
 {
     bool state = (set != StitchLibrary::inst()->masterStitchSet());
     
@@ -162,7 +174,9 @@ void StitchLibraryUi::addStitch()
     QString text = QInputDialog::getText(this, tr("New Stitch"), tr("Stitch name:"),
                                          QLineEdit::Normal, "", &ok);
     if (ok && !text.isEmpty()) {
-        StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
+        const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(ui->listView->model());
+
+        StitchSet* set = static_cast<StitchSet*>(model->sourceModel());
 
         Stitch* s = set->findStitch(text.toLower());
         if(s) {
@@ -178,7 +192,8 @@ void StitchLibraryUi::addStitch()
 
 void StitchLibraryUi::removeStitch()
 {
-    StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(ui->listView->model());
+    StitchSet* set = static_cast<StitchSet*>(model->sourceModel());
 
     for(int i = set->stitchCount() - 1; i >= 0; --i) {
         bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
@@ -236,7 +251,8 @@ void StitchLibraryUi::removeStitch()
 
 void StitchLibraryUi::addSelected()
 {
-    StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(ui->listView->model());
+    StitchSet* set = static_cast<StitchSet*>(model->sourceModel());
     for(int i = 0; i < set->stitchCount(); ++i) {
         bool selected = set->data(set->index(i, 5), Qt::EditRole).toBool();
         if(selected) {
@@ -274,7 +290,8 @@ void StitchLibraryUi::addSelected()
 
 void StitchLibraryUi::updateStitchSetProperties()
 {
-    StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(ui->listView->model());
+    StitchSet* set = static_cast<StitchSet*>(model->sourceModel());
     set->setName(ui->setName->text());
     set->setAuthor(ui->author->text());
     set->setEmail(ui->email->text());
@@ -284,7 +301,8 @@ void StitchLibraryUi::updateStitchSetProperties()
 
 void StitchLibraryUi::setupPropertiesBox()
 {
-    StitchSet* set = static_cast<StitchSet*>(ui->listView->model());
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(ui->listView->model());
+    StitchSet* set = static_cast<StitchSet*>(model->sourceModel());
     ui->setName->setText(set->name());
     ui->author->setText(set->author());
     ui->email->setText(set->email());
