@@ -208,6 +208,7 @@ void MainWindow::setupStitchPalette()
     QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
 
     proxyModel->setSourceModel(set);
+    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     ui->allStitches->setModel(proxyModel);
 
     //TODO: setup a proxywidget that can hold header sections?
