@@ -16,6 +16,8 @@
 #include "mirrordock.h"
 #include "propertiesdock.h"
 
+#include <QSortFilterProxyModel>
+
 #include <QModelIndex>
 
 #include "scene.h"
@@ -133,6 +135,8 @@ private slots:
     void selectStitch(QModelIndex index);
     void selectColor(QModelIndex index);
 
+    void filterStitchList(QString newText);
+
     void openRecentFile();
     void loadFile(QString fileName);
     void saveFileAs(QString fileName);
@@ -144,7 +148,9 @@ private:
     void setupRecentFiles();
     void updateMenuItems();
     
+    QSortFilterProxyModel *mProxyModel;
     void setupStitchPalette();
+
     void setupDocks();
     void readSettings();
 

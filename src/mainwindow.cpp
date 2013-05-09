@@ -205,11 +205,11 @@ void MainWindow::setupStitchPalette()
 {
 
     StitchSet* set = StitchLibrary::inst()->masterStitchSet();
-    QSortFilterProxyModel* proxyModel = new QSortFilterProxyModel(this);
+    mProxyModel = new QSortFilterProxyModel(this);
 
-    proxyModel->setSourceModel(set);
-    proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-    ui->allStitches->setModel(proxyModel);
+    mProxyModel->setSourceModel(set);
+    mProxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+    ui->allStitches->setModel(mProxyModel);
 
     //TODO: setup a proxywidget that can hold header sections?
     StitchPaletteDelegate* delegate = new StitchPaletteDelegate(ui->allStitches);
@@ -222,6 +222,7 @@ void MainWindow::setupStitchPalette()
     connect(ui->allStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
     connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
     connect(ui->patternColors, SIGNAL(clicked(QModelIndex)), this, SLOT(selectColor(QModelIndex)));
+    connect(ui->stitchFilter, SIGNAL(textChanged(QString)), this, SLOT(filterStitchList(QString)));
 }
 
 void MainWindow::setupDocks()
@@ -633,6 +634,12 @@ void MainWindow::selectColor(QModelIndex index)
             tab->setEditBgColor(color);
     }
     setEditMode(11);
+}
+
+void MainWindow::filterStitchList(QString newText)
+{
+    QRegExp regExp(newText, Qt::CaseInsensitive, QRegExp::FixedString);
+    mProxyModel->setFilterRegExp(regExp);
 }
 
 void MainWindow::documentNewChart()

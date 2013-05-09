@@ -555,10 +555,27 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="allStitchesDockWidget">
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
      <property name="margin">
       <number>0</number>
      </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Find:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="stitchFilter"/>
+       </item>
+      </layout>
+     </item>
      <item>
       <widget class="QTreeView" name="allStitches">
        <property name="minimumSize">
