@@ -30,6 +30,8 @@ public:
 
     void loadProperties(Guidelines guidelines);
 
+    bool closing;
+
 signals:
     void propertiesUpdated(QString property, QVariant newValue);
 

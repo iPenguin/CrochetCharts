@@ -744,11 +744,12 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
         mFile->cleanUp();
 
+        mPropertiesDock->closing = true;
         QMainWindow::closeEvent(event);
     } else {
         event->ignore();
     }
-    
+
 }
 
 bool MainWindow::safeToClose()
@@ -758,7 +759,7 @@ bool MainWindow::safeToClose()
         if(isWindowModified())
             return promptToSave();
     }
-    
+
     return true;
 }
 

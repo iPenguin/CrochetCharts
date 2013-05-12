@@ -7,8 +7,9 @@
 #include "stitchlibrary.h"
 #include "stitch.h"
 
-PropertiesDock::PropertiesDock(QTabWidget* tabWidget, QWidget *parent) :
+PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     QDockWidget(parent),
+    closing(false),
     ui(new Ui::PropertiesDock),
     mTabWidget(tabWidget),
     mScene(0)
@@ -172,6 +173,8 @@ void PropertiesDock::updateDialogUi()
 {
 
     clearUi();
+    if(closing)
+        return;
 
     int count = mScene->selectedItems().count();
 
@@ -210,11 +213,12 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
 
         ui->showChartCenter->setChecked(mScene->showChartCenter());
 
-        QString guidelines = mScene->guidelines().type();
-        if(guidelines.isEmpty())
-            guidelines = "None";
+        QString type = mScene->guidelines().type();
 
-        ui->guidelinesType->setCurrentIndex(ui->guidelinesType->findText(guidelines));
+        if(type.isEmpty())
+            type = "None";
+
+        ui->guidelinesType->setCurrentIndex(ui->guidelinesType->findText(type));
         updateGuidelinesUi();
 
     } else if(selection == PropertiesDock::CellUi) {
