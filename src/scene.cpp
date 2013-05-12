@@ -2109,6 +2109,7 @@ void Scene::paste()
     undoStack()->beginMacro("paste items");
     int count = 0;
     stream >> count;
+    
     QList<QGraphicsItem*> items;
     for(int i = 0; i < count; ++i) {
         pasteRecursively(stream, &items);
@@ -2312,11 +2313,13 @@ ItemGroup* Scene::group(QList<QGraphicsItem*> items, ItemGroup* g)
         g = new ItemGroup(0, this);
         foreach(QGraphicsItem *i, items) {
             i->setSelected(false);
+            i->setFlag(QGraphicsItem::ItemIsSelectable, false);
             g->addToGroup(i);
         }
     } else {
         foreach(QGraphicsItem* i, items) {
             i->setSelected(false);
+            i->setFlag(QGraphicsItem::ItemIsSelectable, false);
             g->addToGroup(i);
         }
     }
@@ -2349,6 +2352,8 @@ void Scene::ungroup(ItemGroup* group)
     mGroups.removeOne(group);
     foreach(QGraphicsItem* item, group->childItems()) {
         group->removeFromGroup(item);
+        item->setFlag(QGraphicsItem::ItemIsSelectable, true);
+        item->setSelected(true);
     }
 
 }
