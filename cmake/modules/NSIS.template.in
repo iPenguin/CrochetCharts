@@ -44,10 +44,8 @@
 
   ;TargetMinimalOS 5.1 ; Windows XP
 
-  !include "C:\Documents and Settings\Brian Milco\My Documents\crochet.git\cmake\modules\FileAssociation.nsh" ;Allow files to be associated with this application.
-
-  ;end options added by Brian Milco
-
+  ;Allow files to be associated with this application.
+  !include "@CPACK_SOURCE_DIR@\cmake\modules\FileAssociation.nsh"
 
   ;Set compression
   SetCompressor @CPACK_NSIS_COMPRESSOR@
@@ -657,7 +655,7 @@ Section "-Core installation"
   @CPACK_NSIS_FULL_INSTALL@
 
   ;Added by Brian Milco
-  ${registerExtension} "$PROGRAMFILES\@CPACK_PACKAGE_INSTALL_DIRECTORY@\crochet.exe" ".pattern" "Crochet Pattern File"
+  ${registerExtension} "$PROGRAMFILES\@CPACK_PACKAGE_INSTALL_DIRECTORY@\@PROJECT_NAME@.exe" ".pattern" "Crochet Pattern File"
 
   ;Store installation folder
   WriteRegStr SHCTX "Software\@CPACK_PACKAGE_VENDOR@\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" "" $INSTDIR
