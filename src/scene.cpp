@@ -674,11 +674,6 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
 {
     QGraphicsScene::mouseReleaseEvent(e);
-    
-    //Don't work on events that have been accepted.
-    //ie. double click events.
-    if(e->isAccepted())
-        return;
 
     switch(mMode) {
         case Scene::StitchEdit:
@@ -758,13 +753,13 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
 
 void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
 {
-    QGraphicsItem *i = itemAt(e->scenePos());
+    mCurItem = itemAt(e->scenePos());
 
-    if(!i)
+    if(!mCurItem)
         return;
 
-    if(i->type() == Indicator::Type) {
-        Indicator *ind = qgraphicsitem_cast<Indicator*>(i);
+    if(mCurItem->type() == Indicator::Type) {
+        Indicator *ind = qgraphicsitem_cast<Indicator*>(mCurItem);
         ind->setTextInteractionFlags(Qt::TextEditorInteraction);
     }
 
@@ -813,15 +808,18 @@ void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurItem)
         return;
 
-    if(mCurItem->type() == Cell::Type || mCurItem->type() == Indicator::Type)
+    if(mCurItem->type() == Cell::Type || mCurItem->type() == Indicator::Type) {
         mMoving = true;
+        e->accept();
+    }
 
 }
 
 void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
-    //FIXME: find a better way other then using ctrl.
-    //if right click or ctrl-click remove the indicator.
+    if(e->isAccepted())
+        return;
+
     if((e->button() == Qt::LeftButton && e->modifiers() == Qt::ControlModifier)) {
         if(mCurIndicator) {
             undoStack()->push(new RemoveIndicator(this, mCurIndicator));
@@ -834,7 +832,7 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
         return;
     }
 
-    if(!mCurIndicator && !mHasSelection && !mIsRubberband) {
+    if(!mCurItem && !mHasSelection && !mIsRubberband) {
 
         QPointF pt = e->buttonDownScenePos(Qt::LeftButton);
         //FIXME: dont hard code the offset for the indicator.
@@ -1118,6 +1116,10 @@ void Scene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 {
+
+    if(e->isAccepted())
+        return;
+
     //FIXME: foreach(stitch in selection()) create an undo group event.
     if(!mIsRubberband && !mMoving && !mHasSelection) {
 
