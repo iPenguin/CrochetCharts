@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 #===- lib/asan/scripts/asan_symbolize.py -----------------------------------===#
 #
 #                     The LLVM Compiler Infrastructure

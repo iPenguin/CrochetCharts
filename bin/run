@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+#
+###
+
+
+PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+$PROJECT_DIR/build/src/CrochetCharts 2> $PROJECT_DIR/build/output.log
+
+$PROJECT_DIR/bin/asan_symbolize.py / < $PROJECT_DIR/build/output.log | `which c++filt`
