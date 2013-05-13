@@ -2088,6 +2088,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
             }
             case ItemGroup::Type: {
                 ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
+                stream << group->pos();
                 stream << group->childItems().count();
                 copyRecursively(stream, group->childItems());
                 break;
@@ -2216,8 +2217,9 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             break;
         }
         case ItemGroup::Type: {
+            QPointF pos;
             int childCount;
-            stream >> childCount;
+            stream >> pos >> childCount;
             QList<QGraphicsItem*> items;
             for(int i = 0; i < childCount; ++i) {
                 pasteRecursively(stream, &items);
@@ -2229,6 +2231,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 
             g->setSelected(false);
             group->append(g);
+            g->setPos(pos);
             break;
         }
         default: {
