@@ -110,6 +110,8 @@ void MainWindow::loadFiles(QStringList fileNames)
         MainWindow* newWin = new MainWindow(files);
         newWin->move(x() + 40, y() + 40);
         newWin->show();
+        newWin->raise();
+        newWin->activateWindow();
         Settings::inst()->files.insert(mFile->fileName.toLower(), newWin);
         addToRecentFiles(fileName);
     }
@@ -842,6 +844,8 @@ void MainWindow::loadFile(QString fileName)
             MainWindow* newWin = new MainWindow(files);
             newWin->move(x() + 40, y() + 40);
             newWin->show();
+            newWin->raise();
+            newWin->activateWindow();
             Settings::inst()->files.insert(fileName.toLower(), newWin);
         } else {
             ui->newDocument->hide();
