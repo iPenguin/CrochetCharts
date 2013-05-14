@@ -938,6 +938,7 @@ void MainWindow::saveFileAs(QString fileName)
     if(Settings::inst()->files.contains(mFile->fileName.toLower()))
         Settings::inst()->files.remove(mFile->fileName.toLower());
     Settings::inst()->files.insert(fileName.toLower(), this);
+    addToRecentFiles(fileName);
 
     mFile->fileName = fileName;
     mFile->save(fver);
