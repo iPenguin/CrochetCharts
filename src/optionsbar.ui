@@ -7,39 +7,25 @@
     <x>0</x>
     <y>0</y>
     <width>658</width>
-    <height>108</height>
+    <height>24</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="margin">
+   <property name="leftMargin">
     <number>0</number>
    </property>
-   <item>
-    <layout class="QVBoxLayout" name="dialogLayout">
-     <item>
-      <widget class="QGroupBox" name="chartOptionsBox">
-       <property name="title">
-        <string>Chart Options</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <property name="margin">
-         <number>2</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="showChartCenter">
-          <property name="text">
-           <string>Show Chart Center</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </item>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -100,13 +86,6 @@
        </property>
        <property name="tickInterval">
         <number>25</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="moreBttn">
-       <property name="text">
-        <string>&amp;More &gt;&gt;</string>
        </property>
       </widget>
      </item>

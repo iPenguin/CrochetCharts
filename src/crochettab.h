@@ -115,7 +115,6 @@ protected:
     QMap<QString, int>* patternStitches() { return mPatternStitches; }
     
 private slots:
-    void showChartOptions();
     void zoomChanged(int value);
     void updateZoomLevel(int percent);
 
