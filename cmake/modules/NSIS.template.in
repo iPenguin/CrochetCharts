@@ -45,8 +45,9 @@
   ;TargetMinimalOS 5.1 ; Windows XP
 
   ;Allow files to be associated with this application.
-  !include "@CPACK_SOURCE_DIR@\cmake\modules\FileAssociation.nsh"
-
+  ;!include "@CPACK_CMAKE_MODULES_DIRECTORY@\FileAssociation.nsh"
+  !include "@CPACK_CMAKE_MODULES_DIRECTORY@\FileAssoc.nsh" 
+  
   ;Set compression
   SetCompressor @CPACK_NSIS_COMPRESSOR@
 
@@ -574,6 +575,11 @@ FunctionEnd
   @CPACK_NSIS_PAGE_COMPONENTS@
 
   !insertmacro MUI_PAGE_INSTFILES
+  
+  !define MUI_FINISHPAGE_SHOWREADME ""
+  !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
+  !define MUI_FINISHPAGE_SHOWREADME_TEXT "Create Desktop Shortcut"
+  !define MUI_FINISHPAGE_SHOWREADME_FUNCTION finishpageaction
   !insertmacro MUI_PAGE_FINISH
 
   !insertmacro MUI_UNPAGE_CONFIRM
@@ -645,6 +651,11 @@ FunctionEnd
   ReserveFile "NSIS.InstallOptions.ini"
   !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
+Function finishpageaction
+  ;create desktop shortcut
+  CreateShortCut "$DESKTOP\@CPACK_NSIS_PACKAGE_NAME@.lnk" "$INSTDIR\bin\@CPACK_NSIS_PACKAGE_NAME@.exe" ""
+FunctionEnd
+
 ;--------------------------------
 ;Installer Sections
 
@@ -653,10 +664,12 @@ Section "-Core installation"
   ;list of directories here in sync with the RMDir commands below.
   SetOutPath "$INSTDIR"
   @CPACK_NSIS_FULL_INSTALL@
-
+  
   ;Added by Brian Milco
-  ${registerExtension} "$PROGRAMFILES\@CPACK_PACKAGE_INSTALL_DIRECTORY@\@PROJECT_NAME@.exe" ".pattern" "Crochet Pattern File"
-
+  ;${registerExtension} "$PROGRAMFILES\@CPACK_PACKAGE_INSTALL_DIRECTORY@\@CPACK_NSIS_PACKAGE_NAME@.exe" ".pattern" "Crochet Pattern File"
+  !insertmacro APP_ASSOCIATE "pattern" "@CPACK_NSIS_PACKAGE_NAME@.patternfile" "Crochet Pattern File" \
+    "$INSTDIR\bin\@CPACK_NSIS_PACKAGE_NAME@.exe,1" "Open with @CPACK_NSIS_PACKAGE_NAME@" "$INSTDIR\bin\@CPACK_NSIS_PACKAGE_NAME@.exe $\"%1$\""
+ 
   ;Store installation folder
   WriteRegStr SHCTX "Software\@CPACK_PACKAGE_VENDOR@\@CPACK_PACKAGE_INSTALL_REGISTRY_KEY@" "" $INSTDIR
   
@@ -849,7 +862,7 @@ Section "Uninstall"
 
   ;Remove the uninstaller itself.
   Delete "$INSTDIR\Uninstall.exe"
-  DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_PACKAGE_NAME@"
+  DeleteRegKey SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\@CPACK_NSIS_PACKAGE_NAME@"
 
   ;Remove the installation directory if it is empty.
   RMDir "$INSTDIR"
@@ -861,7 +874,11 @@ Section "Uninstall"
   !insertmacro SectionList "RemoveSection"
   
   !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
-    
+
+  ;remove the .pattern extension.
+  ;${unregisterExtension} ".pattern" "Crochet Pattern File"
+  !insertmacro APP_UNASSOCIATE "pattern" "@CPACK_NSIS_PACKAGE_NAME@.patternfile"
+  
   Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
 @CPACK_NSIS_DELETE_ICONS@
 @CPACK_NSIS_DELETE_ICONS_EXTRA@

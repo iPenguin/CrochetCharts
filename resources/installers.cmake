@@ -47,7 +47,7 @@ ENDIF(WIN32)
 
 
 if(WIN32)
-
+    set(CPACK_MONOLITHIC_INSTALL 1)
     set(CPACK_PACKAGE_ICON "C:\\\\Documents and Settings\\\\Brian Milco\\\\My Documents\\\\crochet.git\\\\images\\\\installer.bmp")
     set(CPACK_GENERATOR "NSIS")
     #
