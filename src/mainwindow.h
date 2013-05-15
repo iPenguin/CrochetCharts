@@ -179,6 +179,7 @@ protected:
     QMap<QString, int> patternStitches() { return mPatternStitches; }
     QMap<QString, QMap<QString, qint64> > patternColors() { return mPatternColors; }
     QTabWidget* tabWidget();
+    void showFileError(int error);
 
 //Flash the new Document dialog when the user selects new doc or new chart.
 private slots:

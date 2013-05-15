@@ -54,7 +54,6 @@ FileFactory::FileError FileFactory::load()
     in >> magicNumber;
 
     if(magicNumber != AppInfo::inst()->magicNumber) {
-        //TODO: nice error message. not a set file.
         qWarning() << "This is not a pattern file";
         file.close();
         return FileFactory::Err_WrongFileType;
@@ -63,17 +62,15 @@ FileFactory::FileError FileFactory::load()
     in >> version;
 
     if(version < FileFactory::Version_1_0) {
-        //TODO: unknown version.
         qWarning() << "Unknown file version";
         file.close();
         return FileFactory::Err_UnknownFileVersion;
     }
 
     if(version > mFileVersion) {
-        //TODO: unknown file version
         qWarning() << "This file was created with a newer version of the software.";
         file.close();
-        return FileFactory::Err_UnknownFileVersion;
+        return FileFactory::Err_NewerFileVersion;
     }
 
     if(version == FileFactory::Version_1_0) {
@@ -123,9 +120,12 @@ FileFactory::FileError FileFactory::save(FileVersion version)
             break;
     }
 
-    /*FIXME: error =*/ saveFile->save(&out);
+    int error = saveFile->save(&out);
 
     file.close();
+
+    if(error != FileFactory::No_Error)
+        return (FileFactory::FileError)error;
 
     QDir d(QFileInfo(fileName).path());
     //only try to delete the file if it exists.

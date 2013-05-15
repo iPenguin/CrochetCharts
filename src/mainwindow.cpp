@@ -98,7 +98,13 @@ void MainWindow::loadFiles(QStringList fileNames)
 
     if(ui->tabWidget->count() < 1) {
         mFile->fileName = fileNames.takeFirst();
-        mFile->load(); //TODO: if !error hide dialog.
+        int error = mFile->load();
+
+        if(error != FileFactory::No_Error) {
+            showFileError(error);
+            return;
+        }
+
         Settings::inst()->files.insert(mFile->fileName.toLower(), this);
         addToRecentFiles(mFile->fileName);
         ui->newDocument->hide();
@@ -850,7 +856,13 @@ void MainWindow::loadFile(QString fileName)
         } else {
             ui->newDocument->hide();
             mFile->fileName = fileName;
-            mFile->load();
+            int error = mFile->load();
+
+            if(error != FileFactory::No_Error) {
+                showFileError(error);
+                return;
+            }
+
             Settings::inst()->files.insert(mFile->fileName.toLower(), this);
         }
         
@@ -885,11 +897,16 @@ void MainWindow::fileSave()
     else {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         FileFactory::FileError err = mFile->save();
-        if(err != FileFactory::No_Error)
+        if(err != FileFactory::No_Error) {
             qWarning() << "There was an error saving the file: " << err;
+            QMessageBox msgbox;
+            msgbox.setText(tr("There was an error saving the file."));
+            msgbox.setIcon(QMessageBox::Critical);
+            msgbox.exec();
+        }
         QApplication::restoreOverrideCursor();
     }
-    
+
     setWindowModified(false);
 }
 
@@ -946,6 +963,20 @@ void MainWindow::saveFileAs(QString fileName)
     setApplicationTitle();
     setWindowModified(false);
     QApplication::restoreOverrideCursor();
+}
+
+void MainWindow::showFileError(int error)
+{
+    QApplication::restoreOverrideCursor();
+    QMessageBox msgbox;
+    msgbox.setText(tr("There was an error loading the file %1.").arg(mFile->fileName));
+    msgbox.setIcon(QMessageBox::Critical);
+    if(error == FileFactory::Err_NewerFileVersion) {
+        msgbox.setInformativeText(tr("It appears to have been created with a newer version of %1.").arg(AppInfo::inst()->appName));
+    } else if ( error == FileFactory::Err_WrongFileType ) {
+        msgbox.setInformativeText(tr("This file does not appear to be a %1 file.").arg(AppInfo::inst()->appName));
+    }
+    msgbox.exec();
 }
 
 void MainWindow::viewFullScreen(bool state)
