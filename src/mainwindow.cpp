@@ -972,9 +972,11 @@ void MainWindow::showFileError(int error)
     msgbox.setText(tr("There was an error loading the file %1.").arg(mFile->fileName));
     msgbox.setIcon(QMessageBox::Critical);
     if(error == FileFactory::Err_NewerFileVersion) {
-        msgbox.setInformativeText(tr("It appears to have been created with a newer version of %1.").arg(AppInfo::inst()->appName));
+        msgbox.setInformativeText(tr("It appears to have been created with a newer version of %1.")
+                                    .arg(AppInfo::inst()->appName));
     } else if ( error == FileFactory::Err_WrongFileType ) {
-        msgbox.setInformativeText(tr("This file does not appear to be a %1 file.").arg(AppInfo::inst()->appName));
+        msgbox.setInformativeText(tr("This file does not appear to be a %1 file.")
+                                    .arg(AppInfo::inst()->appName));
     }
     msgbox.exec();
 }
