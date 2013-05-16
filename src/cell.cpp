@@ -12,7 +12,7 @@
 #include "settings.h"
 #include <QStyleOption>
 
-Cell::Cell(QGraphicsItem* parent)
+Cell::Cell(QGraphicsItem *parent)
     : QGraphicsSvgItem(parent),
     mStitch(0),
     mScale(QPointF(1.0, 1.0)),
@@ -45,7 +45,7 @@ QRectF Cell::boundingRect() const
         return stitch()->renderPixmap()->rect();
 }
 
-void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 
     if(!stitch())
@@ -84,7 +84,7 @@ bool Cell::isGrouped()
     return false;
 }
 
-void Cell::setStitch(Stitch* s, bool useAltRenderer)
+void Cell::setStitch(Stitch *s, bool useAltRenderer)
 {
     if (mStitch != s) {
         QString old;
@@ -145,7 +145,7 @@ void Cell::setColor(QColor c)
 
 void Cell::setStitch(QString s, bool useAltRenderer)
 {
-    Stitch* stitch = StitchLibrary::inst()->findStitch(s);
+    Stitch *stitch = StitchLibrary::inst()->findStitch(s);
 
     if (!stitch) {
         QString st = Settings::inst()->value("defaultStitch").toString();
@@ -192,9 +192,9 @@ void Cell::setScale(qreal sx, qreal sy)
     mScale = QPointF(sx, sy);
 }
 
-Cell* Cell::copy(Cell* cell)
+Cell* Cell::copy(Cell *cell)
 {
-    Cell* c = 0;
+    Cell *c = 0;
     if(!cell)
         c = new Cell();
     else
