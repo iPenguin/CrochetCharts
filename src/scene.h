@@ -99,7 +99,7 @@ public:
         Blank       // start w/no sts and allow anything.
     };
     
-    Scene(QObject* parent = 0);
+    Scene(QObject *parent = 0);
     ~Scene();
 
     //if you have the position in x, y use the overload function
@@ -112,7 +112,7 @@ public:
      * return QPoint(column, row);
      * if return = -1,-1 isVoid.
      */
-    QPoint indexOf(Cell* c);
+    QPoint indexOf(Cell *c);
     
     int rowCount();
     int columnCount(int row);
@@ -154,8 +154,8 @@ public:
     void createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize);
     void createBlankChart();
 
-    void addItem(QGraphicsItem* item);
-    void removeItem(QGraphicsItem* item);
+    void addItem(QGraphicsItem *item);
+    void removeItem(QGraphicsItem *item);
 
     /**
      * Add a row of stitches to the grid.
@@ -185,7 +185,7 @@ protected:
     /**
      * This function removes a cell from the 'grid'. if the row is empty it removes the row too.
      */
-    void removeFromRows(Cell* c);
+    void removeFromRows(Cell *c);
 
     void updateSceneRect();
     
@@ -224,18 +224,18 @@ signals:
     
 protected:
 //    virtual void    helpEvent ( QGraphicsSceneHelpEvent * helpEvent )
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent* e);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *e);
 
-    void keyReleaseEvent(QKeyEvent* keyEvent);
-    void keyPressEvent(QKeyEvent* keyEvent);
+    void keyReleaseEvent(QKeyEvent *keyEvent);
+    void keyPressEvent(QKeyEvent *keyEvent);
     
-    void stitchModeKeyRelease(QKeyEvent* keyEvent);
-    void angleModeKeyRelease(QKeyEvent* keyEvent);
-    void scaleModeKeyRelease(QKeyEvent* keyEvent);
+    void stitchModeKeyRelease(QKeyEvent *keyEvent);
+    void angleModeKeyRelease(QKeyEvent *keyEvent);
+    void scaleModeKeyRelease(QKeyEvent *keyEvent);
     
-    void mouseMoveEvent(QGraphicsSceneMouseEvent* e);
-    void mousePressEvent(QGraphicsSceneMouseEvent* e);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent* e);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *e);
+    void mousePressEvent(QGraphicsSceneMouseEvent *e);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *e);
 
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
     
@@ -312,11 +312,11 @@ protected:
      * Because of the fact that the group doesn't return the correct scene co-ordinates
      * this function will correct them.
      */
-    QPointF calcGroupPos(QGraphicsItem* group, QPointF newScenePos);
+    QPointF calcGroupPos(QGraphicsItem *group, QPointF newScenePos);
 
 public:
-    ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup* g = 0);
-    void ungroup(ItemGroup* group);
+    ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup *g = 0);
+    void ungroup(ItemGroup *group);
 
     QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
 
@@ -328,27 +328,27 @@ public:
     QRectF itemsBoundingRect();
     
 protected:
-    void colorModeMouseMove(QGraphicsSceneMouseEvent* e);
-    void colorModeMouseRelease(QGraphicsSceneMouseEvent* e);
+    void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
     
-    void indicatorModeMouseMove(QGraphicsSceneMouseEvent* e);
-    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e);
+    void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
-    void angleModeMousePress(QGraphicsSceneMouseEvent* e);
-    void angleModeMouseMove(QGraphicsSceneMouseEvent* e);
-    void angleModeMouseRelease(QGraphicsSceneMouseEvent* e);
+    void angleModeMousePress(QGraphicsSceneMouseEvent *e);
+    void angleModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void angleModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
-    void scaleModeMousePress(QGraphicsSceneMouseEvent* e);
-    void scaleModeMouseMove(QGraphicsSceneMouseEvent* e);
-    void scaleModeMouseRelease(QGraphicsSceneMouseEvent* e);
+    void scaleModeMousePress(QGraphicsSceneMouseEvent *e);
+    void scaleModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void scaleModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
-    void rowEditMousePress(QGraphicsSceneMouseEvent* e);
-    void rowEditMouseMove(QGraphicsSceneMouseEvent* e);
-    void rowEditMouseRelease(QGraphicsSceneMouseEvent* e);
+    void rowEditMousePress(QGraphicsSceneMouseEvent *e);
+    void rowEditMouseMove(QGraphicsSceneMouseEvent *e);
+    void rowEditMouseRelease(QGraphicsSceneMouseEvent *e);
     
-    void stitchModeMouseMove(QGraphicsSceneMouseEvent* e);
-    void stitchModeMousePress(QGraphicsSceneMouseEvent* e);
-    void stitchModeMouseRelease(QGraphicsSceneMouseEvent* e);
+    void stitchModeMouseMove(QGraphicsSceneMouseEvent *e);
+    void stitchModeMousePress(QGraphicsSceneMouseEvent *e);
+    void stitchModeMouseRelease(QGraphicsSceneMouseEvent *e);
 
     QSizeF defaultSize() const { return mDefaultSize; }
 
@@ -362,14 +362,14 @@ private:
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */
-    QGraphicsItem* mCurItem;
-    Item* mSclItem;
+    QGraphicsItem *mCurItem;
+    Item *mSclItem;
     QPointF mCellStartPos;
     QPointF mLeftButtonDownPos;
 
     QPainterPath mSelectionPath;
     
-    Indicator* mCurIndicator;
+    Indicator *mCurIndicator;
     
     /**
      * The difference between where the user clicked on the object and the (x,y) of the object.
@@ -377,7 +377,7 @@ private:
     QSizeF mDiff;
     qreal mOldAngle;
 
-    QRubberBand* mRubberBand;
+    QRubberBand *mRubberBand;
     QPointF mRubberBandStart;
 
     QMap<QGraphicsItem*, QPointF> mOldPositions;
@@ -418,14 +418,14 @@ private:
     
     QList<Indicator*> mIndicators;
 
-    Cell* mStartCell;
-    Cell* mEndCell;
-    Cell* mPreviousCell;
+    Cell *mStartCell;
+    Cell *mEndCell;
+    Cell *mPreviousCell;
 
     /**
      *The line between the last cell and the mouse.
      */
-    QGraphicsLineItem* mRowLine;
+    QGraphicsLineItem *mRowLine;
 
     /**
      *All lines connecting one cell to another cell for rows.
@@ -460,12 +460,12 @@ public slots:
     void setShowChartCenter(bool state);
 
 protected:
-    void setCellPosition(int row, int column, Cell* c, int columns);  
+    void setCellPosition(int row, int column, Cell *c, int columns);
     
 private:
     QPointF calcPoint(double radius, double angleInDegrees, QPointF origin);
 
-    QGraphicsItem* mCenterSymbol;
+    QGraphicsItem *mCenterSymbol;
     bool mShowChartCenter;
 
 public:

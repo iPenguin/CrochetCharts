@@ -514,7 +514,7 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
     
 }
 
-void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
+void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 {
 
     if(selectedItems().count() > 0)
@@ -623,9 +623,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 
 }
 
-void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
+void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
 {
-    
+
     switch(mMode) {
         case Scene::StitchEdit:
             stitchModeMouseMove(e);
@@ -671,7 +671,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
     }
 }
 
-void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
+void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 {
     QGraphicsScene::mouseReleaseEvent(e);
 
@@ -767,7 +767,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
     e->accept();
 }
 
-void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
+void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent *e)
 {
     if(e->buttons() != Qt::LeftButton)
         return;
@@ -783,7 +783,7 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent* e)
 */
 }
 
-void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
     Q_UNUSED(e);
     if(!mCurItem || mCurItem->type() != Cell::Type)
@@ -800,7 +800,7 @@ void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent* e)
     undoStack()->endMacro();
 }
 
-void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
+void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent *e)
 {
     if(e->buttons() != Qt::LeftButton)
         return;
@@ -815,7 +815,7 @@ void Scene::indicatorModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 }
 
-void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
     if(e->isAccepted())
         return;
@@ -856,7 +856,7 @@ qreal Scene::scenePosToAngle(QPointF pt)
     return angleX;
 }
 
-void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
+void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
 {
     Q_UNUSED(e);
     if(!mCurItem)
@@ -887,7 +887,7 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent* e)
     mCurItem = wrkItem;
 }
 
-void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
+void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
 {
     if(!mCurItem)
         return;
@@ -899,7 +899,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
     }
 
     mMoving = false;
-    
+
     QPointF first = e->buttonDownScenePos(Qt::LeftButton);
     QPointF second = e->scenePos();
 
@@ -921,7 +921,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
         mSnapTo = false;
 */
     }
-    
+
     qNormalizeAngle(mAngle);
 
     mCurItem->setTransformOriginPoint(mPivotPt);
@@ -929,7 +929,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent* e)
 
 }
 
-void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
     Q_UNUSED(e);
     if(!mCurItem)
@@ -942,7 +942,7 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent* e)
     mOldAngle = 0;
 }
 
-void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
+void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
 {
 
     Q_UNUSED(e);
@@ -954,9 +954,9 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent* e)
     qDebug() << mPivotPt;
 }
 
-void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
+void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 {
-    Q_UNUSED(e);
+
     if(!mCurItem)
         return;
 
@@ -990,9 +990,9 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent* e)
     mSclItem->setScale(baseScale.x(), baseScale.y());
 }
 
-void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
+void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
-    
+
     Q_UNUSED(e);
     if(!mSclItem)
         return;
@@ -1001,7 +1001,7 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent* e)
         return;
 
     undoStack()->push(new SetItemScale(this, mSclItem, mOldScale, mPivotPt));
-    
+
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
 }
