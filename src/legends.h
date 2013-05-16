@@ -47,6 +47,8 @@ public:
     int columnCount;
     QString prefix;
     QString sortBy;
+
+    QRectF boundingRect() const;
     
 protected:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
@@ -54,7 +56,8 @@ protected:
 private:
 
     QMap<QString, QMap<QString, qint64> >* mPatternColors;
-    QMap<qint64, QString> sortedColors;    
+    QMap<qint64, QString> sortedColors;
+    QSizeF mSize;
 };
 
 
@@ -70,13 +73,15 @@ public:
     bool showDescription;
     bool showWrongSide;
     int columnCount;
+
+    QRectF boundingRect() const;
     
 protected:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option,  QWidget* widget = 0);
 
 private:
     QMap<QString, int>* mPatternStitches;
-
+    QSizeF mSize;
 };
 
 #endif //LEGENDS_H

@@ -46,7 +46,8 @@ QPixmap Legend::drawColorBox(QColor color, QSize size)
 
 
 ColorLegend::ColorLegend(QMap<QString, QMap<QString, qint64> >* colors, QGraphicsItem* parent)
-    : QGraphicsWidget(parent)
+    : QGraphicsWidget(parent),
+    mSize(10,10)
 {
     mPatternColors = colors;
 
@@ -63,11 +64,18 @@ ColorLegend::ColorLegend(QMap<QString, QMap<QString, qint64> >* colors, QGraphic
     columnCount = Settings::inst()->value("colorLegendColumnCount").toInt();
     prefix = Settings::inst()->value("colorPrefix").toString();
     sortBy = Settings::inst()->value("colorLegendSortBy").toString();
-    
+
 }
 
 ColorLegend::~ColorLegend()
 {
+}
+
+QRectF ColorLegend::boundingRect() const
+{
+    QRectF rect = QGraphicsWidget::boundingRect();
+    rect.setSize(mSize);
+    return rect;
 }
 
 void ColorLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
@@ -155,6 +163,7 @@ void ColorLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* optio
         painter->drawRect(0, 0, imageWidth - 1, imageHeight - 1);
 
     scene()->setSceneRect(0, 0, imageWidth, imageHeight);
+    mSize = QSizeF(imageWidth, imageHeight);
 }
 
 
@@ -162,7 +171,8 @@ void ColorLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* optio
 | Stitch Legend                                                                    |
 \**********************************************************************************/
 StitchLegend::StitchLegend(QMap<QString, int>* stitches, QGraphicsItem* parent)
-    : QGraphicsWidget(parent)
+    : QGraphicsWidget(parent),
+    mSize(10,10);
 {
     mPatternStitches = stitches;
 
@@ -171,12 +181,20 @@ StitchLegend::StitchLegend(QMap<QString, int>* stitches, QGraphicsItem* parent)
     showDescription = Settings::inst()->value("showStitchDescription").toBool();
     showWrongSide = Settings::inst()->value("showStitchWrongSide").toBool();
     columnCount = Settings::inst()->value("stitchLegendColumnCount").toInt();
-    
+
 }
 
 StitchLegend::~StitchLegend()
 {
 }
+
+QRectF StitchLegend::boundingRect() const
+{
+    QRectF rect = QGraphicsWidget::boundingRect();
+    rect.setSize(mSize);
+    return rect;
+}
+
 
 void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
@@ -356,6 +374,8 @@ void StitchLegend::paint(QPainter* painter, const QStyleOptionGraphicsItem* opti
         painter->drawRect(0, 0, imageWidth -1, imageHeight -1);
     
     scene()->setSceneRect(0,0, imageWidth, imageHeight);
+
+    mSize = QSizeF(imageWidth, imageHeight);
 }
 
 

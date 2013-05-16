@@ -54,20 +54,18 @@ ExportUi::ExportUi(QTabWidget* tab, QMap<QString, int>* stitches,
     ui->showStitchWrongSideLbl->hide();
     ui->colorSortBy->hide();
     ui->colorSortByLbl->hide();
-    //FIXME: chart options...
-    ui->chartOptions->hide();
-    
+
     setupChartOptions();
     setupColorLegendOptions();
     setupStitchLegendOptions();
-    
+
     updateExportOptions(ui->fileType->currentText());
     connect(ui->fileType, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(updateExportOptions(QString)));
     generateSelectionList(true);
 
     connect(ui->chartSelection, SIGNAL(currentIndexChanged(QString)), this, SLOT(setSelection(QString)));
-    
+
     connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(exportData()));
 
@@ -78,6 +76,9 @@ ExportUi::ExportUi(QTabWidget* tab, QMap<QString, int>* stitches,
 
 void ExportUi::setupChartOptions()
 {
+    ui->includeColorLegend->setChecked(Settings::inst()->value("includeColorLegend").toBool());
+    ui->includeStitchLegend->setChecked(Settings::inst()->value("includeStitchLegend").toBool());
+
 
 }
 
@@ -93,7 +94,7 @@ void ExportUi::setupColorLegendOptions()
     ui->colorTitle->setChecked(Settings::inst()->value("showColorTitle").toBool());
     int index = ui->colorSortBy->findText(Settings::inst()->value("colorLegendSortBy").toString());
     ui->colorSortBy->setCurrentIndex(index);
-    
+
     connect(ui->colorBorder, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorHexValue, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorColumns, SIGNAL(valueChanged(int)), SLOT(updateColorLegend()));
@@ -101,7 +102,7 @@ void ExportUi::setupColorLegendOptions()
     connect(ui->colorBorder, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorTitle, SIGNAL(toggled(bool)), SLOT(updateColorLegend()));
     connect(ui->colorSortBy, SIGNAL(currentIndexChanged(int)), SLOT(updateColorLegend()));
-    
+
 }
 
 void ExportUi::setupStitchLegendOptions()
@@ -308,12 +309,29 @@ void ExportUi::exportData()
             exportLegendImg();
 
     } else { //charts
+        CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->currentWidget());
+        QRectF rect = tab->scene()->itemsBoundingRect();
+
+        sl = new StitchLegend(mStitches);
+        tab->scene()->addItem(sl);
+        sl->setPos(rect.x(), rect.bottom() + 10);
+        sl->setScale(0.5);
+
+        cl = new ColorLegend(mColors);
+        tab->scene()->addItem(cl);
+        qDebug() << "THIS IS BROKEN";
+        cl->setPos(rect.x(), rect.bottom() + sl->boundingRect().bottom() + 10);
+        cl->setScale(0.5);
+
         if(exportType == "pdf")
             exportPdf();
         else if(exportType == "svg")
             exportSvg();
         else
             exportImg();
+
+        tab->scene()->removeItem(sl);
+        tab->scene()->removeItem(cl);
     }
 
     QApplication::restoreOverrideCursor();

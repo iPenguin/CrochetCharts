@@ -504,7 +504,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_5">
       <item row="0" column="1">
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="includeStitchLegend">
         <property name="text">
          <string/>
         </property>
@@ -513,25 +513,31 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_13">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Include Stitch Legend:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>includeStitchLegend</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="2">
        <widget class="QLabel" name="label_14">
         <property name="text">
-         <string>TextLabel</string>
+         <string>Include Color Legend:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
+        <property name="buddy">
+         <cstring>includeColorLegend</cstring>
+        </property>
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QCheckBox" name="includeColorLegend">
         <property name="text">
          <string/>
         </property>
@@ -550,8 +556,8 @@
   <tabstop>resolution</tabstop>
   <tabstop>pageToChartSize</tabstop>
   <tabstop>view</tabstop>
-  <tabstop>checkBox</tabstop>
-  <tabstop>checkBox_2</tabstop>
+  <tabstop>includeStitchLegend</tabstop>
+  <tabstop>includeColorLegend</tabstop>
   <tabstop>stitchTitle</tabstop>
   <tabstop>stitchBorder</tabstop>
   <tabstop>stitchColumns</tabstop>
