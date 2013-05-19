@@ -969,8 +969,12 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
     QPointF newScale = QPointF(newSize.width() / mCurItem->boundingRect().width(),
                                 newSize.height() / mCurItem->boundingRect().height());
 
+    //When holding Ctrl lock scale to largest dimension.
     if(e->modifiers() == Qt::ControlModifier) {
-        newScale.ry() = newScale.rx();
+        if(newScale.x() > newScale.y())
+            newScale.ry() = newScale.rx();
+        else
+            newScale.rx() = newScale.ry();
     }
 
     SetItemScale::setScale(mCurItem, newScale);
