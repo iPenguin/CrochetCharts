@@ -8,7 +8,7 @@
 #include "debug.h"
 
 ItemGroup::ItemGroup(QGraphicsItem* parent, QGraphicsScene* scene)
-    : QGraphicsItemGroup::QGraphicsItemGroup( parent, scene),
+    : QGraphicsItemGroup( parent, scene),
     mScale(QPointF(1.0, 1.0))
 {
 
@@ -45,9 +45,11 @@ bool ItemGroup::isGrouped()
 
 void ItemGroup::setScale(qreal sx, qreal sy)
 {
+
     QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
 
-    QGraphicsItemGroup::scale(newScale.x(), newScale.y());
+    QGraphicsItemGroup::setTransform(transform().scale(newScale.x(), newScale.y()));
+
     mScale = QPointF(sx, sy);
 }
 

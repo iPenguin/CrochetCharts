@@ -176,19 +176,11 @@ void Cell::useAlternateRenderer(bool useAlt)
 
 void Cell::setScale(qreal sx, qreal sy)
 {
-    /*
-     * FIXME: scale(sx, sy) is obsolete in 4.7
-     * replace in future version as follows:
-     *
-    // Scale an item by 3x2 from its origin
-    item->scale(3, 2);
 
-    // Scale an item by 3x2 from (x, y)
-    item->setTransform(QTransform().translate(x, y).scale(3, 2).translate(-x, -y));
-    */
     QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
 
-    QGraphicsSvgItem::scale(newScale.x(), newScale.y());
+    QGraphicsSvgItem::setTransform(transform().scale(newScale.x(), newScale.y()));
+
     mScale = QPointF(sx, sy);
 }
 
