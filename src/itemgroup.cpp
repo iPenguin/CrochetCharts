@@ -14,8 +14,6 @@ ItemGroup::ItemGroup(QGraphicsItem* parent, QGraphicsScene* scene)
 
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
-    origHeight = boundingRect().height();
-    origWidth = boundingRect().width();
 }
 
 ItemGroup::~ItemGroup()
@@ -43,22 +41,9 @@ bool ItemGroup::isGrouped()
     return false;
 }
 
-void ItemGroup::setScale(qreal sx, qreal sy)
-{
-
-    QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
-
-    QGraphicsItemGroup::setTransform(transform().scale(newScale.x(), newScale.y()));
-
-    mScale = QPointF(sx, sy);
-}
-
 void ItemGroup::addToGroup(QGraphicsItem* item)
 {
 
     QGraphicsItemGroup::addToGroup(item);
-
-    origWidth = sceneBoundingRect().width();
-    origHeight = sceneBoundingRect().height();
 
 }

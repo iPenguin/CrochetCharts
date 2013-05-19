@@ -23,9 +23,6 @@ Cell::Cell(QGraphicsItem *parent)
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
-    origHeight = boundingRect().height();
-    origWidth = boundingRect().width();
-
     //if we don't set the bgColor it'll end up black.
     setBgColor();
 }
@@ -106,9 +103,6 @@ void Cell::setStitch(Stitch *s, bool useAltRenderer)
 
         if(doUpdate)
             update();
-
-        origWidth = s->width();
-        origHeight = s->height();
         
         emit stitchChanged(old, s->name());
     }

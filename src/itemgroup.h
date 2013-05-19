@@ -5,10 +5,9 @@
 #ifndef ITEMGROUP_H
 #define ITEMGROUP_H
 
-#include "item.h"
 #include <QGraphicsItemGroup>
 
-class ItemGroup : public QGraphicsItemGroup, public Item
+class ItemGroup : public QGraphicsItemGroup
 {
 
 public:
@@ -23,9 +22,6 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
 
     bool isGrouped();
-
-    QPointF scale() {return mScale; }
-    void setScale(qreal sx, qreal sy);
 
     void addToGroup(QGraphicsItem* item);
 private:

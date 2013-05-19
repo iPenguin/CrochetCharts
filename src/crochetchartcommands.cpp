@@ -167,24 +167,33 @@ void SetItemCoordinates::redo()
 /*************************************************\
  | SetItemScale                                   |
 \*************************************************/
-SetItemScale::SetItemScale(Scene* s, Item* item, QPointF oldScle, QUndoCommand* parent)
+SetItemScale::SetItemScale(QGraphicsItem *item, QPointF oldScle, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    scene = s;
+
     i = item;
-    newScale = i->scale();
+    newScale = QPointF(i->transform().m11(), i->transform().m22());
     oldScale = oldScle;
     setText(QObject::tr("change scale"));
 }
 
 void SetItemScale::undo()
 {
-    i->setScale(oldScale.x(), oldScale.y());
+    setScale(i, oldScale);
 }
 
 void SetItemScale::redo()
 {
-    i->setScale(newScale.x(), newScale.y());
+    setScale(i, newScale);
+}
+
+void SetItemScale::setScale(QGraphicsItem *item, QPointF scale)
+{
+
+    QPointF txScale = QPointF(scale.x() / item->transform().m11(),
+                              scale.y() / item->transform().m22());
+
+    item->setTransform(item->transform().scale(txScale.x(), txScale.y()));
 }
 
 /*************************************************\

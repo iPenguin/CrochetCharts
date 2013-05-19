@@ -9,7 +9,6 @@
 
 #include "cell.h"
 #include "scene.h"
-#include "item.h"
 
 class SetCellStitch : public QUndoCommand
 {
@@ -134,19 +133,20 @@ class SetItemScale : public QUndoCommand
 public:
     enum { Id = 1140 };
 
-    SetItemScale(Scene* s, Item* item, QPointF oldScle, QUndoCommand* parent = 0);
+    SetItemScale(QGraphicsItem *item, QPointF oldScle, QUndoCommand *parent = 0);
 
     void undo();
     void redo();
 
     int id() const { return Id; }
 
+    static void setScale(QGraphicsItem *item, QPointF scale);
+
 private:
     QPointF oldScale;
     QPointF newScale;
 
-    Item* i;
-    Scene* scene;
+    QGraphicsItem *i;
 
 };
 

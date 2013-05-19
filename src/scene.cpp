@@ -115,7 +115,6 @@ static void qNormalizeAngle(qreal &angle)
 Scene::Scene(QObject* parent) :
     QGraphicsScene(parent),
     mCurItem(0),
-    mSclItem(0),
     mCellStartPos(QPointF(0,0)),
     mLeftButtonDownPos(QPointF(0,0)),
     mCurIndicator(0),
@@ -507,7 +506,7 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
         QPointF oldScale = c->scale();
         QPointF newScale = oldScale + delta;
         c->setScale(newScale.x(), newScale.y());
-        undoStack()->push(new SetItemScale(this, c, oldScale));
+        undoStack()->push(new SetItemScale(c, oldScale));
     }
     undoStack()->endMacro();
     
@@ -540,7 +539,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
             case Cell::Type: {
                 mCellStartPos = mCurItem->scenePos();
                 mDiff = QSizeF(e->scenePos().x() - mCellStartPos.x(), e->scenePos().y() - mCellStartPos.y());
-                mSclItem = dynamic_cast<Item*>(mCurItem);
                 break;
             }
             case Indicator::Type: {
@@ -556,7 +554,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
             }
             case ItemGroup::Type: {
                 mMoving = true;
-                mSclItem = dynamic_cast<Item*>(mCurItem);
                 break;
             }
             case QGraphicsSimpleTextItem::Type: {
@@ -745,7 +742,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         initDemoBackground();
         mMoving = false;
     }
-    mSclItem = 0;
+
     mCurItem = 0;
     mHasSelection = false;
 }
@@ -861,29 +858,17 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
     if(!mCurItem)
         return;
 
+    //If the item is group we want to rotate the whole group.
+    if (mCurItem->parentItem())
+        mCurItem = mCurItem->parentItem();
+
     mOldAngle = mCurItem->rotation();
 
-    QGraphicsItem *wrkItem = 0;
+    mPivotPt = QPointF(mCurItem->boundingRect().center().x(),
+                       mCurItem->boundingRect().bottom());
 
-    //If the item is group we want to rotate the group object
-    //otherwise we want to rotate this object.
-    if (mSclItem && mSclItem->isGrouped())
-        wrkItem = mCurItem->parentItem();
-    else
-        wrkItem = mCurItem;
+    mOrigin = mCurItem->mapToScene(mPivotPt);
 
-    if(!wrkItem) {
-        qWarning() << "This isn't right, there should be an item to rotate here!";
-        return;
-    }
-
-    mPivotPt = QPointF(wrkItem->boundingRect().center().x(),
-                       wrkItem->boundingRect().bottom());
-
-    mOrigin = wrkItem->mapToScene(mPivotPt);
-
-    //update the mCurItem based on what we're actually working with.
-    mCurItem = wrkItem;
 }
 
 void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -892,7 +877,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
         return;
 
     //FIXME: don't 'move' stitches if multple are selected. rotate them.
-    if(selectedItems().count() > 1 || !mCurItem) {
+    if(selectedItems().count() > 1) {
         mMoving = true;
         return;
     }
@@ -945,12 +930,17 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
 {
 
     Q_UNUSED(e);
-    if(!mCurItem && !mSclItem)
+    if(!mCurItem)
         return;
 
-    mOldScale = mSclItem->scale();
-    mPivotPt = QPointF(mCurItem->sceneBoundingRect().width()/2, mCurItem->sceneBoundingRect().height());
-    qDebug() << mPivotPt;
+    //If the item is grouped we want to scale the whole group.
+    if (mCurItem->parentItem())
+        mCurItem = mCurItem->parentItem();
+
+    mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
+
+    mOrigin = mCurItem->scenePos();
+
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -959,7 +949,7 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
     if(!mCurItem)
         return;
 
-    if(selectedItems().count() > 1 || !mSclItem) {
+    if(selectedItems().count() > 1) {
         mMoving = true;
         return;
     }
@@ -968,38 +958,32 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 
     QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
 
-    QSize oldSize = QSize(mSclItem->origWidth * mOldScale.x(), mSclItem->origHeight * mOldScale.y());
+    QSize oldSize = QSize(mCurItem->boundingRect().width() * mOldScale.x(),
+                          mCurItem->boundingRect().height() * mOldScale.y());
     QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
 
-    if((newSize.width() < 1 && newSize.width() > -1) || (newSize.height() < 1 && newSize.height() > -1))
+    if((newSize.width() < 1 && newSize.width() > -1) ||
+        (newSize.height() < 1 && newSize.height() > -1))
         return;
 
-    QPointF baseScale = QPointF(newSize.width() / mSclItem->origWidth,
-                               newSize.height() / mSclItem->origHeight);
+    QPointF newScale = QPointF(newSize.width() / mCurItem->boundingRect().width(),
+                                newSize.height() / mCurItem->boundingRect().height());
 
     if(e->modifiers() == Qt::ControlModifier) {
-        baseScale.ry() = baseScale.rx();
+        newScale.ry() = newScale.rx();
     }
 
-    if(!mSclItem) {
-        qWarning() << "There is no item here!";
-        return;
-    }
-
-    mSclItem->setScale(baseScale.x(), baseScale.y());
+    SetItemScale::setScale(mCurItem, newScale);
 }
 
 void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 {
 
     Q_UNUSED(e);
-    if(!mSclItem)
-        return;
-
     if(mMoving)
         return;
 
-    undoStack()->push(new SetItemScale(this, mSclItem, mOldScale));
+    undoStack()->push(new SetItemScale(mCurItem, mOldScale));
 
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
@@ -1892,13 +1876,13 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 
             if(property == "Angle") {
                 undoStack()->push(new SetItemRotation(this, i, i->rotation(),
-                                                      QPointF(c->origWidth/2, c->origHeight)));
+                                QPointF(c->boundingRect().center().x(), c->boundingRect().bottom())));
 
             } else if(property == "ScaleX") {
-                undoStack()->push(new SetItemScale(this, c, QPointF(newValue.toDouble(), c->scale().y())));
+                undoStack()->push(new SetItemScale(c, QPointF(newValue.toDouble(), c->scale().y())));
 
             } else if(property == "ScaleY") {
-                undoStack()->push(new SetItemScale(this, c, QPointF(c->scale().x(), newValue.toDouble())));
+                undoStack()->push(new SetItemScale(c, QPointF(c->scale().x(), newValue.toDouble())));
 
             } else if(property == "Stitch") {
                 undoStack()->push(new SetCellStitch(this, c, newValue.toString()));

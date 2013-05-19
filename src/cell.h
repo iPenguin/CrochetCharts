@@ -8,9 +8,8 @@
 #include <QtSvg/QGraphicsSvgItem>
 #include "stitch.h"
 #include <QPointer>
-#include "item.h"
 
-class Cell : public QGraphicsSvgItem, public Item
+class Cell : public QGraphicsSvgItem
 {
     Q_OBJECT
     friend class SaveFile;
