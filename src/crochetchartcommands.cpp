@@ -167,12 +167,11 @@ void SetItemCoordinates::redo()
 /*************************************************\
  | SetItemScale                                   |
 \*************************************************/
-SetItemScale::SetItemScale(Scene* s, Item* item, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent)
+SetItemScale::SetItemScale(Scene* s, Item* item, QPointF oldScle, QUndoCommand* parent)
     : QUndoCommand(parent)
 {
     scene = s;
     i = item;
-    pivotPt = pvtPt;
     newScale = i->scale();
     oldScale = oldScle;
     setText(QObject::tr("change scale"));

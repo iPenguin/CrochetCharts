@@ -134,22 +134,20 @@ class SetItemScale : public QUndoCommand
 public:
     enum { Id = 1140 };
 
-    SetItemScale(Scene* s, Item* item, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent = 0);
-    
+    SetItemScale(Scene* s, Item* item, QPointF oldScle, QUndoCommand* parent = 0);
+
     void undo();
     void redo();
-    
+
     int id() const { return Id; }
-    
+
 private:
     QPointF oldScale;
     QPointF newScale;
 
-    QPointF pivotPt;
-    
     Item* i;
     Scene* scene;
-    
+
 };
 
 class AddCell : public QUndoCommand

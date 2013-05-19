@@ -505,10 +505,9 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
         Cell* c = qgraphicsitem_cast<Cell*>(i);
         
         QPointF oldScale = c->scale();
-        QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
         QPointF newScale = oldScale + delta;
         c->setScale(newScale.x(), newScale.y());
-        undoStack()->push(new SetItemScale(this, c, oldScale, pvtPt));
+        undoStack()->push(new SetItemScale(this, c, oldScale));
     }
     undoStack()->endMacro();
     
@@ -1000,7 +999,7 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
     if(mMoving)
         return;
 
-    undoStack()->push(new SetItemScale(this, mSclItem, mOldScale, mPivotPt));
+    undoStack()->push(new SetItemScale(this, mSclItem, mOldScale));
 
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
@@ -1896,12 +1895,10 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
                                                       QPointF(c->origWidth/2, c->origHeight)));
 
             } else if(property == "ScaleX") {
-                undoStack()->push(new SetItemScale(this, c, QPointF(newValue.toDouble(), c->scale().y()),
-                                                   QPointF(c->origWidth/2, c->origHeight)));
+                undoStack()->push(new SetItemScale(this, c, QPointF(newValue.toDouble(), c->scale().y())));
 
             } else if(property == "ScaleY") {
-                undoStack()->push(new SetItemScale(this, c, QPointF(c->scale().x(), newValue.toDouble()),
-                                                   QPointF(c->origWidth/2, c->origHeight)));
+                undoStack()->push(new SetItemScale(this, c, QPointF(c->scale().x(), newValue.toDouble())));
 
             } else if(property == "Stitch") {
                 undoStack()->push(new SetCellStitch(this, c, newValue.toString()));
