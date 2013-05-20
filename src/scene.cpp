@@ -987,6 +987,9 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
     if(mMoving)
         return;
 
+    if(!mCurItem)
+        return;
+
     undoStack()->push(new SetItemScale(mCurItem, mOldScale));
 
     mOldScale.setX(1.0);
