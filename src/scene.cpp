@@ -432,7 +432,7 @@ void Scene::stitchModeKeyRelease(QKeyEvent* keyEvent)
     foreach(QGraphicsItem *i, selectedItems()) {
         QPointF oldPos = i->pos();
         i->setPos(i->pos().x() + deltaX, i->pos().y() + deltaY);
-        undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        undoStack()->push(new SetItemCoordinates(i, oldPos));
     }
     undoStack()->endMacro();
     
@@ -462,7 +462,7 @@ void Scene::angleModeKeyRelease(QKeyEvent* keyEvent)
         qreal oldAngle = c->rotation();
         c->setRotation(c->rotation() + delta);
         QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
-        undoStack()->push(new SetItemRotation(this, c, oldAngle, pvtPt));
+        undoStack()->push(new SetItemRotation(c, oldAngle, pvtPt));
     }
     undoStack()->endMacro();
 
@@ -716,7 +716,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         foreach(QGraphicsItem* item, selectedItems()) {
             if(mOldPositions.contains(item)) {
                 QPointF oldPos = mOldPositions.value(item);
-                undoStack()->push(new SetItemCoordinates(this, item, oldPos));
+                undoStack()->push(new SetItemCoordinates(item, oldPos));
             }
         }
         undoStack()->endMacro();
@@ -775,7 +775,7 @@ void Scene::colorModeMouseMove(QGraphicsSceneMouseEvent *e)
 /*
  *FIXME: if the user isn't dragging a stitch we should be painting with color.
     if(mCurCell->color() != mEditBgColor)
-        mUndoStack.push(new SetCellBgColor(this, mCurCell, mEditBgColor));
+        mUndoStack.push(new SetCellBgColor(mCurCell, mEditBgColor));
 */
 }
 
@@ -788,10 +788,10 @@ void Scene::colorModeMouseRelease(QGraphicsSceneMouseEvent *e)
     Cell* curCell = static_cast<Cell*>(mCurItem);
     undoStack()->beginMacro("set cell color");
     if(curCell->color() != mEditFgColor) {
-        undoStack()->push(new SetCellColor(this, curCell, mEditFgColor));
+        undoStack()->push(new SetCellColor(curCell, mEditFgColor));
     }
     if(curCell->bgColor() != mEditBgColor) {
-        undoStack()->push(new SetCellBgColor(this, curCell, mEditBgColor));
+        undoStack()->push(new SetCellBgColor(curCell, mEditBgColor));
     }
     undoStack()->endMacro();
 }
@@ -922,7 +922,7 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
     if(mMoving)
         return;
 
-    undoStack()->push(new SetItemRotation(this, mCurItem, mOldAngle, mPivotPt));
+    undoStack()->push(new SetItemRotation(mCurItem, mOldAngle, mPivotPt));
     mOldAngle = 0;
 }
 
@@ -1115,11 +1115,13 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
-            AddCell* addCell = new AddCell(this, e->scenePos());
-            undoStack()->push(addCell);
-            addCell->cell()->setStitch(mEditStitch);
-            addCell->cell()->setColor(mEditFgColor);
-            addCell->cell()->setBgColor(mEditBgColor);
+            Cell *c = new Cell();
+
+            undoStack()->push(new AddItem(this, c));
+            c->setPos(e->scenePos());
+            c->setStitch(mEditStitch);
+            c->setColor(mEditFgColor);
+            c->setBgColor(mEditBgColor);
 
         }
     }
@@ -1444,7 +1446,7 @@ void Scene::align(int vertical, int horizontal)
         }
         
         i->setPos(newX, newY);
-        undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        undoStack()->push(new SetItemCoordinates(i, oldPos));
         
     }
     undoStack()->endMacro();
@@ -1762,7 +1764,7 @@ void Scene::distribute(int vertical, int horizontal)
 
         i->setPos(newX, newY);
 
-        undoStack()->push(new SetItemCoordinates(this, i, oldPos));
+        undoStack()->push(new SetItemCoordinates(i, oldPos));
     }
     undoStack()->endMacro();
 }
@@ -1879,7 +1881,7 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
             }
 
             if(property == "Angle") {
-                undoStack()->push(new SetItemRotation(this, i, i->rotation(),
+                undoStack()->push(new SetItemRotation(i, i->rotation(),
                                 QPointF(c->boundingRect().center().x(), c->boundingRect().bottom())));
 
             } else if(property == "ScaleX") {
@@ -1889,7 +1891,7 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
                 undoStack()->push(new SetItemScale(c, QPointF(c->scale().x(), newValue.toDouble())));
 
             } else if(property == "Stitch") {
-                undoStack()->push(new SetCellStitch(this, c, newValue.toString()));
+                undoStack()->push(new SetCellStitch(c, newValue.toString()));
 
             } else if(property == "Delete") {
                 undoStack()->push(new RemoveItem(this, i));
@@ -1921,15 +1923,16 @@ void Scene::mirror(int direction)
     undoStack()->beginMacro("mirror selection");
     if(direction == 1) { //left
 
-        foreach(QGraphicsItem* item, list) {
+        foreach(QGraphicsItem *item, list) {
             if(item->type() == Cell::Type) {
-                Cell* c = qgraphicsitem_cast<Cell*>(item);
+                Cell *c = qgraphicsitem_cast<Cell*>(item);
                 QPointF oldPos = c->pos();
 
-                AddCell* addCellCmd = new AddCell(this, oldPos);
-                undoStack()->push(addCellCmd);
-                Cell* copy = c->copy(addCellCmd->cell());
-                
+                Cell *tmpC = new Cell();
+                undoStack()->push(new AddItem(this, tmpC));
+                tmpC->setPos(oldPos);
+                Cell *copy = c->copy(tmpC);
+
                 qreal diff = (rect.left() - c->pos().x()) - c->boundingRect().width();
                 copy->setPos(rect.left() + diff, c->pos().y());
 
@@ -1943,14 +1946,15 @@ void Scene::mirror(int direction)
 
     } else if(direction == 2) { //right
 
-        foreach(QGraphicsItem* item, list) {
+        foreach(QGraphicsItem *item, list) {
             if(item->type() == Cell::Type) {
-                Cell* c = qgraphicsitem_cast<Cell*>(item);
+                Cell *c = qgraphicsitem_cast<Cell*>(item);
                 QPointF oldPos = c->pos();
 
-                AddCell* addCellCmd = new AddCell(this, oldPos);
-                undoStack()->push(addCellCmd);
-                Cell* copy = c->copy(addCellCmd->cell());
+                Cell *tmpC = new Cell();
+                undoStack()->push(new AddItem(this, tmpC));
+                tmpC->setPos(oldPos);
+                Cell *copy = c->copy(tmpC);
 
                 qreal diff = (rect.right() - c->pos().x()) - c->boundingRect().width();
                 copy->setPos(rect.right() + diff, c->pos().y());
@@ -1964,19 +1968,20 @@ void Scene::mirror(int direction)
 
     } else if(direction == 3) { //up
 
-        foreach(QGraphicsItem* item, list) {
+        foreach(QGraphicsItem *item, list) {
             if(item->type() == Cell::Type) {
-                Cell* c = qgraphicsitem_cast<Cell*>(item);
+                Cell *c = qgraphicsitem_cast<Cell*>(item);
                 QPointF oldPos = item->pos();
 
-                AddCell* addCellCmd = new AddCell(this, oldPos);
-                undoStack()->push(addCellCmd);
-                Cell* copy = c->copy(addCellCmd->cell());
+                Cell *tmpC = new Cell();
+                undoStack()->push(new AddItem(this, tmpC));
+                tmpC->setPos(oldPos);
+                Cell *copy = c->copy(tmpC);
 
                 qreal diff = (rect.top() - c->pos().y()) - c->boundingRect().height();
                 copy->setPos(c->pos().x(), rect.top() + diff - copy->boundingRect().height());
 
-                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
+                undoStack()->push(new SetItemCoordinates(copy, oldPos));
                 qreal newAngle = 360 - copy->rotation() + 180;
                 qNormalizeAngle(newAngle);
                 copy->setTransformOriginPoint(copy->boundingRect().width()/2, copy->boundingRect().height());
@@ -1987,19 +1992,20 @@ void Scene::mirror(int direction)
 
     } else if(direction == 4) { //down
 
-        foreach(QGraphicsItem* item, list) {
+        foreach(QGraphicsItem *item, list) {
             if(item->type() == Cell::Type) {
-                Cell* c = qgraphicsitem_cast<Cell*>(item);
+                Cell *c = qgraphicsitem_cast<Cell*>(item);
                 QPointF oldPos = item->pos();
-                
-                AddCell* addCellCmd = new AddCell(this, oldPos);
-                undoStack()->push(addCellCmd);
-                Cell* copy = c->copy(addCellCmd->cell());
-                
+
+                Cell *tmpC = new Cell();
+                undoStack()->push(new AddItem(this, tmpC));
+                tmpC->setPos(oldPos);
+                Cell *copy = c->copy(tmpC);
+
                 qreal diff = (rect.bottom() - c->pos().y()) - c->boundingRect().height();
                 copy->setPos(c->pos().x(), rect.bottom() + diff - copy->boundingRect().height());
 
-                undoStack()->push(new SetItemCoordinates(this, copy, oldPos));
+                undoStack()->push(new SetItemCoordinates(copy, oldPos));
 
                 qreal newAngle = 360 - copy->rotation() + 180;
                 qNormalizeAngle(newAngle);
@@ -2019,7 +2025,7 @@ void Scene::rotate(qreal degrees)
     if(selectedItems().count() <= 0)
         return;
 
-    undoStack()->push(new SetItemsRotation(this, selectedItems(), degrees));
+    undoStack()->push(new SetSelectionRotation(this, selectedItems(), degrees));
 }
 
 void Scene::rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint)
@@ -2153,7 +2159,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
         offSet = QPointF(10, 10);
     else
         offSet = QPointF(0,0);
-    
+
     int type;
     stream >> type;
     switch(type) {
@@ -2167,12 +2173,12 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             QTransform trans;
 
             stream >> name >> color >> bgColor >> angle >> scale >> transPoint >> pos >> trans;
-            
-            pos += offSet;
-            AddCell* addCmd = new AddCell(this, pos);
-            undoStack()->push(addCmd);
-            Cell* c = addCmd->cell();
 
+            pos += offSet;
+
+            Cell *c = new Cell();
+            undoStack()->push(new AddItem(this, c));
+            c->setPos(pos);
             c->setStitch(name);
             c->setColor(color);
             c->setBgColor(bgColor);
@@ -2186,7 +2192,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             break;
         }
         case Indicator::Type: {
-            Indicator* i = new Indicator();
+            Indicator *i = new Indicator();
             //FIXME: add this indicator to the undo stack.
             QPointF pos;
             QString text;
@@ -2196,7 +2202,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             i->setText(text);
             addItem(i);
             i->setPos(pos);
-            
+
             i->setSelected(false);
             group->append(i);
             break;
@@ -2210,9 +2216,9 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
                 pasteRecursively(stream, &items);
             }
 
-            GroupItems* grpItems = new GroupItems(this, items);
+            GroupItems *grpItems = new GroupItems(this, items);
             undoStack()->push(grpItems);
-            ItemGroup* g = grpItems->group();
+            ItemGroup *g = grpItems->group();
 
             g->setSelected(false);
             group->append(g);
@@ -2508,7 +2514,7 @@ void Scene::createRow(int row, int columns, QString stitch)
     QList<Cell*> modelRow;
     for(int i = 0; i < columns; ++i) {
         c = new Cell();
-        c->setStitch(stitch, (row % 2));
+        c->setStitch(stitch);
         addItem(c);
         
         modelRow.append(c);
@@ -2572,7 +2578,7 @@ void Scene::replaceStitches(QString original, QString replacement)
             continue;
 
         if(c->stitch()->name() == original) {
-            undoStack()->push(new SetCellStitch(this, c, replacement));
+            undoStack()->push(new SetCellStitch(c, replacement));
         }
 
     }

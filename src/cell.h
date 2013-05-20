@@ -37,8 +37,8 @@ public:
     void setColor(QColor c = QColor(Qt::black));
     QColor color() const { return mColor; }
 
-    void setStitch(Stitch *s, bool useAltRenderer = false);
-    void setStitch(QString s, bool useAltRenderer = false);
+    void setStitch(Stitch *s);
+    void setStitch(QString s);
     Stitch* stitch() const { return mStitch; }
 
     /**

@@ -356,7 +356,7 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
     tab->scene()->addItem(c);
 
     if(row > -1 && column > -1) {
-        c->setStitch(s, (row % 2));
+        c->setStitch(s);
         tab->scene()->grid[row].replace(column, c);
         c->setZValue(100);
     } else {

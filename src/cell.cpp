@@ -81,7 +81,7 @@ bool Cell::isGrouped()
     return false;
 }
 
-void Cell::setStitch(Stitch *s, bool useAltRenderer)
+void Cell::setStitch(Stitch *s)
 {
     if (mStitch != s) {
         QString old;
@@ -93,12 +93,7 @@ void Cell::setStitch(Stitch *s, bool useAltRenderer)
         }
         mStitch = s;
         if(s->isSvg()) {
-            QString color = mColor.name();
-            if(useAltRenderer)
-                color = Settings::inst()->value("stitchAlternateColor").toString();
-
-            mColor = QColor(color);
-            setSharedRenderer(s->renderSvg(QColor(color)));
+            setSharedRenderer(s->renderSvg(mColor));
         }
 
         if(doUpdate)
@@ -137,7 +132,7 @@ void Cell::setColor(QColor c)
     }
 }
 
-void Cell::setStitch(QString s, bool useAltRenderer)
+void Cell::setStitch(QString s)
 {
     Stitch *stitch = StitchLibrary::inst()->findStitch(s);
 
@@ -146,7 +141,7 @@ void Cell::setStitch(QString s, bool useAltRenderer)
         stitch = StitchLibrary::inst()->findStitch(st);
     }
 
-    setStitch(stitch, useAltRenderer);
+    setStitch(stitch);
 }
 
 QString Cell::name()
