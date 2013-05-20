@@ -43,7 +43,7 @@ SetCellBgColor::SetCellBgColor(Cell* cell, QColor newCl, QUndoCommand* parent)
     c = cell;
     oldColor = c->bgColor();
     newColor = newCl;
-    setText(QObject::tr("change color"));
+    setText(QObject::tr("change background color"));
 }
 
 void SetCellBgColor::redo()
@@ -70,7 +70,7 @@ SetCellColor::SetCellColor(Cell *cell, QColor newCl, QUndoCommand *parent)
     c = cell;
     oldColor = c->color();
     newColor = newCl;
-    setText(QObject::tr("change color"));
+    setText(QObject::tr("change stitch color"));
 }
 
 void SetCellColor::redo()
@@ -98,7 +98,7 @@ SetItemRotation::SetItemRotation(QGraphicsItem *item, qreal oldAngl, QPointF piv
     oldAngle = oldAngl;
     newAngle = item->rotation();
     pvtPt = pivotPt;
-    setText(QObject::tr("change angle"));
+    setText(QObject::tr("rotate item"));
 }
 
 void SetItemRotation::redo()
@@ -158,7 +158,7 @@ SetItemCoordinates::SetItemCoordinates(QGraphicsItem *item, QPointF oldPos, QUnd
     i = item;
     oldCoord = oldPos;
     newCoord = i->pos();
-    setText(QObject::tr("change position"));
+    setText(QObject::tr("change item position"));
 }
 
 void SetItemCoordinates::undo()
@@ -186,7 +186,7 @@ SetItemScale::SetItemScale(QGraphicsItem *item, QPointF oldScle, QUndoCommand *p
     i = item;
     newScale = QPointF(i->transform().m11(), i->transform().m22());
     oldScale = oldScle;
-    setText(QObject::tr("change scale"));
+    setText(QObject::tr("change item scale"));
 }
 
 void SetItemScale::undo()
@@ -217,7 +217,7 @@ AddItem::AddItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent)
 
     i = item;
     s = scene;
-    setText(QObject::tr("add stitch"));
+    setText(QObject::tr("add items"));
 
 }
 
@@ -295,7 +295,7 @@ UngroupItems::UngroupItems(Scene *scene, ItemGroup *group, QUndoCommand *parent)
     s = scene;
     g = group;
     items = group->childItems();
-    setText(QObject::tr("group items"));
+    setText(QObject::tr("ungroup items"));
 
 }
 
