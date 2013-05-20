@@ -308,28 +308,3 @@ void UngroupItems::undo()
 {
     g = s->group(items, g);
 }
-
-/*************************************************\
-| RemoveGroup                                     |
-\*************************************************/
-RemoveGroup::RemoveGroup(Scene *scene, ItemGroup *group, QUndoCommand *parent)
-    : QUndoCommand(parent)
-{
-    s = scene;
-    items = group->childItems();
-    g = group;
-    setText(QObject::tr("remove group"));
-}
-
-void RemoveGroup::redo()
-{
-    s->removeItem(g);
-}
-
-void RemoveGroup::undo()
-{
-    s->addItem(g);
-    foreach(QGraphicsItem *i, g->childItems()) {
-        i->setVisible(true);
-    }
-}

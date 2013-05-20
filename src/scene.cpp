@@ -269,6 +269,8 @@ void Scene::addItem(QGraphicsItem* item)
         }
         default:
             WARN("Unknown type: " + QString::number(item->type()));
+            //fall through
+
         case Guideline::Type:
         case QGraphicsEllipseItem::Type:
         case QGraphicsLineItem::Type: {
@@ -2125,19 +2127,14 @@ void Scene::deleteSelection()
     foreach(QGraphicsItem* item, items) {
 
         switch(item->type()) {
+            case ItemGroup::Type:
             case Cell::Type: {
-                Cell *c = qgraphicsitem_cast<Cell*>(item);
-                undoStack()->push(new RemoveItem(this, c));
+                undoStack()->push(new RemoveItem(this, item));
                 break;
             }
             case Indicator::Type: {
                 Indicator *i = qgraphicsitem_cast<Indicator*>(item);
                 undoStack()->push(new RemoveIndicator(this, i));
-                break;
-            }
-            case ItemGroup::Type: {
-                ItemGroup *group = qgraphicsitem_cast<ItemGroup*>(item);
-                undoStack()->push(new RemoveGroup(this, group));
                 break;
             }
             default:
