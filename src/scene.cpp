@@ -104,14 +104,6 @@ QDebug operator<<(QDebug d, IndicatorProperties & properties)
     return d;
 }
 
-static void qNormalizeAngle(qreal &angle)
-{
-    while (angle < 0.0)
-        angle += 360.0;
-    while (angle > 360.0)
-        angle -= 360.0;
-}
-
 Scene::Scene(QObject* parent) :
     QGraphicsScene(parent),
     mCurItem(0),
@@ -2031,19 +2023,6 @@ void Scene::rotate(qreal degrees)
         return;
 
     undoStack()->push(new SetSelectionRotation(this, selectedItems(), degrees));
-}
-
-void Scene::rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint)
-{
-
-    qreal newAngle = degrees;
-    qNormalizeAngle(newAngle);
-
-    QGraphicsItemGroup* g = createItemGroup(items);
-    g->setTransformOriginPoint(pivotPoint);
-    g->setRotation(newAngle);
-    destroyItemGroup(g);
-
 }
 
 void Scene::copy()

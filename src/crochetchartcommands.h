@@ -92,24 +92,37 @@ private:
 
 };
 
+/**
+ * No matter what the angle is convert it to a number between 0, and 360 degrees.
+ */
+static void qNormalizeAngle(qreal &angle)
+{
+    while (angle < 0.0)
+        angle += 360.0;
+    while (angle > 360.0)
+        angle -= 360.0;
+}
+
 class SetSelectionRotation : public QUndoCommand
 {
 public:
     enum { Id = 1125 };
 
-    SetSelectionRotation(Scene *s, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand *parent = 0);
+    SetSelectionRotation(Scene *scene, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand *parent = 0);
 
     void undo();
     void redo();
 
     int id() const { return Id; }
 
+    static void rotate(Scene *scene, qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint);
+
 private:
     QList<QGraphicsItem*> items;
     qreal newAngle;
 
     QPointF pivotPoint;
-    Scene *scene;
+    Scene *s;
 };
 
 class SetItemCoordinates : public QUndoCommand

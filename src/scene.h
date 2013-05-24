@@ -320,8 +320,6 @@ public:
 
     QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
 
-    void rotateSelection(qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint);
-
     /**
      * This function overrides the itemsBoundingRect().
      */

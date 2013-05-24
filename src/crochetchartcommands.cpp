@@ -120,11 +120,11 @@ void SetItemRotation::setRotation(QGraphicsItem *item, qreal angle, QPointF pivo
 /*************************************************\
  | SetSelectionRotation                           |
 \*************************************************/
-SetSelectionRotation::SetSelectionRotation(Scene* s, QList<QGraphicsItem*> itms, qreal degrees,
+SetSelectionRotation::SetSelectionRotation(Scene* scene, QList<QGraphicsItem*> itms, qreal degrees,
                                            QUndoCommand* parent)
     : QUndoCommand(parent)
 {
-    scene = s;
+    s = scene;
     items.append(itms);
     newAngle = degrees;
 
@@ -140,13 +140,26 @@ SetSelectionRotation::SetSelectionRotation(Scene* s, QList<QGraphicsItem*> itms,
 
 void SetSelectionRotation::redo()
 {
-    scene->rotateSelection(newAngle, items, pivotPoint);
+    rotate(s, newAngle, items, pivotPoint);
 
 }
 
 void SetSelectionRotation::undo()
 {
-    scene->rotateSelection(-newAngle, items, pivotPoint);
+    rotate(s, -newAngle, items, pivotPoint);
+}
+
+void SetSelectionRotation::rotate(Scene *scene, qreal degrees,
+                                  QList<QGraphicsItem*> items, QPointF pivotPoint)
+{
+
+    qreal newAngle = degrees;
+    qNormalizeAngle(newAngle);
+
+    QGraphicsItemGroup *g = scene->createItemGroup(items);
+    g->setTransformOriginPoint(pivotPoint);
+    g->setRotation(newAngle);
+    scene->destroyItemGroup(g);
 }
 
 /*************************************************\
