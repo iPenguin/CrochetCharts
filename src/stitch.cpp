@@ -46,19 +46,19 @@ void Stitch::setFile ( QString f )
     }
 }
 
-void Stitch::setupSvgFiles()
+bool Stitch::setupSvgFiles()
 {
     QFile file(mFile);
     if(!file.open(QIODevice::ReadOnly)) {
         WARN("cannot open file for svg setup");
-        return;
+        return false;
     }
 
     QByteArray data = file.readAll();
     QByteArray priData, secData;
-    
+
     QString black = "#000000";
-    
+
     QString pri = Settings::inst()->value("stitchPrimaryColor").toString();
     QString sec = Settings::inst()->value("stitchAlternateColor").toString();
 
@@ -68,15 +68,21 @@ void Stitch::setupSvgFiles()
     if(pri != black)
         priData = priData.replace(QByteArray(black.toLatin1()), QByteArray(pri.toLatin1()));
     QSvgRenderer *svgR = new QSvgRenderer();
-    svgR->load(priData);
+    if(!svgR->load(priData))
+        return false;
+
     mRenderers.insert(pri, svgR);
 
     if(sec != black)
         secData = data.replace(QByteArray(black.toLatin1()), QByteArray(sec.toLatin1()));
 
     svgR = new QSvgRenderer();
-    svgR->load(secData);
+    if(!svgR->load(secData))
+        return false;
+
     mRenderers.insert(sec, svgR);
+
+    return true;
 }
 
 void Stitch::addStitchColor(QString color)

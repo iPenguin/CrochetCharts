@@ -503,7 +503,7 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
         if(i->type() != Cell::Type)
             continue;
         Cell* c = qgraphicsitem_cast<Cell*>(i);
-        
+
         QPointF oldScale = c->scale();
         QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
         QPointF newScale = oldScale + delta;
@@ -599,7 +599,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
         default:
             break;
     }
-    
+
     if(e->buttons() != Qt::LeftButton)
         return;
 
@@ -625,7 +625,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent* e)
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent* e)
 {
-    
+
     switch(mMode) {
         case Scene::StitchEdit:
             stitchModeMouseMove(e);
@@ -735,7 +735,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent* e)
     }
 
     mLeftButtonDownPos = QPointF(0,0);
-    
+
     delete mRubberBand;
     mRubberBand = 0;
 

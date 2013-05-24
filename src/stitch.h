@@ -46,7 +46,7 @@ public:
      *used to track individual stitches as they are moved to the overlay.
      */
     bool isBuiltIn;
-    
+
 protected:
     void setName(QString n) { mName = n; }
     void setFile(QString f);
@@ -55,10 +55,10 @@ protected:
     void setWrongSide(QString ws) { mWrongSide = ws; }
 
     void addStitchColor(QString color);
-    
+
 private:
-    void setupSvgFiles();
-    
+    bool setupSvgFiles();
+
     QString mName;
     QString mFile;
     QString mDescription;
