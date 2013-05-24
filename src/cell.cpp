@@ -71,6 +71,7 @@ void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
             painter->setPen(Qt::SolidLine);
         }
     }
+
 }
 
 bool Cell::isGrouped()
@@ -136,11 +137,15 @@ void Cell::setColor(QColor c)
         if(mColor.isValid())
             old = mColor.name();
         mColor = c;
-        setSharedRenderer(stitch()->renderSvg(c));
+
+        QSvgRenderer *r = stitch()->renderSvg(c);
+        if(r)
+            setSharedRenderer(r);
 
         emit colorChanged(old, c.name());
         update();
     }
+
 }
 
 void Cell::setStitch(QString s, bool useAltRenderer)
