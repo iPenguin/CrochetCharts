@@ -52,6 +52,11 @@ private slots:
     void indicatorUpdate();
 
 private:
+    /**
+     * showUi - show the user interface based on the selection.
+     * Options are show based on their prefix.
+     * gen_ = general, st_ = stitch, ind_ = indicator.
+     */
     void showUi(UiSelection selection);
     void clearUi();
 
