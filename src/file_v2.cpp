@@ -6,7 +6,6 @@
 
 #include <QFileInfo>
 #include <QDir>
-#include <QFile>
 
 #include "stitchlibrary.h"
 #include "mainwindow.h"

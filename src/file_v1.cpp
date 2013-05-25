@@ -6,7 +6,12 @@
 
 #include <QFileInfo>
 #include <QDir>
-#include <QFile>
+
+#include <QDataStream>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
+
+#include <QStringList>
 
 #include "stitchlibrary.h"
 #include "mainwindow.h"
@@ -107,6 +112,7 @@ FileFactory::FileError File_v1::save(QDataStream *stream)
 
     //put xml into binary file.
     *stream << data->toUtf8();
+
     delete data;
     data = 0;
 
