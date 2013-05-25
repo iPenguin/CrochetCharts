@@ -64,6 +64,7 @@ private:
     QString mDescription;
     QString mCategory;
     QString mWrongSide;
+    bool mIsSvg;
 
     QMap<QString, QSvgRenderer*> mRenderers;
 

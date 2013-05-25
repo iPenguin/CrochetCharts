@@ -16,6 +16,7 @@
 Stitch::Stitch(QObject *parent) :
     QObject(parent),
     isBuiltIn(false),
+    mIsSvg(false),
     mPixmap(0)
 {
 }
@@ -36,10 +37,9 @@ void Stitch::setFile ( QString f )
 
         delete mPixmap;
         mPixmap = 0;
-        
-        if(isSvg())
-            setupSvgFiles();
-        
+
+        setupSvgFiles();
+
         if(!isSvg()) {
             mPixmap = new QPixmap(mFile);
         }
@@ -65,11 +65,15 @@ bool Stitch::setupSvgFiles()
     priData = data;
     secData = data;
 
+    //Don't parse the color if we're using black
     if(pri != black)
         priData = priData.replace(QByteArray(black.toLatin1()), QByteArray(pri.toLatin1()));
+
     QSvgRenderer *svgR = new QSvgRenderer();
-    if(!svgR->load(priData))
+    if(!svgR->load(priData)) {
+        mIsSvg = false;
         return false;
+    }
 
     mRenderers.insert(pri, svgR);
 
@@ -77,11 +81,14 @@ bool Stitch::setupSvgFiles()
         secData = data.replace(QByteArray(black.toLatin1()), QByteArray(sec.toLatin1()));
 
     svgR = new QSvgRenderer();
-    if(!svgR->load(secData))
+    if(!svgR->load(secData)) {
+        mIsSvg = false;
         return false;
+    }
 
     mRenderers.insert(sec, svgR);
 
+    mIsSvg = true;
     return true;
 }
 
@@ -102,8 +109,10 @@ void Stitch::addStitchColor(QString color)
 
     QString black = "#000000";
 
+    //Don't parse the color if we're using black
     if(color != black)
         data = data.replace(QByteArray(black.toLatin1()), QByteArray(color.toLatin1()));
+
     QSvgRenderer *svgR = new QSvgRenderer();
     svgR->load(data);
     mRenderers.insert(color, svgR);
@@ -112,12 +121,7 @@ void Stitch::addStitchColor(QString color)
 bool Stitch::isSvg()
 {
 
-    QString fileName = mFile.toLower();
-
-    if(fileName.endsWith(".svg") || fileName.endsWith(".svgz"))
-        return true;
-    else
-        return false;
+    return mIsSvg;
 }
 
 QPixmap* Stitch::renderPixmap()
