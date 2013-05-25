@@ -22,7 +22,7 @@ public:
 
     void showPopup()
     {
-        view()->setFixedWidth(200);
+        view()->setMinimumWidth(200);
         QComboBox::showPopup();
     }
 };
