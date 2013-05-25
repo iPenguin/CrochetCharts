@@ -18,7 +18,7 @@ class SettingsUi : public QDialog
 {
     Q_OBJECT
 public:
-    SettingsUi(QWidget* parent);
+    SettingsUi(QWidget *parent);
     ~SettingsUi();
 
     int exec();
@@ -37,20 +37,20 @@ private:
     void setupDialogWidgets();
     void resetDialogWidgets();
     void saveDialogWidgets();
-    
-    void load(QObject* w);
-    void loadDefualt(QObject* w);
-    void save(QObject* w);
 
-    bool isSettingsWidget(QObject* obj);
-    
-    Ui::SettingsDialog* ui;
+    void load(QObject *w);
+    void loadDefualt(QObject *w);
+    void save(QObject *w);
+
+    bool isSettingsWidget(QObject *obj);
+
+    Ui::SettingsDialog *ui;
 
     QColor mPrimaryColor;
     QColor mAlternateColor;
     QColor mDotColor;
     QColor mKeywordColor;
-    
+
 };
 
 #endif //SETTINGSUI_H

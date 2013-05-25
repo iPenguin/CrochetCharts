@@ -496,7 +496,7 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
         if(i->type() != Cell::Type)
             continue;
         Cell* c = qgraphicsitem_cast<Cell*>(i);
-        
+
         QPointF oldScale = c->scale();
         QPointF newScale = oldScale + delta;
         c->setScale(newScale.x(), newScale.y());
@@ -589,7 +589,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
         default:
             break;
     }
-    
+
     if(e->buttons() != Qt::LeftButton)
         return;
 
@@ -725,7 +725,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     }
 
     mLeftButtonDownPos = QPointF(0,0);
-    
+
     delete mRubberBand;
     mRubberBand = 0;
 

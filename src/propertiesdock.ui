@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>248</width>
-    <height>735</height>
+    <height>588</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,16 @@
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout_2">
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item row="0" column="0">
@@ -196,17 +205,14 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QGroupBox" name="indicatorGroup">
+    <item row="1" column="0">
+     <widget class="QGroupBox" name="itemGroup">
       <property name="title">
        <string/>
       </property>
-      <layout class="QGridLayout" name="gridLayout_4">
-       <property name="margin">
-        <number>2</number>
-       </property>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="indicatorStyle">
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="6" column="1">
+        <widget class="QComboBox" name="ind_indicatorStyle">
          <item>
           <property name="text">
            <string>Dots and Text</string>
@@ -224,61 +230,21 @@
          </item>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Style:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="st_scaleX"/>
        </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="IndicatorEditText">
-         <property name="text">
-          <string>Edit Text</string>
-         </property>
-        </widget>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="st_scaleY"/>
        </item>
-       <item row="3" column="0" colspan="2">
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QLabel" name="indicatorTextEdit">
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QGroupBox" name="stitchGroup">
-      <property name="title">
-       <string/>
-      </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="6" column="1">
-        <widget class="QPushButton" name="deleteItems">
+       <item row="9" column="1">
+        <widget class="QPushButton" name="gen_deleteItems">
          <property name="text">
           <string>Delete Selection</string>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="st_yScaleLbl">
          <property name="text">
           <string>Y Scale:</string>
          </property>
@@ -286,12 +252,12 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>scaleY</cstring>
+          <cstring>st_scaleY</cstring>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QComboBox" name="stitch">
+        <widget class="QComboBox" name="st_stitch">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -306,7 +272,7 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="0" colspan="2">
+       <item row="11" column="0" colspan="2">
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -320,14 +286,14 @@
         </spacer>
        </item>
        <item row="5" column="1">
-        <widget class="QPushButton" name="setBgColorBttn">
+        <widget class="QPushButton" name="st_setBgColorBttn">
          <property name="text">
           <string>Bg Color</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="st_angleLbl">
          <property name="text">
           <string>Angle:</string>
          </property>
@@ -335,12 +301,15 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>angle</cstring>
+          <cstring>st_angle</cstring>
          </property>
         </widget>
        </item>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="st_angle"/>
+       </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="st_stitchLbl">
          <property name="text">
           <string>Stitch:</string>
          </property>
@@ -348,28 +317,19 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>stitch</cstring>
+          <cstring>st_stitch</cstring>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="angle"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="scaleY"/>
-       </item>
        <item row="4" column="1">
-        <widget class="QPushButton" name="stColorBttn">
+        <widget class="QPushButton" name="st_stColorBttn">
          <property name="text">
           <string>St Color</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="scaleX"/>
-       </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="st_xScaleLbl">
          <property name="text">
           <string>X Scale:</string>
          </property>
@@ -377,7 +337,34 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>scaleX</cstring>
+          <cstring>st_scaleX</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QPushButton" name="ind_IndicatorEditText">
+         <property name="text">
+          <string>Edit Text</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="ind_styleLbl">
+         <property name="text">
+          <string>Style:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>ind_indicatorStyle</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0" colspan="2">
+        <widget class="QLabel" name="ind_indicatorTextEdit">
+         <property name="text">
+          <string>TextLabel</string>
          </property>
         </widget>
        </item>
@@ -394,13 +381,13 @@
   <tabstop>columns</tabstop>
   <tabstop>cellWidth</tabstop>
   <tabstop>cellHeight</tabstop>
-  <tabstop>stitch</tabstop>
-  <tabstop>angle</tabstop>
-  <tabstop>scaleX</tabstop>
-  <tabstop>scaleY</tabstop>
-  <tabstop>stColorBttn</tabstop>
-  <tabstop>setBgColorBttn</tabstop>
-  <tabstop>deleteItems</tabstop>
+  <tabstop>st_stitch</tabstop>
+  <tabstop>st_angle</tabstop>
+  <tabstop>st_scaleX</tabstop>
+  <tabstop>st_scaleY</tabstop>
+  <tabstop>st_stColorBttn</tabstop>
+  <tabstop>st_setBgColorBttn</tabstop>
+  <tabstop>gen_deleteItems</tabstop>
  </tabstops>
  <resources/>
  <connections/>

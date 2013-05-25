@@ -24,21 +24,21 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     ui->cellHeight->setValue(Settings::inst()->value("cellHeight").toInt());
     ui->cellWidth->setValue(Settings::inst()->value("cellWidth").toInt());
 
-    int styleIdx = ui->indicatorStyle->findText(Settings::inst()->value("chartRowIndicator").toString());
-    ui->indicatorStyle->setCurrentIndex(styleIdx);
+    int styleIdx = ui->ind_indicatorStyle->findText(Settings::inst()->value("chartRowIndicator").toString());
+    ui->ind_indicatorStyle->setCurrentIndex(styleIdx);
     clearUi();
     connect(mTabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
 
-    connect(ui->angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
-    connect(ui->scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
-    connect(ui->scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
+    connect(ui->st_angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
+    connect(ui->st_scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
+    connect(ui->st_scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
 
     connect(ui->showChartCenter, SIGNAL(toggled(bool)), SLOT(chartUpdateChartCenter(bool)));
     connect(ui->guidelinesType, SIGNAL(currentIndexChanged(QString)), SLOT(chartUpdateGuidelines()));
 
-    connect(ui->stitch, SIGNAL(currentIndexChanged(QString)), SLOT(cellUpdateStitch(QString)));
+    connect(ui->st_stitch, SIGNAL(currentIndexChanged(QString)), SLOT(cellUpdateStitch(QString)));
 
-    connect(ui->deleteItems, SIGNAL(clicked()), SLOT(cellDeleteItems()));
+    connect(ui->gen_deleteItems, SIGNAL(clicked()), SLOT(cellDeleteItems()));
 
     connect(ui->guidelinesType, SIGNAL(currentIndexChanged(int)), SLOT(updateGuidelinesUi()));
     updateGuidelinesUi();
@@ -48,7 +48,7 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     connect(ui->columns, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
     connect(ui->cellHeight, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
 
-    connect(ui->indicatorStyle, SIGNAL(currentIndexChanged(int)), SLOT(indicatorUpdate()));
+    connect(ui->ind_indicatorStyle, SIGNAL(currentIndexChanged(int)), SLOT(indicatorUpdate()));
 }
 
 PropertiesDock::~PropertiesDock()
@@ -99,18 +99,17 @@ void PropertiesDock::tabChanged(int tabNumber)
 void PropertiesDock::clearUi()
 {
     ui->chartGroup->hide();
-    ui->stitchGroup->hide();
-    ui->indicatorGroup->hide();
+    ui->itemGroup->hide();
 }
 
 void PropertiesDock::setupStitchCombo()
 {
 
-    ui->stitch->blockSignals(true);
+    ui->st_stitch->blockSignals(true);
     //populate the combo box.
     foreach(QString stitch, StitchLibrary::inst()->stitchList()) {
         Stitch *s = StitchLibrary::inst()->findStitch(stitch);
-        ui->stitch->addItem(QIcon(s->file()), stitch);
+        ui->st_stitch->addItem(QIcon(s->file()), stitch);
     }
 
     //Smart selection of stitch for combobox.
@@ -131,9 +130,9 @@ void PropertiesDock::setupStitchCombo()
         prev = c;
     }
 
-    ui->stitch->setCurrentIndex(ui->stitch->findText(st));
+    ui->st_stitch->setCurrentIndex(ui->st_stitch->findText(st));
 
-    ui->stitch->blockSignals(false);
+    ui->st_stitch->blockSignals(false);
 
 }
 
@@ -208,6 +207,20 @@ void PropertiesDock::updateDialogUi()
 void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
 {
 
+    //Choose the options to show based on the selection.
+    foreach(QObject *obj, ui->itemGroup->children()) {
+        if(obj->objectName().startsWith("gen_")) {
+            QWidget *w = qobject_cast<QWidget*>(obj);
+            w->setVisible(true);
+        } else if (obj->objectName().startsWith("st_")) {
+            QWidget *w = qobject_cast< QWidget* >(obj);
+            w->setVisible(selection == PropertiesDock::CellUi ? true : false);
+        } else if(obj->objectName().startsWith("ind_")) {
+            QWidget *w = qobject_cast< QWidget* >(obj);
+            w->setVisible(selection == PropertiesDock::IndicatorUi ? true : false);
+        }
+    }
+
     if(selection == PropertiesDock::SceneUi) {
         ui->chartGroup->show();
 
@@ -224,33 +237,35 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
     } else if(selection == PropertiesDock::CellUi) {
 
         Cell *c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
-        ui->stitchGroup->show();
+        ui->itemGroup->show();
 
-        ui->angle->blockSignals(true);
-        ui->angle->setValue(c->rotation());
-        ui->angle->blockSignals(false);
+        ui->st_angle->blockSignals(true);
+        ui->st_angle->setValue(c->rotation());
+        ui->st_angle->blockSignals(false);
 
-        ui->scaleX->blockSignals(true);
-        ui->scaleX->setValue(c->scale().x());
-        ui->scaleX->blockSignals(false);
+        ui->st_scaleX->blockSignals(true);
+        ui->st_scaleX->setValue(c->scale().x());
+        ui->st_scaleX->blockSignals(false);
 
-        ui->scaleY->blockSignals(true);
-        ui->scaleY->setValue(c->scale().y());
-        ui->scaleY->blockSignals(false);
+        ui->st_scaleY->blockSignals(true);
+        ui->st_scaleY->setValue(c->scale().y());
+        ui->st_scaleY->blockSignals(false);
 
         setupStitchCombo();
 
     } else if(selection == PropertiesDock::MixedUi) {
 
+        ui->itemGroup->show();
+
         //TODO: loop through all the items, check all the
 
-
     } else if(selection == PropertiesDock::IndicatorUi) {
-        ui->indicatorGroup->show();
+        ui->itemGroup->show();
+
         Indicator *i = qgraphicsitem_cast<Indicator*>(mScene->selectedItems().first());
 
-        ui->indicatorTextEdit->setText(i->text());
-        ui->indicatorStyle->setCurrentIndex(ui->indicatorStyle->findText(i->style()));
+        ui->ind_indicatorTextEdit->setText(i->text());
+        ui->ind_indicatorStyle->setCurrentIndex(ui->ind_indicatorStyle->findText(i->style()));
 
     } else if (selection == PropertiesDock::CenterUi) {
         WARN("TODO: make center ui work");
@@ -287,8 +302,8 @@ void PropertiesDock::updateGuidelinesUi()
 
 void PropertiesDock::indicatorUpdate()
 {
-    QString html = ui->indicatorTextEdit->text();
-    QString style = ui->indicatorStyle->currentText();
+    QString html = ui->ind_indicatorTextEdit->text();
+    QString style = ui->ind_indicatorStyle->currentText();
 
     IndicatorProperties ip;
     ip.setHtml(html);

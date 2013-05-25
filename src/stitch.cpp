@@ -16,6 +16,7 @@
 Stitch::Stitch(QObject *parent) :
     QObject(parent),
     isBuiltIn(false),
+    mIsSvg(false),
     mPixmap(0)
 {
 }
@@ -36,47 +37,59 @@ void Stitch::setFile ( QString f )
 
         delete mPixmap;
         mPixmap = 0;
-        
-        if(isSvg())
-            setupSvgFiles();
-        
+
+        setupSvgFiles();
+
         if(!isSvg()) {
             mPixmap = new QPixmap(mFile);
         }
     }
 }
 
-void Stitch::setupSvgFiles()
+bool Stitch::setupSvgFiles()
 {
     QFile file(mFile);
     if(!file.open(QIODevice::ReadOnly)) {
         WARN("cannot open file for svg setup");
-        return;
+        return false;
     }
 
     QByteArray data = file.readAll();
     QByteArray priData, secData;
-    
+
     QString black = "#000000";
-    
+
     QString pri = Settings::inst()->value("stitchPrimaryColor").toString();
     QString sec = Settings::inst()->value("stitchAlternateColor").toString();
 
     priData = data;
     secData = data;
 
+    //Don't parse the color if we're using black
     if(pri != black)
         priData = priData.replace(QByteArray(black.toLatin1()), QByteArray(pri.toLatin1()));
+
     QSvgRenderer *svgR = new QSvgRenderer();
-    svgR->load(priData);
+    if(!svgR->load(priData)) {
+        mIsSvg = false;
+        return false;
+    }
+
     mRenderers.insert(pri, svgR);
 
     if(sec != black)
         secData = data.replace(QByteArray(black.toLatin1()), QByteArray(sec.toLatin1()));
 
     svgR = new QSvgRenderer();
-    svgR->load(secData);
+    if(!svgR->load(secData)) {
+        mIsSvg = false;
+        return false;
+    }
+
     mRenderers.insert(sec, svgR);
+
+    mIsSvg = true;
+    return true;
 }
 
 void Stitch::addStitchColor(QString color)
@@ -96,8 +109,10 @@ void Stitch::addStitchColor(QString color)
 
     QString black = "#000000";
 
+    //Don't parse the color if we're using black
     if(color != black)
         data = data.replace(QByteArray(black.toLatin1()), QByteArray(color.toLatin1()));
+
     QSvgRenderer *svgR = new QSvgRenderer();
     svgR->load(data);
     mRenderers.insert(color, svgR);
@@ -106,12 +121,7 @@ void Stitch::addStitchColor(QString color)
 bool Stitch::isSvg()
 {
 
-    QString fileName = mFile.toLower();
-
-    if(fileName.endsWith(".svg") || fileName.endsWith(".svgz"))
-        return true;
-    else
-        return false;
+    return mIsSvg;
 }
 
 QPixmap* Stitch::renderPixmap()
