@@ -7,6 +7,7 @@
 
 #include <QStyledItemDelegate>
 #include <QSignalMapper>
+#include <qcoreevent.h>
 
 #include <QComboBox>
 #include <QAbstractItemView>
@@ -24,6 +25,18 @@ public:
     {
         view()->setMinimumWidth(200);
         QComboBox::showPopup();
+    }
+
+    bool event(QEvent *event)
+    {
+        //Eat wheel Events if the list isn't showing.
+        if(event->type() == QEvent::Wheel) {
+            if(!view()->isVisible()) {
+                return false;
+            }
+        }
+
+        return QComboBox::event(event);
     }
 };
 
