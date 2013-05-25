@@ -29,9 +29,9 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     clearUi();
     connect(mTabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
 
-    connect(ui->gen_angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
-    connect(ui->gen_scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
-    connect(ui->gen_scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
+    connect(ui->st_angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
+    connect(ui->st_scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
+    connect(ui->st_scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
 
     connect(ui->showChartCenter, SIGNAL(toggled(bool)), SLOT(chartUpdateChartCenter(bool)));
     connect(ui->guidelinesType, SIGNAL(currentIndexChanged(QString)), SLOT(chartUpdateGuidelines()));
@@ -239,17 +239,17 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
         Cell *c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
         ui->itemGroup->show();
 
-        ui->gen_angle->blockSignals(true);
-        ui->gen_angle->setValue(c->rotation());
-        ui->gen_angle->blockSignals(false);
+        ui->st_angle->blockSignals(true);
+        ui->st_angle->setValue(c->rotation());
+        ui->st_angle->blockSignals(false);
 
-        ui->gen_scaleX->blockSignals(true);
-        ui->gen_scaleX->setValue(c->scale().x());
-        ui->gen_scaleX->blockSignals(false);
+        ui->st_scaleX->blockSignals(true);
+        ui->st_scaleX->setValue(c->scale().x());
+        ui->st_scaleX->blockSignals(false);
 
-        ui->gen_scaleY->blockSignals(true);
-        ui->gen_scaleY->setValue(c->scale().y());
-        ui->gen_scaleY->blockSignals(false);
+        ui->st_scaleY->blockSignals(true);
+        ui->st_scaleY->setValue(c->scale().y());
+        ui->st_scaleY->blockSignals(false);
 
         setupStitchCombo();
 
