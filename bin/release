@@ -29,7 +29,7 @@ function display_vairiables {
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
-CMAKE_FLAGS="-DDOCS=OFF -DCMAKE_BUILD_TYPE=Release"
+CMAKE_FLAGS="-DDOCS=ON -DCMAKE_BUILD_TYPE=Release"
 CPACK_FLAGS=""
 
 CMAKE=`which cmake`

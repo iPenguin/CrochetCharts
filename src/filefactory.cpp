@@ -17,6 +17,8 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
+#include <QTemporaryFile>
+
 #include "crochettab.h"
 
 #include "scene.h"
@@ -96,14 +98,14 @@ FileFactory::FileError FileFactory::save(FileVersion version)
     if(mTabWidget->count() <= 0)
         return FileFactory::Err_NoTabsToSave;
 
-    QFile file(fileName + ".tmp");
-    if(!file.open(QIODevice::WriteOnly)) {
+    QTemporaryFile f;
+    if(!f.open()) {
         //TODO: some nice dialog to warn the user.
-        qWarning() << "Couldn't open file for writing..." << fileName;
+        qWarning() << "Couldn't open file for writing..." << f.fileName();
         return FileFactory::Err_OpeningFile;
     }
 
-    QDataStream out(&file);
+    QDataStream out(&f);
     // Write a header with a "magic number" and a version
     out << AppInfo::inst()->magicNumber;
 
@@ -122,7 +124,7 @@ FileFactory::FileError FileFactory::save(FileVersion version)
 
     int error = saveFile->save(&out);
 
-    file.close();
+    f.close();
 
     if(error != FileFactory::No_Error)
         return (FileFactory::FileError)error;
@@ -134,7 +136,7 @@ FileFactory::FileError FileFactory::save(FileVersion version)
             return FileFactory::Err_RemovingOrigFile;
     }
 
-    if(!d.rename(fileName +".tmp", fileName))
+    if(!d.rename(f.fileName(), fileName))
         return FileFactory::Err_RenamingTempFile;
 
     return FileFactory::No_Error;
