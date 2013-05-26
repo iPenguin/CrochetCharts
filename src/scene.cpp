@@ -1236,6 +1236,19 @@ void Scene::updateStitchRenderer()
 
 }
 
+void Scene::render(QPainter *painter, const QRectF &target, const QRectF &source,
+                   Qt::AspectRatioMode aspectRatioMode)
+{
+    QFont originalFont = painter->font();
+    originalFont.setPixelSize(10);
+    originalFont.setBold(false);
+    originalFont.setItalic(false);
+    originalFont.setUnderline(false);
+    painter->setFont(originalFont);
+
+    QGraphicsScene::render(painter, target, source, aspectRatioMode);
+}
+
 void Scene::drawRowLines(int row)
 {
     if(grid.count() <= row)
@@ -2362,8 +2375,15 @@ QRectF Scene::itemsBoundingRect()
     }
 
     QRectF rect = selectedItemsBoundingRect(itemList);
+
+    rect.setTop(rect.top() - 10);
+    rect.setBottom(rect.bottom() + 10);
+
+    rect.setLeft(rect.left() - 10);
+    rect.setRight(rect.right() + 10);
+
     return rect;
-    
+
 }
 
 void Scene::updateSceneRect()

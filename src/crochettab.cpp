@@ -111,22 +111,11 @@ void CrochetTab::setEditMode(int mode)
 
 void CrochetTab::renderChart(QPainter* painter, QRectF rect)
 {
-    QRectF sceneRect = mScene->sceneRect();
 
-    mScene->setSceneRect(mScene->itemsBoundingRect());
-    if(!rect.isValid())
-        mScene->render(painter);
-    else
-        mScene->render(painter, rect, mScene->sceneRect());
+    QRectF r = mScene->itemsBoundingRect();
+    mScene->render(painter, rect, r);
 
-    mScene->setSceneRect(sceneRect);
-
-    QPointF centerOn;
-    if(mScene->hasChartCenter())
-        centerOn = mScene->chartCenter()->boundingRect().center();
-    else
-        centerOn = mScene->sceneRect().center();
-    mView->centerOn(centerOn);
+    mView->centerOn(r.center());
 }
 
 void CrochetTab::stitchChanged(QString oldSt, QString newSt)

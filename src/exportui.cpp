@@ -230,6 +230,15 @@ void ExportUi::generateSelectionList(bool showAll)
         if(!tab)
             return;
         ui->view->setScene(tab->scene());
+        QRectF r = ui->view->scene()->itemsBoundingRect();
+
+        ui->width->blockSignals(true);
+        ui->width->setValue(r.width());
+        ui->width->blockSignals(false);
+
+        ui->height->blockSignals(true);
+        ui->height->setValue(r.height());
+        ui->height->blockSignals(false);
     }
 }
 
@@ -359,7 +368,7 @@ void ExportUi::setSelection(QString selection)
 void ExportUi::exportLegendPdf()
 {
     QPainter* p = new QPainter();
-    
+
     QPrinter* printer = new QPrinter(QPrinter::HighResolution);
     printer->setOutputFormat(QPrinter::PdfFormat);
     printer->setOutputFileName(fileName);
@@ -368,7 +377,7 @@ void ExportUi::exportLegendPdf()
     QSizeF size = scene->sceneRect().size();
     if(pageToChartSize)
         printer->setPaperSize(size, QPrinter::Point);
-    
+
     p->begin(printer);
     scene->render(p);
     p->end();
@@ -482,15 +491,15 @@ void ExportUi::exportImg()
 {
     int tabCount = mTabWidget->count();
     QPainter* p = new QPainter();
-    
+
     double dpm = resolution * (39.3700787);
     QImage img = QImage(QSize(width, height), QImage::Format_ARGB32);
     img.setDotsPerMeterX(dpm);
     img.setDotsPerMeterY(dpm);
-    
+
     p->begin(&img);
     p->fillRect(0, 0, width, height, QColor(Qt::white));
-    
+
     for(int i = 0; i < tabCount; ++i) {
         if(selection == mTabWidget->tabText(i)) {
             CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
@@ -498,7 +507,7 @@ void ExportUi::exportImg()
         }
     }
     p->end();
-    
+
     img.save(fileName);
 }
 
@@ -527,16 +536,16 @@ void ExportUi::updateChartSizeRatio(QString selection)
     }
 }
 
-qreal ExportUi::sceneRatio()
+qreal ExportUi::sceneRatio(QRectF rect)
 {
     qreal ratio = 1.0;
-    ratio = ui->view->sceneRect().height() / ui->view->sceneRect().width();
+    ratio = rect.height() / rect.width();
     return ratio;
 }
 
 void ExportUi::updateWidthFromHeight(int height)
 {
-    int width = ceil(height / sceneRatio());
+    int width = ceil(height / sceneRatio(ui->view->scene()->itemsBoundingRect()));
     ui->width->blockSignals(true);
     ui->width->setValue(width);
     ui->width->blockSignals(false);
@@ -544,7 +553,7 @@ void ExportUi::updateWidthFromHeight(int height)
 
 void ExportUi::updateHightFromWidth(int width)
 {
-    int height = ceil(width * sceneRatio());
+    int height = ceil(width * sceneRatio(ui->view->scene()->itemsBoundingRect()));
     ui->height->blockSignals(true);
     ui->height->setValue(height);
     ui->height->blockSignals(false);

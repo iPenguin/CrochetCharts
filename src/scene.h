@@ -324,7 +324,10 @@ public:
      * This function overrides the itemsBoundingRect().
      */
     QRectF itemsBoundingRect();
-    
+
+    void render(QPainter *painter, const QRectF &target = QRectF(), const QRectF &source = QRectF(),
+                Qt::AspectRatioMode aspectRatioMode = Qt::KeepAspectRatio);
+
 protected:
     void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
     void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
@@ -354,8 +357,6 @@ protected:
 
     void hideRowLines();
 
-    
-    
 private:
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
