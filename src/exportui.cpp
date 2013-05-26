@@ -238,15 +238,15 @@ void ExportUi::exportData()
     exportType = ui->fileType->currentText();
     selection = ui->chartSelection->currentText();
     resolution = ui->resolution->text().remove(" dpi").toInt();
-    width = ui->width->text().toInt();
-    height = ui->height->text().toInt();
+    width = ui->width->text().remove(" px").toInt();
+    height = ui->height->text().remove(" px").toInt();
     pageToChartSize = ui->pageToChartSize->isChecked();
-    
+
     if(Settings::inst()->isDemoVersion()) {
         Settings::inst()->trialVersionMessage(this);
         return;
     }
-    
+
     QString filter;
     if(exportType == "pdf")
         filter = tr("Portable Document Format (pdf)(*.pdf)");
@@ -264,13 +264,13 @@ void ExportUi::exportData()
         filter = tr("Bitmap (bmp)(*.bmp)");
     else
         filter = tr("");
-    
+
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
     fileName = QFileDialog::getSaveFileName(this, tr("Export Pattern As..."), fileLoc, filter);
-    
+
     if(fileName.isEmpty())
         return;
-    
+
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     //we don't want the dotted lines in the image.
@@ -286,7 +286,7 @@ void ExportUi::exportData()
             exportLegendSvg();
         else
             exportLegendImg();
-        
+
     } else { //charts
         if(exportType == "pdf")
             exportPdf();
@@ -295,7 +295,7 @@ void ExportUi::exportData()
         else
             exportImg();
     }
-    
+
     QApplication::restoreOverrideCursor();
 }
 
