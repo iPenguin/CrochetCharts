@@ -19,7 +19,7 @@ AppInfo::AppInfo() :
     liveLicensePageVals("?sws_sn=%1&sws_email=%2&sws_fname=%3&sws_lname=%4"),
 
     liveUpdatePage("http://stitchworkssoftware.com/custom/update.php"),
-    liveUpdatePageVals("?sws_software=%1&sws_version=%2&sws_os=%3&sws_sn=%4&sws_arch=%5"),
+    liveUpdatePageVals("?sws_software=%1&sws_version=%2&sws_os=%3&sws_sn=%4&sws_arch=%5&ver=2"),
 
     demoString(QObject::tr("Stitch Works Software - Demo Version  -  ")),
 
