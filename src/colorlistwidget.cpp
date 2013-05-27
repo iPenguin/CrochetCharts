@@ -67,3 +67,14 @@ QPixmap ColorListWidget::drawColorBox(QColor color, QSize size)
 
     return pix;
 }
+
+void ColorListWidget::dragEnterEvent(QDragEnterEvent *e)
+{
+    qDebug() << e->mimeData()->formats();
+    if(e->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
+        e->dropAction();
+        return;
+    }
+
+    QListWidget::dragEnterEvent(e);
+}

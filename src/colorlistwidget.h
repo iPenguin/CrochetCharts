@@ -12,6 +12,8 @@ public:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *e);
 
+    void dragEnterEvent(QDragEnterEvent *e);
+
     static QPixmap drawColorBox(QColor color, QSize size);
 
 signals:
