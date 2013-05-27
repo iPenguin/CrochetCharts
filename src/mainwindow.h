@@ -131,7 +131,6 @@ private slots:
 
     void documentIsModified(bool isModified);
 
-    void selectColor();
     void selectStitch(QModelIndex index);
     void selectColor(QModelIndex index);
 
@@ -140,7 +139,9 @@ private slots:
     void openRecentFile();
     void loadFile(QString fileName);
     void saveFileAs(QString fileName);
-    
+
+    void addColor(QColor color);
+
 private:
     void loadFiles(QStringList fileNames);
     
@@ -159,16 +160,12 @@ private:
     bool safeToClose();
     bool promptToSave();
 
-    void updateFgColor();
-    void updateBgColor();
     void setEditMode(int mode);
 
     void setApplicationTitle();
-    
-    QPixmap drawColorBox(QColor color, QSize size);
-    
+
     CrochetTab* curCrochetTab();
-   
+
     Ui::MainWindow* ui;
 
     FileFactory* mFile;
@@ -195,6 +192,7 @@ private slots:
     void updateGuidelines(Guidelines guidelines);
     
 private:
+    //Save the color of the widget when we flash the New Doc Dialog.
     QColor mNewDocWidgetColor;
     
 private:

@@ -227,10 +227,15 @@ void MainWindow::setupStitchPalette()
     ui->allStitches->hideColumn(4);
     ui->allStitches->hideColumn(5);
 
-    connect(ui->allStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
-    connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
-    connect(ui->patternColors, SIGNAL(clicked(QModelIndex)), this, SLOT(selectColor(QModelIndex)));
-    connect(ui->stitchFilter, SIGNAL(textChanged(QString)), this, SLOT(filterStitchList(QString)));
+    connect(ui->allStitches, SIGNAL(clicked(QModelIndex)), SLOT(selectStitch(QModelIndex)));
+    connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), SLOT(selectStitch(QModelIndex)));
+
+    connect(ui->patternColors, SIGNAL(clicked(QModelIndex)), SLOT(selectColor(QModelIndex)));
+    connect(ui->fgColor, SIGNAL(colorChanged(QColor)), SLOT(addColor(QColor)));
+    connect(ui->bgColor, SIGNAL(colorChanged(QColor)), SLOT(addColor(QColor)));
+    connect(ui->patternColors, SIGNAL(bgColorSelected(QModelIndex)), SLOT(selectColor(QModelIndex)));
+
+    connect(ui->stitchFilter, SIGNAL(textChanged(QString)), SLOT(filterStitchList(QString)));
 }
 
 void MainWindow::setupDocks()
@@ -283,7 +288,7 @@ void MainWindow::setupMenus()
     connect(ui->actionExport, SIGNAL(triggered()), SLOT(fileExport()));
 
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(close()));
-  
+
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open", QIcon(":/images/fileopen.png")));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new", QIcon(":/images/filenew.png")));
     ui->actionSave->setIcon(QIcon::fromTheme("document-save", QIcon(":/images/filesave.png")));
@@ -296,13 +301,13 @@ void MainWindow::setupMenus()
     ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
 
     setupRecentFiles();
-    
+
     //Edit Menu
     connect(ui->menuEdit, SIGNAL(aboutToShow()), SLOT(menuEditAboutToShow()));
 
     mActionUndo = mUndoGroup.createUndoAction(this, tr("Undo"));
     mActionRedo = mUndoGroup.createRedoAction(this, tr("Redo"));
-    
+
     ui->menuEdit->insertAction(ui->actionCopy, mActionUndo);
     ui->menuEdit->insertAction(ui->actionCopy, mActionRedo);
     ui->menuEdit->insertSeparator(ui->actionCopy);
@@ -310,12 +315,12 @@ void MainWindow::setupMenus()
     ui->mainToolBar->insertAction(0, mActionUndo);
     ui->mainToolBar->insertAction(0, mActionRedo);
     ui->mainToolBar->insertSeparator(mActionUndo);
-    
+
     mActionUndo->setIcon(QIcon::fromTheme("edit-undo", QIcon(":/images/editundo.png")));
     mActionRedo->setIcon(QIcon::fromTheme("edit-redo", QIcon(":/images/editredo.png")));
     mActionUndo->setShortcut(QKeySequence::Undo);
     mActionRedo->setShortcut(QKeySequence::Redo);
-    
+
     ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/images/editcopy.png")));
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/editcut.png")));
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/editpaste.png")));
@@ -324,12 +329,9 @@ void MainWindow::setupMenus()
     connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
 
-    connect(ui->actionColorSelectorBg, SIGNAL(triggered()), SLOT(selectColor()));
-    connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
-    
-    ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
-    ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(mBgColor, QSize(32, 32))));
-    
+    ui->fgColor->setColor(QColor(Qt::black));
+    ui->bgColor->setColor(QColor(Qt::white));
+
     //View Menu
     connect(ui->menuView, SIGNAL(aboutToShow()), SLOT(menuViewAboutToShow()));
     connect(ui->actionShowStitches, SIGNAL(triggered()), SLOT(viewShowStitches()));
@@ -358,7 +360,6 @@ void MainWindow::setupMenus()
 
     mModeGroup = new QActionGroup(this);
     mModeGroup->addAction(ui->actionStitchMode);
-    mModeGroup->addAction(ui->actionColorMode);
     mModeGroup->addAction(ui->actionAngleMode);
     mModeGroup->addAction(ui->actionStretchMode);
     mModeGroup->addAction(ui->actionCreateRows);
@@ -555,57 +556,20 @@ void MainWindow::fileExport()
     d.exec();
 }
 
-QPixmap MainWindow::drawColorBox(QColor color, QSize size)
-{
-    QPixmap pix = QPixmap(size);
-    QPainter p;
-    p.begin(&pix);
-    p.fillRect(QRect(QPoint(0, 0), size), QColor(color));
-    p.drawRect(0, 0, size.width() - 1, size.height() - 1);
-    p.end();
-
-    return pix;
-}
-
-void MainWindow::selectColor()
-{
-    if(sender() == ui->actionColorSelectorBg) {
-        QColor color = QColorDialog::getColor(mBgColor, this, tr("Background Color"));
-        
-        if (color.isValid()) {
-            ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
-            mBgColor = color;
-            updateBgColor();
-        }
-    } else {
-        QColor color = QColorDialog::getColor(mFgColor, this, tr("Foreground Color"));
-        
-        if (color.isValid()) {
-            ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
-            mFgColor = color;
-            updateFgColor();
-        }
-    }
-}
-
-void MainWindow::updateBgColor()
+void MainWindow::addColor(QColor color)
 {
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
         CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-        if(tab)
-            tab->setEditBgColor(mBgColor);
-    }
-    setEditMode(11);
-}
+        if(!tab)
+            return;
 
-void MainWindow::updateFgColor()
-{
-    for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-        if(tab)
-            tab->setEditFgColor(mFgColor);
+        if(sender() == ui->fgColor) {
+            tab->setEditFgColor(color);
+        } else if (sender() == ui->bgColor) {
+            tab->setEditBgColor(color);
+        }
     }
-    setEditMode(11);
+
 }
 
 void MainWindow::selectStitch(QModelIndex index)
@@ -613,7 +577,7 @@ void MainWindow::selectStitch(QModelIndex index)
     QModelIndex idx;
     
     if(sender() == ui->allStitches) {
-        const QSortFilterProxyModel* model =  static_cast<const QSortFilterProxyModel*>(index.model());
+        const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
         idx = model->mapToSource(model->index(index.row(), 0));
         
     } else
@@ -625,10 +589,11 @@ void MainWindow::selectStitch(QModelIndex index)
         return;
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditStitch(stitch);
     }
+
     setEditMode(10);
 }
 
@@ -637,11 +602,12 @@ void MainWindow::selectColor(QModelIndex index)
     QString color = index.data(Qt::ToolTipRole).toString();
 
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-        if(tab)
-            tab->setEditBgColor(color);
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        if(tab) {
+            tab->setEditFgColor(color);
+            ui->fgColor->setColor(color);
+        }
     }
-    setEditMode(11);
 }
 
 void MainWindow::filterStitchList(QString newText)
@@ -1001,8 +967,6 @@ void MainWindow::menuFileAboutToShow()
     
     ui->actionExport->setEnabled(state);
 
-    //ui->actionColorSelectorFg->setEnabled(state);
-    ui->actionColorSelectorBg->setEnabled(state);
 }
 
 void MainWindow::menuEditAboutToShow()
@@ -1282,8 +1246,6 @@ void MainWindow::changeTabMode(QAction* a)
     
     if(a == ui->actionStitchMode)
         mode = 10;
-    else if(a == ui->actionColorMode)
-        mode = 11;
     else if(a == ui->actionCreateRows)
         mode = 12;
     else if(a == ui->actionAngleMode)
@@ -1302,8 +1264,6 @@ void MainWindow::setEditMode(int mode)
     
     if(mode == 10)
         ui->actionStitchMode->setChecked(true);
-    else if(mode == 11)
-        ui->actionColorMode->setChecked(true);
     else if(mode == 12)
         ui->actionCreateRows->setChecked(true);
     else if(mode == 14)
@@ -1526,11 +1486,12 @@ void MainWindow::updatePatternColors()
         QString color = sortedColors.value(sortedKey);
         QList<QListWidgetItem*> items = ui->patternColors->findItems(color, Qt::MatchExactly);
         if(items.count() == 0) {
-            QPixmap pix = drawColorBox(color, QSize(32, 32));
+            QPixmap pix = ColorListWidget::drawColorBox(color, QSize(32, 32));
             QIcon icon = QIcon(pix);
             
             QListWidgetItem* item = new QListWidgetItem(icon, prefix + QString::number(i), ui->patternColors);
             item->setToolTip(color);
+            item->setData(Qt::UserRole, QVariant(color));
             ui->patternColors->addItem(item);
             ++i;
         }

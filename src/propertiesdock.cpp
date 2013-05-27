@@ -6,6 +6,7 @@
 #include "crochettab.h"
 #include "stitchlibrary.h"
 #include "stitch.h"
+#include "colorlistwidget.h"
 
 PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     QDockWidget(parent),
@@ -60,7 +61,7 @@ void PropertiesDock::loadProperties(Guidelines guidelines)
 {
     mGuidelines = guidelines;
 
-    //QUESTION: is this the best way to prevent overwritting the properties when "loading" them.
+    //QUESTION: is this the best way to prevent overwriting the properties when "loading" them.
     ui->guidelinesType->blockSignals(true);
     ui->guidelinesType->setCurrentIndex(ui->guidelinesType->findText(mGuidelines.type()));
     ui->guidelinesType->blockSignals(false);
@@ -112,8 +113,8 @@ void PropertiesDock::setupStitchCombo()
         ui->st_stitch->addItem(QIcon(s->file()), stitch);
     }
 
-    //Smart selection of stitch for combobox.
-    //if the sittches aren't the same use "" else use the name of the stitch.
+    //Smart selection of stitch for combo box.
+    //if the stitches aren't the same use "" else use the name of the stitch.
     QString st = "";
     Cell *prev = 0;
     foreach(QGraphicsItem* i, mScene->selectedItems()) {
@@ -250,6 +251,9 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection)
         ui->st_scaleY->blockSignals(true);
         ui->st_scaleY->setValue(c->scale().y());
         ui->st_scaleY->blockSignals(false);
+
+        ui->st_stColorBttn->setIcon(ColorListWidget::drawColorBox(c->color(), QSize(32,32)));
+        ui->st_stBgColorBttn->setIcon(ColorListWidget::drawColorBox(c->bgColor(), QSize(32,32)));
 
         setupStitchCombo();
 

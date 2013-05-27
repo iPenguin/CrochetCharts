@@ -113,7 +113,7 @@ void Cell::setBgColor(QColor c)
         if (mBgColor.isValid())
             old = mBgColor.name();
         mBgColor = c;
-        emit bgColorChanged(old, c.name());
+        emit colorChanged(old, c.name());
         update();
     }
 }
