@@ -1122,6 +1122,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
 
     connect(tab, SIGNAL(chartStitchChanged()), SLOT(updatePatternStitches()));
     connect(tab, SIGNAL(chartColorChanged()), SLOT(updatePatternColors()));
+    connect(tab, SIGNAL(chartColorChanged()), mPropertiesDock, SLOT(propertyUpdated()));
     connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
     connect(tab, SIGNAL(guidelinesUpdated(Guidelines)), SLOT(updateGuidelines(Guidelines)));
 

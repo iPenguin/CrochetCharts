@@ -32,6 +32,9 @@ public:
 
     bool closing;
 
+public slots:
+    void propertyUpdated();
+
 signals:
     void propertiesUpdated(QString property, QVariant newValue);
 
@@ -48,6 +51,9 @@ private slots:
     void cellUpdateStitch(QString stitch);
     void cellDeleteItems();
 
+    void cellUpdateFgColor();
+    void cellUpdateBgColor();
+
     void updateGuidelinesUi();
     void indicatorUpdate();
 
@@ -57,7 +63,15 @@ private:
      * Options are show based on their prefix.
      * gen_ = general, st_ = stitch, ind_ = indicator.
      */
-    void showUi(UiSelection selection);
+    void showUi(PropertiesDock::UiSelection selection, int count = 0);
+
+    void showSingleCell();
+    void showMultiCell();
+    void showSingleIndicator();
+    void showMultiIndicator();
+    void showMixedObjects();
+    void showCanvas();
+
     void clearUi();
 
     void setupStitchCombo();

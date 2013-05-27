@@ -1891,14 +1891,19 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
             }
 
             if(property == "Angle") {
+                i->setRotation(newValue.toReal());
                 undoStack()->push(new SetItemRotation(i, i->rotation(),
                                 QPointF(c->boundingRect().center().x(), c->boundingRect().bottom())));
 
             } else if(property == "ScaleX") {
-                undoStack()->push(new SetItemScale(c, QPointF(newValue.toDouble(), c->scale().y())));
+                QPointF oldScale = c->scale();
+                c->setScale(newValue.toDouble(), c->scale().y());
+                undoStack()->push(new SetItemScale(c, oldScale));
 
             } else if(property == "ScaleY") {
-                undoStack()->push(new SetItemScale(c, QPointF(c->scale().x(), newValue.toDouble())));
+                QPointF oldScale = c->scale();
+                c->setScale(c->scale().x(), newValue.toDouble());
+                undoStack()->push(new SetItemScale(c, oldScale));
 
             } else if(property == "Stitch") {
                 undoStack()->push(new SetCellStitch(c, newValue.toString()));
@@ -1909,6 +1914,12 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
             } else if(property == "Indicator") {
                 ind->setStyle(ip.style());
                 //ind->setText(ip.html());
+
+            } else if(property == "fgColor") {
+                undoStack()->push(new SetCellColor(c, newValue.value<QColor>()));
+
+            } else if(property == "bgColor") {
+                undoStack()->push(new SetCellBgColor(c, newValue.value<QColor>()));
 
             } else {
                 qWarning() << "Unknown property: " << property;

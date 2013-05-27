@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>248</width>
+    <width>260</width>
     <height>588</height>
    </rect>
   </property>
@@ -285,13 +285,6 @@
          </property>
         </spacer>
        </item>
-       <item row="5" column="1">
-        <widget class="QPushButton" name="st_stBgColorBttn">
-         <property name="text">
-          <string>Bg Color</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="st_angleLbl">
          <property name="text">
@@ -318,13 +311,6 @@
          </property>
          <property name="buddy">
           <cstring>st_stitch</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QPushButton" name="st_stColorBttn">
-         <property name="text">
-          <string>St Color</string>
          </property>
         </widget>
        </item>
@@ -365,6 +351,40 @@
         <widget class="QLabel" name="ind_indicatorTextEdit">
          <property name="text">
           <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Stitch Color:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Background Color:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QToolButton" name="st_stBgColorBttn">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QToolButton" name="st_stColorBttn">
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>

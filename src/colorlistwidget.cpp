@@ -70,7 +70,7 @@ QPixmap ColorListWidget::drawColorBox(QColor color, QSize size)
 
 void ColorListWidget::dragEnterEvent(QDragEnterEvent *e)
 {
-    qDebug() << e->mimeData()->formats();
+    //Don't accept generic abstract model items.
     if(e->mimeData()->hasFormat("application/x-qabstractitemmodeldatalist")) {
         e->dropAction();
         return;
