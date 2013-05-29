@@ -164,13 +164,13 @@ public:
     void gridAddRow(QList< Cell* > row, bool append = true, int before = 0);
 
     /**
-     * @brief propertiesUpdate - updates the properties of all selected items.
+     * @brief propertyUpdated - updates the properties of all selected items.
      * @param property - name of the property to update
      * @param newValue - new value to set.
      *
      * Values for property include: Angle, ScaleX, ScaleY, Stitch, ChartCenter, Guidelines, Deletes
      */
-    void propertiesUpdate(QString property, QVariant newValue);
+    void propertyUpdated(QString property, QVariant newValue);
 
 public slots:    
     void copy();
@@ -210,7 +210,7 @@ public slots:
 
     void editorLostFocus(Indicator *item);
     void editorGotFocus(Indicator *item);
-    
+
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);

@@ -11,6 +11,15 @@ namespace Ui {
     class PropertiesDock;
 }
 
+struct CellProperties {
+
+    QString stitch;
+    QColor color;
+    QColor bgColor;
+    QPointF scale;
+    qreal angle;
+};
+
 class PropertiesDock : public QDockWidget
 {
     Q_OBJECT
@@ -28,62 +37,57 @@ public:
     PropertiesDock(QTabWidget* tabWidget, QWidget *parent = 0);
     ~PropertiesDock();
 
-    void loadProperties(Guidelines guidelines);
-
-    bool closing;
+signals:
+    void propertyUpdated(QString property, QVariant value);
 
 public slots:
-    void propertyUpdated();
+    void updatePropertiesUi();
+    void selectionChanged();
 
-signals:
-    void propertiesUpdated(QString property, QVariant newValue);
-
-private slots:
-    void tabChanged(int tabNumber);
-    void updateDialogUi();
-
-    void chartUpdateChartCenter(bool state);
-    void chartUpdateGuidelines();
-
-    void cellUpdateAngle(double angle);
-    void cellUpdateScaleX(double scale);
-    void cellUpdateScaleY(double scale);
-    void cellUpdateStitch(QString stitch);
-    void cellDeleteItems();
-
+private:
     void cellUpdateFgColor();
     void cellUpdateBgColor();
 
-    void updateGuidelinesUi();
-    void indicatorUpdate();
+private slots:
+    void tabChanged(int tabNumber);
 
+//private cell property functions.
 private:
     /**
-     * showUi - show the user interface based on the selection.
-     * Options are show based on their prefix.
-     * gen_ = general, st_ = stitch, ind_ = indicator.
+     * stitchValue - returns the value that should be used for display.
+     * if there isn't a common value it returns "".
      */
-    void showUi(PropertiesDock::UiSelection selection, int count = 0);
+    QString stitchValue(QString first, QString second);
 
-    void showSingleCell();
-    void showMultiCell();
-    void showSingleIndicator();
-    void showMultiIndicator();
-    void showMixedObjects();
-    void showCanvas();
+    /**
+     * colorValue - returns the value that should be used for display.
+     * if there isn't a common value it returns an invalid color.
+     */
+    QColor colorValue(QColor first, QColor second);
 
-    void clearUi();
+    /**
+     * scaleValue - returns the value that should be used for display.
+     * if there isn't a common value it returns QPointF(0,0).
+     */
+    QPointF scaleValue(QPointF first, QPointF second);
+
+    /**
+     * angleValue - returns the value that should be used for display.
+     * if there isn't a common value it returns -1;
+     */
+    qreal angleValue(qreal first, qreal second);
 
     void setupStitchCombo();
 
-    bool updateGuidelines();
+    UiSelection chooseUi();
 
 private:
     Ui::PropertiesDock *ui;
 
     QTabWidget* mTabWidget;
-    Scene* mScene;
+    QPointer<Scene> mScene;
     Guidelines mGuidelines;
+    CellProperties mCellProps;
 };
 
 #endif // PROPERTIESDOCK_H

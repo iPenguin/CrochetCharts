@@ -340,9 +340,9 @@ bool CrochetTab::hasGuidelines()
     return false;
 }
 
-void CrochetTab::propertiesUpdate(QString property, QVariant newValue)
+void CrochetTab::propertyUpdated(QString property, QVariant newValue)
 {
-    mScene->propertiesUpdate(property, newValue);
+    mScene->propertyUpdated(property, newValue);
 }
 
 void CrochetTab::setGuidelinesType(QString guide)

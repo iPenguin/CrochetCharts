@@ -76,7 +76,7 @@ public:
     void setGuidelinesType(QString guides);
     bool hasGuidelines();
     
-    void propertiesUpdate(QString property, QVariant newValue);
+    void propertyUpdated(QString property, QVariant newValue);
 
 signals:
     void chartStitchChanged();

@@ -168,7 +168,7 @@ void MainWindow::setupNewTabDialog()
     connect(ui->chartStyle, SIGNAL(currentIndexChanged(QString)), SLOT(newChartUpdateStyle(QString)));
     
     connect(ui->newDocBttnBox, SIGNAL(accepted()), this, SLOT(newChart()));
-    connect(ui->newDocBttnBox, SIGNAL(rejected()), ui->newDocument, SLOT(hide()));   
+    connect(ui->newDocBttnBox, SIGNAL(rejected()), ui->newDocument, SLOT(hide()));
 }
 
 void MainWindow::newChartUpdateStyle(QString style)
@@ -199,13 +199,13 @@ void MainWindow::newChartUpdateStyle(QString style)
     }
 }
 
-void MainWindow::propertiesUpdate(QString property, QVariant newValue)
+void MainWindow::propertyUpdated(QString property, QVariant newValue)
 {
 
     if(!curCrochetTab())
         return;
 
-    curCrochetTab()->propertiesUpdate(property, newValue);
+    curCrochetTab()->propertyUpdated(property, newValue);
 
 }
 
@@ -269,7 +269,7 @@ void MainWindow::setupDocks()
 
     mPropertiesDock = new PropertiesDock(ui->tabWidget, this);
     connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
-    connect(mPropertiesDock, SIGNAL(propertiesUpdated(QString,QVariant)), SLOT(propertiesUpdate(QString,QVariant)));
+    connect(mPropertiesDock, SIGNAL(propertyUpdated(QString,QVariant)), SLOT(propertyUpdated(QString,QVariant)));
 
 }
 
@@ -718,7 +718,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
         mFile->cleanUp();
 
-        mPropertiesDock->closing = true;
         QMainWindow::closeEvent(event);
     } else {
         event->ignore();
@@ -1122,12 +1121,12 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
 
     connect(tab, SIGNAL(chartStitchChanged()), SLOT(updatePatternStitches()));
     connect(tab, SIGNAL(chartColorChanged()), SLOT(updatePatternColors()));
-    connect(tab, SIGNAL(chartColorChanged()), mPropertiesDock, SLOT(propertyUpdated()));
+    connect(tab, SIGNAL(chartColorChanged()), mPropertiesDock, SLOT(updatePropertiesUi()));
+
     connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
-    connect(tab, SIGNAL(guidelinesUpdated(Guidelines)), SLOT(updateGuidelines(Guidelines)));
 
     mUndoGroup.addStack(tab->undoStack());
-    
+
     QApplication::restoreOverrideCursor();
 
     return tab;
@@ -1489,7 +1488,7 @@ void MainWindow::updatePatternColors()
         if(items.count() == 0) {
             QPixmap pix = ColorListWidget::drawColorBox(color, QSize(32, 32));
             QIcon icon = QIcon(pix);
-            
+
             QListWidgetItem* item = new QListWidgetItem(icon, prefix + QString::number(i), ui->patternColors);
             item->setToolTip(color);
             item->setData(Qt::UserRole, QVariant(color));
@@ -1539,11 +1538,6 @@ void MainWindow::rotate(qreal degrees)
 {
     CrochetTab* tab = curCrochetTab();
     if(tab) tab->rotate(degrees);
-}
-
-void MainWindow::updateGuidelines(Guidelines guidelines)
-{
-    mPropertiesDock->loadProperties(guidelines);
 }
 
 void MainWindow::copy()

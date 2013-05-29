@@ -1854,7 +1854,7 @@ void Scene::gridAddRow(QList< Cell*> row, bool append, int before)
     }
 }
 
-void Scene::propertiesUpdate(QString property, QVariant newValue)
+void Scene::propertyUpdated(QString property, QVariant newValue)
 {
 
     if(property == "ChartCenter") {

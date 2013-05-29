@@ -11,7 +11,6 @@
 
 PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     QDockWidget(parent),
-    closing(false),
     ui(new Ui::PropertiesDock),
     mTabWidget(tabWidget),
     mScene(0)
@@ -21,39 +20,10 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     setFloating(true);
     setObjectName("propertiesDock");
 
-    ui->rows->setValue(Settings::inst()->value("rowCount").toInt());
-    ui->columns->setValue(Settings::inst()->value("stitchCount").toInt());
-    ui->cellHeight->setValue(Settings::inst()->value("cellHeight").toInt());
-    ui->cellWidth->setValue(Settings::inst()->value("cellWidth").toInt());
-
-    int styleIdx = ui->ind_indicatorStyle->findText(Settings::inst()->value("chartRowIndicator").toString());
-    ui->ind_indicatorStyle->setCurrentIndex(styleIdx);
-    clearUi();
+    ui->chartGroup->hide();
+    ui->itemGroup->hide();
+qDebug() << "propertiesdock";
     connect(mTabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
-
-    connect(ui->st_angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
-    connect(ui->st_scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
-    connect(ui->st_scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
-
-    connect(ui->showChartCenter, SIGNAL(toggled(bool)), SLOT(chartUpdateChartCenter(bool)));
-    connect(ui->guidelinesType, SIGNAL(currentIndexChanged(QString)), SLOT(chartUpdateGuidelines()));
-
-    connect(ui->st_stitch, SIGNAL(currentIndexChanged(QString)), SLOT(cellUpdateStitch(QString)));
-
-    connect(ui->gen_deleteItems, SIGNAL(clicked()), SLOT(cellDeleteItems()));
-
-    connect(ui->guidelinesType, SIGNAL(currentIndexChanged(int)), SLOT(updateGuidelinesUi()));
-    updateGuidelinesUi();
-
-    connect(ui->rows, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
-    connect(ui->cellWidth, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
-    connect(ui->columns, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
-    connect(ui->cellHeight, SIGNAL(valueChanged(int)), SLOT(chartUpdateGuidelines()));
-
-    connect(ui->st_stBgColorBttn, SIGNAL(clicked(bool)), SLOT(cellUpdateBgColor()));
-    connect(ui->st_stColorBttn, SIGNAL(clicked(bool)), SLOT(cellUpdateFgColor()));
-
-    connect(ui->ind_indicatorStyle, SIGNAL(currentIndexChanged(int)), SLOT(indicatorUpdate()));
 }
 
 PropertiesDock::~PropertiesDock()
@@ -61,50 +31,180 @@ PropertiesDock::~PropertiesDock()
     delete ui;
 }
 
-void PropertiesDock::loadProperties(Guidelines guidelines)
+void PropertiesDock::selectionChanged()
 {
-    mGuidelines = guidelines;
+    CrochetTab *tab = qobject_cast<CrochetTab*>(mTabWidget->currentWidget());
+    if(!tab) {
+        qWarning() << "Couldn't find a tab!";
+    }
+    QList<QGraphicsItem*> items = tab->scene()->selectedItems();
 
-    //QUESTION: is this the best way to prevent overwriting the properties when "loading" them.
-    ui->guidelinesType->blockSignals(true);
-    ui->guidelinesType->setCurrentIndex(ui->guidelinesType->findText(mGuidelines.type()));
-    ui->guidelinesType->blockSignals(false);
+    if(items.count() <= 0)
+        return;
+qDebug() << "selection changed";
+    bool firstPass = true;
 
-    ui->rows->blockSignals(true);
-    ui->rows->setValue(mGuidelines.rows());
-    ui->rows->blockSignals(false);
+    foreach(QGraphicsItem *i, items) {
+        Cell *cur = qgraphicsitem_cast<Cell*>(i);
+        if(!cur)
+            continue;
 
-    ui->columns->blockSignals(true);
-    ui->columns->setValue(mGuidelines.columns());
-    ui->columns->blockSignals(false);
+        if(firstPass) {
+            mCellProps.stitch = cur->name();
+            mCellProps.color = cur->color();
+            mCellProps.bgColor = cur->bgColor();
+            mCellProps.scale = cur->scale();
+            mCellProps.angle = cur->rotation();
+            firstPass = false;
+        }
 
-    ui->cellHeight->blockSignals(true);
-    ui->cellHeight->setValue(mGuidelines.cellHeight());
-    ui->cellHeight->blockSignals(false);
+        mCellProps.stitch = stitchValue(mCellProps.stitch, cur->name());
+        mCellProps.color = colorValue(mCellProps.color, cur->color());
+        mCellProps.bgColor = colorValue(mCellProps.bgColor, cur->bgColor());
+        mCellProps.scale = scaleValue(mCellProps.scale, cur->scale());
+        mCellProps.angle = angleValue(mCellProps.angle, cur->rotation());
+    }
+qDebug() << "selection changed end";
+}
 
-    ui->cellWidth->blockSignals(true);
-    ui->cellWidth->setValue(mGuidelines.cellWidth());
-    ui->cellWidth->blockSignals(false);
+PropertiesDock::UiSelection PropertiesDock::chooseUi()
+{
+    UiSelection uiStyle = PropertiesDock::SceneUi;
+
+    int count = mScene->selectedItems().count();
+
+    if(count == 0) {
+
+        uiStyle = PropertiesDock::SceneUi;
+    } else if(count >= 1) {
+        bool theSame = true;
+
+        int firstType = mScene->selectedItems().first()->type();
+        for(int i = 1; i < count; ++i) {
+            if(firstType != mScene->selectedItems().at(i)->type()) {
+                theSame = false;
+                break;
+            }
+        }
+
+        if(!theSame) {
+            uiStyle = PropertiesDock::MixedUi;
+        } else if(firstType == Cell::Type) {
+            uiStyle = PropertiesDock::CellUi;
+        } else if(firstType == Indicator::Type) {
+            uiStyle = PropertiesDock::IndicatorUi;
+        }
+    }
+
+    return uiStyle;
+}
+
+void PropertiesDock::updatePropertiesUi()
+{
+    qDebug() << "update properties ui";
+
+    UiSelection selection = chooseUi();
+
+    //Choose the options to show based on the selection.
+    foreach(QObject *obj, ui->itemGroup->children()) {
+        if(obj->objectName().startsWith("gen_")) {
+            QWidget *w = qobject_cast<QWidget*>(obj);
+            w->setVisible(true);
+
+        } else if (obj->objectName().startsWith("st_")) {
+            QWidget *w = qobject_cast< QWidget* >(obj);
+            w->setVisible(selection == PropertiesDock::CellUi ? true : false);
+
+        } else if(obj->objectName().startsWith("ind_")) {
+            QWidget *w = qobject_cast< QWidget* >(obj);
+            w->setVisible(selection == PropertiesDock::IndicatorUi ? true : false);
+        }
+    }
+
+    qDebug() << selection;
+    if(selection == PropertiesDock::SceneUi)
+        ui->chartGroup->show();
+
 }
 
 void PropertiesDock::tabChanged(int tabNumber)
 {
-
-    if(tabNumber == -1) {
-        clearUi();
+    if(tabNumber <= -1) {
         return;
     }
 
     mScene = qobject_cast<CrochetTab*>(mTabWidget->widget(tabNumber))->scene();
-    connect(mScene, SIGNAL(selectionChanged()), SLOT(updateDialogUi()));
-    updateDialogUi();
-
+    connect(mScene, SIGNAL(selectionChanged()), SLOT(selectionChanged()));
 }
 
-void PropertiesDock::clearUi()
+void PropertiesDock::cellUpdateFgColor()
 {
-    ui->chartGroup->hide();
-    ui->itemGroup->hide();
+
+    QColorDialog cdlg;
+    QColor color = cdlg.getColor();
+    QVariant v = color;
+
+    emit propertyUpdated("fgColor", v);
+}
+
+void PropertiesDock::cellUpdateBgColor()
+{
+    QColorDialog cdlg;
+    QColor color = cdlg.getColor();
+    QVariant v = color;
+
+    emit propertyUpdated("bgColor", v);
+}
+
+QString PropertiesDock::stitchValue(QString first, QString second)
+{
+    QString stitch;
+    if(first == second)
+        stitch = first;
+    else
+        stitch = "";
+
+    return stitch;
+}
+
+QColor PropertiesDock::colorValue(QColor first, QColor second)
+{
+    QColor color;
+    if(first == second)
+        color = first;
+    else
+        color = QColor("");
+
+    return color;
+}
+
+QPointF PropertiesDock::scaleValue(QPointF first, QPointF second)
+{
+    qreal x = 1.0,
+          y = 1.0;
+
+    if(first.x() == second.x())
+        x = first.x();
+    else
+        x = 0.0;
+
+    if(first.y() == second.y())
+        y = first.y();
+    else
+        y = 0.0;
+
+    return QPointF(x,y);
+}
+
+qreal PropertiesDock::angleValue(qreal first, qreal second)
+{
+    qreal angle = 0.0;
+    if(first == second)
+        angle = first;
+    else
+        angle = -1;
+
+    return angle;
 }
 
 void PropertiesDock::setupStitchCombo()
@@ -112,6 +212,7 @@ void PropertiesDock::setupStitchCombo()
 
     ui->st_stitch->blockSignals(true);
     //populate the combo box.
+
     foreach(QString stitch, StitchLibrary::inst()->stitchList()) {
         Stitch *s = StitchLibrary::inst()->findStitch(stitch);
         ui->st_stitch->addItem(QIcon(s->file()), stitch);
@@ -139,285 +240,4 @@ void PropertiesDock::setupStitchCombo()
 
     ui->st_stitch->blockSignals(false);
 
-}
-
-bool PropertiesDock::updateGuidelines()
-{
-    bool changed = false;
-
-    if(mGuidelines.type() != ui->guidelinesType->currentText()) {
-        mGuidelines.setType(ui->guidelinesType->currentText());
-        changed = true;
-    }
-
-    if(mGuidelines.rows() != ui->rows->value()) {
-        mGuidelines.setRows(ui->rows->value());
-        changed = true;
-    }
-
-    if(mGuidelines.columns() != ui->columns->value()) {
-        mGuidelines.setColumns(ui->columns->value());
-        changed = true;
-    }
-
-    if(mGuidelines.cellHeight() != ui->cellHeight->value()) {
-        mGuidelines.setCellHeight(ui->cellHeight->value());
-        changed = true;
-    }
-
-    if(mGuidelines.cellWidth() != ui->cellWidth->value()) {
-        mGuidelines.setCellWidth(ui->cellWidth->value());
-        changed = true;
-    }
-
-    return changed;
-}
-
-void PropertiesDock::updateDialogUi()
-{
-
-    clearUi();
-    if(closing)
-        return;
-
-    int count = mScene->selectedItems().count();
-
-    if(count == 0) {
-
-        showUi(PropertiesDock::SceneUi);
-        return;
-    } else if(count >= 1) {
-        bool theSame = true;
-
-        int firstType = mScene->selectedItems().first()->type();
-        for(int i = 1; i < count; ++i) {
-            if(firstType != mScene->selectedItems().at(i)->type()) {
-                theSame = false;
-                break;
-            }
-        }
-
-        if(!theSame) {
-            showUi(PropertiesDock::MixedUi, count);
-        } else if(firstType == Cell::Type) {
-            showUi(PropertiesDock::CellUi, count);
-        } else if(firstType == Indicator::Type) {
-            showUi(PropertiesDock::IndicatorUi, count);
-        }
-    }
-}
-
-void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
-{
-
-    //Choose the options to show based on the selection.
-    foreach(QObject *obj, ui->itemGroup->children()) {
-        if(obj->objectName().startsWith("gen_")) {
-            QWidget *w = qobject_cast<QWidget*>(obj);
-            w->setVisible(true);
-        } else if (obj->objectName().startsWith("st_")) {
-            QWidget *w = qobject_cast< QWidget* >(obj);
-            w->setVisible(selection == PropertiesDock::CellUi ? true : false);
-        } else if(obj->objectName().startsWith("ind_")) {
-            QWidget *w = qobject_cast< QWidget* >(obj);
-            w->setVisible(selection == PropertiesDock::IndicatorUi ? true : false);
-        }
-    }
-
-    if(selection == PropertiesDock::SceneUi) {
-        showCanvas();
-
-    } else if(selection == PropertiesDock::CellUi) {
-        showSingleCell();
-
-    } else if(selection == PropertiesDock::MixedUi) {
-        showMixedObjects();
-
-        //TODO: loop through all the items, check all the
-
-    } else if(selection == PropertiesDock::IndicatorUi) {
-        showSingleIndicator();
-
-    } else if (selection == PropertiesDock::CenterUi) {
-        WARN("TODO: make center ui work");
-    }
-
-}
-
-void PropertiesDock::showSingleCell()
-{
-
-    Cell *c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
-    ui->itemGroup->show();
-
-    ui->st_angle->blockSignals(true);
-    ui->st_angle->setValue(c->rotation());
-    ui->st_angle->blockSignals(false);
-
-    ui->st_scaleX->blockSignals(true);
-    ui->st_scaleX->setValue(c->scale().x());
-    ui->st_scaleX->blockSignals(false);
-
-    ui->st_scaleY->blockSignals(true);
-    ui->st_scaleY->setValue(c->scale().y());
-    ui->st_scaleY->blockSignals(false);
-
-    ui->st_stColorBttn->setIcon(ColorListWidget::drawColorBox(c->color(), QSize(32,32)));
-    ui->st_stColorBttn->setText(c->color().name());
-    ui->st_stBgColorBttn->setIcon(ColorListWidget::drawColorBox(c->bgColor(), QSize(32,32)));
-
-    setupStitchCombo();
-}
-
-void PropertiesDock::showMultiCell()
-{
-
-}
-
-void PropertiesDock::showSingleIndicator()
-{
-    ui->itemGroup->show();
-
-    Indicator *i = qgraphicsitem_cast<Indicator*>(mScene->selectedItems().first());
-
-    ui->ind_indicatorTextEdit->setText(i->text());
-    ui->ind_indicatorStyle->setCurrentIndex(ui->ind_indicatorStyle->findText(i->style()));
-}
-
-void PropertiesDock::showMultiIndicator()
-{
-
-}
-
-void PropertiesDock::showMixedObjects()
-{
-
-    ui->itemGroup->show();
-}
-
-void PropertiesDock::showCanvas()
-{
-    ui->chartGroup->show();
-
-    ui->showChartCenter->setChecked(mScene->showChartCenter());
-
-    QString type = mScene->guidelines().type();
-
-    if(type.isEmpty())
-        type = "None";
-
-    ui->guidelinesType->setCurrentIndex(ui->guidelinesType->findText(type));
-    updateGuidelinesUi();
-}
-
-void PropertiesDock::updateGuidelinesUi()
-{
-    if(ui->guidelinesType->currentText() == "None") {
-        ui->rows->setEnabled(false);
-        ui->columns->setEnabled(false);
-        ui->cellWidth->setEnabled(false);
-        ui->cellHeight->setEnabled(false);
-
-    } else {
-        ui->rows->setEnabled(true);
-        ui->columns->setEnabled(true);
-        ui->cellWidth->setEnabled(true);
-        ui->cellHeight->setEnabled(true);
-
-        if( ui->guidelinesType->currentText() == "Rows") {
-            ui->rowsLbl->setText(tr("Rows:"));
-            ui->cellWidthLbl->show();
-            ui->cellWidth->show();
-        } else { //rounds
-            ui->rowsLbl->setText(tr("Rounds:"));
-            ui->cellWidthLbl->hide();
-            ui->cellWidth->hide();
-        }
-    }
-
-}
-
-void PropertiesDock::indicatorUpdate()
-{
-    QString html = ui->ind_indicatorTextEdit->text();
-    QString style = ui->ind_indicatorStyle->currentText();
-
-    IndicatorProperties ip;
-    ip.setHtml(html);
-    ip.setStyle(style);
-
-    QVariant value;
-    value.setValue(ip);
-
-    emit propertiesUpdated("Indicator", value);
-}
-
-/**
- *Chart functions:
- */
-
-void PropertiesDock::chartUpdateChartCenter(bool state)
-{
-    emit propertiesUpdated("ChartCenter", QVariant(state));
-}
-
-void PropertiesDock::chartUpdateGuidelines()
-{
-
-    if (updateGuidelines()) {
-        QVariant value;
-        value.setValue(mGuidelines);
-        emit propertiesUpdated("Guidelines", value);
-    }
-}
-
-void PropertiesDock::propertyUpdated()
-{
-    updateDialogUi();
-}
-
-/**
- *Cell functions:
- */
-
-void PropertiesDock::cellUpdateAngle(double angle)
-{
-    emit propertiesUpdated("Angle", QVariant(angle));
-}
-
-void PropertiesDock::cellUpdateScaleX(double scale)
-{
-    emit propertiesUpdated("ScaleX", QVariant(scale));
-}
-
-void PropertiesDock::cellUpdateScaleY(double scale)
-{
-    emit propertiesUpdated("ScaleY", QVariant(scale));
-}
-
-void PropertiesDock::cellUpdateStitch(QString stitch)
-{
-    emit propertiesUpdated("Stitch", QVariant(stitch));
-}
-
-void PropertiesDock::cellDeleteItems()
-{
-    emit propertiesUpdated("Delete", QVariant(true));
-}
-
-void PropertiesDock::cellUpdateFgColor()
-{
-
-    QColorDialog cdlg;
-    QColor color = cdlg.getColor();
-    QVariant v = color;
-    emit propertiesUpdated("fgColor", v);
-}
-
-void PropertiesDock::cellUpdateBgColor()
-{
-    QColorDialog cdlg;
-    QColor color = cdlg.getColor();
-    QVariant v = color;
-    emit propertiesUpdated("bgColor", v);
 }

@@ -62,7 +62,7 @@ protected slots:
     
     void newChartUpdateStyle(QString style);
 
-    void propertiesUpdate(QString property, QVariant newValue);
+    void propertyUpdated(QString property, QVariant newValue);
     
 //menu functions/slots:
 private slots:
@@ -189,8 +189,6 @@ private slots:
     void mirror(int direction);
     void rotate(qreal degrees);
 
-    void updateGuidelines(Guidelines guidelines);
-    
 private:
     //Save the color of the widget when we flash the New Doc Dialog.
     QColor mNewDocWidgetColor;
