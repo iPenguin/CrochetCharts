@@ -19,7 +19,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
 set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
-set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${PROJECT_NAME}")
+set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}" "${PROJECT_NAME}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 
 #FIXME: use the FindDoxygen.cmake module.
@@ -32,6 +32,12 @@ if(DOXYGEN)
                 OUTPUT_VARIABLE _output)
 endif()
 
+set(DESKTOP_DIR     "/usr/share/applications/")
+set(PIXMAPS_DIR     "/usr/share/icons/")
+
+# try to set up the menu system
+find_program(XDG-MIME_EXECUTABLE xdg-mime)
+find_program(XDG-DESKTOP-MENU_EXECUTABLE xdg-desktop-menu)
 
 SET(plugin_dest_dir bin)
 SET(qtconf_dest_dir bin)
@@ -152,19 +158,43 @@ elseif(APPLE)
         " COMPONENT Runtime)
 
 else()
-
     set(CPACK_GENERATOR "DEB;RPM") #;RPM;STGZ;TBZ2")
 
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Brian Milco <${PROJECT_CONTACT}>")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libqtgui4 (>= 4.7.0), libqtcore4 (>= 4.7.0), libqt4-svg (>= 4.7.0), libqt4-xml (>= 4.7.0), libqt4-network (>= 4.7.0)")
+    configure_file(${CMAKE_SOURCE_DIR}/resources/CrochetCharts.desktop.in
+                "${CMAKE_BINARY_DIR}/Crochet Charts.desktop")
+
+    install (FILES "@CMAKE_BINARY_DIR@/Crochet Charts.desktop" DESTINATION ${DESKTOP_DIR})
+    install (FILES "resources/vnd.stitchworks.pattern.xml" DESTINATION share/${PROJECT_NAME})
+
+    #Generate all the png files of different sizes.
+    install(CODE "
+        execute_process(
+                COMMAND \"@CMAKE_SOURCE_DIR@/bin/generate_png\"
+                WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
+                OUTPUT_VARIABLE _output
+        )
+    " COMPONENT Runtime)
+
+    install(FILES "@CMAKE_SOURCE_DIR@/images/CrochetCharts.svg" DESTINATION share/${PROJECT_NAME}/images)
+    install(FILES "@CMAKE_SOURCE_DIR@/images/stitchworks-pattern.svg" DESTINATION share/${PROJECT_NAME}/images)
+    install(DIRECTORY "@CMAKE_BINARY_DIR@/icons" DESTINATION share/${PROJECT_NAME})
+
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
+        "${CMAKE_SOURCE_DIR}/resources/deb/postinst;${CMAKE_SOURCE_DIR}/resources/deb/prerm")
+
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${CPACK_PACKAGE_VENDOR} <${PROJECT_CONTACT}>")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.7.0), libqtcore4 (>= 4.7.0), libqt4-svg (>= 4.7.0), libqt4-xml (>= 4.7.0), libqt4-network (>= 4.7.0)")
     set(CPACK_DEBIAN_PACKAGE_SECTION "Graphics")
     set(CPACK_DEBIAN_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION})
+    set(CPACK_DEBIAN_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+    set(CPACK_DEBIAN_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
 
 
     set(CPACK_RPM_PACKAGE_LICENSE "Commercial")
     set(CPACK_RPM_PACKAGE_GROUP "Applications/Productivity")
     set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
     set(CPACK_RPM_PACKAGE_REQUIRES "libqt4 >= 4.7, libqt4-x11 >= 4.7")
+    set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 
     if(FORCE_32BIT)
         set(CPACK_RPM_PACKAGE_ARCHITECTURE "i386")
