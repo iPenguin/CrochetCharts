@@ -2595,3 +2595,32 @@ void Scene::replaceStitches(QString original, QString replacement)
     undoStack()->endMacro();
 
 }
+
+void Scene::replaceColor(QColor original, QColor replacement, int selection)
+{
+    undoStack()->beginMacro(tr("replace color"));
+    foreach(QGraphicsItem *i, items()) {
+        if(!i)
+            continue;
+        if(i->type() != Cell::Type)
+            continue;
+
+        Cell *c = qgraphicsitem_cast<Cell*>(i);
+        if(!c)
+            continue;
+
+        if(selection == 1 || selection == 3) {
+            if(c->color().name() == original.name()) {
+                undoStack()->push(new SetCellColor(c, replacement));
+            }
+        }
+
+        if(selection == 2 || selection == 3) {
+            if(c->bgColor().name() == original.name()) {
+                undoStack()->push(new SetCellBgColor(c, replacement));
+            }
+        }
+
+    }
+    undoStack()->endMacro();
+}

@@ -268,6 +268,11 @@ void CrochetTab::replaceStitches(QString original, QString replacement)
     mScene->replaceStitches(original, replacement);
 }
 
+void CrochetTab::replaceColor(QColor original, QColor replacement, int selection)
+{
+    mScene->replaceColor(original, replacement, selection);
+}
+
 void CrochetTab::updateRows()
 {
     mRowEditDialog->updateRowList();

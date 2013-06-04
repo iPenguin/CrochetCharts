@@ -472,6 +472,14 @@ public:
 
     void replaceStitches(QString original, QString replacement);
 
+    /**
+     * @brief replaceColor - repleace the original color with the replacement color
+     * @param original - color to look for on the chart
+     * @param replacement - color to replace it with
+     * @param selection - foreground = 1, background = 2, or foreground & background = 3.
+     */
+    void replaceColor(QColor original, QColor replacement, int selection);
+
 protected slots:
     /**
      * @brief updateGuidelines - draw the guidelines

@@ -18,6 +18,7 @@
 #include "stitchpalettedelegate.h"
 
 #include "stitchreplacerui.h"
+#include "colorreplacer.h"
 
 #include "debug.h"
 #include <QDialog>
@@ -391,6 +392,7 @@ void MainWindow::setupMenus()
     connect(ui->actionUngroup, SIGNAL(triggered()), SLOT(ungroup()));
 
     connect(ui->actionReplaceStitch, SIGNAL(triggered()), SLOT(stitchesReplaceStitch()));
+    connect(ui->actionColorReplacer, SIGNAL(triggered()), SLOT(stitchesReplaceColor()));
 
     //stitches menu
     connect(ui->menuStitches, SIGNAL(aboutToShow()), SLOT(menuStitchesAboutToShow()));
@@ -1006,7 +1008,12 @@ void MainWindow::menuStitchesAboutToShow()
 
     ui->actionShowAlignDock->setChecked(mAlignDock->isVisible());
     ui->actionShowMirrorDock->setChecked(mMirrorDock->isVisible());
-    ui->actionReplaceStitch->setEnabled(hasTab() && curCrochetTab());
+
+    bool hasItems = (mPatternStitches.count() > 0 ? true : false);
+    ui->actionReplaceStitch->setEnabled(hasTab() && curCrochetTab() && hasItems);
+
+    hasItems = (mPatternColors.count() > 0 ? true : false);
+    ui->actionColorReplacer->setEnabled(hasTab() && curCrochetTab() && hasItems);
 
     ui->actionGroup->setEnabled(hasTab() && curCrochetTab());
     ui->actionUngroup->setEnabled(hasTab() && curCrochetTab());
@@ -1020,11 +1027,31 @@ void MainWindow::stitchesReplaceStitch()
     if(!tab)
         return;
 
+    if(mPatternStitches.count() <= 0)
+        return;
+
     StitchReplacerUi *sr = new StitchReplacerUi(mPatternStitches.keys(), this);
 
     if(sr->exec() == QDialog::Accepted) {
         if(!sr->original.isEmpty())
             tab->replaceStitches(sr->original, sr->replacement);
+    }
+
+}
+
+void MainWindow::stitchesReplaceColor()
+{
+    CrochetTab *tab = curCrochetTab();
+    if(!tab)
+        return;
+
+    if(mPatternColors.count() <= 0)
+        return;
+
+    ColorReplacer *cr = new ColorReplacer(mPatternColors.keys(), this);
+
+    if(cr->exec() == QDialog::Accepted) {
+        tab->replaceColor(cr->originalColor, cr->newColor, cr->selection);
     }
 
 }

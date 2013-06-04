@@ -14,7 +14,7 @@
    <string>Crochet Charts</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../crochet.qrc">
+   <iconset>
     <normaloff>:/images/crochet.ico</normaloff>:/images/crochet.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -22,16 +22,7 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <item>
@@ -51,16 +42,7 @@
          <string>New Chart Options</string>
         </property>
         <layout class="QGridLayout" name="gridLayout">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>0</number>
          </property>
          <item row="1" column="2">
@@ -316,7 +298,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -419,6 +401,7 @@
     <addaction name="actionShowMirrorDock"/>
     <addaction name="separator"/>
     <addaction name="actionReplaceStitch"/>
+    <addaction name="actionColorReplacer"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -454,16 +437,7 @@
    </attribute>
    <widget class="QWidget" name="patternStitchesDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout_3">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>0</number>
      </property>
      <item>
@@ -524,16 +498,7 @@
    </attribute>
    <widget class="QWidget" name="patternColorsDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout_4">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>0</number>
      </property>
      <item>
@@ -645,16 +610,7 @@
    </attribute>
    <widget class="QWidget" name="allStitchesDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>0</number>
      </property>
      <item>
@@ -1199,6 +1155,14 @@
   <action name="actionReplaceStitch">
    <property name="text">
     <string>Replace a stitch...</string>
+   </property>
+  </action>
+  <action name="actionColorReplacer">
+   <property name="text">
+    <string>Replace a color...</string>
+   </property>
+   <property name="toolTip">
+    <string>Replace one color with another</string>
    </property>
   </action>
  </widget>
