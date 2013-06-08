@@ -29,27 +29,35 @@ function display_vairiables {
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
-CMAKE_FLAGS="-DDOCS=ON -DCMAKE_BUILD_TYPE=Release"
-CPACK_FLAGS=""
-
-CMAKE=`which cmake`
-QMAKE=`readlink \`which qmake\``
-CC=`readlink \`which cc\``
-CXX=`readlink \`which c++\``
-
 APP_STORE="OFF"
+DOCS="OFF"
 
-while getopts ":a" opt; do
+while getopts ":ad" opt; do
   case $opt in
     a)
       #-a is for Apple App Store
       APP_STORE="ON"
 	  ;;
+    d)
+      #-d is for DOCS
+      DOCS="ON"
+      ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       ;;
   esac
 done
+
+CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=Release"
+CPACK_FLAGS=""
+
+QT_BASE_PATH="/opt/Qt5.1.0/5.1.0-beta1"
+
+CMAKE=`which cmake`
+QMAKE="${QT_BASE_PATH}/bin/qmake"
+
+CC=`readlink \`which clang\` -e`
+CXX=`readlink \`which clang++\` -e`
 
 if [ $APP_STORE == "ON" ]; then
     BUNDLE_ID="com.stitchworkssoftware.crochet-charts"
@@ -59,10 +67,12 @@ fi
 
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
-    
+
 PLATFORM=`uname -s`
 ARCH=`uname -m`
-    
+
+CMAKE_FLAGS="$CMAKE_FLAGS -DDOCS=$DOCS"
+
 mkdir -p ${PROJECT_DIR}/build
 cd ${PROJECT_DIR}/build 
     
@@ -81,24 +91,35 @@ if [ $PLATFORM == "Darwin" ]; then
 
 elif [ $PLATFORM == "Linux" ]; then
 
-    CMAKE_MODULE_PATH="/opt/Qt/5.1.0-alpha/lib/cmake"
-    QMAKE="/opt/Qt/5.1.0-alpha/bin/qmake"
-    CMAKE_PREFIX_PATH="/opt/Qt/5.1.0-alpha/" 
+    CMAKE_MODULE_PATH="${QT_BASE_PATH}/lib/cmake"
+    QMAKE="${QT_BASE_PATH}/bin/qmake"
+    CMAKE_PREFIX_PATH="${QT_BASE_PATH}" 
 
     if [ $ARCH == "i686" ]; then
       CMAKE_FLAGS="$CMAKE_FLAGS -DFORCE_32BIT=ON"
     fi
 
     export CMAKE_MODULE_PATH CMAKE_PREFIX_PATH
-    CMAKE_FLAGS="$CMAKE_FLAGS -DQT_QMAKE_EXECUTABLE=$QMAKE"
+    CMAKE_FLAGS="$CMAKE_FLAGS -DQT_QMAKE_EXECUTABLE=\"$QMAKE\""
 else
     echo "-- ERROR: unknown platform"
-    exit 0
+    exit 1
 fi
 
 display_vairiables
 
-cmake ${PROJECT_DIR} ${CMAKE_FLAGS}
-make
-cpack ${CPACK_FLAGS}
+if [ ! -x "`cmake ${PROJECT_DIR} ${CMAKE_FLAGS}`" ]; then
+    echo "cmake failed"
+   # exit 1
+fi
+
+if [ ! -x "`make`" ]; then
+    echo "build failed"
+    exit 1
+fi
+
+if [ ! -x "`cpack ${CPACK_FLAGS}`" ]; then
+    echo "packaging failed"
+    exit 1
+fi
 
