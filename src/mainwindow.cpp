@@ -8,6 +8,8 @@
 #include "licensewizard.h"
 #include "exportui.h"
 
+#include "application.h"
+
 #include "appinfo.h"
 #include "settings.h"
 #include "settingsui.h"
@@ -83,7 +85,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
 
     setupMenus();
     readSettings();
-    
+
     QApplication::restoreOverrideCursor();
 }
 

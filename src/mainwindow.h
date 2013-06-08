@@ -138,11 +138,13 @@ private slots:
     void filterStitchList(QString newText);
 
     void openRecentFile();
-    void loadFile(QString fileName);
+
     void saveFileAs(QString fileName);
 
     void addColor(QColor color);
 
+public slots:
+    void loadFile(QString fileName);
 private:
     void loadFiles(QStringList fileNames);
     

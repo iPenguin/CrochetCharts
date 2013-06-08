@@ -11,7 +11,6 @@ set(PROJECT_VERSION      "${VERSION_SHORT}")
 set(PROJECT_COPYRIGHT    "Copyright (c) ${PROJECT_LIFE} ${PROJECT_VENDOR}")
 set(PROJECT_MACOSX_ICON  "${PROJECT_NAME}.icns")
 
-
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_VENDOR ${PROJECT_VENDOR})
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
@@ -150,6 +149,7 @@ elseif(APPLE)
 
     set(crochet_mac "${CPACK_BUNDLE_ICON}")
 
+    install(FILES images/PatternDocument.icns DESTINATION ../Resources/)
     install(CODE "
         file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\" 
              DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@\")
