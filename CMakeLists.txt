@@ -28,7 +28,7 @@ set (HUNSPELL_FIND_QUIETLY TRUE)
 include(FindHunSpell)
 
 include(GetGitRevisionDescription)
-git_describe(VERSION --tags --dirty=-w)
+git_describe(VERSION --tags --dirty=w)
 
 string(REGEX REPLACE "^([0-9]+)\\..*" "\\1" VERSION_MAJOR "${VERSION}")
 string(REGEX REPLACE "^[0-9]+\\.([0-9]+).*" "\\1" VERSION_MINOR "${VERSION}")
@@ -50,7 +50,6 @@ option(FORCE_32BIT "Force 32-bit builds when cross compiling with distcc (needed
 option(DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
 option(APP_STORE "Create an apple app store version" OFF)
-set(CMAKE_OSX_ARCHITECTURES "i386;x86_64")
 
 if(FORCE_32BIT)
     set(extra_build_flags "-m32")
@@ -119,17 +118,19 @@ set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 add_definitions(${QT_DEFINITIONS})
 
+set(CMAKE_AUTOMOC TRUE)
+
 ###################################################################################
 #CPack includes to create installers
 ###################################################################################
 include("${CMAKE_CURRENT_SOURCE_DIR}/resources/installers.cmake")
 
-if(DOCS)
-    add_subdirectory(docs)
-endif()
+add_subdirectory(docs)
+add_subdirectory(src)
 
 if(UNIT_TESTING)
     add_subdirectory(tests)
 endif()
 
-add_subdirectory(src)
+set(CPACK_BINARY_DRAGNDROP ON)
+include(CPack)

@@ -102,8 +102,8 @@ IntroPage::IntroPage(bool regOnly, QWidget* parent)
                 ).arg(qApp->applicationName()));
     topLabel->setWordWrap(true);
         
-    registerRadioButton = new QRadioButton(tr("&Register your copy"));
-    evaluateRadioButton = new QRadioButton(tr("&Evaluate this software"));
+    registerRadioButton = new QRadioButton(tr("&Register this copy"));
+    evaluateRadioButton = new QRadioButton(tr("&Limited trial version"));
 
     registerField("intro.type", evaluateRadioButton);
     registerRadioButton->setChecked(true);

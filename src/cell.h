@@ -13,26 +13,32 @@ class Cell : public QGraphicsSvgItem
 {
     Q_OBJECT
     friend class SaveFile;
-    friend class SaveThread;
+    friend class File_v1;
+    friend class File_v2;
 public:
 
     enum { Type = UserType + 1 };
     
-    explicit Cell(QGraphicsItem* parent = 0);
+    explicit Cell(QGraphicsItem *parent = 0);
     ~Cell();
     
     QRectF boundingRect() const;
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     int type () const { return Cell::Type; }
 
+    bool isGrouped();
+
     void setHighlight(bool state) { mHighlight = state; update(); }
-    Cell* copy(Cell* cell = 0);
+    Cell* copy(Cell *cell = 0);
     
-    void setColor(QColor c = QColor(Qt::white));
+    void setBgColor(QColor c = QColor(Qt::white));
+    QColor bgColor() const { return mBgColor; }
+    
+    void setColor(QColor c = QColor(Qt::black));
     QColor color() const { return mColor; }
-    
-    void setStitch(Stitch* s, bool useAltRenderer = false);
-    void setStitch(QString s, bool useAltRenderer = false);
+
+    void setStitch(Stitch *s);
+    void setStitch(QString s);
     Stitch* stitch() const { return mStitch; }
 
     /**
@@ -44,15 +50,14 @@ public:
 
     QPointF scale() {return mScale; }
     void setScale(qreal sx, qreal sy);
-
-    qreal origWidth;
-    qreal origHeight;
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
+    void bgColorChanged(QString oldColor, QString newColor);
     
 private:
+    QColor mBgColor;
     QColor mColor;
     QPointer<Stitch> mStitch;
 

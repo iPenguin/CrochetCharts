@@ -1,0 +1,10 @@
+To use this project you should first setup the repository for use:
+
+./bin/seutp
+
+Once the process is complete you can begin working on the software.
+
+For ease of use there are two scripts in the bin folder that can help with compilation.
+
+./bin/build - compile the software in Debug mode
+./bin/release - compile the software in Release mode and create packages for the current platform.

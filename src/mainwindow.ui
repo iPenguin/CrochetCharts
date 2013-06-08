@@ -14,18 +14,21 @@
    <string>Crochet Charts</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../crochet.qrc">
+   <iconset>
     <normaloff>:/images/crochet.ico</normaloff>:/images/crochet.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="margin">
      <number>0</number>
     </property>
     <item>
      <layout class="QVBoxLayout" name="dialogLayout" stretch="0">
       <property name="spacing">
-       <number>-1</number>
+       <number>6</number>
       </property>
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
@@ -295,7 +298,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -335,6 +338,8 @@
     <addaction name="actionZoomIn"/>
     <addaction name="actionZoomOut"/>
     <addaction name="separator"/>
+    <addaction name="actionShowProperties"/>
+    <addaction name="separator"/>
     <addaction name="actionShowStitches"/>
     <addaction name="actionShowPatternStitches"/>
     <addaction name="actionShowPatternColors"/>
@@ -356,7 +361,6 @@
     <addaction name="actionEditName"/>
     <addaction name="separator"/>
     <addaction name="actionShowChartCenter"/>
-    <addaction name="actionShowQuarterLines"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -381,7 +385,6 @@
      <string>&amp;Modes</string>
     </property>
     <addaction name="actionStitchMode"/>
-    <addaction name="actionColorMode"/>
     <addaction name="actionAngleMode"/>
     <addaction name="actionStretchMode"/>
     <addaction name="actionCreateRows"/>
@@ -396,6 +399,9 @@
     <addaction name="separator"/>
     <addaction name="actionShowAlignDock"/>
     <addaction name="actionShowMirrorDock"/>
+    <addaction name="separator"/>
+    <addaction name="actionReplaceStitch"/>
+    <addaction name="actionColorReplacer"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -460,6 +466,9 @@
          <height>32</height>
         </size>
        </property>
+       <property name="movement">
+        <enum>QListView::Static</enum>
+       </property>
        <property name="resizeMode">
         <enum>QListView::Adjust</enum>
        </property>
@@ -493,7 +502,52 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QListWidget" name="patternColors">
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <widget class="ColorLabel" name="fgColor">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Stitch</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="ColorLabel" name="bgColor">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Background</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="ColorListWidget" name="patternColors">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -517,6 +571,9 @@
          <width>32</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="movement">
+        <enum>QListView::Static</enum>
        </property>
        <property name="resizeMode">
         <enum>QListView::Adjust</enum>
@@ -552,10 +609,27 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="allStitchesDockWidget">
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
      <property name="margin">
       <number>0</number>
      </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLineEdit" name="stitchFilter">
+         <property name="inputMask">
+          <string/>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>Filter</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item>
       <widget class="QTreeView" name="allStitches">
        <property name="minimumSize">
@@ -566,6 +640,12 @@
        </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="dragEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragOnly</enum>
        </property>
        <property name="alternatingRowColors">
         <bool>false</bool>
@@ -604,7 +684,6 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionStitchMode"/>
-   <addaction name="actionColorMode"/>
    <addaction name="actionAngleMode"/>
    <addaction name="actionStretchMode"/>
    <addaction name="actionCreateRows"/>
@@ -612,7 +691,6 @@
    <addaction name="separator"/>
    <addaction name="actionShowAlignDock"/>
    <addaction name="actionShowMirrorDock"/>
-   <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -887,24 +965,6 @@
     <string>D</string>
    </property>
   </action>
-  <action name="actionColorMode">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../crochet.qrc">
-     <normaloff>:/images/fill_color.svg</normaloff>:/images/fill_color.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Color Edit</string>
-   </property>
-   <property name="toolTip">
-    <string>Edit the colors used on the chart</string>
-   </property>
-   <property name="shortcut">
-    <string>C</string>
-   </property>
-  </action>
   <action name="actionShowMainToolbar">
    <property name="checkable">
     <bool>true</bool>
@@ -919,17 +979,6 @@
    </property>
    <property name="text">
     <string>Show Edit Mode Toolbar</string>
-   </property>
-  </action>
-  <action name="actionColorSelectorBg">
-   <property name="text">
-    <string>Background Color</string>
-   </property>
-   <property name="toolTip">
-    <string>Select a color for the background</string>
-   </property>
-   <property name="shortcut">
-    <string>,</string>
    </property>
   </action>
   <action name="actionShowUndoHistory">
@@ -1092,19 +1141,44 @@
     <string>Show Chart Center</string>
    </property>
   </action>
-  <action name="actionShowQuarterLines">
+  <action name="actionShowProperties">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Wedge Lines</string>
+    <string>Show Properties</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
+   </property>
+  </action>
+  <action name="actionReplaceStitch">
+   <property name="text">
+    <string>Replace a stitch...</string>
+   </property>
+  </action>
+  <action name="actionColorReplacer">
+   <property name="text">
+    <string>Replace a color...</string>
    </property>
    <property name="toolTip">
-    <string>Show Wedge Lines</string>
+    <string>Replace one color with another</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ColorLabel</class>
+   <extends>QLabel</extends>
+   <header>colorlabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ColorListWidget</class>
+   <extends>QListWidget</extends>
+   <header>colorlistwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>chartStyle</tabstop>
   <tabstop>chartTitle</tabstop>

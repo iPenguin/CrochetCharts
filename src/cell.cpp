@@ -15,10 +15,8 @@
 #include <QStyleOption>
 #include <QTransform>
 
-Cell::Cell(QGraphicsItem* parent)
+Cell::Cell(QGraphicsItem *parent)
     : QGraphicsSvgItem(parent),
-    origWidth(64.0),
-    origHeight(64.0),
     mStitch(0),
     mScale(QPointF(1.0, 1.0)),
     mHighlight(false)
@@ -27,6 +25,9 @@ Cell::Cell(QGraphicsItem* parent)
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
+
+    //if we don't set the bgColor it'll end up black.
+    setBgColor();
 }
 
 Cell::~Cell()
@@ -45,13 +46,12 @@ QRectF Cell::boundingRect() const
         return stitch()->renderPixmap()->rect();
 }
 
-void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    DEBUG("start");
     if(!stitch())
         return;
 
-    QColor clr = color();
+    QColor clr = bgColor();
     if(!clr.isValid())
         clr = QColor(Qt::white);
 
@@ -71,10 +71,20 @@ void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
             painter->setPen(Qt::SolidLine);
         }
     }
-    DEBUG("end");
 }
 
-void Cell::setStitch(Stitch* s, bool useAltRenderer)
+bool Cell::isGrouped()
+{
+
+    if(parentItem()) {
+        qDebug() << "isGrouped parent type:" << parentItem()->Type;
+        return true;
+    }
+
+    return false;
+}
+
+void Cell::setStitch(Stitch *s)
 {
     if (mStitch != s) {
         QString old;
@@ -85,43 +95,60 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
             doUpdate = (mStitch->isSvg() != s->isSvg());
         }
         mStitch = s;
-        if(s->isSvg() && s->renderSvg()->isValid())
-            setSharedRenderer(s->renderSvg(useAltRenderer));
+        if(s->isSvg()) {
+            setSharedRenderer(s->renderSvg(mColor));
+        }
 
         if(doUpdate)
             update();
-
-        origWidth = s->width();
-        origHeight = s->height();
         
         emit stitchChanged(old, s->name());
     }
     
-    setColor(Qt::white);
+    setTransformOriginPoint(s->width()/2, s->height());
 }
 
-void Cell::setColor(QColor c)
+void Cell::setBgColor(QColor c)
 {
-    if (mColor != c) {
+    if (mBgColor != c) {
         QString old = "";
-        if (mColor.isValid())
-            old = mColor.name();
-        mColor = c;
+        if (mBgColor.isValid())
+            old = mBgColor.name();
+        mBgColor = c;
         emit colorChanged(old, c.name());
         update();
     }
 }
 
-void Cell::setStitch(QString s, bool useAltRenderer)
+void Cell::setColor(QColor c)
 {
-    Stitch* stitch = StitchLibrary::inst()->findStitch(s);
+
+    if(mColor != c) {
+        QString old = "";
+        if(mColor.isValid())
+            old = mColor.name();
+        mColor = c;
+
+        QSvgRenderer *r = stitch()->renderSvg(c);
+        if(r)
+            setSharedRenderer(r);
+
+        emit colorChanged(old, c.name());
+        update();
+    }
+
+}
+
+void Cell::setStitch(QString s)
+{
+    Stitch *stitch = StitchLibrary::inst()->findStitch(s);
 
     if (!stitch) {
         QString st = Settings::inst()->value("defaultStitch").toString();
         stitch = StitchLibrary::inst()->findStitch(st);
     }
 
-    setStitch(stitch, useAltRenderer);
+    setStitch(stitch);
 }
 
 QString Cell::name()
@@ -134,30 +161,35 @@ QString Cell::name()
 
 void Cell::useAlternateRenderer(bool useAlt)
 {
-    if(mStitch->isSvg() && mStitch->renderSvg()->isValid())
-        setSharedRenderer(mStitch->renderSvg(useAlt));
+    if(mStitch->isSvg() && mStitch->renderSvg()->isValid()) {
+        QString color = "#000000";
+        if(useAlt) {
+            color = Settings::inst()->value("stitchAlternateColor").toString();
+        }
+        setSharedRenderer(mStitch->renderSvg(color));
+    }
 }
 
 void Cell::setScale(qreal sx, qreal sy)
 {
+
     QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
 
-    QTransform tx = transform();
-    tx.fromScale(newScale.x(), newScale.y());
-    setTransform(tx);
+    QGraphicsSvgItem::setTransform(transform().scale(newScale.x(), newScale.y()));
     mScale = QPointF(sx, sy);
 }
 
-Cell* Cell::copy(Cell* cell)
+Cell* Cell::copy(Cell *cell)
 {
-    Cell* c = 0;
+    Cell *c = 0;
     if(!cell)
         c = new Cell();
     else
         c = cell;
 
     c->setStitch(stitch());
-    c->setColor(color());
+    c->setBgColor(bgColor());
+    c->setColor(c->color());
     c->setTransformOriginPoint(transformOriginPoint());
     c->setRotation(rotation());
     c->setScale(scale().x(), scale().y());

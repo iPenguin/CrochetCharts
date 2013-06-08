@@ -15,14 +15,14 @@ class TestStitch : public QObject
 {
     Q_OBJECT
 private slots:
-     void initTestCase();
-     void stitchSetup();
-     void stitchRender();
-     void stitchRender_data();
-     void cleanupTestCase();
+    void initTestCase();
+    void stitchSetup();
+    void stitchRender();
+    void stitchRender_data();
+    void cleanupTestCase();
 
 private:
-     Stitch* mS;
+    Stitch* mS;
 };
 
 #endif // TESTSTITCH_H

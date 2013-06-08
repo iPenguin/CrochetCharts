@@ -4,46 +4,51 @@
 #include <QString>
 #include <QDebug>
 
-QString debugFunctionName(QString name);
+/*
+    black="\033[30m";
+    dark_gray="\033[01;30m";
+    red="\033[31m";
+    bright_red="\033[1;31m";
+    green="\033[32m";
+    bright_green="\033[1;32m";
+    yellow="\033[33m";
+    bright_yellow="\033[1;33m";
+    blue="\033[34m";
+    bright_blue="\033[1;34m";
+    violet="\033[35m";
+    bright_violet="\033[1;35m";
+    cyan="\033[036m";
+    bright_cyan="\033[1;36m";
+    white="\033[37m";
+    light_gray="\033[00;37m";
+    end_color="\033[0m";
 
-/*!
- * \def DEBUG(message)
- * Outputs a debug message showing the calling function and \a message.
  */
+
+QString colorizeFunc(QString name);
+
 #define DEBUG(message) \
 ( \
-(qDebug() << debugFunctionName(Q_FUNC_INFO) << ":" << message), \
-(void)0 \
+    (qDebug() << colorizeFunc(Q_FUNC_INFO).toStdString().c_str() << ":" << QString(message).toStdString().c_str()), \
+    (void)0 \
 )
 
-/*!
- * \def WARN(message)
- * Outputs a warning message showing the calling function and \a message.
- */
 #define WARN(message) \
 ( \
-(qWarning() << debugFunctionName(Q_FUNC_INFO) << ":" << message), \
-(void)0 \
+    (qWarning() << colorizeFunc(Q_FUNC_INFO).toStdString().c_str() << ":" << QString(message).toStdString().c_str()), \
+    (void)0 \
 )
 
-/*!
- * \def CRITICAL(message)
- * Outputs a critical message showing the calling function and \a message.
- */
 #define CRITICAL(message) \
 ( \
-(qCritical() << debugFunctionName(Q_FUNC_INFO) << ":" << message), \
-(void)0 \
+    (qCritical() << colorizeFunc(Q_FUNC_INFO).toStdString().c_str() << ":" << QString(message).toStdString().c_str()),\
+    (void)0 \
 )
 
-/*!
- * \def FATAL(message)
- * Outputs a fatal message showing the calling function and \a message and then core dump.
- */
 #define FATAL(message) \
 ( \
-(qFatal("%s : %s", debugFunctionName(Q_FUNC_INFO).toStdString().c_str(), QString(message).toStdString().c_str())), \
-(void)0 \
+    (qFatal("%s : %s", colorizeFunc(Q_FUNC_INFO).toStdString().c_str(), QString(message).toStdString().c_str())), \
+    (void)0 \
 )
 
 #endif // DEBUG_H

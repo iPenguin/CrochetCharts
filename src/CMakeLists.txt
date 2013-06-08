@@ -8,7 +8,6 @@ set(crochet_resources
     ../stitches/stitches.qrc
     )
 
-
 if(WIN32)
     #generate the embeded icon for the exe file.
     set(CMAKE_RC_COMPILER_INIT windres)
@@ -36,10 +35,10 @@ qt5_add_resources(crochet_rcc_srcs ${crochet_resources})
 qt5_wrap_ui(crochet_ui_h ${crochet_uis})
 
 if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_executable(${EXE_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+    add_executable(${EXE_NAME} ${crochet_srcs} ${crochet_ui_h} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 else()
-    add_executable(${EXE_NAME} WIN32 ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
+    add_executable(${EXE_NAME} WIN32 MACOSX_BUNDLE ${crochet_srcs} ${crochet_ui_h} ${crochet_moc_srcs} ${crochet_rcc_srcs}
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 endif()
 
@@ -48,7 +47,7 @@ target_link_libraries(${EXE_NAME} ${Qt5Widgets_LIBRARIES} ${Qt5Concurrent_LIBRAR
 qt5_use_modules(${EXE_NAME} Widgets Network Svg PrintSupport)
 
 if(APPLE)
-    install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
+    #install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
 
     if(APP_STORE)
         set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS "APPLE_APP_STORE=1")
@@ -57,9 +56,13 @@ if(APPLE)
     install(CODE "
         execute_process(
             COMMAND \"/usr/bin/macdeployqt\"
-            \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@.app/\"
+            \"@CMAKE_CURRENT_BINARY_DIR@/@PROJECT_NAME@.app/\"
             WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
             OUTPUT_VARIABLE _output)
+        file(COPY \"@CMAKE_SOURCE_DIR@/images/@PROJECT_MACOSX_ICON@\"
+            DESTINATION \"@CMAKE_CURRENT_BINARY_DIR@/@PROJECT_NAME@.app/Contents/Resources\") 
+        file(COPY \"@CMAKE_CURRENT_BINARY_DIR@/@PROJECT_NAME@.app\" 
+            DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@\")
     " COMPONENT Runtime)
 
 else()
@@ -73,13 +76,4 @@ endif()
 if(WIN32)
     install(PROGRAMS ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION bin)
     install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
-endif()
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    install(FILES "@CMAKE_SOURCE_DIR@/images/CrochetCharts.svg" DESTINATION share/icons/hicolor/scalable/apps)
-    install(FILES "@CMAKE_SOURCE_DIR@/images/application-vnd.stitchworkssoftware.pattern.svg" DESTINATION share/icons/hicolor/scalable/mimetypes)
-    install(FILES "@CMAKE_SOURCE_DIR@/images/CrochetCharts.png" DESTINATION share/icons/hicolor/48x48/apps)
-    install(FILES "@CMAKE_SOURCE_DIR@/images/application-vnd.stitchworkssoftware.pattern.png" DESTINATION share/icons/hicolor/48x48/mimetypes)
-    install(PROGRAMS "@CMAKE_SOURCE_DIR@/resources/CrochetCharts.desktop" DESTINATION share/applications)
-    install(FILES "@CMAKE_SOURCE_DIR@/resources/vnd.sws-crochetcharts.pattern.xml" DESTINATION share/mime)
 endif()

@@ -130,6 +130,8 @@ void Settings::setupValueList() {
     mValueList["defaultStitch"] = QVariant("ch");
     mValueList["rowCount"] = QVariant(15);
     mValueList["stitchCount"] = QVariant(15);
+    mValueList["cellHeight"] = QVariant(64);
+    mValueList["cellWidth"] = QVariant(64);
     mValueList["chartStyle"] = QVariant(tr("Blank"));
     mValueList["increaseBy"] = QVariant(12);
     
@@ -164,6 +166,12 @@ void Settings::addRecentFile(QString fileName)
     if(mRecentFiles.contains(fileName))
         mRecentFiles.removeAll(fileName);
     mRecentFiles.prepend(fileName);
+    setValue("recentFiles", QVariant(mRecentFiles));
+}
+
+void Settings::setRecentFiles(QStringList files)
+{
+    mRecentFiles = files;
     setValue("recentFiles", QVariant(mRecentFiles));
 }
 

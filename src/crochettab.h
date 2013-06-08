@@ -26,9 +26,11 @@ namespace Ui {
 class CrochetTab : public QWidget
 {
     Q_OBJECT
-    friend class SaveFile;
-    friend class SaveThread;
+    friend class FileFactory;
+    friend class File_v1;
+    friend class File_v2;
     friend class ExportUi;
+    friend class PropertiesDock;
 public:
 
     explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget* parent = 0);
@@ -71,14 +73,22 @@ public:
     bool hasChartCenter();
     void setChartCenter(bool state);
 
-    void setQuarterLines(bool state);
-    bool hasQuarterLines();
+    void setGuidelinesType(QString guides);
+    bool hasGuidelines();
     
+    void propertiesUpdate(QString property, QVariant newValue);
+
 signals:
     void chartStitchChanged();
     void chartColorChanged();
     void tabModified(bool state);
     
+    void guidelinesUpdated(Guidelines guidelines);
+public:
+    void updateGuidelines(Guidelines guidelines) {
+        emit guidelinesUpdated(guidelines);
+    }
+
 public slots:
     void zoomIn();
     void zoomOut();
@@ -98,12 +108,14 @@ public slots:
     void clearSelection();
 
     void showRowEditor(bool state);
+
+    void replaceStitches(QString original, QString replacement);
+    void replaceColor(QColor original, QColor replacement, int selection);
     
 protected:
     QMap<QString, int>* patternStitches() { return mPatternStitches; }
     
 private slots:
-    void showChartOptions();
     void zoomChanged(int value);
     void updateZoomLevel(int percent);
 

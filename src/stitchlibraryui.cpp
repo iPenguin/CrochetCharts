@@ -21,8 +21,6 @@
 #include "stitchiconui.h"
 #include <QFileDialog>
 
-//TODO: add a hash based on the sn to the stitch set to grant write access to a stitch set.
-//TODO: add a check box in the 'add stitch' header that allows to select all stitches.
 //TODO: make the msgboxes reusbale functions.
 
 StitchLibraryUi::StitchLibraryUi(QWidget* parent)
@@ -532,7 +530,7 @@ StitchSet* StitchLibraryUi::addStitchSet(QString fileName)
 
             //FIXME: this is going to cause crashes when removing sets with sts in the master list!
         } else if(msgbox.clickedButton() == rename) {
-            bool ok;
+            bool ok = false;
             QString text;
 
             while(!ok || text.isEmpty() || text == set->name() ){

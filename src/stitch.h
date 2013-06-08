@@ -8,6 +8,8 @@
 #include <QString>
 #include <QList>
 #include <QObject>
+#include <QMap>
+#include <QColor>
 
 class QSvgRenderer;
 class QPixmap;
@@ -35,31 +37,37 @@ public:
     bool isSvg();
 
     QPixmap* renderPixmap();
-    QSvgRenderer* renderSvg(bool useAltRenderer = false);
+    QSvgRenderer* renderSvg(QColor color = QColor(Qt::black));
 
     //reload the svg with new colors.
     void reloadIcon();
 
+    /**
+     *used to track individual stitches as they are moved to the overlay.
+     */
     bool isBuiltIn;
-    
+
 protected:
     void setName(QString n) { mName = n; }
     void setFile(QString f);
     void setDescription(QString desc) { mDescription = desc; }
     void setCategory(QString cat) { mCategory = cat; }
     void setWrongSide(QString ws) { mWrongSide = ws; }
-    
+
+    void addStitchColor(QString color);
+
 private:
-    void setupSvgFiles();
-    
+    bool setupSvgFiles();
+
     QString mName;
     QString mFile;
     QString mDescription;
     QString mCategory;
     QString mWrongSide;
+    bool mIsSvg;
 
-    QSvgRenderer* mSvgRenderer;
-    QSvgRenderer* mSvgRendererAlt;
+    QMap<QString, QSvgRenderer*> mRenderers;
+
     QPixmap* mPixmap;
 };
 

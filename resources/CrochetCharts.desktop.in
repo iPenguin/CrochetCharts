@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Crochet Charts
+Version=@VERSION_SHORT@
+Comment=Pattern design software for crochet charts
+TryExec=@EXE_NAME@
+Exec=@EXE_NAME@ %U
+Terminal=false
+Icon=@EXE_NAME@
+Type=Application
+Categories=Graphics;
+MimeType=application/x-stitchworks-pattern;
+

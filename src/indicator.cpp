@@ -27,6 +27,8 @@ Indicator::Indicator(QGraphicsItem* parent, QGraphicsScene* scene)
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsFocusable);
     setZValue(150);
+
+    mStyle = Settings::inst()->value("chartRowIndicator").toString();
 }
 
 Indicator::~Indicator()
@@ -48,29 +50,15 @@ QPainterPath Indicator::shape() const
 void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
 
-    QString style = Settings::inst()->value("chartRowIndicator").toString();
     QString color = Settings::inst()->value("chartIndicatorColor").toString();
-    bool showOutline = Settings::inst()->value("showIndicatorOutline").toBool();
-
-
-    QRect rect = option->rect;
-    rect.setTop(7);
-    rect.setLeft(7);
 
     if(option->state & QStyle::State_HasFocus) {
         QGraphicsTextItem::paint(painter, option, widget);
     } else {
-        if(option->state & (QStyle::State_Selected | QStyle::State_HasFocus)) {
-            QPen pen = QPen(QColor(Qt::black));
-            pen.setStyle(Qt::DashLine);
-            painter->setPen(pen);
-            painter->drawRect(rect);
-        } else if(highlight || showOutline) {
-            painter->setPen(QColor(Qt::gray));
-            painter->drawRect(rect);
-        }
 
-        if(style == "Dots" || style == "Dots and Text") {
+        document()->setDocumentMargin(10);
+
+        if(mStyle == "Dots" || mStyle == "Dots and Text") {
             painter->setRenderHint(QPainter::Antialiasing);
             painter->setPen(QColor(color));
             painter->setBackgroundMode(Qt::OpaqueMode);
@@ -79,9 +67,17 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
             painter->setBackgroundMode(Qt::TransparentMode);
         }
 
-        if(style == "Text" || style == "Dots and Text") {
-            painter->setPen(QColor(Qt::black));
-            painter->drawText(rect, text());
+        if(mStyle == "Dots" && (option->state & (QStyle::State_Selected | QStyle::State_HasFocus))) {
+            QPen pen = QPen(QColor(Qt::black));
+            pen.setStyle(Qt::DashLine);
+            painter->setPen(pen);
+            QRect r = option->rect;
+            r.setBottomRight(QPoint(10,10));
+            painter->drawRect(r);
+        }
+
+        if(mStyle == "Text" || mStyle == "Dots and Text") {
+            QGraphicsTextItem::paint(painter, option, widget);
         }
     }
 }
@@ -101,6 +97,9 @@ void Indicator::focusOutEvent(QFocusEvent* event)
 
 void Indicator::keyReleaseEvent(QKeyEvent *event)
 {
+    if(event->key() == Qt::Key_Escape)
+        setTextInteractionFlags(Qt::NoTextInteraction);
+
     //eat delete and other keys so they don't delete this object by mistake.
     event->accept();
     QGraphicsTextItem::keyReleaseEvent(event);
@@ -108,10 +107,6 @@ void Indicator::keyReleaseEvent(QKeyEvent *event)
 
 void Indicator::mouseReleaseEvent(QGraphicsSceneMouseEvent* event)
 {
-    if(isSelected()) {
-        if(textInteractionFlags() == Qt::NoTextInteraction) {
-            setTextInteractionFlags(Qt::TextEditorInteraction);
-        }
-    }
+
     QGraphicsTextItem::mouseReleaseEvent(event);
 }

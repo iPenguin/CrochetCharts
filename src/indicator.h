@@ -30,14 +30,17 @@ public:
     int type() const { return Type; }
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 
-    QString text() { return toPlainText(); }
-    void setText(QString t) { setPlainText(t); }
+    QString text() { return toHtml(); }
+    void setText(QString t) { setHtml(t); }
 
     QColor bgColor() { return mBgColor; }
     void setBgColor(QColor c) { mBgColor = c; }
 
     QColor textColor() { return mTextColor; }
     void setTextColor(QColor c) { mTextColor = c; }
+
+    QString style() { return mStyle; }
+    void setStyle(QString style) { mStyle = style; }
 
     QPainterPath shape() const;
     
@@ -57,6 +60,8 @@ private:
 
     QColor mBgColor;
     QColor mTextColor;
+
+    QString mStyle;
 
 };
 #endif //INDICATOR_H

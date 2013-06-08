@@ -44,6 +44,7 @@ set(crochet_app_cpp
 
 set(crochet_app_resources
     ../crochet.qrc
+    ../stitches/stitches.qrc
     )
 
 qt4_add_resources(crochet_app_rcc_srcs ${crochet_app_resources})

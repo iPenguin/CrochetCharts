@@ -29,7 +29,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
         ui(new Ui::OptionsBar),
         mChartStyle(style)
 {
-    DEBUG("start");
+    
     QVBoxLayout* l = new QVBoxLayout(this);
     QWidget* top = new QWidget(this);
     l->addWidget(top);
@@ -53,6 +53,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     connect(mScene, SIGNAL(stitchChanged(QString,QString)), SLOT(stitchChanged(QString,QString)));
     connect(mScene, SIGNAL(colorChanged(QString,QString)), SLOT(colorChanged(QString,QString)));
     connect(mScene, SIGNAL(rowEdited(bool)), SIGNAL(tabModified(bool)));
+    connect(mScene, SIGNAL(guidelinesUpdated(Guidelines)), SIGNAL(guidelinesUpdated(Guidelines)));
 
     mView->setScene(mScene);
     QPoint pt = mView->mapFromScene(centerOn);
@@ -81,14 +82,8 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
     mRowEditDialog = new RowEditDialog(scene(), mTextView, this);
-    ui->dialogLayout->addWidget(mRowEditDialog);
+    ui->horizontalLayout->addWidget(mRowEditDialog);
     mRowEditDialog->hide();
-    
-    ui->chartOptionsBox->setVisible(false);
-    connect(ui->moreBttn, SIGNAL(clicked()), SLOT(showChartOptions()));
-
-    //FIXME: remove this later:
-    ui->moreBttn->setVisible(false);
    
     connect(ui->copyInstructions, SIGNAL(clicked()), SLOT(copyInstructions()));
 
@@ -96,7 +91,6 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     connect(mView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
 
     connect(ui->showChartCenter, SIGNAL(clicked(bool)), SLOT(setShowChartCenter(bool)));
-    DEBUG("end");
 }
 
 CrochetTab::~CrochetTab()
@@ -120,22 +114,11 @@ void CrochetTab::setEditMode(int mode)
 
 void CrochetTab::renderChart(QPainter* painter, QRectF rect)
 {
-    QRectF sceneRect = mScene->sceneRect();
 
-    mScene->setSceneRect(mScene->itemsBoundingRect());
-    if(!rect.isValid())
-        mScene->render(painter);
-    else
-        mScene->render(painter, rect, mScene->sceneRect());
+    QRectF r = mScene->itemsBoundingRect();
+    mScene->render(painter, rect, r);
 
-    mScene->setSceneRect(sceneRect);
-
-    QPointF centerOn;
-    if(mScene->hasChartCenter())
-        centerOn = mScene->chartCenter()->boundingRect().center();
-    else
-        centerOn = mScene->sceneRect().center();
-    mView->centerOn(centerOn);
+    mView->centerOn(r.center());
 }
 
 void CrochetTab::stitchChanged(QString oldSt, QString newSt)
@@ -220,7 +203,6 @@ void CrochetTab::createChart(Scene::ChartStyle style, int rows, int cols, QStrin
         mView->ensureVisible(pt.x(), pt.y(), 50, 50);
     } else if(style == Scene::Rounds) {
         mScene->createRoundsChart(rows, cols, defStitch, rowSize, increaseBy);
-        ui->showChartCenter->setChecked(mScene->showChartCenter());
     } else if(style == Scene::Blank) {
         mScene->createBlankChart();
     }
@@ -252,20 +234,8 @@ void CrochetTab::copyInstructions()
     
 }
 
-void CrochetTab::showChartOptions()
-{
-    if(ui->moreBttn->text() == tr("&More >>")) {
-        ui->moreBttn->setText(tr("&Less <<"));
-        ui->chartOptionsBox->setVisible(true);
-    } else {
-        ui->moreBttn->setText(tr("&More >>"));
-        ui->chartOptionsBox->setVisible(false);
-    }
-}
-
 void CrochetTab::setShowChartCenter(bool state)
 {
-    ui->showChartCenter->setChecked(state);
 
     mScene->setShowChartCenter(state);
 
@@ -294,6 +264,16 @@ void CrochetTab::showRowEditor(bool state)
     }
     
     mScene->clearSelection();
+}
+
+void CrochetTab::replaceStitches(QString original, QString replacement)
+{
+    mScene->replaceStitches(original, replacement);
+}
+
+void CrochetTab::replaceColor(QColor original, QColor replacement, int selection)
+{
+    mScene->replaceColor(original, replacement, selection);
 }
 
 void CrochetTab::updateRows()
@@ -361,13 +341,20 @@ void CrochetTab::setChartCenter(bool state)
     mScene->setShowChartCenter(state);
 }
 
-bool CrochetTab::hasQuarterLines()
+bool CrochetTab::hasGuidelines()
 {
-    return mScene->showQuarterLines();
+    if(mScene->guidelines().type() != tr("None"))
+        return true;
+    return false;
 }
 
-void CrochetTab::setQuarterLines(bool state)
+void CrochetTab::propertiesUpdate(QString property, QVariant newValue)
 {
-    mScene->setShowQuarterLines(state);
+    mScene->propertiesUpdate(property, newValue);
+}
+
+void CrochetTab::setGuidelinesType(QString guide)
+{
+    mScene->setGuidelinesType(guide);
 }
 

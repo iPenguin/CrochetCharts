@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# This script generates the png icons for linux
+# from the original svg files.
+#######################################################
+
+PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+INKSCAPE="`which inkscape 2> /dev/null`"
+
+if [ ! -x "$INKSCAPE" ]; then
+    echo "Error: Could not find inkscape to convert the svg -> png" >&2
+    exit 1
+fi
+
+SIZES="16 32 48 64 96 128 192 256 512 1024 2048"
+FILES="CrochetCharts stitchworks-pattern"
+
+mkdir -p "${PROJECT_DIR}/build/icons/"
+
+for file in $FILES; do
+    for size in $SIZES; do
+        $INKSCAPE -z --export-width=$size --export-height=$size \
+        --export-dpi=96 --export-area-page \
+        -f "${PROJECT_DIR}/images/${file}.svg" \
+        --export-png="${PROJECT_DIR}/build/icons/${file}-${size}.png" > /dev/null
+    done
+done

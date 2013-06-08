@@ -10,10 +10,9 @@
 /*************************************************\
 | SetCellStitch                                   |
 \*************************************************/
-SetCellStitch::SetCellStitch(Scene* s, Cell* cell, QString newSt, QUndoCommand* parent)
+SetCellStitch::SetCellStitch(Cell *cell, QString newSt, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    scene = s;
     c = cell;
     oldStitch = c->name();
     newStitch = newSt;
@@ -22,265 +21,303 @@ SetCellStitch::SetCellStitch(Scene* s, Cell* cell, QString newSt, QUndoCommand* 
 
 void SetCellStitch::redo()
 {
-    QPoint pos = scene->indexOf(c);
-    bool useAlt = false;
-    if(pos.y() != -1)
-       useAlt = (pos.y() % 2);
-    c->setStitch(newStitch, useAlt);
+    setStitch(c, newStitch);
 }
 
 void SetCellStitch::undo()
 {
-    QPoint pos = scene->indexOf(c);
-    bool useAlt = false;
-    if(pos.y() != -1)
-       useAlt = (pos.y() % 2);
-    c->setStitch(oldStitch, useAlt);
+   setStitch(c, oldStitch);
+}
+
+void SetCellStitch::setStitch(Cell *cell, QString stitch)
+{
+    cell->setStitch(stitch);
+}
+
+/*************************************************\
+| SetCellBgColor                                  |
+\*************************************************/
+SetCellBgColor::SetCellBgColor(Cell* cell, QColor newCl, QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    c = cell;
+    oldColor = c->bgColor();
+    newColor = newCl;
+    setText(QObject::tr("change background color"));
+}
+
+void SetCellBgColor::redo()
+{
+    setBgColor(c, newColor);
+}
+
+void SetCellBgColor::undo()
+{
+    setBgColor(c, oldColor);
+}
+
+void SetCellBgColor::setBgColor(Cell *cell, QColor color)
+{
+    cell->setBgColor(color);
 }
 
 /*************************************************\
 | SetCellColor                                    |
 \*************************************************/
-SetCellColor::SetCellColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent)
+SetCellColor::SetCellColor(Cell *cell, QColor newCl, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    scene = s;
     c = cell;
     oldColor = c->color();
     newColor = newCl;
-    setText(QObject::tr("change color"));
+    setText(QObject::tr("change stitch color"));
 }
 
 void SetCellColor::redo()
 {
-    c->setColor(newColor);
+    setColor(c, newColor);
 }
 
 void SetCellColor::undo()
 {
-    c->setColor(oldColor);
+    setColor(c, oldColor);
 }
 
-/*************************************************\
-| SetCellRotation                                 |
-\*************************************************/
-SetCellRotation::SetCellRotation(Scene* s, Cell* cell, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent)
-    : QUndoCommand(parent)
+void SetCellColor::setColor(Cell *cell, QColor color)
 {
-    scene = s;
-    c = cell;
-    oldAngle = oldAngl;
-    newAngle = cell->rotation();
-    pvtPt = pivotPt;
-    setText(QObject::tr("change angle"));
-}
-
-void SetCellRotation::redo()
-{
-    c->setTransformOriginPoint(pvtPt);
-    c->setRotation(newAngle);
-}
-
-void SetCellRotation::undo()
-{
-    c->setRotation(oldAngle);
+    cell->setColor(color);
 }
 
 /*************************************************\
 | SetItemRotation                                 |
 \*************************************************/
-SetItemRotation::SetItemRotation(Scene* s, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand* parent)
+SetItemRotation::SetItemRotation(QGraphicsItem *item, qreal oldAngl, QPointF pivotPt, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    scene = s;
+    i = item;
+    oldAngle = oldAngl;
+    newAngle = item->rotation();
+    pvtPt = pivotPt;
+    setText(QObject::tr("rotate item"));
+}
+
+void SetItemRotation::redo()
+{
+    setRotation(i, newAngle, pvtPt);
+}
+
+void SetItemRotation::undo()
+{
+    setRotation(i, oldAngle, pvtPt);
+}
+
+void SetItemRotation::setRotation(QGraphicsItem *item, qreal angle, QPointF pivot)
+{
+    item->setTransformOriginPoint(pivot);
+    item->setRotation(angle);
+}
+
+/*************************************************\
+ | SetSelectionRotation                           |
+\*************************************************/
+SetSelectionRotation::SetSelectionRotation(Scene* scene, QList<QGraphicsItem*> itms, qreal degrees,
+                                           QUndoCommand* parent)
+    : QUndoCommand(parent)
+{
+    s = scene;
     items.append(itms);
     newAngle = degrees;
 
     if(scene->hasChartCenter()) {
         pivotPoint = scene->chartCenter()->sceneBoundingRect().center();
     } else {
-        pivotPoint = scene->selectedItemsBoundingRect(items).bottomLeft();
+        QRectF itemsRect = scene->selectedItemsBoundingRect(scene->selectedItems());
+        pivotPoint = QPointF(itemsRect.center().x(), itemsRect.bottom());
     }
 
     setText(QObject::tr("rotate selection"));
 }
 
-void SetItemRotation::redo()
+void SetSelectionRotation::redo()
 {
-    scene->rotateSelection(newAngle, items, pivotPoint);
+    rotate(s, newAngle, items, pivotPoint);
 
 }
 
-void SetItemRotation::undo()
+void SetSelectionRotation::undo()
 {
-    scene->rotateSelection(-newAngle, items, pivotPoint);
+    rotate(s, -newAngle, items, pivotPoint);
+}
+
+void SetSelectionRotation::rotate(Scene *scene, qreal degrees,
+                                  QList<QGraphicsItem*> items, QPointF pivotPoint)
+{
+
+    qreal newAngle = degrees;
+    qNormalizeAngle(newAngle);
+
+    QGraphicsItemGroup *g = scene->createItemGroup(items);
+    g->setTransformOriginPoint(pivotPoint);
+    g->setRotation(newAngle);
+    scene->destroyItemGroup(g);
 }
 
 /*************************************************\
 | SetItemCoordinates                              |
 \*************************************************/
-SetItemCoordinates::SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF oldPos, QUndoCommand* parent)
+SetItemCoordinates::SetItemCoordinates(QGraphicsItem *item, QPointF oldPos, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    scene = s;
     i = item;
     oldCoord = oldPos;
     newCoord = i->pos();
-    setText(QObject::tr("change position"));
-    //FIXME: use inverted() matrix to do scaling.
+    setText(QObject::tr("change item position"));
 }
 
 void SetItemCoordinates::undo()
 {
-    i->setPos(oldCoord);
+    setPosition(i, oldCoord);
 }
 
 void SetItemCoordinates::redo()
 {
-    i->setPos(newCoord);
+    setPosition(i, newCoord);
+}
+
+void SetItemCoordinates::setPosition(QGraphicsItem *item, QPointF position)
+{
+    item->setPos(position);
 }
  
 /*************************************************\
- | SetCellScale                                   |
+ | SetItemScale                                   |
 \*************************************************/
-SetCellScale::SetCellScale(Scene* s, Cell* cell, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent)
+SetItemScale::SetItemScale(QGraphicsItem *item, QPointF oldScle, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    scene = s;
-    c = cell;
-    pivotPt = pvtPt;
-    newScale = cell->scale();
+
+    i = item;
+    newScale = QPointF(i->transform().m11(), i->transform().m22());
     oldScale = oldScle;
-    setText(QObject::tr("change scale"));
+    setText(QObject::tr("change item scale"));
 }
 
-void SetCellScale::undo()
+void SetItemScale::undo()
 {
-    c->setScale(oldScale.x(), oldScale.y());
+    setScale(i, oldScale);
 }
 
-void SetCellScale::redo()
+void SetItemScale::redo()
 {
-    c->setScale(newScale.x(), newScale.y());
+    setScale(i, newScale);
 }
 
-/*************************************************\
-| AddCell                                         |
-\*************************************************/
-AddCell::AddCell(Scene* s, QPointF pos, QUndoCommand* parent)
-    : QUndoCommand(parent)
+void SetItemScale::setScale(QGraphicsItem *item, QPointF scale)
 {
 
-    position = pos;
-    c = new Cell();
-    scene = s;
-    setText(QObject::tr("add stitch"));
+    QPointF txScale = QPointF(scale.x() / item->transform().m11(),
+                              scale.y() / item->transform().m22());
 
-}
-
-void AddCell::redo()
-{
-    
-    scene->addItem(c);
-    c->setPos(position);
-    
-}
-
-void AddCell::undo()
-{
-    scene->removeItem(c);
+    item->setTransform(item->transform().scale(txScale.x(), txScale.y()));
 }
 
 /*************************************************\
-| RemoveCell                                      |
+| AddItem                                         |
 \*************************************************/
-RemoveCell::RemoveCell(Scene* s, Cell* cell, QUndoCommand* parent)
+AddItem::AddItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    c = cell;
-    scene = s;
-    position = c->pos();
-    setText(QObject::tr("remove stitch"));
+
+    i = item;
+    s = scene;
+    setText(QObject::tr("add items"));
+
 }
 
-void RemoveCell::redo()
+void AddItem::redo()
 {
-    scene->removeItem(c);
+    add(s, i);
 }
 
-void RemoveCell::undo()
+void AddItem::undo()
 {
-    scene->addItem(c);
-    c->setPos(position);
+    RemoveItem::remove(s, i);
+}
+
+void AddItem::add(Scene *scene, QGraphicsItem *item)
+{
+    scene->addItem(item);
+}
+
+/*************************************************\
+| RemoveItem                                      |
+\*************************************************/
+RemoveItem::RemoveItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent)
+    : QUndoCommand(parent)
+{
+    i = item;
+    s = scene;
+    position = i->pos();
+    setText(QObject::tr("remove items"));
+}
+
+void RemoveItem::redo()
+{
+    remove(s, i);
+}
+
+void RemoveItem::undo()
+{
+    AddItem::add(s, i);
+}
+
+void RemoveItem::remove(Scene *scene, QGraphicsItem *item)
+{
+    scene->removeItem(item);
 }
 
 /*************************************************\
 | GroupItems                                      |
 \*************************************************/
-GroupItems::GroupItems(Scene* s, QList<QGraphicsItem*> itemList, QUndoCommand* parent)
+GroupItems::GroupItems(Scene *scene, QList<QGraphicsItem*> itemList, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    scene = s;
+    s = scene;
     items = itemList;
     setText(QObject::tr("group items"));
-    mGroup = 0;
+    g = 0;
 
 }
 
 void GroupItems::redo()
 {
-    mGroup = scene->group(items, mGroup);
+    g = s->group(items, g);
 }
 
 void GroupItems::undo()
 {
-    scene->ungroup(mGroup);
+    s->ungroup(g);
 }
 
 /*************************************************\
 | UngroupItems                                    |
 \*************************************************/
-UngroupItems::UngroupItems(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* parent)
+UngroupItems::UngroupItems(Scene *scene, ItemGroup *group, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-    scene = s;
-    group = grp;
-    items = grp->childItems();
-    setText(QObject::tr("group items"));
+    s = scene;
+    g = group;
+    items = group->childItems();
+    setText(QObject::tr("ungroup items"));
 
 }
 
 void UngroupItems::redo()
 {
-    scene->ungroup(group);
+    s->ungroup(g);
 }
 
 void UngroupItems::undo()
 {
-    group = scene->group(items, group);
-}
-
-/*************************************************\
-| RemoveGroup                                     |
-\*************************************************/
-RemoveGroup::RemoveGroup(Scene* s, QGraphicsItemGroup* grp, QUndoCommand* parent)
-    : QUndoCommand(parent)
-{
-    scene = s;
-    items = grp->childItems();
-    group = grp;
-    setText(QObject::tr("remove group"));
-}
-
-void RemoveGroup::redo()
-{
-    scene->removeItem(group);
-}
-
-void RemoveGroup::undo()
-{
-    scene->addItem(group);
-    foreach(QGraphicsItem* i, group->childItems()) {
-        i->setVisible(true);
-    }
+    g = s->group(items, g);
 }

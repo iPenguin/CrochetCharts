@@ -1,6 +1,5 @@
 include(InstallRequiredSystemLibraries)
 
-
 set(PROJECT_DESCRIPTION  "Symbol crochet design software")
 set(PROJECT_VENDOR       "Stitch Works Software")
 set(ORG_BASE_URL         "StitchWorksSoftware.com")
@@ -20,7 +19,7 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
 set(CPACK_PACKAGE_CONTACT ${PROJECT_CONTACT})
-set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME};${PROJECT_NAME}")
+set(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}" "${PROJECT_NAME}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 
 #FIXME: use the FindDoxygen.cmake module.
@@ -33,6 +32,12 @@ if(DOXYGEN)
                 OUTPUT_VARIABLE _output)
 endif()
 
+set(DESKTOP_DIR     "/usr/share/applications/")
+set(PIXMAPS_DIR     "/usr/share/icons/")
+
+# try to set up the menu system
+find_program(XDG-MIME_EXECUTABLE xdg-mime)
+find_program(XDG-DESKTOP-MENU_EXECUTABLE xdg-desktop-menu)
 
 SET(plugin_dest_dir bin)
 SET(qtconf_dest_dir bin)
@@ -48,7 +53,7 @@ ENDIF(WIN32)
 
 
 if(WIN32)
-
+    set(CPACK_MONOLITHIC_INSTALL 1)
     set(CPACK_PACKAGE_ICON "C:\\\\Documents and Settings\\\\Brian Milco\\\\My Documents\\\\crochet.git\\\\images\\\\installer.bmp")
     set(CPACK_GENERATOR "NSIS")
     #
@@ -79,19 +84,51 @@ if(WIN32)
 elseif(APPLE)
     set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
     set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
-    set(CPACK_GENERATOR "Bundle")
+
     set(CPACK_BUNDLE_NAME "${PROJECT_NAME}")
     set(CPACK_BUNDLE_PLIST "${CMAKE_BINARY_DIR}/Info.plist")
     set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/images/${PROJECT_MACOSX_ICON}")
-    
+
     set(CPACK_DMG_VOLUME_NAME "${PROJECT_NAME}")
     set(CPACK_DMG_DS_STORE "${CMAKE_SOURCE_DIR}/resources/mac/MacDmgDsStore")
     set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/images/dmg_background.pdf")
-
     
     set(MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME} version ${VERSION}")
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}")
     set(MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}. All rights reserved.")
+
+    set(CPACK_APPLE_CODESIGN_FILES "/Contents/Frameworks/QtCore.framework/Versions/4/QtCore" 
+                                   "/Contents/Frameworks/QtGui.framework/Versions/4/QtGui"
+                                   "/Contents/Frameworks/QtNetwork.framework/Versions/4/QtNetwork"
+                                   "/Contents/Frameworks/QtXml.framework/Versions/4/QtXml"
+                                   "/Contents/Frameworks/QtSvg.framework/Versions/4/QtSvg"
+                                   "/Contents/PlugIns/accessible/libqtaccessiblewidgets.dylib"
+                                   "/Contents/PlugIns/bearer/libqgenericbearer.dylib"
+                                   "/Contents/PlugIns/codecs/libqcncodecs.dylib"
+                                   "/Contents/PlugIns/codecs/libqjpcodecs.dylib"
+                                   "/Contents/PlugIns/codecs/libqkrcodecs.dylib"
+                                   "/Contents/PlugIns/codecs/libqtwcodecs.dylib"
+                                   "/Contents/PlugIns/iconengines/libqsvgicon.dylib"
+                                   "/Contents/PlugIns/imageformats/libqgif.dylib"
+                                   "/Contents/PlugIns/imageformats/libqico.dylib"
+                                   "/Contents/PlugIns/imageformats/libqjpeg.dylib"
+                                   "/Contents/PlugIns/imageformats/libqmng.dylib"
+                                   "/Contents/PlugIns/imageformats/libqsvg.dylib"
+                                   "/Contents/PlugIns/imageformats/libqtga.dylib"
+                                   "/Contents/PlugIns/imageformats/libqtiff.dylib"
+    )
+
+    set(CPACK_APPLE_ENTITLEMENTS "${CMAKE_SOURCE_DIR}/resources/Entitlements.plist")
+
+    if(${APP_STORE})
+        set(CPACK_GENERATOR "MacAppStore")
+        set(CPACK_APPLE_CERT_APP "3rd Party Mac Developer Application: Brian Milco")
+        set(CPACK_APPLE_CERT_INSTALLER "3rd Party Mac Developer Installer: Brian Milco")
+    else()
+        set(CPACK_GENERATOR "DragNDrop")
+        set(CPACK_APPLE_CERT_APP "Developer ID Application: Brian Milco")
+        set(CPACK_APPLE_CERT_INSTALLER "Developer ID Installer: Brian Milco")
+    endif()
 
 #for more see: http://www.mail-archive.com/cmake@cmake.org/msg05498.html
 #and see: http://www.cmake.org/Wiki/CMake:Bundles_And_Frameworks
@@ -103,36 +140,61 @@ elseif(APPLE)
     set_source_files_properties("${MACOSX_BUNDLE_ICON_FILE}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "${BUNDLE_ID}")
+    set(CPACK_APPLE_BUNDLE_ID "${MACOSX_BUNDLE_GUI_IDENTIFIER}")
     set(MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}")
 
     configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/MacOSXBundleInfo.plist.in
                 ${CMAKE_BINARY_DIR}/Info.plist)
 
-    install(CODE "
-        file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\" 
-             DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@\")
-        file(RENAME \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\" 
-        \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/Bundle/@PROJECT_NAME@-@VERSION_SHORT@/User Guide.pdf\")
-        " COMPONENT Runtime)
-
     set(DIRS ${QT_LIBRARY_DIRS})
 
     set(crochet_mac "${CPACK_BUNDLE_ICON}")
 
-else()
+    install(CODE "
+        file(COPY \"@CMAKE_BINARY_DIR@/docs/pdf/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\" 
+             DESTINATION \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@\")
+        file(RENAME \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@/@PROJECT_NAME@_User_Guide_@VERSION_SHORT@.pdf\" 
+        \"@CMAKE_BINARY_DIR@/_CPack_Packages/Darwin/@CPACK_GENERATOR@/@PROJECT_NAME@-@VERSION_SHORT@/User Guide.pdf\")
+        " COMPONENT Runtime)
 
+else()
     set(CPACK_GENERATOR "DEB;RPM") #;RPM;STGZ;TBZ2")
 
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Brian Milco <${PROJECT_CONTACT}>")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libqtgui4 (>= 4.7.0), libqtcore4 (>= 4.7.0), libqt4-svg (>= 4.7.0), libqt4-xml (>= 4.7.0), libqt4-network (>= 4.7.0)")
+    configure_file(${CMAKE_SOURCE_DIR}/resources/CrochetCharts.desktop.in
+                "${CMAKE_BINARY_DIR}/Crochet Charts.desktop")
+
+    install (FILES "@CMAKE_BINARY_DIR@/Crochet Charts.desktop" DESTINATION ${DESKTOP_DIR})
+    install (FILES "resources/vnd.stitchworks.pattern.xml" DESTINATION share/${PROJECT_NAME})
+
+    #Generate all the png files of different sizes.
+    install(CODE "
+        execute_process(
+                COMMAND \"@CMAKE_SOURCE_DIR@/bin/generate_png\"
+                WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
+                OUTPUT_VARIABLE _output
+        )
+    " COMPONENT Runtime)
+
+    install(FILES "@CMAKE_SOURCE_DIR@/images/CrochetCharts.svg" DESTINATION share/${PROJECT_NAME}/images)
+    install(FILES "@CMAKE_SOURCE_DIR@/images/stitchworks-pattern.svg" DESTINATION share/${PROJECT_NAME}/images)
+    install(DIRECTORY "@CMAKE_BINARY_DIR@/icons" DESTINATION share/${PROJECT_NAME})
+
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
+        "${CMAKE_SOURCE_DIR}/resources/deb/postinst;${CMAKE_SOURCE_DIR}/resources/deb/prerm")
+
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${CPACK_PACKAGE_VENDOR} <${PROJECT_CONTACT}>")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqtgui4 (>= 4.7.0), libqtcore4 (>= 4.7.0), libqt4-svg (>= 4.7.0), libqt4-xml (>= 4.7.0), libqt4-network (>= 4.7.0)")
     set(CPACK_DEBIAN_PACKAGE_SECTION "Graphics")
     set(CPACK_DEBIAN_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION})
+    set(CPACK_DEBIAN_PACKAGE_NAME ${CPACK_PACKAGE_NAME})
+    set(CPACK_DEBIAN_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION_SUMMARY})
 
 
     set(CPACK_RPM_PACKAGE_LICENSE "Commercial")
     set(CPACK_RPM_PACKAGE_GROUP "Applications/Productivity")
     set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
     set(CPACK_RPM_PACKAGE_REQUIRES "libqt4 >= 4.7, libqt4-x11 >= 4.7")
+    set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 
     if(FORCE_32BIT)
         set(CPACK_RPM_PACKAGE_ARCHITECTURE "i386")
@@ -143,6 +205,3 @@ else()
     endif()
     
 endif()
-
-set(CPACK_BINARY_DRAGNDROP ON)
-include(CPack)

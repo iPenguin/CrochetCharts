@@ -7,13 +7,16 @@
 
 #include <QMainWindow>
 
-#include "savefile.h"
+#include "filefactory.h"
 #include "updater.h"
 #include "undogroup.h"
 
 #include "aligndock.h"
 #include "rowsdock.h"
 #include "mirrordock.h"
+#include "propertiesdock.h"
+
+#include <QSortFilterProxyModel>
 
 #include <QModelIndex>
 
@@ -31,7 +34,10 @@ namespace Ui {
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    friend class SaveFile;
+    friend class FileFactory;
+    friend class File;
+    friend class File_v1;
+    friend class File_v2;
 public:
     explicit MainWindow(QStringList fileNames = QStringList(), QWidget* parent = 0);
     ~MainWindow();
@@ -55,6 +61,8 @@ protected slots:
     void tabChanged(int newTab);
     
     void newChartUpdateStyle(QString style);
+
+    void propertiesUpdate(QString property, QVariant newValue);
     
 //menu functions/slots:
 private slots:
@@ -83,6 +91,7 @@ private slots:
     void viewShowRowsDock();
     void viewShowAlignDock();
     void viewShowMirrorDock();
+    void viewShowProperties();
 
     void menuModesAboutToShow();
     
@@ -94,8 +103,11 @@ private slots:
     void menuChartAboutToShow();
     void chartEditName();
     void chartsShowChartCenter();
-    void chartsShowQuarterLines();
     void chartCreateRows(bool state);
+
+    void menuStitchesAboutToShow();
+    void stitchesReplaceStitch();
+    void stitchesReplaceColor();
 
     void menuToolsAboutToShow();
     void toolsOptions();
@@ -120,14 +132,17 @@ private slots:
 
     void documentIsModified(bool isModified);
 
-    void selectColor();
     void selectStitch(QModelIndex index);
     void selectColor(QModelIndex index);
+
+    void filterStitchList(QString newText);
 
     void openRecentFile();
     void loadFile(QString fileName);
     void saveFileAs(QString fileName);
-    
+
+    void addColor(QColor color);
+
 private:
     void loadFiles(QStringList fileNames);
     
@@ -135,7 +150,9 @@ private:
     void setupRecentFiles();
     void updateMenuItems();
     
+    QSortFilterProxyModel *mProxyModel;
     void setupStitchPalette();
+
     void setupDocks();
     void readSettings();
 
@@ -144,19 +161,15 @@ private:
     bool safeToClose();
     bool promptToSave();
 
-    void updateFgColor();
-    void updateBgColor();
     void setEditMode(int mode);
 
     void setApplicationTitle();
-    
-    QPixmap drawColorBox(QColor color, QSize size);
-    
+
     CrochetTab* curCrochetTab();
-   
+
     Ui::MainWindow* ui;
 
-    SaveFile* mFile;
+    FileFactory* mFile;
     Updater* mUpdater;
 
 //for the savefile class:
@@ -164,6 +177,7 @@ protected:
     QMap<QString, int> patternStitches() { return mPatternStitches; }
     QMap<QString, QMap<QString, qint64> > patternColors() { return mPatternColors; }
     QTabWidget* tabWidget();
+    void showFileError(int error);
 
 //Flash the new Document dialog when the user selects new doc or new chart.
 private slots:
@@ -175,8 +189,11 @@ private slots:
 
     void mirror(int direction);
     void rotate(qreal degrees);
+
+    void updateGuidelines(Guidelines guidelines);
     
 private:
+    //Save the color of the widget when we flash the New Doc Dialog.
     QColor mNewDocWidgetColor;
     
 private:
@@ -197,6 +214,8 @@ private:
     AlignDock* mAlignDock;
     RowsDock* mRowsDock;
     MirrorDock* mMirrorDock;
+
+    PropertiesDock* mPropertiesDock;
     
     int mEditMode;
     QString mStitch;

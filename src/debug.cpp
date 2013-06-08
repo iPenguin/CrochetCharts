@@ -1,34 +1,24 @@
 #include "debug.h"
-#include <QStringList>
 
-QString debugFunctionName(QString name)
+#include <QStringList>
+#include <QString>
+
+QString colorizeFunc(QString name)
 {
-    QString output = "";
-    QStringList functionAndParams = name.split("(");
-    
-    QStringList classParts = functionAndParams.first().split("::");
-    QStringList nameAndReturnType = classParts.first().split(" ");
-    
-    QString returnType = ""; //ctor, dtor don't have return types
-    QString virtualKeyWord = "";
-    if(nameAndReturnType.count() > 2) {
-        virtualKeyWord = nameAndReturnType.first() + " ";
-        returnType = nameAndReturnType.at(2) + " ";
-    } else if(nameAndReturnType.count() > 1) {
-        returnType = nameAndReturnType.first() + " ";
-    }
-    
-    QString className = nameAndReturnType.last();
-    QString functionName = classParts.last().split("(").first();
-    
-    QStringList paramsAndConst = functionAndParams.last().split(")");
-    QStringList params = paramsAndConst.first().split(",");
-    QString constString = paramsAndConst.last();
-    
-    if(!virtualKeyWord.isEmpty()) {
-        output.append("\033[1;33m");
-        output.append(virtualKeyWord);
-    }
+    QString output;
+    QStringList classParts = name.split("::");
+    QStringList nameAndType = classParts.first().split(" ");
+
+    QString returnType = "";
+    if(nameAndType.count() > 1)
+        returnType = nameAndType.first() + " ";
+    QString className = nameAndType.last();
+
+    QStringList funcAndParamas = classParts.last().split("(");
+    funcAndParamas.last().chop(1);
+    QString functionName = funcAndParamas.first();
+    QStringList params = funcAndParamas.last().split(",");
+
     output.append("\033[036m");
     output.append(returnType);
     output.append("\033[0m\033[32m");

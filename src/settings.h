@@ -15,6 +15,7 @@ class MainWindow;
 class Settings : public QObject
 {
     Q_OBJECT
+    friend class TestSettings;
 public:
     static Settings* inst();
     ~Settings();
@@ -25,6 +26,7 @@ public:
     bool isDemoVersion() { return mIsDemoVersion; }
     void setDemoVersion(bool isDemo) { mIsDemoVersion = isDemo; }
 
+    //FIXME: move this popup dialog to a ui centric class.
     void trialVersionMessage(QWidget* parent);
     
     /**
@@ -47,7 +49,10 @@ public:
     void addRecentFile(QString fileName);
 
     QStringList recentFiles() { return mRecentFiles; }
-    void setRecentFiles(QStringList files) { mRecentFiles = files; }
+    void setRecentFiles(QStringList files);
+
+protected:
+    QString fileName() { return mSettings.fileName(); }
     
 private:
     /**

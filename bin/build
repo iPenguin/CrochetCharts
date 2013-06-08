@@ -37,7 +37,7 @@ CXX=`readlink \`which c++\``
 #CMAKE_C_LINK_EXECUTABLE=
 
 APP_STORE="OFF"
-BUNDLE_ID="com.stitchworkssoftware.Crochet Charts"
+BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
 
 while getopts ":a" opt; do
   case $opt in
@@ -57,10 +57,10 @@ export CXX=/usr/bin/clang++
     
 PLATFORM=`uname -s`
 ARCH=`uname -m`
-    
+
 mkdir -p ${PROJECT_DIR}/build
-cd ${PROJECT_DIR}/build 
-    
+cd ${PROJECT_DIR}/build
+
 if [ $PLATFORM == "Darwin" ]; then
 
     MACOSX_DEPLOYMENT_TARGET=10.6
@@ -96,4 +96,3 @@ display_vairiables
 
 cmake ${PROJECT_DIR} ${CMAKE_FLAGS}
 make
-

@@ -28,8 +28,7 @@ StitchLibrary* StitchLibrary::inst()
 }
 
 StitchLibrary::StitchLibrary()
-{ 
-    DEBUG("start");
+{
     mMasterSet = new StitchSet(this, true);
     mMasterSet->setName(tr("Master Stitch List"));
     connect(mMasterSet, SIGNAL(movedToOverlay(QString)), SLOT(moveStitchToOverlay(QString)));
