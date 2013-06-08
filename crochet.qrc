@@ -65,5 +65,7 @@
         <file>images/plus.svg</file>
         <file>images/group.svg</file>
         <file>images/ungroup.svg</file>
+        <file>images/stitchworks-pattern.svg</file>
+        <file>images/stitchworks-pattern-dark.svg</file>
     </qresource>
 </RCC>

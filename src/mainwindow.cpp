@@ -86,6 +86,9 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     setupMenus();
     readSettings();
 
+    //File icon for titlebar
+    fileIcon = QIcon(":/images/stitchworks-pattern.svg");
+
     QApplication::restoreOverrideCursor();
 }
 
@@ -143,11 +146,22 @@ void MainWindow::checkUpdates(bool silent)
 
 void MainWindow::setApplicationTitle()
 {
-    QString cleanName = QFileInfo(mFile->fileName).baseName();
-    if(cleanName.isEmpty())
-        cleanName = "untitled";
-    
-    setWindowTitle(QString("%1 - %2[*]").arg(qApp->applicationName()).arg(cleanName));
+    QString curFile = mFile->fileName;
+    setWindowModified(false);
+
+    QString shownName;
+    QIcon icon;
+    if (curFile.isEmpty()) {
+        shownName = "untitled.txt";
+    } else {
+        shownName = QFileInfo(curFile).baseName();
+        icon = fileIcon;
+    }
+
+    setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(tr("Application")));
+    setWindowFilePath(curFile);
+    setWindowIcon(icon);
+
 }
 
 void MainWindow::setupNewTabDialog()
@@ -874,10 +888,10 @@ void MainWindow::fileSave()
             msgbox.setIcon(QMessageBox::Critical);
             msgbox.exec();
         }
+
+        documentIsModified(false);
         QApplication::restoreOverrideCursor();
     }
-
-    setWindowModified(false);
 }
 
 void MainWindow::fileSaveAs()
@@ -931,7 +945,7 @@ void MainWindow::saveFileAs(QString fileName)
     mFile->save(fver);
 
     setApplicationTitle();
-    setWindowModified(false);
+    documentIsModified(false);
     QApplication::restoreOverrideCursor();
 }
 
@@ -1137,7 +1151,10 @@ void MainWindow::newChart()
     tab->createChart(st, rows, cols, defStitch, QSizeF(32, rowHeight), incBy);
 
     updateMenuItems();
-    documentIsModified(true);
+
+    //Only mark a document as modified if we're adding another tab to it.
+    if(ui->tabWidget->count() > 1)
+        documentIsModified(true);
 }
 
 CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
@@ -1530,7 +1547,19 @@ void MainWindow::updatePatternColors()
 
 void MainWindow::documentIsModified(bool isModified)
 {
-    //TODO: check all possible modification locations.
+    QString curFile = mFile->fileName;
+
+    if (!curFile.isEmpty()) {
+        if (!isModified) {
+            setWindowIcon(fileIcon);
+        } else {
+            static QIcon darkIcon;
+
+            if (darkIcon.isNull())
+                darkIcon = QIcon(":/images/stitchworks-pattern-dark.svg");
+            setWindowIcon(darkIcon);
+        }
+    }
     setWindowModified(isModified);
 }
 

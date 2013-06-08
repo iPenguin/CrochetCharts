@@ -54,6 +54,12 @@ protected:
 
     CrochetTab* createTab(Scene::ChartStyle style);
     
+/**
+ * The proxy icon for the titlebar on Mac OS X
+ */
+private:
+    QIcon fileIcon;
+
 protected slots:
     void updatePatternStitches();
     void updatePatternColors();
