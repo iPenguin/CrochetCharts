@@ -21,11 +21,6 @@ int main(int argc, char *argv[])
 {
     qInstallMsgHandler(errorHandler);
     Application a(argc, argv);
-    
-    qApp->setApplicationName(AppInfo::inst()->appName);
-    qApp->setApplicationVersion(AppInfo::inst()->appVersion);
-    qApp->setOrganizationName(AppInfo::inst()->appOrg);
-    qApp->setOrganizationDomain(AppInfo::inst()->appOrgDomain);
 
     QStringList arguments = QCoreApplication::arguments();
     arguments.removeFirst(); // remove the application name from the list.

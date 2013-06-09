@@ -1,5 +1,6 @@
 #include "application.h"
 
+#include "appinfo.h"
 #include <QFileOpenEvent>
 
 #include "stitchlibrary.h"
@@ -10,6 +11,11 @@ Application::Application(int &argc, char **argv)
     : QApplication(argc, argv),
       mW(0)
 {
+    qApp->setApplicationName(AppInfo::inst()->appName);
+    qApp->setApplicationVersion(AppInfo::inst()->appVersion);
+    qApp->setOrganizationName(AppInfo::inst()->appOrg);
+    qApp->setOrganizationDomain(AppInfo::inst()->appOrgDomain);
+
     StitchLibrary* library = StitchLibrary::inst();
     library->loadStitchSets();
 }
