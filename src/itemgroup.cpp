@@ -7,7 +7,7 @@
 
 #include "debug.h"
 
-ItemGroup::ItemGroup(QGraphicsItem* parent, QGraphicsScene* scene)
+ItemGroup::ItemGroup(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsItemGroup( parent, scene),
     mScale(QPointF(1.0, 1.0))
 {
@@ -25,8 +25,9 @@ QRectF ItemGroup::boundingRect() const
     return QGraphicsItemGroup::boundingRect();
 }
 
-void ItemGroup::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void ItemGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+
     QGraphicsItemGroup::paint(painter, option, widget);
 }
 
@@ -41,7 +42,7 @@ bool ItemGroup::isGrouped()
     return false;
 }
 
-void ItemGroup::addToGroup(QGraphicsItem* item)
+void ItemGroup::addToGroup(QGraphicsItem *item)
 {
 
     QGraphicsItemGroup::addToGroup(item);

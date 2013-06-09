@@ -14,16 +14,16 @@ public:
 
     enum { Type = UserType + 10 };
 
-    ItemGroup(QGraphicsItem* parent = 0, QGraphicsScene* scene = 0);
+    ItemGroup(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
     ~ItemGroup();
 
     int type () const { return ItemGroup::Type; }
     QRectF boundingRect() const;
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
     bool isGrouped();
 
-    void addToGroup(QGraphicsItem* item);
+    void addToGroup(QGraphicsItem *item);
 private:
     QPointF mScale;
 };
