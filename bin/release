@@ -31,6 +31,7 @@ PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
 APP_STORE="OFF"
 DOCS="OFF"
+USE_LLVM=true
 
 while getopts ":ad" opt; do
   case $opt in
@@ -56,8 +57,17 @@ QT_BASE_PATH="/opt/Qt5.1.0/5.1.0-beta1"
 CMAKE=`which cmake`
 QMAKE="${QT_BASE_PATH}/bin/qmake"
 
-CC=`readlink \`which clang\` -e`
-CXX=`readlink \`which clang++\` -e`
+CC=`which clang`
+if [ ! $CC ]; then
+    CC=`which gcc`
+    USE_LLVM=false
+fi
+
+CXX=`which clang++`
+if [ ! $CXX ]; then
+    CXX=`which g++`
+    USE_LLVM=false
+fi
 
 if [ $APP_STORE == "ON" ]; then
     BUNDLE_ID="com.stitchworkssoftware.crochet-charts"
@@ -65,13 +75,12 @@ else
     BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
 fi
 
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++
+export CC CXX
 
 PLATFORM=`uname -s`
 ARCH=`uname -m`
 
-CMAKE_FLAGS="$CMAKE_FLAGS -DDOCS=$DOCS"
+CMAKE_FLAGS="$CMAKE_FLAGS -DDOCS=$DOCS -DUSE_LLVM=$USE_LLVM"
 
 mkdir -p ${PROJECT_DIR}/build
 cd ${PROJECT_DIR}/build 
@@ -108,18 +117,21 @@ fi
 
 display_vairiables
 
-if [ ! -x "`cmake ${PROJECT_DIR} ${CMAKE_FLAGS}`" ]; then
-    echo "cmake failed"
-   # exit 1
-fi
+#if [ ! -x "`cmake ${PROJECT_DIR} ${CMAKE_FLAGS}`" ]; then
+#    echo "cmake failed"
+#   # exit 1
+#fi
+#
+#if [ ! -x "`make`" ]; then
+#    echo "build failed"
+#    exit 1
+#fi
+#
+#if [ ! -x "`cpack ${CPACK_FLAGS}`" ]; then
+#    echo "packaging failed"
+#    exit 1
+#fi
 
-if [ ! -x "`make`" ]; then
-    echo "build failed"
-    exit 1
-fi
-
-if [ ! -x "`cpack ${CPACK_FLAGS}`" ]; then
-    echo "packaging failed"
-    exit 1
-fi
-
+cmake ${PROJECT_DIR} ${CMAKE_FLAGS}
+make
+cpack ${CPACK_FLAGS}
