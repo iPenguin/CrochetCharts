@@ -14,6 +14,7 @@ ItemGroup::ItemGroup(QGraphicsItem *parent, QGraphicsScene *scene)
 
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
+    setHandlesChildEvents(true);
 }
 
 ItemGroup::~ItemGroup()

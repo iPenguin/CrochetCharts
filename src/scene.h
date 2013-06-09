@@ -308,12 +308,6 @@ protected:
      */
     QRectF selectionBoundingRect(QList< QGraphicsItem* > items, int vertical, int horizontal);
     
-    /**
-     * Because of the fact that the group doesn't return the correct scene co-ordinates
-     * this function will correct them.
-     */
-    QPointF calcGroupPos(QGraphicsItem *group, QPointF newScenePos);
-
 public:
     ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup *g = 0);
     void ungroup(ItemGroup *group);
@@ -393,8 +387,7 @@ private:
     QColor mEditBgColor;
 
     QPointF mOldScale;
-    
-    qreal mAngle;
+
     QPointF mPivotPt;
     QPointF mOrigin;
 

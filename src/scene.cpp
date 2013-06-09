@@ -122,7 +122,6 @@ Scene::Scene(QObject* parent) :
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
     mOldScale(QPointF(1.0, 1.0)),
-    mAngle(0.0),
     mOrigin(0,0),
     mRowSpacing(9),
     mDefaultSize(QSizeF(32.0, 96.0)),
@@ -886,13 +885,13 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     qreal angle1 = scenePosToAngle(rel1);
     qreal angle2 = scenePosToAngle(rel2);
 
-    mAngle = mOldAngle + (angle1 - angle2);
+    qreal angle = mOldAngle + (angle1 - angle2);
 
-    qreal diff = fmod(mAngle, 45.0);
+    qreal diff = fmod(angle, 45.0);
     qreal comp = abs(diff);
     if(comp < 4 /*&& !mSnapTo*/) {
-        qreal div = mAngle - diff;
-        mAngle = div;
+        qreal div = angle - diff;
+        angle = div;
 /*FIXME: figure out a way to allow moving back with out snapping.
         mSnapTo = true;
     } else if(comp >= 4 && mSnapTo) {
@@ -900,10 +899,9 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
 */
     }
 
-    qNormalizeAngle(mAngle);
+    qNormalizeAngle(angle);
 
-    mCurItem->setTransformOriginPoint(mPivotPt);
-    mCurItem->setRotation(mAngle);
+    SetItemRotation::setRotation(mCurItem, angle, mPivotPt);
 
 }
 
@@ -934,7 +932,6 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
     mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
 
     mOrigin = mCurItem->scenePos();
-
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -1461,13 +1458,6 @@ void Scene::align(int vertical, int horizontal)
     }
     undoStack()->endMacro();
     
-}
-
-QPointF Scene::calcGroupPos(QGraphicsItem* group, QPointF newScenePos)
-{
-    QPointF origin = group->sceneBoundingRect().topLeft() - group->scenePos();
-    QPointF delta = newScenePos - origin;
-    return delta;
 }
 
 void Scene::updateGuidelines()
