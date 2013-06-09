@@ -34,7 +34,7 @@ Cell::~Cell()
 QRectF Cell::boundingRect() const
 {
     if(!stitch())
-        return QRectF(0,0,0,0);
+        return QRectF(0,0,32,32);
 
     if(stitch()->isSvg())
         return QGraphicsSvgItem::boundingRect();
