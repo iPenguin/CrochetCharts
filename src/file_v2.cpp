@@ -249,6 +249,10 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
     qreal x = 0, y = 0;
     QString textColor, bgColor;
     QString text, style;
+    QTransform transform;
+    qreal   m11 = 1, m12 = 0, m13 = 0,
+            m21 = 0, m22 = 1, m23 = 0,
+            m31 = 0, m32 = 0, m33 = 1;
 
     while(!(stream->isEndElement() && stream->name() == "indicator")) {
         stream->readNext();
@@ -266,10 +270,23 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
             bgColor = stream->readElementText();
         } else if(tag == "style") {
             style = stream->readElementText();
+        } else if(tag == "transformation") {
+            m11 = stream->attributes().value("m11").toString().toDouble();
+            m12 = stream->attributes().value("m12").toString().toDouble();
+            m13 = stream->attributes().value("m13").toString().toDouble();
+            m21 = stream->attributes().value("m21").toString().toDouble();
+            m22 = stream->attributes().value("m22").toString().toDouble();
+            m23 = stream->attributes().value("m23").toString().toDouble();
+            m31 = stream->attributes().value("m31").toString().toDouble();
+            m32 = stream->attributes().value("m32").toString().toDouble();
+            m33 = stream->attributes().value("m33").toString().toDouble();
+            transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+            stream->readElementText();
         }
     }
 
     tab->scene()->addItem(i);
+    i->setTransform(transform);
     i->setPos(x,y);
     i->setText(text);
     i->setTextColor(textColor);
@@ -528,6 +545,20 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
                 stream->writeTextElement("textColor", i->textColor().name());
                 stream->writeTextElement("bgColor", i->bgColor().name());
                 stream->writeTextElement("style", i->style());
+
+                stream->writeStartElement("transformation");
+                QTransform trans = i->transform();
+
+                stream->writeAttribute("m11", QString::number(trans.m11()));
+                stream->writeAttribute("m12", QString::number(trans.m12()));
+                stream->writeAttribute("m13", QString::number(trans.m13()));
+                stream->writeAttribute("m21", QString::number(trans.m21()));
+                stream->writeAttribute("m22", QString::number(trans.m22()));
+                stream->writeAttribute("m23", QString::number(trans.m23()));
+                stream->writeAttribute("m31", QString::number(trans.m31()));
+                stream->writeAttribute("m32", QString::number(trans.m32()));
+                stream->writeAttribute("m33", QString::number(trans.m33()));
+                stream->writeEndElement(); //transformation
 
             stream->writeEndElement(); //end indicator
         }
