@@ -199,27 +199,42 @@ void MainWindow::newChartUpdateStyle(QString style)
 {
 
     if(style == tr("Blank")) {
-        ui->rows->setEnabled(false);
-        ui->stitches->setEnabled(false);
-        ui->rowSpacing->setEnabled(false);
-        ui->defaultStitch->setEnabled(false);
-        ui->increaseBy->setEnabled(false);
+        ui->rows->setVisible(false);
+        ui->rowsLbl->setVisible(false);
+        ui->stitches->setVisible(false);
+        ui->stitchesLbl->setVisible(false);
+        ui->rowSpacing->setVisible(false);
+        ui->rowSpacingLbl->setVisible(false);
+        ui->defaultStitch->setVisible(false);
+        ui->defaultStitchLbl->setVisible(false);
+        ui->increaseBy->setVisible(false);
+        ui->increaseByLbl->setVisible(false);
     } else if(style == tr("Rounds")){
-        ui->rows->setEnabled(true);
-        ui->stitches->setEnabled(true);
-        ui->rowSpacing->setEnabled(true);
-        ui->defaultStitch->setEnabled(true);
+        ui->rows->setVisible(true);
+        ui->rowsLbl->setVisible(true);
+        ui->stitches->setVisible(true);
+        ui->stitchesLbl->setVisible(true);
+        ui->rowSpacing->setVisible(true);
+        ui->rowSpacingLbl->setVisible(true);
+        ui->defaultStitch->setVisible(true);
+        ui->defaultStitchLbl->setVisible(true);
         ui->rowsLbl->setText(tr("Rounds:"));
         ui->stitchesLbl->setText(tr("Starting Stitches:"));
-        ui->increaseBy->setEnabled(true);
+        ui->increaseBy->setVisible(true);
+        ui->increaseByLbl->setVisible(true);
     } else if (style == tr("Rows")) {
-        ui->rows->setEnabled(true);
-        ui->stitches->setEnabled(true);
-        ui->rowSpacing->setEnabled(true);
-        ui->defaultStitch->setEnabled(true);
+        ui->rows->setVisible(true);
+        ui->rowsLbl->setVisible(true);
+        ui->stitches->setVisible(true);
+        ui->stitchesLbl->setVisible(true);
+        ui->rowSpacing->setVisible(true);
+        ui->rowSpacingLbl->setVisible(true);
+        ui->defaultStitch->setVisible(true);
+        ui->defaultStitchLbl->setVisible(true);
         ui->rowsLbl->setText(tr("Rows:"));
         ui->stitchesLbl->setText(tr("Stitches:"));
-        ui->increaseBy->setEnabled(false);
+        ui->increaseBy->setVisible(false);
+        ui->increaseByLbl->setVisible(false);
     }
 }
 
