@@ -22,12 +22,12 @@
    xml:space="preserve"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="watermark.svg"
-   inkscape:export-filename="/home/brian/crochet.git/logos/sheep-rav.png"
-   inkscape:export-xdpi="36.666451"
-   inkscape:export-ydpi="36.666451"><metadata
+   inkscape:export-filename="/home/brian/crochet/images/watermark.png"
+   inkscape:export-xdpi="120"
+   inkscape:export-ydpi="120"><metadata
      id="metadata77"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
      id="defs75"><linearGradient
        id="linearGradient3856"><stop
          style="stop-color:#000000;stop-opacity:1;"
@@ -127,13 +127,13 @@
              id="text3098"
              sodipodi:linespacing="89.999998%"><tspan
                sodipodi:role="line"
-               id="tspan3100"
-               x="82.703667"
-               y="40.080685">Stitch Works</tspan><tspan
+               x="85.930229"
+               y="40.080685"
+               id="tspan3102">Crochet </tspan><tspan
                sodipodi:role="line"
                x="82.703667"
                y="65.280685"
-               id="tspan3102">Software</tspan></text>
+               id="tspan3068">Charts</tspan></text>
 </g><g
            id="g3289"
            transform="matrix(0,-0.66669501,-0.66669501,0,-33.487503,185.06233)"><path
