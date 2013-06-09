@@ -40,14 +40,10 @@ void ColorReplacer::accept()
 {
 
     if(!originalColor.isValid()) {
-        QMessageBox msgbox;
-        msgbox.setText("Test msgbox");
         return;
     }
 
     if(!newColor.isValid()) {
-        QMessageBox msgbox;
-        msgbox.setText("Test2 msgbox");
         return;
     }
 
@@ -76,10 +72,15 @@ void ColorReplacer::newColorChanged(QString color)
     if(color == tr("More colors...")) {
         QColor c = QColorDialog::getColor(Qt::black, this);
         if(c.isValid()) {
-            ui->newColor->addItem(
+            ui->newColor->blockSignals(true);
+            ui->newColor->insertItem(ui->newColor->count() - 1,
                         QIcon(ColorListWidget::drawColorBox(c, QSize(32,32))), c.name());
+            ui->newColor->blockSignals(false);
             ui->newColor->setCurrentIndex(ui->newColor->findText(c.name()));
             newColor = c;
+        } else {
+            ui->newColor->setCurrentIndex(0);
+            newColor = ui->newColor->currentText();
         }
         return;
     }
