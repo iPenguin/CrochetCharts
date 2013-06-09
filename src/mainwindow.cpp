@@ -158,7 +158,14 @@ void MainWindow::setApplicationTitle()
         icon = fileIcon;
     }
 
-    setWindowTitle(tr("%1[*] - %2").arg(shownName).arg(tr("Application")));
+    QString title;
+#ifdef Q_OS_MACX
+    title = tr("%1[*] - %2").arg(shownName).arg(qApp->applicationName())
+#else
+    title = tr("%2 - %1[*]").arg(shownName).arg(qApp->applicationName());
+#endif
+
+    setWindowTitle(title);
     setWindowFilePath(curFile);
     setWindowIcon(icon);
 
