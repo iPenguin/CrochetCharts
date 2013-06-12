@@ -149,20 +149,25 @@ void MainWindow::setApplicationTitle()
     QString curFile = mFile->fileName;
     setWindowModified(false);
 
-    QString shownName;
+    QString shownName = "";
+    QString join = "";
     QIcon icon;
-    if (curFile.isEmpty()) {
-        shownName = "untitled.txt";
-    } else {
-        shownName = QFileInfo(curFile).baseName();
-        icon = fileIcon;
-    }
 
+    if(curCrochetTab()) {
+        if (curFile.isEmpty()) {
+            shownName = "my design.pattern[*]";
+        } else {
+            shownName = QFileInfo(curFile).baseName() + "[*]";
+            icon = fileIcon;
+        }
+        join = " - ";
+    }
     QString title;
+
 #ifdef Q_OS_MACX
-    title = tr("%1[*] - %2").arg(shownName).arg(qApp->applicationName())
+    title = tr("%1%3%2").arg(shownName).arg(qApp->applicationName()).arg(join);
 #else
-    title = tr("%2 - %1[*]").arg(shownName).arg(qApp->applicationName());
+    title = tr("%2%3%1").arg(shownName).arg(qApp->applicationName()).arg(join);
 #endif
 
     setWindowTitle(title);
@@ -781,7 +786,7 @@ bool MainWindow::promptToSave()
 {
     QString niceName = QFileInfo(mFile->fileName).baseName();
     if(niceName.isEmpty())
-        niceName = "untitled";
+        niceName = "my design";
     
     QMessageBox msgbox(this);
     msgbox.setText(tr("The document '%1' has unsaved changes.").arg(niceName));
