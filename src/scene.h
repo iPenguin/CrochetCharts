@@ -393,7 +393,9 @@ private:
     QColor mEditBgColor;
 
     QPointF mOldScale;
-    
+    QTransform mOldTransform;
+    QSizeF mOldSize;
+
     qreal mAngle;
     QPointF mPivotPt;
     QPointF mOrigin;

@@ -122,6 +122,8 @@ Scene::Scene(QObject* parent) :
     mEditFgColor(QColor(Qt::black)),
     mEditBgColor(QColor(Qt::white)),
     mOldScale(QPointF(1.0, 1.0)),
+    mOldTransform(QTransform()),
+    mOldSize(QSizeF(1,1)),
     mAngle(0.0),
     mOrigin(0,0),
     mRowSpacing(9),
@@ -931,10 +933,16 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
     if (mCurItem->parentItem())
         mCurItem = mCurItem->parentItem();
 
-    mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
+    if(mCurItem->childItems().count() <= 0) {
 
-    mOrigin = mCurItem->scenePos();
-
+        mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
+        mOrigin = mCurItem->scenePos();
+    } else {
+        mOrigin = mCurItem->childrenBoundingRect().topLeft();
+        mOldSize = mCurItem->sceneBoundingRect().size();
+        mOldTransform = mCurItem->transform();
+        mPivotPt = mOrigin;
+    }
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -948,6 +956,12 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
         return;
     }
 
+    ItemGroup *g = 0;
+
+    if(mCurItem->type() == ItemGroup::Type) {
+        g = qgraphicsitem_cast<ItemGroup*>(mCurItem);
+    }
+
     mMoving = false;
 
     QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
@@ -956,12 +970,20 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
                           mCurItem->boundingRect().height() * mOldScale.y());
     QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
 
-    if((newSize.width() < 1 && newSize.width() > -1) ||
-        (newSize.height() < 1 && newSize.height() > -1))
-        return;
+    if(newSize.width() == 0)
+        newSize.setWidth(1);
+    if(newSize.height() == 0)
+        newSize.setHeight(1);
 
-    QPointF newScale = QPointF(newSize.width() / mCurItem->boundingRect().width(),
-                                newSize.height() / mCurItem->boundingRect().height());
+    QPointF newScale;
+    if(g) {
+        newScale = QPointF(newSize.width() / mCurItem->sceneBoundingRect().width(),
+                        newSize.height() / mCurItem->sceneBoundingRect().height());
+
+    } else {
+        newScale = QPointF(newSize.width() / mCurItem->boundingRect().width(),
+                        newSize.height() / mCurItem->boundingRect().height());
+    }
 
     //When holding Ctrl lock scale to largest dimension.
     if(e->modifiers() == Qt::ControlModifier) {
@@ -971,7 +993,20 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
             newScale.rx() = newScale.ry();
     }
 
-    SetItemScale::setScale(mCurItem, newScale);
+    //SetItemScale::setScale(mCurItem, newScale);
+
+    if(g) {
+        mCurItem->setTransform(mOldTransform
+            .translate(mPivotPt.x(), mPivotPt.y())
+            .scale(newScale.x(), newScale.y())
+            .translate(-mPivotPt.x(), -mPivotPt.y())
+            );
+    } else {
+        QPointF txScale = QPointF(newScale.x() / mCurItem->transform().m11(),
+                                  newScale.y() / mCurItem->transform().m22());
+
+        mCurItem->setTransform(mCurItem->transform().scale(txScale.x(), txScale.y()));
+    }
 }
 
 void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
