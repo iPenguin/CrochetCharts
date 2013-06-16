@@ -10,6 +10,7 @@ usage()
     
     printf "      -a        Build this project for the Apple App Store.\n" 1>&2
     printf "      -d        Build the documentation for the project.\n" 1>&2
+    printf "      -D        Build the Doxygen files for the project.\n" 1>&2
     printf "      -h        Show this help screen.\n\n" 1>&2
     
     printf "      debug     Build the project with debug flags.\n" 1>&2
@@ -86,12 +87,11 @@ function init_variables {
         USE_LLVM=false
     fi
     
-    JAVA_BIN=`which java`
-    FOP=`which fop`
-    XSLTPROC=`which xsltproc`
-    
     if [ $DOCS == "ON" ]; then
-
+        JAVA_BIN=`which java`
+        FOP=`which fop`
+        XSLTPROC=`which xsltproc`
+        
         if [ ! $JAVA_BIN ]; then
             printf "${RED}Error${ENDCOLOR}: ${WHITE}Java${ENDCOLOR} must be installed to build the documentation.\n"
         fi
@@ -109,6 +109,20 @@ function init_variables {
             exit 1
         fi
     fi
+    CMAKE_FLAGS="$CMAKE_FLAGS -DDOCS=$DOCS"
+
+    if [ $DOXYGEN == "ON" ]; then
+        GV_DOT=`which dot`
+        
+        if [ ! $GV_DOT ]; then
+            printf "${RED}Error${ENDCOLOR}: ${WHITE}Graphviz/dot${ENDCOLOR} must be installed to build the doxygen files.\n"
+        fi
+        
+        if [[ ! "$GV_DOT" ]]; then
+            exit 1
+        fi
+    fi
+    CMAKE_FLAGS="$CMAKE_FLAGS -DDOXYGEN=$DOXYGEN"
     
     if [ $APP_STORE == "ON" ]; then
         BUNDLE_ID="com.stitchworkssoftware.crochet-charts"
@@ -125,8 +139,6 @@ function init_variables {
     CMAKE_CXX_FLAGS="-W -Wall"
     CMAKE_EXE_LINKER_FLAGS=""
     
-    CMAKE_FLAGS="$CMAKE_FLAGS -DDOCS=$DOCS"
-    
     if [ $PLATFORM == "Darwin" ]; then
 
         MACOSX_DEPLOYMENT_TARGET=10.6
@@ -139,8 +151,6 @@ function init_variables {
         CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6"
         CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_SYSROOT=$MACOSX_SDK"
         CMAKE_FLAGS="$CMAKE_FLAGS -DBUNDLE_ID=$BUNDLE_ID"
-        
-        USE_LLVM=true
 
     elif [ $PLATFORM == "Linux" ]; then
 
@@ -169,13 +179,17 @@ function init_variables {
     if [ $USE_LLVM ]; then
         CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -g -gdwarf-2 -Qunused-arguments -fcolor-diagnostics"
         CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -g -gdwarf-2 -Qunused-arguments -fcolor-diagnostics"
-        CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} "
+        #clang is broken on Fedora - doesn't have compiler-rt installed
+        #CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address"
     else
         CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -g -ggdb"
         CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -g -ggdb"
-        CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} "
+        CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS}"
     fi
-    
+
+    #CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_C_FLAGS=\"${CMAKE_C_FLAGS}\""
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_CXX_FLAGS=\"${CMAKE_CXX_FLAGS}\""
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_EXE_LINKER_FLAGS=\"${CMAKE_EXE_LINKER_FLAGS}\""
 }
 
 function generate_icons {
@@ -206,42 +220,59 @@ function generate_icons {
 function display_vairiables {
 
     printf -- "${WHITE}-------------------------------------------------------\n"
+    printf --         "--                                                   --\n"
     printf --         "--     P R O J E C T    B U I L D    S C R I P T     --\n"
+    printf --         "--                                                   --\n"
     printf --         "-------------------------------------------------------${ENDCOLOR}\n\n"
-    printf -- "Building: ${BRIGHT_BLUE}$PROJECT_DIR${ENDCOLOR}\n"
-    printf -- "Build Dir: ${BRIGHT_BLUE}$BUILD_DIR${ENDCOLOR}\n\n"
+    printf -- "-- Project:       ${BRIGHT_BLUE}$PROJECT_DIR${ENDCOLOR}\n"
+    printf -- "-- Build Dir:     ${BRIGHT_BLUE}$BUILD_DIR${ENDCOLOR}\n\n"
         
-    printf "Using the following variables:\n"
-    printf -- "-- CMake:       ${GREEN}$CMAKE${ENDCOLOR}\n"
-    printf -- "-- QMake:       ${GREEN}$QMAKE${ENDCOLOR}\n"
-    printf -- "-- CC:          ${GREEN}$CC${ENDCOLOR}\n"
-    printf -- "-- CXX:         ${GREEN}$CXX${ENDCOLOR}\n"
-    printf -- "-- Platform:    ${GREEN}$PLATFORM${ENDCOLOR}\n"
-    printf -- "-- Arch:        ${GREEN}$ARCH${ENDCOLOR}\n"
+    printf -- "${WHITE}-------------------------------------------------------\n"
+    printf --         "--                   G E N E R A L                   --\n"
+    printf --         "-------------------------------------------------------${ENDCOLOR}\n"
+    printf -- "-- CMake:         ${GREEN}$CMAKE${ENDCOLOR}\n"
+    printf -- "-- QMake:         ${GREEN}$QMAKE${ENDCOLOR}\n"
+    printf -- "-- CC:            ${GREEN}$CC${ENDCOLOR}\n"
+    printf -- "-- CXX:           ${GREEN}$CXX${ENDCOLOR}\n"
+    printf -- "-- Platform:      ${GREEN}$PLATFORM${ENDCOLOR}\n"
+    printf -- "-- Arch:          ${GREEN}$ARCH${ENDCOLOR}\n"
+    printf -- "-- Use LLVM:      ${GREEN}$USE_LLVM${ENDCOLOR}\n"
+    printf -- "-- CMake Flags:   ${GREEN}$CMAKE_FLAGS${ENDCOLOR}\n"
+    printf -- "-- CPack Flags:   ${GREEN}$CPACK_FLAGS${ENDCOLOR}\n"
     
     if [ $PLATFORM == "Darwin" ]; then
-        printf -- "-- App Store:   ${GREEN}$APP_STORE${ENDCOLOR}\n"
-        printf -- "-- Bundle ID:   ${GREEN}$BUNDLE_ID${ENDCOLOR}\n"
+        printf -- "${WHITE}-------------------------------------------------------\n"
+        printf --         "--             M A C   A P P   S T O R E             --\n"
+        printf --         "-------------------------------------------------------${ENDCOLOR}\n"
+        printf -- "-- App Store:     ${GREEN}$APP_STORE${ENDCOLOR}\n"
+        printf -- "-- Bundle ID:     ${GREEN}$BUNDLE_ID${ENDCOLOR}\n"
     fi
     
-    printf -- "-- Use LLVM:    ${GREEN}$USE_LLVM${ENDCOLOR}\n"
+    if [ $DOCS == "ON" ]; then
+        printf -- "${WHITE}-------------------------------------------------------\n"
+        printf --         "--             D O C U M E N T A T I O N             --\n"
+        printf --         "-------------------------------------------------------${ENDCOLOR}\n"
+        printf -- "-- Java:          ${GREEN}$JAVA_BIN${ENDCOLOR}\n"
+        printf -- "-- fop:           ${GREEN}$FOP${ENDCOLOR}\n"
+        printf -- "-- xsltproc:      ${GREEN}$XSLTPROC${ENDCOLOR}\n"
+    fi
     
-    printf -- "-- CMake Flags: ${GREEN}$CMAKE_FLAGS${ENDCOLOR}\n"
-    printf -- "-- CPack Flags: ${GREEN}$CPACK_FLAGS${ENDCOLOR}\n"
-    printf -- "\n"
-    printf -- "-- Java:        ${GREEN}$JAVA_BIN${ENDCOLOR}\n"
-    printf -- "-- fop:         ${GREEN}$FOP${ENDCOLOR}\n"
-    printf -- "-- xsltproc:    ${GREEN}$XSLTPROC${ENDCOLOR}\n"
-    
+    if [ $DOXYGEN == "ON" ]; then
+        printf -- "${WHITE}-------------------------------------------------------\n"
+        printf --         "--                   D O X Y G E N                   --\n"
+        printf --         "-------------------------------------------------------${ENDCOLOR}\n"
+        printf -- "-- Graphviz/dot:  ${GREEN}$GV_DOT${ENDCOLOR}\n"
+    fi
 }
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
 APP_STORE="OFF"
 DOCS="OFF"
+DOXYGEN="OFF"
 USE_LLVM=true
 
-while getopts ":adh" opt; do
+while getopts ":adDh" opt; do
   case $opt in
     a)
       #-a is for Apple App Store
@@ -250,6 +281,9 @@ while getopts ":adh" opt; do
     d)
       #-d is for DOCS
       DOCS="ON"
+      ;;
+    D)
+      DOXYGEN="ON"
       ;;
     h)
       usage
@@ -279,7 +313,7 @@ display_vairiables
 mkdir -p "${BUILD_DIR}"
 cd "${BUILD_DIR}"
 
-cmake ${PROJECT_DIR} ${CMAKE_FLAGS}
+eval `which cmake` ${CMAKE_FLAGS} ${PROJECT_DIR}
 make
 
 if [[ $BUILD_TYPE == "Release" ]]; then

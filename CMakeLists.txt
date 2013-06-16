@@ -43,6 +43,8 @@ set(crochet_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
 
 find_package(Qt4 REQUIRED)
 
+add_definitions(${QT_DEFINITIONS})
+
 option(UNIT_TESTING  "Build the test libraries for this software" OFF)
 option(DOCS "Create docbook documentation" OFF)
 option(DOXYGEN "Create Doxygen documentation" OFF)
@@ -71,8 +73,6 @@ include(${QT_USE_FILE})
 
 #QT4_CREATE_TRANSLATION( qm_files directories ... sources ... ts_files ... OPTIONS ...)
 #QT4_ADD_TRANSLATION( qm_files ts_files ... )
-
-add_definitions(${QT_DEFINITIONS})
 
 set(CMAKE_AUTOMOC TRUE)
 

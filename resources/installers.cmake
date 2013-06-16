@@ -182,7 +182,7 @@ else()
 
 
     set(CPACK_RPM_PACKAGE_LICENSE "Commercial")
-    set(CPACK_RPM_PACKAGE_GROUP "Applications/Productivity")
+    set(CPACK_RPM_PACKAGE_GROUP "Amusements/Graphics")
     set(CPACK_RPM_PACKAGE_VENDOR ${CPACK_PACKAGE_VENDOR})
     set(CPACK_RPM_PACKAGE_REQUIRES "libqt4 >= 4.7, libqt4-x11 >= 4.7")
     set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
