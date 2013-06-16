@@ -4,47 +4,255 @@
 # the software for each supported platform.
 #############################################
 
-function display_vairiables {
-    echo "-------------------------------------------------------"
-    echo ""
-    echo "NOTE: Java must be installed or fop will fail and the pdf will not build."
-    echo ""
-    echo "Building: $PROJECT_DIR"
-    echo ""
-    echo "Using the following tools:"
-    echo "-- CMake:       $CMAKE"
-    echo "-- QMake:       $QMAKE"
-    echo "-- CC:          $CC"
-    echo "-- CXX:         $CXX"
-    echo "-- Platform:    $PLATFORM"
-    echo "-- Arch:        $ARCH"
-    if [ $PLATFORM == "Darwin" ]; then
-        echo "-- App Store:   $APP_STORE"
-        echo "-- Bundle ID:   $BUNDLE_ID"
+usage()
+{
+    printf "Usage: `basename $0` [-adh] [debug|release]\n\n" 1>&2
+    
+    printf "      -a        Build this project for the Apple App Store.\n" 1>&2
+    printf "      -d        Build the documentation for the project.\n" 1>&2
+    printf "      -h        Show this help screen.\n\n" 1>&2
+    
+    printf "      debug     Build the project with debug flags.\n" 1>&2
+    printf "      release   Build the project with release flags.\n" 1>&2
+    printf "      profile   Build the porject with debug/profiling flags.\n" 1>&2
+    exit 1
+}
+
+function init_variables {
+
+    BLACK="\e[00;30m"
+    DARY_GRAY="\e[01;30m"
+    RED="\e[00;31m"
+    BRIGHT_RED="\e[01;31m"
+    GREEN="\e[00;32m"
+    BRIGHT_GREEN="\e[01;32m"
+    BROWN="\e[00;33m"
+    YELLOW="\e[01;33m"
+    BLUE="\e[00;34m"
+    BRIGHT_BLUE="\e[01;34m"
+    PURPLE="\e[00;35m"
+    LIGHT_PURPLE="\e[01;35m"
+    CYAN="\e[00;36m"
+    BRIGHT_CYAN="\e[01;36m"
+    LIGHT_GRAY="\e[00;37m"
+    WHITE="\e[01;37m"
+    ENDCOLOR="\e[m"
+
+    QT_BASE_PATH="/opt/Qt5.1.0/5.1.0-beta1"
+
+    CMAKE=`which cmake`
+    QMAKE="${QT_BASE_PATH}/bin/qmake"
+    
+    #Debug
+    if [[ $BUILD_TYPE =~ [Dd][Ee][Bb][Uu][Gg] ]]; then
+        BUILD_TYPE="Debug"
+        BUILD_DIR="${BUILD_DIR}_debug"
+        
+        CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
+        CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
+        CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address"
+        
+    #Release
+    elif [[ $BUILD_TYPE =~ [Rr][Ee][Ll][Ee][Aa][Ss][Ee] ]]; then
+        BUILD_TYPE="Release"
+        BUILD_DIR="${BUILD_DIR}_release"
+        
+        CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -O2"
+        CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -O2"
+        CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} "
+        
+    #Profile
+    elif [[ $BUILD_TYPE =~ [Pp][Rr][Oo][Ff][Ii][Ll][Ee] ]]; then
+        BUILD_TYPE="Profile"
+        BUILD_DIR="${BUILD_DIR}_profile"
+        
+        CMAKE_C_FLAGS="-pg ${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
+        CMAKE_CXX_FLAGS="-pg ${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
+        CMAKE_EXE_LINKER_FLAGS="-pg ${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address"
     fi
-    echo "-- CMake Flags: $CMAKE_FLAGS"
+
+    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
+    CPACK_FLAGS=""
+
+    CC=`which clang`
+    if [ ! $CC ]; then
+        CC=`which gcc`
+        USE_LLVM=false
+    fi
+
+    CXX=`which clang++`
+    if [ ! $CXX ]; then
+        CXX=`which g++`
+        USE_LLVM=false
+    fi
+    
+    JAVA_BIN=`which java`
+    FOP=`which fop`
+    XSLTPROC=`which xsltproc`
+    
+    if [ $DOCS == "ON" ]; then
+
+        if [ ! $JAVA_BIN ]; then
+            printf "${RED}Error${ENDCOLOR}: ${WHITE}Java${ENDCOLOR} must be installed to build the documentation.\n"
+        fi
+
+        if [ ! $FOP ]; then
+            printf "${RED}Error${ENDCOLOR}: ${WHITE}fop${ENDCOLOR} must be installed to build the documentation.\n"
+        fi
+
+        if [ ! $XSLTPROC ]; then
+            printf "${RED}Error${ENDCOLOR}: ${WHITE}xsltproc${ENDCOLOR} must be installed to build the documentation.\n"
+            printf "Also make sure the ${WHITE}docbook-xsl-ns${ENDCOLOR} style sheets are installed.\n"
+        fi
+        
+        if [[ ! "$JAVA_BIN" || ! "$FOP" || ! "$XSLTPROC" ]]; then
+            exit 1
+        fi
+    fi
+    
+    if [ $APP_STORE == "ON" ]; then
+        BUNDLE_ID="com.stitchworkssoftware.crochet-charts"
+    else
+        BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
+    fi
+
+    export CC CXX
+
+    PLATFORM=`uname -s`
+    ARCH=`uname -m`
+
+    CMAKE_C_FLAGS="-W -Wall"
+    CMAKE_CXX_FLAGS="-W -Wall"
+    CMAKE_EXE_LINKER_FLAGS=""
+    
+    CMAKE_FLAGS="$CMAKE_FLAGS -DDOCS=$DOCS"
+    
+    if [ $PLATFORM == "Darwin" ]; then
+
+        MACOSX_DEPLOYMENT_TARGET=10.6
+        MACOSX_SDK="/Developer/SDKs/MacOSX10.6.sdk/"
+        QMAKE="/usr/local/Trolltech/Qt-4.8.4/bin/qmake"
+
+        CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_ARCHITECTURES=i386;x86_64"
+        CMAKE_FLAGS="$CMAKE_FLAGS -DQT_QMAKE_EXECUTABLE=$QMAKE"
+        CMAKE_FLAGS="$CMAKE_FLAGS -DAPP_STORE=$APP_STORE"
+        CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6"
+        CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_SYSROOT=$MACOSX_SDK"
+        CMAKE_FLAGS="$CMAKE_FLAGS -DBUNDLE_ID=$BUNDLE_ID"
+        
+        USE_LLVM=true
+
+    elif [ $PLATFORM == "Linux" ]; then
+
+        CMAKE_MODULE_PATH="${QT_BASE_PATH}/lib/cmake"
+        QMAKE="${QT_BASE_PATH}/bin/qmake"
+        CMAKE_PREFIX_PATH="${QT_BASE_PATH}" 
+        
+        if [[ $ARCH == "i686" || $ARCH == "i386" ]]; then
+            CMAKE_FLAGS="$CMAKE_FLAGS -DAMD64=OFF"
+            
+            CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -m32"
+            CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -m32"
+            CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} -m elf_i386"
+        else
+            CMAKE_FLAGS="$CMAKE_FLAGS -DAMD64=ON"
+            
+        fi
+
+        export CMAKE_MODULE_PATH CMAKE_PREFIX_PATH
+        CMAKE_FLAGS="$CMAKE_FLAGS -DQT_QMAKE_EXECUTABLE=\"$QMAKE\""
+    else
+        echo "-- ERROR: unknown platform"
+        exit 1
+    fi
+
+    if [ $USE_LLVM ]; then
+        CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -g -gdwarf-2 -Qunused-arguments -fcolor-diagnostics"
+        CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -g -gdwarf-2 -Qunused-arguments -fcolor-diagnostics"
+        CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} "
+    else
+        CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -g -ggdb"
+        CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -g -ggdb"
+        CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} "
+    fi
+    
+}
+
+function generate_icons {
+
+    INKSCAPE="`which inkscape 2> /dev/null`"
+
+    if [ ! -x "$INKSCAPE" ]; then
+        echo "Error: Could not find inkscape to convert the svg -> png" >&2
+        exit 1
+    fi
+
+    SIZES="16 32 48 64 96 128 192 256 512 1024 2048"
+    FILES="CrochetCharts stitchworks-pattern"
+
+    mkdir -p "${BUILD_DIR}/icons/"
+
+    for file in $FILES; do
+        for size in $SIZES; do
+            $INKSCAPE -z --export-width=$size --export-height=$size \
+            --export-dpi=96 --export-area-page \
+            -f "${PROJECT_DIR}/images/${file}.svg" \
+            --export-png="${BUILD_DIR}/icons/${file}-${size}.png" > /dev/null
+        done
+    done
+
+}
+
+function display_vairiables {
+
+    printf -- "${WHITE}-------------------------------------------------------\n"
+    printf --         "--     P R O J E C T    B U I L D    S C R I P T     --\n"
+    printf --         "-------------------------------------------------------${ENDCOLOR}\n\n"
+    printf -- "Building: ${BRIGHT_BLUE}$PROJECT_DIR${ENDCOLOR}\n"
+    printf -- "Build Dir: ${BRIGHT_BLUE}$BUILD_DIR${ENDCOLOR}\n\n"
+        
+    printf "Using the following variables:\n"
+    printf -- "-- CMake:       ${GREEN}$CMAKE${ENDCOLOR}\n"
+    printf -- "-- QMake:       ${GREEN}$QMAKE${ENDCOLOR}\n"
+    printf -- "-- CC:          ${GREEN}$CC${ENDCOLOR}\n"
+    printf -- "-- CXX:         ${GREEN}$CXX${ENDCOLOR}\n"
+    printf -- "-- Platform:    ${GREEN}$PLATFORM${ENDCOLOR}\n"
+    printf -- "-- Arch:        ${GREEN}$ARCH${ENDCOLOR}\n"
+    
+    if [ $PLATFORM == "Darwin" ]; then
+        printf -- "-- App Store:   ${GREEN}$APP_STORE${ENDCOLOR}\n"
+        printf -- "-- Bundle ID:   ${GREEN}$BUNDLE_ID${ENDCOLOR}\n"
+    fi
+    
+    printf -- "-- Use LLVM:    ${GREEN}$USE_LLVM${ENDCOLOR}\n"
+    
+    printf -- "-- CMake Flags: ${GREEN}$CMAKE_FLAGS${ENDCOLOR}\n"
+    printf -- "-- CPack Flags: ${GREEN}$CPACK_FLAGS${ENDCOLOR}\n"
+    printf -- "\n"
+    printf -- "-- Java:        ${GREEN}$JAVA_BIN${ENDCOLOR}\n"
+    printf -- "-- fop:         ${GREEN}$FOP${ENDCOLOR}\n"
+    printf -- "-- xsltproc:    ${GREEN}$XSLTPROC${ENDCOLOR}\n"
+    
 }
 
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
-CMAKE_FLAGS="-DDOCS=OFF -DCMAKE_BUILD_TYPE=Debug"
-CPACK_FLAGS=""
-
-CMAKE=`which cmake`
-QMAKE=`readlink \`which qmake\``
-CC=`readlink \`which cc\``
-CXX=`readlink \`which c++\``
-#CMAKE_C_LINK_EXECUTABLE=
-
 APP_STORE="OFF"
-BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
+DOCS="OFF"
+USE_LLVM=true
 
-while getopts ":a" opt; do
+while getopts ":adh" opt; do
   case $opt in
     a)
       #-a is for Apple App Store
       APP_STORE="ON"
-      BUNDLE_ID="com.stitchworkssoftware.CrochetCharts"
+      ;;
+    d)
+      #-d is for DOCS
+      DOCS="ON"
+      ;;
+    h)
+      usage
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -52,39 +260,29 @@ while getopts ":a" opt; do
   esac
 done
 
-export CC=/usr/bin/clang
-export CXX=/usr/bin/clang++
+#get aditional arguments.
+shift $(($OPTIND - 1))
 
-PLATFORM=`uname -s`
-ARCH=`uname -m`
+BUILD_TYPE=$1
+BUILD_DIR="${PROJECT_DIR}/build"
 
-mkdir -p ${PROJECT_DIR}/build
-cd ${PROJECT_DIR}/build
-
-if [ $PLATFORM == "Darwin" ]; then
-
-    MACOSX_DEPLOYMENT_TARGET=10.6
-    MACOSX_SDK="/Developer/SDKs/MacOSX10.6.sdk/"
-    QMAKE="/usr/local/Trolltech/Qt-4.8.4/bin/qmake"
-
-    CMAKE_FLAGS="$CMAKE_FLAGS -DQT_QMAKE_EXECUTABLE=$QMAKE"
-    CMAKE_FLAGS="$CMAKE_FLAGS -DAPP_STORE=$APP_STORE"
-    CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_DEPLOYMENT_TARGET=10.6"
-    CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_OSX_SYSROOT=$MACOSX_SDK"
-    CMAKE_FLAGS="$CMAKE_FLAGS -DBUNDLE_ID=$BUNDLE_ID"
-
-elif [ $PLATFORM == "Linux" ]; then
-
-    if [ $ARCH == "i686" ]; then
-      CMAKE_FLAGS="$CMAKE_FLAGS -DFORCE_32BIT=ON"
-    fi
-
-else
-    echo "-- ERROR: unknown platform"
-    exit 0
+if [ -z "$1" ]; then
+    printf -- "${RED}Error${ENDCOLOR}: Please specify the build type (debug or release).\n\n"
+    usage
+    exit 1
 fi
+
+init_variables
 
 display_vairiables
 
+mkdir -p "${BUILD_DIR}"
+cd "${BUILD_DIR}"
+
 cmake ${PROJECT_DIR} ${CMAKE_FLAGS}
 make
+
+if [[ $BUILD_TYPE == "Release" ]]; then
+    generate_icons
+    cpack ${CPACK_FLAGS}
+fi

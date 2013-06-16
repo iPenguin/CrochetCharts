@@ -166,15 +166,6 @@ else()
     install (FILES "@CMAKE_BINARY_DIR@/Crochet Charts.desktop" DESTINATION ${DESKTOP_DIR})
     install (FILES "resources/vnd.stitchworks.pattern.xml" DESTINATION share/${PROJECT_NAME})
 
-    #Generate all the png files of different sizes.
-    install(CODE "
-        execute_process(
-                COMMAND \"@CMAKE_SOURCE_DIR@/bin/generate_png\"
-                WORKING_DIRECTORY \"@CMAKE_BINARY_DIR@\"
-                OUTPUT_VARIABLE _output
-        )
-    " COMPONENT Runtime)
-
     install(FILES "@CMAKE_SOURCE_DIR@/images/CrochetCharts.svg" DESTINATION share/${PROJECT_NAME}/images)
     install(FILES "@CMAKE_SOURCE_DIR@/images/stitchworks-pattern.svg" DESTINATION share/${PROJECT_NAME}/images)
     install(DIRECTORY "@CMAKE_BINARY_DIR@/icons" DESTINATION share/${PROJECT_NAME})
@@ -196,12 +187,12 @@ else()
     set(CPACK_RPM_PACKAGE_REQUIRES "libqt4 >= 4.7, libqt4-x11 >= 4.7")
     set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 
-    if(FORCE_32BIT)
-        set(CPACK_RPM_PACKAGE_ARCHITECTURE "i386")
-        set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE i386)
-    else()
+    if(AMD64)
         set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE amd64)
         set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
+    else()
+        set(CPACK_RPM_PACKAGE_ARCHITECTURE "i386")
+        set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE i386)
     endif()
     
 endif()
