@@ -8,14 +8,16 @@ usage()
 {
     printf "Usage: `basename $0` [-adh] [debug|release]\n\n" 1>&2
     
-    printf "      -a        Build this project for the Apple App Store.\n" 1>&2
-    printf "      -d        Build the documentation for the project.\n" 1>&2
-    printf "      -D        Build the Doxygen files for the project.\n" 1>&2
-    printf "      -h        Show this help screen.\n\n" 1>&2
+    printf "      -a          Build this project for the Apple App Store.\n" 1>&2
+    printf "      -d          Build the documentation for the project.\n" 1>&2
+    printf "      -D          Build the Doxygen files for the project.\n" 1>&2
+    printf "      -h          Show this help screen.\n" 1>&2
+    printf "      -p          Build packages/installers.\n\n" 1>&2
     
-    printf "      debug     Build the project with debug flags.\n" 1>&2
-    printf "      release   Build the project with release flags.\n" 1>&2
-    printf "      profile   Build the porject with debug/profiling flags.\n" 1>&2
+    printf "      debug       Build the project with debug flags.\n" 1>&2
+    printf "      release     Build the project with release flags.\n" 1>&2
+    printf "      profile     Build the porject with debug/profiling flags.\n" 1>&2
+    printf "      installer   Build the project with release flags, and package it (same as -dp release).\n" 1>&2
     exit 1
 }
 
@@ -43,25 +45,32 @@ function init_variables {
 
     CMAKE=`which cmake`
     QMAKE="${QT_BASE_PATH}/bin/qmake"
-    
+
     #Debug
     if [[ $BUILD_TYPE =~ [Dd][Ee][Bb][Uu][Gg] ]]; then
         BUILD_TYPE="Debug"
         BUILD_DIR="${BUILD_DIR}_debug"
-        
+
         CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
         CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
         CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address"
-        
-    #Release
-    elif [[ $BUILD_TYPE =~ [Rr][Ee][Ll][Ee][Aa][Ss][Ee] ]]; then
+
+    #Release or Installer
+    elif [[ $BUILD_TYPE =~ [Rr][Ee][Ll][Ee][Aa][Ss][Ee] || 
+            $BUILD_TYPE =~ [Ii][Nn][Ss][Tt][Aa][Ll][Ll][Ee][Rr] ]]; then
+
+        if [[ $BUILD_TYPE =~ [Ii][Nn][Ss][Tt][Aa][Ll][Ll][Ee][Rr] ]]; then
+            PACKAGE="ON"
+            DOCS="ON"
+        fi
+
         BUILD_TYPE="Release"
         BUILD_DIR="${BUILD_DIR}_release"
         
         CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -O2"
         CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -O2"
         CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} "
-        
+
     #Profile
     elif [[ $BUILD_TYPE =~ [Pp][Rr][Oo][Ff][Ii][Ll][Ee] ]]; then
         BUILD_TYPE="Profile"
@@ -271,6 +280,7 @@ APP_STORE="OFF"
 DOCS="OFF"
 DOXYGEN="OFF"
 USE_LLVM=true
+PACKAGE="OFF"
 
 while getopts ":adDh" opt; do
   case $opt in
@@ -287,6 +297,9 @@ while getopts ":adDh" opt; do
       ;;
     h)
       usage
+      ;;
+    p)
+      PACKAGE="ON"
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -316,7 +329,7 @@ cd "${BUILD_DIR}"
 eval `which cmake` ${CMAKE_FLAGS} ${PROJECT_DIR}
 make
 
-if [[ $BUILD_TYPE == "Release" ]]; then
+if [[ $BUILD_TYPE == "Installer" || $PACKAGE == "ON" ]]; then
     generate_icons
     cpack ${CPACK_FLAGS}
 fi
