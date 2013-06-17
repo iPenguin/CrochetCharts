@@ -56,6 +56,6 @@ fi
 
 #-----------------------------------------------------------------------------
 # Builtin whitespace checks.
-bad=$(git diff-index --check --cached $against --) || die "$bad"
+#bad=$(git diff-index --check --cached $against --) || die "$bad"
 
 . "${BASH_SOURCE%/*}/pre-commit-chain.bash"
