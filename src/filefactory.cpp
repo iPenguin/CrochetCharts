@@ -17,6 +17,8 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
+#include <QTemporaryFile>
+
 #include "crochettab.h"
 
 #include "scene.h"
@@ -54,7 +56,6 @@ FileFactory::FileError FileFactory::load()
     in >> magicNumber;
 
     if(magicNumber != AppInfo::inst()->magicNumber) {
-        //TODO: nice error message. not a set file.
         qWarning() << "This is not a pattern file";
         file.close();
         return FileFactory::Err_WrongFileType;
@@ -63,17 +64,15 @@ FileFactory::FileError FileFactory::load()
     in >> version;
 
     if(version < FileFactory::Version_1_0) {
-        //TODO: unknown version.
         qWarning() << "Unknown file version";
         file.close();
         return FileFactory::Err_UnknownFileVersion;
     }
 
     if(version > mFileVersion) {
-        //TODO: unknown file version
         qWarning() << "This file was created with a newer version of the software.";
         file.close();
-        return FileFactory::Err_UnknownFileVersion;
+        return FileFactory::Err_NewerFileVersion;
     }
 
     if(version == FileFactory::Version_1_0) {
@@ -99,14 +98,14 @@ FileFactory::FileError FileFactory::save(FileVersion version)
     if(mTabWidget->count() <= 0)
         return FileFactory::Err_NoTabsToSave;
 
-    QFile file(fileName + ".tmp");
-    if(!file.open(QIODevice::WriteOnly)) {
+    QTemporaryFile f;
+    if(!f.open()) {
         //TODO: some nice dialog to warn the user.
-        qWarning() << "Couldn't open file for writing..." << fileName;
+        qWarning() << "Couldn't open file for writing..." << f.fileName();
         return FileFactory::Err_OpeningFile;
     }
 
-    QDataStream out(&file);
+    QDataStream out(&f);
     // Write a header with a "magic number" and a version
     out << AppInfo::inst()->magicNumber;
 
@@ -123,9 +122,12 @@ FileFactory::FileError FileFactory::save(FileVersion version)
             break;
     }
 
-    /*FIXME: error =*/ saveFile->save(&out);
+    int error = saveFile->save(&out);
 
-    file.close();
+    f.close();
+
+    if(error != FileFactory::No_Error)
+        return (FileFactory::FileError)error;
 
     QDir d(QFileInfo(fileName).path());
     //only try to delete the file if it exists.
@@ -134,7 +136,7 @@ FileFactory::FileError FileFactory::save(FileVersion version)
             return FileFactory::Err_RemovingOrigFile;
     }
 
-    if(!d.rename(fileName +".tmp", fileName))
+    if(!d.rename(f.fileName(), fileName))
         return FileFactory::Err_RenamingTempFile;
 
     return FileFactory::No_Error;

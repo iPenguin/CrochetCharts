@@ -38,34 +38,28 @@
         <string>NSApplication</string>
         <key>NSHighResolutionCapable</key>
         <string>True</string>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>pattern</string>
-				<string>set</string>
-			</array>
-			<key>CFBundleTypeName</key>
-			<string>Pattern file</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>public.archive</string>
-				<string>public.data</string>
-				<string>public.content</string>
-			</array>
-			<key>NSExportableTypes</key>
-			<array>
-				<string>public.archive</string>
-				<string>public.data</string>
-				<string>public.content</string>
-			</array>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
-		</dict>
-	</array>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <!-- keep the other entries! -->
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>pattern</string>
+            </array>
+            <key>CFBundleTypeMIMETypes</key>
+            <array>
+                <string>application/stitchworks-pattern</string>
+            </array>
+            <key>CFBundleTypeIconFile</key>
+            <string>PatternDocument</string>
+            <key>CFBundleTypeName</key>
+            <string>Stitchworks Pattern File</string>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>LSIsAppleDefaultForType</key>
+            <true/>
+        </dict>
+    </array>
     <key>ForAppStore</key>
     <string>yes</string>
 </dict>

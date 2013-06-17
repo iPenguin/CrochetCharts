@@ -110,12 +110,12 @@ public slots:
     void showRowEditor(bool state);
 
     void replaceStitches(QString original, QString replacement);
+    void replaceColor(QColor original, QColor replacement, int selection);
     
 protected:
     QMap<QString, int>* patternStitches() { return mPatternStitches; }
     
 private slots:
-    void showChartOptions();
     void zoomChanged(int value);
     void updateZoomLevel(int percent);
 

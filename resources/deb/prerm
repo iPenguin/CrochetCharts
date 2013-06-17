@@ -1,0 +1,54 @@
+#!/bin/sh
+#
+# This script is based on the one found in the
+# Google Chrome deb package.
+
+action="$1"
+if [ "$2" = "in-favour" ]; then
+  # Treat conflict remove as an upgrade.
+  action="upgrade"
+fi
+# Don't clean-up just for an upgrade.`
+if [ "$action" = "upgrade" ] ; then
+  exit 0
+fi
+
+# Add icons to the system icons
+XDG_ICON_RESOURCE="`which xdg-icon-resource 2> /dev/null`"
+if [ ! -x "$XDG_ICON_RESOURCE" ]; then
+  echo "Error: Could not find xdg-icon-resource" >&2
+  exit 1
+fi
+
+# Add the mime type to the system
+XDG_MIME="`which xdg-mime 2> /dev/null`"
+if [ ! -x "$XDG_MIME" ]; then
+  echo "Error: Could not find xdg-mime" >&2
+  exit 1
+fi
+
+# Add an entry to the system menu
+XDG_DESKTOP_MENU="`which xdg-desktop-menu 2> /dev/null`"
+if [ ! -x "$XDG_DESKTOP_MENU" ]; then
+  echo "Error: Could not find xdg-desktop-menu" >&2
+  exit 1
+fi
+
+SIZES="16 32 48 64 96 128 192 256 512 1024 2048"
+FPATH="/usr/share/CrochetCharts"
+
+#install all icons for each size.
+for size in $SIZES; do
+  "$XDG_ICON_RESOURCE" uninstall --novendor --context mimetypes --size $size "${FPATH}/icons/stitchworks-pattern-${size}.png" "stitchworks-pattern"
+  "$XDG_ICON_RESOURCE" uninstall --novendor --context apps --size $size "${FPATH}/icons/CrochetCharts-${size}.png" "CrochetCharts"
+done
+
+"$XDG_MIME" uninstall "${FPATH}/vnd.stitchworks.pattern.xml" --novendor
+
+"$XDG_MIME" uninstall default "Crochet Charts.desktop" applications/x-stitchworks-pattern
+
+UPDATE_MENUS="`which update-menus 2> /dev/null`"
+if [ -x "$UPDATE_MENUS" ]; then
+  update-menus
+fi
+

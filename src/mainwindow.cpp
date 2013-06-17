@@ -8,6 +8,8 @@
 #include "licensewizard.h"
 #include "exportui.h"
 
+#include "application.h"
+
 #include "appinfo.h"
 #include "settings.h"
 #include "settingsui.h"
@@ -18,6 +20,7 @@
 #include "stitchpalettedelegate.h"
 
 #include "stitchreplacerui.h"
+#include "colorreplacer.h"
 
 #include "debug.h"
 #include <QDialog>
@@ -82,7 +85,10 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
 
     setupMenus();
     readSettings();
-    
+
+    //File icon for titlebar
+    fileIcon = QIcon(":/images/stitchworks-pattern.svg");
+
     QApplication::restoreOverrideCursor();
 }
 
@@ -98,7 +104,13 @@ void MainWindow::loadFiles(QStringList fileNames)
 
     if(ui->tabWidget->count() < 1) {
         mFile->fileName = fileNames.takeFirst();
-        mFile->load(); //TODO: if !error hide dialog.
+        int error = mFile->load();
+
+        if(error != FileFactory::No_Error) {
+            showFileError(error);
+            return;
+        }
+
         Settings::inst()->files.insert(mFile->fileName.toLower(), this);
         addToRecentFiles(mFile->fileName);
         ui->newDocument->hide();
@@ -110,6 +122,8 @@ void MainWindow::loadFiles(QStringList fileNames)
         MainWindow* newWin = new MainWindow(files);
         newWin->move(x() + 40, y() + 40);
         newWin->show();
+        newWin->raise();
+        newWin->activateWindow();
         Settings::inst()->files.insert(mFile->fileName.toLower(), newWin);
         addToRecentFiles(fileName);
     }
@@ -132,11 +146,34 @@ void MainWindow::checkUpdates(bool silent)
 
 void MainWindow::setApplicationTitle()
 {
-    QString cleanName = QFileInfo(mFile->fileName).baseName();
-    if(cleanName.isEmpty())
-        cleanName = "untitled";
-    
-    setWindowTitle(QString("%1 - %2[*]").arg(qApp->applicationName()).arg(cleanName));
+    QString curFile = mFile->fileName;
+    setWindowModified(false);
+
+    QString shownName = "";
+    QString join = "";
+    QIcon icon;
+
+    if(curCrochetTab()) {
+        if (curFile.isEmpty()) {
+            shownName = "my design.pattern[*]";
+        } else {
+            shownName = QFileInfo(curFile).baseName() + "[*]";
+            icon = fileIcon;
+        }
+        join = " - ";
+    }
+    QString title;
+
+#ifdef Q_OS_MACX
+    title = tr("%1%3%2").arg(shownName).arg(qApp->applicationName()).arg(join);
+#else
+    title = tr("%2%3%1").arg(shownName).arg(qApp->applicationName()).arg(join);
+#endif
+
+    setWindowTitle(title);
+    setWindowFilePath(curFile);
+    setWindowIcon(icon);
+
 }
 
 void MainWindow::setupNewTabDialog()
@@ -167,27 +204,42 @@ void MainWindow::newChartUpdateStyle(QString style)
 {
 
     if(style == tr("Blank")) {
-        ui->rows->setEnabled(false);
-        ui->stitches->setEnabled(false);
-        ui->rowSpacing->setEnabled(false);
-        ui->defaultStitch->setEnabled(false);
-        ui->increaseBy->setEnabled(false);
+        ui->rows->setVisible(false);
+        ui->rowsLbl->setVisible(false);
+        ui->stitches->setVisible(false);
+        ui->stitchesLbl->setVisible(false);
+        ui->rowSpacing->setVisible(false);
+        ui->rowSpacingLbl->setVisible(false);
+        ui->defaultStitch->setVisible(false);
+        ui->defaultStitchLbl->setVisible(false);
+        ui->increaseBy->setVisible(false);
+        ui->increaseByLbl->setVisible(false);
     } else if(style == tr("Rounds")){
-        ui->rows->setEnabled(true);
-        ui->stitches->setEnabled(true);
-        ui->rowSpacing->setEnabled(true);
-        ui->defaultStitch->setEnabled(true);
+        ui->rows->setVisible(true);
+        ui->rowsLbl->setVisible(true);
+        ui->stitches->setVisible(true);
+        ui->stitchesLbl->setVisible(true);
+        ui->rowSpacing->setVisible(true);
+        ui->rowSpacingLbl->setVisible(true);
+        ui->defaultStitch->setVisible(true);
+        ui->defaultStitchLbl->setVisible(true);
         ui->rowsLbl->setText(tr("Rounds:"));
         ui->stitchesLbl->setText(tr("Starting Stitches:"));
-        ui->increaseBy->setEnabled(true);
+        ui->increaseBy->setVisible(true);
+        ui->increaseByLbl->setVisible(true);
     } else if (style == tr("Rows")) {
-        ui->rows->setEnabled(true);
-        ui->stitches->setEnabled(true);
-        ui->rowSpacing->setEnabled(true);
-        ui->defaultStitch->setEnabled(true);
+        ui->rows->setVisible(true);
+        ui->rowsLbl->setVisible(true);
+        ui->stitches->setVisible(true);
+        ui->stitchesLbl->setVisible(true);
+        ui->rowSpacing->setVisible(true);
+        ui->rowSpacingLbl->setVisible(true);
+        ui->defaultStitch->setVisible(true);
+        ui->defaultStitchLbl->setVisible(true);
         ui->rowsLbl->setText(tr("Rows:"));
         ui->stitchesLbl->setText(tr("Stitches:"));
-        ui->increaseBy->setEnabled(false);
+        ui->increaseBy->setVisible(false);
+        ui->increaseByLbl->setVisible(false);
     }
 }
 
@@ -219,10 +271,15 @@ void MainWindow::setupStitchPalette()
     ui->allStitches->hideColumn(4);
     ui->allStitches->hideColumn(5);
 
-    connect(ui->allStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
-    connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), this, SLOT(selectStitch(QModelIndex)));
-    connect(ui->patternColors, SIGNAL(clicked(QModelIndex)), this, SLOT(selectColor(QModelIndex)));
-    connect(ui->stitchFilter, SIGNAL(textChanged(QString)), this, SLOT(filterStitchList(QString)));
+    connect(ui->allStitches, SIGNAL(clicked(QModelIndex)), SLOT(selectStitch(QModelIndex)));
+    connect(ui->patternStitches, SIGNAL(clicked(QModelIndex)), SLOT(selectStitch(QModelIndex)));
+
+    connect(ui->patternColors, SIGNAL(clicked(QModelIndex)), SLOT(selectColor(QModelIndex)));
+    connect(ui->fgColor, SIGNAL(colorChanged(QColor)), SLOT(addColor(QColor)));
+    connect(ui->bgColor, SIGNAL(colorChanged(QColor)), SLOT(addColor(QColor)));
+    connect(ui->patternColors, SIGNAL(bgColorSelected(QModelIndex)), SLOT(selectColor(QModelIndex)));
+
+    connect(ui->stitchFilter, SIGNAL(textChanged(QString)), SLOT(filterStitchList(QString)));
 }
 
 void MainWindow::setupDocks()
@@ -275,7 +332,7 @@ void MainWindow::setupMenus()
     connect(ui->actionExport, SIGNAL(triggered()), SLOT(fileExport()));
 
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(close()));
-  
+
     ui->actionOpen->setIcon(QIcon::fromTheme("document-open", QIcon(":/images/fileopen.png")));
     ui->actionNew->setIcon(QIcon::fromTheme("document-new", QIcon(":/images/filenew.png")));
     ui->actionSave->setIcon(QIcon::fromTheme("document-save", QIcon(":/images/filesave.png")));
@@ -288,13 +345,13 @@ void MainWindow::setupMenus()
     ui->actionQuit->setIcon(QIcon::fromTheme("application-exit", QIcon(":/images/application-exit.png")));
 
     setupRecentFiles();
-    
+
     //Edit Menu
     connect(ui->menuEdit, SIGNAL(aboutToShow()), SLOT(menuEditAboutToShow()));
 
     mActionUndo = mUndoGroup.createUndoAction(this, tr("Undo"));
     mActionRedo = mUndoGroup.createRedoAction(this, tr("Redo"));
-    
+
     ui->menuEdit->insertAction(ui->actionCopy, mActionUndo);
     ui->menuEdit->insertAction(ui->actionCopy, mActionRedo);
     ui->menuEdit->insertSeparator(ui->actionCopy);
@@ -302,12 +359,12 @@ void MainWindow::setupMenus()
     ui->mainToolBar->insertAction(0, mActionUndo);
     ui->mainToolBar->insertAction(0, mActionRedo);
     ui->mainToolBar->insertSeparator(mActionUndo);
-    
+
     mActionUndo->setIcon(QIcon::fromTheme("edit-undo", QIcon(":/images/editundo.png")));
     mActionRedo->setIcon(QIcon::fromTheme("edit-redo", QIcon(":/images/editredo.png")));
     mActionUndo->setShortcut(QKeySequence::Undo);
     mActionRedo->setShortcut(QKeySequence::Redo);
-    
+
     ui->actionCopy->setIcon(QIcon::fromTheme("edit-copy", QIcon(":/images/editcopy.png")));
     ui->actionCut->setIcon(QIcon::fromTheme("edit-cut", QIcon(":/images/editcut.png")));
     ui->actionPaste->setIcon(QIcon::fromTheme("edit-paste", QIcon(":/images/editpaste.png")));
@@ -316,12 +373,9 @@ void MainWindow::setupMenus()
     connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
 
-    connect(ui->actionColorSelectorBg, SIGNAL(triggered()), SLOT(selectColor()));
-    connect(ui->actionColorSelectorFg, SIGNAL(triggered()), this, SLOT(selectColor()));
-    
-    ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(mFgColor, QSize(32, 32))));
-    ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(mBgColor, QSize(32, 32))));
-    
+    ui->fgColor->setColor(QColor(Qt::black));
+    ui->bgColor->setColor(QColor(Qt::white));
+
     //View Menu
     connect(ui->menuView, SIGNAL(aboutToShow()), SLOT(menuViewAboutToShow()));
     connect(ui->actionShowStitches, SIGNAL(triggered()), SLOT(viewShowStitches()));
@@ -350,7 +404,6 @@ void MainWindow::setupMenus()
 
     mModeGroup = new QActionGroup(this);
     mModeGroup->addAction(ui->actionStitchMode);
-    mModeGroup->addAction(ui->actionColorMode);
     mModeGroup->addAction(ui->actionAngleMode);
     mModeGroup->addAction(ui->actionStretchMode);
     mModeGroup->addAction(ui->actionCreateRows);
@@ -382,6 +435,7 @@ void MainWindow::setupMenus()
     connect(ui->actionUngroup, SIGNAL(triggered()), SLOT(ungroup()));
 
     connect(ui->actionReplaceStitch, SIGNAL(triggered()), SLOT(stitchesReplaceStitch()));
+    connect(ui->actionColorReplacer, SIGNAL(triggered()), SLOT(stitchesReplaceColor()));
 
     //stitches menu
     connect(ui->menuStitches, SIGNAL(aboutToShow()), SLOT(menuStitchesAboutToShow()));
@@ -547,57 +601,20 @@ void MainWindow::fileExport()
     d.exec();
 }
 
-QPixmap MainWindow::drawColorBox(QColor color, QSize size)
-{
-    QPixmap pix = QPixmap(size);
-    QPainter p;
-    p.begin(&pix);
-    p.fillRect(QRect(QPoint(0, 0), size), QColor(color));
-    p.drawRect(0, 0, size.width() - 1, size.height() - 1);
-    p.end();
-
-    return pix;
-}
-
-void MainWindow::selectColor()
-{
-    if(sender() == ui->actionColorSelectorBg) {
-        QColor color = QColorDialog::getColor(mBgColor, this, tr("Background Color"));
-        
-        if (color.isValid()) {
-            ui->actionColorSelectorBg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
-            mBgColor = color;
-            updateBgColor();
-        }
-    } else {
-        QColor color = QColorDialog::getColor(mFgColor, this, tr("Foreground Color"));
-        
-        if (color.isValid()) {
-            ui->actionColorSelectorFg->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
-            mFgColor = color;
-            updateFgColor();
-        }
-    }
-}
-
-void MainWindow::updateBgColor()
+void MainWindow::addColor(QColor color)
 {
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
         CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-        if(tab)
-            tab->setEditBgColor(mBgColor);
-    }
-    setEditMode(11);
-}
+        if(!tab)
+            return;
 
-void MainWindow::updateFgColor()
-{
-    for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-        if(tab)
-            tab->setEditFgColor(mFgColor);
+        if(sender() == ui->fgColor) {
+            tab->setEditFgColor(color);
+        } else if (sender() == ui->bgColor) {
+            tab->setEditBgColor(color);
+        }
     }
-    setEditMode(11);
+
 }
 
 void MainWindow::selectStitch(QModelIndex index)
@@ -605,7 +622,7 @@ void MainWindow::selectStitch(QModelIndex index)
     QModelIndex idx;
     
     if(sender() == ui->allStitches) {
-        const QSortFilterProxyModel* model =  static_cast<const QSortFilterProxyModel*>(index.model());
+        const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
         idx = model->mapToSource(model->index(index.row(), 0));
         
     } else
@@ -617,10 +634,11 @@ void MainWindow::selectStitch(QModelIndex index)
         return;
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
         if(tab)
             tab->setEditStitch(stitch);
     }
+
     setEditMode(10);
 }
 
@@ -629,11 +647,12 @@ void MainWindow::selectColor(QModelIndex index)
     QString color = index.data(Qt::ToolTipRole).toString();
 
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
-        CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-        if(tab)
-            tab->setEditBgColor(color);
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        if(tab) {
+            tab->setEditFgColor(color);
+            ui->fgColor->setColor(color);
+        }
     }
-    setEditMode(11);
 }
 
 void MainWindow::filterStitchList(QString newText)
@@ -744,11 +763,12 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
         mFile->cleanUp();
 
+        mPropertiesDock->closing = true;
         QMainWindow::closeEvent(event);
     } else {
         event->ignore();
     }
-    
+
 }
 
 bool MainWindow::safeToClose()
@@ -758,7 +778,7 @@ bool MainWindow::safeToClose()
         if(isWindowModified())
             return promptToSave();
     }
-    
+
     return true;
 }
 
@@ -766,7 +786,7 @@ bool MainWindow::promptToSave()
 {
     QString niceName = QFileInfo(mFile->fileName).baseName();
     if(niceName.isEmpty())
-        niceName = "untitled";
+        niceName = "my design";
     
     QMessageBox msgbox(this);
     msgbox.setText(tr("The document '%1' has unsaved changes.").arg(niceName));
@@ -841,11 +861,19 @@ void MainWindow::loadFile(QString fileName)
             MainWindow* newWin = new MainWindow(files);
             newWin->move(x() + 40, y() + 40);
             newWin->show();
+            newWin->raise();
+            newWin->activateWindow();
             Settings::inst()->files.insert(fileName.toLower(), newWin);
         } else {
             ui->newDocument->hide();
             mFile->fileName = fileName;
-            mFile->load();
+            int error = mFile->load();
+
+            if(error != FileFactory::No_Error) {
+                showFileError(error);
+                return;
+            }
+
             Settings::inst()->files.insert(mFile->fileName.toLower(), this);
         }
         
@@ -880,12 +908,17 @@ void MainWindow::fileSave()
     else {
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         FileFactory::FileError err = mFile->save();
-        if(err != FileFactory::No_Error)
+        if(err != FileFactory::No_Error) {
             qWarning() << "There was an error saving the file: " << err;
+            QMessageBox msgbox;
+            msgbox.setText(tr("There was an error saving the file."));
+            msgbox.setIcon(QMessageBox::Critical);
+            msgbox.exec();
+        }
+
+        documentIsModified(false);
         QApplication::restoreOverrideCursor();
     }
-    
-    setWindowModified(false);
 }
 
 void MainWindow::fileSaveAs()
@@ -933,13 +966,30 @@ void MainWindow::saveFileAs(QString fileName)
     if(Settings::inst()->files.contains(mFile->fileName.toLower()))
         Settings::inst()->files.remove(mFile->fileName.toLower());
     Settings::inst()->files.insert(fileName.toLower(), this);
+    addToRecentFiles(fileName);
 
     mFile->fileName = fileName;
     mFile->save(fver);
 
     setApplicationTitle();
-    setWindowModified(false);
+    documentIsModified(false);
     QApplication::restoreOverrideCursor();
+}
+
+void MainWindow::showFileError(int error)
+{
+    QApplication::restoreOverrideCursor();
+    QMessageBox msgbox;
+    msgbox.setText(tr("There was an error loading the file %1.").arg(mFile->fileName));
+    msgbox.setIcon(QMessageBox::Critical);
+    if(error == FileFactory::Err_NewerFileVersion) {
+        msgbox.setInformativeText(tr("It appears to have been created with a newer version of %1.")
+                                    .arg(AppInfo::inst()->appName));
+    } else if ( error == FileFactory::Err_WrongFileType ) {
+        msgbox.setInformativeText(tr("This file does not appear to be a %1 file.")
+                                    .arg(AppInfo::inst()->appName));
+    }
+    msgbox.exec();
 }
 
 void MainWindow::viewFullScreen(bool state)
@@ -962,8 +1012,6 @@ void MainWindow::menuFileAboutToShow()
     
     ui->actionExport->setEnabled(state);
 
-    //ui->actionColorSelectorFg->setEnabled(state);
-    ui->actionColorSelectorBg->setEnabled(state);
 }
 
 void MainWindow::menuEditAboutToShow()
@@ -1003,7 +1051,12 @@ void MainWindow::menuStitchesAboutToShow()
 
     ui->actionShowAlignDock->setChecked(mAlignDock->isVisible());
     ui->actionShowMirrorDock->setChecked(mMirrorDock->isVisible());
-    ui->actionReplaceStitch->setEnabled(hasTab() && curCrochetTab());
+
+    bool hasItems = (mPatternStitches.count() > 0 ? true : false);
+    ui->actionReplaceStitch->setEnabled(hasTab() && curCrochetTab() && hasItems);
+
+    hasItems = (mPatternColors.count() > 0 ? true : false);
+    ui->actionColorReplacer->setEnabled(hasTab() && curCrochetTab() && hasItems);
 
     ui->actionGroup->setEnabled(hasTab() && curCrochetTab());
     ui->actionUngroup->setEnabled(hasTab() && curCrochetTab());
@@ -1017,11 +1070,31 @@ void MainWindow::stitchesReplaceStitch()
     if(!tab)
         return;
 
+    if(mPatternStitches.count() <= 0)
+        return;
+
     StitchReplacerUi *sr = new StitchReplacerUi(mPatternStitches.keys(), this);
 
     if(sr->exec() == QDialog::Accepted) {
         if(!sr->original.isEmpty())
             tab->replaceStitches(sr->original, sr->replacement);
+    }
+
+}
+
+void MainWindow::stitchesReplaceColor()
+{
+    CrochetTab *tab = curCrochetTab();
+    if(!tab)
+        return;
+
+    if(mPatternColors.count() <= 0)
+        return;
+
+    ColorReplacer *cr = new ColorReplacer(mPatternColors.keys(), this);
+
+    if(cr->exec() == QDialog::Accepted) {
+        tab->replaceColor(cr->originalColor, cr->newColor, cr->selection);
     }
 
 }
@@ -1105,7 +1178,10 @@ void MainWindow::newChart()
     tab->createChart(st, rows, cols, defStitch, QSizeF(32, rowHeight), incBy);
 
     updateMenuItems();
-    documentIsModified(true);
+
+    //Only mark a document as modified if we're adding another tab to it.
+    if(ui->tabWidget->count() > 1)
+        documentIsModified(true);
 }
 
 CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
@@ -1119,6 +1195,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
 
     connect(tab, SIGNAL(chartStitchChanged()), SLOT(updatePatternStitches()));
     connect(tab, SIGNAL(chartColorChanged()), SLOT(updatePatternColors()));
+    connect(tab, SIGNAL(chartColorChanged()), mPropertiesDock, SLOT(propertyUpdated()));
     connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
     connect(tab, SIGNAL(guidelinesUpdated(Guidelines)), SLOT(updateGuidelines(Guidelines)));
 
@@ -1243,8 +1320,6 @@ void MainWindow::changeTabMode(QAction* a)
     
     if(a == ui->actionStitchMode)
         mode = 10;
-    else if(a == ui->actionColorMode)
-        mode = 11;
     else if(a == ui->actionCreateRows)
         mode = 12;
     else if(a == ui->actionAngleMode)
@@ -1263,8 +1338,6 @@ void MainWindow::setEditMode(int mode)
     
     if(mode == 10)
         ui->actionStitchMode->setChecked(true);
-    else if(mode == 11)
-        ui->actionColorMode->setChecked(true);
     else if(mode == 12)
         ui->actionCreateRows->setChecked(true);
     else if(mode == 14)
@@ -1487,11 +1560,12 @@ void MainWindow::updatePatternColors()
         QString color = sortedColors.value(sortedKey);
         QList<QListWidgetItem*> items = ui->patternColors->findItems(color, Qt::MatchExactly);
         if(items.count() == 0) {
-            QPixmap pix = drawColorBox(color, QSize(32, 32));
+            QPixmap pix = ColorListWidget::drawColorBox(color, QSize(32, 32));
             QIcon icon = QIcon(pix);
             
             QListWidgetItem* item = new QListWidgetItem(icon, prefix + QString::number(i), ui->patternColors);
             item->setToolTip(color);
+            item->setData(Qt::UserRole, QVariant(color));
             ui->patternColors->addItem(item);
             ++i;
         }
@@ -1500,7 +1574,19 @@ void MainWindow::updatePatternColors()
 
 void MainWindow::documentIsModified(bool isModified)
 {
-    //TODO: check all possible modification locations.
+    QString curFile = mFile->fileName;
+
+    if (!curFile.isEmpty()) {
+        if (!isModified) {
+            setWindowIcon(fileIcon);
+        } else {
+            static QIcon darkIcon;
+
+            if (darkIcon.isNull())
+                darkIcon = QIcon(":/images/stitchworks-pattern-dark.svg");
+            setWindowIcon(darkIcon);
+        }
+    }
     setWindowModified(isModified);
 }
 

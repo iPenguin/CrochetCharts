@@ -2,7 +2,7 @@
 | Copyright (c) 2010 Stitch Works Software        |
 | Brian C. Milco <brian@stitchworkssoftware.com>  |
 \*************************************************/
-#include <QtGui/QApplication>
+#include "application.h"
 #include "mainwindow.h"
 #include "appinfo.h"
 
@@ -12,8 +12,6 @@
 #include "licensewizard.h"
 #include "settings.h"
 
-#include "stitchlibrary.h"
-
 #include "splashscreen.h"
 #include "updatefunctions.h"
 
@@ -22,12 +20,13 @@
 int main(int argc, char *argv[])
 {
     qInstallMsgHandler(errorHandler);
-    QApplication a(argc, argv);
-    
-    qApp->setApplicationName(AppInfo::inst()->appName);
-    qApp->setApplicationVersion(AppInfo::inst()->appVersion);
-    qApp->setOrganizationName(AppInfo::inst()->appOrg);
-    qApp->setOrganizationDomain(AppInfo::inst()->appOrgDomain);
+    Application a(argc, argv);
+
+    QStringList arguments = QCoreApplication::arguments();
+    arguments.removeFirst(); // remove the application name from the list.
+
+    MainWindow w(arguments);
+    a.setMainWindow(&w);
 
     Q_INIT_RESOURCE(crochet);
 
@@ -57,16 +56,8 @@ int main(int argc, char *argv[])
     updateFunction(lastUsed);
     Settings::inst()->setValue("version", curVersion);
 
-    splash.showMessage(QObject::tr("Loading Stitches..."));
-    StitchLibrary* library = StitchLibrary::inst();
-    library->loadStitchSets();
-
     splash.showMessage(QObject::tr("Loading Ui..."));
 
-    QStringList arguments = QCoreApplication::arguments();
-    arguments.removeFirst(); // remove the application name from the list.
-    
-    MainWindow w(arguments);
     w.showMaximized();
     splash.finish(&w);
     return a.exec();

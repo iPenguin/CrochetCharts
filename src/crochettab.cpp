@@ -80,21 +80,13 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     mView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 
     mRowEditDialog = new RowEditDialog(scene(), mTextView, this);
-    ui->dialogLayout->addWidget(mRowEditDialog);
+    ui->horizontalLayout->addWidget(mRowEditDialog);
     mRowEditDialog->hide();
-    
-    ui->chartOptionsBox->setVisible(false);
-    connect(ui->moreBttn, SIGNAL(clicked()), SLOT(showChartOptions()));
-
-    //FIXME: remove this later:
-    ui->moreBttn->setVisible(false);
    
     connect(ui->copyInstructions, SIGNAL(clicked()), SLOT(copyInstructions()));
 
     connect(ui->zoom, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
     connect(mView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
-
-    connect(ui->showChartCenter, SIGNAL(clicked(bool)), SLOT(setShowChartCenter(bool)));
 
 }
 
@@ -119,22 +111,11 @@ void CrochetTab::setEditMode(int mode)
 
 void CrochetTab::renderChart(QPainter* painter, QRectF rect)
 {
-    QRectF sceneRect = mScene->sceneRect();
 
-    mScene->setSceneRect(mScene->itemsBoundingRect());
-    if(!rect.isValid())
-        mScene->render(painter);
-    else
-        mScene->render(painter, rect, mScene->sceneRect());
+    QRectF r = mScene->itemsBoundingRect();
+    mScene->render(painter, rect, r);
 
-    mScene->setSceneRect(sceneRect);
-
-    QPointF centerOn;
-    if(mScene->hasChartCenter())
-        centerOn = mScene->chartCenter()->boundingRect().center();
-    else
-        centerOn = mScene->sceneRect().center();
-    mView->centerOn(centerOn);
+    mView->centerOn(r.center());
 }
 
 void CrochetTab::stitchChanged(QString oldSt, QString newSt)
@@ -219,7 +200,6 @@ void CrochetTab::createChart(Scene::ChartStyle style, int rows, int cols, QStrin
         mView->ensureVisible(pt.x(), pt.y(), 50, 50);
     } else if(style == Scene::Rounds) {
         mScene->createRoundsChart(rows, cols, defStitch, rowSize, increaseBy);
-        ui->showChartCenter->setChecked(mScene->showChartCenter());
     } else if(style == Scene::Blank) {
         mScene->createBlankChart();
     }
@@ -251,20 +231,8 @@ void CrochetTab::copyInstructions()
     
 }
 
-void CrochetTab::showChartOptions()
-{
-    if(ui->moreBttn->text() == tr("&More >>")) {
-        ui->moreBttn->setText(tr("&Less <<"));
-        ui->chartOptionsBox->setVisible(true);
-    } else {
-        ui->moreBttn->setText(tr("&More >>"));
-        ui->chartOptionsBox->setVisible(false);
-    }
-}
-
 void CrochetTab::setShowChartCenter(bool state)
 {
-    ui->showChartCenter->setChecked(state);
 
     mScene->setShowChartCenter(state);
 
@@ -298,6 +266,11 @@ void CrochetTab::showRowEditor(bool state)
 void CrochetTab::replaceStitches(QString original, QString replacement)
 {
     mScene->replaceStitches(original, replacement);
+}
+
+void CrochetTab::replaceColor(QColor original, QColor replacement, int selection)
+{
+    mScene->replaceColor(original, replacement, selection);
 }
 
 void CrochetTab::updateRows()

@@ -9,7 +9,7 @@
         <file>images/fileopen.png</file>
         <file>images/fileprint.png</file>
         <file>images/filesave.png</file>
-        <file>images/crochet.ico</file>
+        <file>images/CrochetCharts.ico</file>
         <file>images/editcopy.png</file>
         <file>images/editcut.png</file>
         <file>images/editpaste.png</file>
@@ -30,7 +30,7 @@
         <file>images/textleft.png</file>
         <file>images/textright.png</file>
         <file>images/textunder.png</file>
-        <file>images/watermark.svg</file>
+        <file>images/watermark.png</file>
         <file>images/zoomin.png</file>
         <file>images/zoomout.png</file>
         <file>images/row_edit.svg</file>
@@ -65,5 +65,7 @@
         <file>images/plus.svg</file>
         <file>images/group.svg</file>
         <file>images/ungroup.svg</file>
+        <file>images/stitchworks-pattern.svg</file>
+        <file>images/stitchworks-pattern-dark.svg</file>
     </qresource>
 </RCC>

@@ -14,18 +14,21 @@
    <string>Crochet Charts</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../crochet.qrc">
+   <iconset>
     <normaloff>:/images/crochet.ico</normaloff>:/images/crochet.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="margin">
      <number>0</number>
     </property>
     <item>
      <layout class="QVBoxLayout" name="dialogLayout" stretch="0">
       <property name="spacing">
-       <number>-1</number>
+       <number>6</number>
       </property>
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
@@ -113,7 +116,7 @@
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QLabel" name="label_5">
+          <widget class="QLabel" name="rowSpacingLbl">
            <property name="text">
             <string>Row Spacing:</string>
            </property>
@@ -198,7 +201,7 @@
           </widget>
          </item>
          <item row="2" column="2">
-          <widget class="QLabel" name="label_3">
+          <widget class="QLabel" name="defaultStitchLbl">
            <property name="text">
             <string>Default Stitch:</string>
            </property>
@@ -254,7 +257,7 @@
           </widget>
          </item>
          <item row="1" column="4">
-          <widget class="QLabel" name="label">
+          <widget class="QLabel" name="increaseByLbl">
            <property name="text">
             <string>Increase By:</string>
            </property>
@@ -382,7 +385,6 @@
      <string>&amp;Modes</string>
     </property>
     <addaction name="actionStitchMode"/>
-    <addaction name="actionColorMode"/>
     <addaction name="actionAngleMode"/>
     <addaction name="actionStretchMode"/>
     <addaction name="actionCreateRows"/>
@@ -399,6 +401,7 @@
     <addaction name="actionShowMirrorDock"/>
     <addaction name="separator"/>
     <addaction name="actionReplaceStitch"/>
+    <addaction name="actionColorReplacer"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -463,6 +466,9 @@
          <height>32</height>
         </size>
        </property>
+       <property name="movement">
+        <enum>QListView::Static</enum>
+       </property>
        <property name="resizeMode">
         <enum>QListView::Adjust</enum>
        </property>
@@ -496,7 +502,52 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QListWidget" name="patternColors">
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <widget class="ColorLabel" name="fgColor">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Stitch</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="ColorLabel" name="bgColor">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Background</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="ColorListWidget" name="patternColors">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -520,6 +571,9 @@
          <width>32</width>
          <height>32</height>
         </size>
+       </property>
+       <property name="movement">
+        <enum>QListView::Static</enum>
        </property>
        <property name="resizeMode">
         <enum>QListView::Adjust</enum>
@@ -571,17 +625,17 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Find:</string>
+        <widget class="QLineEdit" name="stitchFilter">
+         <property name="inputMask">
+          <string/>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>Filter</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="stitchFilter"/>
        </item>
       </layout>
      </item>
@@ -595,6 +649,12 @@
        </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="dragEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragOnly</enum>
        </property>
        <property name="alternatingRowColors">
         <bool>false</bool>
@@ -633,7 +693,6 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionStitchMode"/>
-   <addaction name="actionColorMode"/>
    <addaction name="actionAngleMode"/>
    <addaction name="actionStretchMode"/>
    <addaction name="actionCreateRows"/>
@@ -641,8 +700,6 @@
    <addaction name="separator"/>
    <addaction name="actionShowAlignDock"/>
    <addaction name="actionShowMirrorDock"/>
-   <addaction name="actionColorSelectorFg"/>
-   <addaction name="actionColorSelectorBg"/>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -917,24 +974,6 @@
     <string>D</string>
    </property>
   </action>
-  <action name="actionColorMode">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../crochet.qrc">
-     <normaloff>:/images/fill_color.svg</normaloff>:/images/fill_color.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Color Edit</string>
-   </property>
-   <property name="toolTip">
-    <string>Edit the colors used on the chart</string>
-   </property>
-   <property name="shortcut">
-    <string>C</string>
-   </property>
-  </action>
   <action name="actionShowMainToolbar">
    <property name="checkable">
     <bool>true</bool>
@@ -949,17 +988,6 @@
    </property>
    <property name="text">
     <string>Show Edit Mode Toolbar</string>
-   </property>
-  </action>
-  <action name="actionColorSelectorFg">
-   <property name="text">
-    <string>Color Selector</string>
-   </property>
-   <property name="toolTip">
-    <string>Select a color for the stitch</string>
-   </property>
-   <property name="shortcut">
-    <string>,</string>
    </property>
   </action>
   <action name="actionShowUndoHistory">
@@ -1138,19 +1166,28 @@
     <string>Replace a stitch...</string>
    </property>
   </action>
-  <action name="actionColorSelectorBg">
+  <action name="actionColorReplacer">
    <property name="text">
-    <string>Background Color Selector</string>
+    <string>Replace a color...</string>
    </property>
    <property name="toolTip">
-    <string>Select a color for the background of the stitch</string>
-   </property>
-   <property name="shortcut">
-    <string>,</string>
+    <string>Replace one color with another</string>
    </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ColorLabel</class>
+   <extends>QLabel</extends>
+   <header>colorlabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ColorListWidget</class>
+   <extends>QListWidget</extends>
+   <header>colorlistwidget.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>chartStyle</tabstop>
   <tabstop>chartTitle</tabstop>

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>658</width>
-    <height>108</height>
+    <height>36</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,30 +18,10 @@
     <number>0</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="dialogLayout">
-     <item>
-      <widget class="QGroupBox" name="chartOptionsBox">
-       <property name="title">
-        <string>Chart Options</string>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <property name="margin">
-         <number>2</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="showChartCenter">
-          <property name="text">
-           <string>Show Chart Center</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="rightMargin">
+      <number>5</number>
+     </property>
      <item>
       <widget class="QPushButton" name="copyInstructions">
        <property name="toolTip">
@@ -100,13 +80,6 @@
        </property>
        <property name="tickInterval">
         <number>25</number>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="moreBttn">
-       <property name="text">
-        <string>&amp;More &gt;&gt;</string>
        </property>
       </widget>
      </item>

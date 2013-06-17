@@ -12,7 +12,7 @@
 #include "settings.h"
 #include <QStyleOption>
 
-Cell::Cell(QGraphicsItem* parent)
+Cell::Cell(QGraphicsItem *parent)
     : QGraphicsSvgItem(parent),
     mStitch(0),
     mScale(QPointF(1.0, 1.0)),
@@ -22,9 +22,6 @@ Cell::Cell(QGraphicsItem* parent)
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
-
-    origHeight = boundingRect().height();
-    origWidth = boundingRect().width();
 
     //if we don't set the bgColor it'll end up black.
     setBgColor();
@@ -37,7 +34,7 @@ Cell::~Cell()
 QRectF Cell::boundingRect() const
 {
     if(!stitch())
-        return QRectF(0,0,0,0);
+        return QRectF(0,0,32,32);
 
     if(stitch()->isSvg())
         return QGraphicsSvgItem::boundingRect();
@@ -45,7 +42,7 @@ QRectF Cell::boundingRect() const
         return stitch()->renderPixmap()->rect();
 }
 
-void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 
     if(!stitch())
@@ -71,6 +68,7 @@ void Cell::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWid
             painter->setPen(Qt::SolidLine);
         }
     }
+
 }
 
 bool Cell::isGrouped()
@@ -84,7 +82,7 @@ bool Cell::isGrouped()
     return false;
 }
 
-void Cell::setStitch(Stitch* s, bool useAltRenderer)
+void Cell::setStitch(Stitch *s)
 {
     if (mStitch != s) {
         QString old;
@@ -96,19 +94,11 @@ void Cell::setStitch(Stitch* s, bool useAltRenderer)
         }
         mStitch = s;
         if(s->isSvg()) {
-            QString color = mColor.name();
-            if(useAltRenderer)
-                color = Settings::inst()->value("stitchAlternateColor").toString();
-
-            mColor = QColor(color);
-            setSharedRenderer(s->renderSvg(QColor(color)));
+            setSharedRenderer(s->renderSvg(mColor));
         }
 
         if(doUpdate)
             update();
-
-        origWidth = s->width();
-        origHeight = s->height();
         
         emit stitchChanged(old, s->name());
     }
@@ -123,7 +113,7 @@ void Cell::setBgColor(QColor c)
         if (mBgColor.isValid())
             old = mBgColor.name();
         mBgColor = c;
-        emit bgColorChanged(old, c.name());
+        emit colorChanged(old, c.name());
         update();
     }
 }
@@ -136,23 +126,27 @@ void Cell::setColor(QColor c)
         if(mColor.isValid())
             old = mColor.name();
         mColor = c;
-        setSharedRenderer(stitch()->renderSvg(c));
+
+        QSvgRenderer *r = stitch()->renderSvg(c);
+        if(r)
+            setSharedRenderer(r);
 
         emit colorChanged(old, c.name());
         update();
     }
+
 }
 
-void Cell::setStitch(QString s, bool useAltRenderer)
+void Cell::setStitch(QString s)
 {
-    Stitch* stitch = StitchLibrary::inst()->findStitch(s);
+    Stitch *stitch = StitchLibrary::inst()->findStitch(s);
 
     if (!stitch) {
         QString st = Settings::inst()->value("defaultStitch").toString();
         stitch = StitchLibrary::inst()->findStitch(st);
     }
 
-    setStitch(stitch, useAltRenderer);
+    setStitch(stitch);
 }
 
 QString Cell::name()
@@ -176,25 +170,17 @@ void Cell::useAlternateRenderer(bool useAlt)
 
 void Cell::setScale(qreal sx, qreal sy)
 {
-    /*
-     * FIXME: scale(sx, sy) is obsolete in 4.7
-     * replace in future version as follows:
-     *
-    // Scale an item by 3x2 from its origin
-    item->scale(3, 2);
 
-    // Scale an item by 3x2 from (x, y)
-    item->setTransform(QTransform().translate(x, y).scale(3, 2).translate(-x, -y));
-    */
     QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
 
-    QGraphicsSvgItem::scale(newScale.x(), newScale.y());
+    QGraphicsSvgItem::setTransform(transform().scale(newScale.x(), newScale.y()));
+
     mScale = QPointF(sx, sy);
 }
 
-Cell* Cell::copy(Cell* cell)
+Cell* Cell::copy(Cell *cell)
 {
-    Cell* c = 0;
+    Cell *c = 0;
     if(!cell)
         c = new Cell();
     else

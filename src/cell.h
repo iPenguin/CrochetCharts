@@ -8,9 +8,8 @@
 #include <QtSvg/QGraphicsSvgItem>
 #include "stitch.h"
 #include <QPointer>
-#include "item.h"
 
-class Cell : public QGraphicsSvgItem, public Item
+class Cell : public QGraphicsSvgItem
 {
     Q_OBJECT
     friend class SaveFile;
@@ -20,17 +19,17 @@ public:
 
     enum { Type = UserType + 1 };
     
-    explicit Cell(QGraphicsItem* parent = 0);
+    explicit Cell(QGraphicsItem *parent = 0);
     ~Cell();
     
     QRectF boundingRect() const;
-    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     int type () const { return Cell::Type; }
 
     bool isGrouped();
 
     void setHighlight(bool state) { mHighlight = state; update(); }
-    Cell* copy(Cell* cell = 0);
+    Cell* copy(Cell *cell = 0);
     
     void setBgColor(QColor c = QColor(Qt::white));
     QColor bgColor() const { return mBgColor; }
@@ -38,8 +37,8 @@ public:
     void setColor(QColor c = QColor(Qt::black));
     QColor color() const { return mColor; }
 
-    void setStitch(Stitch* s, bool useAltRenderer = false);
-    void setStitch(QString s, bool useAltRenderer = false);
+    void setStitch(Stitch *s);
+    void setStitch(QString s);
     Stitch* stitch() const { return mStitch; }
 
     /**

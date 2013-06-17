@@ -41,10 +41,12 @@ Updater::Updater(QWidget* parent)
 #elif defined(__i386)
     arch = "i386";
 #endif
-    
+
     QString sn = Settings::inst()->value("serialNumber").toString();
     //software, version, os, serial number, arch
-    mUrl = QUrl(QString(url).arg(AppInfo::inst()->appName.toLower()).arg(AppInfo::inst()->appVersion).arg(os).arg(sn).arg(arch));
+    mUrl = QUrl(QString(url).arg(AppInfo::inst()->appName.toLower())
+                            .arg(AppInfo::inst()->appVersion)
+                            .arg(os).arg(sn).arg(arch));
 
     mProgDialog = new QProgressDialog(this);
 }
@@ -78,7 +80,7 @@ void Updater::httpFinished()
     }
 
     QString data = QString(mData);
-        
+
     if (reply->error()) {
         //TODO: add a warning.
         qWarning() << "Failed to connect to server.";
@@ -90,27 +92,25 @@ void Updater::httpFinished()
             msgbox.setIcon(QMessageBox::Information);
             msgbox.setText(tr("There is a new version of %1.").arg(AppInfo::inst()->appName));
             msgbox.setInformativeText(tr("Would you like to download the new version?"));
-            /*QPushButton* downloadNow =*/ msgbox.addButton(tr("Download the new version"), QMessageBox::ActionRole);
-            QPushButton* seeNotes    = msgbox.addButton(tr("See what has changed"), QMessageBox::HelpRole);
-            QPushButton* remindLater = msgbox.addButton(tr("Remind me later"), QMessageBox::RejectRole);
+            msgbox.setDetailedText(urls.last());
+
+            QPushButton *downloadNow = msgbox.addButton(tr("Download the new version"), QMessageBox::ActionRole);
+            QPushButton *remindLater = msgbox.addButton(tr("Remind me later"), QMessageBox::RejectRole);
 
             msgbox.exec();
 
             if(msgbox.clickedButton() == remindLater)
                 return;
-            if(msgbox.clickedButton() == seeNotes) {
-                QDesktopServices::openUrl(QUrl(urls.last()));
-                return;
-            }
-                
-            downloadInstaller(QUrl(urls.first()));
-            
+
+            if(msgbox.clickedButton() == downloadNow)
+                downloadInstaller(QUrl(urls.first()));
+
         } else if(!mSilent) {
             QMessageBox::information(this, tr("No updates available"),
                             tr("There are no updates available for %1 at this time.").arg(AppInfo::inst()->appName), QMessageBox::Ok);
         }
     }
-    
+
     reply->deleteLater();
     reply = 0;
 }

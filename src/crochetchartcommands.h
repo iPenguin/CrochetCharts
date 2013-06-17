@@ -9,25 +9,25 @@
 
 #include "cell.h"
 #include "scene.h"
-#include "item.h"
 
 class SetCellStitch : public QUndoCommand
 {
 public:
     enum { Id = 1100 };
     
-    SetCellStitch(Scene* s, Cell* cell, QString newSt, QUndoCommand* parent = 0);
+    SetCellStitch(Cell *cell, QString newSt, QUndoCommand *parent = 0);
 
     void undo();
     void redo();
 
     int id() const { return Id; }
     
+    static void setStitch(Cell *cell, QString stitch);
+
 private:
     QString oldStitch;
     QString newStitch;
-    Cell* c;
-    Scene* scene;
+    Cell *c;
 };
 
 class SetCellBgColor : public QUndoCommand
@@ -35,18 +35,19 @@ class SetCellBgColor : public QUndoCommand
 public:
     enum { Id = 1110 };
     
-    SetCellBgColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent = 0);
+    SetCellBgColor(Cell *cell, QColor newCl, QUndoCommand *parent = 0);
     
     void undo();
     void redo();
 
     int id() const { return Id; }
     
+    static void setBgColor(Cell *cell, QColor color);
+
 private:
     QColor oldColor;
     QColor newColor;
-    Cell* c;
-    Scene* scene;
+    Cell *c;
 };
 
 class SetCellColor : public QUndoCommand
@@ -54,59 +55,74 @@ class SetCellColor : public QUndoCommand
 public:
     enum { Id = 1110 };
 
-    SetCellColor(Scene* s, Cell* cell, QColor newCl, QUndoCommand* parent = 0);
+    SetCellColor(Cell *cell, QColor newCl, QUndoCommand *parent = 0);
 
     void undo();
     void redo();
 
     int id() const { return Id; }
 
+    static void setColor(Cell *cell, QColor color);
+
 private:
     QColor oldColor;
     QColor newColor;
-    Cell* c;
-    Scene* scene;
+    Cell *c;
 };
 
 class SetItemRotation : public QUndoCommand
 {
 public:
     enum { Id = 1120 };
-    
-    SetItemRotation(Scene* s, QGraphicsItem* item, qreal oldAngl, QPointF pivotPt, QUndoCommand* parent = 0);
-    
+
+    SetItemRotation(QGraphicsItem *item, qreal oldAngl, QPointF pivotPt, QUndoCommand *parent = 0);
+
     void undo();
     void redo();
-    
+
     int id() const { return Id; }
-    
+
+    static void setRotation(QGraphicsItem *item, qreal angle, QPointF pivot);
+
 private:
-    QGraphicsItem* i;
+    QGraphicsItem *i;
     qreal oldAngle;
     qreal newAngle;
     QPointF pvtPt;
-    
-    Scene* scene;
+
 };
 
-class SetItemsRotation : public QUndoCommand
+/**
+ * No matter what the angle is convert it to a number between 0, and 360 degrees.
+ */
+static void qNormalizeAngle(qreal &angle)
+{
+    while (angle < 0.0)
+        angle += 360.0;
+    while (angle > 360.0)
+        angle -= 360.0;
+}
+
+class SetSelectionRotation : public QUndoCommand
 {
 public:
     enum { Id = 1125 };
 
-    SetItemsRotation(Scene* s, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand* parent = 0);
+    SetSelectionRotation(Scene *scene, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand *parent = 0);
 
     void undo();
     void redo();
 
     int id() const { return Id; }
+
+    static void rotate(Scene *scene, qreal degrees, QList<QGraphicsItem*> items, QPointF pivotPoint);
 
 private:
     QList<QGraphicsItem*> items;
     qreal newAngle;
 
     QPointF pivotPoint;
-    Scene* scene;
+    Scene *s;
 };
 
 class SetItemCoordinates : public QUndoCommand
@@ -114,19 +130,19 @@ class SetItemCoordinates : public QUndoCommand
 public:
     enum { Id = 1130 };
 
-    SetItemCoordinates(Scene* s, QGraphicsItem* item, QPointF oldPos, QUndoCommand* parent = 0);
+    SetItemCoordinates(QGraphicsItem *item, QPointF oldPos, QUndoCommand *parent = 0);
 
     void undo();
     void redo();
 
     int id() const { return Id; }
 
+    static void setPosition(QGraphicsItem *item, QPointF position);
+
 private:
     QPointF oldCoord;
     QPointF newCoord;
-    QGraphicsItem* i;
-
-    Scene* scene;
+    QGraphicsItem *i;
 };
 
 class SetItemScale : public QUndoCommand
@@ -134,43 +150,40 @@ class SetItemScale : public QUndoCommand
 public:
     enum { Id = 1140 };
 
-    SetItemScale(Scene* s, Item* item, QPointF oldScle, QPointF pvtPt, QUndoCommand* parent = 0);
-    
+    SetItemScale(QGraphicsItem *item, QPointF oldScle, QUndoCommand *parent = 0);
+
     void undo();
     void redo();
-    
+
     int id() const { return Id; }
-    
+
+    static void setScale(QGraphicsItem *item, QPointF scale);
+
 private:
     QPointF oldScale;
     QPointF newScale;
 
-    QPointF pivotPt;
-    
-    Item* i;
-    Scene* scene;
-    
+    QGraphicsItem *i;
+
 };
 
-class AddCell : public QUndoCommand
+class AddItem : public QUndoCommand
 {
 public:
     enum { Id = 1150 };
 
-    AddCell(Scene* s, QPointF pos, QUndoCommand* parent = 0);
+    AddItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent = 0);
 
     void redo();
     void undo();
 
     int id() const { return Id; }
 
-    Cell* cell() { return c; }
-    
-private:
-    Cell* c;
-    QPointF position;
+    static void add(Scene *scene, QGraphicsItem *item);
 
-    Scene* scene;
+private:
+    QGraphicsItem *i;
+    Scene *s;
 };
 
 class RemoveItem : public QUndoCommand
@@ -178,18 +191,20 @@ class RemoveItem : public QUndoCommand
 public:
     enum { Id = 1160 };
 
-    RemoveItem(Scene* s, QGraphicsItem *i, QUndoCommand* parent = 0);
+    RemoveItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent = 0);
 
     void redo();
     void undo();
 
     int id() const { return Id; }
 
+    static void remove(Scene *scene, QGraphicsItem *item);
+
 private:
-    QGraphicsItem* gi;
+    QGraphicsItem *i;
     QPointF position;
 
-    Scene* scene;
+    Scene *s;
 };
 
 class GroupItems : public QUndoCommand
@@ -197,19 +212,19 @@ class GroupItems : public QUndoCommand
 public:
     enum { Id = 1200 };
 
-    GroupItems(Scene* s, QList<QGraphicsItem*> itemList, QUndoCommand* parent = 0);
+    GroupItems(Scene *scene, QList<QGraphicsItem*> itemList, QUndoCommand *parent = 0);
 
     void undo();
     void redo();
 
     int id() const { return Id; }
 
-    ItemGroup* group() { return mGroup; }
+    ItemGroup* group() { return g; }
 
 private:
     QList<QGraphicsItem*> items;
-    ItemGroup* mGroup;
-    Scene* scene;
+    ItemGroup *g;
+    Scene *s;
 };
 
 class UngroupItems : public QUndoCommand
@@ -217,7 +232,7 @@ class UngroupItems : public QUndoCommand
 public:
     enum { Id = 1210 };
 
-    UngroupItems(Scene* s, ItemGroup* grp, QUndoCommand* parent = 0);
+    UngroupItems(Scene *scene, ItemGroup *group, QUndoCommand *parent = 0);
 
     void undo();
     void redo();
@@ -226,26 +241,8 @@ public:
 
 private:
     QList<QGraphicsItem*> items;
-    ItemGroup* group;
-    Scene* scene;
-};
-
-class RemoveGroup : public QUndoCommand
-{
-public:
-    enum { Id = 1220 };
-
-    RemoveGroup(Scene* s, ItemGroup* grp, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    int id() const { return Id; }
-
-private:
-    QList<QGraphicsItem*> items;
-    ItemGroup* group;
-    Scene* scene;
+    ItemGroup *g;
+    Scene *s;
 };
 
 #endif //CROCHETCHARTCOMMANDS_H

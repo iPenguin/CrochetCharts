@@ -65,7 +65,6 @@ void StitchIconUi::loadIcons()
 
 void StitchIconUi::addIcon()
 {
-    //TODO: make this a multi-file importer.
     QString dir = Settings::inst()->value("fileLocation").toString();
     QStringList sources = QFileDialog::getOpenFileNames(this, tr("Add Icon"), dir, "Image Files (*.svg *.svgz *.png *.gif *.jpg *.jpeg)");
 
@@ -80,7 +79,7 @@ void StitchIconUi::addIcon()
         
         QFileInfo srcInfo(source);
 
-        dest += srcInfo.fileName();
+        dest += srcInfo.baseName();
         QFileInfo destInfo(dest);
 
         if(destInfo.exists()) {
@@ -175,12 +174,12 @@ void StitchIconUi::updateIconList(QString fileName)
     }
 
     QIcon icon = QIcon(fileName);
-    
+
     if(!item) {
         QListWidgetItem* item = new QListWidgetItem(icon,fileInfo.baseName(),ui->iconList);
         item->setData(Qt::UserRole, QVariant(fileName));
         item->setToolTip(fileName);
-        ui->iconList->addItem(item);    
+        ui->iconList->addItem(item);
     } else {
         item->setIcon(icon);
         ui->iconList->update();

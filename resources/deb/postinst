@@ -1,0 +1,205 @@
+#!/bin/sh
+#
+# This script is based on the one found in the
+# Google Chrome deb package.
+
+# Add icons to the system icons
+XDG_ICON_RESOURCE="`which xdg-icon-resource 2> /dev/null`"
+if [ ! -x "$XDG_ICON_RESOURCE" ]; then
+  echo "Error: Could not find xdg-icon-resource" >&2
+  exit 1
+fi
+
+# Add the mime type to the system
+XDG_MIME="`which xdg-mime 2> /dev/null`"
+if [ ! -x "$XDG_MIME" ]; then
+  echo "Error: Could not find xdg-mime" >&2
+  exit 1
+fi
+
+# Add an entry to the system menu
+XDG_DESKTOP_MENU="`which xdg-desktop-menu 2> /dev/null`"
+if [ ! -x "$XDG_DESKTOP_MENU" ]; then
+  echo "Error: Could not find xdg-desktop-menu" >&2
+  exit 1
+fi
+
+SIZES="16 32 48 64 96 128 192 256 512 1024 2048"
+FPATH="/usr/share/CrochetCharts"
+
+#install all icons for each size.
+for size in $SIZES; do
+  "$XDG_ICON_RESOURCE" install --novendor --context mimetypes --size $size "${FPATH}/icons/stitchworks-pattern-${size}.png" "stitchworks-pattern"
+  "$XDG_ICON_RESOURCE" install --novendor --context apps --size $size "${FPATH}/icons/CrochetCharts-${size}.png" "CrochetCharts"
+done
+
+"$XDG_MIME" install "${FPATH}/vnd.stitchworks.pattern.xml" --novendor
+
+"$XDG_MIME" install default "Crochet Charts.desktop" applications/x-stitchworks-pattern
+
+UPDATE_MENUS="`which update-menus 2> /dev/null`"
+if [ -x "$UPDATE_MENUS" ]; then
+  update-menus
+fi
+
+#
+# sources.list setting for Stitchworks Software updates.
+#REPOCONFIG="deb http://StitchWorksSoftware.com/linux/deb/ stable main"
+#
+#APT_GET="`which apt-get 2> /dev/null`"
+#APT_CONFIG="`which apt-config 2> /dev/null`"
+#
+#SOURCES_PREAMBLE="### THIS FILE IS AUTOMATICALLY CONFIGURED ###
+## You may comment out this entry, but any other modifications may be lost.\n"
+#
+## Parse apt configuration and return requested variable value.
+#apt_config_val() {
+#  APTVAR="$1"
+#  if [ -x "$APT_CONFIG" ]; then
+#    "$APT_CONFIG" dump | sed -e "/^$APTVAR /"'!d' -e "s/^$APTVAR \"\(.*\)\".*/\1/"
+#  fi
+#}
+#
+## Install the repository signing key
+#install_key() {
+#  APT_KEY="`which apt-key 2> /dev/null`"
+#  if [ -x "$APT_KEY" ]; then
+#    "$APT_KEY" add - >/dev/null 2>&1 <<KEYDATA
+#KEYDATA
+#  fi
+#}
+#
+## Set variables for the locations of the apt sources lists.
+#find_apt_sources() {
+#  APTDIR=$(apt_config_val Dir)
+#  APTETC=$(apt_config_val 'Dir::Etc')
+#  APT_SOURCES="$APTDIR$APTETC$(apt_config_val 'Dir::Etc::sourcelist')"
+#  APT_SOURCESDIR="$APTDIR$APTETC$(apt_config_val 'Dir::Etc::sourceparts')"
+#}
+#
+## Update the repository if it's not set correctly.
+## Note: this doesn't necessarily enable the repository, it just makes sure the
+## correct settings are available in the sources list.
+## Returns:
+## 0 - no update necessary
+## 2 - error
+#update_bad_sources() {
+#  if [ ! "$REPOCONFIG" ]; then
+#    return 0
+#  fi
+#
+#  find_apt_sources
+#
+#  SOURCELIST="$APT_SOURCESDIR/stitchworks.list"
+#  # Don't do anything if the file isn't there, since that probably means the
+#  # user disabled it.
+#  if [ ! -r "$SOURCELIST" ]; then
+#    return 0
+#  fi
+#
+#  # Basic check for active configurations (non-blank, non-comment lines).
+#  ACTIVECONFIGS=$(grep -v "^[[:space:]]*\(#.*\)\?$" "$SOURCELIST" 2>/dev/null)
+#
+#  # Check if the correct repository configuration is in there.
+#  REPOMATCH=$(grep "^[[:space:]#]*\b$REPOCONFIG\b" "$SOURCELIST" \
+#    2>/dev/null)
+#
+#  # Check if the correct repository is disabled.
+#  MATCH_DISABLED=$(echo "$REPOMATCH" | grep "^[[:space:]]*#" 2>/dev/null)
+#
+#  # Now figure out if we need to fix things.
+#  BADCONFIG=1
+#  if [ "$REPOMATCH" ]; then
+#    # If it's there and active, that's ideal, so nothing to do.
+#    if [ ! "$MATCH_DISABLED" ]; then
+#      BADCONFIG=0
+#    else
+#      # If it's not active, but neither is anything else, that's fine too.
+#      if [ ! "$ACTIVECONFIGS" ]; then
+#        BADCONFIG=0
+#      fi
+#    fi
+#  fi
+#
+#  if [ $BADCONFIG -eq 0 ]; then
+#    return 0
+#  fi
+#
+#  # At this point, either the correct configuration is completely missing, or
+#  # the wrong configuration is active. In that case, just abandon the mess and
+#  # recreate the file with the correct configuration. If there were no active
+#  # configurations before, create the new configuration disabled.
+#  DISABLE=""
+#  if [ ! "$ACTIVECONFIGS" ]; then
+#    DISABLE="#"
+#  fi
+#  printf "$SOURCES_PREAMBLE" > "$SOURCELIST"
+#  printf "$DISABLE$REPOCONFIG\n" >> "$SOURCELIST"
+#  if [ $? -eq 0 ]; then
+#    return 0
+#  fi
+#  return 2
+#}
+#
+## Add the repository to the apt sources.
+## Returns:
+## 0 - sources list was created
+## 2 - error
+#create_sources_lists() {
+#  if [ ! "$REPOCONFIG" ]; then
+#    return 0
+#  fi
+#
+#  find_apt_sources
+#
+#  SOURCELIST="$APT_SOURCESDIR/stitchworks.list"
+#  if [ -d "$APT_SOURCESDIR" ]; then
+#    printf "$SOURCES_PREAMBLE" > "$SOURCELIST"
+#    printf "$REPOCONFIG\n" >> "$SOURCELIST"
+#    if [ $? -eq 0 ]; then
+#      return 0
+#    fi
+#  fi
+#  return 2
+#}
+#
+## Remove our custom sources list file.
+## Returns:
+## 0 - successfully removed, or not configured
+## !0 - failed to remove
+#clean_sources_lists() {
+#  if [ ! "$REPOCONFIG" ]; then
+#    return 0
+#  fi
+#
+#  find_apt_sources
+#
+#  rm -f "$APT_SOURCESDIR/stitchworks.list" \
+#        "$APT_SOURCESDIR/stitchworks-stable.list"
+#}
+#
+## Detect if the repo config was disabled by distro upgrade and enable if
+## necessary.
+#handle_distro_upgrade() {
+#  if [ ! "$REPOCONFIG" ]; then
+#    return 0
+#  fi
+#
+#  find_apt_sources
+#  SOURCELIST="$APT_SOURCESDIR/stitchworks.list"
+#  if [ -r "$SOURCELIST" ]; then
+#    REPOLINE=$(grep -E "^[[:space:]]*#[[:space:]]*$REPOCONFIG[[:space:]]*# disabled on upgrade to .*" "$SOURCELIST")
+#    if [ $? -eq 0 ]; then
+#      sed -i -e "s,^[[:space:]]*#[[:space:]]*\($REPOCONFIG\)[[:space:]]*# disabled on upgrade to .*,\1," \
+#        "$SOURCELIST"
+#      LOGGER=$(which logger 2> /dev/null)
+#      if [ "$LOGGER" ]; then
+#        "$LOGGER" -t "$0" "Reverted repository modification: $REPOLINE."
+#      fi
+#    fi
+#  fi
+#}
+#
+#
+## Run the cron job immediately to perform repository configuration.
+#nohup sh /etc/cron.daily/stitchworks > /dev/null 2>&1 &

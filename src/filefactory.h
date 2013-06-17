@@ -25,8 +25,18 @@ public:
     friend class File_v2;
 
     enum FileVersion { Version_1_0 = 100, Version_1_2 = 102, Version_Auto = 255 };
-    enum FileError { No_Error, Err_WrongFileType, Err_UnknownFileVersion, Err_OpeningFile, Err_GettingFileContents,
-                     Err_NoTabsToSave, Err_RemovingOrigFile, Err_RenamingTempFile };
+    enum FileError { No_Error,
+                    Err_OpeningFile,         //could not open file for reading or writing
+                    Err_WrongFileType,       //magic number doesn't match
+                    Err_UnknownFileVersion,  //file version is less then any known version
+                    Err_NewerFileVersion,    //file version is > this version is capable of working with
+                    Err_GettingFileContents, //get the xml file content
+                    Err_NoTabsToSave,        //don't save the file we don't have any tabs
+                    Err_RemovingOrigFile,    //couldn't remove the save file
+                    Err_RenamingTempFile,    //couldn't copy temp file to the save file name
+                    Err_SavingFile,
+                    Err_LoadingFile
+                    };
 
     FileFactory(QWidget *parent);
 

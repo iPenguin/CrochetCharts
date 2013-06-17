@@ -62,7 +62,7 @@ private:
     void exportImg();
     
     void updateChartSizeRatio(QString selection);
-    qreal sceneRatio();
+    qreal sceneRatio(QRectF rect);
 
     Ui::ExportDialog* ui;
     QTabWidget* mTabWidget;

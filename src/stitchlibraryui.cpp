@@ -22,7 +22,6 @@
 #include "stitchiconui.h"
 #include <QFileDialog>
 
-//TODO: add a check box in the 'add stitch' header that allows to select all stitches.
 //TODO: make the msgboxes reusbale functions.
 
 StitchLibraryUi::StitchLibraryUi(QWidget* parent)

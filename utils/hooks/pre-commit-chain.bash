@@ -26,7 +26,7 @@ git config --get user.email | grep '^[^@]*@[^@]*$' > /dev/null ||
 die 'Set user.email to an email address (userid@validdomain.com).' "$advice"
 
 #-------------------------------------------------------------------------------
-line_too_long=120
+line_too_long=110
 bad=$(regex=".{$line_too_long}" &&
 git diff-index --cached HEAD --name-only --diff-filter=AM \
     --pickaxe-regex -S"$regex" -- 'src/*.h' 'src/*.cpp' 'tests/*.h' 'tests/*.cpp' |

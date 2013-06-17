@@ -54,6 +54,12 @@ protected:
 
     CrochetTab* createTab(Scene::ChartStyle style);
     
+/**
+ * The proxy icon for the titlebar on Mac OS X
+ */
+private:
+    QIcon fileIcon;
+
 protected slots:
     void updatePatternStitches();
     void updatePatternColors();
@@ -107,6 +113,7 @@ private slots:
 
     void menuStitchesAboutToShow();
     void stitchesReplaceStitch();
+    void stitchesReplaceColor();
 
     void menuToolsAboutToShow();
     void toolsOptions();
@@ -131,16 +138,19 @@ private slots:
 
     void documentIsModified(bool isModified);
 
-    void selectColor();
     void selectStitch(QModelIndex index);
     void selectColor(QModelIndex index);
 
     void filterStitchList(QString newText);
 
     void openRecentFile();
-    void loadFile(QString fileName);
+
     void saveFileAs(QString fileName);
-    
+
+    void addColor(QColor color);
+
+public slots:
+    void loadFile(QString fileName);
 private:
     void loadFiles(QStringList fileNames);
     
@@ -159,16 +169,12 @@ private:
     bool safeToClose();
     bool promptToSave();
 
-    void updateFgColor();
-    void updateBgColor();
     void setEditMode(int mode);
 
     void setApplicationTitle();
-    
-    QPixmap drawColorBox(QColor color, QSize size);
-    
+
     CrochetTab* curCrochetTab();
-   
+
     Ui::MainWindow* ui;
 
     FileFactory* mFile;
@@ -179,6 +185,7 @@ protected:
     QMap<QString, int> patternStitches() { return mPatternStitches; }
     QMap<QString, QMap<QString, qint64> > patternColors() { return mPatternColors; }
     QTabWidget* tabWidget();
+    void showFileError(int error);
 
 //Flash the new Document dialog when the user selects new doc or new chart.
 private slots:
@@ -194,6 +201,7 @@ private slots:
     void updateGuidelines(Guidelines guidelines);
     
 private:
+    //Save the color of the widget when we flash the New Doc Dialog.
     QColor mNewDocWidgetColor;
     
 private:

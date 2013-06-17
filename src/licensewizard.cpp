@@ -95,15 +95,15 @@ IntroPage::IntroPage(bool regOnly, QWidget* parent)
     : QWizardPage(parent)
 {
     setTitle(tr("Introduction"));
-    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark.svg"));
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark.png"));
 
     topLabel = new QLabel(tr("This wizard will walk you through the registration of <i>%1</i>. "
                 "This licensing wizard requires you to be connected to the internet. "
                 ).arg(qApp->applicationName()));
     topLabel->setWordWrap(true);
         
-    registerRadioButton = new QRadioButton(tr("&Register your copy"));
-    evaluateRadioButton = new QRadioButton(tr("&Evaluate this software"));
+    registerRadioButton = new QRadioButton(tr("&Register this copy"));
+    evaluateRadioButton = new QRadioButton(tr("&Limited trial version"));
 
     registerField("intro.type", evaluateRadioButton);
     registerRadioButton->setChecked(true);
@@ -411,7 +411,7 @@ ConclusionPage::ConclusionPage(QWidget* parent)
     : QWizardPage(parent)
 {
     setTitle(tr("Complete Your Registration"));
-    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark.svg"));
+    setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark.png"));
     setFinalPage(true);
 
     QLabel* lbl = new QLabel(tr("An internet connection is no longer required to run this software. "

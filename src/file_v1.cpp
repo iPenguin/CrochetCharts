@@ -6,13 +6,19 @@
 
 #include <QFileInfo>
 #include <QDir>
-#include <QFile>
+
+#include <QDataStream>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
+
+#include <QStringList>
 
 #include "stitchlibrary.h"
 #include "mainwindow.h"
 #include "scene.h"
 
 #include "crochettab.h"
+#include "settings.h"
 
 File_v1::File_v1(MainWindow *mw, FileFactory *parent)
     : File(mw, parent)
@@ -106,6 +112,7 @@ FileFactory::FileError File_v1::save(QDataStream *stream)
 
     //put xml into binary file.
     *stream << data->toUtf8();
+
     delete data;
     data = 0;
 
@@ -324,7 +331,11 @@ void File_v1::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
     tab->scene()->addItem(c);
 
     if(row > -1 && column > -1) {
-        c->setStitch(s, (row % 2));
+        c->setStitch(s);
+        if(row % 2) {
+            QString colorName = Settings::inst()->value("stitchAlternateColor").toString();
+            c->setColor(QColor(colorName));
+        }
         tab->scene()->grid[row].replace(column, c);
         c->setZValue(100);
     } else {
