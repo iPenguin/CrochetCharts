@@ -49,6 +49,7 @@ StitchLibraryDelegate::StitchLibraryDelegate(QWidget* parent)
 
 void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+
     if(!index.isValid())
         return;
 
@@ -57,6 +58,7 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
     //Icon column:
     if (index.column() == 1) {
+
         if(option.state & QStyle::State_Selected)
             painter->fillRect(option.rect, option.palette.highlight());
         else if(option.state & QStyle::State_MouseOver)
@@ -87,27 +89,31 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
 
     //Checkbox column:
     } else if(index.column() == 5) {
+
         if(option.state & QStyle::State_MouseOver)
             painter->fillRect(option.rect, option.palette.highlight().color().light(190));
 
         bool checked = idx.model()->data(idx, Qt::DisplayRole).toBool();
-        
+
         QStyleOptionButton styleOptions;
         styleOptions.state |= QStyle::State_Enabled;
         if(checked)
             styleOptions.state |= QStyle::State_On;
         else
             styleOptions.state |= QStyle::State_Off;
-        
+
         styleOptions.rect = CheckBoxRect(option);
-        
+
         qApp->style()->drawControl(QStyle::CE_CheckBox, &styleOptions, painter);
 
     //Everything else:
     } else {
+
         //fall back to the basic painter.
         QStyledItemDelegate::paint(painter, option, idx);
+
     }
+
 }
 
 QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -117,49 +123,31 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     if(!index.isValid())
         return QSize(100, 32);
 
-    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
-    QModelIndex idx = model->mapToSource(model->index(index.row(), 0));
-
-    Stitch *s = static_cast<Stitch*>(idx.internalPointer());
-    if(!s)
-        return QSize(100, 32);
-
     QString text;
 
-    switch(idx.column()) {
+    switch(index.column()) {
         case Stitch::Name:
-            text = s->name();
+            text = index.data(Qt::DisplayRole).toString();
             padding += 50;
             break;
         case Stitch::Icon: {
-            QSize retSize;
+            QSize retSize = index.data(Qt::DisplayRole).toSize();
 
-            if(s->isSvg()) {
-                QSvgRenderer *r = s->renderSvg();
-                if(r)
-                    retSize = r->defaultSize();
-                else
-                    retSize = QSize(64, 64);
-            } else {
-                QPixmap *p = s->renderPixmap();
-                if(p)
-                    retSize = p->size();
-                else
-                    retSize = QSize(64, 64);
-            }
+            if(!retSize.isValid())
+                retSize = QSize(64, 64);
             return retSize;
         }
         case Stitch::Description:
             padding +=150;
-            text = s->description();
+            text = index.data(Qt::EditRole).toString();
             break;
         case Stitch::Category:
             padding += 50;
-            text = s->category();
+            text = index.data(Qt::EditRole).toString();
             break;
         case Stitch::WrongSide:
             padding +=50;
-            text = s->wrongSide();
+            text = index.data(Qt::EditRole).toString();
             break;
         case 5:
             padding += 50;
@@ -173,9 +161,11 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     QSize hint = option.fontMetrics.size(Qt::TextWordWrap, text);
     hint.setWidth(hint.width() + padding);
 
-    //HACK: make the height of the icon the height of the whole row.
-    StitchSet *set = static_cast<StitchSet*>((QAbstractItemModel*)idx.model());
-    QSize sizeH = sizeHint(option, set->index(idx.row(), Stitch::Icon));
+    //Set the height of the icon as the height of the row.
+    StitchSet *set = static_cast<StitchSet*>((QAbstractItemModel*)index.model());
+
+    QModelIndex mIdx = set->index(index.row(), (int)Stitch::Icon);
+    QSize sizeH = sizeHint(option, mIdx);
     hint.setHeight(sizeH.height());
 
     return hint;
@@ -270,10 +260,12 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
         default:
             break;
     }
+
 }
 
 void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
+
     QSortFilterProxyModel *m = static_cast<QSortFilterProxyModel*>(model);
     QModelIndex idx = m->mapToSource(m->index(index.row(), 0));
 
@@ -348,6 +340,7 @@ void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *mo
         default:
             break;
     }
+
 }
 
 void StitchLibraryDelegate::updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -355,10 +348,12 @@ void StitchLibraryDelegate::updateEditorGeometry(QWidget *editor, const QStyleOp
     Q_UNUSED(index);
 
     editor->setGeometry(option.rect);
+
 }
 
 bool StitchLibraryDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
+
     QSortFilterProxyModel *m = static_cast<QSortFilterProxyModel*>(model);
     QModelIndex idx = m->mapToSource(m->index(index.row(), 0));
 
@@ -383,11 +378,14 @@ bool StitchLibraryDelegate::editorEvent(QEvent *event, QAbstractItemModel *model
         }
             
         bool checked = idx.model()->data(idx, Qt::DisplayRole).toBool();
+
         return m->setData(idx, !checked, Qt::EditRole);
 
     } else {
+
         return QStyledItemDelegate::editorEvent(event, m, option, idx);
     }
+
 }
 
 

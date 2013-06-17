@@ -16,6 +16,7 @@
 
 #include <QDebug>
 #include <QFileInfo>
+#include <QSize>
 
 #include <QMap>
 #include "appinfo.h"
@@ -454,15 +455,20 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
         switch(index.column()) {
             case Stitch::Name:
                 return QVariant(s->name());
-            case Stitch::Icon:
-                return QVariant(s->file());
+            case Stitch::Icon: {
+                if(role == Qt::DisplayRole) {
+                    return QVariant(QSize(s->width(), s->height()));
+                } else {
+                    return QVariant(s->file());
+                }
+            }
             case Stitch::Description:
                 return QVariant(s->description());
             case Stitch::Category:
                 return QVariant(s->category());
             case Stitch::WrongSide:
                 return QVariant(s->wrongSide());
-            case 5:
+            case 5: //Selected
                 return QVariant(mSelected.contains(s));
             default:
                 return QVariant();
@@ -554,7 +560,7 @@ QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) con
     Q_UNUSED(parent);
     if(row < 0 || column < 0)
         return QModelIndex();
-    
+
     return createIndex(row, column, mStitches[row]);
 }
 
@@ -602,11 +608,6 @@ void StitchSet::reset()
         s->isBuiltIn = true;
 
     QAbstractItemModel::reset();
-}
-
-void StitchSet::sort(int column, Qt::SortOrder order)
-{
-
 }
 
 void StitchSet::reloadStitchIcons()
