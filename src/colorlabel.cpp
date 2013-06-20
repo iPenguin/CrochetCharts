@@ -6,6 +6,8 @@
 #include <QColorDialog>
 #include <QPaintEvent>
 
+#include <QCommonStyle>
+
 ColorLabel::ColorLabel(QWidget *parent) :
     QLabel(parent),
     mColor(QColor(Qt::black))
@@ -76,19 +78,25 @@ void ColorLabel::selectColor()
 
 void ColorLabel::paintEvent(QPaintEvent *event)
 {
+
+    QCommonStyle style;
+
     QPainter painter(this);
     QFont font = painter.font();
+    font.setPixelSize(12);
     painter.setPen(QPen(QColor(Qt::black)));
     painter.setFont(font);
 
     int txtWidth = painter.fontMetrics().width(text());
     int txtHeight = painter.fontMetrics().height();
 
-    QRectF rect = QRectF((width() - txtWidth)/2 -2, (height() - txtHeight)/2 -2, txtWidth+4, txtHeight+4);
-    //painter.fillRect(rect,);
+    QRectF rect = QRectF((width() - txtWidth)/2 -2, (height() - txtHeight)/2 -2,
+                         txtWidth+4, txtHeight+4);
+
     painter.setBrush(QBrush(QColor(255,255,255,128)));
     painter.setPen(QPen(QColor(255,255,255,128)));
     painter.drawRoundedRect(rect, 3, 3);
 
-    QLabel::paintEvent(event);
+    style.drawItemText(&painter, rect.toRect(), Qt::AlignCenter, palette(),
+                       true, text(), QPalette::Foreground);
 }
