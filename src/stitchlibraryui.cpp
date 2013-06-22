@@ -331,6 +331,8 @@ void StitchLibraryUi::printStitchSet()
     ui->listView->setWordWrap(true);
     ui->listView->setTextElideMode(Qt::ElideNone);
     const int rows = ui->listView->model()->rowCount();
+    ui->listView->resizeRowsToContents();
+    ui->listView->resizeColumnsToContents();
 
     // calculate the total width/height table would need without scaling
     double totalWidth = 0.0;   

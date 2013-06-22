@@ -451,6 +451,11 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
 
     Stitch* s = static_cast<Stitch*>(index.internalPointer());
 
+    if(!s) {
+        qWarning() << "No stitch index found in the set.";
+        return QVariant();
+    }
+
     if(role == Qt::DisplayRole || role == Qt::EditRole) {
         switch(index.column()) {
             case Stitch::Name:

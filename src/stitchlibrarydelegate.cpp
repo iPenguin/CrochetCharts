@@ -93,7 +93,7 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
         if(option.state & QStyle::State_MouseOver)
             painter->fillRect(option.rect, option.palette.highlight().color().light(190));
 
-        bool checked = idx.model()->data(idx, Qt::DisplayRole).toBool();
+        bool checked = index.data(Qt::EditRole).toBool();
 
         QStyleOptionButton styleOptions;
         styleOptions.state |= QStyle::State_Enabled;
@@ -110,7 +110,7 @@ void StitchLibraryDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     } else {
 
         //fall back to the basic painter.
-        QStyledItemDelegate::paint(painter, option, idx);
+        QStyledItemDelegate::paint(painter, option, index);
 
     }
 
@@ -181,8 +181,6 @@ QWidget* StitchLibraryDelegate::createEditor(QWidget *parent, const QStyleOption
     switch(index.column()) {
         case Stitch::Name:{
             QLineEdit *editor = new QLineEdit(parent);
-            //QRegExpValidator* validator = new QRegExpValidator(QRegExp("[a-zA-Z][a-zA-Z0-9]{,}"), editor);
-            //editor->setValidator(validator);
             return editor;
         }
         case Stitch::Icon: {
@@ -223,38 +221,35 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
     if(!index.isValid())
         return;
 
-    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
-    QModelIndex idx = model->mapToSource(model->index(index.row(), 0));
-
     switch(index.column()) {
         case Stitch::Name: {
             QLineEdit* le = static_cast<QLineEdit*>(editor);
-            le->setText(idx.data(Qt::EditRole).toString());
+            le->setText(index.data(Qt::EditRole).toString());
             break;
         }
         case Stitch::Icon: {
             IconComboBox* cb = static_cast<IconComboBox*>(editor);
-            cb->setCurrentIndex(cb->findData(idx.data(Qt::EditRole), Qt::UserRole));
+            cb->setCurrentIndex(cb->findData(index.data(Qt::EditRole), Qt::UserRole));
             break;
         }
         case Stitch::Description: {
             QLineEdit* le = static_cast<QLineEdit*>(editor);
-            le->setText(idx.data(Qt::EditRole).toString());
+            le->setText(index.data(Qt::EditRole).toString());
             break;
         }
         case Stitch::Category: {
             QComboBox* cb = static_cast<QComboBox*>(editor);
-            cb->setCurrentIndex(cb->findText(idx.data(Qt::EditRole).toString()));
+            cb->setCurrentIndex(cb->findText(index.data(Qt::EditRole).toString()));
             break;
         }
         case Stitch::WrongSide: {
             QComboBox* cb = static_cast<QComboBox*>(editor);
-            cb->setCurrentIndex(cb->findText(idx.data(Qt::EditRole).toString()));
+            cb->setCurrentIndex(cb->findText(index.data(Qt::EditRole).toString()));
             break;
         }
         case 5: {
             QCheckBox* cb = static_cast<QCheckBox*>(editor);
-            cb->setChecked(idx.data(Qt::EditRole).toBool());
+            cb->setChecked(index.data(Qt::EditRole).toBool());
             break;
         }
         default:
@@ -266,75 +261,34 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
 void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
 
-    QSortFilterProxyModel *m = static_cast<QSortFilterProxyModel*>(model);
-    QModelIndex idx = m->mapToSource(m->index(index.row(), 0));
-
-    StitchSet *set = static_cast<StitchSet*>(m->sourceModel());
-
-    if(!set) {
-        qWarning() << "setModelData: no set found";
-        return;
-    }
-
+    qDebug() << index;
     switch(index.column()) {
         case Stitch::Icon: {
             IconComboBox* cb = static_cast<IconComboBox*>(editor);
-            m->setData(idx, cb->itemData(cb->currentIndex(), Qt::UserRole), Qt::EditRole);
+            model->setData(index, cb->itemData(cb->currentIndex(), Qt::UserRole), Qt::EditRole);
             break;
         }
         case Stitch::Name: {
             QLineEdit *le = static_cast<QLineEdit*>(editor);
+            model->setData(index, QVariant(le->text()), Qt::EditRole);
 
-            Stitch *s = static_cast<Stitch*>(index.internalPointer());
-            Stitch *found = set->findStitch(le->text());
-
-            //is there a stitch with the new name in this set already?
-            if(found && found != s) {
-                QMessageBox msgbox;
-                //TODO: return to the editor with the bad data.
-                msgbox.setText(tr("A stitch with this name already exists in the set."));
-                msgbox.setIcon(QMessageBox::Warning);
-                msgbox.exec();
-
-                break;
-            }
-
-            //is this stitch in the master list? if so is there a stitch with the new name already?
-            found = 0;
-            found = StitchLibrary::inst()->masterStitchSet()->findStitch(s->name());
-            if(found && found == s) {
-                Stitch *match = 0;
-                match = StitchLibrary::inst()->masterStitchSet()->findStitch(le->text());
-                if(match && match != s) {
-                    QMessageBox msgbox;
-                    msgbox.setText("There is already a stitch with this name in the master list");
-                    msgbox.setIcon(QMessageBox::Warning);
-                    msgbox.exec();
-                    //TODO: offer to remove the stitch already there with this name.
-
-                    break;
-                }
-            }
-                
-            m->setData(idx, le->text(), Qt::EditRole);
-            
             break;
         }
         case Stitch::Description: {
             QLineEdit* le = static_cast<QLineEdit*>(editor);
-            m->setData(idx, le->text(), Qt::EditRole);
+            model->setData(index, QVariant(le->text()), Qt::EditRole);
 
             break;
         }
         case Stitch::WrongSide:
         case Stitch::Category: {
             QComboBox* cb = static_cast<QComboBox*>(editor);
-            m->setData(idx, cb->currentText(), Qt::EditRole);
+            model->setData(index, QVariant(cb->currentText()), Qt::EditRole);
             break;
         }
         case 5: {
             QCheckBox* cb = static_cast<QCheckBox*>(editor);
-            m->setData(idx, cb->isChecked(), Qt::EditRole);
+            model->setData(index, QVariant(cb->isChecked()) , Qt::EditRole);
             break;
         }
         default:

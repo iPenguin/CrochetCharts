@@ -20,7 +20,12 @@ class Stitch : public QObject
     friend class TestStitch;
 public:
 
-    enum StitchParts { Name = 0, Icon, Description, Category, WrongSide };
+    enum StitchParts { Name = 0,
+                       Icon = 1,
+                       Description = 2,
+                       Category = 3,
+                       WrongSide = 4
+                     };
     
     Stitch(QObject *parent = 0);
     ~Stitch();
