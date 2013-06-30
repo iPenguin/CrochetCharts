@@ -10,9 +10,9 @@
     id="crochet-charts-user-guide" lang="en" version="5.0">
 
     <bookinfo>
-        <title>The Official @PROJECT_NAME@ User Guide</title>
+        <title>The Official @PROJECT_LONGNAME@ User Guide</title>
         <subtitle>For Version @PROJECT_VERSION@</subtitle>
-        <productname>@PROJECT_NAME@</productname>
+        <productname>@PROJECT_LONGNAME@</productname>
         <productnumber>@PROJECT_VERSION@</productnumber>
         <edition>@PROJECT_VERSION@</edition>
         <copyright>
@@ -34,9 +34,9 @@
         </author>
         <abstract>
             <para>
-                <application>@PROJECT_NAME@</application> is an application specially
+                <application>@PROJECT_LONGNAME@</application> is an application specially
                 designed to allow you to create design charts for crochet patterns.
-                This document will describe the features and abilities of <application>@PROJECT_NAME@</application>.
+                This document will describe the features and abilities of <application>@PROJECT_LONGNAME@</application>.
             </para>
         </abstract>
 
@@ -51,7 +51,7 @@
 
     <preface id="introduction" version="5.0" xmlns="http://docbook.org/ns/docbook">
         <title>Introduction</title>
-        <para>This is the user guide for <application>@PROJECT_NAME@</application> by @PROJECT_VENDOR@.
+        <para>This is the user guide for <application>@PROJECT_LONGNAME@</application> by @PROJECT_VENDOR@.
         If you have any questions that are not answered in this document please
         <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know so that I can answer your
         questions and improve this guide.</para>
@@ -59,7 +59,7 @@
         <section id="videos">
             <title>Additional Resources - Videos</title>
             <para>There are <ulink url="http://StitchWorksSoftware/videos">videos available on my website</ulink>
-            that will walk you through using @PROJECT_NAME@.
+            that will walk you through using @PROJECT_LONGNAME@.
             </para>
         </section>
         
@@ -78,7 +78,7 @@
         If you need help installing on a second platform please <ulink url="@ORG_CONTACT@">contact me</ulink>.</para>
         <section>
             <title>Windows</title>
-            <para>@PROJECT_NAME@ will run on Microsoft Windows XP, Windows Vista, and Windows 7.
+            <para>@PROJECT_LONGNAME@ will run on Microsoft Windows XP, Windows Vista, and Windows 7.
                 To install the software you can download the setup file from
                 <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.
             </para>
@@ -97,7 +97,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win3.png" format="PNG" />
                     </imageobject>
-                    <caption>Choose the installation path for @PROJECT_NAME@</caption>
+                    <caption>Choose the installation path for @PROJECT_LONGNAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -105,7 +105,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win4.png" format="PNG" />
                     </imageobject>
-                    <caption>Choose the Start Menu folder for @PROJECT_NAME@</caption>
+                    <caption>Choose the Start Menu folder for @PROJECT_LONGNAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -113,7 +113,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win5.png" format="PNG" />
                     </imageobject>
-                    <caption>The installer will install the needed files for @PROJECT_NAME@</caption>
+                    <caption>The installer will install the needed files for @PROJECT_LONGNAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -121,25 +121,25 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/install-win6.png" format="PNG" />
                     </imageobject>
-                    <caption>Finish page for the installation of @PROJECT_NAME@</caption>
+                    <caption>Finish page for the installation of @PROJECT_LONGNAME@</caption>
                 </mediaobject>
             </screenshot>
         </section>
         <section>
             <title>Mac</title>
-            <para>@PROJECT_NAME@ will run on Mac OS X version 10.5-10.7 (Leopard, Snow Leopard, Lion).
+            <para>@PROJECT_LONGNAME@ will run on Mac OS X version 10.5-10.7 (Leopard, Snow Leopard, Lion).
                 To install the software you can download the setup file from
                 <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.
             </para>
             <para>Once the file has been downloaded you can install the software by dragging and dropping
-                @PROJECT_NAME@ into the Applications folder.
+                @PROJECT_LONGNAME@ into the Applications folder.
             </para>
             <screenshot>
                 <mediaobject>
                     <imageobject>
                         <imagedata width="400" fileref="images/install-mac.png" format="PNG" />
                     </imageobject>
-                    <caption>The Mac installer for @PROJECT_NAME@</caption>
+                    <caption>The Mac installer for @PROJECT_LONGNAME@</caption>
                 </mediaobject>
             </screenshot>
         </section>
@@ -163,7 +163,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/license-wizard1.png" format="PNG" />
                     </imageobject>
-                    <caption>The license wizard for @PROJECT_NAME@</caption>
+                    <caption>The license wizard for @PROJECT_LONGNAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -171,7 +171,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/license-wizard2.png" format="PNG" />
                     </imageobject>
-                    <caption>The license wizard EULA for @PROJECT_NAME@</caption>
+                    <caption>The license wizard EULA for @PROJECT_LONGNAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -179,7 +179,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/license-wizard3.png" format="PNG" />
                     </imageobject>
-                    <caption>The license wizard registration page for @PROJECT_NAME@</caption>
+                    <caption>The license wizard registration page for @PROJECT_LONGNAME@</caption>
                 </mediaobject>
             </screenshot>
             <screenshot>
@@ -187,7 +187,7 @@
                     <imageobject>
                         <imagedata width="400" fileref="images/license-wizard4.png" format="PNG" />
                     </imageobject>
-                    <caption>Thanks for registering or trying @PROJECT_NAME@</caption>
+                    <caption>Thanks for registering or trying @PROJECT_LONGNAME@</caption>
                 </mediaobject>
             </screenshot>
         </section>
@@ -200,7 +200,7 @@
             links presented.
         </para>
         <para>
-            This is only a general guide and is not the only way to create charts with @PROJECT_NAME@.
+            This is only a general guide and is not the only way to create charts with @PROJECT_LONGNAME@.
             However the work flow presented here is likely the easiest and fastest way to create a chart.
             Hopefully you will consider this chapter as a starting point and not an ending point.
         </para>
@@ -280,7 +280,7 @@
     
     <chapter id="creating-charts">
         <title>Adding Charts to a Document</title>
-        <para>When you first open @PROJECT_NAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
+        <para>When you first open @PROJECT_LONGNAME@ you are presented with a blank window with a "New Chart Options" dialog at the top.
             This dialog gives you quick access to create a new document with a single chart.
             A document can contain any number of charts.
             To add more charts simply goto <menuchoice><guimenu>Charts</guimenu><guimenuitem>Add Chart</guimenuitem></menuchoice>.
@@ -298,7 +298,7 @@
             Selecting a <emphasis>Blank</emphasis> chart style will present you with a blank canvas
             from which you can create a free form pattern.
             This gives you the flexibility to create charts like you would in most drawing programs
-            except @PROJECT_NAME@ uses stitches instead of pixels and lines.
+            except @PROJECT_LONGNAME@ uses stitches instead of pixels and lines.
         </para>
         <para>
             If you select a <emphasis>Rows</emphasis> chart style then you will get all the functionality
@@ -349,7 +349,213 @@
     </chapter>
 
 
-    
+
+    <chapter id="shortcuts">
+        <title>Shortcuts</title>
+        <para>This is a quick overview of the keyboard shortcuts available in @PROJECT_LONGNAME@.</para>
+        <table frame='all'>
+            <title>Shortcuts</title>
+            <tgroup cols='3' align='left' colsep='1'>
+                <thead>
+                    <row>
+                        <entry>Action</entry>
+                        <entry>Windows / Linux</entry>
+                        <entry>Mac</entry>
+                    </row>
+                </thead>
+                <colspec colname='c1'/>
+                <colspec colname='c2'/>
+                <colspec colname='c3'/>
+                <tbody>
+                    <row>
+                        <entry namest="c1" nameend="c3" align="center">File menu</entry>
+                    </row>
+                    <row>
+                        <entry>New</entry>
+                        <entry>Ctrl + N</entry>
+                        <entry>Command + N</entry>
+                    </row>
+                    <row>
+                        <entry>Open</entry>
+                        <entry>Ctrl + O</entry>
+                        <entry>Command + O</entry>
+                    </row>
+                    <row>
+                        <entry>Save</entry>
+                        <entry>Ctrl + S</entry>
+                        <entry>Command + S</entry>
+                    </row>
+                    <row>
+                        <entry>Save As</entry>
+                        <entry>Shift + Ctrl + S</entry>
+                        <entry>Shift + Command + S</entry>
+                    </row>
+                    <row>
+                        <entry>Print</entry>
+                        <entry>Ctrl + P</entry>
+                        <entry>Command + P</entry>
+                    </row>
+                    <row>
+                        <entry>Print Preview</entry>
+                        <entry>Shift + Ctrl + P</entry>
+                        <entry>Shift + Command + P</entry>
+                    </row>
+                    <row>
+                        <entry>Export</entry>
+                        <entry>Shift + Ctrl + X</entry>
+                        <entry>Shift + Command + X</entry>
+                    </row>
+                    <row>
+                        <entry>Quit</entry>
+                        <entry>Ctrl + Q</entry>
+                        <entry>Command + Q</entry>
+                    </row>
+
+                    <row>
+                        <entry namest="c1" nameend="c3" align="center">Edit menu</entry>
+                    </row>
+                    <row>
+                        <entry>Cut</entry>
+                        <entry>Ctrl + X</entry>
+                        <entry>Command + X</entry>
+                    </row>
+                    <row>
+                        <entry>Copy</entry>
+                        <entry>Ctrl + C</entry>
+                        <entry>Command + C</entry>
+                    </row>
+                    <row>
+                        <entry>Paste</entry>
+                        <entry>Ctrl + V</entry>
+                        <entry>Command + V</entry>
+                    </row>
+                    <row>
+                        <entry>Undo</entry>
+                        <entry>Ctrl + Z</entry>
+                        <entry>Command + Z</entry>
+                    </row>
+                    <row>
+                        <entry>Redo</entry>
+                        <entry>Ctrl + Y / Shift + Ctrl + Z</entry>
+                        <entry>Shift + Command + Z</entry>
+                    </row>
+
+
+                    <row>
+                        <entry namest="c1" nameend="c3" align="center">View menu</entry>
+                    </row>
+                    <row>
+                        <entry>Zoom In</entry>
+                        <entry>Ctrl + +</entry>
+                        <entry>Command + +</entry>
+                    </row>
+                    <row>
+                        <entry>Zoom Out</entry>
+                        <entry>Ctrl + -</entry>
+                        <entry>Command + -</entry>
+                    </row>
+                    <row>
+                        <entry>Show/hide Properties</entry>
+                        <entry>P</entry>
+                        <entry>P</entry>
+                    </row>
+                    <row>
+                        <entry>Full Screen</entry>
+                        <entry>F11</entry>
+                        <entry>Shift + Command + F</entry>
+                    </row>
+
+                    <row>
+                        <entry namest="c1" nameend="c3" align="center">Modes menu</entry>
+                    </row>
+                    <row>
+                        <entry>Stitch Edit</entry>
+                        <entry>D</entry>
+                        <entry>D</entry>
+                    </row>
+                    <row>
+                        <entry>Rotation Edit</entry>
+                        <entry>R</entry>
+                        <entry>R</entry>
+                    </row>
+                    <row>
+                        <entry>Scale Edit</entry>
+                        <entry>S</entry>
+                        <entry>S</entry>
+                    </row>
+                    <row>
+                        <entry>Row Edit</entry>
+                        <entry>W</entry>
+                        <entry>W</entry>
+                    </row>
+                    <row>
+                        <entry>Indicator Edit</entry>
+                        <entry>I</entry>
+                        <entry>I</entry>
+                    </row>
+
+                    <row>
+                        <entry namest="c1" nameend="c3" align="center">Charts menu</entry>
+                    </row>
+                    <row>
+                        <entry>New Chart</entry>
+                        <entry>Shift + Ctrl + N</entry>
+                        <entry>Shift + Command + N</entry>
+                    </row>
+
+                    <row>
+                        <entry namest="c1" nameend="c3" align="center">Stitches menu</entry>
+                    </row>
+                    <row>
+                        <entry>Group</entry>
+                        <entry>Ctrl + G</entry>
+                        <entry>Command + G</entry>
+                    </row>
+                    <row>
+                        <entry>Ungroup</entry>
+                        <entry>Shift + Ctrl + G</entry>
+                        <entry>Shift + Command + G</entry>
+                    </row>
+                    <row>
+                        <entry>Show/hide Align and Distribute Tools</entry>
+                        <entry>Shift + F7</entry>
+                        <entry>Shift + F7</entry>
+                    </row>
+                    <row>
+                        <entry>Show/hide Mirror and Rotate Tools</entry>
+                        <entry>Shift + F8</entry>
+                        <entry>Shift + F8</entry>
+                    </row>
+
+                    <row>
+                        <entry namest="c1" nameend="c3" align="center">Tools menu</entry>
+                    </row>
+                    <row>
+                        <entry>Stitch Library</entry>
+                        <entry>Ctrl + L</entry>
+                        <entry>Command + L</entry>
+                    </row>
+                    <row>
+                        <entry>Options</entry>
+                        <entry>Alt + O</entry>
+                        <entry>Command + ,</entry>
+                    </row>
+
+                    <row>
+                        <entry namest="c1" nameend="c3" align="center">Help menu</entry>
+                    </row>
+                    <row>
+                        <entry>@PROJECT_LONGNAME@ Help</entry>
+                        <entry>F1</entry>
+                        <entry>F1</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </chapter>
+
+
+
     <chapter id="tools">
         <title>Tools</title>
         <screenshot>
@@ -357,7 +563,7 @@
                 <imageobject>
                     <imagedata width="400" fileref="images/toolbar.png" format="PNG" />
                 </imageobject>
-                <caption>The toolbar in @PROJECT_NAME@</caption>
+                <caption>The toolbar in @PROJECT_LONGNAME@</caption>
             </mediaobject>
         </screenshot>
         <para>The tools on the tool bar are listed below in order from left to right:
@@ -444,7 +650,7 @@
                     <caption>The user interface for row edit mode</caption>
                 </mediaobject>
             </screenshot>
-            <para>@PROJECT_NAME@ allows the user to place stitches anywhere on the chart,
+            <para>@PROJECT_LONGNAME@ allows the user to place stitches anywhere on the chart,
                 because of this flexibility there is no way to automatically decide which row a stitch belongs on.
                 The purpose of this interface is to define which stitches belong on each row, and in what order.
             </para>
@@ -706,7 +912,7 @@
                 the <guibutton>Copy Instructions</guibutton> button on the bottom left of the application.
                 This button will add the row numbers, capitalize the first letter,
                 put a period at the end of the row, and generate repeats among other features.
-                You can tell @PROJECT_NAME@ that you don't want it to generate text repeats in the
+                You can tell @PROJECT_LONGNAME@ that you don't want it to generate text repeats in the
                 <link linkend="options-charts">Chart Options/Preferences</link>, if you'd rather have every stitch written out.
                 This cleaned up version of the written instructions will automatically be copied to the clipboard where you can
                 then paste it directly into another application as plain text.
@@ -716,7 +922,7 @@
         <section id="export-legends">
             <title>Legends</title>
             <para>
-                @PROJECT_NAME@ supports output of Stitch Legends, and Color Legends.
+                @PROJECT_LONGNAME@ supports output of Stitch Legends, and Color Legends.
                 These legends contain all the stitches or colors (respectively) used on all tabs in the document.
                 The <emphasis>Pattern Stitches</emphasis> and <emphasis>Pattern Colors</emphasis> docks
                 on the main interface give an interactive view of what the legends will contain.
@@ -845,7 +1051,7 @@
                 To include your custom stitches check the "Selected" check box next to the stitch or stitches you wish
                 to add and press the <guibutton>Add To List</guibutton> button.
             </para>
-            <para>The Default Stitches set like any stitch set in @PROJECT_NAME@ can only have
+            <para>The Default Stitches set like any stitch set in @PROJECT_LONGNAME@ can only have
                 uniquely named stitches. If you try to include a stitch name that is already in the
                 list you will be prompted to either replace the existing stitch, keep the original stitch as is,
                 or stop adding stitches if you are adding more than one stitch.
@@ -866,7 +1072,7 @@
                 To export the Stitch Set in the Stitch Library click on the <guibutton>Export Set</guibutton>
                 button and you will be prompted to supply a file name.
                 The currently displayed set will be exported into a single stand alone file that other
-                users of@PROJECT_NAME@ can import and use themselves.
+                users of@PROJECT_LONGNAME@ can import and use themselves.
             </para>
             <para>To import a set that someone has given you go into the Stitch Library and click on
                 the <guibutton>Import Set</guibutton> button. You will be prompted to select the file you wish to import.
@@ -906,7 +1112,7 @@
         </section>
         <section>
             <title>Tips on Creating Icons</title>
-            <para>To create icons for @PROJECT_NAME@ you should use your favorite drawing program
+            <para>To create icons for @PROJECT_LONGNAME@ you should use your favorite drawing program
                 to create files in one of the following formats:
             </para>
             <variablelist>
@@ -989,7 +1195,7 @@
                <varlistentry>
                    <term>Check for Updates on Startup</term>
                    <listitem>
-                       <para>Every time you start @PROJECT_NAME@ it will attempt to connect to @ORG_WEBSITE@ to check for updates.
+                       <para>Every time you start @PROJECT_LONGNAME@ it will attempt to connect to @ORG_WEBSITE@ to check for updates.
                             If an update is found you will be prompted to download and install it.
                             Even if this feature is disable you can still check for updates manually
                             by going to <menuchoice><guimenu>Tools</guimenu><guimenuitem>Check for Updates</guimenuitem></menuchoice>
@@ -1353,7 +1559,7 @@
         </sect1>
         
         <section id="helpAbout">
-            <title>About @PROJECT_NAME@</title>
+            <title>About @PROJECT_LONGNAME@</title>
             <screenshot>
                 <mediaobject>
                     <imageobject>
@@ -1362,8 +1568,8 @@
                     <caption>The about this application dialog</caption>
                 </mediaobject>
             </screenshot>
-            <para>The About dialog can be accessed by going to the <menuchoice><guimenu>Help</guimenu><guimenuitem>About @PROJECT_NAME@</guimenuitem></menuchoice> option,
-            or on the Mac by going to <menuchoice><guimenu>@PROJECT_NAME@</guimenu><guimenuitem>About @PROJECT_NAME@</guimenuitem></menuchoice>.
+            <para>The About dialog can be accessed by going to the <menuchoice><guimenu>Help</guimenu><guimenuitem>About @PROJECT_LONGNAME@</guimenuitem></menuchoice> option,
+            or on the Mac by going to <menuchoice><guimenu>@PROJECT_LONGNAME@</guimenu><guimenuitem>About @PROJECT_LONGNAME@</guimenuitem></menuchoice>.
             </para>
             <para>This dialog contains the full version string and build date, copyright notice, description,
                 dedication and license information. The license information is required to use the software.
@@ -1374,9 +1580,9 @@
 
     <chapter id="limits-on-use">
         <title>Limits on Use of Output</title>
-        <para>There are no limits on what you can do with the charts, or output you create in @PROJECT_NAME@.
+        <para>There are no limits on what you can do with the charts, or output you create in @PROJECT_LONGNAME@.
             However I would appreciate it if you included a credit in any patterns, or publications where you used this software.
-            For example: Charts created with @PROJECT_NAME@ by @PROJECT_VENDOR@.
+            For example: Charts created with @PROJECT_LONGNAME@ by @PROJECT_VENDOR@.
         </para>
     </chapter>
     

@@ -5,6 +5,8 @@ else()
     project("CrochetCharts")
 endif()
 
+set(PROJECT_LONGNAME "Crochet Charts")
+
 if(WIN32)
     set(EXE_NAME "Crochet_Charts")
 else()
