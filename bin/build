@@ -9,6 +9,7 @@ usage()
     printf "Usage: `basename $0` [-adh] [debug|release]\n\n" 1>&2
     
     printf "      -a          Build this project for the Apple App Store.\n" 1>&2
+    printf "      -C          Run cmake only, don't build the project.\n" 1>&2
     printf "      -d          Build the documentation for the project.\n" 1>&2
     printf "      -D          Build the Doxygen files for the project.\n" 1>&2
     printf "      -h          Show this help screen.\n" 1>&2
@@ -281,12 +282,16 @@ DOCS="OFF"
 DOXYGEN="OFF"
 USE_LLVM=true
 PACKAGE="OFF"
+CMAKE_ONLY=false
 
-while getopts ":adDh" opt; do
+while getopts ":aCdDhp" opt; do
   case $opt in
     a)
       #-a is for Apple App Store
       APP_STORE="ON"
+      ;;
+    C)
+      CMAKE_ONLY=true
       ;;
     d)
       #-d is for DOCS
@@ -327,6 +332,11 @@ mkdir -p "${BUILD_DIR}"
 cd "${BUILD_DIR}"
 
 eval `which cmake` ${CMAKE_FLAGS} ${PROJECT_DIR}
+
+if [ $CMAKE_ONLY == true ]; then
+    exit 1
+fi
+
 make
 
 if [[ $BUILD_TYPE == "Installer" || $PACKAGE == "ON" ]]; then
