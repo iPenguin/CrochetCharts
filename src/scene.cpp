@@ -2271,17 +2271,22 @@ void Scene::cut()
     copy();
 
     undoStack()->beginMacro(tr("cut items"));
-    foreach(QGraphicsItem* item, selectedItems()) {
+    foreach(QGraphicsItem *item, selectedItems()) {
 
         switch(item->type()) {
             case Cell::Type: {
-                Cell* c = qgraphicsitem_cast<Cell*>(item);
+                Cell *c = qgraphicsitem_cast<Cell*>(item);
                 undoStack()->push(new RemoveItem(this, c));
                 break;
             }
             case Indicator::Type: {
-            Indicator* i = qgraphicsitem_cast<Indicator*>(item);
+                Indicator *i = qgraphicsitem_cast<Indicator*>(item);
                 undoStack()->push(new RemoveIndicator(this, i));
+                break;
+            }
+            case ItemGroup::Type: {
+                ItemGroup *g = qgraphicsitem_cast<ItemGroup*>(item);
+                undoStack()->push(new RemoveItem(this, g));
                 break;
             }
             default:
