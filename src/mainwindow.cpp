@@ -733,7 +733,7 @@ void MainWindow::helpAbout()
     QString email = Settings::inst()->value("email").toString();
     QString sn = Settings::inst()->value("serialNumber").toString();
 
-    QString dedication = tr("<p></p>");
+    QString dedication = tr("<p>This version is dedicated to my Grandmother (August 20, 1926 - January 8, 2013)</p>");
     aboutInfo.append(dedication);
     
     QString licenseInfo;
