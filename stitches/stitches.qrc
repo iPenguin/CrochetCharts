@@ -112,5 +112,23 @@
         <file>loops.svg</file>
         <file>start.svg</file>
         <file>ring.svg</file>
+        <file>ch_close3tog_ch.svg</file>
+        <file>close3tog.svg</file>
+        <file>normal_closing.svg</file>
+        <file>st2tog_v1.svg</file>
+        <file>st2tog_v2.svg</file>
+        <file>st3tog.svg</file>
+        <file>st3tog_ch.svg</file>
+        <file>stitches.qrc</file>
+        <file>tcc.svg</file>
+        <file>tds2tog.svg</file>
+        <file>tfs.svg</file>
+        <file>thb.svg</file>
+        <file>tks.svg</file>
+        <file>tksp.svg</file>
+        <file>tps.svg</file>
+        <file>tps2tog.svg</file>
+        <file>trs.svg</file>
+        <file>tss.svg</file>
     </qresource>
 </RCC>

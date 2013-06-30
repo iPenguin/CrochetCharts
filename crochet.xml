@@ -877,4 +877,124 @@
        <category>Default</category>
        <ws>ring</ws>
    </stitch>
+   
+   <stitch>
+        <name>tss</name>
+        <icon>:/stitches/tss.svg</icon>
+        <description>Tunisian Simple Stitch</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>trs</name>
+        <icon>:/stitches/trs.svg</icon>
+        <description>Tunisian Reverse Stitch</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>tks</name>
+        <icon>:/stitches/tks.svg</icon>
+        <description>Tunisian Knit Stitch</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>tksp</name>
+        <icon>:/stitches/tksp.svg</icon>
+        <description>Tunisian Knit Stitch Purled</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>tps</name>
+        <icon>:/stitches/tps.svg</icon>
+        <description>Tunisian Purl Stitch</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>tfs</name>
+        <icon>:/stitches/tfs.svg</icon>
+        <description>Tunisian Full Stitch</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>thb</name>
+        <icon>:/stitches/thb.svg</icon>
+        <description>Tunisian Horizontal Bar</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>st2tog v1</name>
+        <icon>:/stitches/st2tog_v1.svg</icon>
+        <description>2 stitches worked together</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>st2tog v2</name>
+        <icon>:/stitches/st2tog_v2.svg</icon>
+        <description>2 stitches worked together</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>tds2tog</name>
+        <icon>:/stitches/tds2tog.svg</icon>
+        <description>2 Tunisian Double Stitches worked together</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>tps2tog</name>
+        <icon>:/stitches/tps2tog.svg</icon>
+        <description>2 stitches worked together Purled</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>st3tog</name>
+        <icon>:/stitches/st3tog.svg</icon>
+        <description>3 stitches worked together</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>st3tog ch</name>
+        <icon>:/stitches/st3tog_ch.svg</icon>
+        <description>3 stitches worked together as for tss, then ch 1</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>normal closing</name>
+        <icon>:/stitches/normal_closing.svg</icon>
+        <description>Normal Closing</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>close3tog</name>
+        <icon>:/stitches/close3tog.svg</icon>
+        <description>Close 3 stitches together</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>ch close3tog ch</name>
+        <icon>:/stitches/ch_close3tog_ch.svg</icon>
+        <description>Chain 1, close 3 stitches together, chain 1</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
+    <stitch>
+        <name>tcc</name>
+        <icon>:/stitches/tcc.svg</icon>
+        <description>Top of Closing Cluster</description>
+        <category></category>
+        <ws></ws>
+    </stitch>
 </stitch_set>
