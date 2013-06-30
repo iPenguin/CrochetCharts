@@ -307,9 +307,6 @@ void StitchLibraryDelegate::updateEditorGeometry(QWidget *editor, const QStyleOp
 bool StitchLibraryDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
 {
 
-    QSortFilterProxyModel *m = static_cast<QSortFilterProxyModel*>(model);
-    QModelIndex idx = m->mapToSource(m->index(index.row(), 0));
-
     //checkbox
     if(index.column() == 5) {
         if ((event->type() == QEvent::MouseButtonRelease) || (event->type() == QEvent::MouseButtonDblClick)) {
@@ -330,13 +327,13 @@ bool StitchLibraryDelegate::editorEvent(QEvent *event, QAbstractItemModel *model
             return false;
         }
             
-        bool checked = idx.model()->data(idx, Qt::DisplayRole).toBool();
+        bool checked = model->data(index, Qt::DisplayRole).toBool();
 
-        return m->setData(idx, !checked, Qt::EditRole);
+        return model->setData(index, QVariant(!checked), Qt::EditRole);
 
     } else {
 
-        return QStyledItemDelegate::editorEvent(event, m, option, idx);
+        return QStyledItemDelegate::editorEvent(event, model, option, index);
     }
 
 }
