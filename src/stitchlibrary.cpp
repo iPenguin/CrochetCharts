@@ -10,6 +10,8 @@
 #include <QFile>
 
 #include <QDebug>
+#include "debug.h"
+
 #include <QDir>
 #include <QFileInfo>
 #include "settings.h"
@@ -185,8 +187,10 @@ void StitchLibrary::removeStitchFormMasterSet(Stitch* s)
 
 void StitchLibrary::moveStitchToOverlay(QString stitchName)
 {
+
     mStitchList[stitchName] = mOverlay->name();
     mOverlay->addStitch(mMasterSet->findStitch(stitchName));
+
 }
 
 bool StitchLibrary::masterHasStitch(Stitch* s)

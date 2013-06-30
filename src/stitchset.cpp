@@ -15,6 +15,8 @@
 #include "settings.h"
 
 #include <QDebug>
+#include "debug.h"
+
 #include <QFileInfo>
 #include <QSize>
 
@@ -485,13 +487,14 @@ QVariant StitchSet::data(const QModelIndex &index, int role) const
 
 bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+
     if(!index.isValid())
         return false;
     
+    bool retVal = false;
+
     if(role == Qt::EditRole || role == Qt::DisplayRole) {
         Stitch* s = static_cast<Stitch*>(index.internalPointer());
-        
-        bool retVal = false;
 
         switch(index.column()) {
             case Stitch::Name: {
@@ -553,17 +556,19 @@ bool StitchSet::setData(const QModelIndex &index, const QVariant &value, int rol
                 emit movedToOverlay(s->name());
             emit dataChanged(index, index);
         }
-        return retVal;
-
     }
 
-    return false;
+    return retVal;
 }
 
 QModelIndex StitchSet::index(int row, int column, const QModelIndex &parent) const
 {
+
     Q_UNUSED(parent);
     if(row < 0 || column < 0)
+        return QModelIndex();
+
+    if(mStitches.count() <= row)
         return QModelIndex();
 
     return createIndex(row, column, mStitches[row]);

@@ -261,7 +261,6 @@ void StitchLibraryDelegate::setEditorData(QWidget *editor, const QModelIndex &in
 void StitchLibraryDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
 
-    qDebug() << index;
     switch(index.column()) {
         case Stitch::Icon: {
             IconComboBox* cb = static_cast<IconComboBox*>(editor);

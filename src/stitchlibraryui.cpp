@@ -103,6 +103,7 @@ void StitchLibraryUi::setDialogSize()
 
 void StitchLibraryUi::changeStitchSet(QString setName)
 {
+
     StitchSet* set = StitchLibrary::inst()->findStitchSet(setName);
     if(!set)
         return;
@@ -114,12 +115,13 @@ void StitchLibraryUi::changeStitchSet(QString setName)
         curSet->clearSelection();
 
     mProxyModel->setSourceModel(set);
+
     ui->listView->update();
 
     ui->listView->resizeColumnsToContents();
     ui->listView->resizeRowsToContents();
-    setupPropertiesBox();
 
+    setupPropertiesBox();
     setButtonStates(set);
 
 }
@@ -504,6 +506,7 @@ void StitchLibraryUi::importSet()
 
 void StitchLibraryUi::updateSourceDropDown(QString setName)
 {
+
     if(setName.isEmpty())
         setName = ui->stitchSource->currentText();
 
@@ -512,6 +515,7 @@ void StitchLibraryUi::updateSourceDropDown(QString setName)
     int index = ui->stitchSource->findText(setName, Qt::MatchExactly);
 
     ui->stitchSource->setCurrentIndex(index);
+
 }
 
 StitchSet* StitchLibraryUi::addStitchSet(QString fileName)
