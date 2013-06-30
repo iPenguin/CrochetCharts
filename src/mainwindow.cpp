@@ -86,9 +86,13 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     setupMenus();
     readSettings();
 
+#ifdef Q_OS_MACX
     //File icon for titlebar
     fileIcon = QIcon(":/images/stitchworks-pattern.svg");
-
+#else
+    fileIcon = QIcon(":/images/CrochetCharts.png");
+    setWindowIcon(fileIcon);
+#endif
     QApplication::restoreOverrideCursor();
 }
 
@@ -157,8 +161,12 @@ void MainWindow::setApplicationTitle()
         if (curFile.isEmpty()) {
             shownName = "my design.pattern[*]";
         } else {
-            shownName = QFileInfo(curFile).baseName() + "[*]";
+            shownName = QFileInfo(curFile).fileName() + "[*]";
+#ifdef Q_OS_MACX
             icon = fileIcon;
+#else
+            icon = QIcon(":/images/CrochetCharts.png");
+#endif
         }
         join = " - ";
     }
@@ -1574,6 +1582,7 @@ void MainWindow::updatePatternColors()
 
 void MainWindow::documentIsModified(bool isModified)
 {
+#ifdef Q_OS_MACX
     QString curFile = mFile->fileName;
 
     if (!curFile.isEmpty()) {
@@ -1587,6 +1596,7 @@ void MainWindow::documentIsModified(bool isModified)
             setWindowIcon(darkIcon);
         }
     }
+#endif
     setWindowModified(isModified);
 }
 

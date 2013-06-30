@@ -14,8 +14,8 @@
    <string>Crochet Charts</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/images/crochet.ico</normaloff>:/images/crochet.ico</iconset>
+   <iconset resource="../crochet.qrc">
+    <normaloff>:/images/CrochetCharts.png</normaloff>:/images/CrochetCharts.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
