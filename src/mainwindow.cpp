@@ -1187,6 +1187,7 @@ void MainWindow::newChart()
 
     updateMenuItems();
 
+    setApplicationTitle();
     //Only mark a document as modified if we're adding another tab to it.
     if(ui->tabWidget->count() > 1)
         documentIsModified(true);
