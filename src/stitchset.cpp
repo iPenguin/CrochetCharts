@@ -178,7 +178,7 @@ void StitchSet::loadIcons(QDataStream* in)
 {
     QMap<QString, QByteArray> icons;
     *in >> icons;
-
+    qDebug() << icons;
     foreach(QString key, icons.keys()) {
         QFile f(stitchSetFolder() + key);
         f.open(QIODevice::WriteOnly);
@@ -313,12 +313,13 @@ void StitchSet::saveDataFile(QString fileName)
     
 }
 
-void StitchSet::saveIcons(QDataStream* out)
+void StitchSet::saveIcons(QDataStream *out)
 {
     QMap<QString, QByteArray> icons;
-    foreach(Stitch* s, mStitches) {
-        if(!s->file().startsWith(":/")) {
+    foreach(Stitch *s, mStitches) {
 
+        if(!s->file().startsWith(":/")) {
+            qDebug() << "doesn't start with :/";
             QFile f(s->file());
             f.open(QIODevice::ReadOnly);
             icons.insert(QFileInfo(s->file()).fileName(), f.readAll());

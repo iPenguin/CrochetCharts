@@ -1536,8 +1536,9 @@ void MainWindow::updatePatternStitches()
         i.next();
         QList<QListWidgetItem*> items = ui->patternStitches->findItems(i.key(), Qt::MatchExactly);
         if(items.count() == 0) {
-            Stitch* s = StitchLibrary::inst()->findStitch(i.key());
+            Stitch* s = StitchLibrary::inst()->findStitch(i.key(), true);
             QPixmap pix = QPixmap(QSize(32, 32));
+
             pix.load(s->file());
             QIcon icon = QIcon(pix);
             QListWidgetItem* item = new QListWidgetItem(icon, i.key(), ui->patternStitches);

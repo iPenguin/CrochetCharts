@@ -47,7 +47,14 @@ public:
      */
     void loadStitchSets();
     
-    Stitch* findStitch(QString name);
+    /**
+     * @brief findStitch - find a stitch from the library
+     * @param name - stitch to find
+     * @param fromAll - look in all set if true otherwise just search the master list.
+     * @return found stitch or 0 if no stitch.
+     */
+    Stitch* findStitch(QString name, bool fromAll = false);
+
     StitchSet* findStitchSet(QString setName);
 
     //fill in a dropdown list for selecting a stitch set.

@@ -27,6 +27,7 @@ FileFactory::FileError File_v2::load(QDataStream *stream)
     mInternalStitchSet->isTemporary = true;
     mInternalStitchSet->stitchSetFileName = StitchLibrary::inst()->nextSetSaveFile();
     QString dest = mInternalStitchSet->stitchSetFileName;
+
     QFileInfo info(dest);
     QDir(info.path()).mkpath(info.path() + "/" + info.baseName());
 
@@ -56,12 +57,10 @@ FileFactory::FileError File_v2::load(QDataStream *stream)
 
             } else if(name == "stitch_set") {
                 mInternalStitchSet->loadXmlStitchSet(&xmlStream, true);
-
+                StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
             }
         }
     }
-
-    StitchLibrary::inst()->addStitchSet(mInternalStitchSet);
 
     return FileFactory::No_Error;
 }
@@ -320,7 +319,7 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
 
         if(tag == "stitch") {
             QString st = stream->readElementText();
-            s = StitchLibrary::inst()->findStitch(st);
+            s = StitchLibrary::inst()->findStitch(st, true);
 
         } else if(tag == "grid") {
             row = stream->attributes().value("row").toString().toDouble();

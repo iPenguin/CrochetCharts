@@ -84,6 +84,7 @@ bool Cell::isGrouped()
 
 void Cell::setStitch(Stitch *s)
 {
+
     if (mStitch != s) {
         QString old;
         bool doUpdate = false;
