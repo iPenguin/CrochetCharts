@@ -201,15 +201,13 @@ bool StitchLibrary::masterHasStitch(Stitch* s)
 Stitch* StitchLibrary::findStitch(QString name, bool fromAll)
 {
 
-    qDebug() << fromAll;
-    return mMasterSet->findStitch(name);
-
     Stitch *s = 0;
 
-    if(!fromAll) {
-        s = mMasterSet->findStitch(name);
-    } else {
+    s = mMasterSet->findStitch(name);
+
+    if(!s && fromAll) {
         foreach(StitchSet *set, mStitchSets) {
+
             s = set->findStitch(name);
             if(s)
                 break;

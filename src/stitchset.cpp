@@ -362,12 +362,14 @@ void StitchSet::saveXmlStitchSet(QXmlStreamWriter* stream, bool saveIcons)
 
 Stitch* StitchSet::findStitch(QString name)
 {
-    foreach(Stitch* s, mStitches) {
+    Stitch *found = 0;
+
+    foreach(Stitch *s, mStitches) {
         if(s->name() == name)
-            return s;
+            found = s;
     }
 
-    return 0;
+    return found;
 }
 
 bool StitchSet::hasStitch(QString name)

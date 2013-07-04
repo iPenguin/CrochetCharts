@@ -12,17 +12,14 @@ Guideline::Guideline(const QRectF &rect, QGraphicsItem *parent, QGraphicsScene *
 void Guideline::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     event->ignore();
-    qDebug() << "mpe";
 }
 
 void Guideline::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     event->ignore();
-    qDebug() << "mme";
 }
 
 void Guideline::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     event->ignore();
-    qDebug() << "mre";
 }
