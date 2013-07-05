@@ -219,7 +219,7 @@ Stitch* StitchLibrary::findStitch(QString name, bool fromAll)
 
 StitchSet* StitchLibrary::findStitchSet(QString setName)
 {
-    foreach(StitchSet* set, mStitchSets) {
+    foreach(StitchSet *set, mStitchSets) {
         if(set->name() == setName)
             return set;
     }
@@ -238,7 +238,7 @@ QStringList StitchLibrary::stitchSetList()
 
     list << mMasterSet->name();
 
-    foreach(StitchSet* set, mStitchSets)
+    foreach(StitchSet *set, mStitchSets)
         list << set->name();
 
     return list;
@@ -248,13 +248,13 @@ QStringList StitchLibrary::categoryList() const
 {
     QStringList list;
 
-    foreach(Stitch* s, mMasterSet->stitches()) {
+    foreach(Stitch *s, mMasterSet->stitches()) {
         if(!list.contains(s->category()))
             list.append(s->category());
     }
 
-    foreach(StitchSet* set, mStitchSets) {
-        foreach(Stitch* s, set->stitches()) {
+    foreach(StitchSet *set, mStitchSets) {
+        foreach(Stitch *s, set->stitches()) {
             if(!list.contains(s->category()))
                 list.append(s->category());
         }
@@ -267,14 +267,14 @@ QStringList StitchLibrary::stitchList(bool showAllSets) const
 {
     QStringList list;
 
-    foreach(Stitch* s, mMasterSet->stitches()) {
+    foreach(Stitch *s, mMasterSet->stitches()) {
         if(!list.contains(s->name()))
             list.append(s->name());
     }
 
     if(showAllSets) {
-        foreach(StitchSet* set, mStitchSets) {
-            foreach(Stitch* s, set->stitches()) {
+        foreach(StitchSet *set, mStitchSets) {
+            foreach(Stitch *s, set->stitches()) {
                 if(!list.contains(s->name()))
                     list.append(s->name());
             }
@@ -309,7 +309,7 @@ StitchSet* StitchLibrary::createStitchSet(QString setName)
     if(setName.isEmpty())
         return 0;
 
-    StitchSet* set = new StitchSet(this, false);
+    StitchSet *set = new StitchSet(this, false);
     set->setName(setName);
     mStitchSets.append(set);
 
@@ -319,11 +319,11 @@ StitchSet* StitchLibrary::createStitchSet(QString setName)
 
 void StitchLibrary::removeSet(QString setName)
 {
-   StitchSet* set = findStitchSet(setName);
+   StitchSet *set = findStitchSet(setName);
    removeSet(set);
 }
 
-void StitchLibrary::removeSet(StitchSet* set)
+void StitchLibrary::removeSet(StitchSet *set)
 {
 
     if(mStitchSets.contains(set)) {
@@ -340,10 +340,10 @@ void StitchLibrary::removeSet(StitchSet* set)
 
 }
 
-void StitchLibrary::removeMasterStitches(StitchSet* set)
+void StitchLibrary::removeMasterStitches(StitchSet *set)
 {
 
-    foreach(Stitch* s, set->stitches()) {
+    foreach(Stitch *s, set->stitches()) {
         if(mStitchList.contains(s->name())) {
             if(mStitchList.value(s->name()) == set->name()) {
                 mMasterSet->removeStitch(s->name());
@@ -353,9 +353,10 @@ void StitchLibrary::removeMasterStitches(StitchSet* set)
     }
 }
 
-void StitchLibrary::addStitchSet(StitchSet* set)
+void StitchLibrary::addStitchSet(StitchSet *set)
 {
-    connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)), this, SLOT(changeStitchName(QString,QString,QString)));
+    connect(set, SIGNAL(stitchNameChanged(QString,QString,QString)),
+            SLOT(changeStitchName(QString,QString,QString)));
     mStitchSets.append(set);
 }
 
@@ -375,7 +376,7 @@ void StitchLibrary::changeStitchName(QString setName, QString oldName, QString n
 
 void StitchLibrary::reloadAllStitchIcons()
 {
-    foreach(StitchSet* set, mStitchSets)
+    foreach(StitchSet *set, mStitchSets)
         set->reloadStitchIcons();
 }
 
@@ -384,7 +385,7 @@ QString StitchLibrary::findStitchSetName(QString folderName)
     if(!folderName.endsWith("/"))
         folderName.append("/");
 
-    foreach(StitchSet* set, mStitchSets) {
+    foreach(StitchSet *set, mStitchSets) {
         if(set->stitchSetFolder() == folderName)
             return set->name();
     }

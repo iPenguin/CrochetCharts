@@ -69,21 +69,21 @@ public:
     //Remove and delete setName.
     void removeSet(QString setName);
     //remove a set like a save file set.
-    void removeSet(StitchSet* set);
+    void removeSet(StitchSet *set);
 
-    void removeMasterStitches(StitchSet* set);
+    void removeMasterStitches(StitchSet *set);
 
-    void addStitchSet(StitchSet* set);
+    void addStitchSet(StitchSet *set);
 
-    bool masterHasStitch(Stitch* s);
+    bool masterHasStitch(Stitch *s);
     
-    void addStitchToMasterSet(StitchSet* set, Stitch* s);
+    void addStitchToMasterSet(StitchSet *set, Stitch *s);
     /**
      * This function removes a stitch from the master set.
      * It can be called on stitches that aren't in the master set
      * as it checks them before it removes them.
      */
-    void removeStitchFormMasterSet(Stitch* s);
+    void removeStitchFormMasterSet(Stitch *s);
 
     void resetMasterStitchSet();
 
@@ -112,13 +112,14 @@ private:
     bool loadMasterList();
     void saveMasterList();
     
-    static StitchLibrary* mInstance;
+    static StitchLibrary *mInstance;
 
     QList<StitchSet*> mStitchSets;
-    StitchSet* mMasterSet;
-    StitchSet* mOverlay;
+    StitchSet *mMasterSet;
+    StitchSet *mOverlay;
 
     QMap<QString, QString> mStitchList;
+
 };
 
 #endif //STITCHLIBRARY_H
