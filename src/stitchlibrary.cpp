@@ -32,6 +32,7 @@ StitchLibrary::StitchLibrary()
     mMasterSet = new StitchSet(this, true);
     mMasterSet->setName(tr("Master Stitch List"));
     connect(mMasterSet, SIGNAL(movedToOverlay(QString)), SLOT(moveStitchToOverlay(QString)));
+
 }
 
 StitchLibrary::~StitchLibrary()
@@ -214,6 +215,11 @@ Stitch* StitchLibrary::findStitch(QString name, bool fromAll)
         }
     }
 
+    if(!s) {
+        s = new Stitch();
+        s->setName(name);
+        s->setFile(":/stitches/unknown.svg");
+    }
     return s;
 }
 

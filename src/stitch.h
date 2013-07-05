@@ -17,6 +17,7 @@ class QPixmap;
 class Stitch : public QObject
 {
     friend class StitchSet;
+    friend class StitchLibrary;
     friend class TestStitch;
 public:
 
