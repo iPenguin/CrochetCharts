@@ -178,7 +178,7 @@ void StitchSet::loadIcons(QDataStream* in)
 {
     QMap<QString, QByteArray> icons;
     *in >> icons;
-    qDebug() << icons;
+
     foreach(QString key, icons.keys()) {
         QFile f(stitchSetFolder() + key);
         f.open(QIODevice::WriteOnly);
