@@ -282,7 +282,7 @@ void File_v1::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
 
         if(tag == "stitch") {
             QString st = stream->readElementText();
-            s = StitchLibrary::inst()->findStitch(st);
+            s = StitchLibrary::inst()->findStitch(st, true);
 
         } else if(tag == "grid") {
             row = stream->attributes().value("row").toString().toDouble();
@@ -351,6 +351,7 @@ void File_v1::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
 
     if(group != -1)
         tab->scene()->mGroups[group]->addToGroup(c);
+
 }
 
 
