@@ -381,7 +381,7 @@ void MainWindow::setupMenus()
     connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
 
-    ui->fgColor->setColor(QColor(Qt::black));
+    ui->fgColor->setColor(QColor(Settings::inst()->value("stitchPrimaryColor").toString()));
     ui->bgColor->setColor(QColor(Qt::white));
 
     //View Menu
@@ -1184,6 +1184,9 @@ void MainWindow::newChart()
         rowHeight = 182;
 
     tab->createChart(st, rows, cols, defStitch, QSizeF(32, rowHeight), incBy);
+
+    tab->setEditFgColor(ui->fgColor->color());
+    tab->setEditBgColor(ui->bgColor->color());
 
     updateMenuItems();
 

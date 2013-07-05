@@ -17,6 +17,8 @@ public:
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
 
+    QColor color() { return mColor; }
+
 signals:
     void colorChanged(QColor c);
 
