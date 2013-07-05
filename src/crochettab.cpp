@@ -350,6 +350,11 @@ void CrochetTab::propertiesUpdate(QString property, QVariant newValue)
     mScene->propertiesUpdate(property, newValue);
 }
 
+void CrochetTab::updateDefaultStitchColor(QColor originalColor, QColor newColor)
+{
+    mScene->updateDefaultStitchColor(originalColor, newColor);
+}
+
 void CrochetTab::setGuidelinesType(QString guide)
 {
     mScene->setGuidelinesType(guide);

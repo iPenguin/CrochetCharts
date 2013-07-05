@@ -149,6 +149,8 @@ private slots:
 
     void addColor(QColor color);
 
+    void updateDefaultStitchColor(QColor originalColor, QColor newColor);
+
 public slots:
     void loadFile(QString fileName);
 private:
@@ -162,6 +164,10 @@ private:
     void setupStitchPalette();
 
     void setupDocks();
+
+    /**
+     * @brief readSettings - restore geometry settings from the application settings.
+     */
     void readSettings();
 
     void checkUpdates(bool silent = true);

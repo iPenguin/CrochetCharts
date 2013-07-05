@@ -22,6 +22,11 @@ public:
     ~SettingsUi();
 
     int exec();
+
+    bool stitchColorUpdated;
+    QColor mOriginalColor;
+    QColor mNewColor;
+
 public slots:
     void selectFolder();
 

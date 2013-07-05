@@ -172,6 +172,8 @@ public:
      */
     void propertiesUpdate(QString property, QVariant newValue);
 
+    void updateDefaultStitchColor(QColor originalColor, QColor newColor);
+
 public slots:    
     void copy();
     void cut();

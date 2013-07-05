@@ -78,6 +78,8 @@ public:
     
     void propertiesUpdate(QString property, QVariant newValue);
 
+    void updateDefaultStitchColor(QColor originalColor, QColor newColor);
+
 signals:
     void chartStitchChanged();
     void chartColorChanged();

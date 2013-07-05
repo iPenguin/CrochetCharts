@@ -15,7 +15,8 @@
 
 
 SettingsUi::SettingsUi(QWidget *parent)
-    : QDialog(parent), ui(new Ui::SettingsDialog)
+    : QDialog(parent), ui(new Ui::SettingsDialog),
+      stitchColorUpdated(false)
 {
     ui->setupUi(this);
 
@@ -187,15 +188,21 @@ void SettingsUi::setColor()
     if (color.isValid()) {
         if(b->objectName() == "primaryColorBttn") {
             ui->primaryColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            mOriginalColor = mPrimaryColor;
+            mNewColor = color;
             mPrimaryColor = color;
         } else if(b->objectName() == "alternateColorBttn") {
             ui->alternateColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
+            mOriginalColor = mAlternateColor;
+            mNewColor = color;
             mAlternateColor = color;
         } else if(b->objectName() == "dotColorBttn") {
             ui->dotColorBttn->setIcon(QIcon(drawColorBox(QColor(color), QSize(32, 32))));
             mDotColor = color;
         }
     }
+
+    stitchColorUpdated = true;
 }
 
 void SettingsUi::setupDialogWidgets()

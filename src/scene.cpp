@@ -1957,6 +1957,19 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 
 }
 
+void Scene::updateDefaultStitchColor(QColor originalColor, QColor newColor)
+{
+
+    foreach(QGraphicsItem *item, items()) {
+        if(item->type() != Cell::Type)
+            continue;
+
+        Cell *c = qgraphicsitem_cast<Cell*>(item);
+        if(c->color() == originalColor)
+        c->setColor(newColor);
+    }
+}
+
 void Scene::mirror(int direction)
 {
     if(selectedItems().count() <= 0)

@@ -625,6 +625,17 @@ void MainWindow::addColor(QColor color)
 
 }
 
+void MainWindow::updateDefaultStitchColor(QColor originalColor, QColor newColor)
+{
+    for(int i = 0; i < ui->tabWidget->count(); ++i) {
+        CrochetTab *tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
+        if(!tab)
+            continue;
+
+        tab->updateDefaultStitchColor(originalColor, newColor);
+    }
+}
+
 void MainWindow::selectStitch(QModelIndex index)
 {
     QModelIndex idx;
@@ -835,9 +846,13 @@ void MainWindow::menuToolsAboutToShow()
 void MainWindow::toolsOptions()
 {
     SettingsUi dialog(this);
+
     dialog.exec();
-    if(curCrochetTab())
+    if(curCrochetTab()) {
         curCrochetTab()->sceneUpdate();
+        if(dialog.stitchColorUpdated)
+            updateDefaultStitchColor(dialog.mOriginalColor, dialog.mNewColor);
+    }
 }
 
 void MainWindow::fileOpen()
