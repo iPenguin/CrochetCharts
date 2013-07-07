@@ -26,6 +26,8 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     int type () const { return Cell::Type; }
 
+    bool event(QEvent *e);
+
     bool isGrouped();
 
     void setHighlight(bool state) { mHighlight = state; update(); }
@@ -63,6 +65,7 @@ private:
 
     QPointF mScale;
     bool mHighlight;
+
 };
 
 #endif // CELL_H

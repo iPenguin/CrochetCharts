@@ -1129,7 +1129,10 @@ void Scene::stitchModeMouseMove(QGraphicsSceneMouseEvent* e)
     if(!mCurItem)
         return;
     
-    mMoving = true;
+    qreal diff = (e->buttonDownScenePos(Qt::LeftButton)- e->scenePos()).manhattanLength();
+
+    if(diff >= QApplication::startDragDistance())
+        mMoving = true;
 }
 
 void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
@@ -1138,8 +1141,18 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     if(e->isAccepted())
         return;
 
-    //FIXME: foreach(stitch in selection()) create an undo group event.
-    if(!mIsRubberband && !mMoving && !mHasSelection) {
+    if(mCurItem && e->modifiers() != Qt::ControlModifier) {
+
+        Cell *cell = qgraphicsitem_cast<Cell*>(mCurItem);
+
+        if(!cell)
+            return;
+
+        if(cell->name() != mEditStitch && !mMoving)
+            undoStack()->push(new SetCellStitch(cell, mEditStitch));
+
+
+    } else if(!mIsRubberband && !mMoving && !mHasSelection) {
 
         if(mCurItem)
             return;

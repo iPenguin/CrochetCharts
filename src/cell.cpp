@@ -11,6 +11,9 @@
 #include "stitchset.h"
 #include "settings.h"
 #include <QStyleOption>
+#include <QEvent>
+
+#include <QGraphicsScene>
 
 Cell::Cell(QGraphicsItem *parent)
     : QGraphicsSvgItem(parent),
@@ -18,6 +21,7 @@ Cell::Cell(QGraphicsItem *parent)
     mScale(QPointF(1.0, 1.0)),
     mHighlight(false)
 {
+
     setCachingEnabled(false);
     setAcceptHoverEvents(true);
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -69,6 +73,24 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
         }
     }
 
+}
+
+bool Cell::event(QEvent *e)
+{
+    //Pass the mouse control back to the scene,
+    //allowing for changing stitches by click.
+    int selectedItems = 1;
+
+    if(scene()) {
+        selectedItems = scene()->selectedItems().count();
+    }
+
+    if(isSelected() && selectedItems == 1) {
+        e->setAccepted(false);
+        return false;
+    }
+
+    return QGraphicsSvgItem::event(e);
 }
 
 bool Cell::isGrouped()
