@@ -412,6 +412,7 @@ void MainWindow::setupMenus()
 
     mModeGroup = new QActionGroup(this);
     mModeGroup->addAction(ui->actionStitchMode);
+    mModeGroup->addAction(ui->actionColorMode);
     mModeGroup->addAction(ui->actionAngleMode);
     mModeGroup->addAction(ui->actionStretchMode);
     mModeGroup->addAction(ui->actionCreateRows);
@@ -1347,6 +1348,8 @@ void MainWindow::changeTabMode(QAction* a)
     
     if(a == ui->actionStitchMode)
         mode = 10;
+    if(a == ui->actionColorMode)
+        mode = 11;
     else if(a == ui->actionCreateRows)
         mode = 12;
     else if(a == ui->actionAngleMode)
@@ -1365,6 +1368,8 @@ void MainWindow::setEditMode(int mode)
     
     if(mode == 10)
         ui->actionStitchMode->setChecked(true);
+    else if(mode == 1)
+        ui->actionColorMode->setChecked(true);
     else if(mode == 12)
         ui->actionCreateRows->setChecked(true);
     else if(mode == 14)

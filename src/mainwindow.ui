@@ -385,6 +385,7 @@
      <string>&amp;Modes</string>
     </property>
     <addaction name="actionStitchMode"/>
+    <addaction name="actionColorMode"/>
     <addaction name="actionAngleMode"/>
     <addaction name="actionStretchMode"/>
     <addaction name="actionCreateRows"/>
@@ -693,6 +694,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionStitchMode"/>
+   <addaction name="actionColorMode"/>
    <addaction name="actionAngleMode"/>
    <addaction name="actionStretchMode"/>
    <addaction name="actionCreateRows"/>
@@ -1172,6 +1174,24 @@
    </property>
    <property name="toolTip">
     <string>Replace one color with another</string>
+   </property>
+  </action>
+  <action name="actionColorMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/fill_color.svg</normaloff>:/images/fill_color.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Color Edit</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit the colors used on the chart</string>
+   </property>
+   <property name="shortcut">
+    <string>C</string>
    </property>
   </action>
  </widget>
