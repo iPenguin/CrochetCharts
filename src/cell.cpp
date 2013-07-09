@@ -183,11 +183,21 @@ QString Cell::name()
 void Cell::useAlternateRenderer(bool useAlt)
 {
     if(mStitch->isSvg() && mStitch->renderSvg()->isValid()) {
-        QString color = "#000000";
-        if(useAlt) {
-            color = Settings::inst()->value("stitchAlternateColor").toString();
+        QString primary = Settings::inst()->value("stitchPrimaryColor").toString();
+        QString secondary = Settings::inst()->value("stitchAlternateColor").toString();
+        QString color;
+
+        //only use the primary and secondary colors if the stitch is using the default colors.
+        if(useAlt && mColor == primary) {
+            color = secondary;
+        } else if(!useAlt && mColor == secondary) {
+            color = primary;
+        } else {
+            color = mColor.name();
         }
-        setSharedRenderer(mStitch->renderSvg(color));
+
+        mColor = QColor(color);
+        setSharedRenderer(mStitch->renderSvg(mColor.name()));
     }
 }
 
