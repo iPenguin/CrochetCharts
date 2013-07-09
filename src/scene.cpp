@@ -976,6 +976,12 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 
     QPointF newScale;
     if(g) {
+        //FIXME: This is only a temporary fix until I can find a better solution.
+        if(newSize.width() < 0)
+            newSize.setWidth(1);
+        if(newSize.height() < 0)
+            newSize.setHeight(1);
+
         newScale = QPointF(newSize.width() / mCurItem->sceneBoundingRect().width(),
                         newSize.height() / mCurItem->sceneBoundingRect().height());
 
