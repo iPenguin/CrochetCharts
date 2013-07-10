@@ -174,6 +174,8 @@ public:
 
     void updateDefaultStitchColor(QColor originalColor, QColor newColor);
 
+    void initDemoBackground();
+
 public slots:    
     void copy();
     void cut();
@@ -242,8 +244,6 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e);
     
     QList<Indicator*> indicators() { return mIndicators; }
-        
-    void initDemoBackground();
 
     /**
      * vertical:   

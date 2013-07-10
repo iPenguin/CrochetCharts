@@ -242,6 +242,7 @@ void CrochetTab::setShowChartCenter(bool state)
 void CrochetTab::sceneUpdate()
 {
     mScene->update();
+    mScene->initDemoBackground();
 }
 
 void CrochetTab::clearSelection()

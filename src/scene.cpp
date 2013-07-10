@@ -179,7 +179,7 @@ void Scene::initDemoBackground()
         for(int c = 0; c < ceil(demoCols); ++c) {
             for(int i = 0; i < ceil(demoRows); ++i) {
                 demoText = addSimpleText(demoString, demoFont);
-                demoText->setBrush(QBrush(QColor("#ECECEC")));
+                demoText->setBrush(QBrush(QColor("#D0D0D0")));
                 QPointF point = QPointF(rect.left() + c * stringWidth, rect.top() + i * (2 * fontSize));
                 demoText->setPos(point);
                 demoText->setZValue(-1);
@@ -189,6 +189,14 @@ void Scene::initDemoBackground()
 
         //restore original rect. letting the demo text overflow off the scene.
         setSceneRect(rect);
+    } else {
+        //clean up when the software has been licensed.
+        if(mDemoItems.count() > 0) {
+            foreach(QGraphicsItem *i, mDemoItems) {
+                delete i;
+            }
+            mDemoItems.clear();
+        }
     }
 }
 
