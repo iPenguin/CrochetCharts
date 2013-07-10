@@ -162,11 +162,14 @@ QSize StitchLibraryDelegate::sizeHint(const QStyleOptionViewItem &option, const 
     hint.setWidth(hint.width() + padding);
 
     //Set the height of the icon as the height of the row.
-    StitchSet *set = static_cast<StitchSet*>((QAbstractItemModel*)index.model());
+    const QSortFilterProxyModel *model =  static_cast<const QSortFilterProxyModel*>(index.model());
+    QModelIndex idx = model->mapToSource(model->index(index.row(), 0));
+    Stitch *s = static_cast<Stitch*>(idx.internalPointer());
 
-    QModelIndex mIdx = set->index(index.row(), (int)Stitch::Icon);
-    QSize sizeH = sizeHint(option, mIdx);
-    hint.setHeight(sizeH.height());
+    if(!s)
+        return hint;
+
+    hint.setHeight(s->height());
 
     return hint;
 }

@@ -43,6 +43,12 @@ private slots:
    
 private slots:
     void iconDialog();
+
+    /**
+     * After the user re-sorts the stitches we want to
+     * resize the cells to fit the stitch that's now in the row.
+     **/
+    void updateRowSizes();
     
 private:
     Ui::StitchLibraryDialog *ui;

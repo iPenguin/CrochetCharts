@@ -78,6 +78,9 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     connect(ui->resetLibrary, SIGNAL(clicked()), SLOT(resetLibrary()));
     connect(ui->icons, SIGNAL(clicked()), SLOT(iconDialog()));
 
+    connect(ui->listView->horizontalHeader(),
+            SIGNAL(sectionClicked(int)), SLOT(updateRowSizes()));
+
     setButtonStates(master);
 }
 
@@ -396,6 +399,11 @@ void StitchLibraryUi::iconDialog()
 
     d.exec();
     
+}
+
+void StitchLibraryUi::updateRowSizes()
+{
+    ui->listView->resizeRowsToContents();
 }
 
 void StitchLibraryUi::createSet()
