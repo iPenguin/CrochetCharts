@@ -68,5 +68,6 @@
         <file>images/stitchworks-pattern.svg</file>
         <file>images/stitchworks-pattern-dark.svg</file>
         <file>images/CrochetCharts.png</file>
+        <file>images/clear.svg</file>
     </qresource>
 </RCC>

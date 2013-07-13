@@ -466,6 +466,7 @@ void MainWindow::setupMenus()
     
     //misc items
     connect(&mUndoGroup, SIGNAL(isModified(bool)), SLOT(documentIsModified(bool)));
+    connect(ui->clearBttn, SIGNAL(clicked()), SLOT(clearStitchFilter()));
     
     updateMenuItems();
 }
@@ -679,6 +680,11 @@ void MainWindow::filterStitchList(QString newText)
 {
     QRegExp regExp(newText, Qt::CaseInsensitive, QRegExp::FixedString);
     mProxyModel->setFilterRegExp(regExp);
+}
+
+void MainWindow::clearStitchFilter()
+{
+    ui->stitchFilter->clear();
 }
 
 void MainWindow::documentNewChart()

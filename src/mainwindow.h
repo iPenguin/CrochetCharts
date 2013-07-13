@@ -142,6 +142,7 @@ private slots:
     void selectColor(QModelIndex index);
 
     void filterStitchList(QString newText);
+    void clearStitchFilter();
 
     void openRecentFile();
 
