@@ -61,7 +61,19 @@ QPixmap ColorListWidget::drawColorBox(QColor color, QSize size)
     QPixmap pix = QPixmap(size);
     QPainter p;
     p.begin(&pix);
-    p.fillRect(QRect(QPoint(0, 0), size), QColor(color));
+
+    if(color.isValid()) {
+        p.fillRect(QRect(QPoint(0, 0), size), QColor(color));
+    } else {
+        p.fillRect(QRect(QPoint(0,0), size), QColor(Qt::white));
+        QPen pen;
+        pen.setColor(QColor(Qt::black));
+        pen.setWidth(3);
+        p.setPen(pen);
+        p.drawLine(0,0, size.width(),size.height());
+        p.drawLine(0,size.height(), size.width(),0);
+    }
+
     p.drawRect(0, 0, size.width() - 1, size.height() - 1);
     p.end();
 

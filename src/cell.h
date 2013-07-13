@@ -50,7 +50,7 @@ public:
 
     void useAlternateRenderer(bool useAlt);
 
-    QPointF scale() {return mScale; }
+    QPointF scale() { return QPointF(transform().m11(), transform().m22()); }
     void setScale(qreal sx, qreal sy);
     
 signals:
@@ -63,7 +63,6 @@ private:
     QColor mColor;
     QPointer<Stitch> mStitch;
 
-    QPointF mScale;
     bool mHighlight;
 
 };

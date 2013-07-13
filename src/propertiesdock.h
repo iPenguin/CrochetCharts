@@ -11,6 +11,8 @@ namespace Ui {
     class PropertiesDock;
 }
 
+class StitchProperties;
+
 class PropertiesDock : public QDockWidget
 {
     Q_OBJECT
@@ -77,6 +79,12 @@ private:
     void setupStitchCombo();
 
     bool updateGuidelines();
+
+    /**
+     * @brief selectionProperties
+     * @return return the properties for the selection of stitches.
+     */
+    StitchProperties selectionProperties();
 
 private:
     Ui::PropertiesDock *ui;

@@ -18,7 +18,6 @@
 Cell::Cell(QGraphicsItem *parent)
     : QGraphicsSvgItem(parent),
     mStitch(0),
-    mScale(QPointF(1.0, 1.0)),
     mHighlight(false)
 {
 
@@ -204,11 +203,9 @@ void Cell::useAlternateRenderer(bool useAlt)
 void Cell::setScale(qreal sx, qreal sy)
 {
 
-    QPointF newScale = QPointF(sx / mScale.x(), sy / mScale.y());
+    QPointF newScale = QPointF(sx / transform().m11(), sy / transform().m22());
 
     QGraphicsSvgItem::setTransform(transform().scale(newScale.x(), newScale.y()));
-
-    mScale = QPointF(sx, sy);
 }
 
 Cell* Cell::copy(Cell *cell)

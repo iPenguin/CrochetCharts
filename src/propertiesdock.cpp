@@ -9,6 +9,8 @@
 #include "colorlistwidget.h"
 #include <qcolordialog.h>
 
+#include "stitchproperties.h"
+
 PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     QDockWidget(parent),
     closing(false),
@@ -173,6 +175,72 @@ bool PropertiesDock::updateGuidelines()
     return changed;
 }
 
+StitchProperties PropertiesDock::selectionProperties()
+{
+    StitchProperties props;
+    bool firstPass = true;
+
+    bool angleMixed = false, xScaleMixed = false, yScaleMixed = false,
+         xPositionMixed = false, yPositionMixed = false, stitchMixed = false,
+         colorMixed = false, bgColorMixed = false;
+
+    foreach(QGraphicsItem *i, mScene->selectedItems()) {
+        if(i->type() != Cell::Type)
+            continue;
+
+        Cell *c = qgraphicsitem_cast<Cell*>(i);
+
+        if(firstPass) {
+            props.angle = c->rotation();
+            props.scale.setX(c->scale().x());
+            props.scale.setY(c->scale().y());
+            props.position.setX(c->scenePos().x());
+            props.position.setY(c->scenePos().y());
+            props.stitch = c->name();
+            props.color = c->color();
+            props.bgColor = c->bgColor();
+            firstPass = false;
+        }
+
+        if(props.angle != c->rotation())
+            angleMixed = true;
+        if(props.scale.x() != c->scale().x())
+            xScaleMixed = true;
+        if(props.scale.y() != c->scale().y())
+            yScaleMixed = true;
+        if(props.position.x() != c->scenePos().x())
+            xPositionMixed = true;
+        if(props.position.y() != c->scenePos().y())
+            yPositionMixed = true;
+        if(props.stitch != c->name())
+            stitchMixed = true;
+        if(props.color != c->color())
+            colorMixed = true;
+        if(props.bgColor != c->bgColor())
+            bgColorMixed = true;
+
+    }
+
+    if(angleMixed)
+        props.angle = 0.0;
+    if(xScaleMixed)
+        props.scale.setX(1.0);
+    if(yScaleMixed)
+        props.scale.setY(1.0);
+    if(xPositionMixed)
+        props.position.setX(0.0);
+    if(yPositionMixed)
+        props.position.setY(0.0);
+    if(stitchMixed)
+        props.stitch = "";
+    if(colorMixed)
+        props.color = QColor();
+    if(bgColorMixed)
+        props.bgColor = QColor();
+
+    return props;
+}
+
 void PropertiesDock::updateDialogUi()
 {
 
@@ -247,31 +315,33 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
 void PropertiesDock::showSingleCell()
 {
 
-    Cell *c = qgraphicsitem_cast<Cell*>(mScene->selectedItems().first());
+    StitchProperties p = selectionProperties();
+
     ui->itemGroup->show();
 
     ui->st_angle->blockSignals(true);
-    ui->st_angle->setValue(c->rotation());
+    ui->st_angle->setValue(p.angle);
     ui->st_angle->blockSignals(false);
 
     ui->st_scaleX->blockSignals(true);
-    ui->st_scaleX->setValue(c->scale().x());
+    ui->st_scaleX->setValue(p.scale.x());
     ui->st_scaleX->blockSignals(false);
 
     ui->st_scaleY->blockSignals(true);
-    ui->st_scaleY->setValue(c->scale().y());
+    ui->st_scaleY->setValue(p.scale.y());
     ui->st_scaleY->blockSignals(false);
 
-    ui->st_stColorBttn->setIcon(ColorListWidget::drawColorBox(c->color(), QSize(32,32)));
-    ui->st_stColorBttn->setText(c->color().name());
-    ui->st_stBgColorBttn->setIcon(ColorListWidget::drawColorBox(c->bgColor(), QSize(32,32)));
+    ui->st_stColorBttn->setIcon(ColorListWidget::drawColorBox(p.color, QSize(32,32)));
+    ui->st_stColorBttn->setText(p.color.name());
+    ui->st_stBgColorBttn->setIcon(ColorListWidget::drawColorBox(p.bgColor, QSize(32,32)));
+    ui->st_stBgColorBttn->setText(p.bgColor.name());
 
     setupStitchCombo();
 }
 
 void PropertiesDock::showMultiCell()
 {
-
+    qDebug() << "multi cell";
 }
 
 void PropertiesDock::showSingleIndicator()
@@ -291,7 +361,7 @@ void PropertiesDock::showMultiIndicator()
 
 void PropertiesDock::showMixedObjects()
 {
-
+    qDebug() << "mixed objs";
     ui->itemGroup->show();
 }
 
