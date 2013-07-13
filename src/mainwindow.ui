@@ -640,6 +640,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="clearBttn">
+         <property name="toolTip">
+          <string>Clear text</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>

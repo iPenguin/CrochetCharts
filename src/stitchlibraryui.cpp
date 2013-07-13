@@ -81,6 +81,9 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     connect(ui->listView->horizontalHeader(),
             SIGNAL(sectionClicked(int)), SLOT(updateRowSizes()));
 
+    connect(ui->stitchFilter, SIGNAL(textChanged(QString)), SLOT(filterStitchList(QString)));
+    connect(ui->clearBttn, SIGNAL(clicked()), SLOT(clearStitchFilter()));
+
     setButtonStates(master);
 }
 
@@ -404,6 +407,18 @@ void StitchLibraryUi::iconDialog()
 void StitchLibraryUi::updateRowSizes()
 {
     ui->listView->resizeRowsToContents();
+}
+
+void StitchLibraryUi::filterStitchList(QString newText)
+{
+    QRegExp regExp(newText, Qt::CaseInsensitive, QRegExp::FixedString);
+    mProxyModel->setFilterRegExp(regExp);
+    updateRowSizes();
+}
+
+void StitchLibraryUi::clearStitchFilter()
+{
+    ui->stitchFilter->clear();
 }
 
 void StitchLibraryUi::createSet()

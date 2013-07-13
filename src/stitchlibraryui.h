@@ -50,6 +50,9 @@ private slots:
      **/
     void updateRowSizes();
     
+    void filterStitchList(QString newText);
+    void clearStitchFilter();
+
 private:
     Ui::StitchLibraryDialog *ui;
     QSortFilterProxyModel *mProxyModel;
