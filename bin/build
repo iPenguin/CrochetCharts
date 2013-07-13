@@ -47,6 +47,12 @@ function init_variables {
     CMAKE=`which cmake`
     QMAKE="${QT_BASE_PATH}/bin/qmake"
 
+    QMAKE_VER=`$QMAKE --version | grep "Using Qt version" | awk '{ print $4 }'`
+
+    if [[ $QMAKE_VER =~ 5.* ]]; then
+	QMAKE="${QT_BASE_PATH}/bin/qmake-qt4"
+    fi
+
     #Debug
     if [[ $BUILD_TYPE =~ [Dd][Ee][Bb][Uu][Gg] ]]; then
         BUILD_TYPE="Debug"
