@@ -37,6 +37,9 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     connect(ui->st_scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
     connect(ui->st_scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
 
+    connect(ui->st_xPos, SIGNAL(valueChanged(double)), SLOT(cellUpdatePositionX(double)));
+    connect(ui->st_yPos, SIGNAL(valueChanged(double)), SLOT(cellUpdatePostiionY(double)));
+
     connect(ui->showChartCenter, SIGNAL(toggled(bool)), SLOT(chartUpdateChartCenter(bool)));
     connect(ui->guidelinesType, SIGNAL(currentIndexChanged(QString)), SLOT(chartUpdateGuidelines()));
 
@@ -56,6 +59,9 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     connect(ui->st_stColorBttn, SIGNAL(clicked(bool)), SLOT(cellUpdateFgColor()));
 
     connect(ui->ind_indicatorStyle, SIGNAL(currentIndexChanged(int)), SLOT(indicatorUpdate()));
+
+    ui->indX_IndicatorEditText->setVisible(false);
+    ui->indX_indicatorTextEdit->setVisible(false);
 }
 
 PropertiesDock::~PropertiesDock()
@@ -194,8 +200,8 @@ StitchProperties PropertiesDock::selectionProperties()
             props.angle = c->rotation();
             props.scale.setX(c->scale().x());
             props.scale.setY(c->scale().y());
-            props.position.setX(c->scenePos().x());
-            props.position.setY(c->scenePos().y());
+            props.position.setX(c->pos().x());
+            props.position.setY(c->pos().y());
             props.stitch = c->name();
             props.color = c->color();
             props.bgColor = c->bgColor();
@@ -208,9 +214,9 @@ StitchProperties PropertiesDock::selectionProperties()
             xScaleMixed = true;
         if(props.scale.y() != c->scale().y())
             yScaleMixed = true;
-        if(props.position.x() != c->scenePos().x())
+        if(props.position.x() != c->pos().x())
             xPositionMixed = true;
-        if(props.position.y() != c->scenePos().y())
+        if(props.position.y() != c->pos().y())
             yPositionMixed = true;
         if(props.stitch != c->name())
             stitchMixed = true;
@@ -278,6 +284,8 @@ void PropertiesDock::updateDialogUi()
 void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
 {
 
+    Q_UNUSED(count);
+
     //Choose the options to show based on the selection.
     foreach(QObject *obj, ui->itemGroup->children()) {
         if(obj->objectName().startsWith("gen_")) {
@@ -323,6 +331,14 @@ void PropertiesDock::showSingleCell()
     ui->st_angle->setValue(p.angle);
     ui->st_angle->blockSignals(false);
 
+    ui->st_xPos->blockSignals(true);
+    ui->st_xPos->setValue(p.position.x());
+    ui->st_xPos->blockSignals(false);
+
+    ui->st_yPos->blockSignals(true);
+    ui->st_yPos->setValue(p.position.y());
+    ui->st_yPos->blockSignals(false);
+
     ui->st_scaleX->blockSignals(true);
     ui->st_scaleX->setValue(p.scale.x());
     ui->st_scaleX->blockSignals(false);
@@ -350,7 +366,7 @@ void PropertiesDock::showSingleIndicator()
 
     Indicator *i = qgraphicsitem_cast<Indicator*>(mScene->selectedItems().first());
 
-    ui->ind_indicatorTextEdit->setText(i->text());
+    //ui->ind_indicatorTextEdit->setText(i->text());
     ui->ind_indicatorStyle->setCurrentIndex(ui->ind_indicatorStyle->findText(i->style()));
 }
 
@@ -409,11 +425,11 @@ void PropertiesDock::updateGuidelinesUi()
 
 void PropertiesDock::indicatorUpdate()
 {
-    QString html = ui->ind_indicatorTextEdit->text();
+    //QString html = ui->ind_indicatorTextEdit->text();
     QString style = ui->ind_indicatorStyle->currentText();
 
     IndicatorProperties ip;
-    ip.setHtml(html);
+    //ip.setHtml(html);
     ip.setStyle(style);
 
     QVariant value;
@@ -453,6 +469,16 @@ void PropertiesDock::propertyUpdated()
 void PropertiesDock::cellUpdateAngle(double angle)
 {
     emit propertiesUpdated("Angle", QVariant(angle));
+}
+
+void PropertiesDock::cellUpdatePositionX(double positionX)
+{
+    emit propertiesUpdated("PositionX", QVariant(positionX));
+}
+
+void PropertiesDock::cellUpdatePostiionY(double positionY)
+{
+    emit propertiesUpdated("PositionY", QVariant(positionY));
 }
 
 void PropertiesDock::cellUpdateScaleX(double scale)

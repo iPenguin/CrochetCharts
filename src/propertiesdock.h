@@ -48,6 +48,8 @@ private slots:
     void chartUpdateGuidelines();
 
     void cellUpdateAngle(double angle);
+    void cellUpdatePositionX(double positionX);
+    void cellUpdatePostiionY(double positionY);
     void cellUpdateScaleX(double scale);
     void cellUpdateScaleY(double scale);
     void cellUpdateStitch(QString stitch);

@@ -1949,6 +1949,16 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
                 undoStack()->push(new SetItemRotation(i, i->rotation(),
                                 QPointF(c->boundingRect().center().x(), c->boundingRect().bottom())));
 
+            } else if(property == "PositionX") {
+                QPointF oldPos = i->pos();
+                i->setPos(newValue.toReal(), i->pos().y());
+                undoStack()->push(new SetItemCoordinates(i, oldPos));
+
+            } else if(property == "PositionY") {
+                QPointF oldPos = i->pos();
+                i->setPos(i->pos().x(), newValue.toReal());
+                undoStack()->push(new SetItemCoordinates(i, oldPos));
+
             } else if(property == "ScaleX") {
                 QPointF oldScale = c->scale();
                 c->setScale(newValue.toDouble(), c->scale().y());
