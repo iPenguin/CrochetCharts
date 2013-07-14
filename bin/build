@@ -88,8 +88,8 @@ function init_variables {
     elif [[ $BUILD_TYPE =~ [Pp][Rr][Oo][Ff][Ii][Ll][Ee] ]]; then
         BUILD_TYPE="Profile"
         BUILD_DIR="${BUILD_DIR}_profile"
-        
-	CMAKE_C_FLAGS="-pg ${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
+        echo "==== P R O F I L E ====" 
+        CMAKE_C_FLAGS="-pg ${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
         CMAKE_CXX_FLAGS="-pg ${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
         CMAKE_EXE_LINKER_FLAGS="-pg ${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address"
     fi
@@ -157,9 +157,9 @@ function init_variables {
     PLATFORM=`uname -s`
     ARCH=`uname -m`
 
-    CMAKE_C_FLAGS="-W -Wall"
-    CMAKE_CXX_FLAGS="-W -Wall"
-    CMAKE_EXE_LINKER_FLAGS=""
+    CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -W -Wall"
+    CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -W -Wall"
+    CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} "
     
     if [ $PLATFORM == "Darwin" ]; then
 
@@ -200,15 +200,16 @@ function init_variables {
     if [ $USE_LLVM ]; then
         CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -g -gdwarf-2 -Qunused-arguments -fcolor-diagnostics"
         CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -g -gdwarf-2 -Qunused-arguments -fcolor-diagnostics"
-        #clang is broken on Fedora - doesn't have compiler-rt installed
-        #CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address"
+        
+	#clang is broken on Fedora - doesn't have compiler-rt installed
+        CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address"
     else
         CMAKE_C_FLAGS="${CMAKE_C_FLAGS} -g -ggdb"
         CMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -g -ggdb"
         CMAKE_EXE_LINKER_FLAGS="${CMAKE_EXE_LINKER_FLAGS}"
     fi
 
-    #CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_C_FLAGS=\"${CMAKE_C_FLAGS}\""
+    CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_C_FLAGS=\"${CMAKE_C_FLAGS}\""
     CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_CXX_FLAGS=\"${CMAKE_CXX_FLAGS}\""
     CMAKE_FLAGS="${CMAKE_FLAGS} -DCMAKE_EXE_LINKER_FLAGS=\"${CMAKE_EXE_LINKER_FLAGS}\""
 }
