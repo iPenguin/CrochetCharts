@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+#
+#
+
+PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+${PROJECT_DIR}/bin/build -g profile
+
+${PROJECT_DIR}/build_profile/src/CrochetCharts
+
+gprof ${PROJECT_DIR}/build_profile/src/CrochetCharts | ${PROJECT_DIR}/bin/gprof2dot.py | dot -Tpng -o output.png
+
+
