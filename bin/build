@@ -14,7 +14,10 @@ usage()
     printf "      -D          Build the Doxygen files for the project.\n" 1>&2
     printf "      -h          Show this help screen.\n" 1>&2
     printf "      -p          Build packages/installers.\n\n" 1>&2
-    
+
+    printf "      -q          Path to qmake\n" 1>&2
+    printf "      -c          Path to cmake\n\n" 1>&2
+
     printf "      debug       Build the project with debug flags.\n" 1>&2
     printf "      release     Build the project with release flags.\n" 1>&2
     printf "      profile     Build the porject with debug/profiling flags.\n" 1>&2
@@ -42,15 +45,18 @@ function init_variables {
     WHITE="\e[01;37m"
     ENDCOLOR="\e[m"
 
-    QT_BASE_PATH="/opt/Qt5.1.0/5.1.0-beta1"
+    if [[ ! $CMAKE ]]; then    
+        CMAKE=`which cmake`
+    fi
 
-    CMAKE=`which cmake`
-    QMAKE="${QT_BASE_PATH}/bin/qmake"
+    if [[ ! $QMAKE ]]; then
+        QMAKE=`which qmake`
+    fi
 
     QMAKE_VER=`$QMAKE --version | grep "Using Qt version" | awk '{ print $4 }'`
 
     if [[ $QMAKE_VER =~ 5.* ]]; then
-	QMAKE="${QT_BASE_PATH}/bin/qmake-qt4"
+        QMAKE=`which qmake-qt4`
     fi
 
     #Debug
@@ -83,7 +89,7 @@ function init_variables {
         BUILD_TYPE="Profile"
         BUILD_DIR="${BUILD_DIR}_profile"
         
-        CMAKE_C_FLAGS="-pg ${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
+	CMAKE_C_FLAGS="-pg ${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
         CMAKE_CXX_FLAGS="-pg ${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls"
         CMAKE_EXE_LINKER_FLAGS="-pg ${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address"
     fi
@@ -171,7 +177,6 @@ function init_variables {
     elif [ $PLATFORM == "Linux" ]; then
 
         CMAKE_MODULE_PATH="${QT_BASE_PATH}/lib/cmake"
-        QMAKE="${QT_BASE_PATH}/bin/qmake"
         CMAKE_PREFIX_PATH="${QT_BASE_PATH}" 
         
         if [[ $ARCH == "i686" || $ARCH == "i386" ]]; then
@@ -290,7 +295,7 @@ USE_LLVM=true
 PACKAGE="OFF"
 CMAKE_ONLY=false
 
-while getopts ":aCdDhp" opt; do
+while getopts ":ac:CdDhpq:" opt; do
   case $opt in
     a)
       #-a is for Apple App Store
@@ -311,6 +316,12 @@ while getopts ":aCdDhp" opt; do
       ;;
     p)
       PACKAGE="ON"
+      ;;
+    c)
+      CMAKE="$OPTARG"
+      ;;
+    q)
+      QMAKE="$OPTARG"
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -337,7 +348,7 @@ display_vairiables
 mkdir -p "${BUILD_DIR}"
 cd "${BUILD_DIR}"
 
-eval `which cmake` ${CMAKE_FLAGS} ${PROJECT_DIR}
+eval $CMAKE ${CMAKE_FLAGS} ${PROJECT_DIR}
 
 if [ $CMAKE_ONLY == true ]; then
     exit 1
