@@ -1387,8 +1387,11 @@ void MainWindow::setEditMode(int mode)
     
     for(int i = 0; i < ui->tabWidget->count(); ++i) {
         CrochetTab* tab = qobject_cast<CrochetTab*>(ui->tabWidget->widget(i));
-        if(tab)
+        if(tab) {
             tab->setEditMode(mEditMode);
+            bool state = mode == 12 ? true : false;
+            tab->showRowEditor(state);
+        }
     }
 }
 
