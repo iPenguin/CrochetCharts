@@ -60,6 +60,8 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
 
     connect(ui->ind_indicatorStyle, SIGNAL(currentIndexChanged(int)), SLOT(indicatorUpdate()));
 
+    setupStitchCombo();
+
     ui->indX_IndicatorEditText->setVisible(false);
     ui->indX_indicatorTextEdit->setVisible(false);
 }
@@ -93,6 +95,7 @@ void PropertiesDock::loadProperties(Guidelines guidelines)
     ui->cellWidth->blockSignals(true);
     ui->cellWidth->setValue(mGuidelines.cellWidth());
     ui->cellWidth->blockSignals(false);
+
 }
 
 void PropertiesDock::tabChanged(int tabNumber)
@@ -118,34 +121,11 @@ void PropertiesDock::clearUi()
 void PropertiesDock::setupStitchCombo()
 {
 
-    ui->st_stitch->blockSignals(true);
     //populate the combo box.
     foreach(QString stitch, StitchLibrary::inst()->stitchList()) {
         Stitch *s = StitchLibrary::inst()->findStitch(stitch);
         ui->st_stitch->addItem(QIcon(s->file()), stitch);
     }
-
-    //Smart selection of stitch for combo box.
-    //if the stitches aren't the same use "" else use the name of the stitch.
-    QString st = "";
-    Cell *prev = 0;
-    foreach(QGraphicsItem* i, mScene->selectedItems()) {
-        Cell *c = qgraphicsitem_cast<Cell*>(i);
-        if(prev) {
-            if(c->name() != prev->name()) {
-                st = "";
-                break;
-            }
-        } else {
-            st = c->name();
-        }
-
-        prev = c;
-    }
-
-    ui->st_stitch->setCurrentIndex(ui->st_stitch->findText(st));
-
-    ui->st_stitch->blockSignals(false);
 
 }
 
@@ -352,7 +332,10 @@ void PropertiesDock::showSingleCell()
     ui->st_stBgColorBttn->setIcon(ColorListWidget::drawColorBox(p.bgColor, QSize(32,32)));
     ui->st_stBgColorBttn->setText(p.bgColor.name());
 
-    setupStitchCombo();
+    ui->st_stitch->blockSignals(true);
+    ui->st_stitch->setCurrentIndex(ui->st_stitch->findText(p.stitch));
+    ui->st_stitch->blockSignals(false);
+
 }
 
 void PropertiesDock::showMultiCell()
