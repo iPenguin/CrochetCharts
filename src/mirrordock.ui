@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>151</width>
+    <width>156</width>
     <height>356</height>
    </rect>
   </property>
@@ -222,7 +222,11 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QDoubleSpinBox" name="degrees"/>
+        <widget class="QDoubleSpinBox" name="degrees">
+         <property name="maximum">
+          <double>1440.000000000000000</double>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
