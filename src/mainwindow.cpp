@@ -739,7 +739,7 @@ void MainWindow::helpAbout()
                                    "<p>Version: %2 (built on %3)</p>"
                                    "<p>Copyright (c) %4 %5</p>"
                                    "<p>This software is for creating crochet charts that"
-                                   " can be exported in many differnet file types.</p>")
+                                   " can be exported in many different file types.</p>")
                                 .arg(qApp->applicationName())
                                 .arg(qApp->applicationVersion())
                                 .arg(AppInfo::inst()->appBuildInfo)
