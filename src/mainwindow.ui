@@ -1179,7 +1179,7 @@
   </action>
   <action name="actionReplaceStitch">
    <property name="text">
-    <string>Replace a stitch...</string>
+    <string>Replace stitches...</string>
    </property>
   </action>
   <action name="actionColorReplacer">
