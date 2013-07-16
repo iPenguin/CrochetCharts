@@ -5,7 +5,7 @@
 #include <QPushButton>
 #include "stitchlibrary.h"
 
-StitchReplacerUi::StitchReplacerUi(QList<QString> patternStitches, QWidget *parent) :
+StitchReplacerUi::StitchReplacerUi(QString stitch, QList< QString > patternStitches, QWidget* parent) :
     QDialog(parent),
     mOriginalStitchList(patternStitches),
     ui(new Ui::StitchReplacerUi)
@@ -24,6 +24,10 @@ StitchReplacerUi::StitchReplacerUi(QList<QString> patternStitches, QWidget *pare
 
     populateStitchLists();
 
+    if(stitch.isEmpty())
+        return;
+
+    ui->originalStitch->setCurrentIndex(ui->originalStitch->findText(stitch));
 }
 
 StitchReplacerUi::~StitchReplacerUi()

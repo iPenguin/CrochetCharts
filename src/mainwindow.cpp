@@ -1103,7 +1103,19 @@ void MainWindow::stitchesReplaceStitch()
     if(mPatternStitches.count() <= 0)
         return;
 
-    StitchReplacerUi *sr = new StitchReplacerUi(mPatternStitches.keys(), this);
+    QString curStitch = Settings::inst()->value("defaultStitch").toString();
+
+    if(curCrochetTab()) {
+        QGraphicsItem *i = curCrochetTab()->selectedItems().first();
+        if(i && i->type() == Cell::Type) {
+            Cell *c = qgraphicsitem_cast<Cell*>(i);
+            if(c)
+                curStitch = c->name();
+        }
+
+    }
+
+    StitchReplacerUi *sr = new StitchReplacerUi(curStitch, mPatternStitches.keys(), this);
 
     if(sr->exec() == QDialog::Accepted) {
         if(!sr->original.isEmpty())

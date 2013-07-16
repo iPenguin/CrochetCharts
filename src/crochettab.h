@@ -80,6 +80,8 @@ public:
 
     void updateDefaultStitchColor(QColor originalColor, QColor newColor);
 
+    QList<QGraphicsItem*> selectedItems();
+
 signals:
     void chartStitchChanged();
     void chartColorChanged();

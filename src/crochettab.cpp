@@ -356,6 +356,12 @@ void CrochetTab::updateDefaultStitchColor(QColor originalColor, QColor newColor)
     mScene->updateDefaultStitchColor(originalColor, newColor);
 }
 
+QList<QGraphicsItem*> CrochetTab::selectedItems()
+{
+
+    return mScene->selectedItems();
+}
+
 void CrochetTab::setGuidelinesType(QString guide)
 {
     mScene->setGuidelinesType(guide);
