@@ -2149,34 +2149,37 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
     foreach(QGraphicsItem* item, items) {
 
         stream << item->type();
-        
+
         switch(item->type()) {
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(item);
                 stream << c->name() << c->color() << c->bgColor()
-                    << c->rotation() << c->scale() << c->transformOriginPoint() << c->pos()
+                    << c->rotation() << c->transformOriginPoint() << c->pos()
                     << c->transform();
                 break;
             }
             case Indicator::Type: {
                 Indicator* i = qgraphicsitem_cast<Indicator*>(item);
-                stream << i->scenePos() << i->text();
+                stream << i->scenePos() << i->text() << i->transform();
                 break;
             }
             case ItemGroup::Type: {
                 ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
                 stream << group->pos();
+                stream << group->transform();
                 stream << group->childItems().count();
                 copyRecursively(stream, group->childItems());
                 break;
             }
+            case Guideline::Type:
+                qDebug() << "guideline";
             default:
                 WARN("Unknown data type: " + QString::number(item->type()));
                 break;
         }
     }
 }
-    
+
 void Scene::paste()
 {
     const QMimeData *mimeData = QApplication::clipboard()->mimeData();
@@ -2249,11 +2252,10 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             QString name;
             QColor color, bgColor;
             qreal angle;
-            QPointF scale;
             QPointF pos, transPoint;
             QTransform trans;
 
-            stream >> name >> color >> bgColor >> angle >> scale >> transPoint >> pos >> trans;
+            stream >> name >> color >> bgColor >> angle >> transPoint >> pos >> trans;
 
             pos += offSet;
 
@@ -2277,8 +2279,9 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             //FIXME: add this indicator to the undo stack.
             QPointF pos;
             QString text;
+            QTransform trans;
 
-            stream >> pos >> text;
+            stream >> pos >> text >> trans;
             pos += offSet;
             i->setText(text);
             addItem(i);
@@ -2286,12 +2289,14 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 
             i->setSelected(false);
             group->append(i);
+            i->setTransform(trans);
             break;
         }
         case ItemGroup::Type: {
             QPointF pos;
             int childCount;
-            stream >> pos >> childCount;
+            QTransform trans;
+            stream >> pos >> trans >> childCount;
             QList<QGraphicsItem*> items;
             for(int i = 0; i < childCount; ++i) {
                 pasteRecursively(stream, &items);
@@ -2304,6 +2309,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             g->setSelected(false);
             group->append(g);
             g->setPos(pos);
+            g->setTransform(trans);
             break;
         }
         default: {
