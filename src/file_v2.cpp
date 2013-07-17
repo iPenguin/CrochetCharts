@@ -252,6 +252,7 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
     qreal   m11 = 1, m12 = 0, m13 = 0,
             m21 = 0, m22 = 1, m23 = 0,
             m31 = 0, m32 = 0, m33 = 1;
+    int group = -1;
 
     while(!(stream->isEndElement() && stream->name() == "indicator")) {
         stream->readNext();
@@ -269,6 +270,8 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
             bgColor = stream->readElementText();
         } else if(tag == "style") {
             style = stream->readElementText();
+        } else if(tag == "group") {
+            group = stream->readElementText().toInt();
         } else if(tag == "transformation") {
             m11 = stream->attributes().value("m11").toString().toDouble();
             m12 = stream->attributes().value("m12").toString().toDouble();
@@ -294,6 +297,9 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
     if(style.isEmpty())
         style = Settings::inst()->value("chartRowIndicator").toString();
     i->setStyle(style);
+
+    if(group != -1)
+        tab->scene()->addToGroup(group, i);
 }
 
 void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
@@ -545,6 +551,18 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
                 stream->writeTextElement("bgColor", i->bgColor().name());
                 stream->writeTextElement("style", i->style());
 
+                bool isGrouped = i->parentItem() ? true : false;
+                ItemGroup *g = 0;
+                if(isGrouped) {
+                    g = qgraphicsitem_cast<ItemGroup*>(i->parentItem());
+                    int groupNum = tab->scene()->mGroups.indexOf(g);
+                    stream->writeTextElement("group", QString::number(groupNum));
+
+                    //ungroup the items so that we can
+                    //take an acurate position of each stitch.
+                    g->removeFromGroup(i);
+                }
+
                 stream->writeStartElement("transformation");
                 QTransform trans = i->transform();
 
@@ -559,6 +577,11 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
                 stream->writeAttribute("m33", QString::number(trans.m33()));
                 stream->writeEndElement(); //transformation
 
+                //in case we haven't closed the
+                //application we need to regroup the items.
+                if(isGrouped)
+                    g->addToGroup(i);
+                
             stream->writeEndElement(); //end indicator
         }
 
