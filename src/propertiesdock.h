@@ -11,7 +11,7 @@ namespace Ui {
     class PropertiesDock;
 }
 
-class StitchProperties;
+class PropertiesData;
 
 class PropertiesDock : public QDockWidget
 {
@@ -22,6 +22,7 @@ public:
     enum UiSelection {
         SceneUi = 10,
         CellUi = 15,
+        ItemGroupUi = 16,
         CenterUi = 20,
         IndicatorUi = 25,
         MixedUi = 100
@@ -49,7 +50,7 @@ private slots:
 
     void cellUpdateAngle(double angle);
     void cellUpdatePositionX(double positionX);
-    void cellUpdatePostiionY(double positionY);
+    void cellUpdatePositionY(double positionY);
     void cellUpdateScaleX(double scale);
     void cellUpdateScaleY(double scale);
     void cellUpdateStitch(QString stitch);
@@ -75,6 +76,7 @@ private:
     void showMultiIndicator();
     void showMixedObjects();
     void showCanvas();
+    void showItemGroup();
 
     void clearUi();
 
@@ -86,7 +88,7 @@ private:
      * @brief selectionProperties
      * @return return the properties for the selection of stitches.
      */
-    StitchProperties selectionProperties();
+    PropertiesData selectionProperties();
 
 private:
     Ui::PropertiesDock *ui;

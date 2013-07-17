@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>588</height>
+    <width>298</width>
+    <height>608</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -210,7 +210,7 @@
         </widget>
        </item>
        <item row="5" column="0">
-        <widget class="QLabel" name="st_yScaleLbl">
+        <widget class="QLabel" name="gen_yScaleLbl">
          <property name="text">
           <string>Y Scale:</string>
          </property>
@@ -218,7 +218,7 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>st_scaleY</cstring>
+          <cstring>gen_scaleY</cstring>
          </property>
         </widget>
        </item>
@@ -240,7 +240,7 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="st_scaleY">
+        <widget class="QDoubleSpinBox" name="gen_scaleY">
          <property name="minimum">
           <double>0.010000000000000</double>
          </property>
@@ -332,7 +332,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="st_angle"/>
+        <widget class="QDoubleSpinBox" name="gen_angle"/>
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="st_stitchLbl">
@@ -348,7 +348,7 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="st_xScaleLbl">
+        <widget class="QLabel" name="gen_xScaleLbl">
          <property name="text">
           <string>X Scale:</string>
          </property>
@@ -356,7 +356,7 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>st_scaleX</cstring>
+          <cstring>gen_scaleX</cstring>
          </property>
         </widget>
        </item>
@@ -371,17 +371,17 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="st_scaleX">
+        <widget class="QDoubleSpinBox" name="gen_scaleX">
          <property name="minimum">
           <double>0.010000000000000</double>
          </property>
          <property name="value">
-          <double>1.000000000000000</double>
+          <double>0.010000000000000</double>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="st_angleLbl">
+        <widget class="QLabel" name="gen_angleLbl">
          <property name="text">
           <string>Angle:</string>
          </property>
@@ -389,12 +389,12 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>st_angle</cstring>
+          <cstring>gen_angle</cstring>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="st_xPos">
+        <widget class="QDoubleSpinBox" name="gen_xPos">
          <property name="minimum">
           <double>-999999999.000000000000000</double>
          </property>
@@ -404,7 +404,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="st_yPos">
+        <widget class="QDoubleSpinBox" name="gen_yPos">
          <property name="minimum">
           <double>-999999999.000000000000000</double>
          </property>
@@ -414,7 +414,7 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="st_xPosLbl">
+        <widget class="QLabel" name="gen_xPosLbl">
          <property name="text">
           <string>X:</string>
          </property>
@@ -422,12 +422,12 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>st_xPos</cstring>
+          <cstring>gen_xPos</cstring>
          </property>
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="st_yPosLbl">
+        <widget class="QLabel" name="gen_yPosLbl">
          <property name="text">
           <string>Y:</string>
          </property>
@@ -435,7 +435,7 @@
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
          <property name="buddy">
-          <cstring>st_yPos</cstring>
+          <cstring>gen_yPos</cstring>
          </property>
         </widget>
        </item>
@@ -453,11 +453,11 @@
   <tabstop>cellWidth</tabstop>
   <tabstop>cellHeight</tabstop>
   <tabstop>st_stitch</tabstop>
-  <tabstop>st_xPos</tabstop>
-  <tabstop>st_yPos</tabstop>
-  <tabstop>st_angle</tabstop>
-  <tabstop>st_scaleX</tabstop>
-  <tabstop>st_scaleY</tabstop>
+  <tabstop>gen_xPos</tabstop>
+  <tabstop>gen_yPos</tabstop>
+  <tabstop>gen_angle</tabstop>
+  <tabstop>gen_scaleX</tabstop>
+  <tabstop>gen_scaleY</tabstop>
   <tabstop>st_stColorBttn</tabstop>
   <tabstop>st_stBgColorBttn</tabstop>
   <tabstop>ind_indicatorStyle</tabstop>

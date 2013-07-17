@@ -1933,21 +1933,22 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
         foreach(QGraphicsItem *i, selectedItems()) {
             Cell *c = 0;
             Indicator *ind = 0;
-
+            ItemGroup *g = 0;
 
             if(i->type() == Cell::Type) {
                 c = qgraphicsitem_cast<Cell*>(i);
             } else if(i->type() == Indicator::Type) {
                 ind = qgraphicsitem_cast<Indicator*>(i);
 
-            } else {
-
+            } else if(i->type() == ItemGroup::Type) {
+                g = qgraphicsitem_cast<ItemGroup*>(i);
             }
 
             if(property == "Angle") {
                 i->setRotation(newValue.toReal());
                 undoStack()->push(new SetItemRotation(i, i->rotation(),
-                                QPointF(c->boundingRect().center().x(), c->boundingRect().bottom())));
+                                QPointF(i->boundingRect().center().x(), 
+                                        i->boundingRect().bottom())));
 
             } else if(property == "PositionX") {
                 QPointF oldPos = i->pos();

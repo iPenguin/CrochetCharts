@@ -2,14 +2,19 @@
 #include "ui_propertiesdock.h"
 
 #include "settings.h"
+
 #include "cell.h"
+#include "itemgroup.h"
+#include "indicator.h"
+#include <QGraphicsEllipseItem>
+
 #include "crochettab.h"
 #include "stitchlibrary.h"
 #include "stitch.h"
 #include "colorlistwidget.h"
 #include <qcolordialog.h>
 
-#include "stitchproperties.h"
+#include "propertiesdata.h"
 
 PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     QDockWidget(parent),
@@ -33,12 +38,12 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     clearUi();
     connect(mTabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
 
-    connect(ui->st_angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
-    connect(ui->st_scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
-    connect(ui->st_scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
+    connect(ui->gen_angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
+    connect(ui->gen_scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
+    connect(ui->gen_scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
 
-    connect(ui->st_xPos, SIGNAL(valueChanged(double)), SLOT(cellUpdatePositionX(double)));
-    connect(ui->st_yPos, SIGNAL(valueChanged(double)), SLOT(cellUpdatePostiionY(double)));
+    connect(ui->gen_xPos, SIGNAL(valueChanged(double)), SLOT(cellUpdatePositionX(double)));
+    connect(ui->gen_yPos, SIGNAL(valueChanged(double)), SLOT(cellUpdatePositionY(double)));
 
     connect(ui->showChartCenter, SIGNAL(toggled(bool)), SLOT(chartUpdateChartCenter(bool)));
     connect(ui->guidelinesType, SIGNAL(currentIndexChanged(QString)), SLOT(chartUpdateGuidelines()));
@@ -161,22 +166,34 @@ bool PropertiesDock::updateGuidelines()
     return changed;
 }
 
-StitchProperties PropertiesDock::selectionProperties()
+PropertiesData PropertiesDock::selectionProperties()
 {
-    StitchProperties props;
+    PropertiesData props;
     bool firstPass = true;
 
     bool angleMixed = false, xScaleMixed = false, yScaleMixed = false,
          xPositionMixed = false, yPositionMixed = false, stitchMixed = false,
          colorMixed = false, bgColorMixed = false;
-
+         
     foreach(QGraphicsItem *i, mScene->selectedItems()) {
-        if(i->type() != Cell::Type)
-            continue;
-
-        Cell *c = qgraphicsitem_cast<Cell*>(i);
-
+        
+        Cell *c = 0;
+        ItemGroup *g = 0;
+        Indicator *ind = 0;
+        QGraphicsEllipseItem *cc = 0; //ChartCenter
+        
+        if(i->type() == Cell::Type) {
+            c = qgraphicsitem_cast<Cell*>(i);
+        } else if(i->type() == ItemGroup::Type) {
+            g = qgraphicsitem_cast<ItemGroup*>(i);
+        } else if(i->type() == Indicator::Type) {
+            ind = qgraphicsitem_cast<Indicator*>(i);
+        } else if(i->type() == QGraphicsEllipseItem::Type) {
+            cc =  qgraphicsitem_cast<QGraphicsEllipseItem*>(i);
+        }
+        
         if(firstPass) {
+            
             props.angle = c->rotation();
             props.scale.setX(c->transform().m11());
             props.scale.setY(c->transform().m22());
@@ -288,7 +305,9 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
 
     } else if(selection == PropertiesDock::CellUi) {
         showSingleCell();
-
+        
+    } else if(selection == PropertiesDock::ItemGroupUi){
+        showItemGroup();
     } else if(selection == PropertiesDock::MixedUi) {
         showMixedObjects();
 
@@ -306,29 +325,29 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
 void PropertiesDock::showSingleCell()
 {
 
-    StitchProperties p = selectionProperties();
+    PropertiesData p = selectionProperties();
 
     ui->itemGroup->show();
 
-    ui->st_angle->blockSignals(true);
-    ui->st_angle->setValue(p.angle);
-    ui->st_angle->blockSignals(false);
+    ui->gen_angle->blockSignals(true);
+    ui->gen_angle->setValue(p.angle);
+    ui->gen_angle->blockSignals(false);
 
-    ui->st_xPos->blockSignals(true);
-    ui->st_xPos->setValue(p.position.x());
-    ui->st_xPos->blockSignals(false);
+    ui->gen_xPos->blockSignals(true);
+    ui->gen_xPos->setValue(p.position.x());
+    ui->gen_xPos->blockSignals(false);
 
-    ui->st_yPos->blockSignals(true);
-    ui->st_yPos->setValue(p.position.y());
-    ui->st_yPos->blockSignals(false);
+    ui->gen_yPos->blockSignals(true);
+    ui->gen_yPos->setValue(p.position.y());
+    ui->gen_yPos->blockSignals(false);
 
-    ui->st_scaleX->blockSignals(true);
-    ui->st_scaleX->setValue(p.scale.x());
-    ui->st_scaleX->blockSignals(false);
+    ui->gen_scaleX->blockSignals(true);
+    ui->gen_scaleX->setValue(p.scale.x());
+    ui->gen_scaleX->blockSignals(false);
 
-    ui->st_scaleY->blockSignals(true);
-    ui->st_scaleY->setValue(p.scale.y());
-    ui->st_scaleY->blockSignals(false);
+    ui->gen_scaleY->blockSignals(true);
+    ui->gen_scaleY->setValue(p.scale.y());
+    ui->gen_scaleY->blockSignals(false);
 
     ui->st_stColorBttn->setIcon(ColorListWidget::drawColorBox(p.color, QSize(32,32)));
     ui->st_stColorBttn->setText(p.color.name());
@@ -365,6 +384,12 @@ void PropertiesDock::showMixedObjects()
 {
     qDebug() << "mixed objs";
     ui->itemGroup->show();
+}
+
+void PropertiesDock::showItemGroup()
+{
+    ui->itemGroup->show();
+    
 }
 
 void PropertiesDock::showCanvas()
@@ -462,7 +487,7 @@ void PropertiesDock::cellUpdatePositionX(double positionX)
     emit propertiesUpdated("PositionX", QVariant(positionX));
 }
 
-void PropertiesDock::cellUpdatePostiionY(double positionY)
+void PropertiesDock::cellUpdatePositionY(double positionY)
 {
     emit propertiesUpdated("PositionY", QVariant(positionY));
 }
