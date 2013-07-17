@@ -40,16 +40,16 @@ public:
     void setTextColor(QColor c) { mTextColor = c; }
 
     QString style() { return mStyle; }
-    void setStyle(QString style) { mStyle = style; }
+    void setStyle(QString style) { mStyle = style; update();}
 
     QPainterPath shape() const;
-    
+
     bool highlight;
 
 signals:
     void lostFocus(Indicator *item);
     void gotFocus(Indicator *item);
-    
+
 protected:
     void focusInEvent(QFocusEvent* event);
     void focusOutEvent(QFocusEvent* event);
