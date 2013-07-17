@@ -387,7 +387,7 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
     c->setRotation(angle);
 
     if(group != -1)
-        tab->scene()->mGroups[group]->addToGroup(c);
+        tab->scene()->addToGroup(group, c);
 }
 
 

@@ -309,10 +309,12 @@ protected:
      *             3 - use the right edges of all stitches
      */
     QRectF selectionBoundingRect(QList< QGraphicsItem* > items, int vertical, int horizontal);
-    
+
 public:
     ItemGroup* group(QList<QGraphicsItem*> items, ItemGroup *g = 0);
     void ungroup(ItemGroup *group);
+
+    void addToGroup(int groupNumber, QGraphicsItem *i);
 
     QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
 
@@ -327,7 +329,7 @@ public:
 protected:
     void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
     void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
-    
+
     void indicatorModeMouseMove(QGraphicsSceneMouseEvent *e);
     void indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e);
 

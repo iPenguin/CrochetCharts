@@ -2435,6 +2435,13 @@ void Scene::ungroup(ItemGroup* group)
 
 }
 
+void Scene::addToGroup(int groupNumber, QGraphicsItem *i)
+{
+    mGroups[groupNumber]->addToGroup(i);
+    i->setFlag(QGraphicsItem::ItemIsSelectable, false);
+    i->setSelected(false);
+}
+
 void Scene::editorLostFocus(Indicator *item)
  {
 
