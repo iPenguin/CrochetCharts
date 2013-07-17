@@ -15,8 +15,8 @@
 
 
 SettingsUi::SettingsUi(QWidget *parent)
-    : QDialog(parent), ui(new Ui::SettingsDialog),
-      stitchColorUpdated(false)
+    : QDialog(parent), stitchColorUpdated(false),
+    ui(new Ui::SettingsDialog)
 {
     ui->setupUi(this);
 

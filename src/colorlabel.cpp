@@ -79,6 +79,8 @@ void ColorLabel::selectColor()
 void ColorLabel::paintEvent(QPaintEvent *event)
 {
 
+    Q_UNUSED(event);
+
     QCommonStyle style;
 
     QPainter painter(this);
