@@ -372,7 +372,10 @@ void PropertiesDock::showSingleIndicator()
     Indicator *i = qgraphicsitem_cast<Indicator*>(mScene->selectedItems().first());
 
     //ui->ind_indicatorTextEdit->setText(i->text());
+    ui->ind_indicatorStyle->blockSignals(true);
     ui->ind_indicatorStyle->setCurrentIndex(ui->ind_indicatorStyle->findText(i->style()));
+    ui->ind_indicatorStyle->blockSignals(false);
+
 }
 
 void PropertiesDock::showMultiIndicator()
