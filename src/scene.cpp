@@ -2392,17 +2392,12 @@ ItemGroup* Scene::group(QList<QGraphicsItem*> items, ItemGroup* g)
 
     if(!g) {
         g = new ItemGroup(0, this);
-        foreach(QGraphicsItem *i, items) {
-            i->setSelected(false);
-            i->setFlag(QGraphicsItem::ItemIsSelectable, false);
-            g->addToGroup(i);
-        }
-    } else {
-        foreach(QGraphicsItem* i, items) {
-            i->setSelected(false);
-            i->setFlag(QGraphicsItem::ItemIsSelectable, false);
-            g->addToGroup(i);
-        }
+    }
+
+    foreach(QGraphicsItem *i, items) {
+        i->setSelected(false);
+        i->setFlag(QGraphicsItem::ItemIsSelectable, false);
+        g->addToGroup(i);
     }
 
     g->setFlag(QGraphicsItem::ItemIsMovable);
