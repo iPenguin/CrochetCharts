@@ -50,7 +50,6 @@ public:
 
     void useAlternateRenderer(bool useAlt);
 
-    QPointF scale() { return QPointF(transform().m11(), transform().m22()); }
     void setScale(qreal sx, qreal sy);
     
 signals:

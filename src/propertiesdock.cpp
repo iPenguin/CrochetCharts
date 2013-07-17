@@ -178,8 +178,8 @@ StitchProperties PropertiesDock::selectionProperties()
 
         if(firstPass) {
             props.angle = c->rotation();
-            props.scale.setX(c->scale().x());
-            props.scale.setY(c->scale().y());
+            props.scale.setX(c->transform().m11());
+            props.scale.setY(c->transform().m22());
             props.position.setX(c->pos().x());
             props.position.setY(c->pos().y());
             props.stitch = c->name();
@@ -188,11 +188,14 @@ StitchProperties PropertiesDock::selectionProperties()
             firstPass = false;
         }
 
+        if(!c)
+            continue;
+        
         if(props.angle != c->rotation())
             angleMixed = true;
-        if(props.scale.x() != c->scale().x())
+        if(props.scale.x() != c->transform().m11())
             xScaleMixed = true;
-        if(props.scale.y() != c->scale().y())
+        if(props.scale.y() != c->transform().m22())
             yScaleMixed = true;
         if(props.position.x() != c->pos().x())
             xPositionMixed = true;

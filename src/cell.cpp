@@ -221,7 +221,7 @@ Cell* Cell::copy(Cell *cell)
     c->setColor(c->color());
     c->setTransformOriginPoint(transformOriginPoint());
     c->setRotation(rotation());
-    c->setScale(scale().x(), scale().y());
+    c->setScale(transform().m11(), transform().m22());
 
     return c;
 }
