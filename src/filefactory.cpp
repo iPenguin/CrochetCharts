@@ -136,8 +136,10 @@ FileFactory::FileError FileFactory::save(FileVersion version)
             return FileFactory::Err_RemovingOrigFile;
     }
 
-    if(!d.rename(f.fileName(), fileName))
+    if(!f.copy(fileName)) {
+        qDebug() << "Could not write final output file." << f.fileName() << fileName;
         return FileFactory::Err_RenamingTempFile;
+    }
 
     return FileFactory::No_Error;
 }
