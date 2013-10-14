@@ -257,6 +257,7 @@ function display_vairiables {
     printf -- "-- CMake:         ${GREEN}$CMAKE${ENDCOLOR}\n"
     printf -- "-- QMake:         ${GREEN}$QMAKE${ENDCOLOR}\n"
     printf -- "-- CC:            ${GREEN}$CC${ENDCOLOR}\n"
+    printf -- "-- THREADS:       ${GREEN}$THREADS${ENDCOLOR}\n"
     printf -- "-- CXX:           ${GREEN}$CXX${ENDCOLOR}\n"
     printf -- "-- Platform:      ${GREEN}$PLATFORM${ENDCOLOR}\n"
     printf -- "-- Arch:          ${GREEN}$ARCH${ENDCOLOR}\n"
@@ -298,6 +299,7 @@ USE_LLVM=true
 PACKAGE="OFF"
 CMAKE_ONLY=false
 VERBOSE=""
+THREADS=8
 
 while getopts ":ac:CdDghj:pq:v" opt; do
   case $opt in
@@ -322,7 +324,7 @@ while getopts ":ac:CdDghj:pq:v" opt; do
       usage
       ;;
     j)
-      THREADS="$OPTARG"
+      THREADS=$OPTARG
       ;;
     p)
       PACKAGE="ON"
