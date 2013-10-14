@@ -85,7 +85,7 @@ void ColorLabel::paintEvent(QPaintEvent *event)
 
     QPainter painter(this);
     QFont font = painter.font();
-    font.setPixelSize(12);
+    font.setPointSize(9);
     painter.setPen(QPen(QColor(Qt::black)));
     painter.setFont(font);
 
