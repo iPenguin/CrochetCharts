@@ -35,8 +35,15 @@ private:
      */
     QString cleanToken(QString token);
 
+    /**
+     * @brief generateRepeats - extract repeats from a row of stitches.
+     * @param stitches - the row of stitches
+     * @param prefix - the prefix to use as a substitute for a match
+     * @return the original row and any substitutes created in place of repeats.
+     */
     QMap<QString, QStringList> generateRepeats(QStringList stitches, QString prefix);
-    QMap< QString, QStringList > generateRepeatRows(QStringList stitches, QString prefix);
+
+    QMap<QString, QStringList> generateRepeatRows(QStringList stitches, QString prefix);
 
     /**
      * Take a list of stitches and convert them into a crochet sentence.

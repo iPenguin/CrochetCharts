@@ -63,7 +63,7 @@ QString TextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
 QString TextView::generateText(QStringList row, bool useRepeats)
 {
     QString text;
-    QString curStitch, previousStitch, nextStitch;
+    QString curStitch, previousStitch;
     QMap<QString, QStringList> data;
     int count = 1;
     bool firstPass = true;
@@ -71,7 +71,6 @@ QString TextView::generateText(QStringList row, bool useRepeats)
     bool genRepeats = Settings::inst()->value("generateTextRepeats").toBool();
     QString prefix = ".sws_";
 
-    //FIXME: useRepeats is a hard coded solution to prevent the software from acting weird.
     if(genRepeats && useRepeats) {
         data = generateRepeats(row, prefix);
         row = data.value("row");
@@ -80,7 +79,6 @@ QString TextView::generateText(QStringList row, bool useRepeats)
     previousStitch = "";
     for(int i = 0; i < row.count(); ++i) {
         curStitch = row.value(i);
-        nextStitch = row.value(i + 1);
 
         if(curStitch != previousStitch) {
             if(!firstPass) text += ", ";
@@ -90,9 +88,10 @@ QString TextView::generateText(QStringList row, bool useRepeats)
             } else
                 text += curStitch;
         }
-        if(curStitch == previousStitch)
+
+        if(curStitch == previousStitch) {
             count++;
-        if(curStitch != nextStitch) {
+        } else {
             text += " " + QString::number(count);
             count = 1;
             if(curStitch.startsWith(prefix))
@@ -111,47 +110,49 @@ QMap< QString, QStringList > TextView::generateRepeats(QStringList stitches, QSt
     QMap<QString, QStringList> data;
     QStringList row;
     int count = stitches.count();
-    
-    //loop through each stitch in the row.
+    bool repeat = true;
+
+    //loop through each stitch in the row to find matches.
     for(int i = 0; i < count; ++i) {
-        
-        //Attempt to find potential repeats by looking for the 
-        //first stitch (j) that matches the current stitch (i).
-        //Use a gap (i + 2) because we 1 stitch cannot be a repeat.
-        for(int j = i + 2; j < count; ++j) {
-            if(stitches.value(i) == stitches.value(j)) {
-                int diff = j - i;
-                int diffSts = false;
-                
-                //If we've found a potential repeat (j == i) then see if the 
-                //stitches that follow also match and this really is a repeat.
-                for(int l = 0; l < diff; ++l) {
-                    if(stitches.value(i + l) != stitches.value(i))
-                        diffSts = true;
-                }
-                if(!diffSts)
-                    continue;
+        QStringList stRepeat;
 
-                int mtchCnt = matchCount(stitches, i, diff);
+        int match = stitches.indexOf(stitches[i], i+1);
 
-                if(mtchCnt > 1) {
-                    QStringList sub;
-                    for(int k = 0; k < diff; ++k)
-                        sub.append(stitches.value(k));
-                    for(int k = 0; k < mtchCnt; ++k)
-                        row.append(prefix + QString::number(i));
-                    data.insert(prefix + QString::number(i), sub);
-                    j += (diff * mtchCnt);
-                    i += (diff * mtchCnt);
-                    qDebug() << j << i;
-                }
+        //no match for this stitch
+        if(match == -1) {
+            continue;
+        }
+
+        int diff = match - i;
+        //don't try to match beyond the end of the array.
+        int endDiff = stitches.count() - match;
+        if(endDiff < diff)
+            diff = endDiff;
+
+        //walk through the match and see if it is a repeat.
+        for(int j = i; j < match; j++) {
+            qDebug() << j << stitches[j] << j + diff << stitches[j + diff];
+            if(stitches[j] != stitches[j + diff])
+                repeat = false;
+            else {
+                stRepeat.append(stitches[j]);
             }
         }
-        if(i < count)
-            row.append(stitches.value(i));
+
+        if(!repeat) {
+            if(stRepeat.count() <= 1) {
+                stRepeat.clear();
+                repeat = true;
+            }
+        }
+
+        data.insert(prefix + QString::number(i), stRepeat);
+
     }
 
     data.insert("row", row);
+
+    qDebug() << data;
     return data;
 }
 
@@ -224,7 +225,7 @@ QString TextView::copyInstructions()
 
     if(text == "")
         text = "There are no rows on this chart, to create rows please goto the \"Modes\" menu and select \"Row Edit\"";
-    
+    qDebug() << text;
     return text;
 
 }
