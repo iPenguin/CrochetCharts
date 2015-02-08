@@ -165,57 +165,6 @@ QStringList Scene::modes()
     return modes;
 }
 
-void Scene::initDemoBackground()
-{
-
-    if(Settings::inst()->isDemoVersion()) {
-
-        if(mDemoItems.count() > 0) {
-            foreach(QGraphicsItem* i, mDemoItems) {
-                delete i;
-            }
-            mDemoItems.clear();
-        }
-        
-        double fontSize = 32.0;
-        QFont demoFont = QFont();
-        demoFont.setPointSize(fontSize);
-        QString demoString = AppInfo::inst()->demoString;
-
-        QFontMetrics fm = QFontMetrics(demoFont);
-        double stringWidth = fm.width(demoString);
-
-        QGraphicsSimpleTextItem* demoText;
-        QRectF rect = sceneRect();
-        double demoRows = rect.height() / fontSize;
-        demoRows = demoRows /2.0;
-
-        double demoCols = rect.width() / stringWidth;
-
-        for(int c = 0; c < ceil(demoCols); ++c) {
-            for(int i = 0; i < ceil(demoRows); ++i) {
-                demoText = addSimpleText(demoString, demoFont);
-                demoText->setBrush(QBrush(QColor("#D0D0D0")));
-                QPointF point = QPointF(rect.left() + c * stringWidth, rect.top() + i * (2 * fontSize));
-                demoText->setPos(point);
-                demoText->setZValue(-1);
-                mDemoItems.append(demoText);
-            }
-        }
-
-        //restore original rect. letting the demo text overflow off the scene.
-        setSceneRect(rect);
-    } else {
-        //clean up when the software has been licensed.
-        if(mDemoItems.count() > 0) {
-            foreach(QGraphicsItem *i, mDemoItems) {
-                delete i;
-            }
-            mDemoItems.clear();
-        }
-    }
-}
-
 Cell* Scene::cell(int row, int column)
 {
     if(row >= grid.count())
@@ -759,7 +708,6 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         //update the size of the scene rect based on where the items are on the scene.
         updateSceneRect();
 
-        initDemoBackground();
         mMoving = false;
     }
 
@@ -1868,13 +1816,10 @@ void Scene::createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSiz
 
     updateSceneRect();
     
-    initDemoBackground();
-    
 }
 
 void Scene::createBlankChart()
 {
-    initDemoBackground();
 }
 
 void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelection)
@@ -2487,11 +2432,6 @@ QRectF Scene::itemsBoundingRect()
 {
     QList<QGraphicsItem*> itemList = items();
 
-    QList<QGraphicsItem*>::const_iterator dItem;
-    for (dItem = mDemoItems.begin(); dItem != mDemoItems.constEnd(); ++dItem) {
-        itemList.removeOne((*dItem));
-    }
-
     QRectF rect = selectedItemsBoundingRect(itemList);
 
     rect.setTop(rect.top() - 10);
@@ -2590,8 +2530,6 @@ void Scene::createRoundsChart(int rows, int cols, QString stitch, QSizeF rowSize
 
     updateSceneRect();
     
-    initDemoBackground();
-
 }
 
 void Scene::setCellPosition(int row, int column, Cell* c, int columns)

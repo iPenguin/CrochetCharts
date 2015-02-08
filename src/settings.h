@@ -38,12 +38,6 @@ public:
     void setValue(const QString &key, const QVariant &value);
     QVariant value(const QString &key) const;
 
-    bool isDemoVersion() { return mIsDemoVersion; }
-    void setDemoVersion(bool isDemo) { mIsDemoVersion = isDemo; }
-
-    //FIXME: move this popup dialog to a ui centric class.
-    void trialVersionMessage(QWidget* parent);
-    
     /**
      * The folder where the user's settings are stored. W/trailing slash.
      */
@@ -75,7 +69,6 @@ private:
      */
     QStringList mRecentFiles;
     
-    void initDemoVersion();
     static Settings* mInstance;
     
     Settings();
@@ -83,8 +76,6 @@ private:
     void setupValueList();
     
     QSettings mSettings;
-
-    bool mIsDemoVersion;
 
     QMap<QString, QVariant> mValueList;
 

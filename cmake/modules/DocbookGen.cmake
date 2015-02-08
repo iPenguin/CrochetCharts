@@ -6,7 +6,6 @@
 #FORMATS:
 #html: generic html
 #pdf: a PDF
-#pages: Mac specific html help pages
 #htmlhelp: MS Windows specific html help pages
 
 MACRO(MAKE_WINDOWS_PATH pathname)
@@ -69,14 +68,6 @@ function(DOCBOOK_GENERATE format input version)
                 COMMAND "${fop}" -fo "${outputBaseName}.fo" -pdf "${outputBaseName}.pdf"
                 OUTPUT_VARIABLE _output)
 
-    elseif(format STREQUAL "pages")
-            set(xslFile "${docbookBasePath}/roundtrip/dbk2pages.xsl")
-            set(outputFile "${working}/index.xml")
-
-            execute_process(
-                COMMAND "${xsltproc}" -o "${outputFile}" --stringparam pages.template template-pages.xml ${xslFile} "${input}"
-                OUTPUT_VARIABLE _output)
-            
     elseif(format STREQUAL "htmlhelp")
             set(xslFile "${docbookBasePath}/htmlhelp/htmlhelp.xsl")
             

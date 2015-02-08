@@ -133,7 +133,6 @@ private slots:
 
     void menuToolsAboutToShow();
     void toolsOptions();
-    void toolsRegisterSoftware();
     void toolsStitchLibrary();
     void toolsCheckForUpdates();
 

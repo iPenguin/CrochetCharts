@@ -190,8 +190,6 @@ public:
 
     void updateDefaultStitchColor(QColor originalColor, QColor newColor);
 
-    void initDemoBackground();
-
 public slots:    
     void copy();
     void cut();
@@ -446,8 +444,6 @@ private:
      */
     QList<QGraphicsLineItem*> mRowLines;
     
-    QList<QGraphicsItem*> mDemoItems;
-
     QList<ItemGroup*> mGroups;
 
 

@@ -24,8 +24,6 @@
 
 #include <QDebug>
 
-#include "license.h"
-#include "licensewizard.h"
 #include "settings.h"
 
 #include "splashscreen.h"
@@ -51,22 +49,6 @@ int main(int argc, char *argv[])
     splash.showMessage(QObject::tr("Loading..."));
     qApp->processEvents();
    
-    QString userSn = Settings::inst()->value("serialNumber").toString();
-    QString userLicense = Settings::inst()->value("license").toString();
-    QString userEmail = Settings::inst()->value("email").toString();
-
-#ifndef APPLE_APP_STORE
-    if(!License::isValidLicense(userLicense, userSn, userEmail)) {
-        splash.showMessage(QObject::tr("Loading: License Wizard"));
-        LicenseWizard wizard;
-        splash.hide();
-        if(wizard.exec() != QWizard::Accepted)
-                return -1;
-        Settings::inst()->saveSettings();
-        splash.show();
-    }
-#endif //APPLE_APP_STORE
-
     QString curVersion = AppInfo::inst()->appVersion;
     QString lastUsed = Settings::inst()->value("lastUsed").toString();
     updateFunction(lastUsed);

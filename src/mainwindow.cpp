@@ -21,7 +21,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "stitchlibraryui.h"
-#include "licensewizard.h"
 #include "exportui.h"
 
 #include "application.h"
@@ -468,7 +467,6 @@ void MainWindow::setupMenus()
     //Tools Menu
     connect(ui->menuTools, SIGNAL(aboutToShow()), SLOT(menuToolsAboutToShow()));
     connect(ui->actionOptions, SIGNAL(triggered()), SLOT(toolsOptions()));
-    connect(ui->actionRegisterSoftware, SIGNAL(triggered()), SLOT(toolsRegisterSoftware()));
     connect(ui->actionStitchLibrary, SIGNAL(triggered()), SLOT(toolsStitchLibrary()));
     connect(ui->actionCheckForUpdates, SIGNAL(triggered()), SLOT(toolsCheckForUpdates()));
     
@@ -565,11 +563,6 @@ void MainWindow::updateMenuItems()
 
 void MainWindow::filePrint()
 {
-    if(Settings::inst()->isDemoVersion()) {
-        Settings::inst()->trialVersionMessage(this);
-        return;
-    }
-    
     //TODO: page count isn't working...
     QPrinter printer;
     QPrintDialog* dialog = new QPrintDialog(&printer, this);
@@ -605,11 +598,6 @@ void MainWindow::print(QPrinter* printer)
 
 void MainWindow::filePrintPreview()
 {
-    if(Settings::inst()->isDemoVersion()) {
-        Settings::inst()->trialVersionMessage(this);
-        return;
-    }
-    
     //FIXME: this isn't working
     QPrinter* printer = new QPrinter(QPrinter::HighResolution);
     QPrintPreviewDialog* dialog = new QPrintPreviewDialog(printer, this);
@@ -772,22 +760,7 @@ void MainWindow::helpAbout()
     
     QString licenseInfo;
 
-#ifndef APPLE_APP_STORE
-    if(Settings::inst()->isDemoVersion()) {
-        licenseInfo = QString(tr("<p>This is a demo license granted to:<br />"
-                              "Name: %1 %2<br />"
-                              "Email: %3<br /></p>")
-                              .arg(fName).arg(lName).arg(email));
-    } else {
-        licenseInfo = QString(tr("<p>This software is licensed to:<br />"
-                              "Name: %1 %2<br />"
-                              "Email: %3<br />"
-                              "Serial #: %4</p>")
-                              .arg(fName).arg(lName).arg(email).arg(sn));
-    }
-#else
-    licenseInfo = QString(tr("<p>This version was downloaded from the Apple App Store</p>"));
-#endif
+    licenseInfo = QString(tr("<p>This version is released under the GPLv3 open source license.</p>"));
 
     aboutInfo.append(licenseInfo);
     QMessageBox::about(this, tr("About Crochet Charts"), aboutInfo);
@@ -862,8 +835,6 @@ void MainWindow::readSettings()
 
 void MainWindow::menuToolsAboutToShow()
 {
-    if(!Settings::inst()->isDemoVersion())
-        ui->actionRegisterSoftware->setVisible(false);    
 }
 
 void MainWindow::toolsOptions()
@@ -937,10 +908,6 @@ void MainWindow::loadFile(QString fileName)
 
 void MainWindow::fileSave()
 {
-    if(Settings::inst()->isDemoVersion()) {
-        Settings::inst()->trialVersionMessage(this);
-        return;
-    }
 
     if(ui->tabWidget->count() <= 0) {
         QMessageBox msgbox;
@@ -969,11 +936,6 @@ void MainWindow::fileSave()
 
 void MainWindow::fileSaveAs()
 {
-    if(Settings::inst()->isDemoVersion()) {
-        Settings::inst()->trialVersionMessage(this);
-        return;
-    }
-
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
 
     QFileDialog* fd = new QFileDialog(this, tr("Save Pattern File"), fileLoc,
@@ -1463,19 +1425,6 @@ void MainWindow::chartEditName()
         ui->tabWidget->setTabText(curTab, newName);
         if(newName != currentName)
             documentIsModified(true);
-    }
-}
-
-void MainWindow::toolsRegisterSoftware()
-{
-    if(Settings::inst()->isDemoVersion()) {
-        LicenseWizard wizard(true, this);
-        if(wizard.exec() == QWizard::Accepted) {
-            Settings::inst()->setDemoVersion(false);
-            Settings::inst()->saveSettings();
-            if(curCrochetTab())
-                curCrochetTab()->sceneUpdate();
-        }
     }
 }
 

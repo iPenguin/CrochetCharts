@@ -20,8 +20,6 @@
  \****************************************************************************/
 #include "settings.h"
 
-#include "license.h"
-
 #include <QDebug>
 #include "appinfo.h"
 #include <QDesktopServices>
@@ -45,46 +43,12 @@ Settings* Settings::inst()
 Settings::Settings()
 {
     setupValueList();
-    initDemoVersion();
     mRecentFiles = value("recentFiles").toStringList();
 }
 
 Settings::~Settings()
 {
     setValue("recentFiles", QVariant(mRecentFiles));
-}
-
-void Settings::initDemoVersion()
-{
-#ifndef APPLE_APP_STORE
-    QString license = value("license").toString();
-    QString sn      = value("serialNumber").toString();
-    QString email   = value("email").toString();
-
-    if(!License::isValidSerialNumber(sn)) {
-        mIsDemoVersion = true;
-        return;
-    }
-    if(!License::isValidLicense(license, sn, email)) {
-        mIsDemoVersion = true;
-        return;
-    }
-#endif
-    mIsDemoVersion = false;
-
-}
-
-void Settings::trialVersionMessage(QWidget* parent)
-{
-    QMessageBox msgbox(parent);
-    msgbox.setWindowTitle(AppInfo::inst()->appName);
-    msgbox.setText(tr("This feature is disabled in the demo version."));
-    msgbox.setInformativeText(tr("There are example output files and screenshots available at http://%1/%2.")
-        .arg(AppInfo::inst()->appOrgDomain).arg(AppInfo::inst()->appName));
-    msgbox.setStandardButtons(QMessageBox::Ok);
-    msgbox.setIcon(QMessageBox::Information);
-    
-    msgbox.exec();
 }
 
 void Settings::setValue(const QString &key, const QVariant &value)
@@ -114,7 +78,6 @@ QVariant Settings::defaultValue ( const QString& key ) const
 void Settings::setupValueList() {
 
     //look up values for setting server/webpage for license and update testing.
-    mValueList["licensePage"] = QVariant(AppInfo::inst()->liveLicensePage + AppInfo::inst()->liveLicensePageVals);
     mValueList["updatePage"] = QVariant(AppInfo::inst()->liveUpdatePage + AppInfo::inst()->liveUpdatePageVals);
     mValueList["lastUsed"] = QVariant("");
     
@@ -123,7 +86,6 @@ void Settings::setupValueList() {
     mValueList["lastName"] = QVariant("");
     mValueList["email"] = QVariant("");
     mValueList["serialNumber"] = QVariant("");
-    mValueList["license"] = QVariant("");
 
     QString userDocs = QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
     

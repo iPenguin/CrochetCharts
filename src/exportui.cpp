@@ -267,11 +267,6 @@ void ExportUi::exportData()
     height = ui->height->text().remove(" px").toInt();
     pageToChartSize = ui->pageToChartSize->isChecked();
 
-    if(Settings::inst()->isDemoVersion()) {
-        Settings::inst()->trialVersionMessage(this);
-        return;
-    }
-
     QString filter;
     if(exportType == "pdf")
         filter = tr("Portable Document Format (pdf)(*.pdf)");

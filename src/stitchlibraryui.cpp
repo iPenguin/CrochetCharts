@@ -505,11 +505,6 @@ void StitchLibraryUi::exportSet()
 {   
     StitchSet* set = StitchLibrary::inst()->findStitchSet(ui->stitchSource->currentText());
 
-    if(Settings::inst()->isDemoVersion()) {
-        Settings::inst()->trialVersionMessage(this);
-        return;
-    }
-    
     QString fileLoc = Settings::inst()->value("fileLocation").toString();
     QString fileName = QFileDialog::getSaveFileName(this,
                                                     tr("Save Stitch Set"), fileLoc, tr("Stitch Set (*.set)"));
