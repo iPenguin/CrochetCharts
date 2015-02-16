@@ -25,9 +25,9 @@
 #include <QDebug>
 #include <QObject>
 
-#include "scene.h"
+#include "../src/scene.h"
 
-#include "textview.h"
+#include "../src/textview.h"
 
 class TestTextView : public QObject
 {

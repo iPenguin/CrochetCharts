@@ -19,7 +19,7 @@
 
  \****************************************************************************/
 #include "teststitchlibrary.h"
-#include "stitchset.h"
+#include "../src/stitchset.h"
 
 #include <QDebug>
 

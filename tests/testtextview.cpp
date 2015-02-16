@@ -19,7 +19,7 @@
 
  \****************************************************************************/
 #include "testtextview.h"
-#include <stitchlibrary.h>
+#include "../src/stitchlibrary.h"
 
 void TestTextView::initTestCase()
 {

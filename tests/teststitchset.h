@@ -25,7 +25,7 @@
 #include <QDebug>
 #include <QObject>
 
-#include "stitchset.h"
+#include "../src/stitchset.h"
 
 class TestStitchSet : public QObject
 {
