@@ -10,7 +10,6 @@ file(GLOB crochet_test_srcs "test*.cpp")
 file(GLOB crochet_test_qobject_headers "test*.h")
 
 set(crochet_app_h
-    ../src/license.h
     ../src/cell.h
     ../src/stitch.h
     ../src/stitchset.h
@@ -26,7 +25,6 @@ set(crochet_app_h
     )
 
 set(crochet_app_cpp
-    ../src/license.cpp
     ../src/cell.cpp
     ../src/stitch.cpp
     ../src/stitchset.cpp
@@ -50,5 +48,5 @@ set(crochet_app_resources
 qt4_add_resources(crochet_app_rcc_srcs ${crochet_app_resources})
 qt4_wrap_cpp(crochet_test_moc_srcs ${crochet_test_qobject_headers} ${crochet_app_h})
 
-add_executable(tests main.cpp ${crochet_test_srcs} ${crochet_test_moc_srcs} ${crochet_app_cpp} ${crochet_app_rcc_srcs})
+add_executable(tests main.cpp ${crochet_test_srcs} ${crochet_test_moc_srcs} ${crochet_app_rcc_srcs})
 target_link_libraries(tests ${QT_LIBRARIES})
