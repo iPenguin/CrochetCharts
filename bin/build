@@ -18,6 +18,7 @@ usage()
     printf "      -j [number] Number of build threads\n" 1>&2
     printf "      -p          Build packages/installers.\n" 1>&2
     printf "      -q [path]   Path to qmake\n" 1>&2
+    printf "      -t          Build the unit tests\n" 1>&2
     printf "      -v          Verbose output from make\n\n" 1>&2
     
     printf "      debug       Build the project with debug flags.\n" 1>&2
@@ -61,6 +62,8 @@ function init_variables {
         QMAKE=`which qmake-qt4`
     fi
 
+    CMAKE_FLAGS="$CMAKE_FLAGS -DUNIT_TESTING=${BUILD_TESTS}"
+
     #Debug
     if [[ $BUILD_TYPE =~ [Dd][Ee][Bb][Uu][Gg] ]]; then
         BUILD_TYPE="Debug"
@@ -96,7 +99,7 @@ function init_variables {
         CMAKE_EXE_LINKER_FLAGS="-pg" #${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address"
     fi
 
-    CMAKE_FLAGS="-DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
+    CMAKE_FLAGS="$CMAKE_FLAGS -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
     CPACK_FLAGS=""
 
     CC=`which clang`
@@ -264,6 +267,7 @@ function display_vairiables {
     printf -- "-- Use LLVM:      ${GREEN}$USE_LLVM${ENDCOLOR}\n"
     printf -- "-- CMake Flags:   ${GREEN}$CMAKE_FLAGS${ENDCOLOR}\n"
     printf -- "-- CPack Flags:   ${GREEN}$CPACK_FLAGS${ENDCOLOR}\n"
+    printf -- "-- Build Tests:   ${GREEN}$BUILD_TESTS${ENDCOLOR}\n"
     
     if [ $PLATFORM == "Darwin" ]; then
         printf -- "${WHITE}-------------------------------------------------------\n"
@@ -294,6 +298,7 @@ PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
 APP_STORE="OFF"
 DOCS="OFF"
+BUILD_TESTS="OFF"
 DOXYGEN="OFF"
 USE_LLVM=true
 PACKAGE="OFF"
@@ -301,7 +306,7 @@ CMAKE_ONLY=false
 VERBOSE=""
 THREADS=8
 
-while getopts ":ac:CdDghj:pq:v" opt; do
+while getopts ":ac:CdDghj:pq:tv" opt; do
   case $opt in
     a)
       #-a is for Apple App Store
@@ -334,6 +339,9 @@ while getopts ":ac:CdDghj:pq:v" opt; do
       ;;
     q)
       QMAKE="$OPTARG"
+      ;;
+    t)
+      BUILD_TESTS="ON"
       ;;
     v)
       VERBOSE="VERBOSE=1"
