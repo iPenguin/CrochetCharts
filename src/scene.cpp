@@ -901,15 +901,16 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
         return;
 
     //If the item is grouped we want to scale the whole group.
-    if (mCurItem->parentItem())
+    if (mCurItem->parentItem()) {
         mCurItem = mCurItem->parentItem();
-
-    if(mCurItem->childItems().count() <= 0) {
-
-        mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
-        mOrigin = mCurItem->scenePos();
-    } else {
-        mOrigin = mCurItem->childrenBoundingRect().topLeft();
+		
+	}
+	//mOldscale should always be set, even when editing groups, else it will reset every scaling
+	mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
+	if(mCurItem->childItems().count() <= 0) {
+		mOrigin = mCurItem->scenePos();
+	} else {
+        mOrigin = mCurItem->boundingRect().topLeft();
         mOldSize = mCurItem->sceneBoundingRect().size();
         mOldTransform = mCurItem->transform();
         mPivotPt = mOrigin;
@@ -932,14 +933,15 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
     if(mCurItem->type() == ItemGroup::Type) {
         g = qgraphicsitem_cast<ItemGroup*>(mCurItem);
     }
-
+	
     mMoving = false;
 
     QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
-
-    QSize oldSize = QSize(mCurItem->boundingRect().width() * mOldScale.x(),
+	
+	QSize oldSize = QSize(mCurItem->boundingRect().width() * mOldScale.x(),
                           mCurItem->boundingRect().height() * mOldScale.y());
-    QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
+	QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
+
 
     if(newSize.width() == 0)
         newSize.setWidth(1);
@@ -948,12 +950,6 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 
     QPointF newScale;
     if(g) {
-        //FIXME: This is only a temporary fix until I can find a better solution.
-        if(newSize.width() < 0)
-            newSize.setWidth(1);
-        if(newSize.height() < 0)
-            newSize.setHeight(1);
-
         newScale = QPointF(newSize.width() / mCurItem->sceneBoundingRect().width(),
                         newSize.height() / mCurItem->sceneBoundingRect().height());
 
@@ -973,10 +969,16 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
     //SetItemScale::setScale(mCurItem, newScale);
 
     if(g) {
+		//flip sign of the new scale if the oldtransform is already negative, so the group won't constantly "flicker" in sign
+		if (mOldTransform.m11() < 0)
+			newScale.setX(-newScale.x());
+		if (mOldTransform.m22() < 0)
+			newScale.setY(-newScale.y());
+		
         mCurItem->setTransform(mOldTransform
             .translate(mPivotPt.x(), mPivotPt.y())
             .scale(newScale.x(), newScale.y())
-            .translate(-mPivotPt.x(), -mPivotPt.y())
+			.translate(-mPivotPt.x(), -mPivotPt.y())
             );
     } else {
         QPointF txScale = QPointF(newScale.x() / mCurItem->transform().m11(),
