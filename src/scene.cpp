@@ -492,9 +492,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     if(e->buttons() & Qt::LeftButton)
         QGraphicsScene::mousePressEvent(e);
 
-    //FIXME: there has to be a better way to keep the current selection.
-    if(mHasSelection && e->modifiers() == Qt::ControlModifier)
-        setSelectionArea(mSelectionPath);
+	//FIXME: there has to be a better way to keep the current selection.
+    //FIXME 2: I commented out the following two lines of codes, which fixed ctrl-selection. No idea why. Hope I didn't break anything else.
+	//if(mHasSelection && e->modifiers() == Qt::ControlModifier)
+    //    setSelectionArea(mSelectionPath);
     
     mLeftButtonDownPos = e->buttonDownPos(Qt::LeftButton);
 
@@ -950,6 +951,7 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 
     QPointF newScale;
     if(g) {
+
         newScale = QPointF(newSize.width() / mCurItem->sceneBoundingRect().width(),
                         newSize.height() / mCurItem->sceneBoundingRect().height());
 
