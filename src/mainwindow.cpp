@@ -1084,13 +1084,15 @@ void MainWindow::stitchesReplaceStitch()
     QString curStitch = Settings::inst()->value("defaultStitch").toString();
 
     if(curCrochetTab()) {
-        QGraphicsItem *i = curCrochetTab()->selectedItems().first();
-        if(i && i->type() == Cell::Type) {
-            Cell *c = qgraphicsitem_cast<Cell*>(i);
-            if(c)
-                curStitch = c->name();
-        }
-
+		//Check if the list is empty. If this is not the case, the .first() statement will crash.
+		if (!curCrochetTab()->selectedItems().empty()) {
+			QGraphicsItem *i = curCrochetTab()->selectedItems().first();
+			if(i && i->type() == Cell::Type) {
+				Cell *c = qgraphicsitem_cast<Cell*>(i);
+				if(c)
+					curStitch = c->name();
+			}
+		}
     }
 
     StitchReplacerUi *sr = new StitchReplacerUi(curStitch, mPatternStitches.keys(), this);
