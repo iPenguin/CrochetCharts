@@ -30,6 +30,7 @@
 
 ColorReplacer::ColorReplacer(QList<QString> colorList, QWidget *parent) :
     QDialog(parent),
+	selection(3),
     ui(new Ui::ColorReplacer),
     mOriginalColorList(colorList)
 {
@@ -66,7 +67,6 @@ void ColorReplacer::accept()
     if(!newColor.isValid()) {
         return;
     }
-
     QDialog::accept();
 }
 

@@ -2655,7 +2655,8 @@ void Scene::replaceColor(QColor original, QColor replacement, int selection)
             continue;
 
         Cell *c = qgraphicsitem_cast<Cell*>(i);
-        if(!c)
+		
+		if(!c)
             continue;
 
         if(selection == 1 || selection == 3) {
