@@ -331,6 +331,7 @@ void MainWindow::setupDocks()
     //Mirror & Rotate.
     mMirrorDock = new MirrorDock(this);
     connect(mMirrorDock, SIGNAL(mirror(int)), SLOT(mirror(int)));
+	connect(mMirrorDock, SIGNAL(copy(int)), SLOT(copy(int)));
     connect(mMirrorDock, SIGNAL(rotate(qreal)), SLOT(rotate(qreal)));
     connect(mMirrorDock, SIGNAL(visibilityChanged(bool)), ui->actionShowMirrorDock, SLOT(setChecked(bool)));
 
@@ -1637,6 +1638,12 @@ void MainWindow::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool us
 {
     CrochetTab* tab = curCrochetTab();
     if(tab) tab->arrangeGrid(grid, alignment, spacing, useSelection);
+}
+
+void MainWindow::copy(int direction)
+{
+    CrochetTab* tab = curCrochetTab();
+    if(tab) tab->copy(direction);
 }
 
 void MainWindow::mirror(int direction)

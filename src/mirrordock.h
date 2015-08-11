@@ -38,12 +38,14 @@ public:
 signals:
     void mirror(int direction);
     void rotate(qreal degrees);
+	void copy(int direction);
 
 private slots:
     void rotateCustom();
 
     void genRotate();
     void genMirror();
+	void genCopy();
 
 private:
     Ui::MirrorDock *ui;

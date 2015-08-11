@@ -76,6 +76,7 @@ public:
     void distributeSelection(int distributionStyle);
     void arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection);
 
+    void copy(int direction);
     void mirror(int direction);
     void rotate(qreal degrees);
 

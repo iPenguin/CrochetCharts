@@ -6,22 +6,132 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>156</width>
-    <height>356</height>
+    <width>206</width>
+    <height>492</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Mirror and Rotate</string>
+   <string>&amp;Mirror and Rotate</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
+   <layout class="QGridLayout" name="gridLayout_6">
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="title">
+       <string>Copy</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
+        <number>2</number>
+       </property>
+       <item row="2" column="1">
+        <widget class="QToolButton" name="copyDown">
+         <property name="toolTip">
+          <string>Mirror down</string>
+         </property>
+         <property name="text">
+          <string>D</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/mirror_down.svg</normaloff>:/images/mirror_down.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QToolButton" name="copyUp">
+         <property name="toolTip">
+          <string>Mirror up</string>
+         </property>
+         <property name="text">
+          <string>U</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/mirror_up.svg</normaloff>:/images/mirror_up.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QToolButton" name="copyRight">
+         <property name="toolTip">
+          <string>Mirror right</string>
+         </property>
+         <property name="text">
+          <string>R</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/mirror_right.svg</normaloff>:/images/mirror_right.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QToolButton" name="copyLeft">
+         <property name="toolTip">
+          <string>Mirror left</string>
+         </property>
+         <property name="text">
+          <string>L</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/mirror_left.svg</normaloff>:/images/mirror_left.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>24</width>
+           <height>24</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0">
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
        <string>Mirror</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
         <number>2</number>
        </property>
        <item row="0" column="1">
@@ -107,13 +217,22 @@
       </layout>
      </widget>
     </item>
-    <item>
+    <item row="2" column="0">
      <widget class="QGroupBox" name="groupBox_3">
       <property name="title">
        <string>Rotate</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
         <number>2</number>
        </property>
        <item row="2" column="1">
@@ -211,7 +330,7 @@ p, li { white-space: pre-wrap; }
       </layout>
      </widget>
     </item>
-    <item>
+    <item row="3" column="0">
      <widget class="QWidget" name="rotateCustomWidgets" native="true">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="1">

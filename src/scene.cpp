@@ -907,6 +907,7 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
 		
 	}
 	//mOldscale should always be set, even when editing groups, else it will reset every scaling
+	
 	mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
 	if(mCurItem->childItems().count() <= 0) {
 		mOrigin = mCurItem->scenePos();
@@ -914,8 +915,8 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
         mOrigin = mCurItem->boundingRect().topLeft();
         mOldSize = mCurItem->sceneBoundingRect().size();
         mOldTransform = mCurItem->transform();
-        mPivotPt = mOrigin;
     }
+	mPivotPt = mOrigin;
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -976,9 +977,9 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 			newScale.setX(-newScale.x());
 		if (mOldTransform.m22() < 0)
 			newScale.setY(-newScale.y());
-		
+		qreal rotation = mCurItem->rotation();
         mCurItem->setTransform(mOldTransform
-            .translate(mPivotPt.x(), mPivotPt.y())
+			.translate(mPivotPt.x(), mPivotPt.y())
             .scale(newScale.x(), newScale.y())
 			.translate(-mPivotPt.x(), -mPivotPt.y())
             );
@@ -1973,6 +1974,114 @@ void Scene::updateDefaultStitchColor(QColor originalColor, QColor newColor)
     }
 }
 
+QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
+{
+	if (item->type() == Cell::Type) {
+		//get the cell
+		Cell* cell = qgraphicsitem_cast<Cell*>(item);
+		
+		//now we clone the cell
+		Cell* tmp = new Cell();
+		undoStack()->push(new AddItem(this, tmp));
+		tmp->setPos(cell->pos());
+		Cell* clone = cell->copy(tmp);
+		
+		//move the clone with the displacement
+		clone->translate(displacement.x(), displacement.y());
+		
+		return clone;
+	}/* else if (item->type() == ItemGroup::Type) {
+		//get the group
+		ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
+		
+		//clone it
+		ItemGroup* newGroup = new ItemGroup();
+		undoStack()->push(new AddItem(this, newGroup));
+		newGroup->setPos(group->pos());
+		//newGroup->setTransform(group->transform());
+		foreach(QGraphicsItem* child, group->childItems()) {
+			QGraphicsItem* childCopy = copy_rec(child, displacement);
+			if (childCopy != NULL) {
+				newGroup->addToGroup(childCopy);
+			}
+		}
+		
+		//newGroup->translate(displacement.x(), displacement.y());
+		
+		return newGroup;
+	}*/
+	return NULL;
+}
+
+void Scene::copy(int direction)
+{
+    if(selectedItems().count() <= 0)
+        return;
+	
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    QRectF rect = selectedItemsBoundingRect(selectedItems());
+    QList<QGraphicsItem*> list = selectedItems();
+
+    clearSelection();
+	//TODO setSelected is extremely slow, optimize that
+    undoStack()->beginMacro("copy selection");
+    if(direction == 1) { //left
+		foreach(QGraphicsItem* item, list) {
+			QGraphicsItem* ret = copy_rec(item, QPointF(-rect.width(), 0));
+			if (ret != NULL)
+				ret->setSelected(true);
+		}
+	} else if (direction == 2) { //right
+		foreach(QGraphicsItem* item, list) {
+			QGraphicsItem* ret = copy_rec(item, QPointF(rect.width(), 0));
+			if (ret != NULL)
+				ret->setSelected(true);
+		}
+	} else if (direction == 3) { //up
+		foreach(QGraphicsItem* item, list) {
+			QGraphicsItem* ret = copy_rec(item, QPointF(0, -rect.height()));
+			if (ret != NULL)
+				ret->setSelected(true);
+		}
+	} else if (direction == 4) { //down
+		foreach(QGraphicsItem* item, list) {
+			QGraphicsItem* ret = copy_rec(item, QPointF(0, rect.height()));
+			if (ret != NULL)
+				ret->setSelected(true);
+		}
+	}
+    undoStack()->endMacro();
+    QApplication::restoreOverrideCursor();
+}
+
+QGraphicsItem* Scene::mirror_rec(QGraphicsItem* item, QPointF targetPos, qreal sx, qreal sy)
+{
+	if (item->type() == Cell::Type) {
+		//get the cell
+		Cell* cell = qgraphicsitem_cast<Cell*>(item);
+		
+		//and the original position
+		QPointF originalPos = cell->sceneBoundingRect().topLeft();
+		
+		//now we clone the cell
+		Cell* tmp = new Cell();
+		undoStack()->push(new AddItem(this, tmp));
+		tmp->setPos(cell->pos());
+		Cell* clone = cell->copy(tmp);
+
+		//flip it
+		clone->scale(sx, sy);
+		
+		//and reposition it to targetPos
+		QPointF displacement = targetPos - clone->sceneBoundingRect().topLeft();
+		clone->translate(displacement.x(), displacement.y());
+		
+		return clone;
+	}
+	return NULL;
+}
+
 void Scene::mirror(int direction)
 {
     if(selectedItems().count() <= 0)
@@ -1988,7 +2097,14 @@ void Scene::mirror(int direction)
     if(direction == 1) { //left
 
         foreach(QGraphicsItem *item, list) {
-            if(item->type() == Cell::Type) {
+			QPointF target = item->sceneBoundingRect().topLeft();
+			qreal diff = (rect.left() - item->pos().x()) - item->boundingRect().width();
+			target.setX(rect.left() + diff);
+			QGraphicsItem* mir = mirror_rec(item, target, -1, 1);
+			if (mir == NULL)
+				continue;
+			mir->setSelected(true);
+            /*if(item->type() == Cell::Type) {
                 Cell *c = qgraphicsitem_cast<Cell*>(item);
                 QPointF oldPos = c->pos();
 
@@ -1996,7 +2112,6 @@ void Scene::mirror(int direction)
                 undoStack()->push(new AddItem(this, tmpC));
                 tmpC->setPos(oldPos);
                 Cell *copy = c->copy(tmpC);
-
                 qreal diff = (rect.left() - c->pos().x()) - c->boundingRect().width();
                 copy->setPos(rect.left() + diff, c->pos().y());
 
@@ -2004,8 +2119,7 @@ void Scene::mirror(int direction)
                 qNormalizeAngle(newAngle);
                 copy->setRotation(newAngle);
                 copy->setSelected(true);
-
-            }
+            }*/
         }
 
     } else if(direction == 2) { //right

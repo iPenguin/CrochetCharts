@@ -162,6 +162,7 @@ public:
      *             down = 4
      */
     void mirror(int direction);
+	void copy(int direction);
     void rotate(qreal degrees);
 
     void group();
@@ -446,7 +447,12 @@ private:
     
     QList<ItemGroup*> mGroups;
 
-
+/***
+ * Generic private functions
+ ***/
+private:
+	QGraphicsItem* mirror_rec(QGraphicsItem* item, QPointF targetPos, qreal sx, qreal sy);
+	QGraphicsItem* copy_rec(QGraphicsItem* item, QPointF displacement);
 /***
  *
  * Rounds specific functions:

@@ -36,6 +36,11 @@ MirrorDock::MirrorDock(QWidget *parent) :
     connect(ui->mirrorRight, SIGNAL(clicked()), SLOT(genMirror()));
     connect(ui->mirrorUp, SIGNAL(clicked()), SLOT(genMirror()));
     connect(ui->mirrorDown, SIGNAL(clicked()), SLOT(genMirror()));
+	
+	connect(ui->copyLeft, SIGNAL(clicked()), SLOT(genCopy()));
+	connect(ui->copyRight, SIGNAL(clicked()), SLOT(genCopy()));
+	connect(ui->copyUp, SIGNAL(clicked()), SLOT(genCopy()));
+	connect(ui->copyDown, SIGNAL(clicked()), SLOT(genCopy()));
 
     connect(ui->rotate90, SIGNAL(clicked()), SLOT(genRotate()));
     connect(ui->rotate180, SIGNAL(clicked()), SLOT(genRotate()));
@@ -49,6 +54,21 @@ MirrorDock::MirrorDock(QWidget *parent) :
 MirrorDock::~MirrorDock()
 {
     delete ui;
+}
+
+void MirrorDock::genCopy()
+{
+    int direction = 1;
+    if(sender() == ui->copyLeft)
+        direction = 1;
+    else if(sender() == ui->copyRight)
+        direction = 2;
+    else if(sender() == ui->copyUp)
+        direction = 3;
+    else if(sender() == ui->copyDown)
+        direction = 4;
+
+    emit copy(direction);
 }
 
 void MirrorDock::genMirror()
