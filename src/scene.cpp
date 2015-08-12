@@ -973,11 +973,11 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 
     if(g) {
 		//flip sign of the new scale if the oldtransform is already negative, so the group won't constantly "flicker" in sign
-		if (mOldTransform.m11() < 0)
+		/*if (mOldTransform.m11() < 0)
 			newScale.setX(-newScale.x());
 		if (mOldTransform.m22() < 0)
 			newScale.setY(-newScale.y());
-		qreal rotation = mCurItem->rotation();
+		qreal rotation = mCurItem->rotation();*/
         mCurItem->setTransform(mOldTransform
 			.translate(mPivotPt.x(), mPivotPt.y())
             .scale(newScale.x(), newScale.y())
@@ -1987,29 +1987,32 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		Cell* clone = cell->copy(tmp);
 		
 		//move the clone with the displacement
-		clone->translate(displacement.x(), displacement.y());
+		clone->moveBy(displacement.x(), displacement.y());
 		
 		return clone;
-	}/* else if (item->type() == ItemGroup::Type) {
+	} else if (item->type() == ItemGroup::Type) {
 		//get the group
-		ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
+		ItemGroup* g = qgraphicsitem_cast<ItemGroup*>(item);
+		QList<QGraphicsItem*> childs = g->childItems();
 		
 		//clone it
 		ItemGroup* newGroup = new ItemGroup();
 		undoStack()->push(new AddItem(this, newGroup));
-		newGroup->setPos(group->pos());
-		//newGroup->setTransform(group->transform());
-		foreach(QGraphicsItem* child, group->childItems()) {
-			QGraphicsItem* childCopy = copy_rec(child, displacement);
+		newGroup->setRotation(g->rotation());
+		newGroup->setTransform(g->transform());
+		
+		foreach(QGraphicsItem* child, childs) {
+			g->removeFromGroup(child);
+			QGraphicsItem* childCopy = copy_rec(child, displacement + g->pos());
+			g->addToGroup(child);
 			if (childCopy != NULL) {
 				newGroup->addToGroup(childCopy);
+				//newChilds.append(childCopy);
 			}
 		}
 		
-		//newGroup->translate(displacement.x(), displacement.y());
-		
 		return newGroup;
-	}*/
+	}
 	return NULL;
 }
 
@@ -2054,32 +2057,27 @@ void Scene::copy(int direction)
     undoStack()->endMacro();
     QApplication::restoreOverrideCursor();
 }
-
-QGraphicsItem* Scene::mirror_rec(QGraphicsItem* item, QPointF targetPos, qreal sx, qreal sy)
+#include <iostream>
+QGraphicsItem* Scene::mirror_rec(QGraphicsItem* item, QPointF displacement, QRectF selectionRect, bool flipX, bool flipY)
 {
-	if (item->type() == Cell::Type) {
-		//get the cell
-		Cell* cell = qgraphicsitem_cast<Cell*>(item);
-		
-		//and the original position
-		QPointF originalPos = cell->sceneBoundingRect().topLeft();
-		
-		//now we clone the cell
-		Cell* tmp = new Cell();
-		undoStack()->push(new AddItem(this, tmp));
-		tmp->setPos(cell->pos());
-		Cell* clone = cell->copy(tmp);
-
-		//flip it
-		clone->scale(sx, sy);
-		
-		//and reposition it to targetPos
-		QPointF displacement = targetPos - clone->sceneBoundingRect().topLeft();
-		clone->translate(displacement.x(), displacement.y());
-		
-		return clone;
+	//first we copy the item
+	QGraphicsItem* newItem = copy_rec(item, displacement);
+	QPointF oldpos = newItem->mapToScene(newItem->boundingRect().center());
+	
+	if (newItem != NULL)
+	{	
+		//finally, we flip each remaining object in place
+		if (flipX)
+			newItem->setTransform(QTransform().scale(-1, 1), true);
+		if (flipY)
+			newItem->setTransform(QTransform().scale(1, -1), true);
+	
+		QPointF newpos = newItem->mapToScene(newItem->boundingRect().center());
+		QPointF newDisplacement = oldpos - newpos;
+		newItem->moveBy(newDisplacement.x(), newDisplacement.y());		
 	}
-	return NULL;
+	
+	return newItem;
 }
 
 void Scene::mirror(int direction)
@@ -2097,100 +2095,37 @@ void Scene::mirror(int direction)
     if(direction == 1) { //left
 
         foreach(QGraphicsItem *item, list) {
-			QPointF target = item->sceneBoundingRect().topLeft();
-			qreal diff = (rect.left() - item->pos().x()) - item->boundingRect().width();
-			target.setX(rect.left() + diff);
-			QGraphicsItem* mir = mirror_rec(item, target, -1, 1);
+			QGraphicsItem* mir = mirror_rec(item, QPointF(-rect.width(), 0), rect, true, false);
 			if (mir == NULL)
 				continue;
 			mir->setSelected(true);
-            /*if(item->type() == Cell::Type) {
-                Cell *c = qgraphicsitem_cast<Cell*>(item);
-                QPointF oldPos = c->pos();
-
-                Cell *tmpC = new Cell();
-                undoStack()->push(new AddItem(this, tmpC));
-                tmpC->setPos(oldPos);
-                Cell *copy = c->copy(tmpC);
-                qreal diff = (rect.left() - c->pos().x()) - c->boundingRect().width();
-                copy->setPos(rect.left() + diff, c->pos().y());
-
-                qreal newAngle = 360 - copy->rotation();
-                qNormalizeAngle(newAngle);
-                copy->setRotation(newAngle);
-                copy->setSelected(true);
-            }*/
         }
 
     } else if(direction == 2) { //right
 
         foreach(QGraphicsItem *item, list) {
-            if(item->type() == Cell::Type) {
-                Cell *c = qgraphicsitem_cast<Cell*>(item);
-                QPointF oldPos = c->pos();
-
-                Cell *tmpC = new Cell();
-                undoStack()->push(new AddItem(this, tmpC));
-                tmpC->setPos(oldPos);
-                Cell *copy = c->copy(tmpC);
-
-                qreal diff = (rect.right() - c->pos().x()) - c->boundingRect().width();
-                copy->setPos(rect.right() + diff, c->pos().y());
-
-                qreal newAngle = 360 - copy->rotation();
-                qNormalizeAngle(newAngle);
-                copy->setRotation(newAngle);
-                copy->setSelected(true);
-            }
+			QGraphicsItem* mir = mirror_rec(item, QPointF(rect.width(), 0), rect, true, false);
+			if (mir == NULL)
+				continue;
+			mir->setSelected(true);
         }
 
     } else if(direction == 3) { //up
 
         foreach(QGraphicsItem *item, list) {
-            if(item->type() == Cell::Type) {
-                Cell *c = qgraphicsitem_cast<Cell*>(item);
-                QPointF oldPos = item->pos();
-
-                Cell *tmpC = new Cell();
-                undoStack()->push(new AddItem(this, tmpC));
-                tmpC->setPos(oldPos);
-                Cell *copy = c->copy(tmpC);
-
-                qreal diff = (rect.top() - c->pos().y()) - c->boundingRect().height();
-                copy->setPos(c->pos().x(), rect.top() + diff - copy->boundingRect().height());
-
-                undoStack()->push(new SetItemCoordinates(copy, oldPos));
-                qreal newAngle = 360 - copy->rotation() + 180;
-                qNormalizeAngle(newAngle);
-                copy->setTransformOriginPoint(copy->boundingRect().width()/2, copy->boundingRect().height());
-                copy->setRotation(newAngle);
-                copy->setSelected(true);
-            }
+			QGraphicsItem* mir = mirror_rec(item, QPointF(0, -rect.height()), rect, false, true);
+			if (mir == NULL)
+				continue;
+			mir->setSelected(true);
         }
 
     } else if(direction == 4) { //down
 
         foreach(QGraphicsItem *item, list) {
-            if(item->type() == Cell::Type) {
-                Cell *c = qgraphicsitem_cast<Cell*>(item);
-                QPointF oldPos = item->pos();
-
-                Cell *tmpC = new Cell();
-                undoStack()->push(new AddItem(this, tmpC));
-                tmpC->setPos(oldPos);
-                Cell *copy = c->copy(tmpC);
-
-                qreal diff = (rect.bottom() - c->pos().y()) - c->boundingRect().height();
-                copy->setPos(c->pos().x(), rect.bottom() + diff - copy->boundingRect().height());
-
-                undoStack()->push(new SetItemCoordinates(copy, oldPos));
-
-                qreal newAngle = 360 - copy->rotation() + 180;
-                qNormalizeAngle(newAngle);
-                copy->setTransformOriginPoint(copy->boundingRect().width()/2, copy->boundingRect().height());
-                copy->setRotation(newAngle);
-                copy->setSelected(true);
-            }
+			QGraphicsItem* mir = mirror_rec(item, QPointF(0, rect.height()), rect, false, true);
+			if (mir == NULL)
+				continue;
+			mir->setSelected(true);
         }
     }
     undoStack()->endMacro();

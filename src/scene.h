@@ -451,7 +451,7 @@ private:
  * Generic private functions
  ***/
 private:
-	QGraphicsItem* mirror_rec(QGraphicsItem* item, QPointF targetPos, qreal sx, qreal sy);
+	QGraphicsItem* mirror_rec(QGraphicsItem* item, QPointF displacement, QRectF selectionRect, bool flipX, bool flipY);
 	QGraphicsItem* copy_rec(QGraphicsItem* item, QPointF displacement);
 /***
  *

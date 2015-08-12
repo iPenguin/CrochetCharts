@@ -27,6 +27,10 @@ ItemGroup::ItemGroup(QGraphicsItem *parent, QGraphicsScene *scene)
     : QGraphicsItemGroup( parent, scene),
     mScale(QPointF(1.0, 1.0))
 {
+    setTransform(QTransform(1,0,0,0,1,0,0,0,1));
+    setPos(0, 0);
+	setTransformOriginPoint(0, 0);
+	setRotation(0);
 
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
