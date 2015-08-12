@@ -45,6 +45,7 @@ public:
         width,
         height;
     bool pageToChartSize;
+	bool selectionOnly;
     QGraphicsScene* scene;
     
 public slots:

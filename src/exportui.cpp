@@ -43,7 +43,8 @@ ExportUi::ExportUi(QTabWidget* tab, QMap<QString, int>* stitches,
       ui(new Ui::ExportDialog),
       mTabWidget(tab),
       mStitches(stitches),
-      mColors(colors)
+      mColors(colors),
+	  selectionOnly(false)
 {
     ui->setupUi(this);
     
@@ -266,7 +267,8 @@ void ExportUi::exportData()
     width = ui->width->text().remove(" px").toInt();
     height = ui->height->text().remove(" px").toInt();
     pageToChartSize = ui->pageToChartSize->isChecked();
-
+	selectionOnly = ui->selectionOnly->isChecked();
+		
     QString filter;
     if(exportType == "pdf")
         filter = tr("Portable Document Format (pdf)(*.pdf)");
@@ -294,10 +296,13 @@ void ExportUi::exportData()
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
     //we don't want the dotted lines in the image.
-    for(int i = 0; i < mTabWidget->count(); ++i) {
-        CrochetTab* t = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
-        if(t) t->clearSelection();
-    }
+	QList< QList<QGraphicsItem*> > selectedPerTab;
+	for(int i = 0; i < mTabWidget->count(); ++i) {
+		CrochetTab* t = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
+		selectedPerTab.append(t->selectedItems());
+		if (!selectionOnly)
+			if(t) t->clearSelection();
+	}
 
     if(selection == tr("Stitch Legend") || selection == tr("Color Legend")) {
         if(exportType == "pdf")
@@ -315,6 +320,13 @@ void ExportUi::exportData()
         else
             exportImg();
     }
+	
+	//restore the selected items
+	for(int i = 0; i < selectedPerTab.count(); ++i) {
+		foreach(QGraphicsItem* item, selectedPerTab[i]) {
+			item->setSelected(true);
+		}
+	}
 
     QApplication::restoreOverrideCursor();
 }
@@ -337,6 +349,8 @@ void ExportUi::setSelection(QString selection)
         ui->stitchLegendOptions->show();
         ui->colorLegendOptions->hide();
         ui->chartOptions->hide();
+		ui->selectionOnly->hide();
+		ui->selectionOnlyLbl->hide();
         
         if(scene->items().contains(cl))
             scene->removeItem(cl);
@@ -347,13 +361,15 @@ void ExportUi::setSelection(QString selection)
         ui->stitchLegendOptions->hide();
         ui->colorLegendOptions->show();
         ui->chartOptions->hide();
-        
+        ui->selectionOnly->hide();
+		ui->selectionOnlyLbl->hide();
+		
         if(scene->items().contains(sl))
             scene->removeItem(sl);
         if(!scene->items().contains(cl))
             scene->addItem(cl);
     } else {
-        CrochetTab* tab = 0;
+		CrochetTab* tab = 0;
         for(int i = 0; i < mTabWidget->count(); ++i) {
             if(selection == mTabWidget->tabText(i) || selection == tr("All Charts")) {
                 tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
@@ -366,6 +382,8 @@ void ExportUi::setSelection(QString selection)
         
         ui->view->setScene(tab->scene());
         
+        ui->selectionOnly->show();
+		ui->selectionOnlyLbl->show();
         ui->stitchLegendOptions->hide();
         ui->colorLegendOptions->hide();
 //FIXME: Add Chart Options.
@@ -457,7 +475,10 @@ void ExportUi::exportPdf()
         
         if(selection == tr("All Charts") || selection == mTabWidget->tabText(i)) {
             CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
-            tab->renderChart(p);
+            if (selectionOnly)
+				tab->renderChartSelected(p);
+			else
+				tab->renderChart(p);
             firstPass = false;
             if(selection != tr("All Charts"))
                 break;
@@ -491,8 +512,11 @@ void ExportUi::exportSvg()
 
     QPainter p;
     p.begin(&gen);
-    
-    tab->renderChart(&p, QRectF(QPointF(rect.x(), rect.y()),QSizeF((qreal)width, (qreal)height)));
+		
+	if (selectionOnly)
+		tab->renderChartSelected(&p, QRectF(QPointF(rect.x(), rect.y()),QSizeF((qreal)width, (qreal)height)));
+	else
+		tab->renderChart(&p, QRectF(QPointF(rect.x(), rect.y()),QSizeF((qreal)width, (qreal)height)));
     
     p.end();
 
@@ -514,7 +538,10 @@ void ExportUi::exportImg()
     for(int i = 0; i < tabCount; ++i) {
         if(selection == mTabWidget->tabText(i)) {
             CrochetTab* tab = qobject_cast<CrochetTab*>(mTabWidget->widget(i));
-            tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height)));
+            if (selectionOnly)
+				tab->renderChartSelected(p, QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height)));
+			else
+				tab->renderChart(p, QRectF(QPointF(0,0),QSizeF((qreal)width, (qreal)height)));
         }
     }
     p->end();

@@ -904,7 +904,6 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
     //If the item is grouped we want to scale the whole group.
     if (mCurItem->parentItem()) {
         mCurItem = mCurItem->parentItem();
-		
 	}
 	//mOldscale should always be set, even when editing groups, else it will reset every scaling
 	

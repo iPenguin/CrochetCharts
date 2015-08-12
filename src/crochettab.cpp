@@ -125,6 +125,28 @@ void CrochetTab::setEditMode(int mode)
     mScene->setEditMode((Scene::EditMode)mode);
 }
 
+void CrochetTab::renderChartSelected(QPainter* painter, QRectF rect)
+{
+	
+    QRectF r = mScene->selectedItemsBoundingRect(mScene->selectedItems());
+	//make all unselected items invisible
+	QList<QGraphicsItem*> selected = mScene->selectedItems();
+	foreach(QGraphicsItem* item, mScene->items()) {
+		item->setVisible(false);
+	}
+	foreach(QGraphicsItem* item, selected) {
+		item->setVisible(true);
+	}
+    mScene->render(painter, rect, r);
+
+    mView->centerOn(r.center());
+	
+	//and make them visible once more
+	foreach(QGraphicsItem* item, mScene->items()) {
+		item->setVisible(true);
+	}
+}
+
 void CrochetTab::renderChart(QPainter* painter, QRectF rect)
 {
 

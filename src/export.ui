@@ -14,6 +14,46 @@
    <string>Export Charts and Legends</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
+   <item row="0" column="3">
+    <widget class="QComboBox" name="fileType">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <item>
+      <property name="text">
+       <string>pdf</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>svg</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>jpeg</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>png</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>tiff</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>bmp</string>
+      </property>
+     </item>
+    </widget>
+   </item>
    <item row="1" column="0" colspan="4">
     <widget class="QGroupBox" name="optionsGroupBox">
      <property name="enabled">
@@ -23,6 +63,22 @@
       <string>Export Options</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="width">
+        <property name="suffix">
+         <string> px</string>
+        </property>
+        <property name="minimum">
+         <number>10</number>
+        </property>
+        <property name="maximum">
+         <number>100000</number>
+        </property>
+        <property name="value">
+         <number>500</number>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="heightLbl">
         <property name="text">
@@ -33,6 +89,19 @@
         </property>
         <property name="buddy">
          <cstring>height</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="resolutionLbl">
+        <property name="text">
+         <string>Resolution:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>resolution</cstring>
         </property>
        </widget>
       </item>
@@ -52,80 +121,18 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QSpinBox" name="resolution">
-        <property name="suffix">
-         <string> dpi</string>
+      <item row="0" column="2" colspan="4">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
-        <property name="minimum">
-         <number>72</number>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
         </property>
-        <property name="maximum">
-         <number>300</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="width">
-        <property name="suffix">
-         <string> px</string>
-        </property>
-        <property name="minimum">
-         <number>10</number>
-        </property>
-        <property name="maximum">
-         <number>100000</number>
-        </property>
-        <property name="value">
-         <number>500</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="resolutionLbl">
-        <property name="text">
-         <string>Resolution:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>resolution</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="widthLbl">
-        <property name="text">
-         <string>Width:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>width</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5">
-       <widget class="QCheckBox" name="pageToChartSize">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLabel" name="pageSizeLbl">
-        <property name="text">
-         <string>Page to Chart Size:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>pageToChartSize</cstring>
-        </property>
-       </widget>
+       </spacer>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="selectionLbl">
@@ -140,23 +147,249 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="4">
+       <widget class="QLabel" name="pageSizeLbl">
+        <property name="text">
+         <string>Page to Chart Si&amp;ze:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>pageToChartSize</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QCheckBox" name="pageToChartSize">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="chartSelection"/>
       </item>
-      <item row="0" column="2" colspan="4">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="2" column="0">
+       <widget class="QLabel" name="widthLbl">
+        <property name="text">
+         <string>Width:</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
-       </spacer>
+        <property name="buddy">
+         <cstring>width</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QSpinBox" name="resolution">
+        <property name="suffix">
+         <string> dpi</string>
+        </property>
+        <property name="minimum">
+         <number>72</number>
+        </property>
+        <property name="maximum">
+         <number>300</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="4">
+       <widget class="QLabel" name="selectionOnlyLbl">
+        <property name="text">
+         <string>Selection only:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="5">
+       <widget class="QCheckBox" name="selectionOnly">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="4">
+    <widget class="QGroupBox" name="colorLegendOptions">
+     <property name="title">
+      <string>Color Legend Options</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="colorHexValue">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLineEdit" name="colorPrefix">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>C</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Color Prefi&amp;x:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>colorPrefix</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QSpinBox" name="colorColumns">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>2</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Column Count:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>colorColumns</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QComboBox" name="colorSortBy">
+        <item>
+         <property name="text">
+          <string>Age</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Color</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Quantity</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel" name="colorSortByLbl">
+        <property name="text">
+         <string>Sort by:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>colorSortBy</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Show Title:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>colorTitle</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Show Border:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>colorBorder</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>Show Hex &amp;Value:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>colorHexValue</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="colorBorder">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="colorTitle">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="fileTypeLbl">
+     <property name="text">
+      <string>File Type:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>fileType</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="4">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Close|QDialogButtonBox::Save</set>
+     </property>
     </widget>
    </item>
    <item row="2" column="0" colspan="4">
@@ -175,7 +408,7 @@
       <item row="0" column="2">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Column Count:</string>
+         <string>Colu&amp;mn Count:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -279,222 +512,6 @@
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="4">
-    <widget class="QGroupBox" name="colorLegendOptions">
-     <property name="title">
-      <string>Color Legend Options</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="colorHexValue">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLineEdit" name="colorPrefix">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>C</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Color Prefix:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>colorPrefix</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QSpinBox" name="colorColumns">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>10</number>
-        </property>
-        <property name="value">
-         <number>2</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Column Count:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>colorColumns</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QComboBox" name="colorSortBy">
-        <item>
-         <property name="text">
-          <string>Age</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Color</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Quantity</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QLabel" name="colorSortByLbl">
-        <property name="text">
-         <string>Sort by:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>colorSortBy</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Show Title:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>colorTitle</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Show Border:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>colorBorder</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>Show Hex Value:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>colorHexValue</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="colorBorder">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QCheckBox" name="colorTitle">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="4">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Close|QDialogButtonBox::Save</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3">
-    <widget class="QComboBox" name="fileType">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <item>
-      <property name="text">
-       <string>pdf</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>svg</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>jpeg</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>png</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>tiff</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>bmp</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="0" column="2">
-    <widget class="QLabel" name="fileTypeLbl">
-     <property name="text">
-      <string>File Type:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>fileType</cstring>
-     </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="4">

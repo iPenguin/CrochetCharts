@@ -53,6 +53,7 @@ public:
     ~CrochetTab();
 
     void renderChart(QPainter* painter, QRectF rect = QRectF());
+	void renderChartSelected(QPainter* painter, QRectF rect = QRectF());
 
     void setPatternStitches(QMap<QString, int>* stitches) { mPatternStitches = stitches; }
     void setPatternColors(QMap<QString, QMap<QString, qint64> >* colors) { mPatternColors = colors; }
