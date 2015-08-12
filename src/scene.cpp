@@ -1980,10 +1980,9 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		Cell* cell = qgraphicsitem_cast<Cell*>(item);
 		
 		//now we clone the cell
-		Cell* tmp = new Cell();
-		undoStack()->push(new AddItem(this, tmp));
-		tmp->setPos(cell->pos());
-		Cell* clone = cell->copy(tmp);
+		Cell* clone = cell->copy();
+		undoStack()->push(new AddItem(this, clone));
+		clone->setPos(cell->pos());
 		
 		//move the clone with the displacement
 		clone->moveBy(displacement.x(), displacement.y());
@@ -1997,18 +1996,18 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		//clone it
 		ItemGroup* newGroup = new ItemGroup();
 		undoStack()->push(new AddItem(this, newGroup));
-		newGroup->setRotation(g->rotation());
-		newGroup->setTransform(g->transform());
 		
 		foreach(QGraphicsItem* child, childs) {
-			g->removeFromGroup(child);
-			QGraphicsItem* childCopy = copy_rec(child, displacement + g->pos());
-			g->addToGroup(child);
+			QGraphicsItem* childCopy = copy_rec(child, displacement);
 			if (childCopy != NULL) {
+				childCopy->setSelected(false);
+				childCopy->setFlag(QGraphicsItem::ItemIsSelectable, false);
 				newGroup->addToGroup(childCopy);
-				//newChilds.append(childCopy);
 			}
 		}
+		
+		newGroup->setRotation(g->rotation());
+		newGroup->setTransform(g->transform());
 		
 		return newGroup;
 	}
@@ -2059,24 +2058,64 @@ void Scene::copy(int direction)
 #include <iostream>
 QGraphicsItem* Scene::mirror_rec(QGraphicsItem* item, QPointF displacement, QRectF selectionRect, bool flipX, bool flipY)
 {
-	//first we copy the item
-	QGraphicsItem* newItem = copy_rec(item, displacement);
-	QPointF oldpos = newItem->mapToScene(newItem->boundingRect().center());
-	
-	if (newItem != NULL)
-	{	
-		//finally, we flip each remaining object in place
-		if (flipX)
-			newItem->setTransform(QTransform().scale(-1, 1), true);
-		if (flipY)
-			newItem->setTransform(QTransform().scale(1, -1), true);
-	
-		QPointF newpos = newItem->mapToScene(newItem->boundingRect().center());
-		QPointF newDisplacement = oldpos - newpos;
-		newItem->moveBy(newDisplacement.x(), newDisplacement.y());		
+	if (item->type() == Cell::Type) {
+		//first we copy the item
+		QGraphicsItem* newItem = copy_rec(item, displacement);
+
+		if (newItem != NULL)
+		{	
+			//then we flip it in the selection
+			QPointF oldrel = item->sceneBoundingRect().center() - selectionRect.center();
+			QPointF targetrel = QPointF(oldrel.x(), oldrel.y());
+			
+			if (flipX)
+				targetrel.setX(-targetrel.x());
+			if (flipY)
+				targetrel.setY(-targetrel.y());
+			std::cout << "targetrel(x: " << targetrel.x() << " y: " << targetrel.y() << ")\n" << std::flush;
+			
+			QPointF flipdisplacement = targetrel - oldrel;
+			newItem->moveBy(flipdisplacement.x(), flipdisplacement.y());
+			
+			//finally, we flip each remaining object in place
+			QPointF oldpos = newItem->sceneBoundingRect().center();
+			
+			if (flipX)
+				newItem->setTransform(QTransform().scale(-1, 1), true);
+			if (flipY)
+				newItem->setTransform(QTransform().scale(1, -1), true);
+		
+			QPointF newpos = newItem->sceneBoundingRect().center();
+			QPointF newDisplacement = oldpos - newpos;
+			
+			newItem->moveBy(newDisplacement.x(), newDisplacement.y());
+		}
+		return newItem;
+	} else if (item->type() == ItemGroup::Type) {
+		//get the group
+		ItemGroup* g = qgraphicsitem_cast<ItemGroup*>(item);
+		QList<QGraphicsItem*> childs = g->childItems();
+		
+		//clone it
+		ItemGroup* newGroup = new ItemGroup();
+		undoStack()->push(new AddItem(this, newGroup));
+		
+		foreach(QGraphicsItem* child, childs) {
+			QGraphicsItem* childCopy = mirror_rec(child, displacement, selectionRect, flipX, flipY);
+			if (childCopy != NULL) {
+				childCopy->setSelected(false);
+				childCopy->setFlag(QGraphicsItem::ItemIsSelectable, false);
+				newGroup->addToGroup(childCopy);
+			}
+		}
+		
+		newGroup->setRotation(g->rotation());
+		newGroup->setTransform(g->transform());
+		
+		return newGroup;
 	}
 	
-	return newItem;
+	return NULL;
 }
 
 void Scene::mirror(int direction)
