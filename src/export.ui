@@ -14,7 +14,7 @@
    <string>Export Charts and Legends</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
-   <item row="0" column="3">
+   <item row="0" column="2">
     <widget class="QComboBox" name="fileType">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -54,7 +54,7 @@
      </item>
     </widget>
    </item>
-   <item row="1" column="0" colspan="4">
+   <item row="1" column="0" colspan="3">
     <widget class="QGroupBox" name="optionsGroupBox">
      <property name="enabled">
       <bool>true</bool>
@@ -120,19 +120,6 @@
          <number>500</number>
         </property>
        </widget>
-      </item>
-      <item row="0" column="2" colspan="4">
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="selectionLbl">
@@ -213,10 +200,37 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="5">
+       <widget class="QCheckBox" name="headerFooter">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" colspan="2">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="headerFooterLbl">
+        <property name="text">
+         <string>Include header &amp; footer:</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
-   <item row="5" column="0" colspan="4">
+   <item row="6" column="0" colspan="3">
     <widget class="QGroupBox" name="colorLegendOptions">
      <property name="title">
       <string>Color Legend Options</string>
@@ -369,7 +383,7 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="2">
+   <item row="0" column="1">
     <widget class="QLabel" name="fileTypeLbl">
      <property name="text">
       <string>File Type:</string>
@@ -382,7 +396,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="4">
+   <item row="7" column="0" colspan="3">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -392,14 +406,14 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="4">
+   <item row="2" column="0" colspan="3">
     <widget class="QGraphicsView" name="view">
      <property name="interactive">
       <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="4">
+   <item row="5" column="0" colspan="3">
     <widget class="QGroupBox" name="stitchLegendOptions">
      <property name="title">
       <string>Stitch Legend Options</string>
@@ -514,7 +528,7 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0" colspan="4">
+   <item row="4" column="0" colspan="3">
     <widget class="QGroupBox" name="chartOptions">
      <property name="title">
       <string>Chart Options</string>
@@ -555,6 +569,54 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="QGroupBox" name="headerFooterLayout">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Header and Footer Options</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <item row="1" column="0">
+       <widget class="QPlainTextEdit" name="headerEdit"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPlainTextEdit" name="footerEdit"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Header Text</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Footer Text</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+     <zorder>gridLayoutWidget</zorder>
+     <zorder>gridLayoutWidget</zorder>
+     <zorder>headerEdit</zorder>
+     <zorder>headerEdit</zorder>
+     <zorder>footerEdit</zorder>
+     <zorder>label_3</zorder>
+     <zorder>label_5</zorder>
     </widget>
    </item>
   </layout>

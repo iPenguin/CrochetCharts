@@ -46,6 +46,7 @@ public:
         height;
     bool pageToChartSize;
 	bool selectionOnly;
+	bool includeHeaderFooter;
     QGraphicsScene* scene;
     
 public slots:
@@ -54,6 +55,7 @@ public slots:
 private slots:
     void exportData();
     
+	void headerFooterToggled(bool status);
     void updateExportOptions(QString expType);
     void setSelection(QString selection);
 
@@ -78,6 +80,10 @@ private:
     void exportSvg();
     void exportImg();
     
+	//returns the height of the rendered text
+	int renderFooter(QPainter &painter, QString text);
+	int renderHeader(QPainter &painter, QString text);
+	
     void updateChartSizeRatio(QString selection);
     qreal sceneRatio(QRectF rect);
 
