@@ -1148,7 +1148,7 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
             c->setStitch(mEditStitch);
             c->setColor(mEditFgColor);
             c->setBgColor(mEditBgColor);
-
+			updateSceneRect();
         }
     }
 }
