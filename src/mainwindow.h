@@ -222,7 +222,7 @@ private slots:
 	void copy(int direction);
     void mirror(int direction);
     void rotate(qreal degrees);
-	void resize();
+	void resize(QRectF scenerect);
 
     void updateGuidelines(Guidelines guidelines);
     

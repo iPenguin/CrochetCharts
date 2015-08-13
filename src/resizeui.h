@@ -39,16 +39,20 @@ public:
 	~ResizeUI();
 
 signals:
-	void resize(QRect);
+	void resize(QRectF);
 	
 public slots:
-	void Shown(bool shown);
+	void updateContent(bool shown);
+	void updateContent(int index);
+	
+private:
+	void setContent(qreal top, qreal bottom, qreal left, qreal right);
+	void sendResize();
 	
 private slots:
-	void ClampPressed();
-	void ResizePressed();
+	void clampPressed();
+	void valueChanged(int value);
 	
-
 private:
 	Ui::ResizeDialog* ui;
 	QTabWidget* mTabWidget;

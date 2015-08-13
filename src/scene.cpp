@@ -1836,6 +1836,11 @@ void Scene::distributeToPath()
 
 }
 
+void Scene::resizeScene(QRectF size)
+{
+	setSceneRect(size);
+}
+
 void Scene::createRowsChart(int rows, int cols, QString defStitch, QSizeF rowSize)
 {
     

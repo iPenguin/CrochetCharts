@@ -164,6 +164,7 @@ public:
     void mirror(int direction);
 	void copy(int direction);
     void rotate(qreal degrees);
+	void resizeScene(QRectF sceneRect);
 
     void group();
     void ungroup();

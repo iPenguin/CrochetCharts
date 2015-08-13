@@ -346,6 +346,11 @@ void CrochetTab::rotate(qreal degrees)
     mScene->rotate(degrees);
 }
 
+void CrochetTab::resizeScene(QRectF rectangle)
+{
+	mScene->resizeScene(rectangle);
+}
+
 void CrochetTab::copy()
 {
     mScene->copy();

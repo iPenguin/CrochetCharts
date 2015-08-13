@@ -20,6 +20,7 @@
  \****************************************************************************/
 #include "resizeui.h"
 #include "ui_resize.h"
+#include "crochettab.h"
 
 ResizeUI::ResizeUI(QTabWidget* tabWidget, QWidget* parent)
 	: QDockWidget(parent),
@@ -30,7 +31,13 @@ ResizeUI::ResizeUI(QTabWidget* tabWidget, QWidget* parent)
     setVisible(false);
     setFloating(true);
 	
-	connect(this, SIGNAL(visibilityChanged(bool)), SLOT(Shown(bool)));
+	//connect(this, SIGNAL(visibilityChanged(bool)), SLOT(updateContent(bool)));
+	
+	connect(ui->topBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	connect(ui->bottomBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	connect(ui->leftBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	connect(ui->rightBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	connect(ui->clampButton, SIGNAL(pressed()), this, SLOT(clampPressed()));
 }
 
 ResizeUI::~ResizeUI()
@@ -38,17 +45,65 @@ ResizeUI::~ResizeUI()
 	
 }
 
-void ResizeUI::Shown(bool shown)
+void ResizeUI::updateContent(bool shown)
 {
-	
+	Q_UNUSED(shown);
+	CrochetTab* currentTab = qobject_cast<CrochetTab*>(mTabWidget->currentWidget());
+	if (currentTab != NULL)
+	{
+		QRectF sceneRect = currentTab->scene()->sceneRect();
+		setContent(-sceneRect.y(), sceneRect.height() + sceneRect.y(), -sceneRect.x(), sceneRect.width() + sceneRect.x());
+	}
 }
 
-void ResizeUI::ClampPressed()
+void ResizeUI::updateContent(int index)
 {
-	
+	CrochetTab* currentTab = qobject_cast<CrochetTab*>(mTabWidget->widget(index));
+	if (currentTab != NULL)
+	{
+		QRectF sceneRect = currentTab->scene()->sceneRect();
+		setContent(-sceneRect.y(), sceneRect.height() + sceneRect.y(), -sceneRect.x(), sceneRect.width() + sceneRect.x());
+	}
 }
 
-void ResizeUI::ResizePressed()
+void ResizeUI::setContent(qreal top, qreal bottom, qreal left, qreal right)
 {
-	emit resize(QRect(0,0,100,100));
+	disconnect(ui->topBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	disconnect(ui->bottomBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	disconnect(ui->leftBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	disconnect(ui->rightBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	ui->topBox->setValue(top);
+	ui->bottomBox->setValue(bottom);
+	ui->leftBox->setValue(left);
+	ui->rightBox->setValue(right);
+	connect(ui->topBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	connect(ui->bottomBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	connect(ui->leftBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+	connect(ui->rightBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
+}
+
+void ResizeUI::valueChanged(int value)
+{
+	Q_UNUSED(value);
+	sendResize();
+}
+
+void ResizeUI::clampPressed()
+{	
+	CrochetTab* currentTab = qobject_cast<CrochetTab*>(mTabWidget->currentWidget());
+	if (currentTab != NULL)
+	{
+		QRectF size(1, 1, 2, 2);
+		
+		foreach(QGraphicsItem* item, currentTab->scene()->items()) {
+			size = size.united(item->sceneBoundingRect());
+		}
+		emit resize(size);
+		updateContent(false);
+	}
+}
+
+void ResizeUI::sendResize()
+{
+	emit resize(QRectF(-ui->leftBox->value(), -ui->topBox->value(),ui->rightBox->value() + ui->leftBox->value(), ui->topBox->value() + ui->bottomBox->value()));
 }

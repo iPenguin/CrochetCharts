@@ -320,7 +320,8 @@ void MainWindow::setupDocks()
 	//Resize Dock
 	mResizeUI = new ResizeUI(ui->tabWidget, this);
 	connect(mResizeUI, SIGNAL(visibilityChanged(bool)), ui->actionShowResizeDock, SLOT(setChecked(bool)));
-	connect(mResizeUI, SIGNAL(resize(QRect)), SLOT(resize(QRect)));
+	connect(mResizeUI, SIGNAL(resize(QRectF)), SLOT(resize(QRectF)));
+	connect(ui->tabWidget, SIGNAL(currentChanged(int)), mResizeUI, SLOT(updateContent(int)));
 	
     //Align & Distribute Dock
     mAlignDock = new AlignDock(this);
@@ -1670,9 +1671,10 @@ void MainWindow::rotate(qreal degrees)
     if(tab) tab->rotate(degrees);
 }
 
-void MainWindow::resize()
+void MainWindow::resize(QRectF scenerect)
 {
-	
+    CrochetTab* tab = curCrochetTab();
+    if(tab) tab->resizeScene(scenerect);
 }
 
 void MainWindow::updateGuidelines(Guidelines guidelines)

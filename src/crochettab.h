@@ -46,6 +46,7 @@ class CrochetTab : public QWidget
     friend class File_v1;
     friend class File_v2;
     friend class ExportUi;
+	friend class ResizeUI;
     friend class PropertiesDock;
 public:
 
@@ -80,7 +81,7 @@ public:
     void copy(int direction);
     void mirror(int direction);
     void rotate(qreal degrees);
-
+	void resizeScene(QRectF rectangle);
     void copy();
     void cut();
     void paste();
