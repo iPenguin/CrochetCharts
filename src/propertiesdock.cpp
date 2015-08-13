@@ -382,7 +382,7 @@ void PropertiesDock::showSingleCell()
 
 void PropertiesDock::showMultiCell()
 {
-    qDebug() << "multi cell";
+    //qDebug() << "multi cell";
 }
 
 void PropertiesDock::showSingleIndicator()

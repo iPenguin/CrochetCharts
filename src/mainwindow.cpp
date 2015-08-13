@@ -61,6 +61,7 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
     mUpdater(0),
+	mResizeUI(0),
     mAlignDock(0),
     mRowsDock(0),
     mMirrorDock(0),
@@ -315,7 +316,12 @@ void MainWindow::setupDocks()
     mUndoDock->setWidget(view);
     mUndoDock->setWindowTitle(tr("Undo History"));
     mUndoDock->setFloating(true);
-
+	
+	//Resize Dock
+	mResizeUI = new ResizeUI(ui->tabWidget, this);
+	connect(mResizeUI, SIGNAL(visibilityChanged(bool)), ui->actionShowResizeDock, SLOT(setChecked(bool)));
+	connect(mResizeUI, SIGNAL(resize(QRect)), SLOT(resize(QRect)));
+	
     //Align & Distribute Dock
     mAlignDock = new AlignDock(this);
     connect(mAlignDock, SIGNAL(align(int)), SLOT(alignSelection(int)));
@@ -455,6 +461,7 @@ void MainWindow::setupMenus()
     connect(ui->actionShowAlignDock, SIGNAL(triggered()), SLOT(viewShowAlignDock()));
     connect(ui->actionShowRowsDock, SIGNAL(triggered()), SLOT(viewShowRowsDock()));
     connect(ui->actionShowMirrorDock, SIGNAL(triggered()), SLOT(viewShowMirrorDock()));
+	connect(ui->actionShowResizeDock, SIGNAL(triggered()), SLOT(viewShowResizeDock()));
 
     connect(ui->actionGroup, SIGNAL(triggered()), SLOT(group()));
     connect(ui->actionUngroup, SIGNAL(triggered()), SLOT(ungroup()));
@@ -1283,6 +1290,11 @@ void MainWindow::viewShowProperties()
     mPropertiesDock->setVisible(ui->actionShowProperties->isChecked());
 }
 
+void MainWindow::viewShowResizeDock()
+{
+	mResizeUI->setVisible(ui->actionShowResizeDock->isChecked());
+}
+
 void MainWindow::viewShowEditModeToolbar()
 {
     ui->editModeToolBar->setVisible(ui->actionShowEditModeToolbar->isChecked());
@@ -1656,6 +1668,11 @@ void MainWindow::rotate(qreal degrees)
 {
     CrochetTab* tab = curCrochetTab();
     if(tab) tab->rotate(degrees);
+}
+
+void MainWindow::resize()
+{
+	
 }
 
 void MainWindow::updateGuidelines(Guidelines guidelines)

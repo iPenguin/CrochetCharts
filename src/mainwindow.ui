@@ -316,7 +316,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>23</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -376,6 +376,7 @@
     <addaction name="actionAddChart"/>
     <addaction name="actionRemoveTab"/>
     <addaction name="separator"/>
+    <addaction name="actionShowResizeDock"/>
     <addaction name="actionEditName"/>
     <addaction name="separator"/>
     <addaction name="actionShowChartCenter"/>
@@ -448,7 +449,7 @@
   </widget>
   <widget class="QDockWidget" name="patternStitchesDock">
    <property name="windowTitle">
-    <string>Pattern Stitches</string>
+    <string>Patte&amp;rn Stitches</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -518,7 +519,7 @@
   </widget>
   <widget class="QDockWidget" name="patternColorsDock">
    <property name="windowTitle">
-    <string>Pattern Colors</string>
+    <string>Pattern Co&amp;lors</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -788,7 +789,7 @@
      <normaloff>:/images/filesave.png</normaloff>:/images/filesave.png</iconset>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
    <property name="toolTip">
     <string>Save the current pattern</string>
@@ -877,7 +878,7 @@
      <normaloff>:/images/new_chart.svg</normaloff>:/images/new_chart.svg</iconset>
    </property>
    <property name="text">
-    <string>Add Chart</string>
+    <string>&amp;Add Chart</string>
    </property>
    <property name="toolTip">
     <string>Add a chart to the current pattern</string>
@@ -904,7 +905,7 @@
   </action>
   <action name="actionStitchLibrary">
    <property name="text">
-    <string>Stitch Library</string>
+    <string>&amp;Stitch Library</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -915,7 +916,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show All Stitches</string>
+    <string>S&amp;how All Stitches</string>
    </property>
    <property name="toolTip">
     <string>Show the complete list of stitches</string>
@@ -923,7 +924,7 @@
   </action>
   <action name="actionCrochetHelp">
    <property name="text">
-    <string>Crochet Charts Help</string>
+    <string>&amp;Crochet Charts Help</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
@@ -934,7 +935,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Full Screen Mode</string>
+    <string>&amp;Full Screen Mode</string>
    </property>
    <property name="toolTip">
     <string>Make the application use the entire screen</string>
@@ -948,7 +949,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Pattern Stitches</string>
+    <string>Show &amp;Pattern Stitches</string>
    </property>
    <property name="toolTip">
     <string>Show the stitches used in this pattern</string>
@@ -959,7 +960,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Pattern Colors</string>
+    <string>Show Pattern &amp;Colors</string>
    </property>
    <property name="toolTip">
     <string>Show the colors used in this pattern</string>
@@ -967,7 +968,7 @@
   </action>
   <action name="actionEditName">
    <property name="text">
-    <string>Edit Name...</string>
+    <string>&amp;Edit Name...</string>
    </property>
    <property name="toolTip">
     <string>Edit the name of the current chart</string>
@@ -983,7 +984,7 @@
   </action>
   <action name="actionPrintPreview">
    <property name="text">
-    <string>Print Preview...</string>
+    <string>Pr&amp;int Preview...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+P</string>
@@ -991,12 +992,12 @@
   </action>
   <action name="actionCheckForUpdates">
    <property name="text">
-    <string>Check for Updates</string>
+    <string>&amp;Check for Updates</string>
    </property>
   </action>
   <action name="actionRemoveTab">
    <property name="text">
-    <string>Remove Chart</string>
+    <string>&amp;Remove Chart</string>
    </property>
    <property name="toolTip">
     <string>Remove chart from this document</string>
@@ -1011,7 +1012,7 @@
      <normaloff>:/images/stitch_mode.svg</normaloff>:/images/stitch_mode.svg</iconset>
    </property>
    <property name="text">
-    <string>Stitch Edit</string>
+    <string>&amp;Stitch Edit</string>
    </property>
    <property name="toolTip">
     <string>Add or edit the stitches used on the chart</string>
@@ -1025,7 +1026,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Main Toolbar</string>
+    <string>Show &amp;Main Toolbar</string>
    </property>
   </action>
   <action name="actionShowEditModeToolbar">
@@ -1033,7 +1034,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Edit Mode Toolbar</string>
+    <string>Show &amp;Edit Mode Toolbar</string>
    </property>
   </action>
   <action name="actionShowUndoHistory">
@@ -1041,7 +1042,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Undo History</string>
+    <string>Show &amp;Undo History</string>
    </property>
   </action>
   <action name="actionAngleMode">
@@ -1053,7 +1054,7 @@
      <normaloff>:/images/rotate_stitch.svg</normaloff>:/images/rotate_stitch.svg</iconset>
    </property>
    <property name="text">
-    <string>Rotation Edit</string>
+    <string>&amp;Rotation Edit</string>
    </property>
    <property name="toolTip">
     <string>Change the angle of stitches on the chart</string>
@@ -1071,7 +1072,7 @@
      <normaloff>:/images/scale_mode.svg</normaloff>:/images/scale_mode.svg</iconset>
    </property>
    <property name="text">
-    <string>Scale Edit</string>
+    <string>Sca&amp;le Edit</string>
    </property>
    <property name="toolTip">
     <string>Edit the scale of the stitches on the chart</string>
@@ -1089,7 +1090,7 @@
      <normaloff>:/images/indicator.svg</normaloff>:/images/indicator.svg</iconset>
    </property>
    <property name="text">
-    <string>Indicator Edit</string>
+    <string>&amp;Indicator Edit</string>
    </property>
    <property name="toolTip">
     <string>Add indicators to the chart</string>
@@ -1107,7 +1108,7 @@
      <normaloff>:/images/row_edit.svg</normaloff>:/images/row_edit.svg</iconset>
    </property>
    <property name="text">
-    <string>Row Edit</string>
+    <string>Row &amp;Edit</string>
    </property>
    <property name="toolTip">
     <string>Add and edit rows</string>
@@ -1125,7 +1126,7 @@
      <normaloff>:/images/align_distribute.svg</normaloff>:/images/align_distribute.svg</iconset>
    </property>
    <property name="text">
-    <string>Show Align and Distribute</string>
+    <string>&amp;Show Align and Distribute</string>
    </property>
    <property name="toolTip">
     <string>Show Align and Distribute</string>
@@ -1158,7 +1159,7 @@
      <normaloff>:/images/mirror_rotate.svg</normaloff>:/images/mirror_rotate.svg</iconset>
    </property>
    <property name="text">
-    <string>Show Mirror and Rotate</string>
+    <string>Show &amp;Mirror and Rotate</string>
    </property>
    <property name="shortcut">
     <string>Shift+F8</string>
@@ -1170,7 +1171,7 @@
      <normaloff>:/images/group.svg</normaloff>:/images/group.svg</iconset>
    </property>
    <property name="text">
-    <string>Group</string>
+    <string>&amp;Group</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+G</string>
@@ -1182,7 +1183,7 @@
      <normaloff>:/images/ungroup.svg</normaloff>:/images/ungroup.svg</iconset>
    </property>
    <property name="text">
-    <string>Ungroup</string>
+    <string>&amp;Ungroup</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+G</string>
@@ -1193,7 +1194,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Chart Center</string>
+    <string>&amp;Show Chart Center</string>
    </property>
   </action>
   <action name="actionShowProperties">
@@ -1201,7 +1202,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Properties</string>
+    <string>&amp;Show Properties</string>
    </property>
    <property name="shortcut">
     <string>P</string>
@@ -1209,12 +1210,12 @@
   </action>
   <action name="actionReplaceStitch">
    <property name="text">
-    <string>Replace stitches...</string>
+    <string>&amp;Replace stitches...</string>
    </property>
   </action>
   <action name="actionColorReplacer">
    <property name="text">
-    <string>Replace a color...</string>
+    <string>Replace a &amp;color...</string>
    </property>
    <property name="toolTip">
     <string>Replace one color with another</string>
@@ -1229,13 +1230,24 @@
      <normaloff>:/images/fill_color.svg</normaloff>:/images/fill_color.svg</iconset>
    </property>
    <property name="text">
-    <string>Color Edit</string>
+    <string>&amp;Color Edit</string>
    </property>
    <property name="toolTip">
     <string>Edit the colors used on the chart</string>
    </property>
    <property name="shortcut">
     <string>C</string>
+   </property>
+  </action>
+  <action name="actionShowResizeDock">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Resi&amp;ze</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F9</string>
    </property>
   </action>
  </widget>

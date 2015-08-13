@@ -1274,8 +1274,33 @@ void Scene::render(QPainter *painter, const QRectF &target, const QRectF &source
     originalFont.setItalic(false);
     originalFont.setUnderline(false);
     painter->setFont(originalFont);
-
+	
+	setBackground(false);
     QGraphicsScene::render(painter, target, source, aspectRatioMode);
+	setBackground(true);
+}
+
+void Scene::drawBackground(QPainter * painter, const QRectF & rect)
+{
+	//if we must draw a background
+	if (mbackgroundIsEnabled) {
+		//first make the screen grey
+		painter->fillRect(rect, QColor(212,212,212));
+		
+		//get the sceneboundingrectangle intersected with the rect
+		QRectF foreground = sceneRect().intersect(rect);
+		
+		//draw that in white
+		painter->fillRect(foreground, QColor(255,255,255));
+	} else {
+		//just paint white
+		painter->fillRect(rect, QColor(255,255,255));
+	}
+}
+
+void Scene::setBackground(bool enabled)
+{
+	mbackgroundIsEnabled = enabled;
 }
 
 void Scene::drawRowLines(int row)
@@ -1997,17 +2022,21 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		ItemGroup* newGroup = new ItemGroup();
 		undoStack()->push(new AddItem(this, newGroup));
 		
+		mPivotPt = QPointF(g->boundingRect().center().x(),
+						   g->boundingRect().bottom());
+		newGroup->setTransformOriginPoint(mPivotPt);
+		newGroup->setRotation(g->rotation());
+		
 		foreach(QGraphicsItem* child, childs) {
+			g->removeFromGroup(child);
 			QGraphicsItem* childCopy = copy_rec(child, displacement);
+			g->addToGroup(child);
 			if (childCopy != NULL) {
 				childCopy->setSelected(false);
 				childCopy->setFlag(QGraphicsItem::ItemIsSelectable, false);
 				newGroup->addToGroup(childCopy);
 			}
 		}
-		
-		newGroup->setRotation(g->rotation());
-		newGroup->setTransform(g->transform());
 		
 		return newGroup;
 	}
@@ -2052,10 +2081,11 @@ void Scene::copy(int direction)
 				ret->setSelected(true);
 		}
 	}
+	updateSceneRect();
     undoStack()->endMacro();
     QApplication::restoreOverrideCursor();
 }
-#include <iostream>
+
 QGraphicsItem* Scene::mirror_rec(QGraphicsItem* item, QPointF displacement, QRectF selectionRect, bool flipX, bool flipY)
 {
 	if (item->type() == Cell::Type) {
@@ -2072,7 +2102,6 @@ QGraphicsItem* Scene::mirror_rec(QGraphicsItem* item, QPointF displacement, QRec
 				targetrel.setX(-targetrel.x());
 			if (flipY)
 				targetrel.setY(-targetrel.y());
-			std::cout << "targetrel(x: " << targetrel.x() << " y: " << targetrel.y() << ")\n" << std::flush;
 			
 			QPointF flipdisplacement = targetrel - oldrel;
 			newItem->moveBy(flipdisplacement.x(), flipdisplacement.y());
@@ -2166,8 +2195,10 @@ void Scene::mirror(int direction)
 			mir->setSelected(true);
         }
     }
+	updateSceneRect();
+	
     undoStack()->endMacro();
-
+	
     QApplication::restoreOverrideCursor();
 }
 

@@ -27,6 +27,7 @@
 #include "updater.h"
 #include "undogroup.h"
 
+#include "resizeui.h"
 #include "aligndock.h"
 #include "rowsdock.h"
 #include "mirrordock.h"
@@ -114,6 +115,7 @@ private slots:
     void viewShowAlignDock();
     void viewShowMirrorDock();
     void viewShowProperties();
+	void viewShowResizeDock();
 
     void menuModesAboutToShow();
     
@@ -220,6 +222,7 @@ private slots:
 	void copy(int direction);
     void mirror(int direction);
     void rotate(qreal degrees);
+	void resize();
 
     void updateGuidelines(Guidelines guidelines);
     
@@ -241,7 +244,8 @@ private:
     
     QDockWidget* mUndoDock;
     UndoGroup mUndoGroup;
-
+	
+	ResizeUI* mResizeUI;
     AlignDock* mAlignDock;
     RowsDock* mRowsDock;
     MirrorDock* mMirrorDock;

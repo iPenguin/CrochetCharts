@@ -340,7 +340,8 @@ public:
 
     void render(QPainter *painter, const QRectF &target = QRectF(), const QRectF &source = QRectF(),
                 Qt::AspectRatioMode aspectRatioMode = Qt::KeepAspectRatio);
-
+	void drawBackground(QPainter * painter, const QRectF & rect);
+	void setBackground(bool enabled);
 protected:
     void colorModeMouseMove(QGraphicsSceneMouseEvent *e);
     void colorModeMouseRelease(QGraphicsSceneMouseEvent *e);
@@ -446,7 +447,9 @@ private:
     QList<QGraphicsLineItem*> mRowLines;
     
     QList<ItemGroup*> mGroups;
-
+	
+	bool mbackgroundIsEnabled;
+	
 /***
  * Generic private functions
  ***/
