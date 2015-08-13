@@ -78,8 +78,16 @@ public:
 
     QString html() { return mHtml; }
     void setHtml(QString html) { mHtml = html; }
-
+	
+	QFont font() { return mFont; }
+	void setFont(const QFont& font) { mFont = font; }
+	
+	int size() { return mFont.pointSize(); }
+	void setSize(int size) { mFont.setPointSize(size); }
+	
 private:
+	QFont mFont;
+	int mSize;
     QString mHtml;
     QString mStyle;
 };

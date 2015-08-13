@@ -41,7 +41,7 @@ Indicator::Indicator(QGraphicsItem* parent, QGraphicsScene* scene)
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemIsFocusable);
     setZValue(150);
-
+	
     mStyle = Settings::inst()->value("chartRowIndicator").toString();
 }
 

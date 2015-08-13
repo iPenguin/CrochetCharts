@@ -75,7 +75,7 @@ protected:
 private:
 
     QColor mBgColor;
-    QColor mTextColor;
+    QColor mTextColor;	
 
     QString mStyle;
 

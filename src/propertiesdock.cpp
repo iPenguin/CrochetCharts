@@ -84,6 +84,8 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     connect(ui->st_stColorBttn, SIGNAL(clicked(bool)), SLOT(cellUpdateFgColor()));
 
     connect(ui->ind_indicatorStyle, SIGNAL(currentIndexChanged(int)), SLOT(indicatorUpdate()));
+	connect(ui->ind_fontComboBox, SIGNAL(currentFontChanged(const QFont&)), SLOT(indicatorUpdate()));
+	connect(ui->ind_size, SIGNAL(valueChanged(int)), SLOT(indicatorUpdate()));
 
     setupStitchCombo();
 
@@ -390,12 +392,12 @@ void PropertiesDock::showSingleIndicator()
     ui->itemGroup->show();
 
     Indicator *i = qgraphicsitem_cast<Indicator*>(mScene->selectedItems().first());
-
     //ui->ind_indicatorTextEdit->setText(i->text());
     ui->ind_indicatorStyle->blockSignals(true);
     ui->ind_indicatorStyle->setCurrentIndex(ui->ind_indicatorStyle->findText(i->style()));
     ui->ind_indicatorStyle->blockSignals(false);
-
+	ui->ind_fontComboBox->setCurrentFont(i->font());
+	ui->ind_size->setValue(i->font().pointSize());
 }
 
 void PropertiesDock::showMultiIndicator()
@@ -405,7 +407,7 @@ void PropertiesDock::showMultiIndicator()
 
 void PropertiesDock::showMixedObjects()
 {
-    qDebug() << "mixed objs";
+    //qDebug() << "mixed objs";
     ui->itemGroup->show();
 }
 
@@ -458,12 +460,14 @@ void PropertiesDock::updateGuidelinesUi()
 }
 
 void PropertiesDock::indicatorUpdate()
-{
-    //QString html = ui->ind_indicatorTextEdit->text();
+{	
+	const QFont& font = ui->ind_fontComboBox->currentFont();
     QString style = ui->ind_indicatorStyle->currentText();
-
+	int size = ui->ind_size->value();
+	
     IndicatorProperties ip;
-    //ip.setHtml(html);
+    ip.setFont(font);
+	ip.setSize(size);
     ip.setStyle(style);
 
     QVariant value;

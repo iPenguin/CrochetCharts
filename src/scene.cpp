@@ -1973,6 +1973,7 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 
             } else if(property == "Indicator") {
                 ind->setStyle(ip.style());
+				ind->setFont(ip.font());
                 //ind->setText(ip.html());
 
             } else if(property == "fgColor") {
