@@ -33,6 +33,7 @@
 
 Cell::Cell(QGraphicsItem *parent)
     : QGraphicsSvgItem(parent),
+	mLayer(0),
     mStitch(0),
     mHighlight(false)
 {

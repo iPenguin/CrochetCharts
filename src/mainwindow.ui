@@ -22,7 +22,16 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
@@ -42,7 +51,16 @@
          <string>New Chart Options</string>
         </property>
         <layout class="QGridLayout" name="gridLayout">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item row="1" column="2">
@@ -298,7 +316,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -343,6 +361,7 @@
     <addaction name="actionShowStitches"/>
     <addaction name="actionShowPatternStitches"/>
     <addaction name="actionShowPatternColors"/>
+    <addaction name="actionShowLayers"/>
     <addaction name="separator"/>
     <addaction name="actionShowUndoHistory"/>
     <addaction name="separator"/>
@@ -431,14 +450,23 @@
   </widget>
   <widget class="QDockWidget" name="patternStitchesDock">
    <property name="windowTitle">
-    <string>Pattern Stitches</string>
+    <string>&amp;Pattern Stitches</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="patternStitchesDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout_3">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
@@ -492,14 +520,23 @@
   </widget>
   <widget class="QDockWidget" name="patternColorsDock">
    <property name="windowTitle">
-    <string>Pattern Colors</string>
+    <string>Pattern Co&amp;lors</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="patternColorsDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout_4">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
@@ -612,7 +649,7 @@
    <widget class="QWidget" name="allStitchesDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
      <property name="leftMargin">
-      <number>5</number>
+      <number>0</number>
      </property>
      <property name="topMargin">
       <number>0</number>
@@ -716,6 +753,97 @@
    <addaction name="separator"/>
    <addaction name="actionShowAlignDock"/>
    <addaction name="actionShowMirrorDock"/>
+  </widget>
+  <widget class="QDockWidget" name="layersDock">
+   <property name="windowTitle">
+    <string>Layers</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QLineEdit" name="layerName">
+         <property name="text">
+          <string>New Layer</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="addLayerBtn">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/plus.svg</normaloff>:/images/plus.svg</iconset>
+         </property>
+         <property name="arrowType">
+          <enum>Qt::NoArrow</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="removeLayerBtn">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/minus.svg</normaloff>:/images/minus.svg</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTreeView" name="layersView">
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="rootIsDecorated">
+        <bool>false</bool>
+       </property>
+       <property name="uniformRowHeights">
+        <bool>true</bool>
+       </property>
+       <property name="itemsExpandable">
+        <bool>false</bool>
+       </property>
+       <property name="allColumnsShowFocus">
+        <bool>true</bool>
+       </property>
+       <property name="headerHidden">
+        <bool>true</bool>
+       </property>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="actionNew">
    <property name="icon">
@@ -976,7 +1104,7 @@
      <normaloff>:/images/stitch_mode.svg</normaloff>:/images/stitch_mode.svg</iconset>
    </property>
    <property name="text">
-    <string>Stitch Edit</string>
+    <string>&amp;Stitch Edit</string>
    </property>
    <property name="toolTip">
     <string>Add or edit the stitches used on the chart</string>
@@ -1018,7 +1146,7 @@
      <normaloff>:/images/rotate_stitch.svg</normaloff>:/images/rotate_stitch.svg</iconset>
    </property>
    <property name="text">
-    <string>Rotation Edit</string>
+    <string>&amp;Rotation Edit</string>
    </property>
    <property name="toolTip">
     <string>Change the angle of stitches on the chart</string>
@@ -1036,7 +1164,7 @@
      <normaloff>:/images/scale_mode.svg</normaloff>:/images/scale_mode.svg</iconset>
    </property>
    <property name="text">
-    <string>Scale Edit</string>
+    <string>Sca&amp;le Edit</string>
    </property>
    <property name="toolTip">
     <string>Edit the scale of the stitches on the chart</string>
@@ -1054,7 +1182,7 @@
      <normaloff>:/images/indicator.svg</normaloff>:/images/indicator.svg</iconset>
    </property>
    <property name="text">
-    <string>Indicator Edit</string>
+    <string>&amp;Indicator Edit</string>
    </property>
    <property name="toolTip">
     <string>Add indicators to the chart</string>
@@ -1072,7 +1200,7 @@
      <normaloff>:/images/row_edit.svg</normaloff>:/images/row_edit.svg</iconset>
    </property>
    <property name="text">
-    <string>Row Edit</string>
+    <string>Row &amp;Edit</string>
    </property>
    <property name="toolTip">
     <string>Add and edit rows</string>
@@ -1194,7 +1322,7 @@
      <normaloff>:/images/fill_color.svg</normaloff>:/images/fill_color.svg</iconset>
    </property>
    <property name="text">
-    <string>Color Edit</string>
+    <string>&amp;Color Edit</string>
    </property>
    <property name="toolTip">
     <string>Edit the colors used on the chart</string>
@@ -1212,6 +1340,17 @@
    </property>
    <property name="shortcut">
     <string>Shift+F9</string>
+   </property>
+  </action>
+  <action name="actionShowLayers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show &amp;Layers</string>
+   </property>
+   <property name="toolTip">
+    <string>Shows the layers dock</string>
    </property>
   </action>
  </widget>

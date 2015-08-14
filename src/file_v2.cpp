@@ -265,7 +265,9 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
     Indicator *i = new Indicator();
 
     qreal x = 0, y = 0;
-    QString textColor, bgColor;
+	bool fontused = false;
+	int fontsize;
+    QString textColor, bgColor, fontname;
     QString text, style;
     QTransform transform;
     qreal   m11 = 1, m12 = 0, m13 = 0,
@@ -303,15 +305,26 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
             m33 = stream->attributes().value("m33").toString().toDouble();
             transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
             stream->readElementText();
-        }
+        } else if (tag == "fontname") {
+			fontname = stream->readElementText();
+			fontused = true;
+		} else if (tag == "fontsize") {
+			fontsize = stream->readElementText().toInt();
+			fontused = true;
+		}
     }
-
-    tab->scene()->addItem(i);
+	DEBUG("Style is: ");
+	DEBUG(style);
     i->setTransform(transform);
     i->setPos(x,y);
     i->setText(text);
     i->setTextColor(textColor);
     i->setBgColor(bgColor);
+	if (fontused)
+		i->setFont(QFont(fontname, fontsize));
+	
+    tab->scene()->addItem(i);
+    i->setTextInteractionFlags(Qt::TextEditorInteraction);
 
     if(style.isEmpty())
         style = Settings::inst()->value("chartRowIndicator").toString();
@@ -569,7 +582,9 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
                 stream->writeTextElement("textColor", i->textColor().name());
                 stream->writeTextElement("bgColor", i->bgColor().name());
                 stream->writeTextElement("style", i->style());
-
+				stream->writeTextElement("fontname", i->font().toString());
+				stream->writeTextElement("fontsize", QString::number(i->font().pointSize()));
+				
                 bool isGrouped = i->parentItem() ? true : false;
                 ItemGroup *g = 0;
                 if(isGrouped) {

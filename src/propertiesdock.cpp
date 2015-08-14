@@ -396,8 +396,12 @@ void PropertiesDock::showSingleIndicator()
     ui->ind_indicatorStyle->blockSignals(true);
     ui->ind_indicatorStyle->setCurrentIndex(ui->ind_indicatorStyle->findText(i->style()));
     ui->ind_indicatorStyle->blockSignals(false);
+	ui->ind_fontComboBox->blockSignals(true);
 	ui->ind_fontComboBox->setCurrentFont(i->font());
+	ui->ind_fontComboBox->blockSignals(false);
+	ui->ind_size->blockSignals(true);
 	ui->ind_size->setValue(i->font().pointSize());
+	ui->ind_size->blockSignals(false);
 }
 
 void PropertiesDock::showMultiIndicator()

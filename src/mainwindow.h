@@ -58,6 +58,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QStringList fileNames = QStringList(), QWidget* parent = 0);
     ~MainWindow();
+	
+	void dropEvent(QDropEvent *e);
+	void dragEnterEvent(QDragEnterEvent *e);
 
     bool hasTab();
     void setupNewTabDialog();
@@ -123,6 +126,11 @@ private slots:
     void newChart();
     void removeCurrentTab();
     void removeTab(int tabIndex);
+	
+	void addLayer();
+	void removeLayer();
+	void selectLayer(const QModelIndex & index);
+	void layerModelChanged(const QModelIndex& index);
 
     void menuChartAboutToShow();
     void chartEditName();
@@ -168,6 +176,8 @@ private slots:
     void addColor(QColor color);
 
     void updateDefaultStitchColor(QColor originalColor, QColor newColor);
+	
+	void reloadLayerContent(QList<ChartLayer*>& layers);
 
 public slots:
     void loadFile(QString fileName);
@@ -180,7 +190,7 @@ private:
     
     QSortFilterProxyModel *mProxyModel;
     void setupStitchPalette();
-
+	void setupLayersDock();
     void setupDocks();
 
     /**

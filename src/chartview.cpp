@@ -27,7 +27,7 @@
 ChartView::ChartView(QWidget* parent)
     : QGraphicsView(parent)
 {
-
+	setAcceptDrops(true);
 }
 
 ChartView::~ChartView()

@@ -27,6 +27,9 @@
 #include <QPainter>
 
 #include <QXmlStreamWriter>
+#include <QDropEvent>
+#include <QDragEnterEvent>
+#include <QUrl>
 
 #include <QDebug>
 
@@ -56,7 +59,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     
     mView = new ChartView(top);
     mScene = new Scene(mView);
-
+	mView->setAcceptDrops(true);
     mScene->setSceneRect(-2500,-2500, 5000,5000);
     centerOn = QPoint(0, 0);
 
@@ -68,6 +71,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     connect(mScene, SIGNAL(colorChanged(QString,QString)), SLOT(colorChanged(QString,QString)));
     connect(mScene, SIGNAL(rowEdited(bool)), SIGNAL(tabModified(bool)));
     connect(mScene, SIGNAL(guidelinesUpdated(Guidelines)), SIGNAL(guidelinesUpdated(Guidelines)));
+	connect(mScene, SIGNAL(layersChanged(QList<ChartLayer*>&)), this, SLOT(layersChangedSlot(QList<ChartLayer*>&)));
 
     mView->setScene(mScene);
     QPoint pt = mView->mapFromScene(centerOn);
@@ -103,7 +107,6 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
 
     connect(ui->zoom, SIGNAL(valueChanged(int)), SLOT(zoomChanged(int)));
     connect(mView, SIGNAL(zoomLevelChanged(int)), SLOT(updateZoomLevel(int)));
-
 }
 
 CrochetTab::~CrochetTab()
@@ -191,6 +194,11 @@ void CrochetTab::colorChanged(QString oldColor, QString newColor)
         mPatternColors->operator[](newColor)["count"]++;
 
     emit chartColorChanged();
+}
+
+void CrochetTab::layersChangedSlot(QList<ChartLayer*>& layers)
+{
+	emit layersChanged(layers);
 }
 
 void CrochetTab::zoomIn()
@@ -329,6 +337,26 @@ void CrochetTab::distributeSelection(int distributionStyle)
 void CrochetTab::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection)
 {
     mScene->arrangeGrid(grid, alignment, spacing, useSelection);
+}
+
+void CrochetTab::addLayer(const QString& layer)
+{
+	mScene->addLayer(layer);
+}
+
+void CrochetTab::addLayer(const QString& layer, unsigned int uid)
+{
+	mScene->addLayer(layer, uid);
+}
+
+void CrochetTab::removeSelectedLayer()
+{
+	mScene->removeSelectedLayer();
+}
+
+void CrochetTab::selectLayer(unsigned int uid)
+{
+	mScene->selectLayer(uid);
 }
 
 void CrochetTab::copy(int direction)

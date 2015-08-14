@@ -43,6 +43,8 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QColorDialog>
+#include <QStandardItemModel>
+#include <QStandardItem>
 
 #include <QPrinter>
 #include <QPrintDialog>
@@ -91,10 +93,13 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
 #endif
 
     setupStitchPalette();
+	setupLayersDock();
     setupDocks();
     
     mFile = new FileFactory(this);
     loadFiles(fileNames);
+
+	setAcceptDrops(true);
 
     setApplicationTitle();
     setupNewTabDialog();
@@ -114,6 +119,23 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *e)
+{
+    if (e->mimeData()->hasUrls()) {
+        e->acceptProposedAction();
+    }
+}
+
+void MainWindow::dropEvent(QDropEvent *e)
+{
+	QStringList files;
+    foreach (const QUrl &url, e->mimeData()->urls()) {
+        const QString &fileName = url.toLocalFile();
+        files.append(fileName);
+    }
+	loadFiles(files);
 }
 
 void MainWindow::loadFiles(QStringList fileNames)
@@ -277,6 +299,59 @@ void MainWindow::propertiesUpdate(QString property, QVariant newValue)
 
 }
 
+void MainWindow::reloadLayerContent(QList<ChartLayer*>& layers)
+{
+	CrochetTab* tab = curCrochetTab();
+	if (tab == NULL)
+		return;
+	
+	QTreeView* view = ui->layersView;
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(view->model());
+	
+	//if there isn't a model yet, create one
+	if (model == NULL) {
+		model = new QStandardItemModel(0,2,this);
+		//set up the header of the model
+		model->setHeaderData(0, Qt::Horizontal, QObject::tr("Visible"));
+		model->setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
+		//and connect the signals
+		connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(layerModelChanged(const QModelIndex&)));
+	}
+	
+	//TODO cleanup memory from previous content
+	model->clear();
+	
+	//dont emit signals while populating the model
+	model->blockSignals(true);
+	
+	ChartLayer* layer;
+	for (int i = 0 ; i < layers.count() ; i++) {
+		//create the item
+		layer = layers[i];
+		
+		QStandardItem* item = new QStandardItem(layer->name());
+		item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+		
+		//set the checkbox
+		item->setCheckable(true);
+		if (layer->visible())
+			item->setCheckState(Qt::Checked);
+		else
+			item->setCheckState(Qt::Unchecked);
+			
+		item->setData(qVariantFromValue((void*)layer), Qt::UserRole+5);
+			
+		//and add it to the list
+		model->appendRow(item);
+	}
+	
+	//let the model send signals again
+	model->blockSignals(false);
+	
+	view->setModel(model);
+	
+}
+
 void MainWindow::setupStitchPalette()
 {
 
@@ -304,6 +379,13 @@ void MainWindow::setupStitchPalette()
     connect(ui->patternColors, SIGNAL(bgColorSelected(QModelIndex)), SLOT(selectColor(QModelIndex)));
 
     connect(ui->stitchFilter, SIGNAL(textChanged(QString)), SLOT(filterStitchList(QString)));
+}
+
+void MainWindow::setupLayersDock()
+{
+	connect(ui->addLayerBtn, SIGNAL(released()), this, SLOT(addLayer()));
+	connect(ui->removeLayerBtn, SIGNAL(released()), this, SLOT(removeLayer()));
+	connect(ui->layersView, SIGNAL(activated(const QModelIndex&)), this, SLOT(selectLayer(const QModelIndex&)));
 }
 
 void MainWindow::setupDocks()
@@ -345,7 +427,6 @@ void MainWindow::setupDocks()
     mPropertiesDock = new PropertiesDock(ui->tabWidget, this);
     connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
     connect(mPropertiesDock, SIGNAL(propertiesUpdated(QString,QVariant)), SLOT(propertiesUpdate(QString,QVariant)));
-
 }
 
 void MainWindow::setupMenus()
@@ -1233,6 +1314,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
     connect(tab, SIGNAL(chartColorChanged()), mPropertiesDock, SLOT(propertyUpdated()));
     connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
     connect(tab, SIGNAL(guidelinesUpdated(Guidelines)), SLOT(updateGuidelines(Guidelines)));
+	connect(tab, SIGNAL(layersChanged(QList<ChartLayer*>&)), this, SLOT(reloadLayerContent(QList<ChartLayer*>&)));
 
     mUndoGroup.addStack(tab->undoStack());
     
@@ -1549,6 +1631,56 @@ void MainWindow::removeTab(int tabIndex)
     //update the title and menus
     setApplicationTitle();
     updateMenuItems();
+}
+
+void MainWindow::addLayer()
+{
+	QString name = ui->layerName->text();
+	CrochetTab* tab = curCrochetTab();
+	if (tab != NULL)
+		tab->addLayer(name);
+}
+
+void MainWindow::removeLayer()
+{
+	CrochetTab* tab = curCrochetTab();
+	if (tab != NULL)
+		tab->removeSelectedLayer();
+}
+
+void MainWindow::selectLayer(const QModelIndex& index)
+{
+	QTreeView* view = ui->layersView;
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(view->model());
+	
+	if (model == NULL)
+		return;
+	
+	QStandardItem* item = model->itemFromIndex(index);
+	ChartLayer* layer = static_cast<ChartLayer*>(item->data(Qt::UserRole+5).value<void*>());
+		
+	CrochetTab* tab = curCrochetTab();
+	if (tab != NULL)
+		tab->selectLayer(layer->uid());
+}
+
+void MainWindow::layerModelChanged(const QModelIndex& index)
+{
+	QTreeView* view = ui->layersView;
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(view->model());
+	
+	if (model == NULL)
+		return;
+	
+	QStandardItem* item = model->itemFromIndex(index);
+	
+	//scrape the data of the item
+	ChartLayer* layer = static_cast<ChartLayer*>(item->data(Qt::UserRole+5).value<void*>());
+	QString name = item->text();
+	bool checked = item->data(Qt::CheckStateRole).toBool();
+	
+	layer->setName(name);
+	layer->setVisible(checked);
 }
 
 void MainWindow::updatePatternStitches()

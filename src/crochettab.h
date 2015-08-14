@@ -52,7 +52,7 @@ public:
 
     explicit CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStitch, QColor defFgColor, QColor defBgColor, QWidget* parent = 0);
     ~CrochetTab();
-
+	
     void renderChart(QPainter* painter, QRectF rect = QRectF());
 	void renderChartSelected(QPainter* painter, QRectF rect = QRectF());
 
@@ -78,6 +78,11 @@ public:
     void distributeSelection(int distributionStyle);
     void arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool useSelection);
 
+	void addLayer(const QString& layer);
+	void addLayer(const QString& layer, unsigned int uid);
+	void removeSelectedLayer();
+	void selectLayer(unsigned int uid);
+	
     void copy(int direction);
     void mirror(int direction);
     void rotate(qreal degrees);
@@ -102,6 +107,7 @@ public:
     QList<QGraphicsItem*> selectedItems();
 
 signals:
+	void layersChanged(QList<ChartLayer*>& layers);
     void chartStitchChanged();
     void chartColorChanged();
     void tabModified(bool state);
@@ -118,6 +124,7 @@ public slots:
 
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
+	void layersChangedSlot(QList<ChartLayer*>& layers);
 
     QUndoStack* undoStack();
 

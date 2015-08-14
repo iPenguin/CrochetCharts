@@ -39,7 +39,7 @@
 #include "appinfo.h"
 #include "crochetchartcommands.h"
 #include "indicatorundo.h"
-
+#include <QUrl>
 #include <QKeyEvent>
 #include "stitchlibrary.h"
 
@@ -147,14 +147,19 @@ Scene::Scene(QObject* parent) :
     mDefaultStitch("ch"),
     mRowLine(0),
     mCenterSymbol(0),
-    mShowChartCenter(false)
+    mShowChartCenter(false),
+	mSelectedLayer(0)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
+	
 }
 
 Scene::~Scene()
 {
-
+	//clean up all layers when destroyed
+	foreach (ChartLayer* layer, mLayers) {
+		delete layer;
+	}
 }
 
 QStringList Scene::modes()
@@ -191,6 +196,11 @@ int Scene::columnCount(int row)
         return 0;
 
     return grid[row].count();
+}
+
+QList<ChartLayer*> Scene::layers()
+{
+	return mLayers.values();
 }
 
 int Scene::maxColumnCount()
@@ -1973,8 +1983,9 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 
             } else if(property == "Indicator") {
                 ind->setStyle(ip.style());
-				ind->setFont(ip.font());
-                //ind->setText(ip.html());
+				QFont font = ip.font();
+				font.setPointSize(ip.size());
+				ind->setFont(font);
 
             } else if(property == "fgColor") {
                 undoStack()->push(new SetCellColor(c, newValue.value<QColor>()));
@@ -2590,6 +2601,58 @@ void Scene::updateSceneRect()
 
     setSceneRect(final);
     
+}
+
+/**
+ * layer manipulation functions
+ */
+void Scene::addLayer(const QString& name)
+{
+	ChartLayer* layer = new ChartLayer(name);
+	mLayers[layer->uid()] = layer;
+	
+	QList<ChartLayer*> l = layers();
+	emit layersChanged(l);
+}
+
+void Scene::addLayer(const QString& name, unsigned int uid)
+{
+	ChartLayer* layer = new ChartLayer(uid, name);
+	mLayers[layer->uid()] = layer;
+	
+	QList<ChartLayer*> l = layers();
+	emit layersChanged(l);
+}
+
+void Scene::removeSelectedLayer()
+{
+	if (mSelectedLayer != NULL) {
+		mLayers.remove(mSelectedLayer->uid());
+		delete mSelectedLayer;
+		//TODO: remove all cells in this layer
+		
+		QList<ChartLayer*> l = layers();
+		emit layersChanged(l);
+	}
+}
+
+void Scene::selectLayer(unsigned int uid)
+{
+	ChartLayer* layer = mLayers[uid];
+	if (layer != NULL) {
+		mSelectedLayer = layer;
+	}
+	qDebug() << "selected layer " << layer->name() << " id " << layer->uid();
+}
+
+ChartLayer* Scene::getCurrentLayer()
+{
+	if (mSelectedLayer == NULL)
+	{
+		if (mLayers.count() == 0)
+			addLayer(tr("New Layer"));
+		return *mLayers.begin();
+	}
 }
 
 /*************************************************\

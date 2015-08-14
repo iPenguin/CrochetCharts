@@ -25,9 +25,11 @@
 
 #include "cell.h"
 
+#include <QHash>
 #include <QUndoStack>
 #include <QRubberBand>
 
+#include "chartLayer.h"
 #include "indicator.h"
 #include "itemgroup.h"
 
@@ -82,8 +84,8 @@ public:
 	QFont font() { return mFont; }
 	void setFont(const QFont& font) { mFont = font; }
 	
-	int size() { return mFont.pointSize(); }
-	void setSize(int size) { mFont.setPointSize(size); }
+	int size() { return mSize; }
+	void setSize(int size) { mSize = size; }
 	
 private:
 	QFont mFont;
@@ -141,6 +143,7 @@ public:
     int rowCount();
     int columnCount(int row);
     int maxColumnCount();
+	QList<ChartLayer*> layers();
 
     void setEditMode(EditMode mode);
     EditMode editMode() { return mMode; }
@@ -183,6 +186,9 @@ public:
     void addItem(QGraphicsItem *item);
     void removeItem(QGraphicsItem *item);
 
+	//returns the current layer and creates a new layer if no layer is currently selected
+	ChartLayer* getCurrentLayer();
+
     /**
      * Add a row of stitches to the grid.
      * If append == false, use the rowPos to insert the row into the grid.
@@ -218,6 +224,17 @@ protected:
     void updateSceneRect();
     
 public slots:
+	/**
+	 * layer manipulation functions
+	 */
+	void addLayer(const QString& layer);
+	void addLayer(const QString& layer, unsigned int uid);
+	void removeSelectedLayer();
+	void selectLayer(unsigned int uid);
+	
+	/**
+	 * row manipulation functions
+	 */
     void createRow();
     void updateRow(int row);
     
@@ -242,6 +259,7 @@ public slots:
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
+	void layersChanged(QList<ChartLayer*>& layers);
 
     void rowSelected();
 
@@ -456,6 +474,9 @@ private:
     QList<QGraphicsLineItem*> mRowLines;
     
     QList<ItemGroup*> mGroups;
+	
+	QHash<unsigned int, ChartLayer*> mLayers;
+	ChartLayer* mSelectedLayer;
 	
 	bool mbackgroundIsEnabled;
 	
