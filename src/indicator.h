@@ -61,6 +61,9 @@ public:
     QPainterPath shape() const;
 
     bool highlight;
+	
+	unsigned int layer() { return mLayer; }
+	void setLayer(unsigned int layer) { mLayer = layer; }
 
 signals:
     void lostFocus(Indicator *item);
@@ -73,7 +76,9 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent* event);
 
 private:
-
+	//the layer of the indicator
+	unsigned int mLayer;
+	
     QColor mBgColor;
     QColor mTextColor;	
 

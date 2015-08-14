@@ -520,7 +520,7 @@
   </widget>
   <widget class="QDockWidget" name="patternColorsDock">
    <property name="windowTitle">
-    <string>Pattern Co&amp;lors</string>
+    <string>Pattern Colors</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -756,7 +756,7 @@
   </widget>
   <widget class="QDockWidget" name="layersDock">
    <property name="windowTitle">
-    <string>Layers</string>
+    <string>&amp;Layers</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -1089,7 +1089,7 @@
   </action>
   <action name="actionRemoveTab">
    <property name="text">
-    <string>&amp;Remove Chart</string>
+    <string>Remove Chart</string>
    </property>
    <property name="toolTip">
     <string>Remove chart from this document</string>
@@ -1104,7 +1104,7 @@
      <normaloff>:/images/stitch_mode.svg</normaloff>:/images/stitch_mode.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Stitch Edit</string>
+    <string>Stitch Edit</string>
    </property>
    <property name="toolTip">
     <string>Add or edit the stitches used on the chart</string>
@@ -1118,7 +1118,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show &amp;Main Toolbar</string>
+    <string>Show Main Toolbar</string>
    </property>
   </action>
   <action name="actionShowEditModeToolbar">
@@ -1126,7 +1126,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show &amp;Edit Mode Toolbar</string>
+    <string>Show Edit Mode Toolbar</string>
    </property>
   </action>
   <action name="actionShowUndoHistory">
@@ -1146,7 +1146,7 @@
      <normaloff>:/images/rotate_stitch.svg</normaloff>:/images/rotate_stitch.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Rotation Edit</string>
+    <string>Rotation Edit</string>
    </property>
    <property name="toolTip">
     <string>Change the angle of stitches on the chart</string>
@@ -1164,7 +1164,7 @@
      <normaloff>:/images/scale_mode.svg</normaloff>:/images/scale_mode.svg</iconset>
    </property>
    <property name="text">
-    <string>Sca&amp;le Edit</string>
+    <string>Scale Edit</string>
    </property>
    <property name="toolTip">
     <string>Edit the scale of the stitches on the chart</string>
@@ -1182,7 +1182,7 @@
      <normaloff>:/images/indicator.svg</normaloff>:/images/indicator.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Indicator Edit</string>
+    <string>Indicator Edit</string>
    </property>
    <property name="toolTip">
     <string>Add indicators to the chart</string>
@@ -1200,7 +1200,7 @@
      <normaloff>:/images/row_edit.svg</normaloff>:/images/row_edit.svg</iconset>
    </property>
    <property name="text">
-    <string>Row &amp;Edit</string>
+    <string>Row Edit</string>
    </property>
    <property name="toolTip">
     <string>Add and edit rows</string>

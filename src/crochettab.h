@@ -82,7 +82,8 @@ public:
 	void addLayer(const QString& layer, unsigned int uid);
 	void removeSelectedLayer();
 	void selectLayer(unsigned int uid);
-	
+	void editedLayer(ChartLayer* layer);
+
     void copy(int direction);
     void mirror(int direction);
     void rotate(qreal degrees);
@@ -107,7 +108,7 @@ public:
     QList<QGraphicsItem*> selectedItems();
 
 signals:
-	void layersChanged(QList<ChartLayer*>& layers);
+	void layersChanged(QList<ChartLayer*>& layers, ChartLayer* selected);
     void chartStitchChanged();
     void chartColorChanged();
     void tabModified(bool state);
@@ -124,7 +125,7 @@ public slots:
 
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
-	void layersChangedSlot(QList<ChartLayer*>& layers);
+	void layersChangedSlot(QList<ChartLayer*>& layers, ChartLayer* selected);
 
     QUndoStack* undoStack();
 

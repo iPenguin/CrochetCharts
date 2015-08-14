@@ -299,7 +299,7 @@ void MainWindow::propertiesUpdate(QString property, QVariant newValue)
 
 }
 
-void MainWindow::reloadLayerContent(QList<ChartLayer*>& layers)
+void MainWindow::reloadLayerContent(QList<ChartLayer*>& layers, ChartLayer* selected)
 {
 	CrochetTab* tab = curCrochetTab();
 	if (tab == NULL)
@@ -316,6 +316,7 @@ void MainWindow::reloadLayerContent(QList<ChartLayer*>& layers)
 		model->setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
 		//and connect the signals
 		connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(layerModelChanged(const QModelIndex&)));
+		view->setModel(model);
 	}
 	
 	//TODO cleanup memory from previous content
@@ -324,6 +325,7 @@ void MainWindow::reloadLayerContent(QList<ChartLayer*>& layers)
 	//dont emit signals while populating the model
 	model->blockSignals(true);
 	
+	QStandardItem* selecteditem = NULL;
 	ChartLayer* layer;
 	for (int i = 0 ; i < layers.count() ; i++) {
 		//create the item
@@ -343,13 +345,16 @@ void MainWindow::reloadLayerContent(QList<ChartLayer*>& layers)
 			
 		//and add it to the list
 		model->appendRow(item);
+		
+		if (layer == selected)
+			selecteditem = item;
 	}
-	
 	//let the model send signals again
 	model->blockSignals(false);
 	
-	view->setModel(model);
-	
+	//finally, select the currently selected layer
+	if (selecteditem != NULL)
+		view->setCurrentIndex(selecteditem->index());
 }
 
 void MainWindow::setupStitchPalette()
@@ -1314,7 +1319,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
     connect(tab, SIGNAL(chartColorChanged()), mPropertiesDock, SLOT(propertyUpdated()));
     connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
     connect(tab, SIGNAL(guidelinesUpdated(Guidelines)), SLOT(updateGuidelines(Guidelines)));
-	connect(tab, SIGNAL(layersChanged(QList<ChartLayer*>&)), this, SLOT(reloadLayerContent(QList<ChartLayer*>&)));
+	connect(tab, SIGNAL(layersChanged(QList<ChartLayer*>&, ChartLayer*)), this, SLOT(reloadLayerContent(QList<ChartLayer*>&, ChartLayer*)));
 
     mUndoGroup.addStack(tab->undoStack());
     
@@ -1681,6 +1686,8 @@ void MainWindow::layerModelChanged(const QModelIndex& index)
 	
 	layer->setName(name);
 	layer->setVisible(checked);
+	
+	curCrochetTab()->editedLayer(layer);
 }
 
 void MainWindow::updatePatternStitches()

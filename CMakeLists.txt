@@ -13,6 +13,9 @@ else()
     set(EXE_NAME ${PROJECT_NAME})
 endif()
 
+#enable c++11
+set (CMAKE_CXX_FLAGS "--std=gnu++11 ${CMAKE_CXX_FLAGS}")
+
 # Appends the cmake/modules path to MAKE_MODULE_PATH variable...
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 

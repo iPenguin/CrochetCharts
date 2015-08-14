@@ -71,7 +71,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     connect(mScene, SIGNAL(colorChanged(QString,QString)), SLOT(colorChanged(QString,QString)));
     connect(mScene, SIGNAL(rowEdited(bool)), SIGNAL(tabModified(bool)));
     connect(mScene, SIGNAL(guidelinesUpdated(Guidelines)), SIGNAL(guidelinesUpdated(Guidelines)));
-	connect(mScene, SIGNAL(layersChanged(QList<ChartLayer*>&)), this, SLOT(layersChangedSlot(QList<ChartLayer*>&)));
+	connect(mScene, SIGNAL(layersChanged(QList<ChartLayer*>&, ChartLayer*)), this, SLOT(layersChangedSlot(QList<ChartLayer*>&, ChartLayer*)));
 
     mView->setScene(mScene);
     QPoint pt = mView->mapFromScene(centerOn);
@@ -196,9 +196,9 @@ void CrochetTab::colorChanged(QString oldColor, QString newColor)
     emit chartColorChanged();
 }
 
-void CrochetTab::layersChangedSlot(QList<ChartLayer*>& layers)
+void CrochetTab::layersChangedSlot(QList<ChartLayer*>& layers, ChartLayer* selected)
 {
-	emit layersChanged(layers);
+	emit layersChanged(layers, selected);
 }
 
 void CrochetTab::zoomIn()
@@ -357,6 +357,11 @@ void CrochetTab::removeSelectedLayer()
 void CrochetTab::selectLayer(unsigned int uid)
 {
 	mScene->selectLayer(uid);
+}
+
+void CrochetTab::editedLayer(ChartLayer* layer)
+{
+	mScene->editedLayer(layer);
 }
 
 void CrochetTab::copy(int direction)

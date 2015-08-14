@@ -40,7 +40,12 @@ public:
     bool isGrouped();
 
     void addToGroup(QGraphicsItem *item);
+	
+	unsigned int layer() { return mLayer; }
+	void setLayer(unsigned int layer) { mLayer = layer; }
 private:
+	//the layer of the group
+	unsigned int mLayer;
     QPointF mScale;
 };
 #endif //ITEMGROUP_H

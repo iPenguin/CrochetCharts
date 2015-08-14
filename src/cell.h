@@ -59,8 +59,8 @@ public:
     void setStitch(QString s);
     Stitch* stitch() const { return mStitch; }
 	
-	int layer() { return mLayer; }
-	void setLayer(int layer) { mLayer = layer; }
+	unsigned int layer() { return mLayer; }
+	void setLayer(unsigned int layer) { mLayer = layer; }
 
     /**
      * The stitch name.
@@ -78,7 +78,7 @@ signals:
     
 private:
 	//the layer of the cell
-	int mLayer;
+	unsigned int mLayer;
     QColor mBgColor;
     QColor mColor;
     QPointer<Stitch> mStitch;

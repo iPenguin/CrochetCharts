@@ -28,6 +28,7 @@
 #include <QHash>
 #include <QUndoStack>
 #include <QRubberBand>
+#include <functional>
 
 #include "chartLayer.h"
 #include "indicator.h"
@@ -188,6 +189,8 @@ public:
 
 	//returns the current layer and creates a new layer if no layer is currently selected
 	ChartLayer* getCurrentLayer();
+	//returns the layer with the given id or creates a new one with that id if none exists yet
+	ChartLayer* getLayer(int uid);
 
     /**
      * Add a row of stitches to the grid.
@@ -231,6 +234,7 @@ public slots:
 	void addLayer(const QString& layer, unsigned int uid);
 	void removeSelectedLayer();
 	void selectLayer(unsigned int uid);
+	void editedLayer(ChartLayer* layer);
 	
 	/**
 	 * row manipulation functions
@@ -259,7 +263,7 @@ public slots:
 signals:
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
-	void layersChanged(QList<ChartLayer*>& layers);
+	void layersChanged(QList<ChartLayer*>& layers, ChartLayer* selected);
 
     void rowSelected();
 
@@ -397,6 +401,10 @@ protected:
     void updateStitchRenderer();
 
     void hideRowLines();
+
+private:
+	//functional help functions
+	void forEachItem(std::function<void(Cell*)> cell, std::function<void(Indicator*)> indicator, std::function<void(ItemGroup*)> itemgroup);
 
 private:
     /**

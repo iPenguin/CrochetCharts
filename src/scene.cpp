@@ -513,7 +513,21 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     mIsRubberband = false;
     
     mCurItem = itemAt(e->scenePos());
-
+	
+	//get the biggest group it is in
+	
+	if (mCurItem)
+		while (mCurItem->parentItem() != NULL) {
+		if (mCurItem->parentItem()->type() == ItemGroup::Type)
+			mCurItem = mCurItem->parentItem();
+		else
+			break;
+		}
+	
+	//deselect it if it cannot be selected
+	if (mCurItem && (mCurItem->flags() & QGraphicsItem::ItemIsSelectable) != QGraphicsItem::ItemIsSelectable)
+		mCurItem = 0;
+	
     if(mCurItem) {
         switch(mCurItem->type()) {
             case Cell::Type: {
@@ -574,7 +588,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
         default:
             break;
-    }
+    }		
 
     if(e->buttons() != Qt::LeftButton)
         return;
@@ -1158,6 +1172,7 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
             c->setStitch(mEditStitch);
             c->setColor(mEditFgColor);
             c->setBgColor(mEditBgColor);
+			c->setLayer(getCurrentLayer()->uid());
 			updateSceneRect();
         }
     }
@@ -2037,6 +2052,7 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		
 		//clone it
 		ItemGroup* newGroup = new ItemGroup();
+		newGroup->setLayer(g->layer());
 		undoStack()->push(new AddItem(this, newGroup));
 		
 		mPivotPt = QPointF(g->boundingRect().center().x(),
@@ -2144,6 +2160,7 @@ QGraphicsItem* Scene::mirror_rec(QGraphicsItem* item, QPointF displacement, QRec
 		
 		//clone it
 		ItemGroup* newGroup = new ItemGroup();
+		newGroup->setLayer(g->layer());
 		undoStack()->push(new AddItem(this, newGroup));
 		
 		foreach(QGraphicsItem* child, childs) {
@@ -2499,6 +2516,7 @@ ItemGroup* Scene::group(QList<QGraphicsItem*> items, ItemGroup* g)
 
     if(!g) {
         g = new ItemGroup(0, this);
+		g->setLayer(getCurrentLayer()->uid());
     }
 
     foreach(QGraphicsItem *i, items) {
@@ -2612,7 +2630,7 @@ void Scene::addLayer(const QString& name)
 	mLayers[layer->uid()] = layer;
 	
 	QList<ChartLayer*> l = layers();
-	emit layersChanged(l);
+	emit layersChanged(l, mSelectedLayer);
 }
 
 void Scene::addLayer(const QString& name, unsigned int uid)
@@ -2621,7 +2639,7 @@ void Scene::addLayer(const QString& name, unsigned int uid)
 	mLayers[layer->uid()] = layer;
 	
 	QList<ChartLayer*> l = layers();
-	emit layersChanged(l);
+	emit layersChanged(l, mSelectedLayer);
 }
 
 void Scene::removeSelectedLayer()
@@ -2629,30 +2647,99 @@ void Scene::removeSelectedLayer()
 	if (mSelectedLayer != NULL) {
 		mLayers.remove(mSelectedLayer->uid());
 		delete mSelectedLayer;
+		
 		//TODO: remove all cells in this layer
 		
 		QList<ChartLayer*> l = layers();
-		emit layersChanged(l);
+		if (l.count() > 0)
+			mSelectedLayer = l.first();
+		else
+			mSelectedLayer = NULL;
+			
+		emit layersChanged(l, mSelectedLayer);
 	}
 }
 
 void Scene::selectLayer(unsigned int uid)
 {
+	DEBUG("selected layer");
+	clearSelection();
+	
 	ChartLayer* layer = mLayers[uid];
 	if (layer != NULL) {
 		mSelectedLayer = layer;
 	}
+	
+	//make only the items in the current layer selectable
+	forEachItem(
+		[layer](Cell* c) {
+			c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
+			c->setSelected(false);
+		},
+		[layer](Indicator* i) {
+			i->setFlag(QGraphicsItem::ItemIsSelectable, i->layer() == layer->uid() && i->parentItem() == NULL);
+			i->setSelected(false);
+		},
+		[layer](ItemGroup* g) {
+			g->setFlag(QGraphicsItem::ItemIsSelectable, g->layer() == layer->uid() && g->parentItem() == NULL);
+			g->setSelected(false);
+		}
+	);
+	
 	qDebug() << "selected layer " << layer->name() << " id " << layer->uid();
+}
+
+void Scene::editedLayer(ChartLayer* layer)
+{
+	DEBUG("edited layer");
+	//set the isVisible of all items in this layer
+	forEachItem(
+		[layer](Cell* c) {
+			if (c->layer() == layer->uid()) {
+				c->setVisible(layer->visible());
+				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible() && c->parentItem() == NULL);
+			}
+		},
+		[layer](Indicator* c) {
+			if (c->layer() == layer->uid()) {
+				c->setVisible(layer->visible());
+				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible() && c->parentItem() == NULL);
+			}
+		},
+		[layer](ItemGroup* c) {
+			if (c->layer() == layer->uid()) {
+				c->setVisible(layer->visible());
+				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible() && c->parentItem() == NULL);
+			}
+		}
+	);
 }
 
 ChartLayer* Scene::getCurrentLayer()
 {
 	if (mSelectedLayer == NULL)
 	{
-		if (mLayers.count() == 0)
-			addLayer(tr("New Layer"));
-		return *mLayers.begin();
+		if (mLayers.count() == 0) {
+			ChartLayer* layer = new ChartLayer("New Layer");
+			mLayers[layer->uid()] = layer;
+		}
+		
+		mSelectedLayer = *mLayers.begin();
+
+		QList<ChartLayer*> l = layers();
+		emit layersChanged(l, mSelectedLayer);
 	}
+	return mSelectedLayer;
+}
+
+ChartLayer* Scene::getLayer(int uid)
+{
+	ChartLayer* layer = mLayers[uid];
+	if (layer == NULL) {
+		addLayer("New Layer", uid);
+		return mLayers[uid];
+	}
+	return layer;
 }
 
 /*************************************************\
@@ -2860,4 +2947,34 @@ void Scene::replaceColor(QColor original, QColor replacement, int selection)
 
     }
     undoStack()->endMacro();
+}
+
+/**
+ * Functional help functions
+ */
+ 
+void Scene::forEachItem(std::function<void(Cell*)> cell, std::function<void(Indicator*)> indicator, std::function<void(ItemGroup*)> itemgroup)
+{
+	foreach(QGraphicsItem *item, items()) {
+		switch(item->type()) {
+            case Cell::Type: {
+                Cell *c = qgraphicsitem_cast<Cell*>(item);
+				cell(c);
+				break;
+            }
+            case Indicator::Type: {
+                Indicator *i = qgraphicsitem_cast<Indicator*>(item);
+				indicator(i);
+				break;
+            }
+            case ItemGroup::Type: {
+                ItemGroup *g = qgraphicsitem_cast<ItemGroup*>(item);
+				itemgroup(g);
+				break;
+            }
+            default:
+                WARN("Unknown data type: " + QString::number(item->type()));
+                break;
+        }
+	}
 }
