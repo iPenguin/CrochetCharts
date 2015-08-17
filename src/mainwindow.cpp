@@ -390,7 +390,7 @@ void MainWindow::setupLayersDock()
 {
 	connect(ui->addLayerBtn, SIGNAL(released()), this, SLOT(addLayer()));
 	connect(ui->removeLayerBtn, SIGNAL(released()), this, SLOT(removeLayer()));
-	connect(ui->layersView, SIGNAL(activated(const QModelIndex&)), this, SLOT(selectLayer(const QModelIndex&)));
+	connect(ui->layersView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectLayer(const QModelIndex&)));
 }
 
 void MainWindow::setupDocks()

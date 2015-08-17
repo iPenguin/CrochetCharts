@@ -10,3 +10,7 @@ CMakeLists.txt.user*
 core
 .DS_Store
 *.kateproject*
+Makefile.Debug
+Makefile.Release
+object_script.CrochetCharts.Debug
+object_script.CrochetCharts.Release
