@@ -2577,6 +2577,11 @@ void Scene::addToGroup(int groupNumber, QGraphicsItem *i)
     i->setSelected(false);
 }
 
+ItemGroup* Scene::getGroup(int groupNumber)
+{
+	return mGroups[groupNumber];
+}
+
 void Scene::editorLostFocus(Indicator *item)
  {
 
@@ -2618,10 +2623,10 @@ void Scene::updateSceneRect()
     QRectF sbr = sceneRect();
     QRectF final;
 
-    ibr.setTop(ibr.top() - 50);
-    ibr.setBottom(ibr.bottom() + 50);
-    ibr.setLeft(ibr.left() - 50);
-    ibr.setRight(ibr.right() + 50);
+    ibr.setTop(ibr.top() - SCENE_CLAMP_BORDER_SIZE);
+    ibr.setBottom(ibr.bottom() + SCENE_CLAMP_BORDER_SIZE);
+    ibr.setLeft(ibr.left() - SCENE_CLAMP_BORDER_SIZE);
+    ibr.setRight(ibr.right() + SCENE_CLAMP_BORDER_SIZE);
     
     final.setBottom((ibr.bottom() >= sbr.bottom()) ? ibr.bottom() : sbr.bottom());
     final.setTop((ibr.top() <= sbr.top()) ? ibr.top() : sbr.top());
@@ -2683,7 +2688,7 @@ void Scene::removeSelectedLayer()
 		//and select another one
 		QList<ChartLayer*> l = layers();
 		if (l.count() > 0)
-			mSelectedLayer = l.first();
+			selectLayer(l.first()->uid());
 		else
 			mSelectedLayer = NULL;
 			
@@ -2693,7 +2698,6 @@ void Scene::removeSelectedLayer()
 
 void Scene::selectLayer(unsigned int uid)
 {
-	DEBUG("selected layer");
 	clearSelection();
 	
 	ChartLayer* layer = mLayers[uid];
@@ -2716,31 +2720,31 @@ void Scene::selectLayer(unsigned int uid)
 			g->setSelected(false);
 		}
 	);
-	
-	qDebug() << "selected layer " << layer->name() << " id " << layer->uid();
 }
 
 void Scene::editedLayer(ChartLayer* layer)
 {
-	DEBUG("edited layer");
 	//set the isVisible of all items in this layer
 	forEachItem(
-		[layer](Cell* c) {
+		[layer, this](Cell* c) {
 			if (c->layer() == layer->uid()) {
 				c->setVisible(layer->visible());
-				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible() && c->parentItem() == NULL);
+				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
+					&& c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
 			}
 		},
-		[layer](Indicator* c) {
+		[layer, this](Indicator* c) {
 			if (c->layer() == layer->uid()) {
 				c->setVisible(layer->visible());
-				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible() && c->parentItem() == NULL);
+				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
+					&& c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
 			}
 		},
-		[layer](ItemGroup* c) {
+		[layer, this](ItemGroup* c) {
 			if (c->layer() == layer->uid()) {
 				c->setVisible(layer->visible());
-				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible() && c->parentItem() == NULL);
+				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
+					&& c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
 			}
 		}
 	);
@@ -2772,6 +2776,14 @@ ChartLayer* Scene::getLayer(int uid)
 	}
 	return layer;
 }
+
+void Scene::refreshLayers()
+{
+	foreach(ChartLayer* layer, layers()) {
+		editedLayer(layer);
+	}
+}
+
 
 /*************************************************\
 | Rounds Specific functions:                      |

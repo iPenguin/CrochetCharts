@@ -225,17 +225,27 @@ void File_v2::loadChart(QXmlStreamReader *stream)
             tab->scene()->updateGuidelines();
             emit tab->updateGuidelines(tab->scene()->guidelines());
 
-        } else {
+        } else if (tag == "chartLayer") {
+			QString name = stream->attributes().value("name").toString();
+			unsigned int uid = stream->attributes().value("uid").toString().toUInt();
+			bool visible = stream->attributes().value("visible").toString().toInt();
+			tab->scene()->addLayer(name, uid);
+			tab->scene()->getLayer(uid)->setVisible(visible);
+			tab->scene()->selectLayer(uid);
+            stream->readElementText(); //move to the next tag.
+		} else {
             qWarning() << "loadChart Unknown tag:" << tag;
         }
     }
-
+	
+	//refresh the layers so the visibility and selectability of items is correct
+	tab->scene()->refreshLayers();
+		
     tab->updateRows();
     int index = mParent->mTabWidget->indexOf(tab);
     mParent->mTabWidget->setTabText(index, tabName);
     mParent->mTabWidget->widget(mParent->mTabWidget->indexOf(tab))->show();
     tab->scene()->updateSceneRect();
-
     if(tab->scene()->hasChartCenter()) {
         tab->view()->centerOn(tab->scene()->mCenterSymbol->sceneBoundingRect().center());
     } else {
@@ -274,7 +284,7 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
             m21 = 0, m22 = 1, m23 = 0,
             m31 = 0, m32 = 0, m33 = 1;
     int group = -1;
-
+	unsigned int layer = 0;
     while(!(stream->isEndElement() && stream->name() == "indicator")) {
         stream->readNext();
         QString tag = stream->name().toString();
@@ -311,6 +321,8 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 		} else if (tag == "fontsize") {
 			fontsize = stream->readElementText().toInt();
 			fontused = true;
+		} else if (tag == "layer") {
+			layer = stream->readElementText().toUInt();
 		}
     }
 	DEBUG("Style is: ");
@@ -320,6 +332,7 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
     i->setText(text);
     i->setTextColor(textColor);
     i->setBgColor(bgColor);
+	i->setLayer(layer);
 	if (fontused)
 		i->setFont(QFont(fontname, fontsize));
 	
@@ -330,8 +343,10 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
         style = Settings::inst()->value("chartRowIndicator").toString();
     i->setStyle(style);
 
-    if(group != -1)
+    if(group != -1) {
         tab->scene()->addToGroup(group, i);
+		tab->scene()->getGroup(group)->setLayer(layer);
+	}
 }
 
 void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
@@ -350,6 +365,7 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
     qreal   m11 = 1, m12 = 0, m13 = 0,
             m21 = 0, m22 = 1, m23 = 0,
             m31 = 0, m32 = 0, m33 = 1;
+	unsigned int layer = 0;
 
     while(!(stream->isEndElement() && stream->name() == "cell")) {
         stream->readNext();
@@ -403,8 +419,12 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
             m33 = stream->attributes().value("m33").toString().toDouble();
             transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
             stream->readElementText();
-        }
+        } else if (tag == "layer") {
+			layer = stream->readElementText().toUInt();
+		}
     }
+	
+	c->setLayer(layer);
 
     tab->scene()->addItem(c);
 
@@ -423,9 +443,10 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
     c->setColor(QColor(color));
     c->setTransformOriginPoint(pivotPoint);
     c->setRotation(angle);
-
-    if(group != -1)
+    if(group != -1) {
         tab->scene()->addToGroup(group, c);
+		tab->scene()->getGroup(group)->setLayer(layer);
+	}
 }
 
 
@@ -497,6 +518,15 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
             }
             stream->writeEndElement(); //end grid.
         }
+		
+		foreach(ChartLayer* l, tab->scene()->layers()) {
+			stream->writeStartElement("chartLayer");
+			stream->writeAttribute("name", l->name());
+			stream->writeAttribute("uid", QString::number(l->uid()));
+			stream->writeAttribute("visible", QString::number(l->visible()));
+			
+			stream->writeEndElement();
+		}
 
         foreach(ItemGroup *g, tab->scene()->mGroups) {
             stream->writeTextElement("group", QString::number(tab->scene()->mGroups.indexOf(g)));
@@ -510,6 +540,7 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
 
             stream->writeStartElement("cell"); //start cell
             stream->writeTextElement("stitch", c->stitch()->name());
+			stream->writeTextElement("layer", QString::number(c->layer()));
 
             //if the stitch is on the grid save the grid position.
             QPoint pt = tab->scene()->indexOf(c);
@@ -584,7 +615,7 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
                 stream->writeTextElement("style", i->style());
 				stream->writeTextElement("fontname", i->font().toString());
 				stream->writeTextElement("fontsize", QString::number(i->font().pointSize()));
-				
+				stream->writeTextElement("layer", QString::number(i->layer()));
                 bool isGrouped = i->parentItem() ? true : false;
                 ItemGroup *g = 0;
                 if(isGrouped) {

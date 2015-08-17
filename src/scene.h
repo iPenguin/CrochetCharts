@@ -34,6 +34,8 @@
 #include "indicator.h"
 #include "itemgroup.h"
 
+#define SCENE_CLAMP_BORDER_SIZE 50
+
 class Guidelines {
 public:
     explicit Guidelines();
@@ -212,6 +214,8 @@ public:
 
     void updateDefaultStitchColor(QColor originalColor, QColor newColor);
 
+    void updateSceneRect();
+	
 public slots:    
     void copy();
     void cut();
@@ -227,7 +231,6 @@ protected:
      */
     void removeFromRows(Cell *c);
 
-    void updateSceneRect();
     
 public slots:
 	/**
@@ -238,7 +241,7 @@ public slots:
 	void removeSelectedLayer();
 	void selectLayer(unsigned int uid);
 	void editedLayer(ChartLayer* layer);
-	
+	void refreshLayers();
 	/**
 	 * row manipulation functions
 	 */
@@ -364,7 +367,7 @@ public:
     void ungroup(ItemGroup *group);
 
     void addToGroup(int groupNumber, QGraphicsItem *i);
-
+	ItemGroup* getGroup(int groupNumber);
     QRectF selectedItemsBoundingRect(QList<QGraphicsItem*> items);
 
     /**
