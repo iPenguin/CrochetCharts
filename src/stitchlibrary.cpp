@@ -82,8 +82,10 @@ void StitchLibrary::loadStitchSets()
     QString confFolder = Settings::inst()->userSettingsFolder();
 
     mMasterSet->loadXmlFile(":/crochet.xml");
-    foreach(Stitch* s, mMasterSet->stitches())
+    foreach(Stitch* s, mMasterSet->stitches()) {
         s->isBuiltIn = true;
+		qDebug() << "stich found " << s->name() << "\n";
+	}
     
     mOverlay = new StitchSet(this, false);
 

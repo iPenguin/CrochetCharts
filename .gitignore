@@ -1,4 +1,6 @@
 build*
+qbuild*
+bin/Makefile
 *~
 CMakeLists.txt.user*
 *.kdev4

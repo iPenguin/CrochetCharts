@@ -1,8 +1,32 @@
 TARGET = CrochetCharts
 
-CONFIG += qt
-QT += core gui xml network
-QMAKE_CXXFLAGS+="-std=c++11 -sysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk"
+CONFIG += qt release
+QMAKE_CXXFLAGS += -std=c++11
+QT += core widgets gui xml network svg
+
+DEFINES += gGIT_VERSION='"\\\"$(shell git describe --always)\\\""'
+DEFINES += gGIT_VERSION_SHORT='"\\\"$(shell git describe --abbrev=0 --always)\\\""'
+DEFINES += gPROJECT_LIFE="2010-2015"
+
+header_files.files = $$HEADERS
+header_files.path = $$DESTDIR/
+INSTALLS += header_files
+
+CONFIG(release, debug|release) {
+	DESTDIR = ../qbuild/release
+}
+CONFIG(debug, debug|release) {
+	DESTDIR = ../qbuild/debug
+}
+
+OBJECTS_DIR = $$DESTDIR/
+MOC_DIR = $$DESTDIR/
+RCC_DIR = $$DESTDIR/
+UI_DIR = $$DESTDIR/
+
+INCLUDEPATH += ../src/
+
+RESOURCES += ../crochet.qrc
 
 HEADERS += ../src/aligndock.h
 HEADERS += ../src/appinfo.h

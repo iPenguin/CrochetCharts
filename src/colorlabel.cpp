@@ -25,6 +25,7 @@
 
 #include <QColorDialog>
 #include <QPaintEvent>
+#include <QMimeData>
 
 #include <QCommonStyle>
 

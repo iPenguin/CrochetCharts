@@ -23,6 +23,7 @@
 #include "appinfo.h"
 
 #include <QDebug>
+#include <QDir>
 
 #include "settings.h"
 
