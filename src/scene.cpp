@@ -203,6 +203,16 @@ QList<ChartLayer*> Scene::layers()
 	return mLayers.values();
 }
 
+QGraphicsItem* Scene::selectableItemAt(const QPointF& pos)
+{
+	foreach (QGraphicsItem* item, items()) {
+		if (item->sceneBoundingRect().contains(pos) &&
+				(item->flags() & QGraphicsItem::ItemIsSelectable) == QGraphicsItem::ItemIsSelectable)
+			return item;
+	}
+	return NULL;
+}
+
 int Scene::maxColumnCount()
 {
     int max = 0;
@@ -512,7 +522,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     mMoving = false;
     mIsRubberband = false;
     
-    mCurItem = itemAt(e->scenePos());
+    mCurItem = selectableItemAt(e->scenePos());
 	
 	//get the biggest group it is in
 	
@@ -523,10 +533,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 		else
 			break;
 		}
-	
-	//deselect it if it cannot be selected
-	if (mCurItem && (mCurItem->flags() & QGraphicsItem::ItemIsSelectable) != QGraphicsItem::ItemIsSelectable)
-		mCurItem = 0;
 	
     if(mCurItem) {
         switch(mCurItem->type()) {
@@ -1906,6 +1912,7 @@ void Scene::arrangeGrid(QSize grd, QSize alignment, QSize spacing, bool useSelec
                 Cell* c = new Cell();
                 //FIXME: use the user selected stitch
                 c->setStitch(mDefaultStitch);
+				c->setLayer(getCurrentLayer()->uid());
                 addItem(c);
                 r.append(c);
                 
@@ -2040,6 +2047,7 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		Cell* clone = cell->copy();
 		undoStack()->push(new AddItem(this, clone));
 		clone->setPos(cell->pos());
+		clone->setLayer(cell->layer());
 		
 		//move the clone with the displacement
 		clone->moveBy(displacement.x(), displacement.y());
@@ -2382,6 +2390,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             c->setStitch(name);
             c->setColor(color);
             c->setBgColor(bgColor);
+			c->setLayer(getCurrentLayer()->uid());
 
             c->setTransformOriginPoint(transPoint);
             c->setRotation(angle);
@@ -2403,6 +2412,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             i->setText(text);
             addItem(i);
             i->setPos(pos);
+			i->setLayer(getCurrentLayer()->uid());
 
             i->setSelected(false);
             group->append(i);
@@ -2427,6 +2437,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             group->append(g);
             g->setPos(pos);
             g->setTransform(trans);
+			g->setLayer(getCurrentLayer()->uid());
             break;
         }
         default: {
@@ -2645,11 +2656,31 @@ void Scene::addLayer(const QString& name, unsigned int uid)
 void Scene::removeSelectedLayer()
 {
 	if (mSelectedLayer != NULL) {
+		//first, remove all items in the layer
+		QList<QGraphicsItem*> toRemove;
+		foreach (QGraphicsItem* item, items()) {
+			forEachItem(
+			[&toRemove, this](Cell* c) {
+				if (c->layer() == mSelectedLayer->uid())
+					toRemove.append(c);
+			},[&toRemove, this](Indicator* c) {
+				if (c->layer() == mSelectedLayer->uid())
+					toRemove.append(c);
+			},[&toRemove, this](ItemGroup* c) {
+				if (c->layer() == mSelectedLayer->uid())
+					toRemove.append(c);
+			});
+		}
+		
+		foreach (QGraphicsItem* item, toRemove) {
+			removeItem(item);
+		}
+		
+		//then remove the layer
 		mLayers.remove(mSelectedLayer->uid());
 		delete mSelectedLayer;
 		
-		//TODO: remove all cells in this layer
-		
+		//and select another one
 		QList<ChartLayer*> l = layers();
 		if (l.count() > 0)
 			mSelectedLayer = l.first();

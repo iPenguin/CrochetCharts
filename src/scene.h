@@ -146,6 +146,9 @@ public:
     int maxColumnCount();
 	QList<ChartLayer*> layers();
 
+	//returns the first selectable item that intersects with the given position
+	QGraphicsItem* selectableItemAt(const QPointF& pos);
+
     void setEditMode(EditMode mode);
     EditMode editMode() { return mMode; }
 
