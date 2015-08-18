@@ -1,7 +1,6 @@
 TARGET = CrochetCharts
 
 CONFIG += qt release
-QMAKE_CXXFLAGS += -std=c++11
 QT += core widgets gui xml network svg
 
 DEFINES += gGIT_VERSION='"\\\"$(shell git describe --always)\\\""'

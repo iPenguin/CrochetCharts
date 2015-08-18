@@ -409,10 +409,6 @@ protected:
     void hideRowLines();
 
 private:
-	//functional help functions
-	void forEachItem(std::function<void(Cell*)> cell, std::function<void(Indicator*)> indicator, std::function<void(ItemGroup*)> itemgroup);
-
-private:
     /**
      * Used in the mouse*Event()s to keep the mouse movements on the same cell.
      */

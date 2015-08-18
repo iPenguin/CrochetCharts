@@ -2667,19 +2667,31 @@ void Scene::removeSelectedLayer()
 	if (mSelectedLayer != NULL) {
 		//first, remove all items in the layer
 		QList<QGraphicsItem*> toRemove;
-		foreach (QGraphicsItem* item, items()) {
-			forEachItem(
-			[&toRemove, this](Cell* c) {
-				if (c->layer() == mSelectedLayer->uid())
-					toRemove.append(c);
-			},[&toRemove, this](Indicator* c) {
-				if (c->layer() == mSelectedLayer->uid())
-					toRemove.append(c);
-			},[&toRemove, this](ItemGroup* c) {
-				if (c->layer() == mSelectedLayer->uid())
-					toRemove.append(c);
-			});
-		}
+		foreach(QGraphicsItem *item, items()) {
+            switch(item->type()) {
+                case Cell::Type: {
+                    Cell *c = qgraphicsitem_cast<Cell*>(item);
+                    if (c->layer() == mSelectedLayer->uid())
+                        toRemove.append(c);
+                    break;
+                }
+                case Indicator::Type: {
+                    Indicator*c = qgraphicsitem_cast<Indicator*>(item);
+                    if (c->layer() == mSelectedLayer->uid())
+                        toRemove.append(c);
+                    break;
+                }
+                case ItemGroup::Type: {
+                    ItemGroup *c = qgraphicsitem_cast<ItemGroup*>(item);
+                    if (c->layer() == mSelectedLayer->uid())
+                        toRemove.append(c);
+                    break;
+                }
+                default:
+                    WARN("Unknown data type: " + QString::number(item->type()));
+                    break;
+            }
+        }
 		
 		foreach (QGraphicsItem* item, toRemove) {
 			removeItem(item);
@@ -2709,49 +2721,67 @@ void Scene::selectLayer(unsigned int uid)
 		mSelectedLayer = layer;
 	}
 	
-	//make only the items in the current layer selectable
-	forEachItem(
-		[layer](Cell* c) {
-			c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
-			c->setSelected(false);
-		},
-		[layer](Indicator* i) {
-			i->setFlag(QGraphicsItem::ItemIsSelectable, i->layer() == layer->uid() && i->parentItem() == NULL);
-			i->setSelected(false);
-		},
-		[layer](ItemGroup* g) {
-			g->setFlag(QGraphicsItem::ItemIsSelectable, g->layer() == layer->uid() && g->parentItem() == NULL);
-			g->setSelected(false);
-		}
-	);
+    foreach(QGraphicsItem *item, items()) {
+        switch(item->type()) {
+            case Cell::Type: {
+                Cell *c = qgraphicsitem_cast<Cell*>(item);
+                c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
+                c->setSelected(false);
+                break;
+            }
+            case Indicator::Type: {
+                Indicator*c = qgraphicsitem_cast<Indicator*>(item);
+                c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
+                c->setSelected(false);
+                break;
+            }
+            case ItemGroup::Type: {
+                ItemGroup *c = qgraphicsitem_cast<ItemGroup*>(item);
+                c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
+                c->setSelected(false);
+                break;
+            }
+            default:
+                WARN("Unknown data type: " + QString::number(item->type()));
+                break;
+        }
+    }
 }
 
 void Scene::editedLayer(ChartLayer* layer)
 {
-	//set the isVisible of all items in this layer
-	forEachItem(
-		[layer, this](Cell* c) {
-			if (c->layer() == layer->uid()) {
-				c->setVisible(layer->visible());
-				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
-					&& c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
-			}
-		},
-		[layer, this](Indicator* c) {
-			if (c->layer() == layer->uid()) {
-				c->setVisible(layer->visible());
-				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
-					&& c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
-			}
-		},
-		[layer, this](ItemGroup* c) {
-			if (c->layer() == layer->uid()) {
-				c->setVisible(layer->visible());
-				c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
-					&& c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
-			}
-		}
-	);
+    foreach(QGraphicsItem *item, items()) {
+        switch(item->type()) {
+            case Cell::Type: {
+                Cell *c = qgraphicsitem_cast<Cell*>(item);
+                if (c->layer() == layer->uid()) {
+                c->setVisible(layer->visible());
+                c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
+                    && c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
+                }  
+            }
+            case Indicator::Type: {
+                Indicator*c = qgraphicsitem_cast<Indicator*>(item);
+                if (c->layer() == layer->uid()) {
+                c->setVisible(layer->visible());
+                c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
+                    && c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
+                }
+                break;
+            }
+            case ItemGroup::Type: {
+                ItemGroup *c = qgraphicsitem_cast<ItemGroup*>(item);
+                if (c->layer() == layer->uid()) {
+                c->setVisible(layer->visible());
+                c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
+                    && c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
+                }
+            }
+            default:
+                WARN("Unknown data type: " + QString::number(item->type()));
+                break;
+        }
+    }
 }
 
 ChartLayer* Scene::getCurrentLayer()
@@ -2994,34 +3024,4 @@ void Scene::replaceColor(QColor original, QColor replacement, int selection)
 
     }
     undoStack()->endMacro();
-}
-
-/**
- * Functional help functions
- */
- 
-void Scene::forEachItem(std::function<void(Cell*)> cell, std::function<void(Indicator*)> indicator, std::function<void(ItemGroup*)> itemgroup)
-{
-	foreach(QGraphicsItem *item, items()) {
-		switch(item->type()) {
-            case Cell::Type: {
-                Cell *c = qgraphicsitem_cast<Cell*>(item);
-				cell(c);
-				break;
-            }
-            case Indicator::Type: {
-                Indicator *i = qgraphicsitem_cast<Indicator*>(item);
-				indicator(i);
-				break;
-            }
-            case ItemGroup::Type: {
-                ItemGroup *g = qgraphicsitem_cast<ItemGroup*>(item);
-				itemgroup(g);
-				break;
-            }
-            default:
-                WARN("Unknown data type: " + QString::number(item->type()));
-                break;
-        }
-	}
 }
