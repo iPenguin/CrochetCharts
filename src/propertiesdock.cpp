@@ -299,7 +299,9 @@ void PropertiesDock::updateDialogUi()
             showUi(PropertiesDock::CellUi, count);
         } else if(firstType == Indicator::Type) {
             showUi(PropertiesDock::IndicatorUi, count);
-        }
+        } else if(firstType == QGraphicsEllipseItem::Type) {
+			showUi(PropertiesDock::CenterUi, count);
+		}
     }
 }
 
@@ -322,7 +324,7 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
         }
     }
 
-    if(selection == PropertiesDock::SceneUi) {
+    if(selection == PropertiesDock::SceneUi || selection == PropertiesDock::CenterUi) {
         showCanvas();
 
     } else if(selection == PropertiesDock::CellUi) {
@@ -338,9 +340,9 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
     } else if(selection == PropertiesDock::IndicatorUi) {
         showSingleIndicator();
 
-    } else if (selection == PropertiesDock::CenterUi) {
+    }/* else if (selection == PropertiesDock::CenterUi) {
         WARN("TODO: make center ui work");
-    }
+    }*/
 
 }
 

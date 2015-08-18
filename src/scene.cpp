@@ -1578,22 +1578,34 @@ void Scene::updateGuidelines()
 
     if(mGuidelines.type() == "None")
         return;
-
+	
+	//get the center position, or make it 0 if centerpos does not exist yet
+	QPointF center;
+	if (mCenterSymbol)
+		center = mCenterSymbol->pos();
+	else
+		center = QPointF(0,0);
+	
+	//create the graphical representation
     for(int c = 0; c <= columns; c++) {
         if(mGuidelines.type() == "Rows") {
-            i = addLine(c*spacingW,0,c*spacingW,spacingH*rows);
+            i = addLine(
+				c*spacingW + center.x(),
+				center.y(),
+				c*spacingW + center.x(),
+				spacingH*rows + center.y()
+			);
             i->setZValue(-1);
             mGuidelinesLines.append(i);
-
-        } else { //gridType == "Rounds"
+		} else { //gridType == "Rounds"
             //result.Y = (int)Math.Round( centerPoint.Y + distance * Math.Sin( angle ) );
             //result.X = (int)Math.Round( centerPoint.X + distance * Math.Cos( angle ) );
             qreal radians = (360.0 / columns * c) * M_PI / 180;
-            qreal outterX = 0/*center point*/ + (spacingH * (rows + 1)) /*distance*/ * sin(radians);
-            qreal outterY = 0/*center point*/ + (spacingH * (rows + 1)) /*distance*/ * cos(radians);
+            qreal outterX = center.x() + (spacingH * (rows + 1)) /*distance*/ * sin(radians);
+            qreal outterY = center.y() + (spacingH * (rows + 1)) /*distance*/ * cos(radians);
 
-            qreal innerX = 0 + spacingH * sin(radians);
-            qreal innerY = 0 + spacingH * cos(radians);
+            qreal innerX = center.x() + spacingH * sin(radians);
+            qreal innerY = center.y() + spacingH * cos(radians);
 
             i = addLine(innerX,innerY,outterX,outterY);
             i->setZValue(-1);
@@ -1603,16 +1615,44 @@ void Scene::updateGuidelines()
 
     for(int r = 0; r <= rows; r++) {
         if(mGuidelines.type() == "Rows") {
-            i = addLine(0,r*spacingH,/*gridSize.width()n*/spacingW*columns,r*spacingH);
+            i = addLine(
+				center.x(),
+				center.y() + r*spacingH,
+				center.x() + spacingW*columns,
+				center.y() + r*spacingH
+			);
+			
             i->setZValue(-1);
             mGuidelinesLines.append(i);
         } else { //gridType == "Rounds"
-            Guideline *g = new Guideline(QRectF(-(r+1)*spacingH,-(r+1)*spacingH,2*(r+1)*spacingH,
-                                                2*(r+1)*spacingH), 0, this);
+            Guideline *g = new Guideline(
+				QRectF(
+					center.x() + -(r+1)*spacingH,
+					center.y() + -(r+1)*spacingH,
+					2*(r+1)*spacingH,
+					2*(r+1)*spacingH)
+				,0
+				,this
+			)
+			;
             g->setZValue(-1);
             mGuidelinesLines.append(g);
         }
     }
+	
+	//and upload the data to the sceneview
+	ChartView* view = qobject_cast<ChartView*>(parent());
+	if (view) {
+		view->setSnapToGrid(mGuidelines.type() != "None");
+		view->setSnapRows(rows);
+		view->setSnapColumns(columns);
+		view->setSnapWidth(spacingW);
+		view->setSnapHeight(spacingH);
+		if(mGuidelines.type() == "Rows")
+			view->setSnapType(ChartView::Rows);
+		if(mGuidelines.type() == "Rounds")
+			view->setSnapType(ChartView::Rounds);
+	}
 
     updateSceneRect();
 }
