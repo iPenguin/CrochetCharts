@@ -129,6 +129,7 @@ private slots:
 	
 	void addLayer();
 	void removeLayer();
+	void mergeLayer();
 	void selectLayer(const QModelIndex & index);
 	void layerModelChanged(const QModelIndex& index);
 

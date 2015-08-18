@@ -815,6 +815,17 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QToolButton" name="mergeBtn">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../crochet.qrc">
+           <normaloff>:/images/arrow_down.svg</normaloff>:/images/arrow_down.svg</iconset>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
@@ -1089,7 +1100,7 @@
   </action>
   <action name="actionRemoveTab">
    <property name="text">
-    <string>Remove Chart</string>
+    <string>&amp;Remove Chart</string>
    </property>
    <property name="toolTip">
     <string>Remove chart from this document</string>
@@ -1118,7 +1129,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Main Toolbar</string>
+    <string>Show &amp;Main Toolbar</string>
    </property>
   </action>
   <action name="actionShowEditModeToolbar">
@@ -1126,7 +1137,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Edit Mode Toolbar</string>
+    <string>Show &amp;Edit Mode Toolbar</string>
    </property>
   </action>
   <action name="actionShowUndoHistory">
@@ -1322,7 +1333,7 @@
      <normaloff>:/images/fill_color.svg</normaloff>:/images/fill_color.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Color Edit</string>
+    <string>Color Edit</string>
    </property>
    <property name="toolTip">
     <string>Edit the colors used on the chart</string>

@@ -3,16 +3,19 @@
 unsigned int ChartLayer::nextuid = 0;
 
 ChartLayer::ChartLayer(const QString& name)
+	: mVisible(true),
+	mName(name)
 {
-	mName = name;
 	mUid = nextuid;
 	nextuid++;
 }
 
 ChartLayer::ChartLayer(unsigned int uid, const QString& name)
+	: mVisible(true),
+	mUid(uid),
+	mName(name)
 {
 	mName = name;
-	mUid = uid;
 	if (mUid >= nextuid)
 		nextuid = mUid+1;
 }

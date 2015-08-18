@@ -1157,7 +1157,8 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     if(e->isAccepted())
         return;
 
-    if(mCurItem && e->modifiers() != Qt::ControlModifier) {
+    if(mCurItem && e->modifiers() != Qt::ControlModifier
+		&& Settings::inst()->value("replaceStitchWithPress").toBool() == true) {
 
         Cell *cell = qgraphicsitem_cast<Cell*>(mCurItem);
 
@@ -1170,8 +1171,9 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
 
     } else if(!mIsRubberband && !mMoving && !mHasSelection) {
 
-        if(mCurItem)
-            return;
+        if(mCurItem) {
+			return;
+		}
 
         if(e->button() == Qt::LeftButton && !(e->modifiers() & Qt::ControlModifier)) {
 
@@ -1183,9 +1185,12 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
             c->setColor(mEditFgColor);
             c->setBgColor(mEditBgColor);
 			c->setLayer(getCurrentLayer()->uid());
+			c->setVisible(getCurrentLayer()->visible());
 			updateSceneRect();
         }
-    }
+    } else if (mCurItem) {
+		mMoving = true;
+	}
 }
 
 void Scene::createRow()
@@ -2712,6 +2717,46 @@ void Scene::removeSelectedLayer()
 	}
 }
 
+void Scene::mergeLayer(unsigned int from, unsigned int to)
+{
+	//we need to have a layer selected
+	if (mSelectedLayer != NULL)
+	{
+		//move all items in the from layer to the to layer
+		foreach(QGraphicsItem *item, items()) {
+			switch(item->type()) {
+				case Cell::Type: {
+					Cell *c = qgraphicsitem_cast<Cell*>(item);
+					if (c->layer() == from)
+						c->setLayer(to);
+					break;
+				}
+				case Indicator::Type: {
+					Indicator*c = qgraphicsitem_cast<Indicator*>(item);
+					if (c->layer() == from)
+						c->setLayer(to);
+					break;
+				}
+				case ItemGroup::Type: {
+					ItemGroup *c = qgraphicsitem_cast<ItemGroup*>(item);
+					if (c->layer() == from)
+						c->setLayer(to);
+					break;
+				}
+				default:
+					WARN("Unknown data type: " + QString::number(item->type()));
+					break;
+			}
+		}
+		
+		//and now we remove from
+		selectLayer(from);
+		removeSelectedLayer();
+		selectLayer(to);
+		editedLayer(getLayer(to));
+	}
+}
+
 void Scene::selectLayer(unsigned int uid)
 {
 	clearSelection();
@@ -2758,7 +2803,8 @@ void Scene::editedLayer(ChartLayer* layer)
                 c->setVisible(layer->visible());
                 c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
                     && c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
-                }  
+                } 
+				break;
             }
             case Indicator::Type: {
                 Indicator*c = qgraphicsitem_cast<Indicator*>(item);
@@ -2776,6 +2822,7 @@ void Scene::editedLayer(ChartLayer* layer)
                 c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
                     && c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
                 }
+				break;
             }
             default:
                 WARN("Unknown data type: " + QString::number(item->type()));

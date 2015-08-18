@@ -81,6 +81,7 @@ public:
 	void addLayer(const QString& layer);
 	void addLayer(const QString& layer, unsigned int uid);
 	void removeSelectedLayer();
+	void mergeLayer(unsigned int from, unsigned int to);
 	void selectLayer(unsigned int uid);
 	void editedLayer(ChartLayer* layer);
 

@@ -36,7 +36,7 @@ AddIndicator::AddIndicator(Scene* s, QPointF pos, QUndoCommand* parent)
     item = new Indicator();
     scene = s;
 	item->setLayer(scene->getCurrentLayer()->uid());
-
+	item->setVisible(scene->getCurrentLayer()->visible());
     setText(QObject::tr("Add indicator"));
 }
 

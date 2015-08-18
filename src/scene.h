@@ -242,6 +242,7 @@ public slots:
 	void selectLayer(unsigned int uid);
 	void editedLayer(ChartLayer* layer);
 	void refreshLayers();
+	void mergeLayer(unsigned int from, unsigned int to);
 	/**
 	 * row manipulation functions
 	 */

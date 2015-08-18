@@ -354,6 +354,11 @@ void CrochetTab::removeSelectedLayer()
 	mScene->removeSelectedLayer();
 }
 
+void CrochetTab::mergeLayer(unsigned int from, unsigned int to)
+{
+	mScene->mergeLayer(from, to);
+}
+
 void CrochetTab::selectLayer(unsigned int uid)
 {
 	mScene->selectLayer(uid);

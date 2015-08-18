@@ -311,17 +311,19 @@ void MainWindow::reloadLayerContent(QList<ChartLayer*>& layers, ChartLayer* sele
 	//if there isn't a model yet, create one
 	if (model == NULL) {
 		model = new QStandardItemModel(0,2,this);
-		//set up the header of the model
-		model->setHeaderData(0, Qt::Horizontal, QObject::tr("Visible"));
-		model->setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
 		//and connect the signals
 		connect(model, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(layerModelChanged(const QModelIndex&)));
 		view->setModel(model);
 	}
 	
-	//TODO cleanup memory from previous content
+	//cleanup previous content
 	model->clear();
 	
+	//set up the header of the model
+	model->setHeaderData(0, Qt::Horizontal, QObject::tr("Visible"));
+	model->setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
+	
+		
 	//dont emit signals while populating the model
 	model->blockSignals(true);
 	
@@ -332,19 +334,21 @@ void MainWindow::reloadLayerContent(QList<ChartLayer*>& layers, ChartLayer* sele
 		layer = layers[i];
 		
 		QStandardItem* item = new QStandardItem(layer->name());
+		
 		item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
 		
 		//set the checkbox
 		item->setCheckable(true);
+			
+		//and add it to the list
+		model->appendRow(item);
+		
 		if (layer->visible())
 			item->setCheckState(Qt::Checked);
 		else
 			item->setCheckState(Qt::Unchecked);
-			
+		
 		item->setData(qVariantFromValue((void*)layer), Qt::UserRole+5);
-			
-		//and add it to the list
-		model->appendRow(item);
 		
 		if (layer == selected)
 			selecteditem = item;
@@ -390,7 +394,8 @@ void MainWindow::setupLayersDock()
 {
 	connect(ui->addLayerBtn, SIGNAL(released()), this, SLOT(addLayer()));
 	connect(ui->removeLayerBtn, SIGNAL(released()), this, SLOT(removeLayer()));
-	connect(ui->layersView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(selectLayer(const QModelIndex&)));
+	connect(ui->mergeBtn, SIGNAL(released()), this, SLOT(mergeLayer()));
+	connect(ui->layersView, SIGNAL(activated(const QModelIndex&)), this, SLOT(selectLayer(const QModelIndex&)));
 }
 
 void MainWindow::setupDocks()
@@ -1653,6 +1658,31 @@ void MainWindow::removeLayer()
 		tab->removeSelectedLayer();
 }
 
+void MainWindow::mergeLayer()
+{
+	QTreeView* view = ui->layersView;
+	QStandardItemModel* model = dynamic_cast<QStandardItemModel*>(view->model());
+	
+	if (model == NULL)
+		return;
+	
+	//first we get the currently selected item
+	QStandardItem* itemfrom = model->itemFromIndex(view->selectionModel()->currentIndex());
+	ChartLayer* from = static_cast<ChartLayer*>(itemfrom->data(Qt::UserRole+5).value<void*>());
+	
+	//and then we fetch the next item
+	QList<QStandardItem*> nextRow = model->takeRow(view->selectionModel()->currentIndex().row()+1);
+	if (nextRow.count() == 0)
+		return;
+	QStandardItem* itemto = nextRow.first();
+	ChartLayer* to = static_cast<ChartLayer*>(itemto->data(Qt::UserRole+5).value<void*>());
+	
+	//and call the function
+	CrochetTab* tab = curCrochetTab();
+	if (tab != NULL)
+		tab->mergeLayer(from->uid(), to->uid());
+}
+
 void MainWindow::selectLayer(const QModelIndex& index)
 {
 	QTreeView* view = ui->layersView;
@@ -1682,7 +1712,7 @@ void MainWindow::layerModelChanged(const QModelIndex& index)
 	//scrape the data of the item
 	ChartLayer* layer = static_cast<ChartLayer*>(item->data(Qt::UserRole+5).value<void*>());
 	QString name = item->text();
-	bool checked = item->data(Qt::CheckStateRole).toBool();
+	bool checked = item->checkState() == Qt::Checked;//item->data(Qt::CheckStateRole).toBool();
 	
 	layer->setName(name);
 	layer->setVisible(checked);

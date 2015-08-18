@@ -84,7 +84,6 @@ void StitchLibrary::loadStitchSets()
     mMasterSet->loadXmlFile(":/crochet.xml");
     foreach(Stitch* s, mMasterSet->stitches()) {
         s->isBuiltIn = true;
-		qDebug() << "stich found " << s->name() << "\n";
 	}
     
     mOverlay = new StitchSet(this, false);
