@@ -1288,14 +1288,17 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
     if(e->isAccepted())
         return;
 
-    if(mCurItem && e->modifiers() != Qt::ControlModifier
-		&& Settings::inst()->value("replaceStitchWithPress").toBool() == true) {
-
-        Cell *cell = qgraphicsitem_cast<Cell*>(mCurItem);
+    if(mCurItem && e->modifiers() != Qt::ControlModifier) {
+		
+		Cell *cell = qgraphicsitem_cast<Cell*>(mCurItem);
 
         if(!cell)
             return;
-
+		
+		if (Settings::inst()->value("replaceStitchWithPress").toBool() == false) {
+			return;
+		}
+		
         if(cell->name() != mEditStitch && !mMoving)
             undoStack()->push(new SetCellStitch(cell, mEditStitch));
 
@@ -1723,74 +1726,105 @@ void Scene::updateGuidelines()
 		center = QPointF(0,0);
 	
 	//create the graphical representation
-    for(int c = 0; c <= columns; c++) {
-        if(mGuidelines.type() == "Rows") {
-            i = addLine(
-				c*spacingW + center.x(),
-				center.y(),
-				c*spacingW + center.x(),
-				spacingH*rows + center.y()
-			);
-            i->setZValue(-1);
-            mGuidelinesLines.append(i);
-		} else { //gridType == "Rounds"
-            //result.Y = (int)Math.Round( centerPoint.Y + distance * Math.Sin( angle ) );
-            //result.X = (int)Math.Round( centerPoint.X + distance * Math.Cos( angle ) );
-            qreal radians = (360.0 / columns * c) * M_PI / 180;
-            qreal outterX = center.x() + (spacingH * (rows + 1)) /*distance*/ * sin(radians);
-            qreal outterY = center.y() + (spacingH * (rows + 1)) /*distance*/ * cos(radians);
-
-            qreal innerX = center.x() + spacingH * sin(radians);
-            qreal innerY = center.y() + spacingH * cos(radians);
-
-            i = addLine(innerX,innerY,outterX,outterY);
-            i->setZValue(-1);
-            mGuidelinesLines.append(i);
-        }
-    }
-
-    for(int r = 0; r <= rows; r++) {
-        if(mGuidelines.type() == "Rows") {
-            i = addLine(
-				center.x(),
-				center.y() + r*spacingH,
-				center.x() + spacingW*columns,
-				center.y() + r*spacingH
-			);
-			
-            i->setZValue(-1);
-            mGuidelinesLines.append(i);
-        } else { //gridType == "Rounds"
-            Guideline *g = new Guideline(
-				QRectF(
-					center.x() + -(r+1)*spacingH,
-					center.y() + -(r+1)*spacingH,
-					2*(r+1)*spacingH,
-					2*(r+1)*spacingH)
-				,0
-				,this
-			)
-			;
-            g->setZValue(-1);
-            mGuidelinesLines.append(g);
-        }
-    }
-	
-	//and upload the data to the sceneview
-	/*ChartView* view = qobject_cast<ChartView*>(parent());
-	if (view) {
-		view->setSnapToGrid(mGuidelines.type() != "None");
-		view->setSnapRows(rows);
-		view->setSnapColumns(columns);
-		view->setSnapWidth(spacingW);
-		view->setSnapHeight(spacingH);
-		if(mGuidelines.type() == "Rows")
-			view->setSnapType(ChartView::Rows);
-		if(mGuidelines.type() == "Rounds")
-			view->setSnapType(ChartView::Rounds);
-	}*/
+	if(mGuidelines.type() == "Rows") {
+		generateGuidelinesRows(spacingW, spacingH, columns, rows, center);
+	} else if (mGuidelines.type() == "Rounds") {
+		generateGuidelinesRounds(spacingW, spacingH, columns, rows, center);
+	} else if (mGuidelines.type() == "Triangles") {
+		generateGuidelinesTriangles(spacingW, spacingH, columns, rows, center);
+	}
 
     updateSceneRect();
+}
+
+void Scene::generateGuidelinesRows(int spacingW, int spacingH, int columns, int rows, QPointF center)
+{
+    QGraphicsItem *i = 0;
+
+	//generate columns
+	for(int c = 0; c <= columns; c++) {
+		i = addLine(
+			c*spacingW + center.x(),
+			center.y(),
+			c*spacingW + center.x(),
+			spacingH*rows + center.y()
+		);
+		i->setZValue(-1);
+		mGuidelinesLines.append(i);
+    }
+	//generate rows
+    for(int r = 0; r <= rows; r++) {
+		 i = addLine(
+			center.x(),
+			center.y() + r*spacingH,
+			center.x() + spacingW*columns,
+			center.y() + r*spacingH
+		);
+		
+		i->setZValue(-1);
+		mGuidelinesLines.append(i);
+    }
+}
+
+void Scene::generateGuidelinesRounds(int spacingW, int spacingH, int columns, int rows, QPointF center)
+{
+    QGraphicsItem *i = 0;
+
+	//generate dividing lines
+	for(int c = 0; c <= columns; c++) {
+        qreal radians = (360.0 / columns * c) * M_PI / 180;
+		qreal outterX = center.x() + (spacingH * (rows + 1)) /*distance*/ * sin(radians);
+		qreal outterY = center.y() + (spacingH * (rows + 1)) /*distance*/ * cos(radians);
+
+		qreal innerX = center.x() + spacingH * sin(radians);
+		qreal innerY = center.y() + spacingH * cos(radians);
+
+		i = addLine(innerX,innerY,outterX,outterY);
+		i->setZValue(-1);
+		mGuidelinesLines.append(i);
+    }
+	
+	//generate circles
+    for(int r = 0; r <= rows; r++) {
+	   Guideline *g = new Guideline(
+			QRectF(
+				center.x() + -(r+1)*spacingH,
+				center.y() + -(r+1)*spacingH,
+				2*(r+1)*spacingH,
+				2*(r+1)*spacingH)
+			,0
+			,this
+		)
+		;
+		g->setZValue(-1);
+		mGuidelinesLines.append(g);
+    }
+}
+
+void Scene::generateGuidelinesTriangles(int spacingW, int spacingH, int columns, int rows, QPointF center)
+{
+    QGraphicsItem *i = 0;
+	
+	//generate the horizontal lines
+	for(int r = 0; r < rows; r++) {
+        qreal height = (r+1) * spacingH;
+		qreal offsetX = (r+1) * spacingW/2;
+
+		i = addLine(-offsetX,height,offsetX,height);
+		i->setZValue(-1);
+		mGuidelinesLines.append(i);
+    }
+	
+	//generate the slanted lines
+	/*for(int c = 0; c <= columns; c++) {
+		qreal maxX = rows+1 * spacingW*2;
+		
+		qreal startX = 
+        
+		i = addLine(-offsetX,height,offsetX,height);
+		i->setZValue(-1);
+		mGuidelinesLines.append(i);
+    }*/
 }
 
 QList<QGraphicsItem*> Scene::sortItemsHorizontally(QList<QGraphicsItem*> unsortedItems, int sortEdge)

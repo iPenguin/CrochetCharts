@@ -560,6 +560,10 @@ protected slots:
     void updateGuidelines();
 
 private:
+	void generateGuidelinesRows(int spacingW, int spacingH, int columns, int rows, QPointF center);
+	void generateGuidelinesRounds(int spacingW, int spacingH, int columns, int rows, QPointF center);
+	void generateGuidelinesTriangles(int spacingW, int spacingH, int columns, int rows, QPointF center);
+
     /**
      * @brief mGuidelinesLines - Hold all the lines that make up the grid
      */

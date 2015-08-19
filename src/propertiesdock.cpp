@@ -460,10 +460,16 @@ void PropertiesDock::updateGuidelinesUi()
             ui->cellWidth->show();
 			ui->snapAngle->setEnabled(false);
 			ui->snapAngleLbl->setEnabled(false);
-        } else { //rounds
+        } else if( ui->guidelinesType->currentText() == "Rounds") { //rounds
             ui->rowsLbl->setText(tr("Rounds:"));
             ui->cellWidthLbl->hide();
             ui->cellWidth->hide();
+			ui->snapAngle->setEnabled(true);
+			ui->snapAngleLbl->setEnabled(true);
+        } else if( ui->guidelinesType->currentText() == "Triangles") { //rounds
+            ui->rowsLbl->setText(tr("Rows:"));
+            ui->cellWidthLbl->show();
+            ui->cellWidth->show();
 			ui->snapAngle->setEnabled(true);
 			ui->snapAngleLbl->setEnabled(true);
         }
