@@ -822,7 +822,7 @@ QPointF Scene::snapPositionToRounds(const QPointF& pos) const
 	QPointF relPos = pos - center;
 	
 	//get the ring of the position
-	qreal distanceToCenter = std::sqrt(relPos.x()*relPos.x() + relPos.y()*relPos.y()) + spacingH/2;
+	qreal distanceToCenter = sqrt(relPos.x()*relPos.x() + relPos.y()*relPos.y()) + spacingH/2;
 	int relPosRing = distanceToCenter / spacingH;
 	relPosRing = std::max(0, std::min(rounds + 1, relPosRing));
 	qreal relPosSnappedDistance = relPosRing*spacingH;
@@ -830,7 +830,7 @@ QPointF Scene::snapPositionToRounds(const QPointF& pos) const
 	//get the quadrant of the position
 	qreal PIPI = M_PI * 2;
 	qreal quadrantAngleSize = PIPI/columns;
-	qreal relPosAngle = std::atan2(relPos.y(), relPos.x());
+	qreal relPosAngle = atan2(relPos.y(), relPos.x());
 	
 	relPosAngle -= M_PI_2;
 	
@@ -844,8 +844,8 @@ QPointF Scene::snapPositionToRounds(const QPointF& pos) const
 	
 	//convert it to a point on the circle and as scene coordinates
 	return QPointF(
-		std::cos(relPosSnappedAngle) * relPosSnappedDistance,
-		std::sin(relPosSnappedAngle) * relPosSnappedDistance
+		cos(relPosSnappedAngle) * relPosSnappedDistance,
+		sin(relPosSnappedAngle) * relPosSnappedDistance
 		) + center;
 }
 
@@ -997,7 +997,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     qreal angle = mOldAngle + (angle1 - angle2);
 
     qreal diff = fmod(angle, 45.0);
-    qreal comp = std::abs(diff);
+    qreal comp = abs(diff);
     if(comp < 4 /*&& !mSnapTo*/) {
         qreal div = angle - diff;
         angle = div;

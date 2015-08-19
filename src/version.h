@@ -23,9 +23,11 @@
 
 #include <QString>
 
-extern const QString gGIT_VERSION;
-extern const QString gGIT_VERSION_SHORT;
-
-extern const QString gPROJECT_LIFE;
+#ifdef USING_QMAKE
+#else
+	extern const QString gGIT_VERSION;
+	extern const QString gGIT_VERSION_SHORT;
+	extern const QString gPROJECT_LIFE;
+#endif
 
 #endif //VERSION_H

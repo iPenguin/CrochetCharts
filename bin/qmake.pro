@@ -3,6 +3,7 @@ TARGET = CrochetCharts
 CONFIG += qt release
 QT += core widgets gui xml network svg
 
+DEFINES += USING_QMAKE
 DEFINES += gGIT_VERSION='"\\\"$(shell git describe --always)\\\""'
 DEFINES += gGIT_VERSION_SHORT='"\\\"$(shell git describe --abbrev=0 --always)\\\""'
 DEFINES += gPROJECT_LIFE="2010-2015"
