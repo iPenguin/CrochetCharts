@@ -216,6 +216,13 @@ public:
 
     void updateSceneRect();
 	
+	/**
+	 * Snap to grid functions
+	 */
+	QPointF snapPositionToGrid(const QPointF& pos) const;
+	QPointF snapPositionToRows(const QPointF& pos) const;
+	QPointF snapPositionToRounds(const QPointF& pos) const;
+	
 public slots:    
     void copy();
     void cut();

@@ -45,32 +45,6 @@ public:
     //zoom takes the mouseDelta which is usually +/- 120;
     void zoom(int mouseDelta);
     void zoomLevel(int percent);
-	
-	/**
-	 * functions for snap to grid
-	 */
-	void setSnapToGrid(bool snapToGrid) { mSnapToGrid = snapToGrid; };
-	bool snapToGrid() const { return mSnapToGrid; }
-	
-	void setSnapRows(unsigned int rows) { mRows = rows; }
-	unsigned int snapRows() const { return mRows; }
-	
-	void setSnapColumns(unsigned int columns) { mColumns = columns; }
-	unsigned int snapColumns() const { return mColumns; }
-	
-	void setSnapWidth(unsigned int width) { mWidth = width; }
-	unsigned int snapWidth() const { return mWidth; }
-	
-	void setSnapHeight(unsigned int height) { mHeight = height; }
-	unsigned int snapHeight() const { return mHeight; }
-	
-	void setSnapPos(QPointF pos) { mPos = pos; }
-	QPointF snapPos() const { return mPos; }
-	
-	void setSnapType(SnapToGridType snapType) { mSnapType = snapType; }
-	SnapToGridType snapType() const { return mSnapType; }
-	
-	QPointF snapPosition(QPointF pos) const;
 
 signals:
     void scrollBarChanged(int dx, int dy);
@@ -83,16 +57,6 @@ protected:
     void wheelEvent(QWheelEvent* event);
     
 private:
-	/**
-	 * Variables for snap to grid.
-	 */
-	bool mSnapToGrid;
-	unsigned int mRows;
-	unsigned int mColumns;
-	unsigned int mWidth;
-	unsigned int mHeight;
-	QPointF mPos;
-	SnapToGridType mSnapType;
 
 };
 

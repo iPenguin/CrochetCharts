@@ -662,7 +662,6 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
                 mIsRubberband = true;
             }
         } else if (mMoving) {
-
             QGraphicsScene::mouseMoveEvent(e);
             if(selectedItems().contains(mCenterSymbol)) {
                 updateGuidelines();
@@ -717,6 +716,12 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     if((selectedItems().count() > 0 && mOldPositions.count() > 0) && mMoving) {
         undoStack()->beginMacro("move items");
+		//first, snap the items to the grid if we need to
+		foreach(QGraphicsItem* item, selectedItems()) {
+			QPointF centerPos = item->pos() + mCurItem->boundingRect().center();
+			item->setPos(snapPositionToGrid(centerPos) - mCurItem->boundingRect().center());
+		}
+		
         foreach(QGraphicsItem* item, selectedItems()) {
             if(mOldPositions.contains(item)) {
                 QPointF oldPos = mOldPositions.value(item);
@@ -748,6 +753,63 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     mCurItem = 0;
     mHasSelection = false;
+}
+
+QPointF Scene::snapPositionToGrid(const QPointF& pos) const
+{
+	if (mGuidelines.type() == "None")
+		return pos;
+	if (mGuidelines.type() == "Rows")
+		return snapPositionToRows(pos);
+	if (mGuidelines.type() == "Rounds")
+		return snapPositionToRounds(pos);
+}
+
+QPointF Scene::snapPositionToRows(const QPointF& pos) const
+{
+	//get the needed variables
+	QPointF center(0, 0);
+	if (mCenterSymbol)
+		center = mCenterSymbol->pos();
+		
+    int columns = mGuidelines.columns();
+    int rows = mGuidelines.rows();
+
+    int spacingW = mGuidelines.cellWidth();
+    int spacingH = mGuidelines.cellHeight();
+
+	//get the relative position to the grid
+	QPointF relPos = pos - center;
+	
+	//get the grid pos of the point
+	int relPosGridX = (relPos.x() + spacingW/2) / spacingW;
+	int relPosGridY = (relPos.y() + spacingH/2) / spacingH;
+	
+	//clamp these the the grid size
+	relPosGridX = std::max(0, std::min(columns, relPosGridX));
+	relPosGridY = std::max(0, std::min(rows, relPosGridY));
+	
+	//get the new relative position
+	QPointF snappedRelPos(relPosGridX * spacingW, relPosGridY * spacingH);
+
+	//return it as scene coordinates
+	return snappedRelPos + center;
+}
+
+QPointF Scene::snapPositionToRounds(const QPointF& pos) const
+{
+	//get the needed variables
+	QPointF center(0, 0);
+	if (mCenterSymbol)
+		center = mCenterSymbol->pos();
+		
+    int columns = mGuidelines.columns();
+    int rows = mGuidelines.rows();
+
+    int spacingW = mGuidelines.cellWidth();
+    int spacingH = mGuidelines.cellHeight();
+	
+	return pos;
 }
 
 void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
@@ -898,7 +960,7 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     qreal angle = mOldAngle + (angle1 - angle2);
 
     qreal diff = fmod(angle, 45.0);
-    qreal comp = abs(diff);
+    qreal comp = std::abs(diff);
     if(comp < 4 /*&& !mSnapTo*/) {
         qreal div = angle - diff;
         angle = div;
@@ -1559,7 +1621,6 @@ void Scene::align(int vertical, int horizontal)
 
 void Scene::updateGuidelines()
 {
-
     int columns = mGuidelines.columns();
     int rows = mGuidelines.rows();
 
@@ -1641,7 +1702,7 @@ void Scene::updateGuidelines()
     }
 	
 	//and upload the data to the sceneview
-	ChartView* view = qobject_cast<ChartView*>(parent());
+	/*ChartView* view = qobject_cast<ChartView*>(parent());
 	if (view) {
 		view->setSnapToGrid(mGuidelines.type() != "None");
 		view->setSnapRows(rows);
@@ -1652,7 +1713,7 @@ void Scene::updateGuidelines()
 			view->setSnapType(ChartView::Rows);
 		if(mGuidelines.type() == "Rounds")
 			view->setSnapType(ChartView::Rounds);
-	}
+	}*/
 
     updateSceneRect();
 }

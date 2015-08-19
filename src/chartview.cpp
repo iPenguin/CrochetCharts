@@ -25,14 +25,7 @@
 #include <QScrollBar>
 
 ChartView::ChartView(QWidget* parent)
-    : QGraphicsView(parent),
-	mSnapToGrid(false),
-	mRows(1),
-	mColumns(1),
-	mWidth(64),
-	mHeight(64),
-	mPos(0,0),
-	mSnapType(ChartView::Rows)
+    : QGraphicsView(parent)
 	
 {
 	setAcceptDrops(true);
@@ -100,15 +93,7 @@ void ChartView::mouseMoveEvent(QMouseEvent* event)
             emit scrollBarChanged(deltaX, deltaY);
     }
 	
-	if (mSnapToGrid) {
-		QPoint newPos = mapFromScene(snapPosition(mapToScene(event->globalPos())));
-		
-		QMouseEvent snapEvent(event->type(), newPos, event->button(), event->buttons(), event->modifiers());
-		QGraphicsView::mouseMoveEvent(&snapEvent);
-	}
-	else {
-		QGraphicsView::mouseMoveEvent(event);
-	}
+	QGraphicsView::mouseMoveEvent(event);
 }
 
 void ChartView::mouseReleaseEvent(QMouseEvent* event)
@@ -151,9 +136,4 @@ void ChartView::zoomLevel(int percent)
         pcent = 0.01;
     qreal diff = pcent / transform().m11();
     scale(diff, diff);
-}
-
-QPointF ChartView::snapPosition(QPointF pos) const
-{
-	return QPointF(0, 0);
 }
