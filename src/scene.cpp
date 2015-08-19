@@ -756,8 +756,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
 void Scene::snapGraphicsItemToGrid(QGraphicsItem& item)
 {
-	QPointF centerPos = item.pos() + item.boundingRect().center();
-	item.setPos(snapPositionToGrid(centerPos) - item.boundingRect().center());
+	QPointF centerPos = item.sceneBoundingRect().center();
+	item.setPos(snapPositionToGrid(centerPos) - centerPos + item.pos());
 }
 
 QPointF Scene::snapPositionToGrid(const QPointF& pos) const
