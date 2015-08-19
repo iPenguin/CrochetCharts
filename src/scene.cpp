@@ -152,6 +152,7 @@ Scene::Scene(QObject* parent) :
     mRowLine(0),
     mCenterSymbol(0),
     mShowChartCenter(false),
+	mSnapAngle(false),
 	mSelectedLayer(0)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
@@ -758,6 +759,25 @@ void Scene::snapGraphicsItemToGrid(QGraphicsItem& item)
 {
 	QPointF centerPos = item.sceneBoundingRect().center();
 	item.setPos(snapPositionToGrid(centerPos) - centerPos + item.pos());
+	
+	//if we need to snap the angle and we are in rounds mode
+	if (mSnapAngle && mGuidelines.type() == "Rounds") {
+		//get the angle between the item and the center
+		QPointF center(0, 0);
+		if (mCenterSymbol)
+			center = mCenterSymbol->pos();
+			
+		QPointF newCenterPos = item.sceneBoundingRect().center();
+		qreal angle = std::atan2(newCenterPos.y() - center.y(), newCenterPos.x() - center.x());
+
+		//rotate the object so it looks at the center
+		item.setRotation((angle * 180/M_PI) + 90);
+		
+		//and correct the position because rotating changed it
+		QPointF newestCenterPos = item.sceneBoundingRect().center();
+		QPointF diff = newestCenterPos - newCenterPos;
+		item.setPos(item.pos() - diff);
+	}
 }
 
 QPointF Scene::snapPositionToGrid(const QPointF& pos) const
@@ -983,6 +1003,12 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
         mMoving = true;
         return;
     }
+	
+	//if we have the center selected, move it
+	if (mCurItem->type() == QGraphicsEllipseItem::Type) {
+        mMoving = true;
+        return;
+	}
 
     mMoving = false;
 
@@ -1022,7 +1048,7 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 
     if(mMoving)
         return;
-
+	
     undoStack()->push(new SetItemRotation(mCurItem, mOldAngle, mPivotPt));
     mOldAngle = 0;
 }
@@ -1061,6 +1087,12 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
         mMoving = true;
         return;
     }
+	
+	//if we have the center selected, move it
+	if (mCurItem->type() == QGraphicsEllipseItem::Type) {
+        mMoving = true;
+        return;
+	}
 
     ItemGroup *g = 0;
 
@@ -1284,6 +1316,11 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
             c->setColor(mEditFgColor);
             c->setBgColor(mEditBgColor);
 			c->setLayer(getCurrentLayer()->uid());
+			
+			//center it on the mouse if that is enabled
+			if (Settings::inst()->value("centerNewStitchOnMouse").toBool() == true)
+				c->setPos(c->pos() - (c->sceneBoundingRect().center() - c->pos()));
+			
 			c->setVisible(getCurrentLayer()->visible());
 			snapGraphicsItemToGrid(*c);
 			updateSceneRect();
@@ -2088,7 +2125,10 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 
     if(property == "ChartCenter") {
         setShowChartCenter(newValue.toBool());
-
+	
+	} else if (property ==  "AlignAngle") {
+		setSnapAngle(newValue.toBool());
+		
     } else if(property == "Guidelines") {
         Guidelines g = newValue.value<Guidelines>();
         if(mGuidelines != g) {
@@ -3012,6 +3052,11 @@ void Scene::refreshLayers()
 bool Scene::showChartCenter()
 {
     return mShowChartCenter;
+}
+
+void Scene::setSnapAngle(bool state)
+{
+	mSnapAngle = state;
 }
 
 void Scene::setShowChartCenter(bool state)

@@ -526,6 +526,7 @@ public:
     
 public slots:
     void setShowChartCenter(bool state);
+	void setSnapAngle(bool state);
 
 protected:
     void setCellPosition(int row, int column, Cell *c, int columns);
@@ -535,6 +536,8 @@ private:
 
     QGraphicsItem *mCenterSymbol;
     bool mShowChartCenter;
+	bool mSnapAngle;
+	
 
 public:
     void setGuidelinesType(QString guides);

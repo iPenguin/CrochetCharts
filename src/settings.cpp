@@ -121,8 +121,11 @@ void Settings::setupValueList() {
     mValueList["chartIndicatorColor"] = QVariant("#c00000");
     mValueList["showIndicatorOutline"] = QVariant(false);
 	
+	//tools options
 	mValueList["replaceStitchWithPress"] = QVariant(true);
+    mValueList["centerNewStitchOnMouse"] = QVariant(true);
     
+	
     //stitch legend options
     mValueList["stitchLegendColumnCount"] = QVariant(2);
     mValueList["showStitchDescription"] = QVariant(true);

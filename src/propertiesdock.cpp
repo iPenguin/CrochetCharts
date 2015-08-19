@@ -65,6 +65,7 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     connect(ui->gen_xPos, SIGNAL(valueChanged(double)), SLOT(cellUpdatePositionX(double)));
     connect(ui->gen_yPos, SIGNAL(valueChanged(double)), SLOT(cellUpdatePositionY(double)));
 
+	connect(ui->snapAngle, SIGNAL(toggled(bool)), SLOT(chartUpdateAlignAngle(bool)));
     connect(ui->showChartCenter, SIGNAL(toggled(bool)), SLOT(chartUpdateChartCenter(bool)));
     connect(ui->guidelinesType, SIGNAL(currentIndexChanged(QString)), SLOT(chartUpdateGuidelines()));
 
@@ -445,7 +446,8 @@ void PropertiesDock::updateGuidelinesUi()
         ui->columns->setEnabled(false);
         ui->cellWidth->setEnabled(false);
         ui->cellHeight->setEnabled(false);
-
+		ui->snapAngle->setEnabled(false);
+		ui->snapAngleLbl->setEnabled(false);
     } else {
         ui->rows->setEnabled(true);
         ui->columns->setEnabled(true);
@@ -456,10 +458,14 @@ void PropertiesDock::updateGuidelinesUi()
             ui->rowsLbl->setText(tr("Rows:"));
             ui->cellWidthLbl->show();
             ui->cellWidth->show();
+			ui->snapAngle->setEnabled(false);
+			ui->snapAngleLbl->setEnabled(false);
         } else { //rounds
             ui->rowsLbl->setText(tr("Rounds:"));
             ui->cellWidthLbl->hide();
             ui->cellWidth->hide();
+			ui->snapAngle->setEnabled(true);
+			ui->snapAngleLbl->setEnabled(true);
         }
     }
 
@@ -485,6 +491,11 @@ void PropertiesDock::indicatorUpdate()
 /**
  *Chart functions:
  */
+
+void PropertiesDock::chartUpdateAlignAngle(bool state)
+{
+	emit propertiesUpdated("AlignAngle", QVariant(state));
+}
 
 void PropertiesDock::chartUpdateChartCenter(bool state)
 {

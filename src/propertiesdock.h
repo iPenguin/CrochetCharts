@@ -65,6 +65,7 @@ private slots:
     void tabChanged(int tabNumber);
     void updateDialogUi();
 
+	void chartUpdateAlignAngle(bool state);
     void chartUpdateChartCenter(bool state);
     void chartUpdateGuidelines();
 
