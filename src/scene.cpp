@@ -718,8 +718,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         undoStack()->beginMacro("move items");
 		//first, snap the items to the grid if we need to
 		foreach(QGraphicsItem* item, selectedItems()) {
-			QPointF centerPos = item->pos() + mCurItem->boundingRect().center();
-			item->setPos(snapPositionToGrid(centerPos) - mCurItem->boundingRect().center());
+			snapGraphicsItemToGrid(*item);
 		}
 		
         foreach(QGraphicsItem* item, selectedItems()) {
@@ -755,6 +754,12 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
     mHasSelection = false;
 }
 
+void Scene::snapGraphicsItemToGrid(QGraphicsItem& item)
+{
+	QPointF centerPos = item.pos() + item.boundingRect().center();
+	item.setPos(snapPositionToGrid(centerPos) - item.boundingRect().center());
+}
+
 QPointF Scene::snapPositionToGrid(const QPointF& pos) const
 {
 	if (mGuidelines.type() == "None")
@@ -763,6 +768,11 @@ QPointF Scene::snapPositionToGrid(const QPointF& pos) const
 		return snapPositionToRows(pos);
 	if (mGuidelines.type() == "Rounds")
 		return snapPositionToRounds(pos);
+	else {
+		return pos;
+		WARN("Unknown guideline type.");
+		WARN(mGuidelines.type());
+	}
 }
 
 QPointF Scene::snapPositionToRows(const QPointF& pos) const
@@ -804,12 +814,39 @@ QPointF Scene::snapPositionToRounds(const QPointF& pos) const
 		center = mCenterSymbol->pos();
 		
     int columns = mGuidelines.columns();
-    int rows = mGuidelines.rows();
-
-    int spacingW = mGuidelines.cellWidth();
+    int rounds = mGuidelines.rows();
+	
     int spacingH = mGuidelines.cellHeight();
 	
-	return pos;
+	//get the relative position to the circle
+	QPointF relPos = pos - center;
+	
+	//get the ring of the position
+	qreal distanceToCenter = std::sqrt(relPos.x()*relPos.x() + relPos.y()*relPos.y()) + spacingH/2;
+	int relPosRing = distanceToCenter / spacingH;
+	relPosRing = std::max(0, std::min(rounds + 1, relPosRing));
+	qreal relPosSnappedDistance = relPosRing*spacingH;
+	
+	//get the quadrant of the position
+	qreal PIPI = M_PI * 2;
+	qreal quadrantAngleSize = PIPI/columns;
+	qreal relPosAngle = std::atan2(relPos.y(), relPos.x());
+	
+	relPosAngle -= M_PI_2;
+	
+	//we normalize the angle
+	relPosAngle = fmod(relPosAngle,PIPI);
+    if (relPosAngle < 0)
+        relPosAngle += PIPI;
+    
+	int relPosQuadrant = (relPosAngle) / quadrantAngleSize + 0.5;
+	qreal relPosSnappedAngle = relPosQuadrant * quadrantAngleSize + M_PI_2;
+	
+	//convert it to a point on the circle and as scene coordinates
+	return QPointF(
+		std::cos(relPosSnappedAngle) * relPosSnappedDistance,
+		std::sin(relPosSnappedAngle) * relPosSnappedDistance
+		) + center;
 }
 
 void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *e)
@@ -899,7 +936,7 @@ void Scene::indicatorModeMouseRelease(QGraphicsSceneMouseEvent *e)
         //FIXME: dont hard code the offset for the indicator.
         pt = QPointF(pt.x() - 10, pt.y() - 10);
 
-        undoStack()->push(new AddIndicator(this, pt));
+        undoStack()->push(new AddIndicator(this, snapPositionToGrid(pt)));
 
     } else {
         if(mCurIndicator)
@@ -1248,6 +1285,7 @@ void Scene::stitchModeMouseRelease(QGraphicsSceneMouseEvent* e)
             c->setBgColor(mEditBgColor);
 			c->setLayer(getCurrentLayer()->uid());
 			c->setVisible(getCurrentLayer()->visible());
+			snapGraphicsItemToGrid(*c);
 			updateSceneRect();
         }
     } else if (mCurItem) {

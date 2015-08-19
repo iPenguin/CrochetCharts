@@ -222,6 +222,7 @@ public:
 	QPointF snapPositionToGrid(const QPointF& pos) const;
 	QPointF snapPositionToRows(const QPointF& pos) const;
 	QPointF snapPositionToRounds(const QPointF& pos) const;
+	void snapGraphicsItemToGrid(QGraphicsItem& item);
 	
 public slots:    
     void copy();
