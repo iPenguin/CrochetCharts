@@ -2794,7 +2794,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
             undoStack()->push(new AddItem(this, image));
 			image->setPos(pos);
 			image->setRotation(rotation);
-			image->setLayer(layer);
+			image->setLayer(getCurrentLayer()->uid());
 			image->setTransform(transform);
 			group->append(image);
 			image->setSelected(false);
@@ -3043,6 +3043,12 @@ void Scene::removeSelectedLayer()
                         toRemove.append(c);
                     break;
                 }
+                case ChartImage::Type: {
+                    ChartImage *c = qgraphicsitem_cast<ChartImage*>(item);
+                    if (c->layer() == mSelectedLayer->uid())
+                        toRemove.append(c);
+                    break;
+                }
                 default:
                     WARN("Unknown data type: " + QString::number(item->type()));
                     break;
@@ -3094,6 +3100,12 @@ void Scene::mergeLayer(unsigned int from, unsigned int to)
 						c->setLayer(to);
 					break;
 				}
+				case ChartImage::Type: {
+					ChartImage *c = qgraphicsitem_cast<ChartImage*>(item);
+					if (c->layer() == from)
+						c->setLayer(to);
+					break;
+				}
 				default:
 					WARN("Unknown data type: " + QString::number(item->type()));
 					break;
@@ -3120,21 +3132,27 @@ void Scene::selectLayer(unsigned int uid)
     foreach(QGraphicsItem *item, items()) {
         switch(item->type()) {
             case Cell::Type: {
-                Cell *c = qgraphicsitem_cast<Cell*>(item);
-                c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
-                c->setSelected(false);
+			Cell *c = qgraphicsitem_cast<Cell*>(item);
+			c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
+			c->setSelected(false);
                 break;
             }
             case Indicator::Type: {
-                Indicator*c = qgraphicsitem_cast<Indicator*>(item);
-                c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
-                c->setSelected(false);
+			Indicator*c = qgraphicsitem_cast<Indicator*>(item);
+			c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
+			c->setSelected(false);
                 break;
             }
             case ItemGroup::Type: {
-                ItemGroup *c = qgraphicsitem_cast<ItemGroup*>(item);
-                c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
-                c->setSelected(false);
+			ItemGroup *c = qgraphicsitem_cast<ItemGroup*>(item);
+			c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
+			c->setSelected(false);
+                break;
+            }
+            case ChartImage::Type: {
+			ChartImage *c = qgraphicsitem_cast<ChartImage*>(item);
+			c->setFlag(QGraphicsItem::ItemIsSelectable, c->layer() == layer->uid() && c->parentItem() == NULL);
+			c->setSelected(false);
                 break;
             }
             default:
@@ -3174,7 +3192,16 @@ void Scene::editedLayer(ChartLayer* layer)
                     && c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
                 }
 				break;
-            }
+            } case ChartImage::Type: {
+                ChartImage *c = qgraphicsitem_cast<ChartImage*>(item);
+                if (c->layer() == layer->uid()) {
+                c->setVisible(layer->visible());
+                c->setFlag(QGraphicsItem::ItemIsSelectable, layer->visible()
+                    && c->parentItem() == NULL && layer->uid() == mSelectedLayer->uid());
+                }
+				break;
+				
+			}
             default:
                 WARN("Unknown data type: " + QString::number(item->type()));
                 break;
