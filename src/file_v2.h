@@ -48,6 +48,7 @@ private:
     void loadCell(CrochetTab* tab, QXmlStreamReader* stream);
     void loadGrid(QXmlStreamReader* stream, Scene* scene);
     void loadIndicator(CrochetTab* tab, QXmlStreamReader* stream);
+	void loadChartImage(CrochetTab* tab, QXmlStreamReader* stream);
 
     void saveCustomStitches(QXmlStreamWriter* stream);
     void saveColors(QXmlStreamWriter* stream);

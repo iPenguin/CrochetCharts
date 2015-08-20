@@ -201,7 +201,10 @@ void File_v2::loadChart(QXmlStreamReader *stream)
 
         } else if(tag == "indicator") {
             loadIndicator(tab, stream);
-
+		
+        } else if(tag == "chartimage") {
+            loadChartImage(tab, stream);
+		
         } else if(tag == "group") {
             stream->readElementText().toInt();
             //create an empty group for future use.
@@ -345,6 +348,81 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 
     if(group != -1) {
         tab->scene()->addToGroup(group, i);
+		tab->scene()->getGroup(group)->setLayer(layer);
+	}
+}
+
+void File_v2::loadChartImage(CrochetTab* tab, QXmlStreamReader* stream)
+{
+    int group = -1;
+    QPointF position(0.0,0.0);
+    QPointF pivotPoint;
+    qreal angle = 0.0;
+    QPointF scale = QPointF(1.0,1.0);
+    QTransform transform;
+    qreal   m11 = 1, m12 = 0, m13 = 0,
+            m21 = 0, m22 = 1, m23 = 0,
+            m31 = 0, m32 = 0, m33 = 1;
+	unsigned int layer = 0;
+	QString filename;
+
+    while(!(stream->isEndElement() && stream->name() == "chartimage")) {
+        stream->readNext();
+        QString tag = stream->name().toString();
+		
+		if(tag == "position") {
+            position.rx() = stream->attributes().value("x").toString().toDouble();
+            position.ry() = stream->attributes().value("y").toString().toDouble();
+            stream->readElementText();
+
+        } else if(tag == "angle") {
+            angle = stream->readElementText().toDouble();
+
+        } else if(tag == "scale") {
+            scale.rx() = stream->attributes().value("x").toString().toDouble();
+            scale.ry() = stream->attributes().value("y").toString().toDouble();
+            stream->readElementText();
+
+        } else if(tag == "pivotPoint") {
+            pivotPoint.rx() = stream->attributes().value("x").toString().toDouble();
+            pivotPoint.ry() = stream->attributes().value("y").toString().toDouble();
+            stream->readElementText();
+
+        } else if(tag == "group") {
+            group = stream->readElementText().toInt();
+
+        } else if(tag == "transformation") {
+            m11 = stream->attributes().value("m11").toString().toDouble();
+            m12 = stream->attributes().value("m12").toString().toDouble();
+            m13 = stream->attributes().value("m13").toString().toDouble();
+            m21 = stream->attributes().value("m21").toString().toDouble();
+            m22 = stream->attributes().value("m22").toString().toDouble();
+            m23 = stream->attributes().value("m23").toString().toDouble();
+            m31 = stream->attributes().value("m31").toString().toDouble();
+            m32 = stream->attributes().value("m32").toString().toDouble();
+            m33 = stream->attributes().value("m33").toString().toDouble();
+            transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+            stream->readElementText();
+        } else if (tag == "layer") {
+			layer = stream->readElementText().toUInt();
+		} else if (tag == "filename") {
+			filename = stream->readElementText();
+		}
+    }
+    ChartImage *c = new ChartImage(filename);
+	
+	c->setLayer(layer);
+
+    tab->scene()->addItem(c);
+
+    c->setZValue(10);
+
+    c->setTransform(transform);
+    c->setPos(position);
+    c->setTransformOriginPoint(pivotPoint);
+    c->setRotation(angle);
+    if(group != -1) {
+        tab->scene()->addToGroup(group, c);
 		tab->scene()->getGroup(group)->setLayer(layer);
 	}
 }
@@ -603,7 +681,64 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
 
             stream->writeEndElement(); //end cell
         }
+		foreach(QGraphicsItem *item, tab->scene()->items()) {
+				ChartImage* c = qgraphicsitem_cast<ChartImage*>(item);
+				if (!c)
+					continue;
+				
+				stream->writeStartElement("chartimage"); //start cell
+				stream->writeTextElement("layer", QString::number(c->layer()));
+				stream->writeTextElement("filename", c->filename());
+				bool isGrouped = c->parentItem() ? true : false;
+				ItemGroup *g = 0;
+				if(isGrouped) {
+					g = qgraphicsitem_cast<ItemGroup*>(c->parentItem());
+					int groupNum = tab->scene()->mGroups.indexOf(g);
+					stream->writeTextElement("group", QString::number(groupNum));
 
+					//ungroup the items so that we can
+					//take an acurate position of each stitch.
+					g->removeFromGroup(c);
+				}
+				
+				stream->writeStartElement("position");
+				stream->writeAttribute("x", QString::number(c->pos().x()));
+				stream->writeAttribute("y", QString::number(c->pos().y()));
+				stream->writeEndElement(); //position
+
+				stream->writeStartElement("transformation");
+				QTransform trans = c->transform();
+
+				stream->writeAttribute("m11", QString::number(trans.m11()));
+				stream->writeAttribute("m12", QString::number(trans.m12()));
+				stream->writeAttribute("m13", QString::number(trans.m13()));
+				stream->writeAttribute("m21", QString::number(trans.m21()));
+				stream->writeAttribute("m22", QString::number(trans.m22()));
+				stream->writeAttribute("m23", QString::number(trans.m23()));
+				stream->writeAttribute("m31", QString::number(trans.m31()));
+				stream->writeAttribute("m32", QString::number(trans.m32()));
+				stream->writeAttribute("m33", QString::number(trans.m33()));
+				stream->writeEndElement(); //transformation
+
+				//in case we haven't closed the
+				//application we need to regroup the items.
+				if(isGrouped)
+					g->addToGroup(c);
+				
+				stream->writeTextElement("angle", QString::number(c->rotation()));
+
+				stream->writeStartElement("scale");
+				stream->writeAttribute("x", QString::number(c->transform().m11()));
+				stream->writeAttribute("y", QString::number(c->transform().m22()));
+				stream->writeEndElement(); //end scale
+
+				stream->writeStartElement("pivotPoint");
+				stream->writeAttribute("x", QString::number(c->transformOriginPoint().x()));
+				stream->writeAttribute("y", QString::number(c->transformOriginPoint().y()));
+				stream->writeEndElement(); //end pivotPoint
+
+				stream->writeEndElement(); //end indicator
+		}
         foreach(Indicator *i, tab->scene()->indicators()) {
             stream->writeStartElement("indicator");
 
