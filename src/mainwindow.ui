@@ -345,9 +345,16 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <widget class="QMenu" name="menuInsert">
+     <property name="title">
+      <string>Insert</string>
+     </property>
+     <addaction name="actionInsertImage"/>
+    </widget>
     <addaction name="actionCut"/>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
+    <addaction name="menuInsert"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -1362,6 +1369,14 @@
    </property>
    <property name="toolTip">
     <string>Shows the layers dock</string>
+   </property>
+  </action>
+  <action name="actionInsertImage">
+   <property name="text">
+    <string>Image</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert an image</string>
    </property>
   </action>
  </widget>

@@ -153,6 +153,8 @@ private slots:
     void copy();
     void cut();
     void paste();
+	
+	void insertImage();
 
     void group();
     void ungroup();

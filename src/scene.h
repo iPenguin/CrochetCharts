@@ -24,6 +24,7 @@
 #include <QGraphicsScene>
 
 #include "cell.h"
+#include "ChartImage.h"
 
 #include <QHash>
 #include <QUndoStack>
@@ -229,6 +230,7 @@ public slots:
     void copy();
     void cut();
     void paste();
+	void insertImage(const QString& filename, QPointF pos);
     void deleteSelection();
     
 protected:

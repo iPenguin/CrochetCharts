@@ -404,6 +404,11 @@ void CrochetTab::paste()
     mScene->paste();
 }
 
+void CrochetTab::insertImage(const QString& filename, QPointF pos)
+{
+	mScene->insertImage(filename, pos);
+}
+
 void CrochetTab::group()
 {
     mScene->group();

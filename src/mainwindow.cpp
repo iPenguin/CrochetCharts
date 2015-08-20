@@ -494,6 +494,7 @@ void MainWindow::setupMenus()
     connect(ui->actionCopy, SIGNAL(triggered()), SLOT(copy()));
     connect(ui->actionPaste, SIGNAL(triggered()), SLOT(paste()));
     connect(ui->actionCut, SIGNAL(triggered()), SLOT(cut()));
+	connect(ui->actionInsertImage, SIGNAL(triggered()), SLOT(insertImage()));
 
     ui->fgColor->setColor(QColor(Settings::inst()->value("stitchPrimaryColor").toString()));
     ui->bgColor->setColor(QColor(Qt::white));
@@ -1867,6 +1868,20 @@ void MainWindow::paste()
 {
     CrochetTab* tab = curCrochetTab();
     if(tab) tab->paste();
+}
+
+void MainWindow::insertImage()
+{
+	//first choose the image we want to add
+	QString file = QFileDialog::getOpenFileName(this, tr("Open Image"),
+		QString(), tr("Image Files (*.png *.jpg *.bmp *.tga *.gif)"));
+		
+	CrochetTab* tab = curCrochetTab();
+	
+	//get the location of the current center of the scene
+	QPointF pos = tab->view()->sceneRect().center();
+	
+    if(tab) tab->insertImage(file, pos);
 }
 
 void MainWindow::group()

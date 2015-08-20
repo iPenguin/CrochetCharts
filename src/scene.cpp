@@ -262,7 +262,7 @@ void Scene::addItem(QGraphicsItem* item)
         default:
             WARN("Unknown type: " + QString::number(item->type()));
             //fall through
-
+		case ChartImage::Type:
         case Guideline::Type:
         case QGraphicsEllipseItem::Type:
         case QGraphicsLineItem::Type: {
@@ -300,6 +300,7 @@ void Scene::removeItem(QGraphicsItem* item)
 
         default:
             WARN("Unknown type: " + QString::number(item->type()));
+		case ChartImage::Type:
         case Guideline::Type:
         case QGraphicsEllipseItem::Type:
         case QGraphicsLineItem::Type: {
@@ -572,6 +573,10 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
                 mCurItem = 0;
                 break;
             }
+			case ChartImage::Type: {
+				mMoving = true;
+				break;
+			}
             default:
                 qWarning() << "mousePress - Unknown object type: " << mCurItem->type();
                 break;
@@ -2324,6 +2329,22 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		clone->moveBy(displacement.x(), displacement.y());
 		
 		return clone;
+	} else if (item->type() == ChartImage::Type) {
+		//get the image
+		ChartImage* image = qgraphicsitem_cast<ChartImage*>(item);
+		
+		//and clone it
+		ChartImage* newImage = new ChartImage(image->filename());
+		newImage->setPos(image->pos());
+		newImage->setTransform(image->transform());
+		newImage->setRotation(image->rotation());
+		newImage->setLayer(getCurrentLayer()->uid());
+		undoStack()->push(new AddItem(this, newImage));
+		
+		//move the clone with the displacement
+		newImage->moveBy(displacement.x(), displacement.y());
+		
+		return newImage;
 	} else if (item->type() == ItemGroup::Type) {
 		//get the group
 		ItemGroup* g = qgraphicsitem_cast<ItemGroup*>(item);
@@ -2400,7 +2421,7 @@ void Scene::copy(int direction)
 
 QGraphicsItem* Scene::mirror_rec(QGraphicsItem* item, QPointF displacement, QRectF selectionRect, bool flipX, bool flipY)
 {
-	if (item->type() == Cell::Type) {
+	if (item->type() == Cell::Type || item->type() == ChartImage::Type) {
 		//first we copy the item
 		QGraphicsItem* newItem = copy_rec(item, displacement);
 
@@ -2567,6 +2588,13 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
                 copyRecursively(stream, group->childItems());
                 break;
             }
+			case ChartImage::Type: {
+				ChartImage* image = qgraphicsitem_cast<ChartImage*>(item);
+				
+				stream << image->rotation() << image->pos() << image->transform() << image->filename();
+				stream << image->layer();
+				break;
+			}
             case Guideline::Type:
                 qDebug() << "guideline";
             default:
@@ -2628,6 +2656,14 @@ void Scene::paste()
     undoStack()->endMacro();
 }
 
+void Scene::insertImage(const QString& filename, QPointF pos)
+{
+	//first, create a new image item
+	ChartImage* image = new ChartImage(filename);
+	image->setPos(pos);
+	undoStack()->push(new AddItem(this, image));
+}
+
 void Scene::deleteSelection()
 {
     QList<QGraphicsItem*> items = selectedItems();
@@ -2645,6 +2681,11 @@ void Scene::deleteSelection()
                 undoStack()->push(new RemoveIndicator(this, i));
                 break;
             }
+			case ChartImage::Type: {
+				ChartImage *i = qgraphicsitem_cast<ChartImage*>(item);
+				undoStack()->push(new RemoveItem(this, i));
+				break;
+			}
             default:
                 qWarning() << "keyReleaseEvent - unknown type: " << item->type();
                 break;
@@ -2739,6 +2780,26 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 			g->setLayer(getCurrentLayer()->uid());
             break;
         }
+		case ChartImage::Type: {
+			qreal rotation;
+			QPointF pos;
+			QString filename;
+			QTransform transform;
+			unsigned int layer;
+			
+			stream >> rotation >> pos >> transform >> filename >> layer;
+			
+			ChartImage* image = new ChartImage(filename);
+			
+            undoStack()->push(new AddItem(this, image));
+			image->setPos(pos);
+			image->setRotation(rotation);
+			image->setLayer(layer);
+			image->setTransform(transform);
+			group->append(image);
+			image->setSelected(false);
+			break;
+		}
         default: {
             WARN("Unknown data type: " + QString::number(type));
             break;

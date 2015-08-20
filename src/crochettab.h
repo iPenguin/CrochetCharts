@@ -92,6 +92,7 @@ public:
     void copy();
     void cut();
     void paste();
+	void insertImage(const QString& filename, QPointF pos = QPointF(0, 0));
 
     void group();
     void ungroup();
@@ -155,6 +156,7 @@ private slots:
     
 protected:
     Scene* scene() { return mScene; }
+public:
     ChartView* view() { return mView; }
     
 private:    

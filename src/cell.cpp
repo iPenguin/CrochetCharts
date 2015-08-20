@@ -101,7 +101,8 @@ bool Cell::event(QEvent *e)
         selectedItems = scene()->selectedItems().count();
     }
 
-    if(isSelected() && selectedItems == 1) {
+    if(isSelected() && selectedItems == 1
+		&& Settings::inst()->value("replaceStitchWithPress").toBool() == true) {
         e->setAccepted(false);
         return false;
     }
