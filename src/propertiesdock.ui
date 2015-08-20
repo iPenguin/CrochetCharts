@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>351</width>
-    <height>685</height>
+    <height>741</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
        <item row="0" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Chart center:</string>
+          <string>&amp;Chart center:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -233,13 +233,143 @@
        <string/>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="6" column="0">
-        <widget class="QLabel" name="st_stitchColorLbl">
+       <item row="14" column="1">
+        <widget class="QLineEdit" name="ci_path"/>
+       </item>
+       <item row="7" column="1">
+        <widget class="QToolButton" name="st_stBgColorBttn">
          <property name="text">
-          <string>Stitch Color:</string>
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="ind_styleLbl">
+         <property name="text">
+          <string>Style:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>ind_indicatorStyle</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="gen_yPosLbl">
+         <property name="text">
+          <string>Y:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>gen_yPos</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0">
+        <widget class="QLabel" name="ind_fontLbl">
+         <property name="text">
+          <string>Font:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="gen_xPos">
+         <property name="minimum">
+          <double>-999999999.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>999999999.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QPushButton" name="indX_IndicatorEditText">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Edit Text</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="st_stitchLbl">
+         <property name="text">
+          <string>Stitch:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>st_stitch</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1">
+        <widget class="QPushButton" name="gen_deleteItems">
+         <property name="text">
+          <string>Delete Selection</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="gen_xScaleLbl">
+         <property name="text">
+          <string>&amp;X Scale:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>gen_scaleX</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QToolButton" name="st_stColorBttn">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QDoubleSpinBox" name="gen_scaleY">
+         <property name="minimum">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QSpinBox" name="ind_size">
+         <property name="maximum">
+          <number>1024</number>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="ind_sizeLbl">
+         <property name="text">
+          <string>Size:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QDoubleSpinBox" name="gen_scaleX">
+         <property name="minimum">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.010000000000000</double>
          </property>
         </widget>
        </item>
@@ -259,92 +389,6 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="ind_styleLbl">
-         <property name="text">
-          <string>Style:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>ind_indicatorStyle</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="gen_angle"/>
-       </item>
-       <item row="13" column="0" colspan="2">
-        <widget class="QLabel" name="indX_indicatorTextEdit">
-         <property name="text">
-          <string>TextLabel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="st_stitchLbl">
-         <property name="text">
-          <string>Stitch:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>st_stitch</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="gen_scaleX">
-         <property name="minimum">
-          <double>0.010000000000000</double>
-         </property>
-         <property name="value">
-          <double>0.010000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <widget class="QPushButton" name="indX_IndicatorEditText">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="text">
-          <string>Edit Text</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="gen_xScaleLbl">
-         <property name="text">
-          <string>&amp;X Scale:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>gen_scaleX</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="ind_fontLbl">
-         <property name="text">
-          <string>Font:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <widget class="QPushButton" name="gen_deleteItems">
-         <property name="text">
-          <string>Delete Selection</string>
-         </property>
-        </widget>
-       </item>
        <item row="5" column="0">
         <widget class="QLabel" name="gen_yScaleLbl">
          <property name="text">
@@ -358,6 +402,39 @@
          </property>
         </widget>
        </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="st_stitchColorLbl">
+         <property name="text">
+          <string>Stitch Color:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="gen_yPos">
+         <property name="minimum">
+          <double>-999999999.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>999999999.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0">
+        <widget class="QLabel" name="ci_pathLbl">
+         <property name="text">
+          <string>Path to image:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="gen_angle"/>
+       </item>
        <item row="7" column="0">
         <widget class="QLabel" name="st_bgColorLbl">
          <property name="text">
@@ -368,21 +445,7 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
-        <widget class="QToolButton" name="st_stBgColorBttn">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="gen_scaleY">
-         <property name="minimum">
-          <double>0.010000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="0" colspan="2">
+       <item row="18" column="0" colspan="2">
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -395,10 +458,39 @@
          </property>
         </spacer>
        </item>
-       <item row="6" column="1">
-        <widget class="QToolButton" name="st_stColorBttn">
+       <item row="3" column="0">
+        <widget class="QLabel" name="gen_angleLbl">
          <property name="text">
-          <string/>
+          <string>A&amp;ngle:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>gen_angle</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="QFontComboBox" name="ind_fontComboBox"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="gen_xPosLbl">
+         <property name="text">
+          <string>X:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>gen_xPos</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0" colspan="2">
+        <widget class="QLabel" name="indX_indicatorTextEdit">
+         <property name="text">
+          <string>TextLabel</string>
          </property>
         </widget>
        </item>
@@ -421,82 +513,10 @@
          </item>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="gen_xPos">
-         <property name="minimum">
-          <double>-999999999.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>999999999.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="gen_yPos">
-         <property name="minimum">
-          <double>-999999999.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>999999999.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="gen_angleLbl">
+       <item row="15" column="1">
+        <widget class="QPushButton" name="ci_openFileBrowser">
          <property name="text">
-          <string>A&amp;ngle:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>gen_angle</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="gen_xPosLbl">
-         <property name="text">
-          <string>X:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>gen_xPos</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="gen_yPosLbl">
-         <property name="text">
-          <string>Y:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>gen_yPos</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="QFontComboBox" name="ind_fontComboBox"/>
-       </item>
-       <item row="12" column="0">
-        <widget class="QLabel" name="ind_sizeLbl">
-         <property name="text">
-          <string>Size:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="1">
-        <widget class="QSpinBox" name="ind_size">
-         <property name="maximum">
-          <number>1024</number>
+          <string>Open file browser</string>
          </property>
         </widget>
        </item>

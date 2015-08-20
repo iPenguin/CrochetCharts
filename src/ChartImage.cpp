@@ -16,7 +16,7 @@ ChartImage::ChartImage(const QString& filename, QGraphicsItem* parent):
 		message.setText("The chosen file (" + filename + ") is not a valid image.");
 		message.exec();
 	}
-		
+	
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
 }

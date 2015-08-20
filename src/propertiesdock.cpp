@@ -26,6 +26,7 @@
 #include "cell.h"
 #include "itemgroup.h"
 #include "indicator.h"
+#include "ChartImage.h"
 #include <QGraphicsEllipseItem>
 
 #include "crochettab.h"
@@ -204,7 +205,7 @@ PropertiesData PropertiesDock::selectionProperties()
         ItemGroup *g = 0;
         Indicator *ind = 0;
         QGraphicsEllipseItem *cc = 0; //ChartCenter
-        
+        ChartImage *ci = 0;
         if(i->type() == Cell::Type) {
             c = qgraphicsitem_cast<Cell*>(i);
         } else if(i->type() == ItemGroup::Type) {
@@ -213,18 +214,24 @@ PropertiesData PropertiesDock::selectionProperties()
             ind = qgraphicsitem_cast<Indicator*>(i);
         } else if(i->type() == QGraphicsEllipseItem::Type) {
             cc =  qgraphicsitem_cast<QGraphicsEllipseItem*>(i);
-        }
+        } else if (i->type() == ChartImage::Type) {
+			ci = qgraphicsitem_cast<ChartImage*>(i);
+		}
         
         if(firstPass) {
             
-            props.angle = c->rotation();
-            props.scale.setX(c->transform().m11());
-            props.scale.setY(c->transform().m22());
-            props.position.setX(c->pos().x());
-            props.position.setY(c->pos().y());
-            props.stitch = c->name();
-            props.color = c->color();
-            props.bgColor = c->bgColor();
+            props.angle = i->rotation();
+            props.scale.setX(i->transform().m11());
+            props.scale.setY(i->transform().m22());
+            props.position.setX(i->pos().x());
+            props.position.setY(i->pos().y());
+			
+			if (c) {
+				props.stitch = c->name();
+				props.color = c->color();
+				props.bgColor = c->bgColor();
+			}
+				
             firstPass = false;
         }
 
@@ -302,6 +309,8 @@ void PropertiesDock::updateDialogUi()
             showUi(PropertiesDock::IndicatorUi, count);
         } else if(firstType == QGraphicsEllipseItem::Type) {
 			showUi(PropertiesDock::CenterUi, count);
+		} else if (firstType == ChartImage::Type) {
+			showUi(PropertiesDock::ChartImageUi, count);
 		}
     }
 }
@@ -341,10 +350,41 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
     } else if(selection == PropertiesDock::IndicatorUi) {
         showSingleIndicator();
 
-    }/* else if (selection == PropertiesDock::CenterUi) {
+    } else if (selection == PropertiesDock::ChartImageUi) {
+		showSingleChartImage();
+	}
+	/* else if (selection == PropertiesDock::CenterUi) {
         WARN("TODO: make center ui work");
     }*/
 
+}
+
+void PropertiesDock::showSingleChartImage()
+{
+	
+    PropertiesData p = selectionProperties();
+
+    ui->itemGroup->show();
+
+    ui->gen_angle->blockSignals(true);
+    ui->gen_angle->setValue(p.angle);
+    ui->gen_angle->blockSignals(false);
+
+    ui->gen_xPos->blockSignals(true);
+    ui->gen_xPos->setValue(p.position.x());
+    ui->gen_xPos->blockSignals(false);
+
+    ui->gen_yPos->blockSignals(true);
+    ui->gen_yPos->setValue(p.position.y());
+    ui->gen_yPos->blockSignals(false);
+
+    ui->gen_scaleX->blockSignals(true);
+    ui->gen_scaleX->setValue(p.scale.x());
+    ui->gen_scaleX->blockSignals(false);
+
+    ui->gen_scaleY->blockSignals(true);
+    ui->gen_scaleY->setValue(p.scale.y());
+    ui->gen_scaleY->blockSignals(false);
 }
 
 void PropertiesDock::showSingleCell()
@@ -392,7 +432,30 @@ void PropertiesDock::showMultiCell()
 
 void PropertiesDock::showSingleIndicator()
 {
+
+    PropertiesData p = selectionProperties();
+
     ui->itemGroup->show();
+
+    ui->gen_angle->blockSignals(true);
+    ui->gen_angle->setValue(p.angle);
+    ui->gen_angle->blockSignals(false);
+
+    ui->gen_xPos->blockSignals(true);
+    ui->gen_xPos->setValue(p.position.x());
+    ui->gen_xPos->blockSignals(false);
+
+    ui->gen_yPos->blockSignals(true);
+    ui->gen_yPos->setValue(p.position.y());
+    ui->gen_yPos->blockSignals(false);
+
+    ui->gen_scaleX->blockSignals(true);
+    ui->gen_scaleX->setValue(p.scale.x());
+    ui->gen_scaleX->blockSignals(false);
+
+    ui->gen_scaleY->blockSignals(true);
+    ui->gen_scaleY->setValue(p.scale.y());
+    ui->gen_scaleY->blockSignals(false);
 
     Indicator *i = qgraphicsitem_cast<Indicator*>(mScene->selectedItems().first());
     //ui->ind_indicatorTextEdit->setText(i->text());
@@ -476,8 +539,8 @@ void PropertiesDock::updateGuidelinesUi()
 			ui->columnsLbl->hide();
             ui->cellWidthLbl->show();
             ui->cellWidth->show();
-			ui->snapAngle->setEnabled(true);
-			ui->snapAngleLbl->setEnabled(true);
+			ui->snapAngle->setEnabled(false);
+			ui->snapAngleLbl->setEnabled(false);
         }
     }
 

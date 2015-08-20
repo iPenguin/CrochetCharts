@@ -45,7 +45,8 @@ public:
         ItemGroupUi = 16,
         CenterUi = 20,
         IndicatorUi = 25,
-        MixedUi = 100
+		ChartImageUi = 30,
+        MixedUi = 100,
     };
 
     PropertiesDock(QTabWidget* tabWidget, QWidget *parent = 0);
@@ -98,6 +99,7 @@ private:
     void showMixedObjects();
     void showCanvas();
     void showItemGroup();
+	void showSingleChartImage();
 
     void clearUi();
 
