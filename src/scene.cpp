@@ -784,15 +784,56 @@ QPointF Scene::snapPositionToGrid(const QPointF& pos) const
 {
 	if (mGuidelines.type() == "None")
 		return pos;
-	if (mGuidelines.type() == "Rows")
+	else if (mGuidelines.type() == "Rows")
 		return snapPositionToRows(pos);
-	if (mGuidelines.type() == "Rounds")
+	else if (mGuidelines.type() == "Rounds")
 		return snapPositionToRounds(pos);
+	else if (mGuidelines.type() == "Triangles")
+		return snapPositionToTriangles(pos);
 	else {
 		return pos;
 		WARN("Unknown guideline type.");
 		WARN(mGuidelines.type());
 	}
+}
+
+QPointF Scene::snapPositionToTriangles(const QPointF& pos) const
+{
+	//get the needed variables
+	QPointF center(0, 0);
+	if (mCenterSymbol)
+		center = mCenterSymbol->pos();
+		
+    int triangles = mGuidelines.columns();
+    
+    int spacingW = mGuidelines.cellWidth();
+    int spacingH = mGuidelines.cellHeight();
+	
+	//get the relative position to the triangles
+	QPointF relPos = pos - center;
+	
+	//get the row of the current position
+	int relRow = relPos.y() / spacingH + 0.5;
+	
+	//clamp the row
+	relRow = std::max(0, std::min(triangles, relRow));
+	
+	//get the max offsetX of that row
+	qreal offsetX = (relRow) * spacingW/2;
+	
+	//get the distance from that offset
+	qreal offsetDist = relPos.x() - offsetX;
+	
+	//snap that distance to the grid
+	int relDistColumn = offsetDist / spacingW - 0.5;
+	
+	//clamp the column
+	relDistColumn = std::max(-relRow, std::min(0, relDistColumn));
+	
+	//get the new relative pos
+	QPointF newPos(relDistColumn * spacingW + offsetX, relRow * spacingH);
+	
+	return newPos + center;
 }
 
 QPointF Scene::snapPositionToRows(const QPointF& pos) const
@@ -1803,6 +1844,7 @@ void Scene::generateGuidelinesRounds(int spacingW, int spacingH, int columns, in
 
 void Scene::generateGuidelinesTriangles(int spacingW, int spacingH, int columns, int rows, QPointF center)
 {
+	Q_UNUSED(columns);
     QGraphicsItem *i = 0;
 	
 	//generate the horizontal lines
@@ -1810,21 +1852,28 @@ void Scene::generateGuidelinesTriangles(int spacingW, int spacingH, int columns,
         qreal height = (r+1) * spacingH;
 		qreal offsetX = (r+1) * spacingW/2;
 
-		i = addLine(-offsetX,height,offsetX,height);
+		i = addLine(-offsetX + center.x(),height + center.y(),offsetX + center.x(),height + center.y());
 		i->setZValue(-1);
 		mGuidelinesLines.append(i);
     }
 	
 	//generate the slanted lines
-	/*for(int c = 0; c <= columns; c++) {
-		qreal maxX = rows+1 * spacingW*2;
+	qreal maxX = (rows) * spacingW/2;
+	qreal maxY = (rows) * spacingH;
+	for(int c = 0; c < rows; c++) {
 		
-		qreal startX = 
+		qreal startX = -maxX + ( 2 * c * (maxX / rows));
+		qreal startY = maxY;
+		qreal endX = maxX - ( (rows - c) * (maxX / rows));
+		qreal endY = c * maxY / rows;
         
-		i = addLine(-offsetX,height,offsetX,height);
+		i = addLine(startX + center.x(), startY + center.y(), endX + center.x(), endY + center.y());
 		i->setZValue(-1);
 		mGuidelinesLines.append(i);
-    }*/
+		i = addLine(-startX + center.x(), startY + center.y(), -endX + center.x(), endY + center.y());
+		i->setZValue(-1);
+		mGuidelinesLines.append(i);
+    }
 }
 
 QList<QGraphicsItem*> Scene::sortItemsHorizontally(QList<QGraphicsItem*> unsortedItems, int sortEdge)
@@ -2547,7 +2596,35 @@ void Scene::paste()
 
     foreach(QGraphicsItem* item, items)
         item->setSelected(true);
-    
+		
+	//if we need to center around the mouse
+	if (Settings::inst()->value("pasteOnMouseLocation").toBool() == true) {
+		if (items.count() > 0) {
+			
+			//get the bounding box of all pasted items
+			QRectF box = items.first()->sceneBoundingRect();
+			foreach(QGraphicsItem* item, items) {
+				box = box.unite(item->sceneBoundingRect());
+			}
+			
+			//get the cursor position in the scene
+			QPointF mousePos = views().first()->mapToScene(views().first()->mapFromGlobal(QCursor::pos()));
+			
+			//now calculate the amount we need to move the items
+			QPointF diff =  mousePos - box.center();
+			
+			//and move all objects with that diff
+			foreach(QGraphicsItem* item, items) {
+				item->moveBy(diff.x(), diff.y());
+			}
+		}
+	}
+	
+	//finally, snap each pasted object on the grid
+    foreach(QGraphicsItem* item, items) {
+		snapGraphicsItemToGrid(*item);
+	}
+	
     undoStack()->endMacro();
 }
 
