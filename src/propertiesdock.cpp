@@ -90,6 +90,8 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
 	connect(ui->ind_fontComboBox, SIGNAL(currentFontChanged(const QFont&)), SLOT(indicatorUpdate()));
 	connect(ui->ind_size, SIGNAL(valueChanged(int)), SLOT(indicatorUpdate()));
 
+	connect(ui->ci_layer, SIGNAL(currentIndexChanged(const QString&)),
+			SLOT(chartImageUpdateZLayer(const QString&)));
 	connect(ui->ci_path, SIGNAL(textChanged(const QString&)), SLOT(chartImageUpdatePath(const QString&)));
 	connect(ui->ci_openFileBrowser, SIGNAL(clicked()), SLOT(chartImageChoosePath()));
 
@@ -398,6 +400,18 @@ void PropertiesDock::showSingleChartImage()
 	ui->ci_path->blockSignals(true);
 	ui->ci_path->setText(i->filename());
 	ui->ci_path->blockSignals(false);
+	
+	ui->ci_layer->blockSignals(true);
+	QComboBox* b = ui->ci_layer;
+	
+	int count = b->count();
+	for (int k = 0 ; k < count ; k++) {
+		if (b->itemText(k).compare(i->ZLayer()) == 0) {
+			b->setCurrentIndex(k);
+			break;
+		}
+	}
+	ui->ci_layer->blockSignals(false);
 }
 
 void PropertiesDock::showSingleCell()
@@ -678,4 +692,10 @@ void PropertiesDock::chartImageChoosePath()
 	
 	//and call updatepath
 	chartImageUpdatePath(file);
+}
+
+void PropertiesDock::chartImageUpdateZLayer(const QString& layer)
+{
+	emit propertiesUpdated("ChartImageZLayer", QVariant(layer));
+
 }

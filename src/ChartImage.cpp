@@ -7,6 +7,7 @@ ChartImage::ChartImage(const QString& filename, QGraphicsItem* parent):
 	mLayer(0),
 	mFilename(filename)
 {
+	setZLayer("Background");
 	mPixmap = new QPixmap(filename);
 	
     //if the image is invalid
@@ -76,4 +77,18 @@ void ChartImage::setFile(const QString& filename)
 	delete mPixmap;
 	mPixmap = newPixmap;
 	mFilename = filename;
+}
+
+void ChartImage::setZLayer(const QString& zlayer)
+{
+	mZLayer = zlayer;
+	
+	if (mZLayer == "Foreground") {
+		setZValue(11);
+	} else if (mZLayer == "Background") {
+		setZValue(-2);
+	} else {
+		WARN("Unknown z value: ");
+		WARN(mZLayer);
+	}
 }

@@ -81,6 +81,7 @@ private slots:
     void cellUpdateFgColor();
     void cellUpdateBgColor();
 	
+	void chartImageUpdateZLayer(const QString & path);
 	void chartImageUpdatePath(const QString& path);
 	void chartImageChoosePath();
 

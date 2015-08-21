@@ -67,6 +67,25 @@ private:
     Cell *c;
 };
 
+class SetChartZLayer : public QUndoCommand
+{
+public:
+    enum { Id = 1110 };
+	SetChartZLayer(ChartImage* ci, const QString& zlayer, QUndoCommand *parent = 0);
+	
+	void undo();
+    void redo();
+
+    int id() const { return Id; }
+    
+    static void setZLayer(ChartImage *ci, const QString& layer);
+	
+private:
+	QString newLayer;
+	QString oldLayer;
+	ChartImage* ci;
+};
+
 class SetChartImagePath : public QUndoCommand
 {
 public:

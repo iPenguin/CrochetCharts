@@ -2296,7 +2296,9 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 
             } else if(property == "ChartImagePath") {
                 undoStack()->push(new SetChartImagePath(ci, newValue.toString()));
-
+				
+			} else if (property == "ChartImageZLayer") {
+				undoStack()->push(new SetChartZLayer(ci, newValue.toString()));
             } else {
                 qWarning() << "Unknown property: " << property;
             }

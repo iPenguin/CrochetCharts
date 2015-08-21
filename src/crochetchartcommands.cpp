@@ -32,6 +32,7 @@ SetIndicatorText::SetIndicatorText(Indicator *ind, QString otext, QString ntext,
 	i = ind;
 	newText = ntext;
 	oldText = otext;
+    QUndoCommand::setText(QObject::tr("change indicator text"));
 }
 
 void SetIndicatorText::undo()
@@ -74,6 +75,33 @@ void SetCellStitch::undo()
 void SetCellStitch::setStitch(Cell *cell, QString stitch)
 {
     cell->setStitch(stitch);
+}
+
+/*************************************************\
+| SetChartZLayer                                  |
+\*************************************************/
+SetChartZLayer::SetChartZLayer(ChartImage* image, const QString& layer, QUndoCommand *parent)
+    : QUndoCommand(parent)
+{
+    ci = image;
+    newLayer = layer;
+    oldLayer = ci->layer();
+    setText(QObject::tr("change image layer"));
+}
+
+void SetChartZLayer::redo()
+{
+    setZLayer(ci, newLayer);
+}
+
+void SetChartZLayer::undo()
+{
+    setZLayer(ci, oldLayer);
+}
+
+void SetChartZLayer::setZLayer(ChartImage *ci, const QString& layer)
+{
+    ci->setZLayer(layer);
 }
 
 /*************************************************\

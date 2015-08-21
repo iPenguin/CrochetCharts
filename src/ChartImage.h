@@ -21,18 +21,22 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
     int type() const { return Type; }
 	
-	const QPixmap* pixmap() { return mPixmap; } 
+	const QPixmap* pixmap() const { return mPixmap; } 
 	
-	unsigned int layer() { return mLayer; }
+	unsigned int layer() const { return mLayer; }
 	void setLayer(unsigned int layer) { mLayer = layer; }
 	
-	const QString& filename() { return mFilename; }
+	const QString& filename() const { return mFilename; }
 	void setFile(const QString& filename);
+	
+	void setZLayer(const QString& zlayer);
+	const QString& ZLayer() const { return mZLayer; }
 	
 private:
 	unsigned int mLayer;
 	QPixmap* mPixmap;
 	QString mFilename;
+	QString mZLayer;
 
 };
 

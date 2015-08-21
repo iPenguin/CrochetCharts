@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>351</width>
-    <height>741</height>
+    <height>769</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -279,6 +279,16 @@
          </property>
         </widget>
        </item>
+       <item row="9" column="1">
+        <widget class="QPushButton" name="indX_IndicatorEditText">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Edit Text</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="1">
         <widget class="QDoubleSpinBox" name="gen_xPos">
          <property name="minimum">
@@ -289,13 +299,10 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="1">
-        <widget class="QPushButton" name="indX_IndicatorEditText">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
+       <item row="17" column="1">
+        <widget class="QPushButton" name="gen_deleteItems">
          <property name="text">
-          <string>Edit Text</string>
+          <string>Delete Selection</string>
          </property>
         </widget>
        </item>
@@ -312,10 +319,10 @@
          </property>
         </widget>
        </item>
-       <item row="16" column="1">
-        <widget class="QPushButton" name="gen_deleteItems">
+       <item row="6" column="1">
+        <widget class="QToolButton" name="st_stColorBttn">
          <property name="text">
-          <string>Delete Selection</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -329,13 +336,6 @@
          </property>
          <property name="buddy">
           <cstring>gen_scaleX</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QToolButton" name="st_stColorBttn">
-         <property name="text">
-          <string/>
          </property>
         </widget>
        </item>
@@ -353,26 +353,6 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="0">
-        <widget class="QLabel" name="ind_sizeLbl">
-         <property name="text">
-          <string>Size:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="gen_scaleX">
-         <property name="minimum">
-          <double>0.010000000000000</double>
-         </property>
-         <property name="value">
-          <double>0.010000000000000</double>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="1">
         <widget class="QComboBox" name="st_stitch">
          <property name="sizePolicy">
@@ -386,6 +366,36 @@
            <width>16777215</width>
            <height>16777215</height>
           </size>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QDoubleSpinBox" name="gen_scaleX">
+         <property name="minimum">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="ind_sizeLbl">
+         <property name="text">
+          <string>Size:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="gen_yPos">
+         <property name="minimum">
+          <double>-999999999.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>999999999.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -412,15 +422,8 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="gen_yPos">
-         <property name="minimum">
-          <double>-999999999.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>999999999.000000000000000</double>
-         </property>
-        </widget>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="gen_angle"/>
        </item>
        <item row="14" column="0">
         <widget class="QLabel" name="ci_pathLbl">
@@ -432,8 +435,8 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="gen_angle"/>
+       <item row="11" column="1">
+        <widget class="QFontComboBox" name="ind_fontComboBox"/>
        </item>
        <item row="7" column="0">
         <widget class="QLabel" name="st_bgColorLbl">
@@ -445,7 +448,7 @@
          </property>
         </widget>
        </item>
-       <item row="18" column="0" colspan="2">
+       <item row="19" column="0" colspan="2">
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -468,22 +471,6 @@
          </property>
          <property name="buddy">
           <cstring>gen_angle</cstring>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="QFontComboBox" name="ind_fontComboBox"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="gen_xPosLbl">
-         <property name="text">
-          <string>X:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="buddy">
-          <cstring>gen_xPos</cstring>
          </property>
         </widget>
        </item>
@@ -513,11 +500,48 @@
          </item>
         </widget>
        </item>
-       <item row="15" column="1">
+       <item row="1" column="0">
+        <widget class="QLabel" name="gen_xPosLbl">
+         <property name="text">
+          <string>X:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="buddy">
+          <cstring>gen_xPos</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1">
         <widget class="QPushButton" name="ci_openFileBrowser">
          <property name="text">
           <string>Open file browser</string>
          </property>
+        </widget>
+       </item>
+       <item row="15" column="0">
+        <widget class="QLabel" name="ci_layerLbl">
+         <property name="text">
+          <string>Layer:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1">
+        <widget class="QComboBox" name="ci_layer">
+         <item>
+          <property name="text">
+           <string>Background</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Foreground</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
