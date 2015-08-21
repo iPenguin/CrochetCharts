@@ -27,6 +27,26 @@
 #include "ChartImage.h"
 #include "scene.h"
 
+class SetIndicatorText : public QUndoCommand
+{
+public:
+    enum { Id = 1100 };
+    
+    SetIndicatorText(Indicator *i, QString otext, QString ntext, QUndoCommand *parent = 0);
+
+    void undo();
+    void redo();
+
+    int id() const { return Id; }
+    
+    static void setText(Indicator *i, QString text);
+
+private:
+    QString oldText;
+    QString newText;
+    Indicator* i;
+};
+
 class SetCellStitch : public QUndoCommand
 {
 public:

@@ -60,6 +60,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     mView = new ChartView(top);
     mScene = new Scene(mView);
 	mView->setAcceptDrops(true);
+	setAcceptDrops(true);
     mScene->setSceneRect(-2500,-2500, 5000,5000);
     centerOn = QPoint(0, 0);
 

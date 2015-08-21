@@ -83,6 +83,7 @@ private:
     QColor mTextColor;	
 
     QString mStyle;
+	QString oldText;
 
 };
 #endif //INDICATOR_H

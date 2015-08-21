@@ -24,6 +24,32 @@
 #include <QObject>
 
 /*************************************************\
+| SetIndicatorText                                   |
+\*************************************************/
+SetIndicatorText::SetIndicatorText(Indicator *ind, QString otext, QString ntext, QUndoCommand *parent)
+	: QUndoCommand(parent)
+{
+	i = ind;
+	newText = ntext;
+	oldText = otext;
+}
+
+void SetIndicatorText::undo()
+{
+	setText(i, oldText);
+}
+
+void SetIndicatorText::redo()
+{
+	setText(i, newText);
+}
+
+void SetIndicatorText::setText(Indicator *i, QString text)
+{
+	i->setText(text);
+}
+
+/*************************************************\
 | SetCellStitch                                   |
 \*************************************************/
 SetCellStitch::SetCellStitch(Cell *cell, QString newSt, QUndoCommand *parent)

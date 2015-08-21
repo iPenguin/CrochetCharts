@@ -32,6 +32,8 @@
 #include <QTextBlock>
 #include <QAbstractTextDocumentLayout>
 #include <QTextLayout>
+#include "scene.h"
+#include "crochetchartcommands.h"
 
 Indicator::Indicator(QGraphicsItem* parent, QGraphicsScene* scene)
     : QGraphicsTextItem(parent, scene),
@@ -98,6 +100,7 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
 
 void Indicator::focusInEvent(QFocusEvent* event)
 {
+	oldText = this->text();
     QGraphicsTextItem::focusInEvent(event);
     emit gotFocus(this);
 }
@@ -106,6 +109,15 @@ void Indicator::focusOutEvent(QFocusEvent* event)
 {
     QGraphicsTextItem::focusOutEvent(event);
     setTextInteractionFlags(Qt::NoTextInteraction);
+	
+	//if the old text is different from the current text, add it to the undo stack
+	if (oldText.compare(text()) != 0) {
+		Scene* s =  dynamic_cast<Scene*>(scene());
+		if (s) {
+			s->undoStack()->push(new SetIndicatorText(this, oldText, text()));
+		}
+	}
+	
     emit lostFocus(this);
 }
 
