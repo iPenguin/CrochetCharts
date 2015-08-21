@@ -24,6 +24,7 @@
 #include <QUndoCommand>
 
 #include "cell.h"
+#include "ChartImage.h"
 #include "scene.h"
 
 class SetCellStitch : public QUndoCommand
@@ -44,6 +45,25 @@ private:
     QString oldStitch;
     QString newStitch;
     Cell *c;
+};
+
+class SetChartImagePath : public QUndoCommand
+{
+public:
+    enum { Id = 1110 };
+	SetChartImagePath(ChartImage* ci, const QString& path, QUndoCommand *parent = 0);
+	
+	void undo();
+    void redo();
+
+    int id() const { return Id; }
+    
+    static void setPath(ChartImage *ci, const QString& path);
+	
+private:
+	QString newPath;
+	QString oldPath;
+	ChartImage* ci;
 };
 
 class SetCellBgColor : public QUndoCommand

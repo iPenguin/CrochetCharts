@@ -51,6 +51,33 @@ void SetCellStitch::setStitch(Cell *cell, QString stitch)
 }
 
 /*************************************************\
+| SetChartImagePath                                  |
+\*************************************************/
+SetChartImagePath::SetChartImagePath(ChartImage* image, const QString& path, QUndoCommand *parent)
+    : QUndoCommand(parent)
+{
+    ci = image;
+    newPath = path;
+    oldPath = image->filename();
+    setText(QObject::tr("change image path"));
+}
+
+void SetChartImagePath::redo()
+{
+    setPath(ci, newPath);
+}
+
+void SetChartImagePath::undo()
+{
+    setPath(ci, oldPath);
+}
+
+void SetChartImagePath::setPath(ChartImage *ci, const QString& path)
+{
+    ci->setFile(path);
+}
+
+/*************************************************\
 | SetCellBgColor                                  |
 \*************************************************/
 SetCellBgColor::SetCellBgColor(Cell* cell, QColor newCl, QUndoCommand* parent)

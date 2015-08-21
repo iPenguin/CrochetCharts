@@ -34,6 +34,7 @@
 #include "stitch.h"
 #include "colorlistwidget.h"
 #include <qcolordialog.h>
+#include <QFileDialog>
 
 #include "propertiesdata.h"
 
@@ -88,6 +89,9 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     connect(ui->ind_indicatorStyle, SIGNAL(currentIndexChanged(int)), SLOT(indicatorUpdate()));
 	connect(ui->ind_fontComboBox, SIGNAL(currentFontChanged(const QFont&)), SLOT(indicatorUpdate()));
 	connect(ui->ind_size, SIGNAL(valueChanged(int)), SLOT(indicatorUpdate()));
+
+	connect(ui->ci_path, SIGNAL(textChanged(const QString&)), SLOT(chartImageUpdatePath(const QString&)));
+	connect(ui->ci_openFileBrowser, SIGNAL(clicked()), SLOT(chartImageChoosePath()));
 
     setupStitchCombo();
 
@@ -331,6 +335,9 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
         } else if(obj->objectName().startsWith("ind_")) {
             QWidget *w = qobject_cast< QWidget* >(obj);
             w->setVisible(selection == PropertiesDock::IndicatorUi ? true : false);
+        } else if(obj->objectName().startsWith("ci_")) {
+            QWidget *w = qobject_cast< QWidget* >(obj);
+            w->setVisible(selection == PropertiesDock::ChartImageUi ? true : false);
         }
     }
 
@@ -385,6 +392,12 @@ void PropertiesDock::showSingleChartImage()
     ui->gen_scaleY->blockSignals(true);
     ui->gen_scaleY->setValue(p.scale.y());
     ui->gen_scaleY->blockSignals(false);
+	
+    ChartImage *i = qgraphicsitem_cast<ChartImage*>(mScene->selectedItems().first());
+	
+	ui->ci_path->blockSignals(true);
+	ui->ci_path->setText(i->filename());
+	ui->ci_path->blockSignals(false);
 }
 
 void PropertiesDock::showSingleCell()
@@ -646,4 +659,23 @@ void PropertiesDock::cellUpdateBgColor()
     QColor color = cdlg.getColor();
     QVariant v = color;
     emit propertiesUpdated("bgColor", v);
+}
+
+void PropertiesDock::chartImageUpdatePath(const QString& path)
+{
+	emit propertiesUpdated("ChartImagePath", QVariant(path));
+}
+
+void PropertiesDock::chartImageChoosePath()
+{
+	//get the file we need to open
+	QString file = QFileDialog::getOpenFileName(this, tr("Open Image"),
+		QString(), tr("Image Files (*.png *.jpg *.bmp *.tga *.gif)"));
+	
+	ui->ci_path->blockSignals(true);
+	ui->ci_path->setText(file);
+	ui->ci_path->blockSignals(false);
+	
+	//and call updatepath
+	chartImageUpdatePath(file);
 }

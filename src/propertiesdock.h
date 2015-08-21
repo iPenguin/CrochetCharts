@@ -80,6 +80,9 @@ private slots:
 
     void cellUpdateFgColor();
     void cellUpdateBgColor();
+	
+	void chartImageUpdatePath(const QString& path);
+	void chartImageChoosePath();
 
     void updateGuidelinesUi();
     void indicatorUpdate();

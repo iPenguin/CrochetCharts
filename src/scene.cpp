@@ -703,7 +703,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
     }
 
-    if(mIsRubberband) {
+    if(mIsRubberband && mRubberBand) {
         ChartView* view = qobject_cast<ChartView*>(parent());
         QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
 
@@ -2237,6 +2237,7 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
             Cell *c = 0;
             Indicator *ind = 0;
             ItemGroup *g = 0;
+			ChartImage* ci = 0;
 
             if(i->type() == Cell::Type) {
                 c = qgraphicsitem_cast<Cell*>(i);
@@ -2245,7 +2246,9 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 
             } else if(i->type() == ItemGroup::Type) {
                 g = qgraphicsitem_cast<ItemGroup*>(i);
-            }
+            } else if (i->type() == ChartImage::Type) {
+				ci = qgraphicsitem_cast<ChartImage*>(i);
+			}
 
             if(property == "Angle") {
                 i->setRotation(newValue.toReal());
@@ -2290,6 +2293,9 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 
             } else if(property == "bgColor") {
                 undoStack()->push(new SetCellBgColor(c, newValue.value<QColor>()));
+
+            } else if(property == "ChartImagePath") {
+                undoStack()->push(new SetChartImagePath(ci, newValue.toString()));
 
             } else {
                 qWarning() << "Unknown property: " << property;
