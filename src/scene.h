@@ -193,6 +193,9 @@ public:
     void addItem(QGraphicsItem *item);
     void removeItem(QGraphicsItem *item);
 
+	QList<QGraphicsTransform*> getGraphicsTransformations(QGraphicsItem* item);
+	QPointF mapToGraphicsTransformations(QList<QGraphicsTransform*>* transforms, const QPointF& pos);
+
 	//returns the current layer and creates a new layer if no layer is currently selected
 	ChartLayer* getCurrentLayer();
 	//returns the layer with the given id or creates a new one with that id if none exists yet
