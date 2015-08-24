@@ -374,6 +374,36 @@ void RemoveItem::remove(Scene *scene, QGraphicsItem *item)
 }
 
 /*************************************************\
+| RemoveItems                                     |
+\*************************************************/
+RemoveItems::RemoveItems(Scene *scene, QList<QGraphicsItem*> i, QUndoCommand *parent)
+    : QUndoCommand(parent)
+{
+    items = i;
+    s = scene;
+    setText(QObject::tr("remove items"));
+	removegroup = NULL;
+}
+RemoveItems::~RemoveItems()
+{
+	if (removegroup)
+		delete removegroup;
+}
+void RemoveItems::redo()
+{
+	removegroup = s->createItemGroup(items);
+    RemoveItem::remove(s, removegroup);
+}
+
+void RemoveItems::undo()
+{
+    AddItem::add(s, removegroup);
+	//this call already deletes the itemgroup (according to the QT 4.8 doc. This may have changed in QT 5)
+	s->destroyItemGroup(removegroup);
+	removegroup = NULL;
+}
+
+/*************************************************\
 | GroupItems                                      |
 \*************************************************/
 GroupItems::GroupItems(Scene *scene, QList<QGraphicsItem*> itemList, QUndoCommand *parent)

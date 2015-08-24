@@ -715,8 +715,10 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         if(mHasSelection && e->modifiers() == Qt::ControlModifier) {
             path.addPath(mSelectionPath);
         }
-
+		blockSignals(true);
         setSelectionArea(path);
+		blockSignals(false);
+		emit selectionChanged();
         mRubberBand->hide();
     }
 
@@ -1183,12 +1185,12 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 
     if(g) {
 		//flip sign of the new scale if the oldtransform is already negative, so the group won't constantly "flicker" in sign
-		/*if (mOldTransform.m11() < 0)
+		if (mOldTransform.m11() < 0)
 			newScale.setX(-newScale.x());
 		if (mOldTransform.m22() < 0)
 			newScale.setY(-newScale.y());
-		qreal rotation = mCurItem->rotation();*/
-        mCurItem->setTransform(mOldTransform
+		
+		mCurItem->setTransform(mOldTransform
 			.translate(mPivotPt.x(), mPivotPt.y())
             .scale(newScale.x(), newScale.y())
 			.translate(-mPivotPt.x(), -mPivotPt.y())
@@ -2625,6 +2627,9 @@ void Scene::paste()
     int count = 0;
     stream >> count;
     
+	//disable signals for performance
+	blockSignals(true);
+	
     QList<QGraphicsItem*> items;
     for(int i = 0; i < count; ++i) {
         pasteRecursively(stream, &items);
@@ -2661,6 +2666,10 @@ void Scene::paste()
 		snapGraphicsItemToGrid(*item);
 	}
 	
+	blockSignals(false);
+	
+	emit selectionChanged();
+	
     undoStack()->endMacro();
 }
 
@@ -2676,8 +2685,10 @@ void Scene::deleteSelection()
 {
     QList<QGraphicsItem*> items = selectedItems();
     undoStack()->beginMacro("remove items");
-    foreach(QGraphicsItem* item, items) {
-
+	//undoStack()->push(new RemoveItems(this, items));
+	blockSignals(true);
+	foreach(QGraphicsItem* item, items) {
+		removeItem(item);
         switch(item->type()) {
             case ItemGroup::Type:
             case Cell::Type: {
@@ -2699,6 +2710,11 @@ void Scene::deleteSelection()
                 break;
         }
     }
+	blockSignals(false);
+	
+	//signals were blocked so we manually emit them
+	emit selectionChanged();
+	
     undoStack()->endMacro();
 }
 

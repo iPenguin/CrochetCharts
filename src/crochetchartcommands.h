@@ -282,6 +282,26 @@ private:
     Scene *s;
 };
 
+class RemoveItems : public QUndoCommand
+{
+public:
+    enum { Id = 1160 };
+
+    RemoveItems(Scene *scene, QList<QGraphicsItem*> items, QUndoCommand *parent = 0);
+	~RemoveItems();
+	
+    void redo();
+    void undo();
+
+    int id() const { return Id; }
+
+private:
+    QList<QGraphicsItem*> items;
+	QGraphicsItemGroup* removegroup;
+
+    Scene *s;
+};
+
 class GroupItems : public QUndoCommand
 {
 public:
