@@ -56,9 +56,10 @@ QRectF Cell::boundingRect() const
     if(!stitch())
         return QRectF(0,0,32,32);
 
-    if(stitch()->isSvg())
-        return QGraphicsSvgItem::boundingRect();
-    else
+    if(stitch()->isSvg()) {
+		QRectF r = QGraphicsSvgItem::boundingRect();
+        return r;
+    } else
         return stitch()->renderPixmap()->rect();
 }
 

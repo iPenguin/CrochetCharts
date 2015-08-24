@@ -47,6 +47,9 @@
 #include <QAction>
 #include <QMenu>
 
+#include <QGraphicsScale>
+#include <QGraphicsRotation>
+
 #include "guideline.h"
 
 #ifndef M_PI
@@ -1051,8 +1054,17 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
 
     mOldAngle = mCurItem->rotation();
 
-    mPivotPt = QPointF(mCurItem->boundingRect().center().x(),
-                       mCurItem->boundingRect().bottom());
+	if (Settings::inst()->value("rotateAroundCenter").toBool() == true) {
+		mPivotPt = mCurItem->boundingRect().center();
+	} else {
+	    mPivotPt = QPointF(mCurItem->boundingRect().center().x(),
+                   mCurItem->boundingRect().bottom());
+	}
+
+	//offset the pivot by the scale
+	/*QGraphicsScale* scale = static_cast<QGraphicsScale*>(getGraphicsTransformations(mCurItem)[1]);
+	mPivotPt.setX(mPivotPt.x() * scale->xScale());
+	mPivotPt.setY(mPivotPt.y() * scale->yScale());*/
 
     mOrigin = mCurItem->mapToScene(mPivotPt);
 
@@ -1100,9 +1112,15 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     }
 
     qNormalizeAngle(angle);
-
-    SetItemRotation::setRotation(mCurItem, angle, mPivotPt);
-
+	
+	QList<QGraphicsTransform*> transformations = getGraphicsTransformations(mCurItem);
+	QGraphicsRotation* rot = dynamic_cast<QGraphicsRotation*>(transformations[0]);
+	if (rot) {
+		rot->setAngle(angle);
+		rot->setOrigin(QVector3D(mPivotPt));
+	}
+	mCurItem->setTransformations(transformations);
+    //SetItemRotation::setRotation(mCurItem, angle, mPivotPt);
 }
 
 void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
@@ -1129,16 +1147,32 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
     if (mCurItem->parentItem()) {
         mCurItem = mCurItem->parentItem();
 	}
-	//mOldscale should always be set, even when editing groups, else it will reset every scaling
 	
+	qDebug() << "transform " << mCurItem->transform();
+	
+	//mOldscale should always be set, even when editing groups, else it will reset every scaling
+	mOldScale = QPointF(1, 1);
+    mOldSize = mCurItem->sceneBoundingRect().size();
+	if (Settings::inst()->value("scaleAroundCenter").toBool() == true) {
+		mOrigin = mCurItem->boundingRect().center();
+	} else {
+		mOrigin = mCurItem->boundingRect().topLeft();
+	}
+	
+	//offset the pivot by the scale
+	//QGraphicsScale* scale = static_cast<QGraphicsScale*>(getGraphicsTransformations(mCurItem)[1]);
+	//mOrigin.setX(mOrigin.x() * scale->xScale());
+	//mOrigin.setY(mOrigin.y() * scale->yScale());
+	
+	/*
 	mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
 	if(mCurItem->childItems().count() <= 0) {
-		mOrigin = mCurItem->scenePos();
+		
 	} else {
         mOrigin = mCurItem->boundingRect().topLeft();
         mOldSize = mCurItem->sceneBoundingRect().size();
         mOldTransform = mCurItem->transform();
-    }
+    }*/
 	mPivotPt = mOrigin;
 }
 
@@ -1158,7 +1192,36 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
         mMoving = true;
         return;
 	}
-
+	
+	//calculate the new size
+	QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
+	
+	QTransform curTransform = mCurItem->transform();
+	QPointF currentScale = QPointF(curTransform.m11(), curTransform.m22());
+	
+	QSizeF originalSize = mCurItem->boundingRect().size();
+	QSizeF currentSize = QSizeF(originalSize.width() * currentScale.x(),
+								originalSize.height() * currentScale.y());
+	
+	QSizeF newSize = QSizeF(currentSize.width() + delta.x(), currentSize.height() + delta.y());
+	
+	QPointF neededScale = QPointF(newSize.width() / originalSize.width(),
+								  newSize.height() / originalSize.height());
+	QPointF applyscale = QPointF(neededScale.x() / currentScale.x(), neededScale.y() / currentScale.y());
+	
+	QList<QGraphicsTransform*> transformations = getGraphicsTransformations(mCurItem);
+	
+	QGraphicsScale* scale = dynamic_cast<QGraphicsScale*>(transformations[1]);
+	if (scale) {
+		scale->setOrigin(QVector3D(mPivotPt));
+		scale->setXScale(neededScale.x());
+		scale->setYScale(neededScale.y());
+	}
+	//transformations[1] = QTransform().scale(neededScale.x(), neededScale.y());
+	
+	mCurItem->setTransformations(transformations);
+	
+	/*
     ItemGroup *g = 0;
 
     if(mCurItem->type() == ItemGroup::Type) {
@@ -1201,13 +1264,14 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
     //SetItemScale::setScale(mCurItem, newScale);
 
     if(g) {
-		//flip sign of the new scale if the oldtransform is already negative, so the group won't constantly "flicker" in sign
+		//flip sign of the new scale if the oldtransform is already
+		//negative, so the group won't constantly "flicker" in sign
 		if (mOldTransform.m11() < 0)
 			newScale.setX(-newScale.x());
 		if (mOldTransform.m22() < 0)
 			newScale.setY(-newScale.y());
-		
-		mCurItem->setTransform(mOldTransform
+		qreal rotation = mCurItem->rotation();
+        mCurItem->setTransform(mOldTransform
 			.translate(mPivotPt.x(), mPivotPt.y())
             .scale(newScale.x(), newScale.y())
 			.translate(-mPivotPt.x(), -mPivotPt.y())
@@ -1217,7 +1281,7 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
                                   newScale.y() / mCurItem->transform().m22());
 
         mCurItem->setTransform(mCurItem->transform().scale(txScale.x(), txScale.y()));
-    }
+    }*/
 }
 
 void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
@@ -1230,10 +1294,25 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
     if(!mCurItem)
         return;
 
-    undoStack()->push(new SetItemScale(mCurItem, mOldScale));
+   // undoStack()->push(new SetItemScale(mCurItem, mOldScale));
 
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
+}
+
+QList<QGraphicsTransform*> Scene::getGraphicsTransformations(QGraphicsItem* item)
+{
+	QList<QGraphicsTransform*> transforms = item->transformations();
+	if (transforms.size() < 1) {
+		transforms.append(new QGraphicsRotation());
+	} if (transforms.size() < 2) {
+		QGraphicsScale* scale = new QGraphicsScale();
+		scale->setXScale(1);
+		scale->setYScale(1);
+		transforms.append(scale);
+	}
+	item->setTransformations(transforms);
+	return transforms;
 }
 
 void Scene::rowEditMousePress(QGraphicsSceneMouseEvent* e)

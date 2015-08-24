@@ -125,6 +125,8 @@ void Settings::setupValueList() {
 	mValueList["replaceStitchWithPress"] = QVariant(true);
     mValueList["centerNewStitchOnMouse"] = QVariant(true);
     mValueList["pasteOnMouseLocation"] = QVariant(true);
+	mValueList["rotateAroundCenter"] = QVariant(true);
+	mValueList["scaleAroundCenter"] = QVariant(true);
 	
     //stitch legend options
     mValueList["stitchLegendColumnCount"] = QVariant(2);
