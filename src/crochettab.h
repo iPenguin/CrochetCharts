@@ -157,9 +157,8 @@ private slots:
 
     void setShowChartCenter(bool state);
     
-protected:
-    Scene* scene() { return mScene; }
 public:
+    Scene* scene() { return mScene; }
     ChartView* view() { return mView; }
     
 private:    

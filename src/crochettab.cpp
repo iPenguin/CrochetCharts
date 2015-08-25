@@ -73,7 +73,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
     connect(mScene, SIGNAL(rowEdited(bool)), SIGNAL(tabModified(bool)));
     connect(mScene, SIGNAL(guidelinesUpdated(Guidelines)), SIGNAL(guidelinesUpdated(Guidelines)));
 	connect(mScene, SIGNAL(layersChanged(QList<ChartLayer*>&, ChartLayer*)), this, SLOT(layersChangedSlot(QList<ChartLayer*>&, ChartLayer*)));
-
+	
     mView->setScene(mScene);
     QPoint pt = mView->mapFromScene(centerOn);
     mView->centerOn(pt.x(), pt.y());

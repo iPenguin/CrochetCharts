@@ -31,6 +31,7 @@
 #include "mainwindow.h"
 #include "scene.h"
 #include "settings.h"
+#include <QStack>
 
 #include "crochettab.h"
 
@@ -128,8 +129,8 @@ FileFactory::FileError File_v2::save(QDataStream *stream)
 
     delete data;
     data = 0;
-
-    return FileFactory::No_Error;
+	
+	return FileFactory::No_Error;
 }
 
 void File_v2::loadColors(QXmlStreamReader *stream)
@@ -236,6 +237,16 @@ void File_v2::loadChart(QXmlStreamReader *stream)
 			tab->scene()->getLayer(uid)->setVisible(visible);
 			tab->scene()->selectLayer(uid);
             stream->readElementText(); //move to the next tag.
+		} else if (tag == "size") {
+			qreal x = stream->attributes().value("x").toString().toDouble();
+			qreal y = stream->attributes().value("y").toString().toDouble();
+			qreal width = stream->attributes().value("width").toString().toDouble();
+			qreal height = stream->attributes().value("height").toString().toDouble();
+			
+			QRectF size = QRectF(x, y, width, height);
+			tab->scene()->setSceneRect(size);
+			
+			stream->readElementText();
 		} else {
             qWarning() << "loadChart Unknown tag:" << tag;
         }
@@ -554,6 +565,10 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
         if(!tab)
             continue;
 
+	
+		//first, block al qt signals for performance
+		tab->scene()->blockSignals(true);
+	
         stream->writeStartElement("chart"); //start chart
 
         stream->writeTextElement("name", mTabWidget->tabText(i));
@@ -561,6 +576,14 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
         stream->writeTextElement("style", QString::number(tab->mChartStyle));
         stream->writeTextElement("defaultSt", tab->scene()->mDefaultStitch);
 
+		//write the chart size 
+		stream->writeStartElement("size");
+		stream->writeAttribute("x", QString::number(tab->scene()->sceneRect().x()));
+		stream->writeAttribute("y", QString::number(tab->scene()->sceneRect().y()));
+		stream->writeAttribute("width", QString::number(tab->scene()->sceneRect().width()));
+		stream->writeAttribute("height", QString::number(tab->scene()->sceneRect().height()));
+		stream->writeEndElement();
+	
         bool showCenter = tab->scene()->showChartCenter();
         if(showCenter) {
             stream->writeStartElement("chartCenter");
@@ -631,14 +654,29 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
 
             bool isGrouped = c->parentItem() ? true : false;
             ItemGroup *g = 0;
+			QList<QGraphicsItem*> ungroupstack;
+			
             if(isGrouped) {
                 g = qgraphicsitem_cast<ItemGroup*>(c->parentItem());
                 int groupNum = tab->scene()->mGroups.indexOf(g);
                 stream->writeTextElement("group", QString::number(groupNum));
 
+				//ungroup this and all possible childs
+				ungroupstack.append(c);
+				while (ungroupstack.last()->parentItem()
+					&& ungroupstack.last()->parentItem()->type() == ItemGroup::Type) {
+					ungroupstack.append(ungroupstack.last()->parentItem());
+				}
+				
                 //ungroup the items so that we can
                 //take an acurate position of each stitch.
-                g->removeFromGroup(c);
+				//TODO this destroys all groups 
+				for (int i = ungroupstack.count() - 1 ; i >= 2 ; i--) {
+					ItemGroup* ig = qgraphicsitem_cast<ItemGroup*>(ungroupstack[i]);
+					tab->scene()->ungroup(ig);
+				}
+
+				g->removeFromGroup(c);
             }
 
             stream->writeStartElement("position");
@@ -662,8 +700,9 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
 
             //in case we haven't closed the
             //application we need to regroup the items.
-            if(isGrouped)
-                g->addToGroup(c);
+            if(isGrouped) {
+				g->addToGroup(c);
+			}
 
             stream->writeTextElement("color", c->color().name());
             stream->writeTextElement("bgColor", c->bgColor().name());
@@ -786,6 +825,9 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
         }
 
         stream->writeEndElement(); // end chart
+		
+		//and resume signals
+		tab->scene()->blockSignals(false);
     }
 
     return true;

@@ -154,7 +154,8 @@ Scene::Scene(QObject* parent) :
 	mSnapAngle(false),
 	mSelectedLayer(0),
 	mSelectMode(BoxSelect),
-	mSelectionBand(0)
+	mSelectionBand(0),
+	mbackgroundIsEnabled(true)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
 	
@@ -516,7 +517,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 
     if(mHasSelection && e->modifiers() == Qt::ControlModifier)
         mSelectionPath = selectionArea();
-    if(e->buttons() & Qt::LeftButton)
+	//
+    if(e->buttons() & Qt::LeftButton &&(e->modifiers() != Qt::ShiftModifier || selectedItems().count() >= 1))
         QGraphicsScene::mousePressEvent(e);
 
 	//FIXME: there has to be a better way to keep the current selection.
@@ -529,8 +531,11 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     mMoving = false;
     mIsRubberband = false;
     
-    mCurItem = selectableItemAt(e->scenePos());
-	
+	//select an item unless we force a rubberband using shift
+	if (e->modifiers() != Qt::ShiftModifier)
+		mCurItem = selectableItemAt(e->scenePos());
+	else
+		mCurItem = NULL;
 	//get the biggest group it is in
 	
 	if (mCurItem)
@@ -823,7 +828,7 @@ QPointF Scene::snapPositionToTriangles(const QPointF& pos) const
 	if (mCenterSymbol)
 		center = mCenterSymbol->pos();
 		
-    int triangles = mGuidelines.columns();
+    int triangles = mGuidelines.rows();
     
     int spacingW = mGuidelines.cellWidth();
     int spacingH = mGuidelines.cellHeight();

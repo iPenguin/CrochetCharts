@@ -1153,7 +1153,7 @@ void MainWindow::menuEditAboutToShow()
     ui->actionCopy->setEnabled(state);
     ui->actionCut->setEnabled(state);
     ui->actionPaste->setEnabled(state);
-    
+	ui->actionInsertImage->setEnabled(state);
 }
 
 void MainWindow::menuViewAboutToShow()
@@ -1349,6 +1349,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
     connect(tab, SIGNAL(tabModified(bool)), SLOT(documentIsModified(bool)));
     connect(tab, SIGNAL(guidelinesUpdated(Guidelines)), SLOT(updateGuidelines(Guidelines)));
 	connect(tab, SIGNAL(layersChanged(QList<ChartLayer*>&, ChartLayer*)), this, SLOT(reloadLayerContent(QList<ChartLayer*>&, ChartLayer*)));
+	connect(tab->scene(), SIGNAL(sceneRectChanged(const QRectF&)), mResizeUI, SLOT(updateContent()));
 
     mUndoGroup.addStack(tab->undoStack());
     
@@ -1468,6 +1469,11 @@ void MainWindow::menuModesAboutToShow()
         a->setChecked(selected);
         selected = false;
     }   
+	
+	bool state = hasTab();
+	
+	ui->actionBoxSelectMode->setEnabled(state);
+	ui->actionLassoSelectMode->setEnabled(state);
 }
 
 void MainWindow::changeTabMode(QAction* a)
@@ -1902,9 +1908,17 @@ void MainWindow::insertImage()
 	CrochetTab* tab = curCrochetTab();
 	
 	//get the location of the current center of the scene
-	QPointF pos = tab->view()->sceneRect().center();
+	if (!tab)
+		return;
+		
+	ChartView* view = tab->view();
 	
-    if(tab) tab->insertImage(file, pos);
+	if (!view)
+		return;
+		
+	QPointF pos = view->sceneRect().center();
+	
+    tab->insertImage(file, pos);
 }
 
 void MainWindow::group()

@@ -31,8 +31,7 @@ ResizeUI::ResizeUI(QTabWidget* tabWidget, QWidget* parent)
     setVisible(false);
     setFloating(true);
 	
-	//connect(this, SIGNAL(visibilityChanged(bool)), SLOT(updateContent(bool)));
-	
+	connect(this, SIGNAL(visibilityChanged(bool)), SLOT(updateContent()));	
 	connect(ui->topBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
 	connect(ui->bottomBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
 	connect(ui->leftBox, SIGNAL(valueChanged(int)), this, SLOT(valueChanged(int)));
@@ -45,9 +44,8 @@ ResizeUI::~ResizeUI()
 	
 }
 
-void ResizeUI::updateContent(bool shown)
+void ResizeUI::updateContent()
 {
-	Q_UNUSED(shown);
 	CrochetTab* currentTab = qobject_cast<CrochetTab*>(mTabWidget->currentWidget());
 	if (currentTab != NULL)
 	{
@@ -102,7 +100,7 @@ void ResizeUI::clampPressed()
 		ibr.setRight(ibr.right() + SCENE_CLAMP_BORDER_SIZE);
 		
 		emit resize(ibr);
-		updateContent(false);
+		updateContent();
 	}
 }
 

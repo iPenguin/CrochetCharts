@@ -42,7 +42,7 @@ signals:
 	void resize(QRectF);
 	
 public slots:
-	void updateContent(bool shown);
+	void updateContent();
 	void updateContent(int index);
 	
 private:
