@@ -43,7 +43,7 @@
          </property>
          <property name="icon">
           <iconset resource="../crochet.qrc">
-           <normaloff>:/images/mirror_down.svg</normaloff>:/images/mirror_down.svg</iconset>
+           <normaloff>:/images/copy_down.svg</normaloff>:/images/copy_down.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -63,7 +63,7 @@
          </property>
          <property name="icon">
           <iconset resource="../crochet.qrc">
-           <normaloff>:/images/mirror_up.svg</normaloff>:/images/mirror_up.svg</iconset>
+           <normaloff>:/images/copy_up.svg</normaloff>:/images/copy_up.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -83,7 +83,7 @@
          </property>
          <property name="icon">
           <iconset resource="../crochet.qrc">
-           <normaloff>:/images/mirror_right.svg</normaloff>:/images/mirror_right.svg</iconset>
+           <normaloff>:/images/copy_right.svg</normaloff>:/images/copy_right.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -103,7 +103,7 @@
          </property>
          <property name="icon">
           <iconset resource="../crochet.qrc">
-           <normaloff>:/images/mirror_left.svg</normaloff>:/images/mirror_left.svg</iconset>
+           <normaloff>:/images/copy_left.svg</normaloff>:/images/copy_left.svg</iconset>
          </property>
          <property name="iconSize">
           <size>

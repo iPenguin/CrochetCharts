@@ -131,7 +131,6 @@ Scene::Scene(QObject* parent) :
     mLeftButtonDownPos(QPointF(0,0)),
     mCurIndicator(0),
     mDiff(QSizeF(0,0)),
-    mRubberBand(0),
     mRubberBandStart(QPointF(0,0)),
     mMoving(false),
     mIsRubberband(false),
@@ -153,7 +152,9 @@ Scene::Scene(QObject* parent) :
     mCenterSymbol(0),
     mShowChartCenter(false),
 	mSnapAngle(false),
-	mSelectedLayer(0)
+	mSelectedLayer(0),
+	mSelectMode(BoxSelect),
+	mSelectionBand(0)
 {
     mPivotPt = QPointF(mDefaultSize.width()/2, mDefaultSize.height());
 	
@@ -612,13 +613,25 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
     if(selectedItems().count() <= 0 || e->modifiers() == Qt::ControlModifier) {
         ChartView* view = qobject_cast<ChartView*>(parent());
 
-        if(!mRubberBand)
-            mRubberBand = new QRubberBand(QRubberBand::Rectangle, view);
+        //if(!mRubberBand)
+        //    mRubberBand = new QRubberBand(QRubberBand::Rectangle, view);
+		
+		if(!mSelectionBand) {
+			if (mSelectMode == Scene::BoxSelect)
+				mSelectionBand = new RubberBand(view);
+			else if (mSelectMode == Scene::LassoSelect)
+				mSelectionBand = new LassoBand(view);
+		}
 
         mRubberBandStart = view->mapFromScene(e->scenePos());
-
-        mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
-        mRubberBand->show();
+		
+        //mRubberBand->setGeometry(QRect(mRubberBandStart.toPoint(), QSize()));
+        //mRubberBand->show();
+		
+		mSelectionBand->reset();
+		mSelectionBand->setPosition(mRubberBandStart.toPoint());
+		mSelectionBand->moveMouseTo(mRubberBandStart.toPoint());
+		mSelectionBand->show();
     } else {
         
     //Track object movement on scene.
@@ -660,12 +673,13 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *e)
     if(diff >= QApplication::startDragDistance()) {
 
         if(!mCurItem && !mMoving) {
-            if(mRubberBand) {
+            if(mSelectionBand) {
                 QGraphicsView* view = views().first();
-                QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
-
-                mRubberBand->setGeometry(rect.normalized());
-                mIsRubberband = true;
+				
+				mSelectionBand->setPosition(mRubberBandStart.toPoint());
+				mSelectionBand->moveMouseTo(view->mapFromScene(e->scenePos()));
+				
+				mIsRubberband = true;
             }
         } else if (mMoving) {
             QGraphicsScene::mouseMoveEvent(e);
@@ -703,13 +717,11 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
             break;
     }
 
-    if(mIsRubberband && mRubberBand) {
+    if(mIsRubberband && mSelectionBand) {
         ChartView* view = qobject_cast<ChartView*>(parent());
-        QRect rect = QRect(mRubberBandStart.toPoint(), view->mapFromScene(e->scenePos()));
-
-        QPolygonF p = view->mapToScene(rect.normalized());
+		
         QPainterPath path;
-        path.addPolygon(p);
+		path.addPath(view->mapToScene(mSelectionBand->path()));
 
         //if user is holding down ctrl add items to existing selection.
         if(mHasSelection && e->modifiers() == Qt::ControlModifier) {
@@ -719,7 +731,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
         setSelectionArea(path);
 		blockSignals(false);
 		emit selectionChanged();
-        mRubberBand->hide();
+		mSelectionBand->hide();
     }
 
     if((selectedItems().count() > 0 && mOldPositions.count() > 0) && mMoving) {
@@ -748,8 +760,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     mLeftButtonDownPos = QPointF(0,0);
 
-    delete mRubberBand;
-    mRubberBand = 0;
+    delete mSelectionBand;
+    mSelectionBand = 0;
 
     if(mMoving) {
         //update the size of the scene rect based on where the items are on the scene.
@@ -2396,6 +2408,8 @@ void Scene::copy(int direction)
     QRectF rect = selectedItemsBoundingRect(selectedItems());
     QList<QGraphicsItem*> list = selectedItems();
 
+	blockSignals(true);
+
     clearSelection();
 	//TODO setSelected is extremely slow, optimize that
     undoStack()->beginMacro("copy selection");
@@ -2424,6 +2438,11 @@ void Scene::copy(int direction)
 				ret->setSelected(true);
 		}
 	}
+	
+	blockSignals(false);
+	
+	emit selectionChanged();
+	
 	updateSceneRect();
     undoStack()->endMacro();
     QApplication::restoreOverrideCursor();
@@ -2500,6 +2519,8 @@ void Scene::mirror(int direction)
     QRectF rect = selectedItemsBoundingRect(selectedItems());
     QList<QGraphicsItem*> list = selectedItems();
 
+	blockSignals(true);
+
     clearSelection();
 
     undoStack()->beginMacro("mirror selection");
@@ -2540,6 +2561,10 @@ void Scene::mirror(int direction)
         }
     }
 	updateSceneRect();
+	
+	blockSignals(false);
+	
+	emit selectionChanged();
 	
     undoStack()->endMacro();
 	
@@ -3398,6 +3423,16 @@ void Scene::setEditMode(EditMode mode)
     if (mode == Scene::IndicatorEdit)
         state = true;
     highlightIndicators(state);
+}
+
+void Scene::setSelectMode(Scene::SelectMode mode)
+{
+	mSelectMode = mode;
+}
+
+Scene::SelectMode Scene::selectMode() const
+{
+	return mSelectMode;
 }
 
 void Scene::highlightIndicators(bool state)

@@ -64,6 +64,9 @@ public:
 
     void setEditMode(int mode);
     int editMode() const;
+	
+	void setSelectMode(Scene::SelectMode mode);
+	Scene::SelectMode selectMode() const;
 
     void setEditFgColor(QColor color);
     void setEditBgColor(QColor color);

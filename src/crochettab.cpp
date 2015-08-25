@@ -129,6 +129,16 @@ void CrochetTab::setEditMode(int mode)
     mScene->setEditMode((Scene::EditMode)mode);
 }
 
+void CrochetTab::setSelectMode(Scene::SelectMode mode)
+{
+	mScene->setSelectMode(mode);
+}
+
+Scene::SelectMode CrochetTab::selectMode() const
+{
+	return mScene->selectMode();
+}
+
 void CrochetTab::renderChartSelected(QPainter* painter, QRectF rect)
 {
 	

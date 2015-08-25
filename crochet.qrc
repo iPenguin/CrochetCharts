@@ -55,6 +55,10 @@
         <file>images/mirror_right.svg</file>
         <file>images/mirror_rotate.svg</file>
         <file>images/mirror_up.svg</file>
+        <file>images/copy_down.svg</file>
+        <file>images/copy_left.svg</file>
+        <file>images/copy_right.svg</file>
+        <file>images/copy_up.svg</file>
         <file>images/rotate90.svg</file>
         <file>images/rotate180.svg</file>
         <file>images/rotate270.svg</file>
@@ -69,6 +73,8 @@
         <file>images/stitchworks-pattern-dark.svg</file>
         <file>images/CrochetCharts.png</file>
         <file>images/clear.svg</file>
+        <file>images/box_select.svg</file>
+        <file>images/lasso_select.svg</file>
         <file>stitches/sl_st.svg</file>
         <file>stitches/ch.svg</file>
         <file>stitches/sc.svg</file>

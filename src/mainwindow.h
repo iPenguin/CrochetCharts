@@ -146,6 +146,8 @@ private slots:
     void toolsOptions();
     void toolsStitchLibrary();
     void toolsCheckForUpdates();
+	
+	void changeSelectMode(QAction* action);
 
     void helpCrochetHelp();
     void helpAbout();
@@ -248,6 +250,7 @@ private:
     QMap<QString, QMap<QString, qint64> > mPatternColors;
 
     QActionGroup* mModeGroup;
+	QActionGroup* mSelectGroup;
     
     QAction* mActionUndo,
            * mActionRedo;

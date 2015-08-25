@@ -347,7 +347,7 @@
     </property>
     <widget class="QMenu" name="menuInsert">
      <property name="title">
-      <string>Insert</string>
+      <string>&amp;Insert</string>
      </property>
      <addaction name="actionInsertImage"/>
     </widget>
@@ -416,6 +416,9 @@
     <addaction name="actionStretchMode"/>
     <addaction name="actionCreateRows"/>
     <addaction name="actionIndicatorMode"/>
+    <addaction name="separator"/>
+    <addaction name="actionBoxSelectMode"/>
+    <addaction name="actionLassoSelectMode"/>
    </widget>
    <widget class="QMenu" name="menuStitches">
     <property name="title">
@@ -760,6 +763,9 @@
    <addaction name="separator"/>
    <addaction name="actionShowAlignDock"/>
    <addaction name="actionShowMirrorDock"/>
+   <addaction name="separator"/>
+   <addaction name="actionBoxSelectMode"/>
+   <addaction name="actionLassoSelectMode"/>
   </widget>
   <widget class="QDockWidget" name="layersDock">
    <property name="windowTitle">
@@ -1373,10 +1379,34 @@
   </action>
   <action name="actionInsertImage">
    <property name="text">
-    <string>Image</string>
+    <string>&amp;Image</string>
    </property>
    <property name="toolTip">
     <string>Insert an image</string>
+   </property>
+  </action>
+  <action name="actionBoxSelectMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/box_select.svg</normaloff>:/images/box_select.svg</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Box select</string>
+   </property>
+  </action>
+  <action name="actionLassoSelectMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/lasso_select.svg</normaloff>:/images/lasso_select.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Lass&amp;o select</string>
    </property>
   </action>
  </widget>

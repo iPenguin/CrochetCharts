@@ -119,6 +119,11 @@ MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
 
 MainWindow::~MainWindow()
 {
+	delete mModeGroup;
+	delete mSelectGroup;
+	
+	if (mUpdater)
+		delete mUpdater;
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *e)
@@ -534,6 +539,13 @@ void MainWindow::setupMenus()
     mModeGroup->addAction(ui->actionIndicatorMode);
 
     connect(mModeGroup, SIGNAL(triggered(QAction*)), SLOT(changeTabMode(QAction*)));
+
+	mSelectGroup = new QActionGroup(this);
+	mSelectGroup->addAction(ui->actionBoxSelectMode);
+	mSelectGroup->addAction(ui->actionLassoSelectMode);
+	ui->actionBoxSelectMode->setChecked(true);
+	
+	connect(mSelectGroup, SIGNAL(triggered(QAction*)), SLOT(changeSelectMode(QAction*)));
     
     //Charts Menu
     connect(ui->actionAddChart, SIGNAL(triggered()), SLOT(documentNewChart()));
@@ -936,6 +948,17 @@ void MainWindow::readSettings()
 
 void MainWindow::menuToolsAboutToShow()
 {
+}
+
+void MainWindow::changeSelectMode(QAction* action)
+{
+	CrochetTab* tab = curCrochetTab();
+	if (tab) {
+		if (action == ui->actionBoxSelectMode)
+			tab->setSelectMode(Scene::BoxSelect);
+		else if (action == ui->actionLassoSelectMode)
+			tab->setSelectMode(Scene::LassoSelect);
+	}
 }
 
 void MainWindow::toolsOptions()

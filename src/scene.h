@@ -34,6 +34,7 @@
 #include "chartLayer.h"
 #include "indicator.h"
 #include "itemgroup.h"
+#include "selectionband.h"
 
 #define SCENE_CLAMP_BORDER_SIZE 50
 
@@ -128,6 +129,11 @@ public:
         Rounds,     // round chart rows clac'ed with trig.
         Blank       // start w/no sts and allow anything.
     };
+	
+	enum SelectMode {
+		BoxSelect,
+		LassoSelect,
+	};
     
     Scene(QObject *parent = 0);
     ~Scene();
@@ -154,6 +160,9 @@ public:
 
     void setEditMode(EditMode mode);
     EditMode editMode() { return mMode; }
+
+	void setSelectMode(Scene::SelectMode mode);
+	Scene::SelectMode selectMode() const;
 
     void setEditStitch(QString stitch) { mEditStitch = stitch; }
 
@@ -438,7 +447,9 @@ private:
     QSizeF mDiff;
     qreal mOldAngle;
 
-    QRubberBand *mRubberBand;
+	SelectMode mSelectMode;
+	AbstractSelectionBand* mSelectionBand;
+    //QRubberBand *mRubberBand;
     QPointF mRubberBandStart;
 
     QMap<QGraphicsItem*, QPointF> mOldPositions;
