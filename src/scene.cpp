@@ -1163,7 +1163,6 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
 	//QGraphicsScale* scale = static_cast<QGraphicsScale*>(getGraphicsTransformations(mCurItem)[1]);
 	//mOrigin.setX(mOrigin.x() * scale->xScale());
 	//mOrigin.setY(mOrigin.y() * scale->yScale());
-	
 	/*
 	mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
 	if(mCurItem->childItems().count() <= 0) {
