@@ -316,10 +316,6 @@ void SetItemScale::setScale(QGraphicsItem *item, QPointF scale, QPointF pivot)
 	ChartItemTools::setScalePivot(item, pivot);
 	ChartItemTools::setScaleX(item, scale.x());
 	ChartItemTools::setScaleY(item, scale.y());
-    //QPointF txScale = QPointF(scale.x() / item->transform().m11(),
-							//scale.y() / item->transform().m22());
-
-    //item->setTransform(item->transform().scale(txScale.x(), txScale.y()));
 }
 
 /*************************************************\

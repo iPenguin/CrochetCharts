@@ -1,6 +1,8 @@
 #include "ChartItemTools.h"
+#include <cmath>
 #include <QList>
 #include <QTransform>
+#include <QVector2D>
 
 #define ROTATION_MATRIX_INDEX 	0
 #define SCALE_MATRIX_INDEX 		1
@@ -77,6 +79,12 @@ void ChartItemTools::addScaleY(QGraphicsItem* item, qreal scaleY)
 {
 	QGraphicsScale* s = getGraphicsScale(item);
 	s->setYScale(s->yScale() + scaleY);
+}
+
+QPointF ChartItemTools::getScale(QGraphicsItem* item)
+{
+	QGraphicsScale* s = getGraphicsScale(item);
+	return QPointF(s->xScale(), s->yScale());
 }
 
 QPointF ChartItemTools::getScalePivot(QGraphicsItem* item)
@@ -160,4 +168,65 @@ QList<QGraphicsTransform*> ChartItemTools::getGraphicsTransformations(QGraphicsI
 		item->setTransformations(transforms);
 	}
 	return transforms;
+}
+
+void ChartItemTools::recalculateTransformations(QGraphicsItem* item)
+{
+	//plan of action:
+	//		1: get the position of the top left corner. this will also be our origin for scale and rotation
+	//		2: get the rotation of the item by mapping two corners and calculating the atan2
+	//		3: get the scale of the item by mapping three corners and comparing the ratio of the distances
+	//		4: reset all transformations of the chartitem
+	//		5: apply the new transformations
+	
+	//calculate the position of the item
+	QPointF position = item->mapToScene(0, 0);
+	
+	//get the positions of three corners
+	QPointF topLeftLocal = item->boundingRect().topLeft();
+	QPointF bottomLeftLocal = item->boundingRect().bottomLeft();
+	QPointF topRightLocal = item->boundingRect().topRight();
+	
+	//get these positions mapped
+	QPointF topLeftMapped = item->mapToScene(topLeftLocal);
+	QPointF bottomLeftMapped = item->mapToScene(bottomLeftLocal);
+	QPointF topRightMapped = item->mapToScene(topRightLocal);
+	
+	//get the differences in positions both mapped and local
+	QPointF xDiffMapped = topRightMapped - topLeftMapped;
+	QPointF yDiffMapped = bottomLeftMapped - topLeftMapped;
+	QPointF xDiffLocal = topRightLocal - topLeftLocal;
+	QPointF yDiffLocal = bottomLeftLocal - topLeftLocal;
+	
+	//calculate the rotation using an arctangens in degrees 
+	qreal rotation = std::atan2(xDiffMapped.y(), xDiffMapped.x()) * 180 / M_PI;
+	
+	//the local boundingrect is always square so we can safely use manhattan length
+	qreal xDistanceLocal = xDiffLocal.manhattanLength();
+	qreal yDistanceLocal = yDiffLocal.manhattanLength();
+	qreal xDistanceMapped = QVector2D(xDiffMapped).length();
+	qreal yDistanceMapped = QVector2D(yDiffMapped).length();
+	
+	//from this we can calculate the scales
+	qreal scaleX = xDistanceMapped / xDistanceLocal;
+	qreal scaleY = yDistanceMapped / yDistanceLocal;
+	
+	//now we reset the item
+	item->setRotation(0);
+	item->setScale(1);
+	item->setTransformOriginPoint(0, 0);
+	item->resetTransform();
+	item->setTransformations(QList<QGraphicsTransform*>());
+	item->setPos(position);
+	
+	//and apply the new transformations, first we set the scale
+	setScalePivot(item, topLeftLocal);
+	setScaleX(item, scaleX);
+	setScaleY(item, scaleY);
+
+	//and then the rotation
+	setRotationPivot(item, mapToScale(item, topLeftLocal));
+	setRotation(item, rotation);
+	
+	item->update();
 }

@@ -31,10 +31,19 @@ public:
 	static qreal getScaleY(QGraphicsItem* item);
 	static void setScaleY(QGraphicsItem* item, qreal scaleY);
 	static void addScaleY(QGraphicsItem* item, qreal scaleY);
+	
+	static QPointF getScale(QGraphicsItem* item);
 
 	static QPointF getScalePivot(QGraphicsItem* item);
 	static void setScalePivot(QGraphicsItem* item, QPointF pivot);
 	static void addScalePivot(QGraphicsItem* item, QPointF pivot);
+	
+	/**
+	 * recalculates the transform of a graphicsitem to the system used in the chart. 
+	 * The visible state of the stitch will stay identical, but the method it is stored with
+	 * will be different.
+	 */
+	static void recalculateTransformations(QGraphicsItem* item);
 	
 	/**
 	 * rotate a point in local coordinates (boundingrect coordinates) with the rotation of the graphicsitem

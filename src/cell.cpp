@@ -89,7 +89,6 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             painter->setPen(Qt::SolidLine);
         }
     }
-
 }
 
 bool Cell::event(QEvent *e)

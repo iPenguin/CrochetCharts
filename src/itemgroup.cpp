@@ -19,6 +19,7 @@
 
  \****************************************************************************/
 #include "itemgroup.h"
+#include <QPainter>
 #include <QGraphicsSceneEvent>
 
 #include "debug.h"
@@ -43,7 +44,8 @@ ItemGroup::~ItemGroup()
 
 QRectF ItemGroup::boundingRect() const
 {
-    return QGraphicsItemGroup::boundingRect();
+	QRectF bb = QGraphicsItemGroup::boundingRect();
+    return bb;
 }
 
 void ItemGroup::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -67,5 +69,4 @@ void ItemGroup::addToGroup(QGraphicsItem *item)
 {
 
     QGraphicsItemGroup::addToGroup(item);
-
 }
