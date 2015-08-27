@@ -29,6 +29,7 @@
 #include "ChartImage.h"
 #include <QGraphicsEllipseItem>
 
+#include "ChartItemTools.h"
 #include "crochettab.h"
 #include "stitchlibrary.h"
 #include "stitch.h"
@@ -226,9 +227,8 @@ PropertiesData PropertiesDock::selectionProperties()
         
         if(firstPass) {
             
-            props.angle = i->rotation();
-            props.scale.setX(i->transform().m11());
-            props.scale.setY(i->transform().m22());
+            props.angle = ChartItemTools::getRotation(i);
+            props.scale = ChartItemTools::getScale(i);
             props.position.setX(i->pos().x());
             props.position.setY(i->pos().y());
 			
@@ -244,11 +244,11 @@ PropertiesData PropertiesDock::selectionProperties()
         if(!c)
             continue;
         
-        if(props.angle != c->rotation())
+        if(props.angle != ChartItemTools::getRotation(c))
             angleMixed = true;
-        if(props.scale.x() != c->transform().m11())
+        if(props.scale.x() != ChartItemTools::getScaleX(i))
             xScaleMixed = true;
-        if(props.scale.y() != c->transform().m22())
+        if(props.scale.y() != ChartItemTools::getScaleY(i))
             yScaleMixed = true;
         if(props.position.x() != c->pos().x())
             xPositionMixed = true;
