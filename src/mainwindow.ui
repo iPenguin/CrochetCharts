@@ -761,6 +761,7 @@
    <addaction name="actionCreateRows"/>
    <addaction name="actionIndicatorMode"/>
    <addaction name="separator"/>
+   <addaction name="actionShowResizeDock"/>
    <addaction name="actionShowAlignDock"/>
    <addaction name="actionShowMirrorDock"/>
    <addaction name="separator"/>
@@ -1359,11 +1360,12 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/resize.svg</normaloff>:/images/resize.svg</iconset>
+   </property>
    <property name="text">
     <string>Resi&amp;ze</string>
-   </property>
-   <property name="shortcut">
-    <string>Shift+F9</string>
    </property>
   </action>
   <action name="actionShowLayers">
