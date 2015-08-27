@@ -44,7 +44,8 @@ QRectF ChartImage::boundingRect() const
 {
 	
 	if (mPixmap) {
-		return mPixmap->rect();
+		QRectF bb = mPixmap->rect();
+		return bb;
 	} else {
 		WARN("No pixmap in ChartImage.");
 		return QRectF();

@@ -26,6 +26,7 @@
 #include "stitchlibrary.h"
 #include "stitchset.h"
 #include "settings.h"
+#include "ChartItemTools.h"
 #include <QStyleOption>
 #include <QEvent>
 
@@ -49,6 +50,8 @@ Cell::Cell(QGraphicsItem *parent)
 
 Cell::~Cell()
 {
+	foreach (QGraphicsTransform* gt, transformations())
+		delete gt;
 }
 
 QRectF Cell::boundingRect() const
@@ -238,9 +241,10 @@ Cell* Cell::copy(Cell *cell)
     c->setBgColor(bgColor());
     c->setColor(c->color());
     c->setTransformOriginPoint(transformOriginPoint());
-    c->setRotation(rotation());
-    c->setScale(transform().m11(), transform().m22());
-    c->setTransform(transform());
+    c->setRotation(0);
+    c->setScale(1, 1);
+    c->setTransform(QTransform());
+	c->setTransformations(ChartItemTools::cloneGraphicsTransformations(this));
 
     return c;
 }

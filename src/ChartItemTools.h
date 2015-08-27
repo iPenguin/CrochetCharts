@@ -21,8 +21,8 @@ public:
 	static void addRotation(QGraphicsItem* item, qreal rotation);
 	
 	static QPointF getRotationPivot(QGraphicsItem* item);
-	static void setRotationPivot(QGraphicsItem* item, QPointF pivot);
-	static void addRotationPivot(QGraphicsItem* item, QPointF pivot);
+	static void setRotationPivot(QGraphicsItem* item, QPointF pivot, bool reposition = true);
+	static void addRotationPivot(QGraphicsItem* item, QPointF pivot, bool reposition = true);
 
 	static qreal getScaleX(QGraphicsItem* item);
 	static void setScaleX(QGraphicsItem* item, qreal scaleX);
@@ -35,8 +35,8 @@ public:
 	static QPointF getScale(QGraphicsItem* item);
 
 	static QPointF getScalePivot(QGraphicsItem* item);
-	static void setScalePivot(QGraphicsItem* item, QPointF pivot);
-	static void addScalePivot(QGraphicsItem* item, QPointF pivot);
+	static void setScalePivot(QGraphicsItem* item, QPointF pivot, bool reposition = true);
+	static void addScalePivot(QGraphicsItem* item, QPointF pivot, bool reposition = true);
 	
 	/**
 	 * recalculates the transform of a graphicsitem to the system used in the chart. 
@@ -57,6 +57,8 @@ public:
 	 * rotate and scale a point in local coordinates (boundingrect coordinates) with the data of the item
 	 */
 	static QPointF mapToRotationAndScale(QGraphicsItem* item, QPointF point);
+	
+	static QList<QGraphicsTransform*> cloneGraphicsTransformations(QGraphicsItem* item);
 	
 protected:
 	static QGraphicsRotation* getGraphicsRotation(QGraphicsItem* item);

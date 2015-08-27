@@ -43,25 +43,26 @@ QPointF ChartItemTools::getRotationPivot(QGraphicsItem* item)
 	return getGraphicsRotation(item)->origin().toPointF();
 }
 
-void ChartItemTools::setRotationPivot(QGraphicsItem* item, QPointF pivot)
+void ChartItemTools::setRotationPivot(QGraphicsItem* item, QPointF pivot, bool reposition)
 {
 	QGraphicsRotation* r = getGraphicsRotation(item);
 	
-	//get the new pivot point on the scaled stitch
-	QPointF newPivotLocation = mapToRotation(item, pivot);
-	//QPointF currentPivotLocation = mapToScale(item, r->origin().toPointF());
-	QPointF diff = newPivotLocation - pivot;
-	//translate by that diff, to offset the translation caused by moving the pivot
-	item->moveBy(diff.x(), diff.y());
+	if (reposition) {
+		//get the new pivot point on the scaled stitch
+		QPointF newPivotLocation = mapToRotation(item, pivot);
+		QPointF diff = newPivotLocation - pivot;
+		//translate by that diff, to offset the translation caused by moving the pivot
+		item->moveBy(diff.x(), diff.y());
+	}
 	
 	r->setOrigin(QVector3D(pivot));
 }
 
-void ChartItemTools::addRotationPivot(QGraphicsItem* item, QPointF pivot)
+void ChartItemTools::addRotationPivot(QGraphicsItem* item, QPointF pivot, bool reposition)
 {
 	QGraphicsRotation* r = getGraphicsRotation(item);
 	QPointF curPivot = r->origin().toPointF();
-	setRotationPivot(item, curPivot + pivot);
+	setRotationPivot(item, curPivot + pivot, reposition);
 }
 
 qreal ChartItemTools::getScaleX(QGraphicsItem* item)
@@ -107,26 +108,27 @@ QPointF ChartItemTools::getScalePivot(QGraphicsItem* item)
 	return getGraphicsScale(item)->origin().toPointF();
 }
 
-void ChartItemTools::setScalePivot(QGraphicsItem* item, QPointF pivot)
+void ChartItemTools::setScalePivot(QGraphicsItem* item, QPointF pivot, bool reposition)
 {
 	item->setScale(1);
 	QGraphicsScale* r = getGraphicsScale(item);
 	
-	//get the new pivot point on the scaled stitch
-	QPointF newPivotLocation = mapToRotationAndScale(item, pivot);
-	//QPointF currentPivotLocation = mapToScale(item, r->origin().toPointF());
-	QPointF diff = newPivotLocation - mapToRotation(item, pivot);
-	//translate by that diff, to offset the translation caused by moving the pivot
-	item->moveBy(diff.x(), diff.y());
+	if (reposition) {
+		//get the new pivot point on the scaled stitch
+		QPointF newPivotLocation = mapToRotationAndScale(item, pivot);
+		QPointF diff = newPivotLocation - mapToRotation(item, pivot);
+		//translate by that diff, to offset the translation caused by moving the pivot
+		item->moveBy(diff.x(), diff.y());
+	}
 	
 	r->setOrigin(QVector3D(pivot));
 }
 
-void ChartItemTools::addScalePivot(QGraphicsItem* item, QPointF pivot)
+void ChartItemTools::addScalePivot(QGraphicsItem* item, QPointF pivot, bool reposition)
 {
 	QGraphicsScale* r = getGraphicsScale(item);
 	QPointF curPivot = r->origin().toPointF();
-	setScalePivot(item, curPivot + pivot);
+	setScalePivot(item, curPivot + pivot, reposition);
 }
 
 QPointF ChartItemTools::mapToRotation(QGraphicsItem* item, QPointF point)
@@ -183,6 +185,27 @@ QList<QGraphicsTransform*> ChartItemTools::getGraphicsTransformations(QGraphicsI
 		item->setTransformations(transforms);
 	}
 	return transforms;
+}
+
+QList<QGraphicsTransform*> ChartItemTools::cloneGraphicsTransformations(QGraphicsItem* item)
+{
+	QList<QGraphicsTransform*> newitems;
+	QGraphicsRotation* oldr = getGraphicsRotation(item);
+	QGraphicsScale* olds = getGraphicsScale(item);
+	
+	QGraphicsRotation* newr = new QGraphicsRotation;
+	QGraphicsScale* news = new QGraphicsScale;
+	
+	newr->setOrigin(oldr->origin());
+	newr->setAngle(oldr->angle());
+	
+	news->setOrigin(olds->origin());
+	news->setXScale(olds->xScale());
+	news->setYScale(olds->yScale());
+	
+	newitems.append(newr);
+	newitems.append(news);
+	return newitems;
 }
 
 void ChartItemTools::recalculateTransformations(QGraphicsItem* item)
