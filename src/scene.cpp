@@ -2716,35 +2716,6 @@ void Scene::deleteSelection()
 
 void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 {
-	/*
-		switch(item->type()) {
-            case Cell::Type: {
-                Cell* c = qgraphicsitem_cast<Cell*>(item);
-               
-                break;
-            }
-            case Indicator::Type: {
-                Indicator* i = qgraphicsitem_cast<Indicator*>(item);
-                break;
-            }
-            case ItemGroup::Type: {
-                ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
-                
-                copyRecursively(stream, group->childItems());
-                break;
-            }
-			case ChartImage::Type: {
-				ChartImage* image = qgraphicsitem_cast<ChartImage*>(item);
-				
-				break;
-			}
-            case Guideline::Type:
-                qDebug() << "guideline";
-            default:
-                WARN("Unknown data type: " + QString::number(item->type()));
-                break;
-        }*/
-	
     QPointF offSet;
     QString pasteOS = Settings::inst()->value("pasteOffset").toString();
     if(pasteOS == tr("Up and Left"))
