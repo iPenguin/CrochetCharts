@@ -294,7 +294,12 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
     QString textColor, bgColor, fontname;
     QString text, style;
 	QPointF pivotScale, pivotRotation;
-	qreal rotation, scaleX, scaleY;
+	QTransform transform;
+    qreal   m11 = 1, m12 = 0, m13 = 0,
+            m21 = 0, m22 = 1, m23 = 0,
+            m31 = 0, m32 = 0, m33 = 1;
+			
+	qreal rotation = 0, scaleX = 1, scaleY = 1;
     int group = -1;
 	unsigned int layer = 0;
     while(!(stream->isEndElement() && stream->name() == "indicator")) {
@@ -324,7 +329,7 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 		} else if (tag == "layer") {
 			layer = stream->readElementText().toUInt();
 			
-		} else if (tag == "scale") {
+		} else if (tag == "newscale") {
 			scaleX = stream->attributes().value("scaleX").toString().toDouble();
 			scaleY = stream->attributes().value("scaleY").toString().toDouble();
 			pivotScale.rx() = stream->attributes().value("pivotX").toString().toDouble();
@@ -337,10 +342,23 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 			pivotRotation.ry() = stream->attributes().value("pivotY").toString().toDouble();
 			stream->readElementText();
 			
-		} 
+		}  else if(tag == "transformation") {
+            m11 = stream->attributes().value("m11").toString().toDouble();
+            m12 = stream->attributes().value("m12").toString().toDouble();
+            m13 = stream->attributes().value("m13").toString().toDouble();
+            m21 = stream->attributes().value("m21").toString().toDouble();
+            m22 = stream->attributes().value("m22").toString().toDouble();
+            m23 = stream->attributes().value("m23").toString().toDouble();
+            m31 = stream->attributes().value("m31").toString().toDouble();
+            m32 = stream->attributes().value("m32").toString().toDouble();
+            m33 = stream->attributes().value("m33").toString().toDouble();
+            stream->readElementText();
+        } 
     }
 	DEBUG("Style is: ");
 	DEBUG(style);
+	transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+    i->setTransform(transform);
 	ChartItemTools::setRotation(i, rotation);
 	ChartItemTools::setScaleX(i, scaleX);
 	ChartItemTools::setScaleY(i, scaleY);
@@ -353,6 +371,8 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 	i->setLayer(layer);
 	if (fontused)
 		i->setFont(QFont(fontname, fontsize));
+	
+	ChartItemTools::recalculateTransformations(i);
 	
     tab->scene()->addItem(i);
     i->setTextInteractionFlags(Qt::TextEditorInteraction);
@@ -373,8 +393,14 @@ void File_v2::loadChartImage(CrochetTab* tab, QXmlStreamReader* stream)
     QPointF position(0.0,0.0);
     QPointF pivotPoint;
 	QPointF pivotScale, pivotRotation;
-	qreal rotation, scaleX, scaleY;
+	qreal rotation = 0, scaleX = 1, scaleY = 1;
+	 QPointF scale = QPointF(1.0,1.0);
 	unsigned int layer = 0;
+    QTransform transform;
+	qreal angle = 0.0;
+    qreal   m11 = 1, m12 = 0, m13 = 0,
+            m21 = 0, m22 = 1, m23 = 0,
+            m31 = 0, m32 = 0, m33 = 1;
 	QString filename;
 
     while(!(stream->isEndElement() && stream->name() == "chartimage")) {
@@ -386,7 +412,15 @@ void File_v2::loadChartImage(CrochetTab* tab, QXmlStreamReader* stream)
             position.ry() = stream->attributes().value("y").toString().toDouble();
             stream->readElementText();
 
-        } else if (tag == "scale") {
+        } else if(tag == "angle") {
+            angle = stream->readElementText().toDouble();
+			
+		} else if(tag == "scale") {
+            scale.rx() = stream->attributes().value("x").toString().toDouble();
+            scale.ry() = stream->attributes().value("y").toString().toDouble();
+            stream->readElementText();
+			
+        } else if (tag == "newscale") {
 			scaleX = stream->attributes().value("scaleX").toString().toDouble();
 			scaleY = stream->attributes().value("scaleY").toString().toDouble();
 			pivotScale.rx() = stream->attributes().value("pivotX").toString().toDouble();
@@ -411,6 +445,17 @@ void File_v2::loadChartImage(CrochetTab* tab, QXmlStreamReader* stream)
 			layer = stream->readElementText().toUInt();
 		} else if (tag == "filename") {
 			filename = stream->readElementText();
+		}  else if(tag == "transformation") {
+            m11 = stream->attributes().value("m11").toString().toDouble();
+            m12 = stream->attributes().value("m12").toString().toDouble();
+            m13 = stream->attributes().value("m13").toString().toDouble();
+            m21 = stream->attributes().value("m21").toString().toDouble();
+            m22 = stream->attributes().value("m22").toString().toDouble();
+            m23 = stream->attributes().value("m23").toString().toDouble();
+            m31 = stream->attributes().value("m31").toString().toDouble();
+            m32 = stream->attributes().value("m32").toString().toDouble();
+            m33 = stream->attributes().value("m33").toString().toDouble();
+            stream->readElementText();
 		}
     }
     ChartImage *c = new ChartImage(filename);
@@ -418,16 +463,18 @@ void File_v2::loadChartImage(CrochetTab* tab, QXmlStreamReader* stream)
 
     tab->scene()->addItem(c);
 
+	transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
 	c->setLayer(layer);
     c->setZValue(10);
 	c->setPos(position);
     c->setTransformOriginPoint(pivotPoint);
+    c->setRotation(angle);
 	ChartItemTools::setRotation(c, rotation);
 	ChartItemTools::setScaleX(c, scaleX);
 	ChartItemTools::setScaleY(c, scaleY);
 	ChartItemTools::setRotationPivot(c, pivotRotation, false);
 	ChartItemTools::setScalePivot(c, pivotScale, false);
-	
+	ChartItemTools::recalculateTransformations(c);
     if(group != -1) {
         tab->scene()->addToGroup(group, c);
 		tab->scene()->getGroup(group)->setLayer(layer);
@@ -446,8 +493,14 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
     QPointF pivotPoint;
 	unsigned int layer = 0;
 	QPointF pivotScale, pivotRotation;
-	qreal rotation, scaleX, scaleY;
-
+	qreal rotation = 0, scaleX = 1, scaleY = 1;
+	qreal angle = 0.0;
+    QPointF scale = QPointF(1.0,1.0);
+    QTransform transform;
+    qreal   m11 = 1, m12 = 0, m13 = 0,
+            m21 = 0, m22 = 1, m23 = 0,
+            m31 = 0, m32 = 0, m33 = 1;
+			
     while(!(stream->isEndElement() && stream->name() == "cell")) {
         stream->readNext();
         QString tag = stream->name().toString();
@@ -472,6 +525,15 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
             position.ry() = stream->attributes().value("y").toString().toDouble();
             stream->readElementText();
 
+		} else if(tag == "angle") {
+            angle = stream->readElementText().toDouble();
+
+        } else if(tag == "scale") {
+            scale.rx() = stream->attributes().value("x").toString().toDouble();
+            scale.ry() = stream->attributes().value("y").toString().toDouble();
+            stream->readElementText();
+
+
         } else if(tag == "pivotPoint") {
             pivotPoint.rx() = stream->attributes().value("x").toString().toDouble();
             pivotPoint.ry() = stream->attributes().value("y").toString().toDouble();
@@ -486,7 +548,7 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
 		} else if(tag == "group") {
             group = stream->readElementText().toInt();
 
-        } else if (tag == "scale") {
+        } else if (tag == "newscale") {
 			scaleX = stream->attributes().value("scaleX").toString().toDouble();
 			scaleY = stream->attributes().value("scaleY").toString().toDouble();
 			pivotScale.rx() = stream->attributes().value("pivotX").toString().toDouble();
@@ -498,9 +560,21 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
 			pivotRotation.rx() = stream->attributes().value("pivotX").toString().toDouble();
 			pivotRotation.ry() = stream->attributes().value("pivotY").toString().toDouble();
 			stream->readElementText();
-		}
+		} else if(tag == "transformation") {
+            m11 = stream->attributes().value("m11").toString().toDouble();
+            m12 = stream->attributes().value("m12").toString().toDouble();
+            m13 = stream->attributes().value("m13").toString().toDouble();
+            m21 = stream->attributes().value("m21").toString().toDouble();
+            m22 = stream->attributes().value("m22").toString().toDouble();
+            m23 = stream->attributes().value("m23").toString().toDouble();
+            m31 = stream->attributes().value("m31").toString().toDouble();
+            m32 = stream->attributes().value("m32").toString().toDouble();
+            m33 = stream->attributes().value("m33").toString().toDouble();
+            stream->readElementText();
+        } 
     }
 	
+	transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
 	c->setLayer(layer);
 
     tab->scene()->addItem(c);
@@ -514,6 +588,8 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
         c->setZValue(10);
     }
 
+    c->setTransform(transform);
+    c->setRotation(angle);
     c->setPos(position);
     c->setBgColor(QColor(bgColor));
     c->setColor(QColor(color));
@@ -524,7 +600,7 @@ void File_v2::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
 	ChartItemTools::setScaleY(c, scaleY);
 	ChartItemTools::setRotationPivot(c, pivotRotation, false);
 	ChartItemTools::setScalePivot(c, pivotScale, false);
-	
+	ChartItemTools::recalculateTransformations(c);
     if(group != -1) {
         tab->scene()->addToGroup(group, c);
 		tab->scene()->getGroup(group)->setLayer(layer);
@@ -677,7 +753,7 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
             stream->writeAttribute("y", QString::number(c->pos().y()));
             stream->writeEndElement(); //position
 
-			stream->writeStartElement("scale");
+			stream->writeStartElement("newscale");
 			stream->writeAttribute("scaleX", QString::number(ChartItemTools::getScaleX(c)));
 			stream->writeAttribute("scaleY", QString::number(ChartItemTools::getScaleY(c)));
 			stream->writeAttribute("pivotX", QString::number(ChartItemTools::getScalePivot(c).x()));
@@ -731,7 +807,7 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
 				stream->writeAttribute("y", QString::number(c->pos().y()));
 				stream->writeEndElement(); //position
 
-				stream->writeStartElement("scale");
+				stream->writeStartElement("newscale");
 				stream->writeAttribute("scaleX", QString::number(ChartItemTools::getScaleX(c)));
 				stream->writeAttribute("scaleY", QString::number(ChartItemTools::getScaleY(c)));
 				stream->writeAttribute("pivotX", QString::number(ChartItemTools::getScalePivot(c).x()));
@@ -780,7 +856,7 @@ bool File_v2::saveCharts(QXmlStreamWriter *stream)
                     g->removeFromGroup(i);
                 }
 				
-				stream->writeStartElement("scale");
+				stream->writeStartElement("newscale");
 				stream->writeAttribute("scaleX", QString::number(ChartItemTools::getScaleX(i)));
 				stream->writeAttribute("scaleY", QString::number(ChartItemTools::getScaleY(i)));
 				stream->writeAttribute("pivotX", QString::number(ChartItemTools::getScalePivot(i).x()));
