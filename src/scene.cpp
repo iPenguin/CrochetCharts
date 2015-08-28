@@ -1134,6 +1134,7 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 		ungroup();
 		undoStack()->push(new UngroupItems(this, (ItemGroup*)mCurItem));
 		undoStack()->endMacro();
+		emit selectionChanged();
 		mMultiEdit = false;
 	}
 	
@@ -1200,20 +1201,7 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 	QSizeF currentSize = QSizeF(originalSize.width() * mOldScale.x(),
 								originalSize.height() * mOldScale.y());
 	
-	QPointF toPress(e->buttonDownScenePos(Qt::LeftButton) - scenePivot);
-	QPointF toNow(e->scenePos() - scenePivot);
-	
-	qreal diffx = toNow.x() - toPress.x();
-	qreal diffy = toNow.y() - toPress.y();
-	qreal ratiox = 1;
-	qreal ratioy = 1;
-	
-	if (diffx > 1 || diffx < 1)
-		ratiox = toNow.x() / toPress.x();
-	if (diffy > 1 || diffy < 1)
-		ratioy = toNow.y() / toPress.y();
-		
-	QSizeF newSize = QSizeF(currentSize.width() * ratiox, currentSize.height() * ratioy);
+	QSizeF newSize = QSizeF(currentSize.width() + delta.x(), currentSize.height() + delta.y());
 	
 	QPointF neededScale = QPointF(newSize.width() / originalSize.width(),
 								  newSize.height() / originalSize.height());
@@ -1245,6 +1233,7 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
 		ungroup();
 		undoStack()->push(new UngroupItems(this, (ItemGroup*)mCurItem));
 		undoStack()->endMacro();
+		emit selectionChanged();
 		mMultiEdit = false;
 	}
 
@@ -2286,9 +2275,10 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 			}
 
             if(property == "Angle") {
+				qreal rotation = ChartItemTools::getRotation(i);
 				ChartItemTools::setRotation(i, newValue.toReal());
-                undoStack()->push(new SetItemRotation(i, ChartItemTools::getRotation(i),
-														 ChartItemTools::getScalePivot(i)));
+                undoStack()->push(new SetItemRotation(i, rotation,
+														 ChartItemTools::getRotationPivot(i)));
 
             } else if(property == "PositionX") {
                 QPointF oldPos = i->pos();
@@ -2301,8 +2291,9 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
                 undoStack()->push(new SetItemCoordinates(i, oldPos));
 
             } else if(property == "ScaleX") {
+				QPointF scale = ChartItemTools::getScale(i);
                 ChartItemTools::setScaleX(i, newValue.toDouble());
-                undoStack()->push(new SetItemScale(i, ChartItemTools::getScale(i),
+                undoStack()->push(new SetItemScale(i, scale,
 													  ChartItemTools::getScalePivot(i)));
 
             } else if(property == "ScaleY") {
