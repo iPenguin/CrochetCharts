@@ -459,6 +459,8 @@ private:
     bool mIsRubberband;
     bool mHasSelection;
     bool mSnapTo;
+	//true if multiple items are being edited at the same time 
+	bool mMultiEdit;
     
     EditMode mMode;
     

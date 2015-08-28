@@ -46,6 +46,7 @@
 #include <QTextCursor>
 #include <QAction>
 #include <QMenu>
+#include <QVector2D>
 
 #include "ChartItemTools.h"
 
@@ -138,6 +139,7 @@ Scene::Scene(QObject* parent) :
     mIsRubberband(false),
     mHasSelection(false),
     mSnapTo(false),
+	mMultiEdit(false),
     mMode(Scene::StitchEdit),
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
@@ -481,12 +483,15 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
         delta.setX(0.1);
         keyEvent->accept();
     } else if (keyEvent->key() == Qt::Key_Up) {
-        delta.setY(0.1);
-        keyEvent->accept();
-    } else if (keyEvent->key() == Qt::Key_Down) {
         delta.setY(-0.1);
         keyEvent->accept();
+    } else if (keyEvent->key() == Qt::Key_Down) {
+        delta.setY(0.1);
+        keyEvent->accept();
     }
+	
+	if (Settings::inst()->value("scaleAroundCenter").toBool() == true)
+		delta.ry() = - delta.y();
 
     if(!keyEvent->isAccepted())
         return;
@@ -1050,7 +1055,15 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
     //If the item is group we want to rotate the whole group.
     if (mCurItem->parentItem())
         mCurItem = mCurItem->parentItem();
-
+	
+	if (selectedItems().count() > 1) {
+		undoStack()->beginMacro("Rotate multiple items.");
+		GroupItems* g = new GroupItems(this, selectedItems());
+		undoStack()->push(g);
+		mCurItem = g->group();
+		mMultiEdit = true;
+	}
+	
     mOldAngle = ChartItemTools::getRotation(mCurItem);	
 	QPointF localPivot;
 	
@@ -1116,6 +1129,14 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
         return;
 	
     undoStack()->push(new SetItemRotation(mCurItem, mOldAngle, mPivotPt));
+		
+	if (mMultiEdit) {
+		ungroup();
+		undoStack()->push(new UngroupItems(this, (ItemGroup*)mCurItem));
+		undoStack()->endMacro();
+		mMultiEdit = false;
+	}
+	
     mOldAngle = 0;
 }
 
@@ -1129,6 +1150,14 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
     //If the item is grouped we want to scale the whole group.
     if (mCurItem->parentItem()) {
         mCurItem = mCurItem->parentItem();
+	}
+	
+	if (selectedItems().count() > 1) {
+		undoStack()->beginMacro("Rotate multiple items.");
+		GroupItems* g = new GroupItems(this, selectedItems());
+		undoStack()->push(g);
+		mCurItem = g->group();
+		mMultiEdit = true;
 	}
 	
 	qDebug() << "transform " << mCurItem->transform();
@@ -1145,11 +1174,6 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
 	
 	mPivotPt = localPivot;
     mOrigin = mCurItem->mapToScene(localPivot);
-	//ChartItemTools::setScalePivot(mCurItem, mPivotPt);
-    //mOrigin = mCurItem->mapToScene(mPivotPt);
-	
-	//offset the pivot by the scale
-	//mPivotPt = ChartItemTools::mapToScale(mCurItem, localPivot);
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -1170,19 +1194,33 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
 	}
 	
 	QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
-	
+	QPointF scenePivot = ChartItemTools::getScalePivot(mCurItem) + mCurItem->pos();
 	QSizeF originalSize = mCurItem->boundingRect().size();
+	
 	QSizeF currentSize = QSizeF(originalSize.width() * mOldScale.x(),
 								originalSize.height() * mOldScale.y());
 	
-	QSizeF newSize = QSizeF(currentSize.width() + delta.x(), currentSize.height() + delta.y());
+	QPointF toPress(e->buttonDownScenePos(Qt::LeftButton) - scenePivot);
+	QPointF toNow(e->scenePos() - scenePivot);
+	
+	qreal diffx = toNow.x() - toPress.x();
+	qreal diffy = toNow.y() - toPress.y();
+	qreal ratiox = 1;
+	qreal ratioy = 1;
+	
+	if (diffx > 1 || diffx < 1)
+		ratiox = toNow.x() / toPress.x();
+	if (diffy > 1 || diffy < 1)
+		ratioy = toNow.y() / toPress.y();
+		
+	QSizeF newSize = QSizeF(currentSize.width() * ratiox, currentSize.height() * ratioy);
 	
 	QPointF neededScale = QPointF(newSize.width() / originalSize.width(),
 								  newSize.height() / originalSize.height());
 	
     //When holding Ctrl or when scaling a group, lock scale to largest dimension.
     if(e->modifiers() == Qt::ControlModifier || mCurItem->type() == ItemGroup::Type) {
-        if(fabs(neededScale.x()) > fabs(neededScale.y()))
+        if(neededScale.x() < neededScale.y())
             neededScale.ry() = neededScale.rx();
         else
             neededScale.rx() = neededScale.ry();
@@ -1202,6 +1240,13 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
         return;
 
     undoStack()->push(new SetItemScale(mCurItem, mOldScale, mPivotPt));
+
+	if (mMultiEdit) {
+		ungroup();
+		undoStack()->push(new UngroupItems(this, (ItemGroup*)mCurItem));
+		undoStack()->endMacro();
+		mMultiEdit = false;
+	}
 
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);

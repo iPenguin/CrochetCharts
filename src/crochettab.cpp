@@ -317,7 +317,8 @@ void CrochetTab::showRowEditor(bool state)
         mRowEditDialog->hide();
     }
     
-    mScene->clearSelection();
+	//why clear the selection here???
+    //mScene->clearSelection();
 }
 
 void CrochetTab::replaceStitches(QString original, QString replacement)
