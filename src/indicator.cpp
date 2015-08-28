@@ -34,6 +34,7 @@
 #include <QTextLayout>
 #include "scene.h"
 #include "crochetchartcommands.h"
+#include "ChartItemTools.h"
 
 Indicator::Indicator(QGraphicsItem* parent, QGraphicsScene* scene)
     : QGraphicsTextItem(parent, scene),

@@ -50,8 +50,6 @@ Cell::Cell(QGraphicsItem *parent)
 
 Cell::~Cell()
 {
-	foreach (QGraphicsTransform* gt, transformations())
-		delete gt;
 }
 
 QRectF Cell::boundingRect() const

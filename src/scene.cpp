@@ -776,8 +776,10 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     mLeftButtonDownPos = QPointF(0,0);
 
-    delete mSelectionBand;
-    mSelectionBand = 0;
+    if (mSelectionBand) {
+       delete mSelectionBand;
+        mSelectionBand = 0;
+    }
 
     if(mMoving) {
         //update the size of the scene rect based on where the items are on the scene.
