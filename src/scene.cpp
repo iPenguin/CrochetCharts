@@ -2633,7 +2633,7 @@ void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
 			case ChartImage::Type: {
 				ChartImage* image = qgraphicsitem_cast<ChartImage*>(item);
 				
-				stream << image->filename() 
+				stream << image->filename() << image->pos()
 					<< ChartItemTools::getRotation(image) << ChartItemTools::getRotationPivot(image)
                     << ChartItemTools::getScaleX(image) << ChartItemTools::getScaleY(image)
 					<< ChartItemTools::getScalePivot(image);
@@ -2872,7 +2872,7 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 			QPointF pos, pivotScale, pivotRotation;
 			QString filename;
 					
-			stream >> filename >> rotation >> pivotRotation >> scaleX >> scaleY >> pivotScale;
+			stream >> filename >> pos >> rotation >> pivotRotation >> scaleX >> scaleY >> pivotScale;
 			
 			ChartImage* image = new ChartImage(filename);
 			

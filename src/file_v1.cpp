@@ -36,6 +36,7 @@
 #include "stitchlibrary.h"
 #include "mainwindow.h"
 #include "scene.h"
+#include "ChartItemTools.h"
 
 #include "crochettab.h"
 #include "settings.h"
@@ -276,6 +277,7 @@ void File_v1::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
     i->setText(text);
     i->setTextColor(textColor);
     i->setBgColor(bgColor);
+	ChartItemTools::recalculateTransformations(i);
 }
 
 void File_v1::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
@@ -367,8 +369,9 @@ void File_v1::loadCell(CrochetTab *tab, QXmlStreamReader *stream)
     c->setBgColor(QColor(bgColor));
     c->setTransformOriginPoint(pivotPoint);
     c->setRotation(angle);
-
-    if(group != -1)
+	ChartItemTools::recalculateTransformations(c);
+    
+	if(group != -1)
         tab->scene()->addToGroup(group, c);
 
 }

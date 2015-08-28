@@ -464,11 +464,13 @@ void File_v2::loadChartImage(CrochetTab* tab, QXmlStreamReader* stream)
     tab->scene()->addItem(c);
 
 	transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+	c->setTransform(transform);
 	c->setLayer(layer);
     c->setZValue(10);
 	c->setPos(position);
     c->setTransformOriginPoint(pivotPoint);
     c->setRotation(angle);
+	
 	ChartItemTools::setRotation(c, rotation);
 	ChartItemTools::setScaleX(c, scaleX);
 	ChartItemTools::setScaleY(c, scaleY);
