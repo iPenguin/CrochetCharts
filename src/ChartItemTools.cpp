@@ -162,6 +162,19 @@ QPointF ChartItemTools::mapToRotationAndScale(QGraphicsItem* item, QPointF point
 	return mat.map(point);
 }
 
+void ChartItemTools::initIfNotAlreadyInitialised(QGraphicsItem* item)
+{
+	QList<QGraphicsTransform*> transforms = item->transformations();
+	if (transforms.length() == 0) {
+		transforms.append(new QGraphicsRotation());
+		transforms.append(new QGraphicsScale());
+		item->setTransformations(transforms);
+	} else if (transforms.length() == 1) {
+		transforms.append(new QGraphicsScale());
+		item->setTransformations(transforms);
+	}
+}
+
 QGraphicsRotation* ChartItemTools::getGraphicsRotation(QGraphicsItem* item)
 {
 	return static_cast<QGraphicsRotation*>(getGraphicsTransformations(item)[ROTATION_MATRIX_INDEX]);
@@ -174,16 +187,8 @@ QGraphicsScale* ChartItemTools::getGraphicsScale(QGraphicsItem* item)
 
 QList<QGraphicsTransform*> ChartItemTools::getGraphicsTransformations(QGraphicsItem* item)
 {
-	//TODO delete this items when destroying the graphicsitem
+	initIfNotAlreadyInitialised(item);
 	QList<QGraphicsTransform*> transforms = item->transformations();
-	if (transforms.length() == 0) {
-		transforms.append(new QGraphicsRotation());
-		transforms.append(new QGraphicsScale());
-		item->setTransformations(transforms);
-	} else if (transforms.length() == 1) {
-		transforms.append(new QGraphicsScale());
-		item->setTransformations(transforms);
-	}
 	return transforms;
 }
 

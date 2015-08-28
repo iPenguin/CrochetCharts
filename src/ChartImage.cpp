@@ -1,5 +1,6 @@
 #include "ChartImage.h"
 #include "debug.h"
+#include "ChartItemTools.h"
 #include <QMessageBox>
 
 ChartImage::ChartImage(const QString& filename, QGraphicsItem* parent):

@@ -21,7 +21,7 @@
 #include "itemgroup.h"
 #include <QPainter>
 #include <QGraphicsSceneEvent>
-
+#include "ChartItemTools.h"
 #include "debug.h"
 
 ItemGroup::ItemGroup(QGraphicsItem *parent, QGraphicsScene *scene)

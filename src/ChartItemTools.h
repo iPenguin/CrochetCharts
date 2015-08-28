@@ -59,6 +59,8 @@ public:
 	static QPointF mapToRotationAndScale(QGraphicsItem* item, QPointF point);
 	
 	static QList<QGraphicsTransform*> cloneGraphicsTransformations(QGraphicsItem* item);
+
+	static void initIfNotAlreadyInitialised(QGraphicsItem* item);
 	
 protected:
 	static QGraphicsRotation* getGraphicsRotation(QGraphicsItem* item);
