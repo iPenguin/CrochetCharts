@@ -217,7 +217,7 @@ void LineBand::reset()
 QPainterPath LineBand::path()
 {
 	//move the path so it accounts for the position of the selectionband
-	QPainterPath temppath = mPath;
+	QPainterPath temppath = mIntersectionPath;
 	temppath.translate(getTopLeft());
 	return temppath;
 }
@@ -227,7 +227,7 @@ void LineBand::paintEvent(QPaintEvent * event)
     QPainter painter(this);
 	setDefaultStyle(painter);
 	
-	painter.strokePath(mPath, painter.pen());
+	painter.strokePath(mVisiblePath, painter.pen());
 }
 
 void LineBand::updatePath()
@@ -248,20 +248,24 @@ void LineBand::updatePath()
 	//translate the painter to be offset from the topleft of mMaxSize
 	QPoint targetOffset = mMaxGeom.topLeft();
 	QPoint remainingOffset = mCurPainterTranslation - targetOffset;	
-	mPath.translate(remainingOffset);
+	mIntersectionPath.translate(remainingOffset);
+	mVisiblePath.translate(remainingOffset);
 	mCurPainterTranslation = targetOffset;
 	
 	//update the path by drawing a line to diff
-	mPath.lineTo(diff - mCurPainterTranslation - QPointF(0.5, 0.5));
-	mPath.moveTo(diff - mCurPainterTranslation - QPointF(0.5, 0.5));
+	mIntersectionPath.lineTo(diff - mCurPainterTranslation - QPointF(0.5, 0.5));
+	mIntersectionPath.moveTo(diff - mCurPainterTranslation - QPointF(0.5, 0.5));
+	mVisiblePath.lineTo(diff - mCurPainterTranslation - QPointF(0.5, 0.5));
 	
 	repaint();
 }
 
 void LineBand::resetPath()
 {
-	mPath = QPainterPath();
-	mPath.moveTo(0, 0);
+	mVisiblePath = QPainterPath();
+	mVisiblePath.moveTo(0, 0);
+	mIntersectionPath = QPainterPath();
+	mIntersectionPath.moveTo(0, 0);
 	
 	mCurPainterTranslation = QPoint(0, 0);
 }

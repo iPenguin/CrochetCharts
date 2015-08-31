@@ -83,7 +83,8 @@ private:
 	QPoint mCurPainterTranslation;
 	QPointF mMouseNow;
 	QRect mMaxGeom;
-	QPainterPath mPath;
+	QPainterPath mIntersectionPath;
+	QPainterPath mVisiblePath;
 };
 
 #endif // SELECTIONBAND_H
