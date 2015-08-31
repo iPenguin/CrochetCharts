@@ -24,6 +24,7 @@
 
 #include "appinfo.h"
 
+#include <QTextDocument>
 #include <QFileInfo>
 #include <QDir>
 
@@ -265,6 +266,12 @@ void File_v1::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
             y = stream->readElementText().toDouble();
         } else if(tag == "text") {
             text = stream->readElementText();
+			//the text might be html formatted in old saves, so we need to strip it. A regex could work,
+			//but is hard to make performant with inline css, and wouldn't work well with text that has
+			//brackets in it.
+			QTextDocument doc;
+			doc.setHtml( text );
+			text = doc.toPlainText();
         } else if(tag == "textColor") {
             textColor = stream->readElementText();
         } else if(tag == "bgColor") {

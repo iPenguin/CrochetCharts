@@ -25,6 +25,7 @@
 #include "appinfo.h"
 
 #include <QFileInfo>
+#include <QTextDocument>
 #include <QDir>
 
 #include "stitchlibrary.h"
@@ -312,6 +313,12 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
             y = stream->readElementText().toDouble();
         } else if(tag == "text") {
             text = stream->readElementText();
+			//the text might be html formatted in old saves, so we need to strip it. A regex could work,
+			//but is hard to make performant with inline css, and wouldn't work well with text that has
+			//brackets in it.
+			QTextDocument doc;
+			doc.setHtml( text );
+			text = doc.toPlainText();
         } else if(tag == "textColor") {
             textColor = stream->readElementText();
         } else if(tag == "bgColor") {
@@ -358,6 +365,7 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 	DEBUG("Style is: ");
 	DEBUG(style);
 	transform.setMatrix(m11, m12, m13, m21, m22, m23, m31, m32, m33);
+    tab->scene()->addItem(i);
     i->setTransform(transform);
 	ChartItemTools::setRotation(i, rotation);
 	ChartItemTools::setScaleX(i, scaleX);
@@ -365,7 +373,8 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 	ChartItemTools::setRotationPivot(i, pivotRotation, false);
 	ChartItemTools::setScalePivot(i, pivotScale, false);
     i->setPos(x,y);
-    i->setText(text);
+	i->setText(text);
+	qDebug() << "loading text " << text;
     i->setTextColor(textColor);
     i->setBgColor(bgColor);
 	i->setLayer(layer);
@@ -374,8 +383,7 @@ void File_v2::loadIndicator(CrochetTab *tab, QXmlStreamReader *stream)
 	
 	ChartItemTools::recalculateTransformations(i);
 	
-    tab->scene()->addItem(i);
-    i->setTextInteractionFlags(Qt::TextEditorInteraction);
+    //i->setTextInteractionFlags(Qt::TextEditorInteraction);
 
     if(style.isEmpty())
         style = Settings::inst()->value("chartRowIndicator").toString();

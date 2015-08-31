@@ -49,6 +49,7 @@ RowEditDialog::RowEditDialog(Scene* scene, TextView* textView, QWidget* parent)
 
 RowEditDialog::~RowEditDialog()
 {
+	delete ui;
 }
 
 void RowEditDialog::show()

@@ -46,8 +46,8 @@ public:
     int type() const { return Type; }
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 
-    QString text() { return toHtml(); }
-    void setText(QString t) { setHtml(t); }
+	QString text();
+	void setText(QString t);
 
     QColor bgColor() { return mBgColor; }
     void setBgColor(QColor c) { mBgColor = c; }

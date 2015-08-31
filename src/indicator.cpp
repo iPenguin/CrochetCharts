@@ -64,6 +64,15 @@ QPainterPath Indicator::shape() const
     return path;
 }
 
+QString Indicator::text() {
+	return toPlainText();
+}
+
+void Indicator::setText(QString t)
+{
+	setPlainText(t);
+}
+
 void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
 
@@ -94,6 +103,7 @@ void Indicator::paint(QPainter* painter, const QStyleOptionGraphicsItem* option,
         }
 
         if(mStyle == "Text" || mStyle == "Dots and Text") {
+			painter->setFont(font());
             QGraphicsTextItem::paint(painter, option, widget);
         }
     }
