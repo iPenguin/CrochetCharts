@@ -20,9 +20,9 @@
  \****************************************************************************/
 #include "crochetchartcommands.h"
 #include "ChartItemTools.h"
+#include "settings.h"
 #include <QDebug>
 #include <QObject>
-
 
 /*************************************************\
 | SetIndicatorText                                   |
@@ -231,7 +231,11 @@ SetSelectionRotation::SetSelectionRotation(Scene* scene, QList<QGraphicsItem*> i
         pivotPoint = scene->chartCenter()->sceneBoundingRect().center();
     } else {
         QRectF itemsRect = scene->selectedItemsBoundingRect(scene->selectedItems());
-        pivotPoint = QPointF(itemsRect.center().x(), itemsRect.bottom());
+		if (Settings::inst()->value("rotateAroundCenter") == true) {
+			pivotPoint = itemsRect.center() - QPointF(itemsRect.x(), itemsRect.y());
+		} else {
+			pivotPoint = QPointF(itemsRect.center().x(), itemsRect.bottom()) - QPointF(itemsRect.x(), itemsRect.y());
+		}
     }
 
     setText(QObject::tr("rotate selection"));
@@ -256,9 +260,13 @@ void SetSelectionRotation::rotate(Scene *scene, qreal degrees,
     qNormalizeAngle(newAngle);
 
     QGraphicsItemGroup *g = scene->createItemGroup(items);
-    g->setTransformOriginPoint(pivotPoint);
-    g->setRotation(newAngle);
+	ChartItemTools::setRotationPivot(g, pivotPoint);
+	ChartItemTools::setRotation(g, newAngle);
+	QList<QGraphicsItem*> childs = g->children();
     scene->destroyItemGroup(g);
+	foreach (QGraphicsItem* c, childs) {
+		ChartItemTools::recalculateTransformations(c);
+	}
 }
 
 /*************************************************\
