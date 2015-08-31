@@ -121,6 +121,8 @@ MainWindow::~MainWindow()
 {
 	delete mModeGroup;
 	delete mSelectGroup;
+	delete ui;
+	delete mFile;
 	
 	if (mUpdater)
 		delete mUpdater;
@@ -543,7 +545,9 @@ void MainWindow::setupMenus()
 	mSelectGroup = new QActionGroup(this);
 	mSelectGroup->addAction(ui->actionBoxSelectMode);
 	mSelectGroup->addAction(ui->actionLassoSelectMode);
+	mSelectGroup->addAction(ui->actionLineSelectMode);
 	ui->actionBoxSelectMode->setChecked(true);
+	
 	
 	connect(mSelectGroup, SIGNAL(triggered(QAction*)), SLOT(changeSelectMode(QAction*)));
     
@@ -958,6 +962,8 @@ void MainWindow::changeSelectMode(QAction* action)
 			tab->setSelectMode(Scene::BoxSelect);
 		else if (action == ui->actionLassoSelectMode)
 			tab->setSelectMode(Scene::LassoSelect);
+		else if (action == ui->actionLineSelectMode)
+			tab->setSelectMode(Scene::LineSelect);
 	}
 }
 
@@ -1474,6 +1480,7 @@ void MainWindow::menuModesAboutToShow()
 	
 	ui->actionBoxSelectMode->setEnabled(state);
 	ui->actionLassoSelectMode->setEnabled(state);
+	ui->actionLineSelectMode->setEnabled(state);
 }
 
 void MainWindow::changeTabMode(QAction* a)

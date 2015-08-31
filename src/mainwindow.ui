@@ -761,11 +761,13 @@
    <addaction name="actionCreateRows"/>
    <addaction name="actionIndicatorMode"/>
    <addaction name="separator"/>
+   <addaction name="actionShowResizeDock"/>
    <addaction name="actionShowAlignDock"/>
    <addaction name="actionShowMirrorDock"/>
    <addaction name="separator"/>
    <addaction name="actionBoxSelectMode"/>
    <addaction name="actionLassoSelectMode"/>
+   <addaction name="actionLineSelectMode"/>
   </widget>
   <widget class="QDockWidget" name="layersDock">
    <property name="windowTitle">
@@ -1359,11 +1361,12 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/resize.svg</normaloff>:/images/resize.svg</iconset>
+   </property>
    <property name="text">
     <string>Resi&amp;ze</string>
-   </property>
-   <property name="shortcut">
-    <string>Shift+F9</string>
    </property>
   </action>
   <action name="actionShowLayers">
@@ -1407,6 +1410,18 @@
    </property>
    <property name="text">
     <string>Lass&amp;o select</string>
+   </property>
+  </action>
+  <action name="actionLineSelectMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/line_select.svg</normaloff>:/images/line_select.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Line select</string>
    </property>
   </action>
  </widget>

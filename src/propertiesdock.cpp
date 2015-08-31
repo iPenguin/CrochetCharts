@@ -29,6 +29,7 @@
 #include "ChartImage.h"
 #include <QGraphicsEllipseItem>
 
+#include "ChartItemTools.h"
 #include "crochettab.h"
 #include "stitchlibrary.h"
 #include "stitch.h"
@@ -61,6 +62,7 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
     connect(mTabWidget, SIGNAL(currentChanged(int)), SLOT(tabChanged(int)));
 
     connect(ui->gen_angle, SIGNAL(valueChanged(double)), SLOT(cellUpdateAngle(double)));
+    connect(ui->ig_scale, SIGNAL(valueChanged(double)), SLOT(itemGroupUpdateScale(double)));
     connect(ui->gen_scaleX, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleX(double)));
     connect(ui->gen_scaleY, SIGNAL(valueChanged(double)), SLOT(cellUpdateScaleY(double)));
 
@@ -226,9 +228,8 @@ PropertiesData PropertiesDock::selectionProperties()
         
         if(firstPass) {
             
-            props.angle = i->rotation();
-            props.scale.setX(i->transform().m11());
-            props.scale.setY(i->transform().m22());
+            props.angle = ChartItemTools::getRotation(i);
+            props.scale = ChartItemTools::getScale(i);
             props.position.setX(i->pos().x());
             props.position.setY(i->pos().y());
 			
@@ -244,11 +245,11 @@ PropertiesData PropertiesDock::selectionProperties()
         if(!c)
             continue;
         
-        if(props.angle != c->rotation())
+        if(props.angle != ChartItemTools::getRotation(c))
             angleMixed = true;
-        if(props.scale.x() != c->transform().m11())
+        if(props.scale.x() != ChartItemTools::getScaleX(i))
             xScaleMixed = true;
-        if(props.scale.y() != c->transform().m22())
+        if(props.scale.y() != ChartItemTools::getScaleY(i))
             yScaleMixed = true;
         if(props.position.x() != c->pos().x())
             xPositionMixed = true;
@@ -298,10 +299,10 @@ void PropertiesDock::updateDialogUi()
         return;
     } else if(count >= 1) {
         bool theSame = true;
-
-        int firstType = mScene->selectedItems().first()->type();
+		QList<QGraphicsItem*> selection = mScene->selectedItems();
+        int firstType = selection.first()->type();
         for(int i = 1; i < count; ++i) {
-            if(firstType != mScene->selectedItems().at(i)->type()) {
+            if(firstType != selection.at(i)->type()) {
                 theSame = false;
                 break;
             }
@@ -313,6 +314,8 @@ void PropertiesDock::updateDialogUi()
             showUi(PropertiesDock::CellUi, count);
         } else if(firstType == Indicator::Type) {
             showUi(PropertiesDock::IndicatorUi, count);
+        } else if(firstType == ItemGroup::Type) {
+            showUi(PropertiesDock::ItemGroupUi, count);
         } else if(firstType == QGraphicsEllipseItem::Type) {
 			showUi(PropertiesDock::CenterUi, count);
 		} else if (firstType == ChartImage::Type) {
@@ -340,6 +343,9 @@ void PropertiesDock::showUi(PropertiesDock::UiSelection selection, int count)
         } else if(obj->objectName().startsWith("ci_")) {
             QWidget *w = qobject_cast< QWidget* >(obj);
             w->setVisible(selection == PropertiesDock::ChartImageUi ? true : false);
+        } else if(obj->objectName().startsWith("ig_")) {
+            QWidget *w = qobject_cast< QWidget* >(obj);
+            w->setVisible(selection == PropertiesDock::ItemGroupUi ? true : false);
         }
     }
 
@@ -376,7 +382,7 @@ void PropertiesDock::showSingleChartImage()
     ui->itemGroup->show();
 
     ui->gen_angle->blockSignals(true);
-    ui->gen_angle->setValue(p.angle);
+    ui->gen_angle->setValue(fmod(p.angle, 360));
     ui->gen_angle->blockSignals(false);
 
     ui->gen_xPos->blockSignals(true);
@@ -422,7 +428,7 @@ void PropertiesDock::showSingleCell()
     ui->itemGroup->show();
 
     ui->gen_angle->blockSignals(true);
-    ui->gen_angle->setValue(p.angle);
+    ui->gen_angle->setValue(fmod(p.angle, 360));
     ui->gen_angle->blockSignals(false);
 
     ui->gen_xPos->blockSignals(true);
@@ -465,7 +471,7 @@ void PropertiesDock::showSingleIndicator()
     ui->itemGroup->show();
 
     ui->gen_angle->blockSignals(true);
-    ui->gen_angle->setValue(p.angle);
+    ui->gen_angle->setValue(fmod(p.angle, 360));
     ui->gen_angle->blockSignals(false);
 
     ui->gen_xPos->blockSignals(true);
@@ -511,6 +517,28 @@ void PropertiesDock::showMixedObjects()
 void PropertiesDock::showItemGroup()
 {
     ui->itemGroup->show();
+
+    PropertiesData p = selectionProperties();
+    ui->gen_angle->blockSignals(true);
+    ui->gen_angle->setValue(fmod(p.angle, 360));
+    ui->gen_angle->blockSignals(false);
+
+    ui->gen_xPos->blockSignals(true);
+    ui->gen_xPos->setValue(p.position.x());
+    ui->gen_xPos->blockSignals(false);
+
+    ui->gen_yPos->blockSignals(true);
+    ui->gen_yPos->setValue(p.position.y());
+    ui->gen_yPos->blockSignals(false);
+
+    ui->gen_scaleX->hide();
+    ui->gen_scaleY->hide();
+    ui->gen_xScaleLbl->hide();
+    ui->gen_yScaleLbl->hide();
+
+    ui->ig_scale->blockSignals(true);
+    ui->ig_scale->setValue(p.scale.y());
+    ui->ig_scale->blockSignals(false);
     
 }
 
@@ -641,6 +669,12 @@ void PropertiesDock::cellUpdatePositionY(double positionY)
 void PropertiesDock::cellUpdateScaleX(double scale)
 {
     emit propertiesUpdated("ScaleX", QVariant(scale));
+}
+
+void PropertiesDock::itemGroupUpdateScale(double scale)
+{
+    emit propertiesUpdated("ScaleX", QVariant(scale));
+    emit propertiesUpdated("ScaleY", QVariant(scale));
 }
 
 void PropertiesDock::cellUpdateScaleY(double scale)

@@ -19,9 +19,10 @@
 
  \****************************************************************************/
 #include "crochetchartcommands.h"
-
+#include "ChartItemTools.h"
 #include <QDebug>
 #include <QObject>
+
 
 /*************************************************\
 | SetIndicatorText                                   |
@@ -193,7 +194,7 @@ SetItemRotation::SetItemRotation(QGraphicsItem *item, qreal oldAngl, QPointF piv
 {
     i = item;
     oldAngle = oldAngl;
-    newAngle = item->rotation();
+    newAngle = ChartItemTools::getRotation(item);
     pvtPt = pivotPt;
     setText(QObject::tr("rotate item"));
 }
@@ -210,8 +211,9 @@ void SetItemRotation::undo()
 
 void SetItemRotation::setRotation(QGraphicsItem *item, qreal angle, QPointF pivot)
 {
-    item->setTransformOriginPoint(pivot);
-    item->setRotation(angle);
+    //item->setTransformOriginPoint(pivot);
+	ChartItemTools::setRotationPivot(item, pivot);
+    ChartItemTools::setRotation(item, angle);
 }
 
 /*************************************************\
@@ -289,33 +291,31 @@ void SetItemCoordinates::setPosition(QGraphicsItem *item, QPointF position)
 /*************************************************\
  | SetItemScale                                   |
 \*************************************************/
-SetItemScale::SetItemScale(QGraphicsItem *item, QPointF oldScle, QUndoCommand *parent)
+SetItemScale::SetItemScale(QGraphicsItem *item, QPointF oldScle, QPointF pivotPt, QUndoCommand *parent)
     : QUndoCommand(parent)
 {
-
+	mPivot = pivotPt;
     i = item;
-    newScale = QPointF(i->transform().m11(), i->transform().m22());
+    newScale = QPointF(ChartItemTools::getScaleX(i), ChartItemTools::getScaleY(i));
     oldScale = oldScle;
     setText(QObject::tr("change item scale"));
 }
 
 void SetItemScale::undo()
 {
-    setScale(i, oldScale);
+    setScale(i, oldScale, mPivot);
 }
 
 void SetItemScale::redo()
 {
-    setScale(i, newScale);
+    setScale(i, newScale, mPivot);
 }
 
-void SetItemScale::setScale(QGraphicsItem *item, QPointF scale)
+void SetItemScale::setScale(QGraphicsItem *item, QPointF scale, QPointF pivot)
 {
-
-    QPointF txScale = QPointF(scale.x() / item->transform().m11(),
-                              scale.y() / item->transform().m22());
-
-    item->setTransform(item->transform().scale(txScale.x(), txScale.y()));
+	ChartItemTools::setScalePivot(item, pivot);
+	ChartItemTools::setScaleX(item, scale.x());
+	ChartItemTools::setScaleY(item, scale.y());
 }
 
 /*************************************************\
@@ -328,7 +328,13 @@ AddItem::AddItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent)
     i = item;
     s = scene;
     setText(QObject::tr("add items"));
+}
 
+AddItem::~AddItem()
+{
+	//if the graphicsobject has no scene, delete it ourselves
+	if (!i->scene())
+		delete i;
 }
 
 void AddItem::redo()

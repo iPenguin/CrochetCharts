@@ -133,6 +133,7 @@ public:
 	enum SelectMode {
 		BoxSelect,
 		LassoSelect,
+		LineSelect,
 	};
     
     Scene(QObject *parent = 0);
@@ -459,6 +460,8 @@ private:
     bool mIsRubberband;
     bool mHasSelection;
     bool mSnapTo;
+	//true if multiple items are being edited at the same time 
+	bool mMultiEdit;
     
     EditMode mMode;
     

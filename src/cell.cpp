@@ -26,6 +26,7 @@
 #include "stitchlibrary.h"
 #include "stitchset.h"
 #include "settings.h"
+#include "ChartItemTools.h"
 #include <QStyleOption>
 #include <QEvent>
 
@@ -56,9 +57,10 @@ QRectF Cell::boundingRect() const
     if(!stitch())
         return QRectF(0,0,32,32);
 
-    if(stitch()->isSvg())
-        return QGraphicsSvgItem::boundingRect();
-    else
+    if(stitch()->isSvg()) {
+		QRectF r = QGraphicsSvgItem::boundingRect();
+        return r;
+    } else
         return stitch()->renderPixmap()->rect();
 }
 
@@ -88,7 +90,6 @@ void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
             painter->setPen(Qt::SolidLine);
         }
     }
-
 }
 
 bool Cell::event(QEvent *e)
@@ -238,9 +239,10 @@ Cell* Cell::copy(Cell *cell)
     c->setBgColor(bgColor());
     c->setColor(c->color());
     c->setTransformOriginPoint(transformOriginPoint());
-    c->setRotation(rotation());
-    c->setScale(transform().m11(), transform().m22());
-    c->setTransform(transform());
+    c->setRotation(0);
+    c->setScale(1, 1);
+    c->setTransform(QTransform());
+	c->setTransformations(ChartItemTools::cloneGraphicsTransformations(this));
 
     return c;
 }

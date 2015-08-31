@@ -225,18 +225,19 @@ class SetItemScale : public QUndoCommand
 public:
     enum { Id = 1140 };
 
-    SetItemScale(QGraphicsItem *item, QPointF oldScle, QUndoCommand *parent = 0);
+    SetItemScale(QGraphicsItem *item, QPointF oldScle, QPointF pivotPt, QUndoCommand *parent = 0);
 
     void undo();
     void redo();
 
     int id() const { return Id; }
 
-    static void setScale(QGraphicsItem *item, QPointF scale);
+    static void setScale(QGraphicsItem *item, QPointF scale, QPointF pivot);
 
 private:
     QPointF oldScale;
     QPointF newScale;
+	QPointF mPivot;
 
     QGraphicsItem *i;
 
@@ -248,7 +249,7 @@ public:
     enum { Id = 1150 };
 
     AddItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent = 0);
-
+	~AddItem();
     void redo();
     void undo();
 

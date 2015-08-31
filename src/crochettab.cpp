@@ -112,6 +112,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
 
 CrochetTab::~CrochetTab()
 {
+	delete ui;
 }
 
 QStringList CrochetTab::editModes()
@@ -317,7 +318,8 @@ void CrochetTab::showRowEditor(bool state)
         mRowEditDialog->hide();
     }
     
-    mScene->clearSelection();
+	//why clear the selection here???
+    //mScene->clearSelection();
 }
 
 void CrochetTab::replaceStitches(QString original, QString replacement)

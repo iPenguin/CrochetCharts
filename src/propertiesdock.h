@@ -73,6 +73,7 @@ private slots:
     void cellUpdateAngle(double angle);
     void cellUpdatePositionX(double positionX);
     void cellUpdatePositionY(double positionY);
+    void itemGroupUpdateScale(double scale);
     void cellUpdateScaleX(double scale);
     void cellUpdateScaleY(double scale);
     void cellUpdateStitch(QString stitch);

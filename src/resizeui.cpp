@@ -41,7 +41,7 @@ ResizeUI::ResizeUI(QTabWidget* tabWidget, QWidget* parent)
 
 ResizeUI::~ResizeUI()
 {
-	
+	delete ui;
 }
 
 void ResizeUI::updateContent()

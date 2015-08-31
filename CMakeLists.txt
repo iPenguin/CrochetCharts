@@ -73,6 +73,7 @@ if(WIN32)
 endif()
 
 set(QT_USE_QTSVG true)
+#set(QT_USE_QTOPENGL true)
 set(QT_USE_QTNETWORK true)
 include(${QT_USE_FILE})
 

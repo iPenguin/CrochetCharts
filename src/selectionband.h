@@ -63,4 +63,28 @@ private:
 	QPainterPath mPath;
 };
 
+
+class LineBand : public AbstractSelectionBand
+{
+public:
+	LineBand(QWidget* parent);
+	
+	virtual void moveMouseTo(const QPointF& pos);
+	virtual void reset();
+	
+	virtual QPainterPath path();
+	void paintEvent(QPaintEvent * event);
+
+private:
+	void updatePath();
+	void resetPath();
+	QPoint getTopLeft() const;
+	
+	QPoint mCurPainterTranslation;
+	QPointF mMouseNow;
+	QRect mMaxGeom;
+	QPainterPath mIntersectionPath;
+	QPainterPath mVisiblePath;
+};
+
 #endif // SELECTIONBAND_H

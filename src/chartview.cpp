@@ -23,12 +23,14 @@
 #include <QWheelEvent>
 #include <QDebug>
 #include <QScrollBar>
+#include <QGLWidget>
 
 ChartView::ChartView(QWidget* parent)
     : QGraphicsView(parent)
 	
 {
 	setAcceptDrops(true);
+	//update();
 }
 
 ChartView::~ChartView()

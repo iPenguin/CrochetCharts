@@ -46,6 +46,9 @@
 #include <QTextCursor>
 #include <QAction>
 #include <QMenu>
+#include <QVector2D>
+
+#include "ChartItemTools.h"
 
 #include "guideline.h"
 
@@ -136,6 +139,7 @@ Scene::Scene(QObject* parent) :
     mIsRubberband(false),
     mHasSelection(false),
     mSnapTo(false),
+	mMultiEdit(false),
     mMode(Scene::StitchEdit),
     mEditStitch("ch"),
     mEditFgColor(QColor(Qt::black)),
@@ -340,10 +344,11 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent* e)
 {
 
     QMenu menu;
-    QAction* copyAction = new QAction(tr("Copy"), 0);
-    QAction* cutAction = new QAction(tr("Cut"), 0);
-    QAction* pasteAction = new QAction(tr("Paste"), 0);
-    QAction *deleteAction = new QAction(tr("Delete"), 0);
+	
+	QAction* copyAction = new QAction(tr("Copy"), &menu);
+	QAction* cutAction = new QAction(tr("Cut"), &menu);
+    QAction* pasteAction = new QAction(tr("Paste"), &menu);
+    QAction *deleteAction = new QAction(tr("Delete"), &menu);
 
     connect(deleteAction, SIGNAL(triggered()), SLOT(deleteSelection()));
     connect(copyAction, SIGNAL(triggered()), SLOT(copy()));
@@ -437,6 +442,7 @@ void Scene::stitchModeKeyRelease(QKeyEvent* keyEvent)
 
 void Scene::angleModeKeyRelease(QKeyEvent* keyEvent)
 {
+	//TODO transform_refactor
     int delta = 0;
 
     if(keyEvent->key() == Qt::Key_Left || keyEvent->key() == Qt::Key_Up) {
@@ -456,10 +462,11 @@ void Scene::angleModeKeyRelease(QKeyEvent* keyEvent)
             continue;
         Cell* c = qgraphicsitem_cast<Cell*>(i);
         
-        qreal oldAngle = c->rotation();
-        c->setRotation(c->rotation() + delta);
-        QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
-        undoStack()->push(new SetItemRotation(c, oldAngle, pvtPt));
+        qreal oldAngle = ChartItemTools::getRotation(c);
+		QPointF pvtPt = QPointF(c->boundingRect().width()/2, c->boundingRect().bottom());
+        ChartItemTools::setRotationPivot(c, pvtPt);
+        ChartItemTools::addRotation(c, delta);
+		undoStack()->push(new SetItemRotation(c, oldAngle, pvtPt));
     }
     undoStack()->endMacro();
 
@@ -467,6 +474,7 @@ void Scene::angleModeKeyRelease(QKeyEvent* keyEvent)
 
 void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
 {
+	//TODO transform_refactor
     QPointF delta(0.0, 0.0);
     
     if(keyEvent->key() == Qt::Key_Left) {
@@ -482,6 +490,9 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
         delta.setY(0.1);
         keyEvent->accept();
     }
+	
+	if (Settings::inst()->value("scaleAroundCenter").toBool() == true)
+		delta.ry() = - delta.y();
 
     if(!keyEvent->isAccepted())
         return;
@@ -500,10 +511,11 @@ void Scene::scaleModeKeyRelease(QKeyEvent* keyEvent)
             continue;
         Cell* c = qgraphicsitem_cast<Cell*>(i);
 
-        QPointF oldScale = QPointF(c->transform().m11(), c->transform().m22());
+        QPointF oldScale = ChartItemTools::getScale(c);
         QPointF newScale = oldScale + delta;
-        c->setScale(newScale.x(), newScale.y());
-        undoStack()->push(new SetItemScale(c, oldScale));
+        ChartItemTools::setScaleX(c, newScale.x());
+        ChartItemTools::setScaleY(c, newScale.y());
+        undoStack()->push(new SetItemScale(c, oldScale, ChartItemTools::getScalePivot(i)));
     }
     undoStack()->endMacro();
     
@@ -565,7 +577,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
                 break;
             }
             case ItemGroup::Type: {
-                mMoving = true;
+                //mMoving = true;
                 break;
             }
             case QGraphicsSimpleTextItem::Type: {
@@ -580,7 +592,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
                 break;
             }
 			case ChartImage::Type: {
-				mMoving = true;
+				//mMoving = true;
 				break;
 			}
             default:
@@ -626,6 +638,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 				mSelectionBand = new RubberBand(view);
 			else if (mSelectMode == Scene::LassoSelect)
 				mSelectionBand = new LassoBand(view);
+			else if (mSelectMode == Scene::LineSelect) 
+				mSelectionBand = new LineBand(view);
 		}
 
         mRubberBandStart = view->mapFromScene(e->scenePos());
@@ -765,8 +779,10 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *e)
 
     mLeftButtonDownPos = QPointF(0,0);
 
-    delete mSelectionBand;
-    mSelectionBand = 0;
+    if (mSelectionBand) {
+       delete mSelectionBand;
+        mSelectionBand = 0;
+    }
 
     if(mMoving) {
         //update the size of the scene rect based on where the items are on the scene.
@@ -795,12 +811,8 @@ void Scene::snapGraphicsItemToGrid(QGraphicsItem& item)
 		qreal angle = std::atan2(newCenterPos.y() - center.y(), newCenterPos.x() - center.x());
 
 		//rotate the object so it looks at the center
-		item.setRotation((angle * 180/M_PI) + 90);
-		
-		//and correct the position because rotating changed it
-		QPointF newestCenterPos = item.sceneBoundingRect().center();
-		QPointF diff = newestCenterPos - newCenterPos;
-		item.setPos(item.pos() - diff);
+		ChartItemTools::setRotationPivot(&item, item.boundingRect().center());
+		ChartItemTools::setRotation(&item, (angle * 180/M_PI) + 90);
 	}
 }
 
@@ -1048,14 +1060,27 @@ void Scene::angleModeMousePress(QGraphicsSceneMouseEvent *e)
     //If the item is group we want to rotate the whole group.
     if (mCurItem->parentItem())
         mCurItem = mCurItem->parentItem();
-
-    mOldAngle = mCurItem->rotation();
-
-    mPivotPt = QPointF(mCurItem->boundingRect().center().x(),
-                       mCurItem->boundingRect().bottom());
-
-    mOrigin = mCurItem->mapToScene(mPivotPt);
-
+	
+	if (selectedItems().count() > 1) {
+		undoStack()->beginMacro("Rotate multiple items.");
+		GroupItems* g = new GroupItems(this, selectedItems());
+		undoStack()->push(g);
+		mCurItem = g->group();
+		mMultiEdit = true;
+	}
+	
+    mOldAngle = ChartItemTools::getRotation(mCurItem);	
+	QPointF localPivot;
+	
+	if (Settings::inst()->value("rotateAroundCenter").toBool() == true) {
+		localPivot = mCurItem->boundingRect().center();
+	} else {
+	    localPivot = QPointF(mCurItem->boundingRect().center().x(),
+                   mCurItem->boundingRect().bottom());
+	}
+	
+	mPivotPt = ChartItemTools::mapToScale(mCurItem, localPivot);
+    mOrigin = mCurItem->mapToScene(localPivot);
 }
 
 void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -1088,21 +1113,15 @@ void Scene::angleModeMouseMove(QGraphicsSceneMouseEvent *e)
     qreal angle = mOldAngle + (angle1 - angle2);
 
     qreal diff = fmod(angle, 45.0);
-    qreal comp = abs(diff);
+    qreal comp = fabs(diff);
     if(comp < 4 /*&& !mSnapTo*/) {
         qreal div = angle - diff;
         angle = div;
-/*FIXME: figure out a way to allow moving back with out snapping.
-        mSnapTo = true;
-    } else if(comp >= 4 && mSnapTo) {
-        mSnapTo = false;
-*/
     }
 
     qNormalizeAngle(angle);
-
-    SetItemRotation::setRotation(mCurItem, angle, mPivotPt);
-
+	
+	SetItemRotation::setRotation(mCurItem, angle, mPivotPt);
 }
 
 void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
@@ -1115,6 +1134,15 @@ void Scene::angleModeMouseRelease(QGraphicsSceneMouseEvent *e)
         return;
 	
     undoStack()->push(new SetItemRotation(mCurItem, mOldAngle, mPivotPt));
+		
+	if (mMultiEdit) {
+		ungroup();
+		undoStack()->push(new UngroupItems(this, (ItemGroup*)mCurItem));
+		undoStack()->endMacro();
+		emit selectionChanged();
+		mMultiEdit = false;
+	}
+	
     mOldAngle = 0;
 }
 
@@ -1129,17 +1157,29 @@ void Scene::scaleModeMousePress(QGraphicsSceneMouseEvent *e)
     if (mCurItem->parentItem()) {
         mCurItem = mCurItem->parentItem();
 	}
-	//mOldscale should always be set, even when editing groups, else it will reset every scaling
 	
-	mOldScale = QPointF(mCurItem->transform().m11(), mCurItem->transform().m22());
-	if(mCurItem->childItems().count() <= 0) {
-		mOrigin = mCurItem->scenePos();
+	if (selectedItems().count() > 1) {
+		undoStack()->beginMacro("Rotate multiple items.");
+		GroupItems* g = new GroupItems(this, selectedItems());
+		undoStack()->push(g);
+		mCurItem = g->group();
+		mMultiEdit = true;
+	}
+	
+	qDebug() << "transform " << mCurItem->transform();
+	
+	//mOldscale should always be set, even when editing groups, else it will reset every scaling
+	mOldScale = QPointF(ChartItemTools::getScaleX(mCurItem), ChartItemTools::getScaleY(mCurItem));
+	mOldSize = mCurItem->boundingRect().size();
+	QPointF localPivot;
+	if (Settings::inst()->value("scaleAroundCenter").toBool() == true) {
+		localPivot = mCurItem->boundingRect().center();
 	} else {
-        mOrigin = mCurItem->boundingRect().topLeft();
-        mOldSize = mCurItem->sceneBoundingRect().size();
-        mOldTransform = mCurItem->transform();
-    }
-	mPivotPt = mOrigin;
+		localPivot = mCurItem->boundingRect().topLeft();
+	}
+	
+	mPivotPt = localPivot;
+    mOrigin = mCurItem->mapToScene(localPivot);
 }
 
 void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
@@ -1158,66 +1198,28 @@ void Scene::scaleModeMouseMove(QGraphicsSceneMouseEvent *e)
         mMoving = true;
         return;
 	}
-
-    ItemGroup *g = 0;
-
-    if(mCurItem->type() == ItemGroup::Type) {
-        g = qgraphicsitem_cast<ItemGroup*>(mCurItem);
-    }
 	
-    mMoving = false;
-
-    QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
+	QPointF delta = e->scenePos() - e->buttonDownScenePos(Qt::LeftButton);
+	QPointF scenePivot = ChartItemTools::getScalePivot(mCurItem) + mCurItem->pos();
+	QSizeF originalSize = mCurItem->boundingRect().size();
 	
-	QSize oldSize = QSize(mCurItem->boundingRect().width() * mOldScale.x(),
-                          mCurItem->boundingRect().height() * mOldScale.y());
-	QSize newSize = QSize(oldSize.width() + delta.x(), oldSize.height() + delta.y());
-
-
-    if(newSize.width() == 0)
-        newSize.setWidth(1);
-    if(newSize.height() == 0)
-        newSize.setHeight(1);
-
-    QPointF newScale;
-    if(g) {
-
-        newScale = QPointF(newSize.width() / mCurItem->sceneBoundingRect().width(),
-                        newSize.height() / mCurItem->sceneBoundingRect().height());
-
-    } else {
-        newScale = QPointF(newSize.width() / mCurItem->boundingRect().width(),
-                        newSize.height() / mCurItem->boundingRect().height());
-    }
-
-    //When holding Ctrl lock scale to largest dimension.
-    if(e->modifiers() == Qt::ControlModifier) {
-        if(newScale.x() > newScale.y())
-            newScale.ry() = newScale.rx();
+	QSizeF currentSize = QSizeF(originalSize.width() * mOldScale.x(),
+								originalSize.height() * mOldScale.y());
+	
+	QSizeF newSize = QSizeF(currentSize.width() + delta.x(), currentSize.height() + delta.y());
+	
+	QPointF neededScale = QPointF(newSize.width() / originalSize.width(),
+								  newSize.height() / originalSize.height());
+	
+    //When holding Ctrl or when scaling a group, lock scale to largest dimension.
+    if(e->modifiers() == Qt::ControlModifier || mCurItem->type() == ItemGroup::Type) {
+        if(neededScale.x() < neededScale.y())
+            neededScale.ry() = neededScale.rx();
         else
-            newScale.rx() = newScale.ry();
+            neededScale.rx() = neededScale.ry();
     }
-
-    //SetItemScale::setScale(mCurItem, newScale);
-
-    if(g) {
-		//flip sign of the new scale if the oldtransform is already negative, so the group won't constantly "flicker" in sign
-		if (mOldTransform.m11() < 0)
-			newScale.setX(-newScale.x());
-		if (mOldTransform.m22() < 0)
-			newScale.setY(-newScale.y());
-		
-		mCurItem->setTransform(mOldTransform
-			.translate(mPivotPt.x(), mPivotPt.y())
-            .scale(newScale.x(), newScale.y())
-			.translate(-mPivotPt.x(), -mPivotPt.y())
-            );
-    } else {
-        QPointF txScale = QPointF(newScale.x() / mCurItem->transform().m11(),
-                                  newScale.y() / mCurItem->transform().m22());
-
-        mCurItem->setTransform(mCurItem->transform().scale(txScale.x(), txScale.y()));
-    }
+	qDebug() << "Setting scale " << neededScale.x() << " " << neededScale.y();
+	SetItemScale::setScale(mCurItem, neededScale, mPivotPt);
 }
 
 void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
@@ -1230,7 +1232,15 @@ void Scene::scaleModeMouseRelease(QGraphicsSceneMouseEvent *e)
     if(!mCurItem)
         return;
 
-    undoStack()->push(new SetItemScale(mCurItem, mOldScale));
+    undoStack()->push(new SetItemScale(mCurItem, mOldScale, mPivotPt));
+
+	if (mMultiEdit) {
+		ungroup();
+		undoStack()->push(new UngroupItems(this, (ItemGroup*)mCurItem));
+		undoStack()->endMacro();
+		emit selectionChanged();
+		mMultiEdit = false;
+	}
 
     mOldScale.setX(1.0);
     mOldScale.setY(1.0);
@@ -2270,10 +2280,10 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
 			}
 
             if(property == "Angle") {
-                i->setRotation(newValue.toReal());
-                undoStack()->push(new SetItemRotation(i, i->rotation(),
-                                QPointF(i->boundingRect().center().x(), 
-                                        i->boundingRect().bottom())));
+				qreal rotation = ChartItemTools::getRotation(i);
+				ChartItemTools::setRotation(i, newValue.toReal());
+                undoStack()->push(new SetItemRotation(i, rotation,
+														 ChartItemTools::getRotationPivot(i)));
 
             } else if(property == "PositionX") {
                 QPointF oldPos = i->pos();
@@ -2286,14 +2296,15 @@ void Scene::propertiesUpdate(QString property, QVariant newValue)
                 undoStack()->push(new SetItemCoordinates(i, oldPos));
 
             } else if(property == "ScaleX") {
-                QPointF oldScale = QPointF(i->transform().m11(), i->transform().m22());
-                i->transform().scale(newValue.toDouble(), i->transform().m22());
-                undoStack()->push(new SetItemScale(i, oldScale));
+				QPointF scale = ChartItemTools::getScale(i);
+                ChartItemTools::setScaleX(i, newValue.toDouble());
+                undoStack()->push(new SetItemScale(i, scale,
+													  ChartItemTools::getScalePivot(i)));
 
             } else if(property == "ScaleY") {
-                QPointF oldScale = QPointF(i->transform().m11(), i->transform().m22());
-                i->transform().scale(i->transform().m11(), newValue.toDouble());
-                undoStack()->push(new SetItemScale(i, oldScale));
+                ChartItemTools::setScaleY(i, newValue.toDouble());
+                undoStack()->push(new SetItemScale(i, ChartItemTools::getScale(i),
+													  ChartItemTools::getScalePivot(i)));
 
             } else if(property == "Stitch") {
                 undoStack()->push(new SetCellStitch(c, newValue.toString()));
@@ -2363,7 +2374,7 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		//and clone it
 		ChartImage* newImage = new ChartImage(image->filename());
 		newImage->setPos(image->pos());
-		newImage->setTransform(image->transform());
+		newImage->setTransformations(ChartItemTools::cloneGraphicsTransformations(image));
 		newImage->setRotation(image->rotation());
 		newImage->setLayer(getCurrentLayer()->uid());
 		undoStack()->push(new AddItem(this, newImage));
@@ -2384,11 +2395,14 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		
 		mPivotPt = QPointF(g->boundingRect().center().x(),
 						   g->boundingRect().bottom());
+		
 		newGroup->setTransformOriginPoint(mPivotPt);
-		newGroup->setRotation(g->rotation());
+		newGroup->setRotation(0);
+		newGroup->setTransformations(ChartItemTools::cloneGraphicsTransformations(g));
 		
 		foreach(QGraphicsItem* child, childs) {
 			g->removeFromGroup(child);
+			ChartItemTools::recalculateTransformations(child);
 			QGraphicsItem* childCopy = copy_rec(child, displacement);
 			g->addToGroup(child);
 			if (childCopy != NULL) {
@@ -2455,64 +2469,37 @@ void Scene::copy(int direction)
 
 QGraphicsItem* Scene::mirror_rec(QGraphicsItem* item, QPointF displacement, QRectF selectionRect, bool flipX, bool flipY)
 {
-	if (item->type() == Cell::Type || item->type() == ChartImage::Type) {
-		//first we copy the item
-		QGraphicsItem* newItem = copy_rec(item, displacement);
+	//first we copy the item
+	QGraphicsItem* newItem = copy_rec(item, displacement);
 
-		if (newItem != NULL)
-		{	
-			//then we flip it in the selection
-			QPointF oldrel = item->sceneBoundingRect().center() - selectionRect.center();
-			QPointF targetrel = QPointF(oldrel.x(), oldrel.y());
-			
-			if (flipX)
-				targetrel.setX(-targetrel.x());
-			if (flipY)
-				targetrel.setY(-targetrel.y());
-			
-			QPointF flipdisplacement = targetrel - oldrel;
-			newItem->moveBy(flipdisplacement.x(), flipdisplacement.y());
-			
-			//finally, we flip each remaining object in place
-			QPointF oldpos = newItem->sceneBoundingRect().center();
-			
-			if (flipX)
-				newItem->setTransform(QTransform().scale(-1, 1), true);
-			if (flipY)
-				newItem->setTransform(QTransform().scale(1, -1), true);
+	if (newItem != NULL)
+	{	
+		//then we flip it in the selection
+		QPointF oldrel = item->sceneBoundingRect().center() - selectionRect.center();
+		QPointF targetrel = QPointF(oldrel.x(), oldrel.y());
 		
-			QPointF newpos = newItem->sceneBoundingRect().center();
-			QPointF newDisplacement = oldpos - newpos;
-			
-			newItem->moveBy(newDisplacement.x(), newDisplacement.y());
+		if (flipX)
+			targetrel.setX(-targetrel.x());
+		if (flipY)
+			targetrel.setY(-targetrel.y());
+		
+		QPointF flipdisplacement = targetrel - oldrel;
+		newItem->moveBy(flipdisplacement.x(), flipdisplacement.y());
+		
+		//finally, we flip each remaining object in place
+		ChartItemTools::setScalePivot(newItem, newItem->boundingRect().center());
+		ChartItemTools::setRotationPivot(newItem, newItem->boundingRect().center());
+		
+		if (flipX) {
+			ChartItemTools::setRotation(newItem, -ChartItemTools::getRotation(newItem));
+			ChartItemTools::setScaleX(newItem, -ChartItemTools::getScaleX(newItem));
+		} else if (flipY) {
+			ChartItemTools::setRotation(newItem, -ChartItemTools::getRotation(newItem));
+			ChartItemTools::setScaleY(newItem, -ChartItemTools::getScaleY(newItem));
 		}
-		return newItem;
-	} else if (item->type() == ItemGroup::Type) {
-		//get the group
-		ItemGroup* g = qgraphicsitem_cast<ItemGroup*>(item);
-		QList<QGraphicsItem*> childs = g->childItems();
-		
-		//clone it
-		ItemGroup* newGroup = new ItemGroup();
-		newGroup->setLayer(g->layer());
-		undoStack()->push(new AddItem(this, newGroup));
-		
-		foreach(QGraphicsItem* child, childs) {
-			QGraphicsItem* childCopy = mirror_rec(child, displacement, selectionRect, flipX, flipY);
-			if (childCopy != NULL) {
-				childCopy->setSelected(false);
-				childCopy->setFlag(QGraphicsItem::ItemIsSelectable, false);
-				newGroup->addToGroup(childCopy);
-			}
-		}
-		
-		newGroup->setRotation(g->rotation());
-		newGroup->setTransform(g->transform());
-		
-		return newGroup;
 	}
-	
-	return NULL;
+	return newItem;
+
 }
 
 void Scene::mirror(int direction)
@@ -2604,35 +2591,55 @@ void Scene::copy()
 void Scene::copyRecursively(QDataStream &stream, QList<QGraphicsItem*> items)
 {
     foreach(QGraphicsItem* item, items) {
-
         stream << item->type();
 
         switch(item->type()) {
             case Cell::Type: {
                 Cell* c = qgraphicsitem_cast<Cell*>(item);
                 stream << c->name() << c->color() << c->bgColor()
-                    << c->rotation() << c->transformOriginPoint() << c->pos()
-                    << c->transform();
+                    << ChartItemTools::getRotation(c) << ChartItemTools::getRotationPivot(c)
+                    << ChartItemTools::getScaleX(c) << ChartItemTools::getScaleY(c)
+					<< ChartItemTools::getScalePivot(c) << c->transformOriginPoint() << c->pos();
                 break;
             }
             case Indicator::Type: {
                 Indicator* i = qgraphicsitem_cast<Indicator*>(item);
-                stream << i->scenePos() << i->text() << i->transform();
+                stream << i->scenePos() << i->text()
+					<< ChartItemTools::getRotation(i) << ChartItemTools::getRotationPivot(i)
+                    << ChartItemTools::getScaleX(i) << ChartItemTools::getScaleY(i)
+					<< ChartItemTools::getScalePivot(i);
                 break;
             }
             case ItemGroup::Type: {
                 ItemGroup* group = qgraphicsitem_cast<ItemGroup*>(item);
-                stream << group->pos();
-                stream << group->transform();
-                stream << group->childItems().count();
-                copyRecursively(stream, group->childItems());
+				ChartItemTools::recalculateTransformations(group);
+                stream << group->pos()
+					<< group->childItems().count()
+					<< ChartItemTools::getRotation(group) << ChartItemTools::getRotationPivot(group)
+                    << ChartItemTools::getScaleX(group) << ChartItemTools::getScaleY(group)
+					<< ChartItemTools::getScalePivot(group);
+				
+				QList<QGraphicsItem*> childs = group->childItems();
+				
+				foreach(QGraphicsItem* child, childs) {
+						group->removeFromGroup(child);
+						ChartItemTools::recalculateTransformations(child);
+				}
+					
+                copyRecursively(stream, childs);
+				
+				foreach(QGraphicsItem* child, childs) {
+						group->addToGroup(child);
+				}
                 break;
             }
 			case ChartImage::Type: {
 				ChartImage* image = qgraphicsitem_cast<ChartImage*>(item);
 				
-				stream << image->rotation() << image->pos() << image->transform() << image->filename();
-				stream << image->layer();
+				stream << image->filename() << image->pos()
+					<< ChartItemTools::getRotation(image) << ChartItemTools::getRotationPivot(image)
+                    << ChartItemTools::getScaleX(image) << ChartItemTools::getScaleY(image)
+					<< ChartItemTools::getScalePivot(image);
 				break;
 			}
             case Guideline::Type:
@@ -2770,11 +2777,11 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
         case Cell::Type: {
             QString name;
             QColor color, bgColor;
-            qreal angle;
-            QPointF pos, transPoint;
-            QTransform trans;
-
-            stream >> name >> color >> bgColor >> angle >> transPoint >> pos >> trans;
+            qreal rotation, scaleX, scaleY;
+            QPointF pos, transPoint, pivotRotation, pivotScale;
+		
+            stream >> name >> color >> bgColor >> rotation >> pivotRotation;
+			stream >> scaleX >> scaleY >> pivotScale >> transPoint >> pos;
 
             pos += offSet;
 
@@ -2787,8 +2794,11 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 			c->setLayer(getCurrentLayer()->uid());
 
             c->setTransformOriginPoint(transPoint);
-            c->setRotation(angle);
-            c->setTransform(trans);
+            ChartItemTools::setRotation(c, rotation);
+            ChartItemTools::setScaleX(c, scaleX);
+			ChartItemTools::setScaleY(c, scaleY);
+			ChartItemTools::setScalePivot(c, pivotScale, false);
+			ChartItemTools::setRotationPivot(c, pivotRotation, false);
 
             c->setSelected(false);
             group->append(c);
@@ -2797,11 +2807,13 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
         case Indicator::Type: {
             Indicator *i = new Indicator();
             //FIXME: add this indicator to the undo stack.
-            QPointF pos;
+            QPointF pos, pivotScale, pivotRotation;
             QString text;
-            QTransform trans;
-
-            stream >> pos >> text >> trans;
+            qreal rotation, scaleX, scaleY;
+			
+            stream >> pos >> text >> rotation >> pivotRotation >> scaleX;
+			stream >> scaleY >> pivotScale;
+			
             pos += offSet;
             i->setText(text);
             addItem(i);
@@ -2809,47 +2821,74 @@ void Scene::pasteRecursively(QDataStream &stream, QList<QGraphicsItem*> *group)
 			i->setLayer(getCurrentLayer()->uid());
 
             i->setSelected(false);
-            group->append(i);
-            i->setTransform(trans);
-            break;
+			
+            ChartItemTools::setRotation(i, rotation);
+            ChartItemTools::setScaleX(i, scaleX);
+			ChartItemTools::setScaleY(i, scaleY);
+			ChartItemTools::setScalePivot(i, pivotScale, false);
+			ChartItemTools::setRotationPivot(i, pivotRotation, false);
+			
+			group->append(i);
+			break;
         }
         case ItemGroup::Type: {
-            QPointF pos;
-            int childCount;
-            QTransform trans;
-            stream >> pos >> trans >> childCount;
-            QList<QGraphicsItem*> items;
+			
+            QPointF pos, pivotScale, pivotRotation;
+			qreal rotation, scaleX, scaleY;
+			int childCount;
+			
+			stream >> pos >> childCount >> rotation >> pivotRotation >> scaleX;
+			stream >> scaleY >> pivotScale;
+			QList<QGraphicsItem*> items;
             for(int i = 0; i < childCount; ++i) {
                 pasteRecursively(stream, &items);
             }
-
+			
+			
             GroupItems *grpItems = new GroupItems(this, items);
             undoStack()->push(grpItems);
             ItemGroup *g = grpItems->group();
-
-            g->setSelected(false);
-            group->append(g);
+			g->setSelected(false);
+            
+			group->append(g);
+			
+			foreach(QGraphicsItem* child, items) {
+				g->removeFromGroup(child);
+			}
+			
             g->setPos(pos);
-            g->setTransform(trans);
+			ChartItemTools::setRotation(g, rotation);
+			ChartItemTools::setScaleX(g, scaleX);
+			ChartItemTools::setScaleY(g, scaleY);
+			ChartItemTools::setScalePivot(g, pivotScale, false);
+			ChartItemTools::setRotationPivot(g, pivotRotation, false);
+			
+			foreach(QGraphicsItem* child, items) {
+				g->addToGroup(child);
+			}
+			
 			g->setLayer(getCurrentLayer()->uid());
             break;
         }
 		case ChartImage::Type: {
-			qreal rotation;
-			QPointF pos;
+			qreal rotation, scaleX, scaleY;
+			QPointF pos, pivotScale, pivotRotation;
 			QString filename;
-			QTransform transform;
-			unsigned int layer;
-			
-			stream >> rotation >> pos >> transform >> filename >> layer;
+					
+			stream >> filename >> pos >> rotation >> pivotRotation >> scaleX >> scaleY >> pivotScale;
 			
 			ChartImage* image = new ChartImage(filename);
 			
             undoStack()->push(new AddItem(this, image));
 			image->setPos(pos);
-			image->setRotation(rotation);
 			image->setLayer(getCurrentLayer()->uid());
-			image->setTransform(transform);
+			
+            ChartItemTools::setRotation(image, rotation);
+            ChartItemTools::setScaleX(image, scaleX);
+			ChartItemTools::setScaleY(image, scaleY);
+			ChartItemTools::setScalePivot(image, pivotScale, false);
+			ChartItemTools::setRotationPivot(image, pivotRotation, false);
+			
 			group->append(image);
 			image->setSelected(false);
 			break;
@@ -2938,10 +2977,19 @@ ItemGroup* Scene::group(QList<QGraphicsItem*> items, ItemGroup* g)
 
     //clear selection because we're going to create a new selection.
     clearSelection();
-
+		
     if(!g) {
         g = new ItemGroup(0, this);
 		g->setLayer(getCurrentLayer()->uid());
+		
+		/*if (items.count() > 0) {
+			QRectF bigRect = items.first()->sceneBoundingRect();
+			foreach(QGraphicsItem* i, items) {
+				bigRect = bigRect.united(i->sceneBoundingRect());
+			}
+			g->setPos(bigRect.center());
+			g->setTransformOriginPoint(0, 0);
+		}*/
     }
 
     foreach(QGraphicsItem *i, items) {
@@ -2974,14 +3022,21 @@ void Scene::ungroup()
 
 void Scene::ungroup(ItemGroup* group)
 {
-
+	blockSignals(true);
+	group->setSelected(false);
     mGroups.removeOne(group);
-    foreach(QGraphicsItem* item, group->childItems()) {
+	QList<QGraphicsItem*> childs = group->childItems();
+    foreach(QGraphicsItem* item, childs) {
         group->removeFromGroup(item);
         item->setFlag(QGraphicsItem::ItemIsSelectable, true);
         item->setSelected(true);
     }
-
+	
+	foreach(QGraphicsItem* item, childs) {
+		ChartItemTools::recalculateTransformations(item);
+	}
+	blockSignals(false);
+	//emit selectionChanged();
 }
 
 void Scene::addToGroup(int groupNumber, QGraphicsItem *i)

@@ -1,5 +1,6 @@
 #include "ChartImage.h"
 #include "debug.h"
+#include "ChartItemTools.h"
 #include <QMessageBox>
 
 ChartImage::ChartImage(const QString& filename, QGraphicsItem* parent):
@@ -44,7 +45,8 @@ QRectF ChartImage::boundingRect() const
 {
 	
 	if (mPixmap) {
-		return mPixmap->rect();
+		QRectF bb = mPixmap->rect();
+		return bb;
 	} else {
 		WARN("No pixmap in ChartImage.");
 		return QRectF();
