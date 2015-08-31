@@ -22,7 +22,16 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
@@ -42,7 +51,16 @@
          <string>New Chart Options</string>
         </property>
         <layout class="QGridLayout" name="gridLayout">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
           <number>0</number>
          </property>
          <item row="1" column="2">
@@ -298,7 +316,7 @@
      <x>0</x>
      <y>0</y>
      <width>1045</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -442,14 +460,23 @@
   </widget>
   <widget class="QDockWidget" name="patternStitchesDock">
    <property name="windowTitle">
-    <string>Pattern Stitches</string>
+    <string>&amp;Pattern Stitches</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="patternStitchesDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout_3">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
@@ -510,7 +537,16 @@
    </attribute>
    <widget class="QWidget" name="patternColorsDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout_4">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
@@ -622,7 +658,16 @@
    </attribute>
    <widget class="QWidget" name="allStitchesDockWidget">
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
@@ -722,10 +767,11 @@
    <addaction name="separator"/>
    <addaction name="actionBoxSelectMode"/>
    <addaction name="actionLassoSelectMode"/>
+   <addaction name="actionLineSelectMode"/>
   </widget>
   <widget class="QDockWidget" name="layersDock">
    <property name="windowTitle">
-    <string>Layers</string>
+    <string>&amp;Layers</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
@@ -735,7 +781,16 @@
      <property name="spacing">
       <number>6</number>
      </property>
-     <property name="margin">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
       <number>0</number>
      </property>
      <item>
@@ -1355,6 +1410,18 @@
    </property>
    <property name="text">
     <string>Lass&amp;o select</string>
+   </property>
+  </action>
+  <action name="actionLineSelectMode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/line_select.svg</normaloff>:/images/line_select.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Line select</string>
    </property>
   </action>
  </widget>

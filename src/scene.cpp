@@ -637,6 +637,8 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *e)
 				mSelectionBand = new RubberBand(view);
 			else if (mSelectMode == Scene::LassoSelect)
 				mSelectionBand = new LassoBand(view);
+			else if (mSelectMode == Scene::LineSelect) 
+				mSelectionBand = new LineBand(view);
 		}
 
         mRubberBandStart = view->mapFromScene(e->scenePos());

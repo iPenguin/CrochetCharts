@@ -133,6 +133,7 @@ public:
 	enum SelectMode {
 		BoxSelect,
 		LassoSelect,
+		LineSelect,
 	};
     
     Scene(QObject *parent = 0);

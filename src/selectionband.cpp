@@ -185,3 +185,88 @@ QPoint LassoBand::getTopLeft() const
 {
 	return mMaxGeom.translated(mPosition).topLeft();
 }
+
+/************************************************\ 
+*  LineBand                                     * 
+\************************************************/ 
+LineBand::LineBand(QWidget* parent)
+	: AbstractSelectionBand(parent)
+{
+	setAttribute(Qt::WA_TransparentForMouseEvents);
+	#ifndef Q_WS_WIN
+    setAttribute(Qt::WA_NoSystemBackground);
+	#endif //Q_WS_WIN
+    setAttribute(Qt::WA_WState_ExplicitShowHide);
+}
+	
+void LineBand::moveMouseTo(const QPointF& pos)
+{
+	mMouseNow = pos;
+	updatePath();
+}
+
+void LineBand::reset()
+{
+	mPosition = QPoint(0, 0);
+	mMouseNow = QPointF(0, 0);
+	mCurPainterTranslation = QPoint(0, 0);
+	mMaxGeom = QRect(0, 0, 0, 0);
+	resetPath();
+}
+	
+QPainterPath LineBand::path()
+{
+	//move the path so it accounts for the position of the selectionband
+	QPainterPath temppath = mPath;
+	temppath.translate(getTopLeft());
+	return temppath;
+}
+
+void LineBand::paintEvent(QPaintEvent * event)
+{
+    QPainter painter(this);
+	setDefaultStyle(painter);
+	
+	painter.strokePath(mPath, painter.pen());
+}
+
+void LineBand::updatePath()
+{
+	//get the difference between the position and the current mouse position
+	QPointF diff = mMouseNow - mPosition;
+	
+	//get the rectangle from that diff to the center
+	QRect newr(0, 0, diff.x(), diff.y());
+	newr = newr.normalized();
+	
+	//expand our size rectangle to contain newr
+	mMaxGeom = mMaxGeom.unite(newr).normalized();
+	
+	//set the geometry to that rectangle, translated to our position
+	setGeometry(mMaxGeom.translated(mPosition.x(), mPosition.y()).normalized());
+	
+	//translate the painter to be offset from the topleft of mMaxSize
+	QPoint targetOffset = mMaxGeom.topLeft();
+	QPoint remainingOffset = mCurPainterTranslation - targetOffset;	
+	mPath.translate(remainingOffset);
+	mCurPainterTranslation = targetOffset;
+	
+	//update the path by drawing a line to diff
+	mPath.lineTo(diff - mCurPainterTranslation - QPointF(0.5, 0.5));
+	mPath.moveTo(diff - mCurPainterTranslation - QPointF(0.5, 0.5));
+	
+	repaint();
+}
+
+void LineBand::resetPath()
+{
+	mPath = QPainterPath();
+	mPath.moveTo(0, 0);
+	
+	mCurPainterTranslation = QPoint(0, 0);
+}
+
+QPoint LineBand::getTopLeft() const
+{
+	return mMaxGeom.translated(mPosition).topLeft();
+}
