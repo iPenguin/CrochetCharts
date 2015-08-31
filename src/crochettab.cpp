@@ -112,6 +112,7 @@ CrochetTab::CrochetTab(Scene::ChartStyle style, int defEditMode, QString defStit
 
 CrochetTab::~CrochetTab()
 {
+	delete ui;
 }
 
 QStringList CrochetTab::editModes()

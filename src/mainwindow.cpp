@@ -121,6 +121,8 @@ MainWindow::~MainWindow()
 {
 	delete mModeGroup;
 	delete mSelectGroup;
+	delete ui;
+	delete mFile;
 	
 	if (mUpdater)
 		delete mUpdater;

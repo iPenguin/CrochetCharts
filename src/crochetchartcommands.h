@@ -249,7 +249,7 @@ public:
     enum { Id = 1150 };
 
     AddItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent = 0);
-
+	~AddItem();
     void redo();
     void undo();
 

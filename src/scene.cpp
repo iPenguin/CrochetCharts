@@ -344,10 +344,11 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent* e)
 {
 
     QMenu menu;
-    QAction* copyAction = new QAction(tr("Copy"), 0);
-    QAction* cutAction = new QAction(tr("Cut"), 0);
-    QAction* pasteAction = new QAction(tr("Paste"), 0);
-    QAction *deleteAction = new QAction(tr("Delete"), 0);
+	
+	QAction* copyAction = new QAction(tr("Copy"), &menu);
+	QAction* cutAction = new QAction(tr("Cut"), &menu);
+    QAction* pasteAction = new QAction(tr("Paste"), &menu);
+    QAction *deleteAction = new QAction(tr("Delete"), &menu);
 
     connect(deleteAction, SIGNAL(triggered()), SLOT(deleteSelection()));
     connect(copyAction, SIGNAL(triggered()), SLOT(copy()));

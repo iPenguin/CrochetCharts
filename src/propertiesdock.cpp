@@ -299,10 +299,10 @@ void PropertiesDock::updateDialogUi()
         return;
     } else if(count >= 1) {
         bool theSame = true;
-
-        int firstType = mScene->selectedItems().first()->type();
+		QList<QGraphicsItem*> selection = mScene->selectedItems();
+        int firstType = selection.first()->type();
         for(int i = 1; i < count; ++i) {
-            if(firstType != mScene->selectedItems().at(i)->type()) {
+            if(firstType != selection.at(i)->type()) {
                 theSame = false;
                 break;
             }

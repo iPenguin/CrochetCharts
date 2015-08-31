@@ -328,7 +328,13 @@ AddItem::AddItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent)
     i = item;
     s = scene;
     setText(QObject::tr("add items"));
+}
 
+AddItem::~AddItem()
+{
+	//if the graphicsobject has no scene, delete it ourselves
+	if (!i->scene())
+		delete i;
 }
 
 void AddItem::redo()
