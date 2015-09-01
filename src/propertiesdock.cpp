@@ -101,6 +101,7 @@ PropertiesDock::PropertiesDock(QTabWidget *tabWidget, QWidget *parent) :
 
     ui->indX_IndicatorEditText->setVisible(false);
     ui->indX_indicatorTextEdit->setVisible(false);
+	ui->snapAngle->setCheckState(Qt::Unchecked);
 }
 
 PropertiesDock::~PropertiesDock()

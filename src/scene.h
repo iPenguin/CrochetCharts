@@ -544,7 +544,8 @@ public:
 public slots:
     void setShowChartCenter(bool state);
 	void setSnapAngle(bool state);
-
+public:
+	bool snapAngle() const { return mSnapAngle; };
 protected:
     void setCellPosition(int row, int column, Cell *c, int columns);
     
