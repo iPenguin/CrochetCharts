@@ -77,6 +77,10 @@
         <file>images/lasso_select.svg</file>
         <file>images/line_select.svg</file>
         <file>images/resize.svg</file>
+        <file>images/grid_none.svg</file>
+        <file>images/grid_square.svg</file>
+        <file>images/grid_round.svg</file>
+        <file>images/grid_triangle.svg</file>
         <file>stitches/sl_st.svg</file>
         <file>stitches/ch.svg</file>
         <file>stitches/sc.svg</file>

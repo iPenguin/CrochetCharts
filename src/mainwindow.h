@@ -148,6 +148,9 @@ private slots:
     void toolsCheckForUpdates();
 	
 	void changeSelectMode(QAction* action);
+	void nextSelectMode();
+	void changeGridMode(QAction* action);
+	void nextGridMode();
 
     void helpCrochetHelp();
     void helpAbout();
@@ -251,6 +254,7 @@ private:
 
     QActionGroup* mModeGroup;
 	QActionGroup* mSelectGroup;
+	QActionGroup* mGridGroup;
     
     QAction* mActionUndo,
            * mActionRedo;

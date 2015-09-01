@@ -381,6 +381,15 @@
     <property name="title">
      <string>&amp;Charts</string>
     </property>
+    <widget class="QMenu" name="menuGrid">
+     <property name="title">
+      <string>Grid</string>
+     </property>
+     <addaction name="actionGridNone"/>
+     <addaction name="actionGridSquare"/>
+     <addaction name="actionGridRound"/>
+     <addaction name="actionGridTriangle"/>
+    </widget>
     <addaction name="actionAddChart"/>
     <addaction name="actionRemoveTab"/>
     <addaction name="separator"/>
@@ -388,6 +397,7 @@
     <addaction name="actionEditName"/>
     <addaction name="separator"/>
     <addaction name="actionShowChartCenter"/>
+    <addaction name="menuGrid"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -768,6 +778,11 @@
    <addaction name="actionBoxSelectMode"/>
    <addaction name="actionLassoSelectMode"/>
    <addaction name="actionLineSelectMode"/>
+   <addaction name="separator"/>
+   <addaction name="actionGridNone"/>
+   <addaction name="actionGridSquare"/>
+   <addaction name="actionGridRound"/>
+   <addaction name="actionGridTriangle"/>
   </widget>
   <widget class="QDockWidget" name="layersDock">
    <property name="windowTitle">
@@ -1422,6 +1437,73 @@
    </property>
    <property name="text">
     <string>Line select</string>
+   </property>
+  </action>
+  <action name="actionGridNone">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/grid_none.svg</normaloff>:/images/grid_none.svg</iconset>
+   </property>
+   <property name="text">
+    <string>No grid</string>
+   </property>
+   <property name="toolTip">
+    <string>No grid</string>
+   </property>
+  </action>
+  <action name="actionGridSquare">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/grid_square.svg</normaloff>:/images/grid_square.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Square grid</string>
+   </property>
+  </action>
+  <action name="actionGridRound">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/grid_round.svg</normaloff>:/images/grid_round.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Round grid</string>
+   </property>
+  </action>
+  <action name="actionGridTriangle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../crochet.qrc">
+     <normaloff>:/images/grid_triangle.svg</normaloff>:/images/grid_triangle.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Triangular gid</string>
+   </property>
+  </action>
+  <action name="actionNextSelectMode">
+   <property name="text">
+    <string>actionNextSelectMode</string>
+   </property>
+   <property name="shortcut">
+    <string>B</string>
+   </property>
+  </action>
+  <action name="actionNextGridMode">
+   <property name="text">
+    <string>actionNextGridMode</string>
+   </property>
+   <property name="shortcut">
+    <string>G</string>
    </property>
   </action>
  </widget>

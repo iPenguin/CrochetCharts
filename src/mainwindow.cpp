@@ -121,6 +121,7 @@ MainWindow::~MainWindow()
 {
 	delete mModeGroup;
 	delete mSelectGroup;
+	delete mGridGroup;
 	delete ui;
 	delete mFile;
 	
@@ -548,9 +549,21 @@ void MainWindow::setupMenus()
 	mSelectGroup->addAction(ui->actionLineSelectMode);
 	ui->actionBoxSelectMode->setChecked(true);
 	
-	
 	connect(mSelectGroup, SIGNAL(triggered(QAction*)), SLOT(changeSelectMode(QAction*)));
-    
+    connect(ui->actionNextSelectMode, SIGNAL(triggered()), SLOT(nextSelectMode()));
+	addAction(ui->actionNextSelectMode);
+	
+	mGridGroup = new QActionGroup(this);
+	mGridGroup->addAction(ui->actionGridNone);
+	mGridGroup->addAction(ui->actionGridSquare);
+	mGridGroup->addAction(ui->actionGridRound);
+	mGridGroup->addAction(ui->actionGridTriangle);
+	ui->actionGridNone->setChecked(true);
+	
+	connect(mGridGroup, SIGNAL(triggered(QAction*)), SLOT(changeGridMode(QAction*)));
+	connect(ui->actionNextGridMode, SIGNAL(triggered()), SLOT(nextGridMode()));
+	addAction(ui->actionNextGridMode);
+	
     //Charts Menu
     connect(ui->actionAddChart, SIGNAL(triggered()), SLOT(documentNewChart()));
     connect(ui->actionRemoveTab, SIGNAL(triggered()), SLOT(removeCurrentTab()));
@@ -967,6 +980,43 @@ void MainWindow::changeSelectMode(QAction* action)
 	}
 }
 
+void MainWindow::nextSelectMode()
+{
+	if (ui->actionBoxSelectMode->isChecked())
+		ui->actionLassoSelectMode->trigger();
+	else if (ui->actionLassoSelectMode->isChecked())
+		ui->actionLineSelectMode->trigger();
+	else if (ui->actionLineSelectMode->isChecked())
+		ui->actionBoxSelectMode->trigger();
+}
+
+void MainWindow::changeGridMode(QAction* action)
+{
+	CrochetTab* tab = curCrochetTab();
+	if (tab) {
+		if (action == ui->actionGridNone)
+			tab->setGuidelinesType("None");
+		else if (action == ui->actionGridSquare)
+			tab->setGuidelinesType("Rows");
+		else if (action == ui->actionGridRound)
+			tab->setGuidelinesType("Rounds");
+		else if (action == ui->actionGridTriangle)
+			tab->setGuidelinesType("Triangles");
+	}
+}
+
+void MainWindow::nextGridMode()
+{
+	if (ui->actionGridNone->isChecked())
+		ui->actionGridSquare->trigger();
+	else if (ui->actionGridSquare->isChecked())
+		ui->actionGridRound->trigger();
+	else if (ui->actionGridRound->isChecked())
+		ui->actionGridTriangle->trigger();
+	else if (ui->actionGridTriangle->isChecked())
+		ui->actionGridNone->trigger();
+}
+	
 void MainWindow::toolsOptions()
 {
     SettingsUi dialog(this);

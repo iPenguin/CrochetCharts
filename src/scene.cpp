@@ -3510,13 +3510,13 @@ void Scene::setGuidelinesType(QString guides)
 
     if(mGuidelines.type() != guides) {
         mGuidelines.setType(guides);
-        if(guides == tr("Round")) {
+        /*if(guides == tr("Round")) {
             DEBUG("TODO: show guidelines round");
         } else if(guides == tr("Grid")) {
             DEBUG("TODO: show guidelines grid");
         } else {
             DEBUG("TODO: hide guidelines");
-        }
+        }*/
     }
     
     updateGuidelines();
