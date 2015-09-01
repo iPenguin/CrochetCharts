@@ -79,6 +79,11 @@ ExportUi::ExportUi(QTabWidget* tab, QMap<QString, int>* stitches,
 
 }
 
+ExportUi::~ExportUi()
+{
+	delete ui;
+}
+
 void ExportUi::setupChartOptions()
 {
 

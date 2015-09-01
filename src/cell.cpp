@@ -243,6 +243,8 @@ Cell* Cell::copy(Cell *cell)
     c->setScale(1, 1);
     c->setTransform(QTransform());
 	c->setTransformations(ChartItemTools::cloneGraphicsTransformations(this));
+	foreach (QGraphicsTransform* t, transformations())
+		t->setParent(parentObject());
 
     return c;
 }

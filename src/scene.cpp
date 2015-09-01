@@ -2375,6 +2375,8 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		ChartImage* newImage = new ChartImage(image->filename());
 		newImage->setPos(image->pos());
 		newImage->setTransformations(ChartItemTools::cloneGraphicsTransformations(image));
+		foreach (QGraphicsTransform* t, newImage->transformations())
+			t->setParent(newImage->parentObject());
 		newImage->setRotation(image->rotation());
 		newImage->setLayer(getCurrentLayer()->uid());
 		undoStack()->push(new AddItem(this, newImage));
@@ -2399,6 +2401,8 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 		newGroup->setTransformOriginPoint(mPivotPt);
 		newGroup->setRotation(0);
 		newGroup->setTransformations(ChartItemTools::cloneGraphicsTransformations(g));
+		foreach (QGraphicsTransform* t, newGroup->transformations())
+			t->setParent(newGroup->parentObject());
 		
 		foreach(QGraphicsItem* child, childs) {
 			g->removeFromGroup(child);
@@ -2725,7 +2729,6 @@ void Scene::deleteSelection()
 	//undoStack()->push(new RemoveItems(this, items));
 	blockSignals(true);
 	foreach(QGraphicsItem* item, items) {
-		removeItem(item);
         switch(item->type()) {
             case ItemGroup::Type:
             case Cell::Type: {

@@ -166,11 +166,17 @@ void ChartItemTools::initIfNotAlreadyInitialised(QGraphicsItem* item)
 {
 	QList<QGraphicsTransform*> transforms = item->transformations();
 	if (transforms.length() == 0) {
-		transforms.append(new QGraphicsRotation());
-		transforms.append(new QGraphicsScale());
+		QGraphicsRotation* rot = new QGraphicsRotation();
+		QGraphicsScale* scale = new QGraphicsScale();
+		rot->setParent(item->parentObject());
+		scale->setParent(item->parentObject());
+		transforms.append(rot);
+		transforms.append(scale);
 		item->setTransformations(transforms);
 	} else if (transforms.length() == 1) {
-		transforms.append(new QGraphicsScale());
+		QGraphicsScale* scale = new QGraphicsScale();
+		scale->setParent(item->parentObject());
+		transforms.append(scale);
 		item->setTransformations(transforms);
 	}
 }
