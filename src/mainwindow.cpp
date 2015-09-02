@@ -551,6 +551,7 @@ void MainWindow::setupMenus()
 	
 	connect(mSelectGroup, SIGNAL(triggered(QAction*)), SLOT(changeSelectMode(QAction*)));
     connect(ui->actionNextSelectMode, SIGNAL(triggered()), SLOT(nextSelectMode()));
+	
 	addAction(ui->actionNextSelectMode);
 	
 	mGridGroup = new QActionGroup(this);
@@ -561,7 +562,10 @@ void MainWindow::setupMenus()
 	ui->actionGridNone->setChecked(true);
 	
 	connect(mGridGroup, SIGNAL(triggered(QAction*)), SLOT(changeGridMode(QAction*)));
+	connect(mGridGroup, SIGNAL(triggered(QAction*)), mPropertiesDock, SLOT(propertyUpdated()));
 	connect(ui->actionNextGridMode, SIGNAL(triggered()), SLOT(nextGridMode()));
+	connect(ui->actionNextGridMode, SIGNAL(triggered()), mPropertiesDock, SLOT(propertyUpdated()));
+	
 	addAction(ui->actionNextGridMode);
 	
     //Charts Menu
