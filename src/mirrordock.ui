@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Copy, Mirror and Rotate</string>
+   <string>&amp;Copy, Mirror and Rotate</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout_6">
@@ -21,13 +21,22 @@
        <string>Copy</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_5">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
         <number>2</number>
        </property>
        <item row="2" column="1">
         <widget class="QToolButton" name="copyDown">
          <property name="toolTip">
-          <string>Mirror down</string>
+          <string>Copy down</string>
          </property>
          <property name="text">
           <string>D</string>
@@ -47,7 +56,7 @@
        <item row="0" column="1">
         <widget class="QToolButton" name="copyUp">
          <property name="toolTip">
-          <string>Mirror up</string>
+          <string>Copy up</string>
          </property>
          <property name="text">
           <string>U</string>
@@ -67,7 +76,7 @@
        <item row="1" column="2">
         <widget class="QToolButton" name="copyRight">
          <property name="toolTip">
-          <string>Mirror right</string>
+          <string>Copy right</string>
          </property>
          <property name="text">
           <string>R</string>
@@ -87,7 +96,7 @@
        <item row="1" column="0">
         <widget class="QToolButton" name="copyLeft">
          <property name="toolTip">
-          <string>Mirror left</string>
+          <string>Copy left</string>
          </property>
          <property name="text">
           <string>L</string>
@@ -113,7 +122,16 @@
        <string>Mirror</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
         <number>2</number>
        </property>
        <item row="0" column="1">
@@ -205,7 +223,16 @@
        <string>Rotate</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>2</number>
+       </property>
+       <property name="topMargin">
+        <number>2</number>
+       </property>
+       <property name="rightMargin">
+        <number>2</number>
+       </property>
+       <property name="bottomMargin">
         <number>2</number>
        </property>
        <item row="2" column="1">
