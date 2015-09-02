@@ -69,16 +69,9 @@
 
     <chapter id="installation">
         <title>Installation</title>
-        <para>Because this software is licensed per user you may install it on multiple computers including any
-        combination of the supported platforms below.
-        To install on multiple platforms you may goto the the <ulink url="@ORG_DOWNLOAD@">downloads page</ulink>
-        and download the installer for other platforms.
-        You will need your serial number to complete the installation.
-        The serial number can be found in the <link linkend="helpAbout">About dialog</link>.
-        If you need help installing on a second platform please <ulink url="@ORG_CONTACT@">contact me</ulink>.</para>
         <section>
             <title>Windows</title>
-            <para>@PROJECT_LONGNAME@ will run on Microsoft Windows XP, Windows Vista, and Windows 7.
+            <para>@PROJECT_LONGNAME@ will run on Microsoft Windows XP, Windows Vista, Windows 7, Windows 8, Windows 8.1 and Windows 10.
                 To install the software you can download the setup file from
                 <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.
             </para>
@@ -148,48 +141,6 @@
             <para>For Debian/Ubuntu based distributions you can use the .deb package.
                 If you're having any problems please <ulink url="@ORG_CONTACT@">contact me</ulink>
             </para>
-        </section>
-        
-        <section>
-            <title>Licensing Wizard</title>
-            <para>The license wizard allows the user to either register or evaluate this software.
-                To use the software you must agree to the End User License Agreement.
-                To evaluate the software you will need to supply your name, and email address.
-                When you register the software you will need to supply your name, email address and serial number.
-                The serial number should have arrived in an email called "Stitch Works Software - License Information for Order#XXXX".
-            </para>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/license-wizard1.png" format="PNG" />
-                    </imageobject>
-                    <caption>The license wizard for @PROJECT_LONGNAME@</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/license-wizard2.png" format="PNG" />
-                    </imageobject>
-                    <caption>The license wizard EULA for @PROJECT_LONGNAME@</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/license-wizard3.png" format="PNG" />
-                    </imageobject>
-                    <caption>The license wizard registration page for @PROJECT_LONGNAME@</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/license-wizard4.png" format="PNG" />
-                    </imageobject>
-                    <caption>Thanks for registering or trying @PROJECT_LONGNAME@</caption>
-                </mediaobject>
-            </screenshot>
         </section>
     </chapter>
     
@@ -1848,8 +1799,7 @@
             or on the Mac by going to <menuchoice><guimenu>@PROJECT_LONGNAME@</guimenu><guimenuitem>About @PROJECT_LONGNAME@</guimenuitem></menuchoice>.
             </para>
             <para>This dialog contains the full version string and build date, copyright notice, description,
-                dedication and license information. The license information is required to use the software.
-                The license information was provided to you when you purchased the software, but is presented here for your convenience.
+                dedication and license information.
             </para>
         </section>
     </chapter>
