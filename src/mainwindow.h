@@ -108,6 +108,7 @@ private slots:
     void viewShowStitches();
     void viewShowPatternColors();
     void viewShowPatternStitches();
+	void viewShowLayers();
     void viewShowUndoHistory();
     void viewShowMainToolbar();
     void viewShowEditModeToolbar();

@@ -512,6 +512,7 @@ void MainWindow::setupMenus()
     connect(ui->actionShowStitches, SIGNAL(triggered()), SLOT(viewShowStitches()));
     connect(ui->actionShowPatternColors, SIGNAL(triggered()), SLOT(viewShowPatternColors()));
     connect(ui->actionShowPatternStitches, SIGNAL(triggered()), SLOT(viewShowPatternStitches()));
+	connect(ui->actionShowLayers, SIGNAL(triggered()), SLOT(viewShowLayers()));
 
     connect(ui->actionShowUndoHistory, SIGNAL(triggered()), SLOT(viewShowUndoHistory()));
     
@@ -1221,6 +1222,7 @@ void MainWindow::menuViewAboutToShow()
     ui->actionShowStitches->setChecked(ui->allStitchesDock->isVisible());
     ui->actionShowPatternColors->setChecked(ui->patternColorsDock->isVisible());
     ui->actionShowPatternStitches->setChecked(ui->patternStitchesDock->isVisible());
+	ui->actionShowLayers->setChecked(ui->layersDock->isVisible());
 
     ui->actionShowUndoHistory->setChecked(mUndoDock->isVisible());
     
@@ -1451,6 +1453,11 @@ void MainWindow::viewShowStitches()
 void MainWindow::viewShowPatternColors()
 {
     ui->patternColorsDock->setVisible(ui->actionShowPatternColors->isChecked());
+}
+
+void MainWindow::viewShowLayers()
+{
+	ui->layersDock->setVisible(ui->actionShowLayers->isChecked());
 }
 
 void MainWindow::viewShowPatternStitches()
