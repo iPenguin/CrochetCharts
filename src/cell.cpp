@@ -66,7 +66,6 @@ QRectF Cell::boundingRect() const
 
 void Cell::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-
     if(!stitch())
         return;
 
@@ -219,14 +218,6 @@ void Cell::useAlternateRenderer(bool useAlt)
     }
 }
 
-void Cell::setScale(qreal sx, qreal sy)
-{
-
-    QPointF newScale = QPointF(sx / transform().m11(), sy / transform().m22());
-
-    QGraphicsSvgItem::setTransform(transform().scale(newScale.x(), newScale.y()));
-}
-
 Cell* Cell::copy(Cell *cell)
 {
     Cell *c = 0;
@@ -240,7 +231,6 @@ Cell* Cell::copy(Cell *cell)
     c->setColor(c->color());
     c->setTransformOriginPoint(transformOriginPoint());
     c->setRotation(0);
-    c->setScale(1, 1);
     c->setTransform(QTransform());
 	c->setTransformations(ChartItemTools::cloneGraphicsTransformations(this));
 	foreach (QGraphicsTransform* t, transformations())

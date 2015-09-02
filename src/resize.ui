@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>179</width>
+    <width>183</width>
     <height>177</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Resize</string>
+   <string>Resi&amp;ze</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
@@ -30,10 +30,13 @@
       <item row="0" column="1">
        <widget class="QSpinBox" name="topBox">
         <property name="minimum">
-         <number>1</number>
+         <number>-999999999</number>
         </property>
         <property name="maximum">
          <number>999999999</number>
+        </property>
+        <property name="singleStep">
+         <number>50</number>
         </property>
        </widget>
       </item>
@@ -50,10 +53,13 @@
       <item row="1" column="1">
        <widget class="QSpinBox" name="bottomBox">
         <property name="minimum">
-         <number>1</number>
+         <number>-999999999</number>
         </property>
         <property name="maximum">
          <number>999999999</number>
+        </property>
+        <property name="singleStep">
+         <number>50</number>
         </property>
        </widget>
       </item>
@@ -76,10 +82,13 @@
       <item row="2" column="1">
        <widget class="QSpinBox" name="leftBox">
         <property name="minimum">
-         <number>1</number>
+         <number>-999999999</number>
         </property>
         <property name="maximum">
          <number>999999999</number>
+        </property>
+        <property name="singleStep">
+         <number>50</number>
         </property>
        </widget>
       </item>
@@ -96,10 +105,13 @@
       <item row="3" column="1">
        <widget class="QSpinBox" name="rightBox">
         <property name="minimum">
-         <number>1</number>
+         <number>-999999999</number>
         </property>
         <property name="maximum">
          <number>999999999</number>
+        </property>
+        <property name="singleStep">
+         <number>50</number>
         </property>
        </widget>
       </item>

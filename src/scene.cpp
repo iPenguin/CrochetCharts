@@ -2562,8 +2562,8 @@ void Scene::mirror(int direction)
 	
 	emit selectionChanged();
 	
+	updateSceneRect();
     undoStack()->endMacro();
-	
     QApplication::restoreOverrideCursor();
 }
 
