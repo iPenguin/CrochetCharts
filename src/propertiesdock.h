@@ -61,6 +61,7 @@ public slots:
 
 signals:
     void propertiesUpdated(QString property, QVariant newValue);
+	void setGridType(QString type);
 
 private slots:
     void tabChanged(int tabNumber);

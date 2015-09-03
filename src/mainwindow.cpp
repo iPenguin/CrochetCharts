@@ -445,6 +445,7 @@ void MainWindow::setupDocks()
     mPropertiesDock = new PropertiesDock(ui->tabWidget, this);
     connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
     connect(mPropertiesDock, SIGNAL(propertiesUpdated(QString,QVariant)), SLOT(propertiesUpdate(QString,QVariant)));
+	connect(mPropertiesDock, SIGNAL(setGridType(QString)), SLOT(setSelectedGridMode(QString)));
 }
 
 void MainWindow::setupMenus()
@@ -1008,6 +1009,38 @@ void MainWindow::changeGridMode(QAction* action)
 		else if (action == ui->actionGridTriangle)
 			tab->setGuidelinesType("Triangles");
 	}
+}
+
+void MainWindow::setSelectedGridMode(QString gmode) {
+	CrochetTab* tab = curCrochetTab();
+	if (tab == NULL)
+		return;
+		
+	ui->actionGridNone->blockSignals(true);
+	ui->actionGridSquare->blockSignals(true);
+	ui->actionGridRound->blockSignals(true);
+	ui->actionGridTriangle->blockSignals(true);
+	
+	ui->actionGridNone->setChecked(false);
+	ui->actionGridSquare->setChecked(false);
+	ui->actionGridRound->setChecked(false);
+	ui->actionGridTriangle->setChecked(false);
+	
+	
+	if (gmode.compare("None") == 0) {
+		ui->actionGridNone->setChecked(true);
+	} else if (gmode.compare("Rows") == 0) {
+		ui->actionGridSquare->setChecked(true);
+	} else if (gmode.compare("Rounds") == 0) {
+		ui->actionGridRound->setChecked(true);
+	} else if (gmode.compare("Triangles") == 0) {
+		ui->actionGridTriangle->setChecked(true);
+	}
+	ui->actionGridNone->blockSignals(false);
+	ui->actionGridSquare->blockSignals(false);
+	ui->actionGridRound->blockSignals(false);
+	ui->actionGridTriangle->blockSignals(false);
+	
 }
 
 void MainWindow::nextGridMode()

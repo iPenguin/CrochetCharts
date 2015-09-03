@@ -640,6 +640,7 @@ void PropertiesDock::chartUpdateGuidelines()
         QVariant value;
         value.setValue(mGuidelines);
         emit propertiesUpdated("Guidelines", value);
+		emit setGridType(mGuidelines.type());
     }
 }
 

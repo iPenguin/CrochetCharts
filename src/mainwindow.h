@@ -151,6 +151,7 @@ private slots:
 	
 	void changeSelectMode(QAction* action);
 	void nextSelectMode();
+	void setSelectedGridMode(QString mode);
 	void changeGridMode(QAction* action);
 	void nextGridMode();
 
