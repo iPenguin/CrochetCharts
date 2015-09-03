@@ -354,12 +354,12 @@ void CrochetTab::arrangeGrid(QSize grid, QSize alignment, QSize spacing, bool us
 
 void CrochetTab::addLayer(const QString& layer)
 {
-	mScene->addLayer(layer);
+	mScene->addLayerUndoable(layer);
 }
 
 void CrochetTab::addLayer(const QString& layer, unsigned int uid)
 {
-	mScene->addLayer(layer, uid);
+	mScene->addLayerUndoable(layer, uid);
 }
 
 void CrochetTab::removeSelectedLayer()

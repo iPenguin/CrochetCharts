@@ -2939,6 +2939,11 @@ void Scene::cut()
                 undoStack()->push(new RemoveItem(this, g));
                 break;
             }
+            case ChartImage::Type: {
+                ChartImage *g = qgraphicsitem_cast<ChartImage*>(item);
+                undoStack()->push(new RemoveItem(this, g));
+                break;
+            }
             default:
                 WARN("Unknown data type: " + QString::number(item->type()));
                 break;
@@ -3139,59 +3144,93 @@ void Scene::addLayer(const QString& name, unsigned int uid)
 	emit layersChanged(l, mSelectedLayer);
 }
 
+void Scene::addLayer(ChartLayer* layer)
+{
+	mLayers[layer->uid()] = layer;
+	
+	QList<ChartLayer*> l = layers();
+	emit layersChanged(l, mSelectedLayer);
+}
+
+void Scene::addLayerUndoable(const QString& name)
+{
+	mUndoStack.push(new AddLayer(this, new ChartLayer(name)));
+}
+
+void Scene::addLayerUndoable(const QString& name, unsigned int uid)
+{
+	mUndoStack.push(new AddLayer(this, new ChartLayer(uid, name)));
+}
+
+void Scene::removeLayer(unsigned int uid)
+{
+	ChartLayer* layer = mLayers[uid];
+		
+	//remove the layer
+	mLayers.remove(uid);
+	
+	//and select another one, if the removed one was currently selected
+	QList<ChartLayer*> l = layers();
+	if (l.count() == 0)
+		mSelectedLayer = NULL;
+	else if (mSelectedLayer == layer)
+		selectLayer(l.first()->uid());
+		
+	emit layersChanged(l, mSelectedLayer);
+}
+
+void Scene::removeLayerUndoable(unsigned int uid)
+{
+	mUndoStack.beginMacro("remove layer");
+	
+	ChartLayer* layer = mLayers[uid];
+	
+	//first, remove all items in the layer
+	QList<QGraphicsItem*> toRemove;
+	QList<QGraphicsItem*> itemslist = items();
+	
+	foreach(QGraphicsItem *item, itemslist) {
+		switch(item->type()) {
+			case Cell::Type: {
+				Cell *c = qgraphicsitem_cast<Cell*>(item);
+				if (c->layer() == layer->uid() && c->parentItem() == NULL)
+					toRemove.append(c);
+				break;
+			}
+			case Indicator::Type: {
+				Indicator*c = qgraphicsitem_cast<Indicator*>(item);
+				if (c->layer() == layer->uid() && c->parentItem() == NULL)
+					toRemove.append(c);
+				break;
+			}
+			case ItemGroup::Type: {
+				ItemGroup *c = qgraphicsitem_cast<ItemGroup*>(item);
+				if (c->layer() == layer->uid() && c->parentItem() == NULL)
+					toRemove.append(c);
+				break;
+			}
+			case ChartImage::Type: {
+				ChartImage *c = qgraphicsitem_cast<ChartImage*>(item);
+				if (c->layer() == layer->uid() && c->parentItem() == NULL)
+					toRemove.append(c);
+				break;
+			}
+			default:
+				WARN("Unknown data type: " + QString::number(item->type()));
+				break;
+		}
+	}
+	
+	mUndoStack.push(new RemoveItems(this, toRemove));
+	mUndoStack.push(new RemoveLayer(this, layer));
+	
+	mUndoStack.endMacro();
+}
+
 void Scene::removeSelectedLayer()
 {
 	if (mSelectedLayer != NULL) {
-		//first, remove all items in the layer
-		QList<QGraphicsItem*> toRemove;
-		foreach(QGraphicsItem *item, items()) {
-            switch(item->type()) {
-                case Cell::Type: {
-                    Cell *c = qgraphicsitem_cast<Cell*>(item);
-                    if (c->layer() == mSelectedLayer->uid())
-                        toRemove.append(c);
-                    break;
-                }
-                case Indicator::Type: {
-                    Indicator*c = qgraphicsitem_cast<Indicator*>(item);
-                    if (c->layer() == mSelectedLayer->uid())
-                        toRemove.append(c);
-                    break;
-                }
-                case ItemGroup::Type: {
-                    ItemGroup *c = qgraphicsitem_cast<ItemGroup*>(item);
-                    if (c->layer() == mSelectedLayer->uid())
-                        toRemove.append(c);
-                    break;
-                }
-                case ChartImage::Type: {
-                    ChartImage *c = qgraphicsitem_cast<ChartImage*>(item);
-                    if (c->layer() == mSelectedLayer->uid())
-                        toRemove.append(c);
-                    break;
-                }
-                default:
-                    WARN("Unknown data type: " + QString::number(item->type()));
-                    break;
-            }
-        }
-		
-		foreach (QGraphicsItem* item, toRemove) {
-			removeItem(item);
-		}
-		
-		//then remove the layer
-		mLayers.remove(mSelectedLayer->uid());
-		delete mSelectedLayer;
-		
-		//and select another one
-		QList<ChartLayer*> l = layers();
-		if (l.count() > 0)
-			selectLayer(l.first()->uid());
-		else
-			mSelectedLayer = NULL;
-			
-		emit layersChanged(l, mSelectedLayer);
+		removeLayerUndoable(mSelectedLayer->uid());
 	}
 }
 
@@ -3200,31 +3239,33 @@ void Scene::mergeLayer(unsigned int from, unsigned int to)
 	//we need to have a layer selected
 	if (mSelectedLayer != NULL)
 	{
+		mUndoStack.beginMacro("merge layers");
+		QList<QGraphicsItem*> itemslist = items();
 		//move all items in the from layer to the to layer
-		foreach(QGraphicsItem *item, items()) {
+		foreach(QGraphicsItem *item, itemslist) {
 			switch(item->type()) {
 				case Cell::Type: {
 					Cell *c = qgraphicsitem_cast<Cell*>(item);
 					if (c->layer() == from)
-						c->setLayer(to);
+						mUndoStack.push(new SetLayerStitch(this, c, to));
 					break;
 				}
 				case Indicator::Type: {
 					Indicator*c = qgraphicsitem_cast<Indicator*>(item);
 					if (c->layer() == from)
-						c->setLayer(to);
+						mUndoStack.push(new SetLayerIndicator(this, c, to));
 					break;
 				}
 				case ItemGroup::Type: {
 					ItemGroup *c = qgraphicsitem_cast<ItemGroup*>(item);
 					if (c->layer() == from)
-						c->setLayer(to);
+						mUndoStack.push(new SetLayerGroup(this, c, to));
 					break;
 				}
 				case ChartImage::Type: {
 					ChartImage *c = qgraphicsitem_cast<ChartImage*>(item);
 					if (c->layer() == from)
-						c->setLayer(to);
+						mUndoStack.push(new SetLayerImage(this, c, to));
 					break;
 				}
 				default:
@@ -3234,10 +3275,11 @@ void Scene::mergeLayer(unsigned int from, unsigned int to)
 		}
 		
 		//and now we remove from
-		selectLayer(from);
-		removeSelectedLayer();
+		mUndoStack.push(new RemoveLayer(this, mLayers[from]));
 		selectLayer(to);
 		editedLayer(getLayer(to));
+		
+		mUndoStack.endMacro();
 	}
 }
 
@@ -3285,6 +3327,9 @@ void Scene::selectLayer(unsigned int uid)
 
 void Scene::editedLayer(ChartLayer* layer)
 {
+	if (layer == NULL || mSelectedLayer == NULL)
+		return;
+	
     foreach(QGraphicsItem *item, items()) {
         switch(item->type()) {
             case Cell::Type: {

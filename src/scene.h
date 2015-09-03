@@ -258,12 +258,22 @@ public slots:
 	/**
 	 * layer manipulation functions
 	 */
-	void addLayer(const QString& layer);
-	void addLayer(const QString& layer, unsigned int uid);
+	void addLayer(const QString& name);
+	void addLayer(const QString& name, unsigned int uid);
+	void addLayer(ChartLayer* layer);
+	
+	void addLayerUndoable(const QString& name);
+	void addLayerUndoable(const QString& name, unsigned int uid);
+	
+	void removeLayer(unsigned int uid);
+	void removeLayerUndoable(unsigned int uid);
+	
 	void removeSelectedLayer();
+	
 	void selectLayer(unsigned int uid);
 	void editedLayer(ChartLayer* layer);
 	void refreshLayers();
+	
 	void mergeLayer(unsigned int from, unsigned int to);
 	/**
 	 * row manipulation functions

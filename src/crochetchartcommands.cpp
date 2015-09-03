@@ -462,3 +462,137 @@ void UngroupItems::undo()
 {
     g = s->group(items, g);
 }
+
+/*************************************************\
+| AddLayer                                        |
+\*************************************************/
+AddLayer::AddLayer(Scene* scene, ChartLayer* layer, QUndoCommand* parent)
+{
+	s = scene;
+	mLayer = layer;
+    setText(QObject::tr("add layer"));
+}
+
+AddLayer::~AddLayer()
+{
+}
+	
+void AddLayer::undo()
+{
+	s->removeLayer(mLayer->uid());
+	s->refreshLayers();
+}
+void AddLayer::redo()
+{
+	s->addLayer(mLayer);
+	s->refreshLayers();
+}
+
+/*************************************************\
+| RemoveLayer                                     |
+\*************************************************/
+RemoveLayer::RemoveLayer(Scene* scene, ChartLayer* layer, QUndoCommand* parent)
+{
+	s = scene;
+	mLayer = layer;
+    setText(QObject::tr("remove layer"));
+}
+
+void RemoveLayer::undo()
+{
+	s->addLayer(mLayer);
+	s->refreshLayers();
+}
+void RemoveLayer::redo()
+{
+	s->removeLayer(mLayer->uid());
+	s->refreshLayers();
+}
+
+/*************************************************\
+| SetLayerStitch                                  |
+\*************************************************/
+SetLayerStitch::SetLayerStitch(Scene* scene, Cell* c, unsigned int layer, QUndoCommand* parent)
+{
+	s = scene;
+	this->c = c;
+	mNew = layer;
+	mOld = c->layer();
+	setText("set sitch layer");
+}
+
+void SetLayerStitch::undo()
+{
+	c->setLayer(mOld);
+}
+
+void SetLayerStitch::redo()
+{
+	c->setLayer(mNew);
+}
+
+/*************************************************\
+| SetLayerIndicator                               |
+\*************************************************/
+SetLayerIndicator::SetLayerIndicator(Scene* scene, Indicator* c, unsigned int layer, QUndoCommand* parent)
+{
+	s = scene;
+	this->c = c;
+	mNew = layer;
+	mOld = c->layer();
+	setText("set indicator layer");
+}
+
+void SetLayerIndicator::undo()
+{
+	c->setLayer(mOld);
+}
+
+void SetLayerIndicator::redo()
+{
+	c->setLayer(mNew);
+}
+
+/*************************************************\
+| SetLayerGroup                                   |
+\*************************************************/
+SetLayerGroup::SetLayerGroup(Scene* scene, ItemGroup* c, unsigned int layer, QUndoCommand* parent)
+{
+	s = scene;
+	this->c = c;
+	mNew = layer;
+	mOld = c->layer();
+	setText("set group layer");
+}
+
+void SetLayerGroup::undo()
+{
+	c->setLayer(mOld);
+}
+
+void SetLayerGroup::redo()
+{
+	c->setLayer(mNew);
+}
+
+/*************************************************\
+| SetLayerimage                                |
+\*************************************************/
+SetLayerImage::SetLayerImage(Scene* scene, ChartImage* c, unsigned int layer, QUndoCommand* parent)
+{
+	s = scene;
+	this->c = c;
+	mNew = layer;
+	mOld = c->layer();
+	setText("set image layer");
+}
+
+void SetLayerImage::undo()
+{
+	c->setLayer(mOld);
+}
+
+void SetLayerImage::redo()
+{
+	c->setLayer(mNew);
+}
