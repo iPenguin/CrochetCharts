@@ -237,6 +237,7 @@ public:
 	void snapGraphicsItemToGrid(QGraphicsItem& item);
 	
 public slots:    
+	void showProperties();
     void copy();
     void cut();
     void paste();
@@ -289,6 +290,7 @@ public slots:
     void editorGotFocus(Indicator *item);
     
 signals:
+	void showPropertiesSignal();
     void stitchChanged(QString oldSt, QString newSt);
     void colorChanged(QString oldColor, QString newColor);
 	void layersChanged(QList<ChartLayer*>& layers, ChartLayer* selected);

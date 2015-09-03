@@ -102,7 +102,7 @@ void Settings::setupValueList() {
     mValueList["generateTextRepeats"] = QVariant(true);
     mValueList["showChartCenter"] = QVariant(false);
 
-    mValueList["pasteOffset"] = QVariant(tr("Down and Right"));
+    mValueList["pasteOffset"] = QVariant(tr("On mouse cursor"));
     
     //charts options
     mValueList["defaultStitch"] = QVariant("ch");

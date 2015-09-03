@@ -348,18 +348,22 @@ void Scene::contextMenuEvent(QGraphicsSceneContextMenuEvent* e)
 	QAction* copyAction = new QAction(tr("Copy"), &menu);
 	QAction* cutAction = new QAction(tr("Cut"), &menu);
     QAction* pasteAction = new QAction(tr("Paste"), &menu);
-    QAction *deleteAction = new QAction(tr("Delete"), &menu);
-
+    QAction* deleteAction = new QAction(tr("Delete"), &menu);
+	QAction* propertiesAction = new QAction(tr("Properties"), &menu);
+	
     connect(deleteAction, SIGNAL(triggered()), SLOT(deleteSelection()));
     connect(copyAction, SIGNAL(triggered()), SLOT(copy()));
     connect(cutAction, SIGNAL(triggered()), SLOT(cut()));
     connect(pasteAction, SIGNAL(triggered()), SLOT(paste()));
+	connect(propertiesAction, SIGNAL(triggered()), SLOT(showProperties()));
     
     menu.addAction(copyAction);
     menu.addAction(cutAction);
     menu.addAction(pasteAction);
     menu.addSeparator();
     menu.addAction(deleteAction);
+	menu.addSeparator();
+	menu.addAction(propertiesAction);
 
     menu.exec(e->screenPos());
 
@@ -2421,6 +2425,11 @@ QGraphicsItem* Scene::copy_rec(QGraphicsItem* item, QPointF displacement)
 	return NULL;
 }
 
+void Scene::showProperties()
+{
+	emit showPropertiesSignal();
+}
+
 void Scene::copy(int direction)
 {
     if(selectedItems().count() <= 0)
@@ -2680,7 +2689,7 @@ void Scene::paste()
         item->setSelected(true);
 		
 	//if we need to center around the mouse
-	if (Settings::inst()->value("pasteOnMouseLocation").toBool() == true) {
+	if (Settings::inst()->value("pasteOffset").toString().compare(tr("On mouse cursor")) == 0) {
 		if (items.count() > 0) {
 			
 			//get the bounding box of all pasted items

@@ -1412,6 +1412,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
     connect(tab, SIGNAL(guidelinesUpdated(Guidelines)), SLOT(updateGuidelines(Guidelines)));
 	connect(tab, SIGNAL(layersChanged(QList<ChartLayer*>&, ChartLayer*)), this, SLOT(reloadLayerContent(QList<ChartLayer*>&, ChartLayer*)));
 	connect(tab->scene(), SIGNAL(sceneRectChanged(const QRectF&)), mResizeUI, SLOT(updateContent()));
+	connect(tab->scene(), SIGNAL(showPropertiesSignal()), SLOT(viewMakePropertiesVisible()));
 
     mUndoGroup.addStack(tab->undoStack());
     
@@ -1468,6 +1469,12 @@ void MainWindow::viewShowPatternStitches()
 void MainWindow::viewShowUndoHistory()
 {
     mUndoDock->setVisible(ui->actionShowUndoHistory->isChecked());
+}
+
+void MainWindow::viewMakePropertiesVisible()
+{
+	ui->actionShowProperties->setChecked(true);
+	viewShowProperties();
 }
 
 void MainWindow::viewShowProperties()

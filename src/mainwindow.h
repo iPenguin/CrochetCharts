@@ -104,6 +104,7 @@ private slots:
 
     void menuEditAboutToShow();
     
+	void viewMakePropertiesVisible();
     void menuViewAboutToShow();
     void viewShowStitches();
     void viewShowPatternColors();
