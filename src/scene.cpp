@@ -2998,18 +2998,12 @@ ItemGroup* Scene::group(QList<QGraphicsItem*> items, ItemGroup* g)
     if(!g) {
         g = new ItemGroup(0, this);
 		g->setLayer(getCurrentLayer()->uid());
-		
-		/*if (items.count() > 0) {
-			QRectF bigRect = items.first()->sceneBoundingRect();
-			foreach(QGraphicsItem* i, items) {
-				bigRect = bigRect.united(i->sceneBoundingRect());
-			}
-			g->setPos(bigRect.center());
-			g->setTransformOriginPoint(0, 0);
-		}*/
     }
 
     foreach(QGraphicsItem *i, items) {
+		//dont group the chart center
+		if (i->type() == QGraphicsEllipseItem::Type)
+			continue;
         i->setSelected(false);
         i->setFlag(QGraphicsItem::ItemIsSelectable, false);
         g->addToGroup(i);

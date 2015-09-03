@@ -32,14 +32,23 @@
                 <country>USA</country>
             </address>
         </author>
+        <legalnotice>
+            <para>this file is part of @PROJECT_LONGNAME@.</para>
+            <para>@PROJECT_LONGNAME@ is free software: you can redistribute it and/or modify
+                it under the terms of the GNU General Public License as published by
+                the Free Software Foundation, either version 3 of the License, or
+                (at your option) any later version.</para>
+            <para>You should have received a copy of the GNU General Public License
+                along with @PROJECT_LONGNAME@. If not, see <ulink url="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</ulink></para>
+        </legalnotice>
         <abstract>
             <para>
                 <application>@PROJECT_LONGNAME@</application> is an application specially
                 designed to allow you to create design charts for crochet patterns.
                 This document will describe the features and abilities of <application>@PROJECT_LONGNAME@</application>.
+                
             </para>
-        </abstract>
-
+        </abstract>        
         <mediaobject>
             <imageobject>
                 <imagedata fileref="images/cover.png" format="PNG" />
@@ -53,19 +62,152 @@
         <title>Introduction</title>
         <para>This is the user guide for <application>@PROJECT_LONGNAME@</application> by @PROJECT_VENDOR@.
         If you have any questions that are not answered in this document please
-        <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know so that I can answer your
+        <ulink url="@ORG_CONTACT@">contact us</ulink> and let us know so that we can answer your
         questions and improve this guide.</para>
+
+        <section id="open-source">
+            <title>Open source</title>
+            <para>Open-source is a very broad term, @PROJECT_LONGNAME@ in particular is released under the GPL v3 license, since @PROJECT_LONGNAME@ version 1.2.</para>
+            <para>Being open source software has multiple (very good) implications. First of all, it means that @PROJECT_LONGNAME@ is now completely free! Yes, free! Everyone can freely download, use and distribute @PROJECT_LONGNAME@, forever. Secondly, the source code is now publicly available at <ulink ref="https://github.com/iPenguin/CrochetCharts">https://github.com/iPenguin/CrochetCharts</ulink>. Anyone can make changes, add new features, fix bugs,.. . As long as there are people willing to work on it, development won't halt!  Thirdly, you are allowed to share and redistribute @PROJECT_LONGNAME@ however you please, although it must always remain under this license.</para>
+            <para>Being licensed under the GPL v3 license also means that the program comes without warranty. we will do our best to offer support for the program, but should it suddenly decide to sell your house and move to the cloud, we are not held responsible... ;-)</para>
+        </section>
+
+        <section id="what-is-new">
+            <title>What's new in this version?</title>
+            <para>Version 1.2 comes with a series of new features and fixes. Following is a hopefully exhaustive list.</para>
+
+            <variablelist>
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="open-source">open source</link></term>
+                   <listitem>
+                       <para>@PROJECT_LONGNAME@ is now completely open source!</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>Improved stability</term>
+                   <listitem>
+                       <para>The stability of the program has drastically improved. The program now rarely, if ever, crashes.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="properties">Properties window</link></term>
+                   <listitem>
+                       <para>The <emphasis>properties window</emphasis> provides context sensitive information about the current selection and allows you to change certain properties of the selection.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="export-charts">More export options</link></term>
+                   <listitem>
+                       <para>Extra export options, allowing you to export only the selection and the ability to add a header and/or footer to the exported chart.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="pattern-colors">Full coloring options</link></term>
+                   <listitem>
+                       <para>The foreground and background of stitches can now be fully colored using the <link linkend="tools-color-edit">color edit tool</link> and the <link linkend="pattern-colors">pattern colors tab</link>.</para>
+                   </listitem>
+               </varlistentry>
+                   
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-indicator-edit">Full text support</link></term>
+                   <listitem>
+                       <para>Using the <link linkend="properties">properties window</link>, the font and size of an indicator can be edited, which allows for the user to write instructions, copyright notices,.. in the chart.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-add-image">Image support</link></term>
+                   <listitem>
+                       <para>It is possible to add custom images to the chart.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-selection-box">More selection methods</link></term>
+                   <listitem>
+                       <para>Box, lasso and line selection are available. These make it easier to select big groups of items quickly.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-mirror-rotate">Updated copy, mirror and rotate window</link></term>
+                   <listitem>
+                       <para>The old mirror and rotate window now has an extra option, <emphasis>copy</emphasis>, which clones and moves the whole selection. Mirror now properly mirrors the selection, rather than rotating it.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-grid-square">Align to grid</link></term>
+                   <listitem>
+                       <para>A square, rond and triangular grid can be shown, and all items will automatically snap to this grid. This is useful to exactly position elements in a chart. Snap to angle makes stitches automatically rotate towards the center in a round grid.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="layers">Layers</link></term>
+                   <listitem>
+                       <para>A chart can be divided into multiple layers, making it easier to organize big charts and work with overlapping elements.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>New file format</term>
+                   <listitem>
+                       <para>@PROJECT_LONGNAME@ now internally uses another file format. Because of this, charts created in this version can't be opened in older version of @PROJECT_LONGNAME@</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>New method of calculating rotation and scale</term>
+                   <listitem>
+                       <para>The application works with rotation and scale in a completely new way. Everything can now be rotated and scaled arbitrarily, without deforming the stitch or making it jump around the chart.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="options-preferences">More options</link></term>
+                   <listitem>
+                       <para>More options have been added to the application, allowing for more custumizability. Among those options are the ability to rotate and scale around the center of a stitch, and the ability to center stitches on the mouse when pasting.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-resize">Resize window</link></term>
+                   <listitem>
+                       <para>A resize window allows you to change the size of the chart.</para>
+                   </listitem>
+               </varlistentry>
+            </variablelist>
+
+
+        </section>
 
         <section id="videos">
             <title>Additional Resources - Videos</title>
-            <para>There are <ulink url="http://StitchWorksSoftware/videos">videos available on my website</ulink>
+            <para>There are <ulink url="http://StitchWorksSoftware/videos">videos available on the website</ulink>
             that will walk you through using @PROJECT_LONGNAME@.
             </para>
         </section>
-        
     </preface>
-
-
 
     <chapter id="installation">
         <title>Installation</title>
@@ -139,7 +281,7 @@
         <section>
             <title>Linux</title>
             <para>For Debian/Ubuntu based distributions you can use the .deb package.
-                If you're having any problems please <ulink url="@ORG_CONTACT@">contact me</ulink>
+                If you're having any problems please <ulink url="@ORG_CONTACT@">contact us</ulink>
             </para>
         </section>
     </chapter>
@@ -1289,7 +1431,7 @@
                 or scale up the stitches they will always look good.
             </para>
             <para>
-                I recommend using the SVG file format when possible.
+                it is recommended to use SVG file format when possible.
                 SVG is not as well known a format as the others, but it is becoming an industry standard. Here are a few applications that
                 can generate SVG files if you choose to use it:
                     <ulink url="http://inkscape.org">Inkscape</ulink>,
@@ -1298,8 +1440,8 @@
                     <ulink url="http://docs.google.com">Google Docs</ulink>, and
                     <ulink url="http://www.adobe.com/products/illustrator/">Adobe Illustrator</ulink>.
             </para>
-            <para>I recommend starting with a canvas size of 32x32 px.
-                If you need to use a different size I recommend changing the size in increments of 16 or 32.
+            <para>We recommend starting with a canvas size of 32x32 px.
+                If you need to use a different size it is recommended to change the size in increments of 16 or 32.
                 So a single crochet is 32x32, a half double crochet is 32x64, and a double crochet is 32x80.
                 Once you have the basic size you can modify it from there as needed.
             </para>
@@ -1369,7 +1511,7 @@
                <varlistentry id="paste-offset">
                    <term>Paste Offset</term>
                    <listitem>
-                       <para>When copying and pasting, this option decides if the pasted stitches appear on top of or next to the copied stiches. If <link linkend="paste-on-mouse-location">paste on mouse location</link> is enabled, this option does nothing.
+                       <para>When copying and pasting, this option decides if the pasted stitches appear on top of or next to the copied stiches. If <emphasis>on mouse cursor</emphasis> is selected, the pasted objects will be centered on the mouse cursor. 
                         </para>
                    </listitem>
                </varlistentry>
@@ -1699,17 +1841,6 @@
  
            <variablelist>
                <?dbfo list-presentation="blocks"?> 
-               <varlistentry id="paste-on-mouse-location">
-                   <term>Paste on mouse location</term>
-                   <listitem>
-                       <para>If enabled, pasting stitches will center them on the mouse, rather than on the copied stitches. If this is enabled <link linkend="paste-offset">paste offset</link> won't do anything.
-                       </para>
-                   </listitem>
-               </varlistentry>
-            </variablelist>
- 
-           <variablelist>
-               <?dbfo list-presentation="blocks"?> 
                <varlistentry>
                    <term>Click to change stitch</term>
                    <listitem>
@@ -1717,9 +1848,7 @@
                        </para>
                    </listitem>
                </varlistentry>
-            </variablelist>
- 
-           <variablelist>
+
                <?dbfo list-presentation="blocks"?> 
                <varlistentry>
                    <term>Center stitch on mouse</term>
@@ -1728,10 +1857,7 @@
                        </para>
                    </listitem>
                </varlistentry>
-            </variablelist>
-            
- 
-           <variablelist>
+
                <?dbfo list-presentation="blocks"?> 
                <varlistentry>
                    <term>Rotate around center</term>
@@ -1740,9 +1866,7 @@
                        </para>
                    </listitem>
                </varlistentry>
-            </variablelist>
 
-           <variablelist>
                <?dbfo list-presentation="blocks"?> 
                <varlistentry>
                    <term>Scale around center</term>
@@ -1799,7 +1923,7 @@
             or on the Mac by going to <menuchoice><guimenu>@PROJECT_LONGNAME@</guimenu><guimenuitem>About @PROJECT_LONGNAME@</guimenuitem></menuchoice>.
             </para>
             <para>This dialog contains the full version string and build date, copyright notice, description,
-                dedication and license information.
+                dedication and the GPL license information.
             </para>
         </section>
     </chapter>
@@ -1807,7 +1931,7 @@
     <chapter id="limits-on-use">
         <title>Limits on Use of Output</title>
         <para>There are no limits on what you can do with the charts, or output you create in @PROJECT_LONGNAME@.
-            However I would appreciate it if you included a credit in any patterns, or publications where you used this software.
+            However we would appreciate it if you included a credit in any patterns, or publications where you used this software.
             For example: Charts created with @PROJECT_LONGNAME@ by @PROJECT_VENDOR@.
         </para>
     </chapter>
@@ -1817,17 +1941,17 @@
         <section>
             <title>Bugs</title>
             <para>
-                If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact me</ulink> so I can look into the issue.
-                I take bugs and defects very seriously and the sooner I know about them the sooner I can fix them.
+                If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact us</ulink> so we can look into the issue.
+                we take bugs and defects very seriously and the sooner we know about them the sooner we can fix them.
             </para>
         </section>
         <section>
             <title>Features</title>
             <para>
                 Is the software missing a feature? Do you have an idea that should be included in the software?
-                You should <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know.
-                I want this software to make creating charts easy for the users and the best way to do that
-                is to have the users give me feedback about what is and isn't working for them.
+                You should <ulink url="@ORG_CONTACT@">contact us</ulink> and let us know.
+                we want this software to make creating charts easy for the users and the best way to do that
+                is to have the users give us feedback about what is and isn't working for them.
             </para>
         </section>
     </chapter>
