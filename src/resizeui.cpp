@@ -91,13 +91,20 @@ void ResizeUI::clampPressed()
 	CrochetTab* currentTab = qobject_cast<CrochetTab*>(mTabWidget->currentWidget());
 	if (currentTab != NULL)
 	{
-		
-		QRectF ibr = currentTab->scene()->itemsBoundingRect();
+		QList<QGraphicsItem*> selection = currentTab->scene()->items();
+		if (selection.length() == 0)
+			return;
+			
+		QRectF ibr = ibr = selection.first()->sceneBoundingRect();
+		foreach (QGraphicsItem* i, selection) {
+			if (i->isVisible() && i->isEnabled())
+				ibr = ibr.united(i->sceneBoundingRect());
+		}
 
-		ibr.setTop(ibr.top() - SCENE_CLAMP_BORDER_SIZE);
-		ibr.setBottom(ibr.bottom() + SCENE_CLAMP_BORDER_SIZE);
-		ibr.setLeft(ibr.left() - SCENE_CLAMP_BORDER_SIZE);
-		ibr.setRight(ibr.right() + SCENE_CLAMP_BORDER_SIZE);
+		ibr.setTop(ibr.top() - SCENE_CLAMP_BORDER_SIZE - 10);
+		ibr.setBottom(ibr.bottom() + SCENE_CLAMP_BORDER_SIZE + 10);
+		ibr.setLeft(ibr.left() - SCENE_CLAMP_BORDER_SIZE - 10);
+		ibr.setRight(ibr.right() + SCENE_CLAMP_BORDER_SIZE + 10);
 		
 		emit resize(ibr);
 		updateContent();

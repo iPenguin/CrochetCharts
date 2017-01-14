@@ -47,6 +47,7 @@ QString TextView::generateTextRow(int row, bool cleanOutput, bool useRepeats)
 
     //create a list of stitches
     for(int c = 0; c < cols; ++c) {
+		qDebug() << "row iteration!";
         Cell* cell = mScene->grid[row][c];
         if(!cell)
             continue;
@@ -87,10 +88,10 @@ QString TextView::generateText(QStringList row, bool useRepeats)
     bool genRepeats = Settings::inst()->value("generateTextRepeats").toBool();
     QString prefix = ".sws_";
 
-    if(genRepeats && useRepeats) {
+    /*if(genRepeats && useRepeats) {
         data = generateRepeats(row, prefix);
         row = data.value("row");
-    }
+    }*/
 
     previousStitch = "";
     for(int i = 0; i < row.count(); ++i) {

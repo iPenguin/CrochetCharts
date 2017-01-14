@@ -15,17 +15,20 @@ AbstractSelectionBand::AbstractSelectionBand(QWidget* parent)
 
 void AbstractSelectionBand::setDefaultStyle(QPainter& p)
 {
-	QBrush b;
-	b = (QApplication::palette().highlight());
-	
-	p.setBrush(b);
 	p.setRenderHint(QPainter::Antialiasing, true);
 	p.setRenderHint(QPainter::TextAntialiasing, false);
 	p.setRenderHint(QPainter::SmoothPixmapTransform, false);
 	p.setRenderHint(QPainter::HighQualityAntialiasing, false);
 	p.setRenderHint(QPainter::NonCosmeticDefaultPen, true);
-	p.setPen(QPen(Qt::black, 1));
-	p.setOpacity(80.0/255.0);
+	
+	QBrush b;
+	b = (QApplication::palette().highlight());
+	QColor bColor = b.color();
+	p.setPen(QPen(bColor, 1));
+	bColor.setAlpha(80);
+	b.setColor(bColor);
+	
+	p.setBrush(b);
 }
 
 void AbstractSelectionBand::setPosition(const QPoint& pos)

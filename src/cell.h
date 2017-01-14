@@ -68,8 +68,6 @@ public:
     QString name();
 
     void useAlternateRenderer(bool useAlt);
-
-    void setScale(qreal sx, qreal sy);
     
 signals:
     void stitchChanged(QString oldSt, QString newSt);

@@ -50,7 +50,7 @@ private:
 class SetCellStitch : public QUndoCommand
 {
 public:
-    enum { Id = 1100 };
+    enum { Id = 1110 };
     
     SetCellStitch(Cell *cell, QString newSt, QUndoCommand *parent = 0);
 
@@ -70,7 +70,7 @@ private:
 class SetChartZLayer : public QUndoCommand
 {
 public:
-    enum { Id = 1110 };
+    enum { Id = 1120 };
 	SetChartZLayer(ChartImage* ci, const QString& zlayer, QUndoCommand *parent = 0);
 	
 	void undo();
@@ -89,7 +89,7 @@ private:
 class SetChartImagePath : public QUndoCommand
 {
 public:
-    enum { Id = 1110 };
+    enum { Id = 1130 };
 	SetChartImagePath(ChartImage* ci, const QString& path, QUndoCommand *parent = 0);
 	
 	void undo();
@@ -108,7 +108,7 @@ private:
 class SetCellBgColor : public QUndoCommand
 {
 public:
-    enum { Id = 1110 };
+    enum { Id = 1140 };
     
     SetCellBgColor(Cell *cell, QColor newCl, QUndoCommand *parent = 0);
     
@@ -128,7 +128,7 @@ private:
 class SetCellColor : public QUndoCommand
 {
 public:
-    enum { Id = 1110 };
+    enum { Id = 1150 };
 
     SetCellColor(Cell *cell, QColor newCl, QUndoCommand *parent = 0);
 
@@ -148,7 +148,7 @@ private:
 class SetItemRotation : public QUndoCommand
 {
 public:
-    enum { Id = 1120 };
+    enum { Id = 1160 };
 
     SetItemRotation(QGraphicsItem *item, qreal oldAngl, QPointF pivotPt, QUndoCommand *parent = 0);
 
@@ -181,7 +181,7 @@ static void qNormalizeAngle(qreal &angle)
 class SetSelectionRotation : public QUndoCommand
 {
 public:
-    enum { Id = 1125 };
+    enum { Id = 1170 };
 
     SetSelectionRotation(Scene *scene, QList<QGraphicsItem*> itms, qreal degrees, QUndoCommand *parent = 0);
 
@@ -203,7 +203,7 @@ private:
 class SetItemCoordinates : public QUndoCommand
 {
 public:
-    enum { Id = 1130 };
+    enum { Id = 1180 };
 
     SetItemCoordinates(QGraphicsItem *item, QPointF oldPos, QUndoCommand *parent = 0);
 
@@ -223,7 +223,7 @@ private:
 class SetItemScale : public QUndoCommand
 {
 public:
-    enum { Id = 1140 };
+    enum { Id = 1190 };
 
     SetItemScale(QGraphicsItem *item, QPointF oldScle, QPointF pivotPt, QUndoCommand *parent = 0);
 
@@ -246,7 +246,7 @@ private:
 class AddItem : public QUndoCommand
 {
 public:
-    enum { Id = 1150 };
+    enum { Id = 1200 };
 
     AddItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent = 0);
 	~AddItem();
@@ -265,7 +265,7 @@ private:
 class RemoveItem : public QUndoCommand
 {
 public:
-    enum { Id = 1160 };
+    enum { Id = 1210 };
 
     RemoveItem(Scene *scene, QGraphicsItem *item, QUndoCommand *parent = 0);
 
@@ -286,7 +286,7 @@ private:
 class RemoveItems : public QUndoCommand
 {
 public:
-    enum { Id = 1160 };
+    enum { Id = 1220 };
 
     RemoveItems(Scene *scene, QList<QGraphicsItem*> items, QUndoCommand *parent = 0);
 	~RemoveItems();
@@ -306,7 +306,7 @@ private:
 class GroupItems : public QUndoCommand
 {
 public:
-    enum { Id = 1200 };
+    enum { Id = 1230 };
 
     GroupItems(Scene *scene, QList<QGraphicsItem*> itemList, QUndoCommand *parent = 0);
 
@@ -326,7 +326,7 @@ private:
 class UngroupItems : public QUndoCommand
 {
 public:
-    enum { Id = 1210 };
+    enum { Id = 1240 };
 
     UngroupItems(Scene *scene, ItemGroup *group, QUndoCommand *parent = 0);
 
@@ -339,6 +339,111 @@ private:
     QList<QGraphicsItem*> items;
     ItemGroup *g;
     Scene *s;
+};
+
+class AddLayer : public QUndoCommand
+{
+public:
+    enum { Id = 1250 };
+	
+	AddLayer(Scene* scene, ChartLayer* layer, QUndoCommand* parent = 0);
+	~AddLayer();
+	
+	void undo();
+	void redo();
+	
+	int id() const { return Id; }
+private:
+	ChartLayer* mLayer;
+	Scene* s;
+};
+
+class RemoveLayer : public QUndoCommand
+{
+public:
+    enum { Id = 1260 };
+	
+	RemoveLayer(Scene* scene, ChartLayer* layer, QUndoCommand* parent = 0);
+	
+	void undo();
+	void redo();
+	
+	int id() const { return Id; }
+private:
+	ChartLayer* mLayer;
+	Scene* s;
+};
+
+class SetLayerStitch : public QUndoCommand
+{
+public:
+    enum { Id = 1270 };
+	
+	SetLayerStitch(Scene* scene, Cell* c, unsigned int layer, QUndoCommand* parent = 0);
+	
+	void undo();
+	void redo();
+	
+	int id() const { return Id; }
+private:
+	Scene* s;
+	Cell* c;
+	unsigned int mNew;
+	unsigned int mOld;
+};
+
+class SetLayerIndicator : public QUndoCommand
+{
+public:
+    enum { Id = 1280 };
+	
+	SetLayerIndicator(Scene* scene, Indicator* c, unsigned int layer, QUndoCommand* parent = 0);
+	
+	void undo();
+	void redo();
+	
+	int id() const { return Id; }
+private:
+	Scene* s;
+	Indicator* c;
+	unsigned int mNew;
+	unsigned int mOld;
+};
+
+class SetLayerGroup : public QUndoCommand
+{
+public:
+    enum { Id = 1290 };
+	
+	SetLayerGroup(Scene* scene, ItemGroup* c, unsigned int layer, QUndoCommand* parent = 0);
+	
+	void undo();
+	void redo();
+	
+	int id() const { return Id; }
+private:
+	Scene* s;
+	ItemGroup* c;
+	unsigned int mNew;
+	unsigned int mOld;
+};
+
+class SetLayerImage : public QUndoCommand
+{
+public:
+    enum { Id = 1300 };
+	
+	SetLayerImage(Scene* scene, ChartImage* c, unsigned int layer, QUndoCommand* parent = 0);
+	
+	void undo();
+	void redo();
+	
+	int id() const { return Id; }
+private:
+	Scene* s;
+	ChartImage* c;
+	unsigned int mNew;
+	unsigned int mOld;
 };
 
 #endif //CROCHETCHARTCOMMANDS_H

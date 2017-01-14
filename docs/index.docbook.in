@@ -32,14 +32,23 @@
                 <country>USA</country>
             </address>
         </author>
+        <legalnotice>
+            <para>this file is part of @PROJECT_LONGNAME@.</para>
+            <para>@PROJECT_LONGNAME@ is free software: you can redistribute it and/or modify
+                it under the terms of the GNU General Public License as published by
+                the Free Software Foundation, either version 3 of the License, or
+                (at your option) any later version.</para>
+            <para>You should have received a copy of the GNU General Public License
+                along with @PROJECT_LONGNAME@. If not, see <ulink url="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</ulink></para>
+        </legalnotice>
         <abstract>
             <para>
                 <application>@PROJECT_LONGNAME@</application> is an application specially
                 designed to allow you to create design charts for crochet patterns.
                 This document will describe the features and abilities of <application>@PROJECT_LONGNAME@</application>.
+                
             </para>
-        </abstract>
-
+        </abstract>        
         <mediaobject>
             <imageobject>
                 <imagedata fileref="images/cover.png" format="PNG" />
@@ -53,32 +62,158 @@
         <title>Introduction</title>
         <para>This is the user guide for <application>@PROJECT_LONGNAME@</application> by @PROJECT_VENDOR@.
         If you have any questions that are not answered in this document please
-        <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know so that I can answer your
+        <ulink url="@ORG_CONTACT@">contact us</ulink> and let us know so that we can answer your
         questions and improve this guide.</para>
+
+        <section id="open-source">
+            <title>Open source</title>
+            <para>Open-source is a very broad term, @PROJECT_LONGNAME@ in particular is released under the GPL v3 license, since @PROJECT_LONGNAME@ version 1.2.</para>
+            <para>Being open source software has multiple (very good) implications. First of all, it means that @PROJECT_LONGNAME@ is now completely free! Yes, free! Everyone can freely download, use and distribute @PROJECT_LONGNAME@, forever. Secondly, the source code is now publicly available at <ulink ref="https://github.com/iPenguin/CrochetCharts">https://github.com/iPenguin/CrochetCharts</ulink>. Anyone can make changes, add new features, fix bugs,.. . As long as there are people willing to work on it, development won't halt!  Thirdly, you are allowed to share and redistribute @PROJECT_LONGNAME@ however you please, although it must always remain under this license.</para>
+            <para>Being licensed under the GPL v3 license also means that the program comes without warranty. we will do our best to offer support for the program, but should it suddenly decide to sell your house and move to the cloud, we are not held responsible... ;-)</para>
+        </section>
+
+        <section id="what-is-new">
+            <title>What's new in this version?</title>
+            <para>Version 1.2 comes with a series of new features and fixes. Following is a hopefully exhaustive list.</para>
+
+            <variablelist>
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="open-source">open source</link></term>
+                   <listitem>
+                       <para>@PROJECT_LONGNAME@ is now completely open source!</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>Improved stability</term>
+                   <listitem>
+                       <para>The stability of the program has drastically improved. The program now rarely, if ever, crashes.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="properties">Properties window</link></term>
+                   <listitem>
+                       <para>The <emphasis>properties window</emphasis> provides context sensitive information about the current selection and allows you to change certain properties of the selection.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="export-charts">More export options</link></term>
+                   <listitem>
+                       <para>Extra export options, allowing you to export only the selection and the ability to add a header and/or footer to the exported chart.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="pattern-colors">Full coloring options</link></term>
+                   <listitem>
+                       <para>The foreground and background of stitches can now be fully colored using the <link linkend="tools-color-edit">color edit tool</link> and the <link linkend="pattern-colors">pattern colors tab</link>.</para>
+                   </listitem>
+               </varlistentry>
+                   
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-indicator-edit">Full text support</link></term>
+                   <listitem>
+                       <para>Using the <link linkend="properties">properties window</link>, the font and size of an indicator can be edited, which allows for the user to write instructions, copyright notices,.. in the chart.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-add-image">Image support</link></term>
+                   <listitem>
+                       <para>It is possible to add custom images to the chart.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-selection-box">More selection methods</link></term>
+                   <listitem>
+                       <para>Box, lasso and line selection are available. These make it easier to select big groups of items quickly.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-mirror-rotate">Updated copy, mirror and rotate window</link></term>
+                   <listitem>
+                       <para>The old mirror and rotate window now has an extra option, <emphasis>copy</emphasis>, which clones and moves the whole selection. Mirror now properly mirrors the selection, rather than rotating it.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-grid-square">Align to grid</link></term>
+                   <listitem>
+                       <para>A square, rond and triangular grid can be shown, and all items will automatically snap to this grid. This is useful to exactly position elements in a chart. Snap to angle makes stitches automatically rotate towards the center in a round grid.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="layers">Layers</link></term>
+                   <listitem>
+                       <para>A chart can be divided into multiple layers, making it easier to organize big charts and work with overlapping elements.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>New file format</term>
+                   <listitem>
+                       <para>@PROJECT_LONGNAME@ now internally uses another file format. Because of this, charts created in this version can't be opened in older version of @PROJECT_LONGNAME@</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>New method of calculating rotation and scale</term>
+                   <listitem>
+                       <para>The application works with rotation and scale in a completely new way. Everything can now be rotated and scaled arbitrarily, without deforming the stitch or making it jump around the chart.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="options-preferences">More options</link></term>
+                   <listitem>
+                       <para>More options have been added to the application, allowing for more custumizability. Among those options are the ability to rotate and scale around the center of a stitch, and the ability to center stitches on the mouse when pasting.</para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term><link linkend="tools-resize">Resize window</link></term>
+                   <listitem>
+                       <para>A resize window allows you to change the size of the chart.</para>
+                   </listitem>
+               </varlistentry>
+            </variablelist>
+
+
+        </section>
 
         <section id="videos">
             <title>Additional Resources - Videos</title>
-            <para>There are <ulink url="http://StitchWorksSoftware/videos">videos available on my website</ulink>
+            <para>There are <ulink url="http://StitchWorksSoftware/videos">videos available on the website</ulink>
             that will walk you through using @PROJECT_LONGNAME@.
             </para>
         </section>
-        
     </preface>
-
-
 
     <chapter id="installation">
         <title>Installation</title>
-        <para>Because this software is licensed per user you may install it on multiple computers including any
-        combination of the supported platforms below.
-        To install on multiple platforms you may goto the the <ulink url="@ORG_DOWNLOAD@">downloads page</ulink>
-        and download the installer for other platforms.
-        You will need your serial number to complete the installation.
-        The serial number can be found in the <link linkend="helpAbout">About dialog</link>.
-        If you need help installing on a second platform please <ulink url="@ORG_CONTACT@">contact me</ulink>.</para>
         <section>
             <title>Windows</title>
-            <para>@PROJECT_LONGNAME@ will run on Microsoft Windows XP, Windows Vista, and Windows 7.
+            <para>@PROJECT_LONGNAME@ will run on Microsoft Windows XP, Windows Vista, Windows 7, Windows 8, Windows 8.1 and Windows 10.
                 To install the software you can download the setup file from
                 <ulink url="@ORG_DOWNLOAD@">the @PROJECT_VENDOR@ website</ulink>.
             </para>
@@ -146,50 +281,8 @@
         <section>
             <title>Linux</title>
             <para>For Debian/Ubuntu based distributions you can use the .deb package.
-                If you're having any problems please <ulink url="@ORG_CONTACT@">contact me</ulink>
+                If you're having any problems please <ulink url="@ORG_CONTACT@">contact us</ulink>
             </para>
-        </section>
-        
-        <section>
-            <title>Licensing Wizard</title>
-            <para>The license wizard allows the user to either register or evaluate this software.
-                To use the software you must agree to the End User License Agreement.
-                To evaluate the software you will need to supply your name, and email address.
-                When you register the software you will need to supply your name, email address and serial number.
-                The serial number should have arrived in an email called "Stitch Works Software - License Information for Order#XXXX".
-            </para>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/license-wizard1.png" format="PNG" />
-                    </imageobject>
-                    <caption>The license wizard for @PROJECT_LONGNAME@</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/license-wizard2.png" format="PNG" />
-                    </imageobject>
-                    <caption>The license wizard EULA for @PROJECT_LONGNAME@</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/license-wizard3.png" format="PNG" />
-                    </imageobject>
-                    <caption>The license wizard registration page for @PROJECT_LONGNAME@</caption>
-                </mediaobject>
-            </screenshot>
-            <screenshot>
-                <mediaobject>
-                    <imageobject>
-                        <imagedata width="400" fileref="images/license-wizard4.png" format="PNG" />
-                    </imageobject>
-                    <caption>Thanks for registering or trying @PROJECT_LONGNAME@</caption>
-                </mediaobject>
-            </screenshot>
         </section>
     </chapter>
     
@@ -498,6 +591,11 @@
                         <entry>I</entry>
                         <entry>I</entry>
                     </row>
+                    <row>
+                        <entry>Next Selection Mode</entry>
+                        <entry>B</entry>
+                        <entry>B</entry>
+                    </row>
 
                     <row>
                         <entry namest="c1" nameend="c3" align="center">Charts menu</entry>
@@ -506,6 +604,11 @@
                         <entry>New Chart</entry>
                         <entry>Shift + Ctrl + N</entry>
                         <entry>Shift + Command + N</entry>
+                    </row>
+                    <row>
+                        <entry>Next Grid Mode</entry>
+                        <entry>G</entry>
+                        <entry>G</entry>
                     </row>
 
                     <row>
@@ -582,11 +685,25 @@
             <link linkend="tools-scale-edit">Scale Edit</link>,
             <link linkend="tools-row-edit">Row Edit</link>,
             <link linkend="tools-indicator-edit">Indicator Edit</link>,
+            <link linkend="tools-resize">Resize Tools</link>,
             <link linkend="tools-align-distribute">Align and Distribute Tools</link>,
-            <link linkend="tools-mirror-rotate">Mirror and Rotate Tools</link>, and
-            <link linkend="tools-color-selector">Color Selector</link>.
+            <link linkend="tools-mirror-rotate">Mirror and Rotate Tools</link>,
+            <link linkend="tools-selection-box">Box Select</link>,
+            <link linkend="tools-selection-lasso">Lasso Select</link>,
+            <link linkend="tools-selection-line">Line Select</link>,
+            <link linkend="tools-grid-none">Disable Grid</link>,
+            <link linkend="tools-grid-square">Square Grid</link>,
+            <link linkend="tools-grid-triangular">Triangular Grid</link> and 
+            <link linkend="tools-grid-round">Round Grid</link>.
 
         </para>
+
+        <section id="properties">
+            <title>Properties</title>
+            <para><menuchoice><guimenu>View</guimenu><guimenuitem>Show properties</guimenuitem></menuchoice></para>
+            <para>The properties menu shows context sensitive information about your current selection. It allows you to change the position, angle and scale of your selection, as well as font settings when an indicator is selected, image settings when an image is selected, and grid settings when nothing is selected
+            </para>
+        </section>
 
         <section id="tools-export">
             <title>Export</title>
@@ -616,9 +733,7 @@
         <section id="tools-color-edit">
             <title>Color Edit</title>
             <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Color Edit</guimenuitem></menuchoice></para>
-            <para>This mode allows you to edit the background colors used behind the stitches.
-                If you wish to edit the color of the stitches themselves you can change the
-                primary and secondary colors in the <link linkend="options-charts">Chart Options/Preferences</link>.
+            <para>This mode allows you to edit the background and foreground colors of stitches. By clicking on a stitch his foreground and background color will be changed to the currently selected colors. To change the selected colors, use the <link linkend="pattern-colors">Pattern Colors Menu</link>.
             </para>
         </section>
 
@@ -709,10 +824,44 @@
             <title>Indicator Edit</title>
             <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Indicator Edit</guimenuitem></menuchoice></para>
             <para>Indicators can be used as row indicators, or to point out pieces of the chart that need special notes.
-                The indicators on the chart can show the dot and/or text based on the <link linkend="options-charts">Chart Options/Preferences</link>.
+                The indicators on the chart can show the dot and/or text based on the <link linkend="options-charts">Chart Options/Preferences</link> or the <link linkend="properties">properties window</link>.
             </para>
             <para>Once you're in the Indicator Edit mode you can click on the chart to add a new indicator. If you've setup the indicators with text
                 you can edit the text by clicking on the selected indicator.
+            </para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="150" fileref="images/properties-indicator.png" format="PNG" />
+                    </imageobject>
+                    <caption>The properties for indicators</caption>
+                </mediaobject>
+            </screenshot>
+            <para>When an indicator is selected, the properties menu changes to show some indicator-only parameters. </para>
+            <para> The style drop-down menu allows you to choose wether to show a dot and text, just a dot or just text. The last option can be used to add a description, a disclaimer,.. to your chart, although the <link linkend="exporting-files">export menu</link> also allows you to add a custom header and footer to your chart.
+            </para>
+            <para>The font and size option work as you would expect. In the font textbox, you can either write the name of the font yourself, or open a drop down menu so you can see all available fonts. It is best to stick to the most popular fonts Some are only avaiable on certain platforms (like Windows or Mac) and as a result wouldn't work on every computer.
+            </para>
+        </section>
+
+        <section id="tools-selection-box">
+            <title>Box Select</title>
+            <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Box select</guimenuitem></menuchoice></para>
+            <para>One of three selection modes. By holding the left mouse button down and moving the mouse, you draw a rectangle, selecting everything that intersects with this rectangle.
+            </para>
+        </section>
+
+        <section id="tools-selection-lasso">
+            <title>Lasso Select</title>
+            <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Lasso select</guimenuitem></menuchoice></para>
+            <para>One of three selection modes. By holding the left mouse button down and moving the mouse, you can freely draw a shape, selecting everything that intersects with this shape.
+            </para>
+        </section>
+
+        <section id="tools-selection-line">
+            <title>Line Select</title>
+            <para><menuchoice><guimenu>Modes</guimenu><guimenuitem>Line select</guimenuitem></menuchoice></para>
+            <para>One of three selection modes. By holding the left mouse button down and moving the mouse, you can freely draw a line, selecting everything that intersects with this line.
             </para>
         </section>
 
@@ -738,19 +887,22 @@
         </section>
 
         <section id="tools-mirror-rotate">
-            <title>Mirror and Rotate</title>
+            <title>Scale, Mirror and Rotate</title>
             <para><menuchoice><guimenu>Stitches</guimenu><guimenuitem>Show Mirror and Rotate</guimenuitem></menuchoice></para>
             <screenshot>
                 <mediaobject>
                     <imageobject>
                         <imagedata width="100" fileref="images/dock-mirror-rotate.png" format="PNG" />
-                    </imageobject>
+                    </imageobject>   
                     <caption>The mirror and rotate tools</caption>
-                </mediaobject>
-            </screenshot>
-            <para>A set of tools that allows you to mirror and rotate groups of stitches on the chart.
+                </mediaobject> 
+            </screenshot> 
+            <para>A set of tools that allows you to copy, mirror and rotate groups of stitches on the chart.
             </para>
-            <para>Mirroring can be done up, down, left, and right. Mirroring is done across vertical or horizontal lines.
+            <para>Copying and mirroring can be done up, down, left, and right.</para>
+                Copying will clone the selected stiches and move them in the selected direction. For example, if your copy left, the right most edge of the right most cloned stitch will touch the left most edge of the left most selected stitch.
+
+             <para>Mirroring is done across vertical or horizontal lines.
                 For example if you mirror left, the left most point of the left most selected stitch is used as the mirroring line.
                 Mirroring will automatically make copies of the stitches that are to be mirrored.
             </para>
@@ -762,15 +914,6 @@
                 and a fourth button (on the top) representing a custom option that allows you to select exactly how many degrees you want to rotate the selection.
             </para>
             <para>Rotating operates on the selected stitches, unlike mirroring.
-            </para>
-        </section>
-
-        <section id="tools-color-selector">
-            <title>Color Selector</title>
-            <para>Select the color that will be used in Color Edit.</para>
-            <para>To use the color edit mode, Select <menuchoice><guimenu>Modes</guimenu><guimenuitem>Color Edit</guimenuitem></menuchoice>.
-            In the tool bar click on the white color box, with the tool tip reading "Select a color for the background".
-            This tool will allow you to change the color behind each stitch by clicking on them.
             </para>
         </section>
 
@@ -794,6 +937,87 @@
                 the center point you will have a consistent looking repeat.
             </para>
         </section>
+
+        <section id="tools-resize">
+            <title>Resize</title>
+            <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Resize</guimenuitem></menuchoice></para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="100" fileref="images/dock-resize.png" format="PNG" />
+                    </imageobject>
+                    <caption>The resize tools</caption>
+                </mediaobject>
+            </screenshot>
+            <para>A menu that allows you to resize the chart.</para>
+            <para>Using the four number boxes, you can change the size of the chart. When you move a stitch outside of the chart, it will automatically resize.
+            </para>
+            <para>The Clamp To Chart button will resize the chart so it exactly fits the content. This will also automatically center the chart on the screen.
+            </para>
+        </section>
+
+        <section id="tools-grid-none">
+            <title>No grid</title>
+            <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Grid</guimenuitem><guimenuitem>No grid</guimenuitem></menuchoice></para>
+            <para>Disables the grid. No grid is shown and there is no snap to grid.</para>
+        </section>
+
+        <section id="tools-grid-square">
+            <title>Square grid</title>
+            <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Grid</guimenuitem><guimenuitem>Square grid</guimenuitem></menuchoice></para>
+            <para>Enables a square grid, and snaps items on this grid.</para>
+            <para>Whenever you move an object, it will snap to the nearest point on the grid. This is useful to easily layout stitches in a grid or row pattern.</para>
+            <para>When no items are selected, the grid can be customized in the <link linkend="properties">properties window</link>.</para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="150" fileref="images/properties-rows.png" format="PNG" />
+                    </imageobject>
+                    <caption>The properties for the square grid.</caption>
+                </mediaobject>
+            </screenshot>
+            <para>In the properties window, the rows and columns setting changes the amount of vertical and horizontal squares in the grid. Width and height determines the size of each individual square in the grid.
+            </para>
+        </section>
+
+        <section id="tools-grid-round">
+            <title>Round grid</title>
+            <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Grid</guimenuitem><guimenuitem>Round grid</guimenuitem></menuchoice></para>
+            <para>Enables a round grid, and snaps items on this grid.</para>
+            <para>Whenever you move an object, it will snap to the nearest point on the grid. This is useful to easily layout stitches in a grid or row pattern.</para>
+            <para>When no items are selected, the grid can be customized in the <link linkend="properties">properties window</link>.</para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="150" fileref="images/properties-rows.png" format="PNG" />
+                    </imageobject>
+                    <caption>The properties for the round grid.</caption>
+                </mediaobject>
+            </screenshot>
+            <para>In the properties window, the rounds setting changes the amount of layers the circle has. Columns decides in how many slices the circle is divided, and height changes the height of each layer.
+            </para>
+            <para>If snap to grid is enabled, stiches will automatically rotate towards the center of the chart. This is useful for quickly making round charts.
+            </para>
+        </section>
+
+        <section id="tools-grid-triangular">
+            <title>Triangular grid</title>
+            <para><menuchoice><guimenu>Charts</guimenu><guimenuitem>Grid</guimenuitem><guimenuitem>Triangular grid</guimenuitem></menuchoice></para>
+            <para>Enables a triangular grid, and snaps items on this grid.</para>
+            <para>Whenever you move an object, it will snap to the nearest point on the grid. This is useful to easily layout stitches in a grid or row pattern.</para>
+            <para>When no items are selected, the grid can be customized in the <link linkend="properties">properties window</link>.</para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="150" fileref="images/properties-triangles.png" format="PNG" />
+                    </imageobject>
+                    <caption>The properties for the Triangular grid.</caption>
+                </mediaobject>
+            </screenshot>
+            <para>In the properties window, the triangles setting changes the amount of layers of triangles in the grid. Width and height changes the size of each individual triangle.
+            </para>
+        </section>
+
         <section>
             <title>Grouping</title>
             <para><menuchoice><guimenu>Stitches</guimenu><guimenuitem>Group</guimenuitem></menuchoice>
@@ -804,9 +1028,55 @@
             </para>
         </section>
             
+        
+        <section id="tools-add-image">
+            <title>Add image</title>
+            <para><menuchoice><guimenu>Edit</guimenu><guimenuitem>Insert</guimenuitem><guimenuitem>Image</guimenuitem></menuchoice></para>
+            <para>Inserts an image into the chart. A file chooser allows you to pick the image you want and embed it directly into the chart. Using the <link linkend="properties">properties window</link>, the path of the selected image can be changed.
+            </para>
+        </section>
+        
+        <section id="pattern-colors">
+            <title>Pattern colors</title>
+            <para><menuchoice><guimenu>View</guimenu><guimenuitem>Show pattern colors</guimenuitem></menuchoice></para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="150" fileref="images/patterncolors.png" format="PNG" />
+                    </imageobject>
+                    <caption>The pattern colors menu.</caption>
+                </mediaobject>
+            </screenshot>
+            <para>This menu allows you to choose the foreground and background color of stitches. By pressing either <emphasis>stitch</emphasis> or <emphasis>background</emphasis>, your are prompted with a color picker where you can change the selected color. These colors will be applied to new stitches placed with the <link linkend="tools-stitch-edit">stitch edit tool</link>. To change the color of existing stitches, use the <link linkend="tools-color-edit">color edit tool</link>.
+            </para>
+        </section>
+
+        <section id="layers">
+            <title>Layers</title>
+            <para><menuchoice><guimenu>View</guimenu><guimenuitem>Show layers</guimenuitem></menuchoice></para>
+            <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="150" fileref="images/layers.png" format="PNG" />
+                    </imageobject>
+                    <caption>The layers menu.</caption>
+                </mediaobject>
+            </screenshot>
+            <para>This menu allows you to work with layers. Each element in de chart is assigned to a certain layer, and can only be selected while that layer is selected. This allows you to divide up the chart in parts, so you can work on one part without being able to accidentally select or delete unrelated parts. Don't worry, if you don't want to use it, you can just hide and ignore this window.
+            </para>
+            <para>A layer can be selected simply by clicking on it.
+            </para>
+            <para>The checkbox to the left of each layer hides that layer, making everything that is part of that layer invisible.
+            </para>
+            <para>By clicking on the <emphasis>plus button</emphasis> a new layer is added, with the name that was entered into the textbox. The name of a layer can be changed by double clicking on it.
+            </para>
+            <para>By clicking on the <emphasis>minus button</emphasis> the selected layer, and everything contained in that layer, is removed. 
+            </para>
+            <para>The button with the downwards button merges the selected layer with the layer underneath it. This moves all the elements from the current layer to the layer it is going to merge with, and removes the current layer from the list.
+            </para>
+        </section>
+
     </chapter>
-
-
     
     <chapter id="exporting-files">
         <title>Exporting Files</title>
@@ -827,7 +1097,7 @@
         <screenshot>
             <mediaobject>
                 <imageobject>
-                    <imagedata width="400" fileref="images/export-chart-pdf.png" format="PNG" />
+                    <imagedata width="400" fileref="images/export-chart-pdf2.png" format="PNG" />
                 </imageobject>
                 <caption>Options window for export as a pdf</caption>
             </mediaobject>
@@ -845,7 +1115,7 @@
         <screenshot>
             <mediaobject>
                 <imageobject>
-                    <imagedata width="400" fileref="images/export-chart-png.png" format="PNG" />
+                    <imagedata width="400" fileref="images/export-chart-jpg2.png" format="PNG" />
                 </imageobject>
                 <caption>Options window for export as a jpeg, png, tiff, or bmp</caption>
             </mediaobject>
@@ -872,13 +1142,29 @@
             </varlistentry>
             
             <varlistentry>
+                <term>Include header and footer</term>
+                <listitem>
+                    <para>If this is checked, two text boxes will apear near the bottom of the export screen, prompting you to enter a header and/or footer text. This text will apear on your exported image.
+                    </para>
+                </listitem>
+            </varlistentry> 
+
+            <varlistentry>
                 <term>Page to Chart Size</term>
                 <listitem>
                     <para>By default the page size is set for a standard A4 letter page and the chart is scaled to fit onto the page.
                         If the <emphasis>Page to Chart Size</emphasis> option is checked then the page size is set to the size of the chart.
                     </para>
                 </listitem>
-            </varlistentry>            
+            </varlistentry>   
+            
+            <varlistentry>
+                <term>Selection only</term>
+                <listitem>
+                    <para>Only the items you have currently selected will be exported. This is useful if you only want to export a certain part of your chart. Note that the rectangles shown around selected stitches will not be exported, so it looks just like exporting the whole chart.
+                    </para>
+                </listitem>
+            </varlistentry>          
 
             <varlistentry>
                 <term>Height and Width</term>
@@ -1145,7 +1431,7 @@
                 or scale up the stitches they will always look good.
             </para>
             <para>
-                I recommend using the SVG file format when possible.
+                it is recommended to use SVG file format when possible.
                 SVG is not as well known a format as the others, but it is becoming an industry standard. Here are a few applications that
                 can generate SVG files if you choose to use it:
                     <ulink url="http://inkscape.org">Inkscape</ulink>,
@@ -1154,8 +1440,8 @@
                     <ulink url="http://docs.google.com">Google Docs</ulink>, and
                     <ulink url="http://www.adobe.com/products/illustrator/">Adobe Illustrator</ulink>.
             </para>
-            <para>I recommend starting with a canvas size of 32x32 px.
-                If you need to use a different size I recommend changing the size in increments of 16 or 32.
+            <para>We recommend starting with a canvas size of 32x32 px.
+                If you need to use a different size it is recommended to change the size in increments of 16 or 32.
                 So a single crochet is 32x32, a half double crochet is 32x64, and a double crochet is 32x80.
                 Once you have the basic size you can modify it from there as needed.
             </para>
@@ -1177,6 +1463,7 @@
         <para>The options have been divided into sections. The first section contains the general application settings.
             The Charts section contains settings that effect the creation and layout of charts and their written instructions.
             The Legend section contains the default settings for generating stitch and color legends.
+            The tools section contains settings that effect the functionality of tools.
             Usually, these settings can be overridden at the point at which they are used.
             For example, if you set default options on the Legends you can change them, temporarily,
             while you are on the <menuchoice><guimenu>File</guimenu><guimenuitem>Export</guimenuitem></menuchoice> dialog.
@@ -1218,6 +1505,13 @@
                    <listitem>
                        <para>This option allows you to specify how many recent files to list in
                            <menuchoice><guimenu>File</guimenu><guimenuitem>Recent Files</guimenuitem></menuchoice>.
+                        </para>
+                   </listitem>
+               </varlistentry>
+               <varlistentry id="paste-offset">
+                   <term>Paste Offset</term>
+                   <listitem>
+                       <para>When copying and pasting, this option decides if the pasted stitches appear on top of or next to the copied stiches. If <emphasis>on mouse cursor</emphasis> is selected, the pasted objects will be centered on the mouse cursor. 
                         </para>
                    </listitem>
                </varlistentry>
@@ -1298,13 +1592,13 @@
                         </para>
                     </listitem>
                 </varlistentry>
-                <varlistentry>
+                <!--<varlistentry>
                     <term>Generate Repeats</term>
                     <listitem>
                         <para>If unchecked the software will write out all the stitches individually.
                         </para>
                     </listitem>
-                </varlistentry>
+                </varlistentry>-->
             </variablelist>
             
         </section>
@@ -1532,11 +1826,63 @@
             </sect3>
             
         </section>
+
+
+       <section id="options-tools">
+           <title>Tools</title>
+           <screenshot>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata width="400" fileref="images/options-tools.png" format="PNG" />
+                    </imageobject>
+                    <caption>The tools options dialog</caption>
+                </mediaobject>
+            </screenshot>
+ 
+           <variablelist>
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>Click to change stitch</term>
+                   <listitem>
+                       <para>If enabled, clicking on another stitch with the stitch tool will change the type of that stitch.
+                       </para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>Center stitch on mouse</term>
+                   <listitem>
+                       <para>This option will center newly placed stitches on the mouse. If this is disabled, the upper-left most point of the stitch will be centered on the mouse.
+                       </para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>Rotate around center</term>
+                   <listitem>
+                       <para>Rotating stitches will use the center of the stitch or group as anchor, instead of the bottom-middle of the stitch or group.
+                       </para>
+                   </listitem>
+               </varlistentry>
+
+               <?dbfo list-presentation="blocks"?> 
+               <varlistentry>
+                   <term>Scale around center</term>
+                   <listitem>
+                       <para>Scaling stitches will use the center of the stitch or group as anchor, instead of the bottom-middle of the stitch or group.
+                       </para>
+                   </listitem>
+               </varlistentry>
+            </variablelist>
+            
+        </section>
         
     </chapter>
 
     <chapter>
-        <title>Tools</title>
+        <title>Miscellaneous</title>
         <sect1>
             <title>Check for Updates</title>
             <para>By default the software will silently check for updates every time you start the software.
@@ -1577,8 +1923,7 @@
             or on the Mac by going to <menuchoice><guimenu>@PROJECT_LONGNAME@</guimenu><guimenuitem>About @PROJECT_LONGNAME@</guimenuitem></menuchoice>.
             </para>
             <para>This dialog contains the full version string and build date, copyright notice, description,
-                dedication and license information. The license information is required to use the software.
-                The license information was provided to you when you purchased the software, but is presented here for your convenience.
+                dedication and the GPL license information.
             </para>
         </section>
     </chapter>
@@ -1586,7 +1931,7 @@
     <chapter id="limits-on-use">
         <title>Limits on Use of Output</title>
         <para>There are no limits on what you can do with the charts, or output you create in @PROJECT_LONGNAME@.
-            However I would appreciate it if you included a credit in any patterns, or publications where you used this software.
+            However we would appreciate it if you included a credit in any patterns, or publications where you used this software.
             For example: Charts created with @PROJECT_LONGNAME@ by @PROJECT_VENDOR@.
         </para>
     </chapter>
@@ -1596,17 +1941,17 @@
         <section>
             <title>Bugs</title>
             <para>
-                If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact me</ulink> so I can look into the issue.
-                I take bugs and defects very seriously and the sooner I know about them the sooner I can fix them.
+                If you find a defect, or unexpected behavior in this software please <ulink url="@ORG_CONTACT@">contact us</ulink> so we can look into the issue.
+                we take bugs and defects very seriously and the sooner we know about them the sooner we can fix them.
             </para>
         </section>
         <section>
             <title>Features</title>
             <para>
                 Is the software missing a feature? Do you have an idea that should be included in the software?
-                You should <ulink url="@ORG_CONTACT@">contact me</ulink> and let me know.
-                I want this software to make creating charts easy for the users and the best way to do that
-                is to have the users give me feedback about what is and isn't working for them.
+                You should <ulink url="@ORG_CONTACT@">contact us</ulink> and let us know.
+                we want this software to make creating charts easy for the users and the best way to do that
+                is to have the users give us feedback about what is and isn't working for them.
             </para>
         </section>
     </chapter>

@@ -445,6 +445,7 @@ void MainWindow::setupDocks()
     mPropertiesDock = new PropertiesDock(ui->tabWidget, this);
     connect(mPropertiesDock, SIGNAL(visibilityChanged(bool)), ui->actionShowProperties, SLOT(setChecked(bool)));
     connect(mPropertiesDock, SIGNAL(propertiesUpdated(QString,QVariant)), SLOT(propertiesUpdate(QString,QVariant)));
+	connect(mPropertiesDock, SIGNAL(setGridType(QString)), SLOT(setSelectedGridMode(QString)));
 }
 
 void MainWindow::setupMenus()
@@ -512,6 +513,7 @@ void MainWindow::setupMenus()
     connect(ui->actionShowStitches, SIGNAL(triggered()), SLOT(viewShowStitches()));
     connect(ui->actionShowPatternColors, SIGNAL(triggered()), SLOT(viewShowPatternColors()));
     connect(ui->actionShowPatternStitches, SIGNAL(triggered()), SLOT(viewShowPatternStitches()));
+	connect(ui->actionShowLayers, SIGNAL(triggered()), SLOT(viewShowLayers()));
 
     connect(ui->actionShowUndoHistory, SIGNAL(triggered()), SLOT(viewShowUndoHistory()));
     
@@ -551,6 +553,7 @@ void MainWindow::setupMenus()
 	
 	connect(mSelectGroup, SIGNAL(triggered(QAction*)), SLOT(changeSelectMode(QAction*)));
     connect(ui->actionNextSelectMode, SIGNAL(triggered()), SLOT(nextSelectMode()));
+	
 	addAction(ui->actionNextSelectMode);
 	
 	mGridGroup = new QActionGroup(this);
@@ -561,7 +564,10 @@ void MainWindow::setupMenus()
 	ui->actionGridNone->setChecked(true);
 	
 	connect(mGridGroup, SIGNAL(triggered(QAction*)), SLOT(changeGridMode(QAction*)));
+	connect(mGridGroup, SIGNAL(triggered(QAction*)), mPropertiesDock, SLOT(propertyUpdated()));
 	connect(ui->actionNextGridMode, SIGNAL(triggered()), SLOT(nextGridMode()));
+	connect(ui->actionNextGridMode, SIGNAL(triggered()), mPropertiesDock, SLOT(propertyUpdated()));
+	
 	addAction(ui->actionNextGridMode);
 	
     //Charts Menu
@@ -1005,6 +1011,38 @@ void MainWindow::changeGridMode(QAction* action)
 	}
 }
 
+void MainWindow::setSelectedGridMode(QString gmode) {
+	CrochetTab* tab = curCrochetTab();
+	if (tab == NULL)
+		return;
+		
+	ui->actionGridNone->blockSignals(true);
+	ui->actionGridSquare->blockSignals(true);
+	ui->actionGridRound->blockSignals(true);
+	ui->actionGridTriangle->blockSignals(true);
+	
+	ui->actionGridNone->setChecked(false);
+	ui->actionGridSquare->setChecked(false);
+	ui->actionGridRound->setChecked(false);
+	ui->actionGridTriangle->setChecked(false);
+	
+	
+	if (gmode.compare("None") == 0) {
+		ui->actionGridNone->setChecked(true);
+	} else if (gmode.compare("Rows") == 0) {
+		ui->actionGridSquare->setChecked(true);
+	} else if (gmode.compare("Rounds") == 0) {
+		ui->actionGridRound->setChecked(true);
+	} else if (gmode.compare("Triangles") == 0) {
+		ui->actionGridTriangle->setChecked(true);
+	}
+	ui->actionGridNone->blockSignals(false);
+	ui->actionGridSquare->blockSignals(false);
+	ui->actionGridRound->blockSignals(false);
+	ui->actionGridTriangle->blockSignals(false);
+	
+}
+
 void MainWindow::nextGridMode()
 {
 	if (ui->actionGridNone->isChecked())
@@ -1217,6 +1255,7 @@ void MainWindow::menuViewAboutToShow()
     ui->actionShowStitches->setChecked(ui->allStitchesDock->isVisible());
     ui->actionShowPatternColors->setChecked(ui->patternColorsDock->isVisible());
     ui->actionShowPatternStitches->setChecked(ui->patternStitchesDock->isVisible());
+	ui->actionShowLayers->setChecked(ui->layersDock->isVisible());
 
     ui->actionShowUndoHistory->setChecked(mUndoDock->isVisible());
     
@@ -1406,6 +1445,7 @@ CrochetTab* MainWindow::createTab(Scene::ChartStyle style)
     connect(tab, SIGNAL(guidelinesUpdated(Guidelines)), SLOT(updateGuidelines(Guidelines)));
 	connect(tab, SIGNAL(layersChanged(QList<ChartLayer*>&, ChartLayer*)), this, SLOT(reloadLayerContent(QList<ChartLayer*>&, ChartLayer*)));
 	connect(tab->scene(), SIGNAL(sceneRectChanged(const QRectF&)), mResizeUI, SLOT(updateContent()));
+	connect(tab->scene(), SIGNAL(showPropertiesSignal()), SLOT(viewMakePropertiesVisible()));
 
     mUndoGroup.addStack(tab->undoStack());
     
@@ -1449,6 +1489,11 @@ void MainWindow::viewShowPatternColors()
     ui->patternColorsDock->setVisible(ui->actionShowPatternColors->isChecked());
 }
 
+void MainWindow::viewShowLayers()
+{
+	ui->layersDock->setVisible(ui->actionShowLayers->isChecked());
+}
+
 void MainWindow::viewShowPatternStitches()
 {
     ui->patternStitchesDock->setVisible(ui->actionShowPatternStitches->isChecked());
@@ -1457,6 +1502,12 @@ void MainWindow::viewShowPatternStitches()
 void MainWindow::viewShowUndoHistory()
 {
     mUndoDock->setVisible(ui->actionShowUndoHistory->isChecked());
+}
+
+void MainWindow::viewMakePropertiesVisible()
+{
+	ui->actionShowProperties->setChecked(true);
+	viewShowProperties();
 }
 
 void MainWindow::viewShowProperties()

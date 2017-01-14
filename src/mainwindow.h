@@ -104,10 +104,12 @@ private slots:
 
     void menuEditAboutToShow();
     
+	void viewMakePropertiesVisible();
     void menuViewAboutToShow();
     void viewShowStitches();
     void viewShowPatternColors();
     void viewShowPatternStitches();
+	void viewShowLayers();
     void viewShowUndoHistory();
     void viewShowMainToolbar();
     void viewShowEditModeToolbar();
@@ -149,6 +151,7 @@ private slots:
 	
 	void changeSelectMode(QAction* action);
 	void nextSelectMode();
+	void setSelectedGridMode(QString mode);
 	void changeGridMode(QAction* action);
 	void nextGridMode();
 
