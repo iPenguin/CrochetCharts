@@ -59,6 +59,8 @@
 #include <QSortFilterProxyModel>
 #include <QDesktopServices>
 
+#include <QMimeData>
+
 MainWindow::MainWindow(QStringList fileNames, QWidget* parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),

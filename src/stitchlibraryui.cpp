@@ -61,7 +61,7 @@ StitchLibraryUi::StitchLibraryUi(QWidget* parent)
     ui->listView->setItemDelegate(delegate);
 
     setDialogSize();
-    ui->listView->horizontalHeader()->setClickable(true);
+    ui->listView->horizontalHeader()->setSectionsClickable(true);
     ui->listView->horizontalHeader()->setSortIndicatorShown(true);
 
     //TODO: Wrong Side.

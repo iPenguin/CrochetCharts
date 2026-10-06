@@ -30,7 +30,7 @@ public:
 
     enum { Type = UserType + 10 };
 
-    ItemGroup(QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+    ItemGroup(QGraphicsItem *parent = 0);
     ~ItemGroup();
 
     int type () const { return ItemGroup::Type; }

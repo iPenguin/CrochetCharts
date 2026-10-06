@@ -26,7 +26,7 @@
 class Guideline : public QGraphicsEllipseItem
 {
 public:
-    explicit Guideline(const QRectF &rect, QGraphicsItem *parent = 0, QGraphicsScene *scene = 0);
+    explicit Guideline(const QRectF &rect, QGraphicsItem *parent = 0);
 
     enum { Type = UserType + 5 };
 

@@ -8,8 +8,8 @@ set(crochet_resources
     ../stitches/stitches.qrc
     )
 
-qt4_add_resources(crochet_rcc_srcs ${crochet_resources})
-qt4_wrap_ui(crochet_ui_h ${crochet_uis})
+qt5_add_resources(crochet_rcc_srcs ${crochet_resources})
+qt5_wrap_ui(crochet_ui_h ${crochet_uis})
 
 if(WIN32)
     #generate the embeded icon for the exe file.
@@ -42,7 +42,7 @@ else()
             ${crochet_version} ${crochet_win} ${crochet_mac} ${crochet_nix})
 endif()
 
-target_link_libraries(${EXE_NAME} ${QT_LIBRARIES})
+target_link_libraries(${EXE_NAME} ${QT_LIBRARIES} Qt5::Widgets Qt5::Core Qt5::Network Qt5::Svg Qt5::OpenGL Qt5::PrintSupport)
 
 if(APPLE)
     #install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME} DESTINATION ../MacOS)
@@ -75,3 +75,14 @@ if(WIN32)
     install(PROGRAMS ${QT_LIBS_WINDOWS} ${QT_DEPS_WINDOWS} DESTINATION bin)
     install(DIRECTORY ${QT_PLUGINS_WINDOWS} DESTINATION plugins)
 endif()
+
+add_custom_command(
+    TARGET ${EXE_NAME} PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory $/../icons
+)
+add_custom_command(
+    TARGET ${EXE_NAME} PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/../images
+            $/../icons
+)

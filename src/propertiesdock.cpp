@@ -18,6 +18,8 @@
  along with Crochet Charts. If not, see <http://www.gnu.org/licenses/>.
 
  \****************************************************************************/
+#include <cmath>
+
 #include "propertiesdock.h"
 #include "ui_propertiesdock.h"
 

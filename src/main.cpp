@@ -34,7 +34,7 @@
 
 int main(int argc, char *argv[])
 {
-    qInstallMsgHandler(errorHandler);
+    qInstallMessageHandler(errorHandler);
     Application a(argc, argv);
 
     QStringList arguments = QCoreApplication::arguments();

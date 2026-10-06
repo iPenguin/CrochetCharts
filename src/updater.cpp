@@ -20,10 +20,10 @@
  \****************************************************************************/
 #include "updater.h"
 
-#include <QtNetwork/QHttp>
-#include <QtNetwork/QNetworkRequest>
+#include <QNetworkRequest>
 
 #include <QDesktopServices>
+#include <QStandardPaths>
 
 #include <QFile>
 #include <QFileInfo>
@@ -139,7 +139,7 @@ void Updater::httpReadyRead()
 void Updater::downloadInstaller(QUrl url)
 {   
     QString fName = url.path().split("/").last();
-    QString path = QDesktopServices::storageLocation(QDesktopServices::TempLocation);
+    QString path = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
     installer = new QFile(path + "/" + fName);
     
     if (!installer->open(QIODevice::WriteOnly)){

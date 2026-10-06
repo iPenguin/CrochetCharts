@@ -24,6 +24,7 @@
 #include "stitch.h"
 
 #include <QFile>
+#include <QDataStream>
 
 #include <QDebug>
 #include "debug.h"

@@ -23,8 +23,8 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 
-Guideline::Guideline(const QRectF &rect, QGraphicsItem *parent, QGraphicsScene *scene) :
-    QGraphicsEllipseItem(rect, parent, scene)
+Guideline::Guideline(const QRectF &rect, QGraphicsItem *parent) :
+    QGraphicsEllipseItem(rect, parent)
 {
     setAcceptedMouseButtons(0);
 }

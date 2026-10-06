@@ -46,7 +46,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/version.cpp.in
                 ${CMAKE_CURRENT_BINARY_DIR}/version.cpp)
 set(crochet_version "${CMAKE_CURRENT_BINARY_DIR}/version.cpp")
 
-find_package(Qt4 REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets Gui Network Svg OpenGL PrintSupport REQUIRED)
 
 add_definitions(${QT_DEFINITIONS})
 
@@ -75,7 +75,6 @@ endif()
 set(QT_USE_QTSVG true)
 #set(QT_USE_QTOPENGL true)
 set(QT_USE_QTNETWORK true)
-include(${QT_USE_FILE})
 
 #QT4_CREATE_TRANSLATION( qm_files directories ... sources ... ts_files ... OPTIONS ...)
 #QT4_ADD_TRANSLATION( qm_files ts_files ... )

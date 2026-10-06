@@ -66,9 +66,9 @@ set(crochet_app_resources
     ../stitches/stitches.qrc
     )
 
-qt4_add_resources(crochet_app_rcc_srcs ${crochet_app_resources})
-#qt4_wrap_cpp(crochet_test_moc_srcs ${crochet_test_qobject_headers} ${crochet_app_h})
-qt4_wrap_ui(crochet_ui_h ${crochet_ui})
+qt5_add_resources(crochet_app_rcc_srcs ${crochet_app_resources})
+#qt5_wrap_cpp(crochet_test_moc_srcs ${crochet_test_qobject_headers} ${crochet_app_h})
+qt5_wrap_ui(crochet_ui_h ${crochet_ui})
 
 add_executable(tests main.cpp ${crochet_test_srcs} ${crochet_test_moc_srcs} ${crochet_app_rcc_srcs} ${crochet_app_cpp} ${crochet_ui_h})
 target_link_libraries(tests ${QT_LIBRARIES})

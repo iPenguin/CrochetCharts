@@ -627,16 +627,18 @@ void StitchSet::reset()
 {
     if(!isMasterSet)
         return;
-    
+
+    QAbstractItemModel::beginResetModel();
+
     QFile::remove(stitchSetFileName);
 
     clearStitches();
     loadXmlFile(":/crochet.xml");
-    
+
     foreach(Stitch* s, mStitches)
         s->isBuiltIn = true;
 
-    QAbstractItemModel::reset();
+    QAbstractItemModel::endResetModel();
 }
 
 void StitchSet::reloadStitchIcons()
